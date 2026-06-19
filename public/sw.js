@@ -74,7 +74,9 @@ self.addEventListener('fetch', (event) => {
                         }
                         return response;
                     })
-                    .catch(() => cached);
+                    // Cold-Start offline (noch nichts gecacht): sauber ablehnen
+                    // statt zu undefined aufzulösen.
+                    .catch(() => cached ?? Promise.reject(new Error('offline')));
                 return cached || network;
             })),
         );
