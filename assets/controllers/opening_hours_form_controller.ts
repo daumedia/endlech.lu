@@ -41,7 +41,7 @@ export default class extends Controller {
             '✕</button>';
 
         // Den versteckten dayOfWeek-Input des neuen Slots auf den Zieltag setzen.
-        const dayInput = wrapper.querySelector<HTMLInputElement>('input[type="hidden"]');
+        const dayInput = wrapper.querySelector<HTMLInputElement>('input[type="hidden"][name*="[dayOfWeek]"]');
         if (dayInput) {
             dayInput.value = day;
         }
