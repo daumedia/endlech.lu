@@ -51,11 +51,37 @@ final class AuthControllerTest extends WebTestCase
         self::assertResponseStatusCodeSame(201);
         $data = json_decode($client->getResponse()->getContent(), true);
         self::assertArrayNotHasKey('token', $data);
-        self::assertFalse($data['data']['isVerified']);
+        self::assertArrayHasKey('message', $data);
 
         $user = static::getContainer()->get(UserRepository::class)->findOneBy(['email' => $email]);
         self::assertNotNull($user);
         self::assertFalse($user->isVerified());
+    }
+
+    /**
+     * Eine bereits registrierte E-Mail darf nicht durch eine abweichende Antwort
+     * erkennbar sein (kein User-Enumeration). Antwort identisch zur Neuregistrierung.
+     */
+    public function testRegisterWithExistingEmailDoesNotLeakAndCreatesNoDuplicate(): void
+    {
+        $client = static::createClient();
+        $repository = static::getContainer()->get(UserRepository::class);
+        $before = \count($repository->findBy(['email' => 'user@endlech.lu']));
+
+        $client->request(
+            'POST',
+            '/api/v1/auth/register',
+            server: ['CONTENT_TYPE' => 'application/json'],
+            content: json_encode(['name' => 'Eindringling', 'email' => 'user@endlech.lu', 'password' => 'supersecret']),
+        );
+
+        self::assertResponseStatusCodeSame(201);
+        $data = json_decode($client->getResponse()->getContent(), true);
+        self::assertArrayHasKey('message', $data);
+        self::assertStringNotContainsStringIgnoringCase('registriert', $data['message']);
+
+        // Kein Duplikat angelegt.
+        self::assertSame($before, \count($repository->findBy(['email' => 'user@endlech.lu'])));
     }
 
     public function testRegisterValidationFailsForShortPassword(): void

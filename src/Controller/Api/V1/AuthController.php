@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use OpenApi\Attributes as OA;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
@@ -63,8 +64,6 @@ final class AuthController extends AbstractController
         }
         if ($email === '' || filter_var($email, \FILTER_VALIDATE_EMAIL) === false) {
             $violations['email'] = 'Bitte eine gültige E-Mail-Adresse angeben.';
-        } elseif ($userRepository->findOneBy(['email' => $email]) !== null) {
-            $violations['email'] = 'Diese E-Mail-Adresse ist bereits registriert.';
         }
         if (mb_strlen($password) < 8) {
             $violations['password'] = 'Das Passwort muss mindestens 8 Zeichen lang sein.';
@@ -80,19 +79,38 @@ final class AuthController extends AbstractController
             ], 422);
         }
 
-        $user = new User();
-        $user->setName($name);
-        $user->setEmail($email);
-        $user->setPassword($passwordHasher->hashPassword($user, $password));
-        $token = $user->generateVerificationToken();
+        // User-Enumeration vermeiden: identische Antwort, egal ob die E-Mail bereits
+        // existiert. Eine bestehende Adresse bekommt einen Hinweis statt einer
+        // Bestätigungsmail; ein neuer Account wird normal angelegt. Das Passwort wird
+        // in beiden Fällen gehasht, um auch die Antwortzeit nicht zu verraten.
+        $hashedPassword = $passwordHasher->hashPassword(new User(), $password);
 
-        $entityManager->persist($user);
-        $entityManager->flush();
+        if ($userRepository->findOneBy(['email' => $email]) !== null) {
+            $this->sendAccountExistsHint($mailer, $email);
+        } else {
+            $user = new User();
+            $user->setName($name);
+            $user->setEmail($email);
+            $user->setPassword($hashedPassword);
+            $token = $user->generateVerificationToken();
 
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            $this->sendVerificationEmail($mailer, $user, $token);
+        }
+
+        return new JsonResponse([
+            'message' => 'Fast geschafft! Wenn die Angaben gültig sind, haben wir dir eine E-Mail geschickt. Bitte bestätige deine Adresse.',
+        ], 201);
+    }
+
+    private function sendVerificationEmail(MailerInterface $mailer, User $user, string $token): void
+    {
         $verifyUrl = $this->generateUrl('app_verify_email', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL);
 
         $message = (new TemplatedEmail())
-            ->to($user->getEmail())
+            ->to((string) $user->getEmail())
             ->subject($this->translator->trans('email.verify_subject'))
             ->htmlTemplate('email/verification.html.twig')
             ->context([
@@ -105,15 +123,30 @@ final class AuthController extends AbstractController
         } catch (TransportExceptionInterface) {
             // Nutzer ist angelegt; nur der Mailversand schlug fehl.
         }
+    }
 
-        return new JsonResponse([
-            'data' => [
-                'id' => $user->getId(),
-                'email' => $user->getEmail(),
-                'isVerified' => $user->isVerified(),
-            ],
-            'message' => 'Registrierung erfolgreich. Bitte bestätige deine E-Mail-Adresse.',
-        ], 201);
+    /**
+     * Hinweis an eine bereits registrierte Adresse, ohne dies dem Aufrufer zu verraten.
+     */
+    private function sendAccountExistsHint(MailerInterface $mailer, string $email): void
+    {
+        $message = (new Email())
+            ->to($email)
+            ->subject('Du hast bereits ein Konto bei Endlech.lu')
+            ->text(
+                "Hallo,\n\n"
+                ."soeben gab es einen Registrierungsversuch mit dieser E-Mail-Adresse. "
+                ."Du hast bereits ein Konto bei Endlech.lu – bitte melde dich einfach an. "
+                ."Falls du dein Passwort vergessen hast, kannst du es über die Anmeldeseite zurücksetzen.\n\n"
+                ."Warst du das nicht, kannst du diese E-Mail ignorieren.\n\n"
+                .'Dein Endlech.lu-Team',
+            );
+
+        try {
+            $mailer->send($message);
+        } catch (TransportExceptionInterface) {
+            // Hinweis nicht zustellbar – nach außen kein Unterschied.
+        }
     }
 
     private function error(int $code, string $message): JsonResponse
