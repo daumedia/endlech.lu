@@ -70,7 +70,7 @@ assets/
     └── app.css          # Tailwind import (@import "tailwindcss")
 
 migrations/              # Doctrine migrations (DoctrineMigrations namespace)
-tests/                   # PHPUnit tests (empty - MVP)
+tests/                   # PHPUnit tests (Service/OpeningHoursServiceTest)
 translations/            # i18n files (de, en, fr, lb)
 public/                  # Web root (index.php front controller)
 public/images/platforms/    # SVG logos for delivery platforms (Uber Eats, Deliveroo, etc.)
@@ -130,7 +130,7 @@ php bin/phpunit tests/              # Run specific directory
 
 PHPUnit is configured in `phpunit.dist.xml` with strict mode: fails on deprecation, notices, and warnings. Bootstrap loads `.env.test` variables.
 
-No test cases exist yet. When writing tests, use `App\Tests\` namespace (PSR-4 mapped to `tests/`).
+First test: `tests/Service/OpeningHoursServiceTest.php` (reiner Unit-Test ohne Kernel/DB). When writing tests, use `App\Tests\` namespace (PSR-4 mapped to `tests/`).
 
 ## Architecture & Conventions
 
@@ -165,6 +165,17 @@ Autowiring and autoconfiguration are enabled by default in `config/services.yaml
 | `app_profile_avatar_delete` | `/profile/avatar/delete` | `ProfileController::deleteAvatar()` |
 | `api_cuisine_search`  | `/api/cuisines/search` | `CuisineApiController::search()` |
 | `api_cuisine_create`  | `/api/cuisines`        | `CuisineApiController::create()` |
+| `api_v1_auth_login`   | `/api/v1/auth/login` (POST) | `Api\V1\AuthController::login()` (json_login) |
+| `api_v1_auth_register`| `/api/v1/auth/register` (POST) | `Api\V1\AuthController::register()` |
+| `api_v1_restaurants_index` | `/api/v1/restaurants` (GET) | `Api\V1\RestaurantApiController::index()` |
+| `api_v1_restaurants_create`| `/api/v1/restaurants` (POST) | `Api\V1\RestaurantApiController::create()` |
+| `api_v1_restaurants_show`  | `/api/v1/restaurants/{id}` (GET) | `Api\V1\RestaurantApiController::show()` |
+| `api_v1_restaurants_images`| `/api/v1/restaurants/{id}/images` (GET) | `Api\V1\RestaurantApiController::images()` |
+| `api_v1_me`           | `/api/v1/me` (GET) | `Api\V1\MeController::me()` |
+| `api_v1_me_submissions`| `/api/v1/me/submissions` (GET) | `Api\V1\MeController::submissions()` |
+| `app.swagger_ui`      | `/api/docs`    | NelmioApiDoc Swagger-UI |
+
+**Wichtig:** Die `/api/v1/`-Routen sind **locale-frei** (kein `/{_locale}`-Prefix). `config/routes.yaml` importiert `src/Controller/Api/V1/` in einem eigenen Block und `exclude`t es am `controllers`-Loader. Der ältere `CuisineApiController` (`/api/cuisines`) liegt weiterhin UNTER `/{_locale}` (also real `/{_locale}/api/cuisines`).
 
 `/restaurants` accepts query params:
 - `?sort=rating` (default) – sorted by rating DESC
@@ -224,18 +235,54 @@ Suggestion-Approval: `AdminSuggestionController::approve()` setzt `submittedBy` 
 Migration: `Version20260319000000`.
 Fixtures: Admin → 3 verifizierte, User → 3 unverifizierte, Rest → null.
 
-## Entity: OpeningHour (Issue #64)
-Felder: id, dayOfWeek (INT 1-7), openTime (TIME nullable), closeTime (TIME nullable), isClosed (BOOL), restaurant (ManyToOne CASCADE DELETE).
-UNIQUE: (restaurant_id, day_of_week).
-Collection auf Restaurant: `$openingHours` (OneToMany, cascade, orphanRemoval, OrderBy dayOfWeek ASC).
-Helper auf Restaurant: `getOpeningHourForDay(int $day): ?OpeningHour`.
-Service: `OpeningHoursService` — `isOpenNow()`, `isOpenAt()`, `getNextOpeningTime()`. Zeitzone: Europe/Luxembourg.
+## Entity: OpeningHour (Issue #64, erweitert in #81)
+Felder: id, dayOfWeek (INT 1-7), openTime (TIME nullable), closeTime (TIME nullable), restaurant (ManyToOne CASCADE DELETE).
+**Mehrere Zeitslots pro Tag** (Issue #81): kein UNIQUE-Constraint mehr; ein Tag kann beliebig viele `OpeningHour`-Einträge haben (z. B. Mittag + Abend). **Geschlossener Tag = keine Slots** (Feld `isClosed` entfernt).
+Collection auf Restaurant: `$openingHours` (OneToMany, cascade, orphanRemoval, OrderBy dayOfWeek ASC, openTime ASC).
+Helper auf Restaurant: `getOpeningHoursForDay(int $day): OpeningHour[]` — alle Slots eines Tages.
+Service: `OpeningHoursService` — `isOpenNow()`, `isOpenAt()` (iteriert über alle Slots), `getNextOpeningTime(Restaurant, ?\DateTimeInterface $now = null)` (frühester künftiger Slot; optionaler `$now` für Tests). Zeitzone: Europe/Luxembourg.
 Twig Extension: `OpeningHoursExtension` — Filter `restaurant|is_open_now`, Funktion `next_opening_time(restaurant)`.
-Form: `OpeningHourType` in CollectionType (fixed 7 Einträge, PRE_SET_DATA Listener füllt fehlende Tage auf).
-Stimulus: `opening_hours_form_controller.ts` — deaktiviert Zeitfelder bei "Geschlossen".
-Template: `templates/partials/_opening_hours.html.twig` — Wochenplan mit hervorgehobenem heutigem Tag.
-Filter: `?open=1` nutzt SQL JOIN mit TIME-Vergleich (inkl. Nachtschicht-Übertrag).
-Migration: `Version20260321000000` — erstellt `opening_hour` Tabelle, entfernt `is_open` Spalte.
+Form: `OpeningHourType` (dayOfWeek hidden, openTime/closeTime) als CollectionType (`allow_add`/`allow_delete`/`prototype`) in `RestaurantType`.
+Stimulus: `opening_hours_form_controller.ts` — pro Tag „＋ Zeitfenster hinzufügen" / einzelne Slots entfernen (Prototype-Klonen, gemeinsamer Index, setzt `dayOfWeek` des neuen Slots).
+Template: `templates/partials/_opening_hours.html.twig` — Wochenplan (Tag 1–7), mehrere Slots als `12:00 – 14:30 · 18:00 – 22:00`, hervorgehobener heutiger Tag.
+Admin-Template: `templates/admin/restaurant/_form.html.twig` — Öffnungszeiten nach Tag gruppiert.
+Filter: `?open=1` nutzt SQL JOIN mit TIME-Vergleich (inkl. Nachtschicht-Übertrag), `distinct()` gegen Duplikate bei mehreren Slots.
+Test: `tests/Service/OpeningHoursServiceTest.php` — Multi-Slot-, Nachtschicht- und Next-Opening-Logik.
+Migrationen: `Version20260321000000` (erstellt Tabelle), `Version20260619000000` (entfernt UNIQUE-Constraint + `is_closed`-Spalte für Multi-Slot).
+
+## REST-API für die iOS-App (Issue #87)
+Versionierte, **locale-freie** REST/JSON-API unter `/api/v1/` als Backend für eine native iOS-App. Bestehende Web-App unverändert. Ansatz: **Plain Controller + explizite Transformer** (kein API Platform, keine Serializer-Groups).
+**Bundles:** `lexik/jwt-authentication-bundle` (JWT), `nelmio/cors-bundle` (CORS), `nelmio/api-doc-bundle` (Swagger), `symfony/rate-limiter`. JWT-Keypair in `config/jwt/*.pem` (gitignored) via `php bin/console lexik:jwt:generate-keypair`; env: `JWT_SECRET_KEY`, `JWT_PUBLIC_KEY`, `JWT_PASSPHRASE`, `CORS_ALLOW_ORIGIN`.
+**Routing:** `config/routes.yaml` — eigener `api_v1`-Block (prefix `/api/v1`, kein `_locale`) + `exclude: '../src/Controller/Api/V1/'` am `controllers`-Loader (sonst landete die API unter `/{_locale}/api/v1`).
+**Controller** (`src/Controller/Api/V1/`): `AuthController` (`login` = json_login-Stub, Rumpf nie erreicht; `register` repliziert den Web-Flow inkl. E-Mail-Verifikation, gibt KEIN Token zurück; **Anti-User-Enumeration**: identische generische 201-Antwort, egal ob die E-Mail existiert – bestehende Adressen erhalten einen Hinweis-Mail statt einer Bestätigung, Passwort wird in beiden Zweigen gehasht (Timing)), `RestaurantApiController` (`index` mit Envelope `{data, meta:{page,limit,total,totalPages,sort}}` + Filter-Mapping auf `RestaurantRepository::findPaginated`; `show`; `images`; `create` mit `submittedBy`=current user, `isVerified=false`), `MeController` (`me`, `submissions` via `findBySubmitter`; `#[IsGranted('IS_AUTHENTICATED_FULLY')]`).
+**Transformer** (`src/Api/`): `RestaurantTransformer` (`list()`/`detail()`/`image()`, injiziert `OpeningHoursService` für `isOpenNow` + `nextOpeningTime`, Öffnungszeiten gruppiert nach Tag 1–7) und `UserTransformer` (`profile()`). Bild-/Avatar-URLs sind **absolut** (für native iOS-Clients) via `AssetUrlBuilder` (`src/Api/`): nutzt Scheme+Host des aktuellen Requests, optionaler Env-Override `APP_API_BASE_URL` (Proxy/CDN). Koordinaten im `create`-Endpoint werden auf Dezimalformat + Bereich ±90/±180 geprüft (422 statt DBAL-500). Bewusst explizit statt Serializer-Groups, weil die Entity untypische Getter hat (`acceptsCash()`, `isWheelchairAccessible()`, `hasAccessibleToilet()`), die der ObjectNormalizer nicht zuverlässig erkennt. `password`/Token werden strukturell NIE ausgegeben.
+**Security** (`config/packages/security.yaml`): zwei stateless Firewalls VOR `main`: `api_login` (`^/api/v1/auth/login$`, json_login mit `username_path: email`, Lexik success/failure-Handler) und `api` (`^/api/v1`, `jwt: ~`). `access_control`: `auth` + `GET restaurants` = PUBLIC; `me` + `POST restaurants` = IS_AUTHENTICATED_FULLY. Web-Regeln (`^/[a-z]{2}/...`) bleiben kollisionsfrei.
+**Fehler/CORS/Rate-Limit** (`src/EventSubscriber/`): `ApiExceptionSubscriber` (nur `^/api/v1`, JSON `{error:{code,message}}`; **anonyme** AccessDenied → 401, sonst 403; übernimmt Header der HTTP-Exception, z. B. `Retry-After`/`WWW-Authenticate`; im Debug-Modus Exception-Detail bei 500). `ApiRateLimitSubscriber` (IP-basiert, Login strenger; bei Limit `TooManyRequestsHttpException` → 429 inkl. `Retry-After`-Sekunden aus `RateLimit::getRetryAfter()`). Limiter in `config/packages/framework.yaml` (`api_anonymous` sliding_window 100/min, `api_login` fixed_window 5/min; in `when@test` auf 10000 gelockert). CORS in `config/packages/nelmio_cors.yaml` nur `^/api/v1/`. `bool $debug`-Bind in `config/services.yaml`.
+**Swagger:** `config/packages/nelmio_api_doc.yaml` (`areas.default.path_patterns: ^/api/v1`, Bearer-securityScheme), Routen `app.swagger_ui` (`/api/docs`) + `app.swagger` (`/api/docs.json`) in `config/routes/nelmio_api_doc.yaml`. OA-Tags + `#[Security(name:'Bearer')]` auf geschützten Endpunkten.
+**Tests** (`tests/Controller/Api/V1/`): `RestaurantApiControllerTest`, `AuthControllerTest`, `MeControllerTest` (WebTestCase, 13 Tests inkl. `password`-Regression). Token im Test via `JWTTokenManagerInterface::create()`. **Test-DB:** `DATABASE_URL` musste in `.env.test` ergänzt werden (`.env.local` wird im Test-Env nicht geladen). `when@test` in `messenger.yaml` routet `async` → `in-memory://` (kein `messenger_messages`-Table, E-Mails nicht real versendet).
+
+## PWA – Installierbare iPhone-App (Issue #83)
+Endlech.lu ist als Progressive Web App über Safaris „Zum Home-Bildschirm" installierbar (Vollbild, App-Icon, Offline-Fallback). **Kein** separates Swift-Projekt; alle Templates werden weiterverwendet. Reiner Frontend-/Static-File-Ansatz — keine Entity/Migration/Backend-Logik.
+**Locale-frei:** Alle PWA-Dateien liegen als statische Dateien auf Root-Ebene in `public/` (kein `/{_locale}`-Prefix, kein Controller). Der Service-Worker-Scope `/` erfordert das.
+**Dateien:**
+- `public/manifest.webmanifest` — `name`/`short_name`, `start_url`/`scope` `/`, `display: standalone`, `orientation: portrait`, `theme_color #0891b2` (cyan-600), `background_color #ffffff`, Icons 192/512 (`any`) + 512 (`maskable`). Eingebunden via `<link rel="manifest">` in `base.html.twig`.
+- `public/icons/icon-{57,60,72,76,114,120,144,152,180,192,512}.png` — generiert mit `bin/generate-pwa-icons.sh` (macOS `sips`): Logo wird zuerst quadratisch weiß gepaddet (`--padToHeightWidth`), dann skaliert (sonst Verzerrung, da `logo.png` 10000×7664). `icon-512.png` dient zugleich als maskable. **Eingecheckt** (nicht von `.gitignore` erfasst).
+- `public/sw.js` — Vanilla Service Worker, Scope `/`. `CACHE_VERSION`-Konstante (bei Änderungen erhöhen). install: App-Shell (`offline.html`, Logo, Icons, Manifest) vorcachen + `skipWaiting()`. activate: alte Caches löschen + `clients.claim()`. fetch (nur GET, eigene Origin, **nie** `/api/`): Navigationen network-first → `offline.html`-Fallback; `/build/`-Assets stale-while-revalidate (Encore-Hashing-sicher); Bilder/Icons cache-first.
+- `public/offline.html` — eigenständige HTML (Inline-CSS, da offline kein Server/Encore-Asset erreichbar), Endlech.lu-Branding, Reload-Button. Vom SW vorgecacht.
+- `templates/partials/_bottom_nav.html.twig` — mobile Bottom-Navigation (`fixed bottom-0 md:hidden`, Safe-Area unten via `pb-[env(safe-area-inset-bottom)]`, Tap-Targets ≥ 44 px). 4 Items: Home, Restaurants, Über uns, Profil (bzw. Login für Gäste), aktiver Zustand über Route-Vergleich. Eingebunden in `base.html.twig` analog Cookie-Banner (**nicht** auf `admin_*`-Routen). `<main>` hat `pb-16 md:pb-0`, damit Inhalt nicht hinter der Nav liegt.
+**`base.html.twig`:** `viewport-fit=cover` im Viewport; iOS-Meta-Tags (`apple-mobile-web-app-capable`, `…-status-bar-style: black-translucent`, `…-title: Endlech.lu`, `mobile-web-app-capable`); `apple-touch-icon` (180) + Legacy-Größen per Twig-Loop; `<meta name="theme-color" content="#0891b2">`.
+**`assets/app.ts`:** registriert `/sw.js` (Scope `/`) beim `load`-Event (Fehler werden geschluckt; kein Workbox/keine neue Abhängigkeit).
+**`assets/styles/app.css`:** `@media (max-width: 767px)` setzt `input/select/textarea` auf `font-size: 16px` (verhindert iOS-Auto-Zoom).
+**Übersetzungen:** neue Keys `nav.home`, `nav.restaurants` in `messages.{de,en,fr,lb}.yaml` (für die Bottom-Nav; `nav.about`/`nav.profile`/`nav.login` wiederverwendet).
+**Bewusst nicht enthalten (Folge-Issues):** Apple-Splash-Screens, Pull-to-Refresh, Swipe-Gesten, Push-Notification-Scaffold, vollständiger 7-Seiten-Mobile-Audit.
+
+## Cookie-Consent-Banner (Issue #82)
+DSGVO-Banner, das beim ersten Besuch unten erscheint und die Wahl (`accepted`/`declined`) 365 Tage im Cookie `cookie_consent` speichert. Keine Entity/Migration/Backend-Änderung — rein clientseitig.
+Stimulus: `assets/controllers/cookie_consent_controller.ts` — `connect()` zeigt das Banner, wenn kein `cookie_consent`-Cookie existiert; `accept()`/`decline()` setzen den Cookie (`path=/; max-age=365d; samesite=lax`, `secure` nur bei HTTPS — Muster aus `csrf_protection_controller.ts`) und blenden aus. Values: `cookieName` (default `cookie_consent`), `lifetime` (default 365). Cross-Element-Kommunikation idiomatisch über Fenster-Event: der Footer-Link ist eine eigene Controller-Instanz (`<li data-controller="cookie-consent">`), sein `openSettings()` stößt `this.dispatch('open')` an; die Banner-Instanz fängt es über den `@window`-Descriptor (`data-action="cookie-consent:open@window->cookie-consent#reopen"`) ab und zeigt das Banner (`reopen()`). Beide `reopen()`/`connect()` sind via `hasBannerTarget` abgesichert.
+Template: `templates/partials/_cookie_banner.html.twig` — `role="dialog"`, `aria-modal="false"`, fixiertes Banner (`fixed bottom-0`), barrierefrei (Tastatur/ARIA/Kontrast), responsiv. Verlinkt auf `path('app_impressum') ~ '#datenschutz'`.
+Einbindung: `templates/base.html.twig` — Banner-Include **und** Footer-Link „Cookie-Einstellungen" nur außerhalb Admin: `{% if not (app.request.attributes.get('_route') starts with 'admin_') %}` (Footer wird auch auf Admin-Seiten gerendert).
+Datenschutz-Anker: `templates/impressum/index.html.twig` — Datenschutz-`<section id="datenschutz" class="... scroll-mt-24">`.
+Übersetzungen: `cookie`-Block (`title`, `description`, `accept`, `decline`, `privacy_link`, `settings`) in `messages.{de,en,fr,lb}.yaml`.
 
 ## Nearby Stops / Public Transport (Issue #65)
 Felder auf Restaurant: `latitude` (DECIMAL 10,8 nullable), `longitude` (DECIMAL 11,8 nullable), `nearbyStopsNote` (TEXT nullable).

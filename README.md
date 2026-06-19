@@ -26,6 +26,9 @@ Current development status of the platform.
 - [x] **User Fixtures:** Test users (admin, verified, unverified) for development & testing.
 - [ ] **Authentication:** Login & registration for users.
 - [x] **Email:** Brevo mailer integration for transactional emails (verification, password reset).
+- [x] **Cookie Consent:** GDPR-compliant cookie banner with accept/decline, 365-day storage, footer re-open link, and translations (LU/DE/FR/EN).
+- [x] **REST API (Issue #87):** Versioned JSON API under `/api/v1/` for the native iOS app — JWT auth (login/register), paginated & filterable restaurants, full detail, `/me` + submissions, restaurant submission. CORS, rate limiting, and auto-generated Swagger UI at `/api/docs`.
+- [x] **PWA (Issue #83):** Installable as a Progressive Web App on iPhone via Safari's "Add to Home Screen" — full-screen standalone mode, web app manifest, app icons (57–512 px, incl. maskable), iOS meta tags, service worker with offline fallback, safe-area insets, a mobile bottom navigation bar, and 16 px form inputs to prevent iOS zoom. See [PWA / Install on iPhone](#-pwa--install-on-iphone).
 
 ### 🔧 Admin Panel
 - [x] **Dashboard:** Admin area at `/admin` with statistics and quick actions.
@@ -101,7 +104,18 @@ Ideas for version 2.0 (after the first stable release):
     php bin/console doctrine:fixtures:load
     ```
 
-6.  **Build assets & start server:**
+6.  **JWT keys for the REST API (Issue #87):**
+    The `/api/v1/` API signs tokens with an RSA keypair. Generate it once
+    (the keys land in `config/jwt/`, which is gitignored):
+    ```bash
+    php bin/console lexik:jwt:generate-keypair
+    ```
+    `JWT_SECRET_KEY`, `JWT_PUBLIC_KEY` and `JWT_PASSPHRASE` are managed in `.env`
+    (override the passphrase in `.env.local` for production). Optionally set
+    `CORS_ALLOW_ORIGIN` to restrict API origins. Tests use the same keypair, so
+    generate it before running `php bin/phpunit`.
+
+7.  **Build assets & start server:**
     ```bash
     npm run build
     symfony server:start
@@ -112,6 +126,27 @@ Ideas for version 2.0 (after the first stable release):
     make init   # Full setup (Docker, composer, npm, DB, fixtures)
     make start  # Start server + asset watcher
     ```
+
+## 📱 PWA / Install on iPhone
+
+Endlech.lu is a Progressive Web App. On an iPhone, open the site in Safari, tap
+**Share → Add to Home Screen**. The app then launches full-screen (no browser
+chrome) with its own icon, a mobile bottom navigation bar, and an offline
+fallback page when the connection drops.
+
+The PWA assets are plain static files served from the web root (locale-free):
+`public/manifest.webmanifest`, `public/sw.js` (service worker), and
+`public/offline.html`. The app icons live in `public/icons/` and are checked
+into the repo. To regenerate them from `public/images/logo.png` (macOS, uses the
+native `sips` tool):
+
+```bash
+./bin/generate-pwa-icons.sh
+```
+
+> Note: the service worker only takes effect over HTTPS (or `localhost`). After
+> changing `public/sw.js`, bump the `CACHE_VERSION` constant so clients pick up
+> the new version.
 
 ## 🌍 Environments
 

@@ -27,3 +27,11 @@ framework:
 
             # Route your messages to the transports
             # 'App\Message\YourMessage': async
+
+when@test:
+    framework:
+        messenger:
+            # In-Memory statt async-Doctrine: kein messenger_messages-Table nötig,
+            # E-Mails werden im Test nicht real versendet.
+            transports:
+                async: 'in-memory://'

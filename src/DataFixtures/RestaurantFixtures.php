@@ -143,7 +143,7 @@ class RestaurantFixtures extends Fixture implements DependentFixtureInterface
                 'email'                  => 'reservierung@lejardin.lu',
                 'website'                => 'https://www.lejardin.lu',
                 'facebookUrl'            => 'https://facebook.com/lejardinbrasserie',
-                'openingHours'           => [[2, '12:00', '14:30'], [3, '12:00', '14:30'], [4, '12:00', '14:30'], [5, '12:00', '14:30'], [6, '12:00', '14:30']],
+                'openingHours'           => [[2, '12:00', '14:30'], [2, '18:00', '22:30'], [3, '12:00', '14:30'], [3, '18:00', '22:30'], [4, '12:00', '14:30'], [4, '18:00', '22:30'], [5, '12:00', '14:30'], [5, '18:00', '22:30'], [6, '12:00', '14:30'], [6, '18:00', '23:00'], [7, '12:00', '15:00']],
                 'orderingOptions'        => [
                     [OrderingPlatform::WOLT, 'https://wolt.com/lu/restaurant/le-jardin-brasserie'],
                 ],
@@ -171,7 +171,7 @@ class RestaurantFixtures extends Fixture implements DependentFixtureInterface
                 'accessibilityNotes'     => ['warn:Zwei Stufen am Eingang', 'ok:Helle Innenbeleuchtung'],
                 'spokenLanguages'        => [Language::LU, Language::DE, Language::FR],
                 'phone'                  => '+352 75 11 22 33',
-                'openingHours'           => [[2, '17:00', '23:00'], [3, '17:00', '23:00'], [4, '17:00', '23:00'], [5, '17:00', '23:00'], [6, '17:00', '23:00'], [7, '12:00', '21:00']],
+                'openingHours'           => [[2, '17:00', '23:00'], [3, '17:00', '23:00'], [4, '17:00', '23:00'], [5, '17:00', '23:00'], [6, '12:00', '14:30'], [6, '18:00', '23:30'], [7, '12:00', '14:30'], [7, '18:00', '21:00']],
             ],
             [
                 'name'                   => 'Café Nordstad',
@@ -286,7 +286,7 @@ class RestaurantFixtures extends Fixture implements DependentFixtureInterface
                 'email'                  => 'ciao@trattoriaroma.lu',
                 'website'                => 'https://www.trattoriaroma.lu',
                 'instagramUrl'           => 'https://instagram.com/trattoriaroma.lu',
-                'openingHours'           => [[2, '11:00', '22:00'], [3, '11:00', '22:00'], [4, '11:00', '22:00'], [5, '11:00', '22:00'], [6, '11:00', '22:00'], [7, '11:00', '22:00']],
+                'openingHours'           => [[1, '12:00', '14:30'], [1, '18:30', '23:00'], [2, '12:00', '14:30'], [2, '18:30', '23:00'], [3, '12:00', '14:30'], [3, '18:30', '23:00'], [4, '12:00', '14:30'], [4, '18:30', '23:00'], [5, '12:00', '14:30'], [5, '18:30', '23:30'], [6, '18:30', '23:30'], [7, '12:00', '15:00']],
                 'orderingOptions'        => [
                     [OrderingPlatform::WEDELY, 'https://wedely.com/trattoria-roma'],
                 ],
@@ -418,7 +418,6 @@ class RestaurantFixtures extends Fixture implements DependentFixtureInterface
                 $oh->setDayOfWeek($day);
                 $oh->setOpenTime(new \DateTime($open));
                 $oh->setCloseTime(new \DateTime($close));
-                $oh->setIsClosed(false);
                 $restaurant->addOpeningHour($oh);
             }
 

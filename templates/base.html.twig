@@ -3,7 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Endlech.lu{% endblock %}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+    {# PWA: Manifest, Theme-Farbe & iOS-spezifische Tags (Issue #83) #}
+    <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
+    <meta name="theme-color" content="#0891b2">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Endlech.lu">
+    <link rel="apple-touch-icon" href="{{ asset('icons/icon-180.png') }}">
+    {% for size in [152, 144, 120, 114, 76, 72, 60, 57] %}
+        <link rel="apple-touch-icon" sizes="{{ size }}x{{ size }}" href="{{ asset('icons/icon-' ~ size ~ '.png') }}">
+    {% endfor %}
 
     {# hreflang-Tags für SEO #}
     {% set _current_route = app.request.attributes.get('_route') %}
@@ -91,7 +103,8 @@
 </div>
 
 {# === HAUPTINHALT (Hier wird index.html.twig reingeladen) === #}
-<main class="flex-grow">
+{# pb-16 md:pb-0: auf Mobil Platz für die fixe Bottom-Nav schaffen #}
+<main class="flex-grow pb-16 md:pb-0">
     {% block body %}{% endblock %}
 </main>
 
@@ -120,6 +133,11 @@
                 <li><a href="#" class="hover:text-cyan-400 transition">{{ 'footer.search_restaurants'|trans }}</a></li>
                 <li><a href="{{ path('app_kriterien') }}" class="hover:text-cyan-400 transition">{{ 'footer.accessibility_criteria'|trans }}</a></li>
                 <li><a href="{{ path('app_impressum') }}" class="hover:text-cyan-400 transition">{{ 'footer.legal'|trans }}</a></li>
+                {% if not (app.request.attributes.get('_route') starts with 'admin_') %}
+                    <li data-controller="cookie-consent">
+                        <button type="button" class="hover:text-cyan-400 transition text-left" data-action="cookie-consent#openSettings">{{ 'cookie.settings'|trans }}</button>
+                    </li>
+                {% endif %}
                 <li><a href="https://endlech.userjot.com/?cursor=1&amp;order=top&amp;limit=10" class="hover:text-cyan-400 transition" target="_blank" rel="noopener noreferrer">{{ 'footer.feedback'|trans }}</a></li>
             </ul>
         </div>
@@ -138,6 +156,16 @@
         <span class="text-gray-600">v{{ app_version }}</span>
     </div>
 </footer>
+
+{# === MOBILE BOTTOM-NAVIGATION (nur öffentliche Seiten) === #}
+{% if not (app.request.attributes.get('_route') starts with 'admin_') %}
+    {% include 'partials/_bottom_nav.html.twig' %}
+{% endif %}
+
+{# === COOKIE-CONSENT-BANNER (nur öffentliche Seiten) === #}
+{% if not (app.request.attributes.get('_route') starts with 'admin_') %}
+    {% include 'partials/_cookie_banner.html.twig' %}
+{% endif %}
 
 </body>
 </html>

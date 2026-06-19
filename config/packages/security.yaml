@@ -12,6 +12,21 @@ security:
         dev:
             pattern: ^/(_profiler|_wdt|assets|build)/
             security: false
+        api_login:
+            pattern: ^/api/v1/auth/login$
+            stateless: true
+            provider: app_user_provider
+            json_login:
+                check_path: api_v1_auth_login
+                username_path: email
+                password_path: password
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+        api:
+            pattern: ^/api/v1
+            stateless: true
+            provider: app_user_provider
+            jwt: ~
         main:
             lazy: true
             provider: app_user_provider
@@ -28,6 +43,12 @@ security:
                 target: app_home
 
     access_control:
+        # API (/api/v1) – locale-frei, reihenfolgeabhängig: spezifisch vor allgemein.
+        - { path: '^/api/v1/auth', roles: PUBLIC_ACCESS }
+        - { path: '^/api/v1/restaurants', methods: [GET], roles: PUBLIC_ACCESS }
+        - { path: '^/api/v1/me', roles: IS_AUTHENTICATED_FULLY }
+        - { path: '^/api/v1/restaurants', methods: [POST], roles: IS_AUTHENTICATED_FULLY }
+        # Web
         - { path: '^/[a-z]{2}/admin', roles: ROLE_ADMIN }
         - { path: '^/[a-z]{2}/profile', roles: IS_AUTHENTICATED_FULLY }
         - { path: '^/[a-z]{2}/register', roles: PUBLIC_ACCESS }

@@ -1,6 +1,16 @@
 @import "tailwindcss";
 @source not "../../public";
 
+/* PWA: iOS-Auto-Zoom beim Fokus auf Formularfelder verhindern (Issue #83).
+   Safari zoomt, sobald die Schriftgröße eines Felds < 16px ist. */
+@media (max-width: 767px) {
+    input:not([type="checkbox"]):not([type="radio"]),
+    select,
+    textarea {
+        font-size: 16px;
+    }
+}
+
 /* Tom Select Overrides */
 .ts-wrapper .ts-control {
     background-color: rgb(249 250 251);

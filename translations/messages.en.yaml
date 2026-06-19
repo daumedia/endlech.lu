@@ -1,4 +1,7 @@
 nav:
+    home: "Home"
+    restaurants: "Restaurants"
+    bottom_navigation: "Main navigation"
     find_restaurants: "Find Restaurants"
     about: "About Us"
     suggest_restaurant: "Suggest a Restaurant"
@@ -19,6 +22,14 @@ footer:
     contact_title: "Contact"
     help_improve: "Help us improve."
     copyright: "Made with ❤️ in Luxembourg."
+
+cookie:
+    title: "We use cookies"
+    description: "We only use technically necessary cookies to make the site work. Read more in our"
+    accept: "Accept"
+    decline: "Decline"
+    privacy_link: "privacy policy"
+    settings: "Cookie settings"
 
 home:
     title: "Endlech.lu - Accessible Restaurants in Luxembourg"
@@ -421,7 +432,8 @@ admin:
         location: "Location & Public Transport"
         location_hint: "GPS coordinates enable automatic search for accessible stops nearby."
         opening_hours: "Opening Hours"
-        opening_hours_hint: "Enter the opening hours for each day. Check 'Closed' for rest days."
+        opening_hours_hint: "Add as many time slots per day as needed (e.g. lunch and dinner). A day without any slot counts as closed."
+        add_opening_slot: "＋ Add time slot"
         cancel: "Cancel"
     suggestion:
         title: "Restaurant Suggestions"

@@ -1,0 +1,40 @@
+{# Cookie-Consent-Banner (Issue #82) – wird vom cookie_consent_controller gesteuert #}
+<div
+    data-controller="cookie-consent"
+    data-cookie-consent-target="banner"
+    data-action="cookie-consent:open@window->cookie-consent#reopen"
+    class="hidden fixed bottom-0 inset-x-0 z-50 bg-gray-900 text-gray-200 border-t border-gray-700 shadow-lg"
+    role="dialog"
+    aria-modal="false"
+    aria-labelledby="cookie-banner-title"
+    aria-describedby="cookie-banner-desc"
+    tabindex="-1"
+>
+    <div class="container mx-auto px-4 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="text-sm">
+            <p id="cookie-banner-title" class="font-bold text-white mb-1">{{ 'cookie.title'|trans }}</p>
+            <p id="cookie-banner-desc">
+                {{ 'cookie.description'|trans }}
+                <a href="{{ path('app_impressum') }}#datenschutz" class="text-cyan-400 hover:underline">
+                    {{ 'cookie.privacy_link'|trans }}
+                </a>
+            </p>
+        </div>
+        <div class="flex flex-shrink-0 gap-3">
+            <button
+                type="button"
+                class="border border-gray-400 text-gray-200 hover:bg-white/10 px-5 py-2.5 rounded-full font-bold transition"
+                data-action="cookie-consent#decline"
+            >
+                {{ 'cookie.decline'|trans }}
+            </button>
+            <button
+                type="button"
+                class="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2.5 rounded-full font-bold shadow-md hover:shadow-lg transition"
+                data-action="cookie-consent#accept"
+            >
+                {{ 'cookie.accept'|trans }}
+            </button>
+        </div>
+    </div>
+</div>

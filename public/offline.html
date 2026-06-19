@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Offline – Endlech.lu</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#0891b2">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+        html, body { height: 100%; margin: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: #f9fafb;
+            color: #1f2937;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem max(1.5rem, env(safe-area-inset-left)) max(2rem, env(safe-area-inset-bottom));
+        }
+        .logo { width: 96px; height: 96px; object-fit: contain; margin-bottom: 1.5rem; }
+        .brand { font-size: 1.5rem; font-weight: 700; color: #0891b2; margin-bottom: 0.75rem; }
+        .brand span { color: #a855f7; }
+        h1 { font-size: 1.25rem; font-weight: 700; margin: 0 0 0.5rem; }
+        p { max-width: 24rem; color: #4b5563; line-height: 1.5; margin: 0 0 2rem; }
+        button {
+            font: inherit;
+            font-weight: 700;
+            color: #fff;
+            background: #0891b2;
+            border: none;
+            border-radius: 9999px;
+            padding: 0.85rem 2rem;
+            min-height: 44px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        button:hover { background: #0e7490; }
+    </style>
+</head>
+<body>
+    <img class="logo" src="/icons/icon-192.png" alt="Endlech.lu">
+    <div class="brand">Endlech<span>.lu</span></div>
+    <h1>Keng Internetverbindung</h1>
+    <p>Du bass momentan offline. Iwwerpréif deng Verbindung a probéier et nach eemol.</p>
+    <button type="button" onclick="location.reload()">Nach eemol probéieren</button>
+</body>
+</html>

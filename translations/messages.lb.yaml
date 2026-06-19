@@ -1,4 +1,7 @@
 nav:
+    home: "Doheem"
+    restaurants: "Restauranten"
+    bottom_navigation: "Haaptnavigatioun"
     find_restaurants: "Restauranten fannen"
     about: "Iwwer eis"
     suggest_restaurant: "Restaurant virschloen"
@@ -19,6 +22,14 @@ footer:
     contact_title: "Kontakt"
     help_improve: "Hëlleft eis, besser ze ginn."
     copyright: "Made with ❤️ in Luxembourg."
+
+cookie:
+    title: "Mir benotzen Cookien"
+    description: "Mir benotzen nëmmen technesch néideg Cookien, fir datt d'Säit funktionéiert. Méi doriwwer an eiser"
+    accept: "Akzeptéieren"
+    decline: "Oflehnen"
+    privacy_link: "Datenschutzerklärung"
+    settings: "Cookie-Astellungen"
 
 home:
     title: "Endlech.lu - Barrierefrä Restauranten zu Lëtzebuerg"
@@ -421,7 +432,8 @@ admin:
         location: "Standuert & Nahverkéier"
         location_hint: "GPS-Koordinaten erlaben d'automatesch Sich no barrierefrä Haltestellen an der Géigend."
         opening_hours: "Öffnungszäiten"
-        opening_hours_hint: "Gëff d'Öffnungszäiten fir all Dag an. Aktivéier 'Zou' fir Roudeg."
+        opening_hours_hint: "Setz pro Dag esou vill Zäitfenstere bäi wéi néideg (z. B. Mëtteg an Owend). En Dag ouni Zäitfenster gëllt als zou."
+        add_opening_slot: "＋ Zäitfenster derbäisetzen"
         cancel: "Ofbriechen"
     suggestion:
         title: "Restaurant-Virschléi"

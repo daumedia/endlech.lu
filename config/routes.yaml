@@ -10,13 +10,23 @@ app_root:
         permanent: false
 
 # Alle Controller mit /{_locale} Prefix (inkl. Admin)
+# Ausnahme: Api/V1 wird separat ohne Locale-Prefix unter /api/v1 importiert.
 controllers:
     resource:
         path: ../src/Controller/
         namespace: App\Controller
+        exclude: '../src/Controller/Api/V1/'
     type: attribute
     prefix: /{_locale}
     requirements:
         _locale: lb|de|fr|en
     defaults:
         _locale: lb
+
+# REST-API für die iOS-App – versioniert, locale-frei (Issue #87)
+api_v1:
+    resource:
+        path: ../src/Controller/Api/V1/
+        namespace: App\Controller\Api\V1
+    type: attribute
+    prefix: /api/v1

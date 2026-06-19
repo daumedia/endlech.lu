@@ -73,12 +73,13 @@ class RestaurantRepository extends ServiceEntityRepository
             $qb->leftJoin('r.openingHours', 'oh_today', 'WITH', 'oh_today.dayOfWeek = :currentDay')
                 ->leftJoin('r.openingHours', 'oh_yesterday', 'WITH', 'oh_yesterday.dayOfWeek = :previousDay')
                 ->andWhere(
-                    '(oh_today.isClosed = false AND oh_today.openTime <= oh_today.closeTime AND oh_today.openTime <= :currentTime AND oh_today.closeTime > :currentTime)' .
+                    '(oh_today.openTime <= oh_today.closeTime AND oh_today.openTime <= :currentTime AND oh_today.closeTime > :currentTime)' .
                     ' OR ' .
-                    '(oh_today.isClosed = false AND oh_today.openTime > oh_today.closeTime AND oh_today.openTime <= :currentTime)' .
+                    '(oh_today.openTime > oh_today.closeTime AND oh_today.openTime <= :currentTime)' .
                     ' OR ' .
-                    '(oh_yesterday.isClosed = false AND oh_yesterday.openTime > oh_yesterday.closeTime AND oh_yesterday.closeTime > :currentTime)'
+                    '(oh_yesterday.openTime > oh_yesterday.closeTime AND oh_yesterday.closeTime > :currentTime)'
                 )
+                ->distinct()
                 ->setParameter('currentDay', $currentDay)
                 ->setParameter('previousDay', $previousDay)
                 ->setParameter('currentTime', $currentTime);

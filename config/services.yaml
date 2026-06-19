@@ -7,7 +7,7 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
-    app.version: '2026.03.17'
+    app.version: '2026.06.19'
     app.mobiliteit_api_key: '%env(default::MOBILITEIT_API_KEY)%'
     app.mobiliteit_radius: 500
     app.mobiliteit_max_stops: 5
@@ -17,6 +17,8 @@ services:
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        bind:
+            bool $debug: '%kernel.debug%'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
