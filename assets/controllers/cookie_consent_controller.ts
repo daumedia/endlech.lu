@@ -6,6 +6,13 @@ import { Controller } from '@hotwired/stimulus';
  * Zeigt das Banner, wenn noch keine Wahl getroffen wurde, speichert die
  * Entscheidung (akzeptiert/abgelehnt) in einem langlebigen Cookie und lässt sich
  * über den Footer-Link "Cookie-Einstellungen" erneut öffnen.
+ *
+ * Der Footer-Link liegt außerhalb des Banner-Elements und ist daher eine eigene
+ * Controller-Instanz: sein Klick ruft `openSettings()` auf, das ein Fenster-Event
+ * (`cookie-consent:open`) anstößt. Die Banner-Instanz fängt es über den
+ * `@window`-Action-Descriptor ab (`reopen`). So bleibt die Stimulus-Event-Delegation
+ * intakt – auch wenn Footer oder Banner einzeln (z. B. per Turbo-Frame) neu geladen
+ * werden.
  */
 export default class extends Controller {
     static targets = ['banner'];
@@ -15,27 +22,13 @@ export default class extends Controller {
     };
 
     declare readonly bannerTarget: HTMLElement;
+    declare readonly hasBannerTarget: boolean;
     declare cookieNameValue: string;
     declare lifetimeValue: number;
 
-    // Gebundene Referenz, damit der Listener in disconnect() entfernt werden kann.
-    private reopenHandler = (event: Event): void => this.reopen(event);
-
     connect(): void {
-        if (!this.#hasConsent()) {
+        if (this.hasBannerTarget && !this.#hasConsent()) {
             this.#show();
-        }
-
-        const trigger = document.getElementById('cookie-settings-trigger');
-        if (trigger) {
-            trigger.addEventListener('click', this.reopenHandler);
-        }
-    }
-
-    disconnect(): void {
-        const trigger = document.getElementById('cookie-settings-trigger');
-        if (trigger) {
-            trigger.removeEventListener('click', this.reopenHandler);
         }
     }
 
@@ -49,9 +42,16 @@ export default class extends Controller {
         this.#hide();
     }
 
-    reopen(event: Event): void {
-        event.preventDefault();
-        this.#show();
+    // Footer-Instanz: stößt ein Fenster-Event an, das die Banner-Instanz abfängt.
+    openSettings(): void {
+        this.dispatch('open');
+    }
+
+    // Banner-Instanz: reagiert auf das Fenster-Event (cookie-consent:open@window).
+    reopen(): void {
+        if (this.hasBannerTarget) {
+            this.#show();
+        }
     }
 
     #show(): void {

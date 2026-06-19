@@ -121,7 +121,9 @@
                 <li><a href="{{ path('app_kriterien') }}" class="hover:text-cyan-400 transition">{{ 'footer.accessibility_criteria'|trans }}</a></li>
                 <li><a href="{{ path('app_impressum') }}" class="hover:text-cyan-400 transition">{{ 'footer.legal'|trans }}</a></li>
                 {% if not (app.request.attributes.get('_route') starts with 'admin_') %}
-                    <li><button type="button" id="cookie-settings-trigger" class="hover:text-cyan-400 transition text-left">{{ 'cookie.settings'|trans }}</button></li>
+                    <li data-controller="cookie-consent">
+                        <button type="button" class="hover:text-cyan-400 transition text-left" data-action="cookie-consent#openSettings">{{ 'cookie.settings'|trans }}</button>
+                    </li>
                 {% endif %}
                 <li><a href="https://endlech.userjot.com/?cursor=1&amp;order=top&amp;limit=10" class="hover:text-cyan-400 transition" target="_blank" rel="noopener noreferrer">{{ 'footer.feedback'|trans }}</a></li>
             </ul>
