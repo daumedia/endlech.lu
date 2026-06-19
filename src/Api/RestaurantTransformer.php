@@ -20,6 +20,7 @@ final class RestaurantTransformer
 {
     public function __construct(
         private readonly OpeningHoursService $openingHours,
+        private readonly AssetUrlBuilder $assetUrlBuilder,
     ) {
     }
 
@@ -107,7 +108,7 @@ final class RestaurantTransformer
     {
         return [
             'id' => $image->getId(),
-            'url' => '/uploads/restaurants/' . $image->getFilename(),
+            'url' => $this->assetUrlBuilder->absolute('/uploads/restaurants/' . $image->getFilename()),
             'altText' => $image->getAltText(),
             'sortOrder' => $image->getSortOrder(),
         ];
@@ -218,6 +219,8 @@ final class RestaurantTransformer
     {
         $cover = $restaurant->getCoverImage();
 
-        return $cover === null ? null : '/uploads/restaurants/' . $cover->getFilename();
+        return $cover === null
+            ? null
+            : $this->assetUrlBuilder->absolute('/uploads/restaurants/' . $cover->getFilename());
     }
 }
