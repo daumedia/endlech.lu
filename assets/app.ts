@@ -19,3 +19,12 @@ import 'glightbox/dist/css/glightbox.css';
 document.addEventListener('DOMContentLoaded', () => {
     GLightbox({ selector: '.glightbox' });
 });
+
+// PWA: Service Worker registrieren (Offline-Support, installierbar – Issue #83)
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js', { scope: '/' }).catch(() => {
+            // Registrierung fehlgeschlagen – App funktioniert ohne SW weiter.
+        });
+    });
+}
