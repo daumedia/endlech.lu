@@ -8,8 +8,29 @@ framework:
     #esi: true
     #fragments: true
 
+    # Rate-Limiting für die /api/v1-Endpunkte (Issue #87)
+    rate_limiter:
+        api_anonymous:
+            policy: 'sliding_window'
+            limit: 100
+            interval: '1 minute'
+        api_login:
+            policy: 'fixed_window'
+            limit: 5
+            interval: '1 minute'
+
 when@test:
     framework:
         test: true
         session:
             storage_factory_id: session.storage.factory.mock_file
+        # In Tests großzügig, um Flakiness durch Limits zu vermeiden.
+        rate_limiter:
+            api_anonymous:
+                policy: 'sliding_window'
+                limit: 10000
+                interval: '1 minute'
+            api_login:
+                policy: 'fixed_window'
+                limit: 10000
+                interval: '1 minute'

@@ -27,6 +27,7 @@ Current development status of the platform.
 - [ ] **Authentication:** Login & registration for users.
 - [x] **Email:** Brevo mailer integration for transactional emails (verification, password reset).
 - [x] **Cookie Consent:** GDPR-compliant cookie banner with accept/decline, 365-day storage, footer re-open link, and translations (LU/DE/FR/EN).
+- [x] **REST API (Issue #87):** Versioned JSON API under `/api/v1/` for the native iOS app — JWT auth (login/register), paginated & filterable restaurants, full detail, `/me` + submissions, restaurant submission. CORS, rate limiting, and auto-generated Swagger UI at `/api/docs`.
 
 ### 🔧 Admin Panel
 - [x] **Dashboard:** Admin area at `/admin` with statistics and quick actions.
@@ -102,7 +103,18 @@ Ideas for version 2.0 (after the first stable release):
     php bin/console doctrine:fixtures:load
     ```
 
-6.  **Build assets & start server:**
+6.  **JWT keys for the REST API (Issue #87):**
+    The `/api/v1/` API signs tokens with an RSA keypair. Generate it once
+    (the keys land in `config/jwt/`, which is gitignored):
+    ```bash
+    php bin/console lexik:jwt:generate-keypair
+    ```
+    `JWT_SECRET_KEY`, `JWT_PUBLIC_KEY` and `JWT_PASSPHRASE` are managed in `.env`
+    (override the passphrase in `.env.local` for production). Optionally set
+    `CORS_ALLOW_ORIGIN` to restrict API origins. Tests use the same keypair, so
+    generate it before running `php bin/phpunit`.
+
+7.  **Build assets & start server:**
     ```bash
     npm run build
     symfony server:start
