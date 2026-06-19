@@ -70,7 +70,7 @@ assets/
     └── app.css          # Tailwind import (@import "tailwindcss")
 
 migrations/              # Doctrine migrations (DoctrineMigrations namespace)
-tests/                   # PHPUnit tests (empty - MVP)
+tests/                   # PHPUnit tests (Service/OpeningHoursServiceTest)
 translations/            # i18n files (de, en, fr, lb)
 public/                  # Web root (index.php front controller)
 public/images/platforms/    # SVG logos for delivery platforms (Uber Eats, Deliveroo, etc.)
@@ -130,7 +130,7 @@ php bin/phpunit tests/              # Run specific directory
 
 PHPUnit is configured in `phpunit.dist.xml` with strict mode: fails on deprecation, notices, and warnings. Bootstrap loads `.env.test` variables.
 
-No test cases exist yet. When writing tests, use `App\Tests\` namespace (PSR-4 mapped to `tests/`).
+First test: `tests/Service/OpeningHoursServiceTest.php` (reiner Unit-Test ohne Kernel/DB). When writing tests, use `App\Tests\` namespace (PSR-4 mapped to `tests/`).
 
 ## Architecture & Conventions
 
@@ -224,18 +224,20 @@ Suggestion-Approval: `AdminSuggestionController::approve()` setzt `submittedBy` 
 Migration: `Version20260319000000`.
 Fixtures: Admin → 3 verifizierte, User → 3 unverifizierte, Rest → null.
 
-## Entity: OpeningHour (Issue #64)
-Felder: id, dayOfWeek (INT 1-7), openTime (TIME nullable), closeTime (TIME nullable), isClosed (BOOL), restaurant (ManyToOne CASCADE DELETE).
-UNIQUE: (restaurant_id, day_of_week).
-Collection auf Restaurant: `$openingHours` (OneToMany, cascade, orphanRemoval, OrderBy dayOfWeek ASC).
-Helper auf Restaurant: `getOpeningHourForDay(int $day): ?OpeningHour`.
-Service: `OpeningHoursService` — `isOpenNow()`, `isOpenAt()`, `getNextOpeningTime()`. Zeitzone: Europe/Luxembourg.
+## Entity: OpeningHour (Issue #64, erweitert in #81)
+Felder: id, dayOfWeek (INT 1-7), openTime (TIME nullable), closeTime (TIME nullable), restaurant (ManyToOne CASCADE DELETE).
+**Mehrere Zeitslots pro Tag** (Issue #81): kein UNIQUE-Constraint mehr; ein Tag kann beliebig viele `OpeningHour`-Einträge haben (z. B. Mittag + Abend). **Geschlossener Tag = keine Slots** (Feld `isClosed` entfernt).
+Collection auf Restaurant: `$openingHours` (OneToMany, cascade, orphanRemoval, OrderBy dayOfWeek ASC, openTime ASC).
+Helper auf Restaurant: `getOpeningHoursForDay(int $day): OpeningHour[]` — alle Slots eines Tages.
+Service: `OpeningHoursService` — `isOpenNow()`, `isOpenAt()` (iteriert über alle Slots), `getNextOpeningTime(Restaurant, ?\DateTimeInterface $now = null)` (frühester künftiger Slot; optionaler `$now` für Tests). Zeitzone: Europe/Luxembourg.
 Twig Extension: `OpeningHoursExtension` — Filter `restaurant|is_open_now`, Funktion `next_opening_time(restaurant)`.
-Form: `OpeningHourType` in CollectionType (fixed 7 Einträge, PRE_SET_DATA Listener füllt fehlende Tage auf).
-Stimulus: `opening_hours_form_controller.ts` — deaktiviert Zeitfelder bei "Geschlossen".
-Template: `templates/partials/_opening_hours.html.twig` — Wochenplan mit hervorgehobenem heutigem Tag.
-Filter: `?open=1` nutzt SQL JOIN mit TIME-Vergleich (inkl. Nachtschicht-Übertrag).
-Migration: `Version20260321000000` — erstellt `opening_hour` Tabelle, entfernt `is_open` Spalte.
+Form: `OpeningHourType` (dayOfWeek hidden, openTime/closeTime) als CollectionType (`allow_add`/`allow_delete`/`prototype`) in `RestaurantType`.
+Stimulus: `opening_hours_form_controller.ts` — pro Tag „＋ Zeitfenster hinzufügen" / einzelne Slots entfernen (Prototype-Klonen, gemeinsamer Index, setzt `dayOfWeek` des neuen Slots).
+Template: `templates/partials/_opening_hours.html.twig` — Wochenplan (Tag 1–7), mehrere Slots als `12:00 – 14:30 · 18:00 – 22:00`, hervorgehobener heutiger Tag.
+Admin-Template: `templates/admin/restaurant/_form.html.twig` — Öffnungszeiten nach Tag gruppiert.
+Filter: `?open=1` nutzt SQL JOIN mit TIME-Vergleich (inkl. Nachtschicht-Übertrag), `distinct()` gegen Duplikate bei mehreren Slots.
+Test: `tests/Service/OpeningHoursServiceTest.php` — Multi-Slot-, Nachtschicht- und Next-Opening-Logik.
+Migrationen: `Version20260321000000` (erstellt Tabelle), `Version20260619000000` (entfernt UNIQUE-Constraint + `is_closed`-Spalte für Multi-Slot).
 
 ## Nearby Stops / Public Transport (Issue #65)
 Felder auf Restaurant: `latitude` (DECIMAL 10,8 nullable), `longitude` (DECIMAL 11,8 nullable), `nearbyStopsNote` (TEXT nullable).

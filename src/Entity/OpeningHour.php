@@ -6,7 +6,6 @@ use App\Repository\OpeningHourRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OpeningHourRepository::class)]
-#[ORM\UniqueConstraint(name: 'unique_restaurant_day', columns: ['restaurant_id', 'day_of_week'])]
 class OpeningHour
 {
     #[ORM\Id]
@@ -22,9 +21,6 @@ class OpeningHour
 
     #[ORM\Column(type: 'time', nullable: true)]
     private ?\DateTimeInterface $closeTime = null;
-
-    #[ORM\Column]
-    private bool $isClosed = false;
 
     #[ORM\ManyToOne(inversedBy: 'openingHours')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
@@ -67,18 +63,6 @@ class OpeningHour
     public function setCloseTime(?\DateTimeInterface $closeTime): static
     {
         $this->closeTime = $closeTime;
-
-        return $this;
-    }
-
-    public function isClosed(): bool
-    {
-        return $this->isClosed;
-    }
-
-    public function setIsClosed(bool $isClosed): static
-    {
-        $this->isClosed = $isClosed;
 
         return $this;
     }

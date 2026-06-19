@@ -421,7 +421,8 @@ admin:
         location: "Location & Public Transport"
         location_hint: "GPS coordinates enable automatic search for accessible stops nearby."
         opening_hours: "Opening Hours"
-        opening_hours_hint: "Enter the opening hours for each day. Check 'Closed' for rest days."
+        opening_hours_hint: "Add as many time slots per day as needed (e.g. lunch and dinner). A day without any slot counts as closed."
+        add_opening_slot: "＋ Add time slot"
         cancel: "Cancel"
     suggestion:
         title: "Restaurant Suggestions"

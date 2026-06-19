@@ -421,7 +421,8 @@ admin:
         location: "Localisation & Transports"
         location_hint: "Les coordonnées GPS permettent la recherche automatique d'arrêts accessibles à proximité."
         opening_hours: "Horaires d'ouverture"
-        opening_hours_hint: "Entrez les horaires d'ouverture pour chaque jour. Cochez 'Fermé' pour les jours de repos."
+        opening_hours_hint: "Ajoutez autant de créneaux que nécessaire par jour (p. ex. midi et soir). Un jour sans créneau est considéré comme fermé."
+        add_opening_slot: "＋ Ajouter un créneau"
         cancel: "Annuler"
     suggestion:
         title: "Propositions de restaurants"
