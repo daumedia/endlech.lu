@@ -51,26 +51,40 @@
         </label>
     </fieldset>
 
-    {# --- Öffnungszeiten --- #}
+    {# --- Öffnungszeiten (mehrere Zeitslots pro Tag) --- #}
     <fieldset>
         <legend class="text-lg font-bold text-gray-700 border-b border-gray-200 pb-2 mb-4">{{ 'admin.form.opening_hours'|trans }}</legend>
         <p class="text-xs text-gray-400 mb-3">{{ 'admin.form.opening_hours_hint'|trans }}</p>
 
-        <div data-controller="opening-hours-form" class="space-y-2">
-            {% set dayNames = {1: 'opening_hours.day_1', 2: 'opening_hours.day_2', 3: 'opening_hours.day_3', 4: 'opening_hours.day_4', 5: 'opening_hours.day_5', 6: 'opening_hours.day_6', 7: 'opening_hours.day_7'} %}
-            {% for oh in form.openingHours %}
-                {{ form_widget(oh.dayOfWeek) }}
-                <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200" data-opening-hours-form-target="row">
-                    <span class="text-sm font-semibold text-gray-700 w-24 shrink-0">{{ dayNames[oh.vars.data.dayOfWeek]|trans }}</span>
-                    <div class="flex items-center gap-2 flex-1">
-                        {{ form_widget(oh.openTime, {'attr': {'class': 'bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-purple-500 focus:outline-none w-32'}}) }}
-                        <span class="text-gray-400 text-sm">–</span>
-                        {{ form_widget(oh.closeTime, {'attr': {'class': 'bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-purple-500 focus:outline-none w-32'}}) }}
+        <div data-controller="opening-hours-form"
+             data-opening-hours-form-prototype-value="{{ form_widget(form.openingHours.vars.prototype)|e('html_attr') }}"
+             class="space-y-3">
+            {% for day in 1..7 %}
+                <div class="p-3 bg-gray-50 rounded-lg border border-gray-200">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-semibold text-gray-700">{{ ('opening_hours.day_' ~ day)|trans }}</span>
+                        <button type="button" data-action="opening-hours-form#addSlot"
+                                data-opening-hours-form-day-param="{{ day }}"
+                                class="text-sm font-semibold text-purple-600 hover:text-purple-800 transition">
+                            {{ 'admin.form.add_opening_slot'|trans }}
+                        </button>
                     </div>
-                    <label class="flex items-center gap-2 cursor-pointer group shrink-0">
-                        {{ form_widget(oh.isClosed, {'attr': {'class': 'rounded text-red-500 focus:ring-red-400 border-gray-300', 'data-action': 'opening-hours-form#toggle'}}) }}
-                        <span class="text-xs text-gray-500 group-hover:text-red-600">{{ 'opening_hours.closed'|trans }}</span>
-                    </label>
+                    <div data-day="{{ day }}" class="space-y-2">
+                        {% for slot in form.openingHours %}
+                            {% if slot.vars.data.dayOfWeek == day %}
+                                <div class="flex items-center gap-2" data-opening-hours-form-target="slot">
+                                    {{ form_widget(slot.dayOfWeek) }}
+                                    {{ form_widget(slot.openTime) }}
+                                    <span class="text-gray-400 text-sm">–</span>
+                                    {{ form_widget(slot.closeTime) }}
+                                    <button type="button" data-action="opening-hours-form#removeSlot"
+                                            class="text-red-500 hover:text-red-700 text-sm font-bold px-2 py-1 shrink-0 transition">
+                                        ✕
+                                    </button>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
                 </div>
             {% endfor %}
         </div>

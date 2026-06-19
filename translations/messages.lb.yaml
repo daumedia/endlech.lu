@@ -421,7 +421,8 @@ admin:
         location: "Standuert & Nahverkéier"
         location_hint: "GPS-Koordinaten erlaben d'automatesch Sich no barrierefrä Haltestellen an der Géigend."
         opening_hours: "Öffnungszäiten"
-        opening_hours_hint: "Gëff d'Öffnungszäiten fir all Dag an. Aktivéier 'Zou' fir Roudeg."
+        opening_hours_hint: "Setz pro Dag esou vill Zäitfenstere bäi wéi néideg (z. B. Mëtteg an Owend). En Dag ouni Zäitfenster gëllt als zou."
+        add_opening_slot: "＋ Zäitfenster derbäisetzen"
         cancel: "Ofbriechen"
     suggestion:
         title: "Restaurant-Virschléi"

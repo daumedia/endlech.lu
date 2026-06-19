@@ -421,7 +421,8 @@ admin:
         location: "Standort & Nahverkehr"
         location_hint: "GPS-Koordinaten ermöglichen die automatische Suche nach barrierefreien Haltestellen in der Nähe."
         opening_hours: "Öffnungszeiten"
-        opening_hours_hint: "Gib die Öffnungszeiten für jeden Tag ein. Aktiviere 'Geschlossen' für Ruhetage."
+        opening_hours_hint: "Füge pro Tag beliebig viele Zeitfenster hinzu (z. B. Mittag und Abend). Ein Tag ohne Zeitfenster gilt als geschlossen."
+        add_opening_slot: "＋ Zeitfenster hinzufügen"
         cancel: "Abbrechen"
     suggestion:
         title: "Restaurant-Vorschläge"

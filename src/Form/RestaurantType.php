@@ -3,7 +3,6 @@
 namespace App\Form;
 
 use App\Entity\Cuisine;
-use App\Entity\OpeningHour;
 use App\Entity\Restaurant;
 use App\Enum\Language;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -14,8 +13,6 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
@@ -251,9 +248,11 @@ class RestaurantType extends AbstractType
             ->add('openingHours', CollectionType::class, [
                 'label' => 'admin.form.opening_hours',
                 'entry_type' => OpeningHourType::class,
-                'allow_add' => false,
-                'allow_delete' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'prototype' => true,
                 'by_reference' => false,
+                'required' => false,
                 'constraints' => [
                     new Valid(),
                 ],
@@ -276,28 +275,6 @@ class RestaurantType extends AbstractType
                 'prototype' => true,
                 'required' => false,
             ]);
-
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event): void {
-            /** @var Restaurant|null $restaurant */
-            $restaurant = $event->getData();
-            if ($restaurant === null) {
-                return;
-            }
-
-            $existingDays = [];
-            foreach ($restaurant->getOpeningHours() as $oh) {
-                $existingDays[$oh->getDayOfWeek()] = true;
-            }
-
-            for ($day = 1; $day <= 7; ++$day) {
-                if (!isset($existingDays[$day])) {
-                    $oh = new OpeningHour();
-                    $oh->setDayOfWeek($day);
-                    $oh->setIsClosed(true);
-                    $restaurant->addOpeningHour($oh);
-                }
-            }
-        });
     }
 
     public function configureOptions(OptionsResolver $resolver): void

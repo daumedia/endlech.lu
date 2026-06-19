@@ -3,20 +3,25 @@
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
         <h2 class="text-lg font-bold text-gray-800 mb-4">{{ 'opening_hours.title'|trans }}</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            {% for oh in restaurant.openingHours %}
-                {% set isToday = (oh.dayOfWeek == todayDayOfWeek) %}
+            {% for day in 1..7 %}
+                {% set isToday = (day == todayDayOfWeek) %}
+                {% set slots = restaurant.getOpeningHoursForDay(day) %}
                 <div class="flex items-center justify-between px-3 py-2 rounded-lg {{ isToday ? 'bg-purple-50 border border-purple-200' : 'bg-gray-50 border border-gray-100' }}">
                     <span class="text-sm font-semibold {{ isToday ? 'text-purple-700' : 'text-gray-700' }}">
-                        {{ ('opening_hours.day_' ~ oh.dayOfWeek)|trans }}
+                        {{ ('opening_hours.day_' ~ day)|trans }}
                         {% if isToday %}
                             <span class="text-xs font-normal text-purple-500 ml-1">({{ 'opening_hours.today'|trans }})</span>
                         {% endif %}
                     </span>
                     <span class="text-sm {{ isToday ? 'text-purple-600 font-medium' : 'text-gray-500' }}">
-                        {% if oh.isClosed or oh.openTime is null %}
+                        {% if slots is empty %}
                             {{ 'opening_hours.closed'|trans }}
                         {% else %}
-                            {{ oh.openTime|date('H:i') }} – {{ oh.closeTime|date('H:i') }}
+                            {% for slot in slots %}
+                                {%- if slot.openTime and slot.closeTime -%}
+                                    {{ slot.openTime|date('H:i') }} – {{ slot.closeTime|date('H:i') }}{% if not loop.last %} · {% endif %}
+                                {%- endif -%}
+                            {% endfor %}
                         {% endif %}
                     </span>
                 </div>

@@ -131,7 +131,7 @@ class Restaurant
 
     /** @var Collection<int, OpeningHour> */
     #[ORM\OneToMany(mappedBy: 'restaurant', targetEntity: OpeningHour::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
-    #[ORM\OrderBy(['dayOfWeek' => 'ASC'])]
+    #[ORM\OrderBy(['dayOfWeek' => 'ASC', 'openTime' => 'ASC'])]
     private Collection $openingHours;
 
     public function __construct()
@@ -645,14 +645,18 @@ class Restaurant
         return $this;
     }
 
-    public function getOpeningHourForDay(int $day): ?OpeningHour
+    /**
+     * @return OpeningHour[]
+     */
+    public function getOpeningHoursForDay(int $day): array
     {
+        $slots = [];
         foreach ($this->openingHours as $oh) {
             if ($oh->getDayOfWeek() === $day) {
-                return $oh;
+                $slots[] = $oh;
             }
         }
 
-        return null;
+        return $slots;
     }
 }

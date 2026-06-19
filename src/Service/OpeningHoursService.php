@@ -21,11 +21,13 @@ class OpeningHoursService
         $currentDay = (int) $dt->format('N');
         $currentTime = $dt->format('H:i:s');
 
-        $todayEntry = $restaurant->getOpeningHourForDay($currentDay);
+        foreach ($restaurant->getOpeningHoursForDay($currentDay) as $slot) {
+            if ($slot->getOpenTime() === null || $slot->getCloseTime() === null) {
+                continue;
+            }
 
-        if ($todayEntry !== null && !$todayEntry->isClosed() && $todayEntry->getOpenTime() !== null && $todayEntry->getCloseTime() !== null) {
-            $open = $todayEntry->getOpenTime()->format('H:i:s');
-            $close = $todayEntry->getCloseTime()->format('H:i:s');
+            $open = $slot->getOpenTime()->format('H:i:s');
+            $close = $slot->getCloseTime()->format('H:i:s');
 
             if ($open <= $close) {
                 if ($currentTime >= $open && $currentTime < $close) {
@@ -39,11 +41,14 @@ class OpeningHoursService
         }
 
         $previousDay = $currentDay === 1 ? 7 : $currentDay - 1;
-        $yesterdayEntry = $restaurant->getOpeningHourForDay($previousDay);
 
-        if ($yesterdayEntry !== null && !$yesterdayEntry->isClosed() && $yesterdayEntry->getOpenTime() !== null && $yesterdayEntry->getCloseTime() !== null) {
-            $open = $yesterdayEntry->getOpenTime()->format('H:i:s');
-            $close = $yesterdayEntry->getCloseTime()->format('H:i:s');
+        foreach ($restaurant->getOpeningHoursForDay($previousDay) as $slot) {
+            if ($slot->getOpenTime() === null || $slot->getCloseTime() === null) {
+                continue;
+            }
+
+            $open = $slot->getOpenTime()->format('H:i:s');
+            $close = $slot->getCloseTime()->format('H:i:s');
 
             if ($open > $close && $currentTime < $close) {
                 return true;
@@ -56,36 +61,49 @@ class OpeningHoursService
     /**
      * @return array{dayOfWeek: int, time: \DateTimeInterface}|null
      */
-    public function getNextOpeningTime(Restaurant $restaurant): ?array
+    public function getNextOpeningTime(Restaurant $restaurant, ?\DateTimeInterface $now = null): ?array
     {
-        if ($this->isOpenNow($restaurant)) {
+        $tz = new \DateTimeZone(self::TIMEZONE);
+        $reference = $now !== null
+            ? \DateTimeImmutable::createFromInterface($now)->setTimezone($tz)
+            : new \DateTimeImmutable('now', $tz);
+
+        if ($this->isOpenAt($restaurant, $reference)) {
             return null;
         }
 
-        $tz = new \DateTimeZone(self::TIMEZONE);
-        $now = new \DateTimeImmutable('now', $tz);
-        $currentDay = (int) $now->format('N');
-        $currentTime = $now->format('H:i:s');
+        $currentDay = (int) $reference->format('N');
+        $currentTime = $reference->format('H:i:s');
 
-        $todayEntry = $restaurant->getOpeningHourForDay($currentDay);
-        if ($todayEntry !== null && !$todayEntry->isClosed() && $todayEntry->getOpenTime() !== null) {
-            $openTime = $todayEntry->getOpenTime()->format('H:i:s');
-            if ($openTime > $currentTime) {
-                return [
-                    'dayOfWeek' => $currentDay,
-                    'time' => $todayEntry->getOpenTime(),
-                ];
+        // Heute: frühester Slot, der noch öffnet.
+        $nextToday = null;
+        foreach ($restaurant->getOpeningHoursForDay($currentDay) as $slot) {
+            if ($slot->getOpenTime() === null) {
+                continue;
+            }
+            $openTime = $slot->getOpenTime()->format('H:i:s');
+            if ($openTime > $currentTime && ($nextToday === null || $openTime < $nextToday->format('H:i:s'))) {
+                $nextToday = $slot->getOpenTime();
             }
         }
+        if ($nextToday !== null) {
+            return ['dayOfWeek' => $currentDay, 'time' => $nextToday];
+        }
 
+        // Folgetage: erster Tag mit Slots, dessen frühester Slot.
         for ($i = 1; $i <= 6; ++$i) {
             $day = (($currentDay - 1 + $i) % 7) + 1;
-            $entry = $restaurant->getOpeningHourForDay($day);
-            if ($entry !== null && !$entry->isClosed() && $entry->getOpenTime() !== null) {
-                return [
-                    'dayOfWeek' => $day,
-                    'time' => $entry->getOpenTime(),
-                ];
+            $earliest = null;
+            foreach ($restaurant->getOpeningHoursForDay($day) as $slot) {
+                if ($slot->getOpenTime() === null) {
+                    continue;
+                }
+                if ($earliest === null || $slot->getOpenTime()->format('H:i:s') < $earliest->format('H:i:s')) {
+                    $earliest = $slot->getOpenTime();
+                }
+            }
+            if ($earliest !== null) {
+                return ['dayOfWeek' => $day, 'time' => $earliest];
             }
         }
 
