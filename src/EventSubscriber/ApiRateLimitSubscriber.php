@@ -47,9 +47,12 @@ final class ApiRateLimitSubscriber implements EventSubscriberInterface
             ? $this->apiLoginLimiter
             : $this->apiAnonymousLimiter;
 
-        $limiter = $factory->create($request->getClientIp() ?? 'anonymous');
-        if (!$limiter->consume(1)->isAccepted()) {
-            throw new TooManyRequestsHttpException(message: 'Zu viele Anfragen. Bitte später erneut versuchen.');
+        $limit = $factory->create($request->getClientIp() ?? 'anonymous')->consume(1);
+        if (!$limit->isAccepted()) {
+            // Retry-After (Sekunden bis zum nächsten erlaubten Versuch) für intelligentes Backoff.
+            $retryAfter = max(1, $limit->getRetryAfter()->getTimestamp() - time());
+
+            throw new TooManyRequestsHttpException($retryAfter, 'Zu viele Anfragen. Bitte später erneut versuchen.');
         }
     }
 }

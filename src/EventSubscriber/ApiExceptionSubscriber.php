@@ -63,6 +63,14 @@ final class ApiExceptionSubscriber implements EventSubscriberInterface
             $error['detail'] = $throwable->getMessage();
         }
 
-        $event->setResponse(new JsonResponse(['error' => $error], $status));
+        $response = new JsonResponse(['error' => $error], $status);
+
+        // Header der HTTP-Exception übernehmen (z. B. Retry-After bei 429,
+        // WWW-Authenticate bei 401), die sonst beim Neuaufbau verloren gingen.
+        if ($throwable instanceof HttpExceptionInterface) {
+            $response->headers->add($throwable->getHeaders());
+        }
+
+        $event->setResponse($response);
     }
 }
