@@ -1,0 +1,16 @@
+nelmio_api_doc:
+    documentation:
+        info:
+            title: Endlech.lu API
+            description: 'REST-API für die native iOS-App (Restaurants, Barrierefreiheit, Auth, Nutzerdaten).'
+            version: '1.0.0'
+        components:
+            securitySchemes:
+                Bearer:
+                    type: http
+                    scheme: bearer
+                    bearerFormat: JWT
+    areas:
+        default:
+            path_patterns:
+                - ^/api/v1
