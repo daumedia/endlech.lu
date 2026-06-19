@@ -1,6 +1,7 @@
 nav:
     home: "Doheem"
     restaurants: "Restauranten"
+    bottom_navigation: "Haaptnavigatioun"
     find_restaurants: "Restauranten fannen"
     about: "Iwwer eis"
     suggest_restaurant: "Restaurant virschloen"

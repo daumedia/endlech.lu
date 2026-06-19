@@ -12,7 +12,7 @@
 ] %}
 
 <nav class="fixed bottom-0 inset-x-0 z-50 md:hidden bg-white border-t border-gray-200 shadow-[0_-1px_3px_rgba(0,0,0,0.08)] pb-[env(safe-area-inset-bottom)]"
-     aria-label="{{ 'nav.find_restaurants'|trans }}">
+     aria-label="{{ 'nav.bottom_navigation'|trans }}">
     <ul class="grid grid-cols-4">
         {% for item in _items %}
             {% set is_active = _route in item.active %}

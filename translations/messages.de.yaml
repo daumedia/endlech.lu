@@ -1,6 +1,7 @@
 nav:
     home: "Home"
     restaurants: "Restaurants"
+    bottom_navigation: "Hauptnavigation"
     find_restaurants: "Restaurants finden"
     about: "Über uns"
     suggest_restaurant: "Restaurant vorschlagen"
