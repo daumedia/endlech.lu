@@ -2,13 +2,13 @@
   "entrypoints": {
     "app": {
       "js": [
-        "/build/runtime.js",
-        "/build/vendors-node_modules_hotwired_turbo_dist_turbo_es2017-esm_js-node_modules_symfony_stimulus-br-78a2e6.js",
-        "/build/app.js"
+        "/build/runtime.4f1ddb10.js",
+        "/build/781.f8c86ef0.js",
+        "/build/app.10bdd3cf.js"
       ],
       "css": [
-        "/build/vendors-node_modules_hotwired_turbo_dist_turbo_es2017-esm_js-node_modules_symfony_stimulus-br-78a2e6.css",
-        "/build/app.css"
+        "/build/781.6e420a57.css",
+        "/build/app.aac47388.css"
       ]
     }
   }

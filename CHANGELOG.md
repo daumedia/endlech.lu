@@ -8,6 +8,7 @@ Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 ## [Unreleased]
 
 ### Added
+- **Cookie-Consent-Banner (Issue #82):** DSGVO-konformes Banner, das beim ersten Besuch unten erscheint und über die Cookie-Nutzung informiert. „Akzeptieren"/„Ablehnen" speichern die Wahl 365 Tage im Cookie `cookie_consent`; danach erscheint das Banner nicht mehr. Footer-Link „Cookie-Einstellungen" öffnet es erneut. Banner verlinkt auf den Datenschutz-Abschnitt der Rechtliches-Seite (`#datenschutz`). Vollständig barrierefrei (Tastatur, ARIA-Rollen, Kontrast), responsiv und in 4 Sprachen (lb, de, fr, en). Stimulus-Controller `cookie_consent_controller.ts`, Partial `_cookie_banner.html.twig`. Nur auf öffentlichen Seiten (Admin ausgenommen).
 - **Öffnungszeiten: Mehrere Zeitslots pro Tag (Issue #81):** Restaurants mit zwei Schichten (z. B. Mittag 12:00–14:30 und Abend 18:00–22:00) werden jetzt korrekt abgebildet. Pro Wochentag sind beliebig viele `OpeningHour`-Einträge möglich; ein Tag ohne Zeitfenster gilt als geschlossen. Admin-Formular gruppiert die Slots nach Tag mit „＋ Zeitfenster hinzufügen"- und Entfernen-Buttons (Stimulus). Detailseite zeigt alle Slots eines Tages als `12:00 – 14:30 · 18:00 – 22:00`. Der „Geöffnet"-Status und die nächste Öffnungszeit berücksichtigen alle Slots (inkl. Nachtschicht-Übertrag). `?open=1`-Filter angepasst. Erster PHPUnit-Test (`OpeningHoursServiceTest`). Migration entfernt UNIQUE-Constraint und `is_closed`-Spalte.
 - **Map:** Kartenansicht der Locations. *(geplant)*
 

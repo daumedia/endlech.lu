@@ -26,6 +26,7 @@ Current development status of the platform.
 - [x] **User Fixtures:** Test users (admin, verified, unverified) for development & testing.
 - [ ] **Authentication:** Login & registration for users.
 - [x] **Email:** Brevo mailer integration for transactional emails (verification, password reset).
+- [x] **Cookie Consent:** GDPR-compliant cookie banner with accept/decline, 365-day storage, footer re-open link, and translations (LU/DE/FR/EN).
 
 ### 🔧 Admin Panel
 - [x] **Dashboard:** Admin area at `/admin` with statistics and quick actions.
