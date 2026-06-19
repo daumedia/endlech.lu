@@ -2,17 +2,22 @@
 
 Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
-![Version](https://img.shields.io/badge/version-2026.03.22-blue)
+![Version](https://img.shields.io/badge/version-2026.06.19-blue)
 ![Status](https://img.shields.io/badge/status-beta-green)
 
 ## [Unreleased]
+
+- **Map:** Kartenansicht der Locations. *(geplant)*
+
+---
+
+## [2026.06.19] – Mobile App, REST-API & PWA
 
 ### Added
 - **PWA – Installierbare iPhone-App (Issue #83):** Endlech.lu lässt sich über Safaris „Zum Home-Bildschirm" als Progressive Web App installieren und startet dann im Vollbild ohne Browser-Chrome. Vollständiges Web App Manifest (`public/manifest.webmanifest`, `display: standalone`, `orientation: portrait`, Theme-Farbe Cyan), 11 App-Icon-Größen (57–512 px, inkl. maskable) reproduzierbar aus dem Logo erzeugt (`bin/generate-pwa-icons.sh`, macOS `sips`), alle iOS-spezifischen Meta-Tags (`apple-mobile-web-app-*`, `apple-touch-icon`) und `viewport-fit=cover` für Safe-Area-Insets (Notch/Home-Indicator). Service Worker (`public/sw.js`) mit Offline-Fallback-Seite (`public/offline.html`): Navigationen network-first, gebaute Assets stale-while-revalidate, `/api/` nie gecacht. Neue mobile Bottom-Navigation (`_bottom_nav.html.twig`, nur < 768 px, Tap-Targets ≥ 44 px, Home/Restaurants/Über uns/Profil) ersetzt die auf Mobil ausgeblendete Header-Navigation. Formularfelder erhalten auf kleinen Screens 16 px Schriftgröße gegen iOS-Auto-Zoom. Keine Backend-/DB-Änderung; alle PWA-Dateien locale-frei auf Root-Ebene.
 - **REST-API für die iOS-App (Issue #87):** Versionierte, locale-freie REST/JSON-API unter `/api/v1/` als Backend für eine künftige native iOS-App. JWT-Authentifizierung via `lexik/jwt-authentication-bundle`. Endpunkte: `POST /auth/login` (Token), `POST /auth/register` (legt unverifizierten Nutzer an + E-Mail-Verifikation wie im Web), `GET /restaurants` (paginiert + alle Filter aus `findPaginated`: Barrierefreiheit, Ernährung, Küche, „offen jetzt", Stadt, Sprachen), `GET /restaurants/{id}` (volle Details inkl. Öffnungszeiten, Zahlung, Kontakt, Standort, Bestelloptionen), `GET /restaurants/{id}/images`, `GET /me` + `GET /me/submissions` (auth), `POST /restaurants` (auth, setzt `submittedBy`, unverifiziert). Explizite Transformer-Services (`App\Api\RestaurantTransformer`, `UserTransformer`) statt Serializer-Groups – `password`/Token werden strukturell nie ausgegeben. Einheitliche JSON-Fehler (`{error:{code,message}}`, 401 vs. 403 je nach Auth-Status) via `ApiExceptionSubscriber`. CORS (`nelmio/cors-bundle`) und IP-basiertes Rate-Limiting (`symfony/rate-limiter`, Login strenger) nur für `/api/v1`. Auto-generierte Swagger-UI unter `/api/docs` (`nelmio/api-doc-bundle`). 13 WebTestCase-Tests. Bestehende Web-App unverändert (eigener Routing-Import ohne `_locale`-Prefix).
 - **Cookie-Consent-Banner (Issue #82):** DSGVO-konformes Banner, das beim ersten Besuch unten erscheint und über die Cookie-Nutzung informiert. „Akzeptieren"/„Ablehnen" speichern die Wahl 365 Tage im Cookie `cookie_consent`; danach erscheint das Banner nicht mehr. Footer-Link „Cookie-Einstellungen" öffnet es erneut. Banner verlinkt auf den Datenschutz-Abschnitt der Rechtliches-Seite (`#datenschutz`). Vollständig barrierefrei (Tastatur, ARIA-Rollen, Kontrast), responsiv und in 4 Sprachen (lb, de, fr, en). Stimulus-Controller `cookie_consent_controller.ts`, Partial `_cookie_banner.html.twig`. Nur auf öffentlichen Seiten (Admin ausgenommen).
 - **Öffnungszeiten: Mehrere Zeitslots pro Tag (Issue #81):** Restaurants mit zwei Schichten (z. B. Mittag 12:00–14:30 und Abend 18:00–22:00) werden jetzt korrekt abgebildet. Pro Wochentag sind beliebig viele `OpeningHour`-Einträge möglich; ein Tag ohne Zeitfenster gilt als geschlossen. Admin-Formular gruppiert die Slots nach Tag mit „＋ Zeitfenster hinzufügen"- und Entfernen-Buttons (Stimulus). Detailseite zeigt alle Slots eines Tages als `12:00 – 14:30 · 18:00 – 22:00`. Der „Geöffnet"-Status und die nächste Öffnungszeit berücksichtigen alle Slots (inkl. Nachtschicht-Übertrag). `?open=1`-Filter angepasst. Erster PHPUnit-Test (`OpeningHoursServiceTest`). Migration entfernt UNIQUE-Constraint und `is_closed`-Spalte.
-- **Map:** Kartenansicht der Locations. *(geplant)*
 
 ---
 
