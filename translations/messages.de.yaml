@@ -20,6 +20,14 @@ footer:
     help_improve: "Helfen Sie uns, besser zu werden."
     copyright: "Made with ❤️ in Luxembourg."
 
+cookie:
+    title: "Wir verwenden Cookies"
+    description: "Wir nutzen nur technisch notwendige Cookies, damit die Seite funktioniert. Mehr dazu in unserer"
+    accept: "Akzeptieren"
+    decline: "Ablehnen"
+    privacy_link: "Datenschutzerklärung"
+    settings: "Cookie-Einstellungen"
+
 home:
     title: "Endlech.lu - Barrierefreie Restaurants in Luxemburg"
     hero:

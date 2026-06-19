@@ -20,6 +20,14 @@ footer:
     help_improve: "Aidez-nous à nous améliorer."
     copyright: "Made with ❤️ in Luxembourg."
 
+cookie:
+    title: "Nous utilisons des cookies"
+    description: "Nous utilisons uniquement des cookies techniquement nécessaires au fonctionnement du site. En savoir plus dans notre"
+    accept: "Accepter"
+    decline: "Refuser"
+    privacy_link: "politique de confidentialité"
+    settings: "Paramètres des cookies"
+
 home:
     title: "Endlech.lu - Restaurants accessibles au Luxembourg"
     hero:

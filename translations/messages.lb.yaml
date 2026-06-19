@@ -20,6 +20,14 @@ footer:
     help_improve: "Hëlleft eis, besser ze ginn."
     copyright: "Made with ❤️ in Luxembourg."
 
+cookie:
+    title: "Mir benotzen Cookien"
+    description: "Mir benotzen nëmmen technesch néideg Cookien, fir datt d'Säit funktionéiert. Méi doriwwer an eiser"
+    accept: "Akzeptéieren"
+    decline: "Oflehnen"
+    privacy_link: "Datenschutzerklärung"
+    settings: "Cookie-Astellungen"
+
 home:
     title: "Endlech.lu - Barrierefrä Restauranten zu Lëtzebuerg"
     hero:
