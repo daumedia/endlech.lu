@@ -92,6 +92,15 @@ final class RestaurantApiController extends AbstractController
         if (mb_strlen($city) < 2 || mb_strlen($city) > 100) {
             $violations['city'] = 'Die Stadt muss zwischen 2 und 100 Zeichen lang sein.';
         }
+
+        $location = (array) ($payload['location'] ?? []);
+        if (($latError = $this->validateCoordinate($location['latitude'] ?? null, 90.0)) !== null) {
+            $violations['latitude'] = $latError;
+        }
+        if (($lngError = $this->validateCoordinate($location['longitude'] ?? null, 180.0)) !== null) {
+            $violations['longitude'] = $lngError;
+        }
+
         if ($violations !== []) {
             return new JsonResponse([
                 'error' => ['code' => 422, 'message' => 'Validierung fehlgeschlagen.', 'violations' => $violations],
@@ -170,8 +179,8 @@ final class RestaurantApiController extends AbstractController
         $restaurant->setTiktokUrl($this->nullableString($contact['tiktokUrl'] ?? null));
 
         $location = (array) ($payload['location'] ?? []);
-        $restaurant->setLatitude($this->nullableString($location['latitude'] ?? null));
-        $restaurant->setLongitude($this->nullableString($location['longitude'] ?? null));
+        $restaurant->setLatitude($this->coordinateString($location['latitude'] ?? null));
+        $restaurant->setLongitude($this->coordinateString($location['longitude'] ?? null));
         $restaurant->setNearbyStopsNote($this->nullableString($location['nearbyStopsNote'] ?? null));
 
         // Nur gültige Sprachcodes übernehmen.
@@ -201,6 +210,45 @@ final class RestaurantApiController extends AbstractController
         $value = trim($value);
 
         return $value === '' ? null : $value;
+    }
+
+    /**
+     * Prüft einen optionalen Koordinatenwert (String oder Zahl) auf Dezimalformat
+     * und Wertebereich ±$max. Gibt eine Fehlermeldung zurück oder null, wenn ok/leer.
+     */
+    private function validateCoordinate(mixed $value, float $max): ?string
+    {
+        if (\is_string($value)) {
+            $value = trim($value);
+        }
+        if ($value === null || $value === '') {
+            return null;
+        }
+        if (!is_numeric($value)) {
+            return 'Muss eine Dezimalzahl sein.';
+        }
+        $float = (float) $value;
+        if ($float < -$max || $float > $max) {
+            return \sprintf('Muss zwischen %s und %s liegen.', -$max, $max);
+        }
+
+        return null;
+    }
+
+    /**
+     * Normalisiert eine (bereits validierte) Koordinate zur String-Form für die
+     * DECIMAL-Spalte; akzeptiert auch numerische JSON-Werte. Ungültig/leer → null.
+     */
+    private function coordinateString(mixed $value): ?string
+    {
+        if (\is_string($value)) {
+            $value = trim($value);
+        }
+        if ($value === null || $value === '' || !is_numeric($value)) {
+            return null;
+        }
+
+        return (string) $value;
     }
 
     /**

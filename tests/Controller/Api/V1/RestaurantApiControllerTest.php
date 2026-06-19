@@ -2,7 +2,10 @@
 
 namespace App\Tests\Controller\Api\V1;
 
+use App\Entity\User;
 use App\Repository\RestaurantRepository;
+use App\Repository\UserRepository;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -98,6 +101,46 @@ final class RestaurantApiControllerTest extends WebTestCase
         self::assertResponseStatusCodeSame(401);
     }
 
+    public function testCreateRejectsInvalidCoordinatesWith422(): void
+    {
+        $client = static::createClient();
+        $client->request(
+            'POST',
+            '/api/v1/restaurants',
+            server: ['CONTENT_TYPE' => 'application/json', 'HTTP_AUTHORIZATION' => 'Bearer ' . $this->token()],
+            content: json_encode([
+                'name' => 'Koordinaten-Test',
+                'city' => 'Luxembourg',
+                'location' => ['latitude' => 'not-a-number', 'longitude' => 999],
+            ]),
+        );
+
+        self::assertResponseStatusCodeSame(422);
+        $data = $this->json($client);
+        self::assertArrayHasKey('latitude', $data['error']['violations']);
+        self::assertArrayHasKey('longitude', $data['error']['violations']);
+    }
+
+    public function testCreateAcceptsValidNumericCoordinates(): void
+    {
+        $client = static::createClient();
+        $client->request(
+            'POST',
+            '/api/v1/restaurants',
+            server: ['CONTENT_TYPE' => 'application/json', 'HTTP_AUTHORIZATION' => 'Bearer ' . $this->token()],
+            content: json_encode([
+                'name' => 'Geo Bistro',
+                'city' => 'Luxembourg',
+                'location' => ['latitude' => 49.6116, 'longitude' => 6.1319],
+            ]),
+        );
+
+        self::assertResponseStatusCodeSame(201);
+        $data = $this->json($client);
+        self::assertEqualsWithDelta(49.6116, (float) $data['location']['latitude'], 0.0000001);
+        self::assertEqualsWithDelta(6.1319, (float) $data['location']['longitude'], 0.0000001);
+    }
+
     /**
      * @return array<string, mixed>
      */
@@ -111,5 +154,14 @@ final class RestaurantApiControllerTest extends WebTestCase
         $repository = static::getContainer()->get(RestaurantRepository::class);
 
         return $repository->findOneBy([])->getId();
+    }
+
+    private function token(): string
+    {
+        $container = static::getContainer();
+        /** @var User $user */
+        $user = $container->get(UserRepository::class)->findOneBy(['email' => 'user@endlech.lu']);
+
+        return $container->get(JWTTokenManagerInterface::class)->create($user);
     }
 }
