@@ -203,6 +203,7 @@ class RestaurantType extends AbstractType
                 'label' => 'form.latitude',
                 'required' => false,
                 'html5' => true,
+                'scale' => 8,
                 'attr' => ['placeholder' => 'form.latitude_placeholder', 'step' => '0.00000001'],
                 'constraints' => [
                     new Range(
@@ -216,6 +217,7 @@ class RestaurantType extends AbstractType
                 'label' => 'form.longitude',
                 'required' => false,
                 'html5' => true,
+                'scale' => 8,
                 'attr' => ['placeholder' => 'form.longitude_placeholder', 'step' => '0.00000001'],
                 'constraints' => [
                     new Range(

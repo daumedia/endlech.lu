@@ -7,6 +7,9 @@ Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
 ## [Unreleased]
 
+### Fixed
+- **Admin – Koordinaten-Präzision:** Breiten- und Längengrad im Restaurant-Formular werden nicht mehr auf 3 Nachkommastellen gerundet angezeigt (z. B. `5.94700000` → `5,947`), sondern mit voller Präzision von 8 Nachkommastellen – passend zu den DB-Spalten `DECIMAL(10,8)`/`DECIMAL(11,8)`. Ursache war der fehlende `scale`-Wert auf den `NumberType`-Feldern (`RestaurantType`); Default des `\NumberFormatter` sind 3 Nachkommastellen. Schützt auch beim Speichern vor Präzisionsverlust.
+
 - **Map:** Kartenansicht der Locations. *(geplant)*
 
 ---
