@@ -124,13 +124,26 @@ php bin/console make:migration      # Generate migration from entity diff
 ## Testing
 
 ```bash
-php bin/phpunit                     # Run all tests
-php bin/phpunit tests/              # Run specific directory
+make test                           # Test-DB vorbereiten (create/migrate/fixtures) + PHPUnit
+make test-db-setup                  # Nur Test-DB aufsetzen (einmalig nötig)
+php bin/phpunit                     # Alle Tests (Test-DB muss bereits aufgesetzt sein)
+php bin/phpunit tests/Service       # Einzelnes Verzeichnis
+php bin/phpunit --display-all-issues  # Volle Notice-/Deprecation-Texte
+composer test                       # Äquivalent zu `make test` (CI-tauglich)
 ```
 
-PHPUnit is configured in `phpunit.dist.xml` with strict mode: fails on deprecation, notices, and warnings. Bootstrap loads `.env.test` variables.
+PHPUnit is configured in `phpunit.dist.xml` with strict mode: fails on deprecation, notices, and warnings. Bootstrap loads `.env.test` variables. Läuft real auf PHP 8.5; Zielversion ist 8.4+.
 
-First test: `tests/Service/OpeningHoursServiceTest.php` (reiner Unit-Test ohne Kernel/DB). When writing tests, use `App\Tests\` namespace (PSR-4 mapped to `tests/`).
+**Test-Isolation:** `dama/doctrine-test-bundle` (in `config/bundles.php` nur `test`, Extension in `phpunit.dist.xml`) wickelt jeden Test in eine Transaktion mit Rollback. Fixtures werden **einmal vor** der Suite geladen (`make test-db-setup`), nicht in `setUp()`. Tests dürfen frei persistieren/flushen, ohne den Fixture-Stand zu verändern → wiederholbare, reihenfolgeunabhängige Läufe.
+
+**Mailer im Test:** `config/packages/messenger.yaml` (`when@test`) routet `SendEmailMessage` auf `sync` (+ `MAILER_DSN=null://null` in `.env.test`), damit `MailerAssertionsTrait` (`assertEmailCount`, `getMailerMessage`) greift.
+
+**Drei Test-Kategorien** (PSR-4-Namespace `App\Tests\`, gespiegelt unter `tests/`):
+- **Unit** (`extends TestCase`, keine DB): Services mit mockbaren Deps (`PublicTransportService` via `MockHttpClient`), Transformer (`RestaurantTransformer`/`UserTransformer` – echter `AssetUrlBuilder` mit Base-URL, da `final`), Enums, Twig-Extension, `OpeningHoursService`.
+- **KernelTestCase** (Container + DB, DAMA-isoliert): Repositories (v. a. `RestaurantRepositoryTest` – alle `findPaginated`-Filter), `ImageUploadService`/`AvatarUploadService` (Temp-Dir-Isolation via `sys_get_temp_dir`).
+- **WebTestCase** (HTTP/Forms/Auth): Web- und Admin-Controller + `/api/v1`. Basisklasse `tests/AbstractWebTestCase.php` mit `loginAs()`, `formWithField()`, `formByAction()`, `csrfTokenFrom()`. Web-Routen tragen den Locale-Prefix → `self::LOCALE` (`/de`) vor jeden Pfad.
+
+**PHPUnit-12-Konventionen (strict):** `#[DataProvider]`-Attribut statt Docblock-`@dataProvider`; `createStub()` für reine Rückgabe-Doubles, `createMock()` nur mit `expects()` (sonst Notice). Ungültige Formular-Submits liefern HTTP **422**, gültige einen 302-Redirect. Formular-CSRF ist stateless (`token_id: submit`) und passt im headless-Test via Same-Origin-Referer; Custom-Token-IDs (z. B. `toggle-verified-…`) sind session-basiert und werden als gerenderte Hidden-Felder mitgesendet.
 
 ## Architecture & Conventions
 
@@ -399,7 +412,11 @@ The project uses **CalVer** (Calendar Versioning): `vYYYY.MM.DD` (e.g., `v2026.0
 
 ## CI/CD
 
-No GitHub Actions workflows are configured yet. The `.github/` directory contains issue templates only (bug reports, feature requests, tasks).
+GitHub-Actions-Workflow `.github/workflows/ci.yml` (Trigger: Push auf `dev`/`main` + alle Pull Requests):
+- **Job `tests`** – PHP 8.4 (`shivammathur/setup-php`, Extensions inkl. `pdo_mysql`, `gd`, `intl`), MySQL-8.0-Service, Composer-Install (gecacht), JWT-Keypair (`lexik:jwt:generate-keypair --env=test --skip-if-exists`, Passphrase `changeme`), Test-DB (create/migrate/fixtures), dann `php bin/phpunit`.
+- **Job `frontend`** – Node 20, `npm ci`, `npm run typecheck` (`tsc --noEmit`), `npm run lint` (ESLint).
+
+Das `.github/`-Verzeichnis enthält außerdem Issue-Templates (Bug Reports, Feature Requests, Tasks).
 
 ## Key Files Reference
 

@@ -141,6 +141,52 @@ final class RestaurantApiControllerTest extends WebTestCase
         self::assertEqualsWithDelta(6.1319, (float) $data['location']['longitude'], 0.0000001);
     }
 
+    public function testCreateMarksSubmitterAndIsUnverified(): void
+    {
+        $client = static::createClient();
+        $userId = static::getContainer()->get(UserRepository::class)->findOneBy(['email' => 'user@endlech.lu'])->getId();
+
+        $client->request(
+            'POST',
+            '/api/v1/restaurants',
+            server: ['CONTENT_TYPE' => 'application/json', 'HTTP_AUTHORIZATION' => 'Bearer ' . $this->token()],
+            content: json_encode(['name' => 'Eingereicht API ' . uniqid(), 'city' => 'Luxembourg']),
+        );
+
+        self::assertResponseStatusCodeSame(201);
+        $data = $this->json($client);
+        self::assertFalse($data['isVerified']);
+        self::assertNotNull($data['submittedBy']);
+        self::assertSame($userId, $data['submittedBy']['id']);
+    }
+
+    public function testCreateRejectsMissingNameWith422(): void
+    {
+        $client = static::createClient();
+        $client->request(
+            'POST',
+            '/api/v1/restaurants',
+            server: ['CONTENT_TYPE' => 'application/json', 'HTTP_AUTHORIZATION' => 'Bearer ' . $this->token()],
+            content: json_encode(['city' => 'Luxembourg']),
+        );
+
+        self::assertResponseStatusCodeSame(422);
+        self::assertArrayHasKey('name', $this->json($client)['error']['violations']);
+    }
+
+    public function testCreateRejectsInvalidJsonWith400(): void
+    {
+        $client = static::createClient();
+        $client->request(
+            'POST',
+            '/api/v1/restaurants',
+            server: ['CONTENT_TYPE' => 'application/json', 'HTTP_AUTHORIZATION' => 'Bearer ' . $this->token()],
+            content: '"kein-objekt"',
+        );
+
+        self::assertResponseStatusCodeSame(400);
+    }
+
     /**
      * @return array<string, mixed>
      */
