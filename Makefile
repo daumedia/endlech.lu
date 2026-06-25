@@ -1,4 +1,4 @@
-.PHONY: help init start stop restart db migration fixtures db-reset cc assets fix lint
+.PHONY: help init start stop restart db migration fixtures db-reset cc assets fix lint test test-db-setup
 
 # Standard-Hilfe: Zeigt alle Befehle an, wenn du nur "make" tippst
 help: ## Zeigt diese Hilfe an
@@ -49,6 +49,16 @@ db-reset: ## ⚠️ ACHTUNG: Löscht DB, migriert neu & lädt Fixtures (Alles fr
 	php bin/console doctrine:database:create
 	php bin/console doctrine:migrations:migrate --no-interaction
 	php bin/console doctrine:fixtures:load --no-interaction
+
+# --- 🧪 Tests ---
+
+test-db-setup: ## Test-Datenbank anlegen, migrieren & Fixtures laden
+	php bin/console doctrine:database:create --env=test --if-not-exists
+	php bin/console doctrine:migrations:migrate --env=test --no-interaction
+	php bin/console doctrine:fixtures:load --env=test --no-interaction
+
+test: test-db-setup ## Bereitet die Test-DB vor und führt PHPUnit aus
+	php bin/phpunit
 
 # --- 🧹 Tools & Assets ---
 

@@ -31,7 +31,11 @@ framework:
 when@test:
     framework:
         messenger:
-            # In-Memory statt async-Doctrine: kein messenger_messages-Table nötig,
-            # E-Mails werden im Test nicht real versendet.
+            # In-Memory statt async-Doctrine: kein messenger_messages-Table nötig.
             transports:
                 async: 'in-memory://'
+                sync: 'sync://'
+            # E-Mails synchron verarbeiten, damit sie im MailerDataCollector landen
+            # und assertEmailCount()/getMailerMessage() in WebTestCase-Tests greifen.
+            routing:
+                Symfony\Component\Mailer\Messenger\SendEmailMessage: sync
