@@ -50,7 +50,10 @@ jobs:
           restore-keys: composer-${{ runner.os }}-
 
       - name: Install dependencies
-        run: composer install --no-interaction --no-progress --prefer-dist
+        # --no-scripts: Auto-Scripts (cache:clear/assets) brauchen ein dev-DATABASE_URL,
+        # das nur in der gitignorierten .env.local liegt. Für Tests irrelevant – die
+        # --env=test-Befehle bauen den Test-Cache selbst (DATABASE_URL aus .env.test).
+        run: composer install --no-interaction --no-progress --prefer-dist --no-scripts
 
       - name: Generate JWT keypair
         run: php bin/console lexik:jwt:generate-keypair --env=test --skip-if-exists
