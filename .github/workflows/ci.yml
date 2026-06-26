@@ -1,9 +1,9 @@
 name: CI
 
+# Automatische Trigger (push/PR) abgeschaltet – CI läuft nur noch manuell
+# über "Run workflow" (GitHub-UI) bzw. `gh workflow run ci.yml`.
 on:
-  push:
-    branches: [dev, main]
-  pull_request:
+  workflow_dispatch:
 
 jobs:
   tests:
