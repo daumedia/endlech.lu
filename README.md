@@ -2,7 +2,7 @@
 
 An open platform to find and rate accessible restaurants in Luxembourg. Built for inclusion, community, and simplicity.
 
-![Version](https://img.shields.io/badge/version-v2026.03.14f-blue)
+![Version](https://img.shields.io/badge/version-v2026.08.06-blue)
 ![Status](https://img.shields.io/badge/status-beta-green)
 
 <div align="center">
@@ -152,12 +152,10 @@ native `sips` tool):
 
 ### 🛠 Development
 Active development mode. Changes to templates and CSS are picked up immediately.
+Tailwind runs as a PostCSS plugin inside the Encore build, so the asset watcher
+is the only process you need:
 
 ```bash
-# Terminal 1: Tailwind
-php bin/console tailwind:build --watch
-
-# Terminal 2: JS/Encore
 npm run watch
 ```
 
@@ -165,10 +163,75 @@ npm run watch
 Optimized for performance and security.
 
 ```bash
-php bin/console tailwind:build --minify
 npm run build
 php bin/console cache:clear
 ```
+
+## 🚢 Deployment
+
+A merge into `production` **is** the deploy. GitHub Actions opens an SSH session and
+the server updates itself — see `.github/workflows/cd.yml` (the connection) and
+`.github/deploy.sh` (everything that actually happens).
+
+```
+dev ──merge──▶ production ──push──▶ verify-assets ──▶ deploy (SSH)
+```
+
+The `verify-assets` job rebuilds `public/build` and compares it against the
+committed one. **`public/build` is checked into the repo** — so whenever you
+touch anything under `assets/`, run `npm run build` and commit the result, or
+the deploy is blocked.
+
+On the server, `deploy.sh` runs `git reset --hard origin/production` followed by
+`git clean -fd`, then `composer install --no-dev`, the Doctrine migrations and
+`cache:clear`. `git clean` runs **without** `-x`, so everything gitignored
+survives: `.env.local`, `config/jwt/*.pem`, `public/uploads/`, `var/`,
+`vendor/`. There is no worker to recycle — production runs with
+`MESSENGER_TRANSPORT_DSN=sync://`, so mail is sent inside the request.
+
+Rollback: push a revert commit to `production`. The next run restores the previous
+state including matching assets, because they live in the same commit.
+
+### One-time server setup
+
+The deploy directory must be a git checkout with its own deploy key. The key
+belongs in `.git/` — that directory sits outside the web root, is not part of
+the repo, and neither `reset --hard` nor `clean` touches it:
+
+```bash
+cd ~/public_html
+tar czf /tmp/before-deploy.tar.gz .env.local config/jwt public/uploads  # backup first
+
+git init
+ssh-keygen -t ed25519 -C "endlech-deploy" -f .git/deploy_key -N ""
+chmod 600 .git/deploy_key
+ssh-keyscan github.com > .git/known_hosts
+git config core.sshCommand "ssh -i $PWD/.git/deploy_key \
+  -o IdentitiesOnly=yes -o UserKnownHostsFile=$PWD/.git/known_hosts"
+cat .git/deploy_key.pub   # → GitHub → Settings → Deploy keys (no write access)
+
+git remote add origin git@github.com:daumedia/endlech.lu.git
+git fetch origin
+git checkout -f -B production origin/production
+
+git clean -nd   # DRY RUN: review this list before the first real deploy
+```
+
+That last line is the one not to skip. It shows what `git clean -fd` will delete
+on the first deploy — untracked and *not* gitignored. Check upload paths
+individually with `git check-ignore -v <path>`; if the command stays silent, the
+file is **not** protected.
+
+This inventory was run on 2026-08-06 against the live server: **18 orphans**, all
+of them genuine leftovers (pre-TypeScript `assets/*.js`, six stale
+`public/build/` hashes, the old `tests/` layout, and a Cloudways placeholder
+`index.php` in the project root — harmless, the web root points at `public/`).
+Everything that must survive was confirmed protected: `.env.local`,
+`config/jwt/*.pem`, and all four user uploads under
+`public/uploads/{avatars,restaurants}`.
+
+Three repository secrets are required — `SSH_PRIVATE_KEY`, `APP_USER`,
+`APP_HOST` — using a key pair separate from the server's deploy key.
 
 ## 📂 Structure
 

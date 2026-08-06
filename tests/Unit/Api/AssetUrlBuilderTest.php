@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Api;
+namespace App\Tests\Unit\Api;
 
 use App\Api\AssetUrlBuilder;
 use PHPUnit\Framework\TestCase;

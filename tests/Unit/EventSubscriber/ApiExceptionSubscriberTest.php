@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\EventSubscriber;
+namespace App\Tests\Unit\EventSubscriber;
 
 use App\EventSubscriber\ApiExceptionSubscriber;
 use PHPUnit\Framework\TestCase;

@@ -2,12 +2,28 @@
 
 Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
-![Version](https://img.shields.io/badge/version-2026.06.19-blue)
+![Version](https://img.shields.io/badge/version-2026.08.06-blue)
 ![Status](https://img.shields.io/badge/status-beta-green)
 
 ## [Unreleased]
 
 - **Map:** Kartenansicht der Locations. *(geplant)*
+
+---
+
+## [2026.08.06] – Deployment-Automatisierung, Test-Suite & Bugfixes
+
+### Added
+- **Deployment über GitHub Actions & SSH:** Der Git-Button des Hosting-Panels ist abgelöst – **ein Merge nach `production` ist jetzt der Deploy**. Ein Runner öffnet eine SSH-Sitzung und lässt den Server sich selbst aktualisieren: `git reset --hard origin/production` + `git clean -fd` (entfernt, was nicht mehr im Repo steht – der Panel-Button kopierte nur und ließ gelöschte Dateien liegen), dann `composer install --no-dev --optimize-autoloader`, Doctrine-Migrationen und `cache:clear`. Zwei neue Dateien: `.github/workflows/cd.yml` (nur die Verbindung, Sparse-Checkout einer einzigen Datei, `concurrency`-Sperre gegen parallele Deploys) und `.github/deploy.sh` (die gesamte Logik, versioniert und mit `bash -n` prüfbar; `set -euo pipefail`, damit eine gescheiterte Migration den Lauf rot macht statt grün). Vorgeschalteter Job `verify-assets` baut `public/build` neu und vergleicht per `git status --porcelain` – da der Build im Repo liegt, fiele ein vergessenes `npm run build` sonst niemandem auf. `git clean` läuft ohne `-x`, alles Gitignorierte überlebt (`.env.local`, `config/jwt/*.pem`, `public/uploads/`, `var/`). Rollback ist ein Revert-Commit auf `production`, inklusive passender Assets aus demselben Commit. Kein Null-Downtime – für dieses Projekt bewusst akzeptiert. Die Waisen-Inventur gegen den Live-Server ist vorab gelaufen: 18 Waisen, ausschließlich echte Altlasten (JS-Dateien von vor der TypeScript-Umstellung, sechs veraltete `public/build/`-Hashes, die alte `tests/`-Gliederung, ein Cloudways-Platzhalter), und alles Schützenswerte – `.env.local`, JWT-Keys, sämtliche Nutzer-Uploads – nachweislich durch `.gitignore` gedeckt.
+
+- **Sortier-Reihenfolge-Tests & Test-Gliederung nach Art:** Reihenfolge-Tests für die Restaurant-Sortierung (`?sort=rating|name|newest`) auf allen drei Ebenen – Repository (bislang fehlender `findPaginated('rating')`-Reihenfolge-Test), funktionaler Web-Controller (tatsächlich gerenderte Reihenfolge der Restaurant-Karten) und JSON-API (`data`-Reihenfolge + `meta.sort`, inkl. Fallback ungültiger Werte auf `rating`). Die Test-Suite ist jetzt nach Test-Art in Ordner gegliedert – `tests/Unit/` (ohne DB), `tests/Integration/` (KernelTestCase + DB) und `tests/Functional/` (WebTestCase) – mit je einer gleichnamigen `phpunit.dist.xml`-Testsuite (`php bin/phpunit --testsuite Unit|Integration|Functional`); `AbstractWebTestCase` bleibt im `tests/`-Root (Namespace `App\Tests`). 154 Tests, 544 Assertions.
+- **Umfassende Test-Suite & CI:** Die automatisierte Testabdeckung wurde von 29 auf **146 Tests** (474 Assertions) ausgebaut – Unit-Tests (Services, Transformer, Enums, Twig-Extension), Integrationstests gegen MySQL (alle `RestaurantRepository::findPaginated`-Filter inkl. Nachtschicht- und `JSON_CONTAINS`-Logik, Upload-Services mit Temp-Dir-Isolation) und funktionale WebTestCase-Tests für sämtliche Web-, Admin- und `/api/v1`-Controller (inkl. Auth-Guards, CSRF-Pfade, Mailer-Versand). Test-Isolation über `dama/doctrine-test-bundle` (Transaktion-Rollback pro Test → wiederholbare Läufe). Neue Befehle `make test` / `make test-db-setup` und `composer test`. GitHub-Actions-Workflow (`.github/workflows/ci.yml`) führt PHPUnit (PHP 8.4 + MySQL-8.0-Service, JWT-Keypair) sowie TypeScript-Typecheck und ESLint bei jedem Push/PR aus. Basisklasse `tests/AbstractWebTestCase.php` mit Login-/Formular-/CSRF-Helfern.
+
+### Fixed
+- **Sprachen-Filter (`?lang_…`) warf 500er:** Der dokumentierte Sprachfilter auf `/restaurants` (z. B. `?lang_de=1`) nutzt die MySQL-Funktion `JSON_CONTAINS`, die nirgends als DQL-Funktion registriert war → `QueryException`. Neu: `App\Doctrine\JsonContainsFunction`, registriert in `config/packages/doctrine.yaml`.
+- **Restaurant-Detailseite warf 500er ohne Nahverkehrs-API-Key:** `app.mobiliteit_api_key` löste über `%env(default::…)%` bei leerem Key zu `null` auf, was den `string`-Typehint von `PublicTransportService` brach (jede Detailseite mit Koordinaten betroffen). Fix: `%env(string:default::MOBILITEIT_API_KEY)%` castet zu `''` → dokumentierte Graceful-Degradation (leerer Key → keine Haltestellen) funktioniert wieder.
+- **Admin-Vorschlag-Detailseite warf 500er:** `templates/admin/suggestion/show.html.twig` nutzt den `|u`-Twig-Filter, das Paket `twig/string-extra` war jedoch nicht installiert. Nachinstalliert.
+- **Admin – Koordinaten-Präzision:** Breiten- und Längengrad im Restaurant-Formular werden nicht mehr auf 3 Nachkommastellen gerundet angezeigt (z. B. `5.94700000` → `5,947`), sondern mit voller Präzision von 8 Nachkommastellen – passend zu den DB-Spalten `DECIMAL(10,8)`/`DECIMAL(11,8)`. Ursache war der fehlende `scale`-Wert auf den `NumberType`-Feldern (`RestaurantType`); Default des `\NumberFormatter` sind 3 Nachkommastellen. Schützt auch beim Speichern vor Präzisionsverlust.
 
 ---
 

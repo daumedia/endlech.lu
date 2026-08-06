@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Controller\Api\V1;
+namespace App\Tests\Functional\Controller\Api\V1;
 
 use App\Entity\User;
 use App\Repository\RestaurantRepository;
@@ -45,6 +45,70 @@ final class RestaurantApiControllerTest extends WebTestCase
         foreach ($data['data'] as $restaurant) {
             self::assertTrue($restaurant['accessibility']['wheelchairAccessible']);
         }
+    }
+
+    public function testIndexSortByNameReturnsAlphabetical(): void
+    {
+        $client = static::createClient();
+        $client->request('GET', '/api/v1/restaurants?sort=name&limit=50');
+
+        self::assertResponseIsSuccessful();
+        $data = $this->json($client);
+
+        self::assertSame('name', $data['meta']['sort']);
+
+        $names = array_column($data['data'], 'name');
+        self::assertNotEmpty($names);
+
+        $sorted = $names;
+        usort($sorted, 'strcasecmp');
+        self::assertSame($sorted, $names);
+    }
+
+    public function testIndexSortByRatingReturnsDescending(): void
+    {
+        $client = static::createClient();
+        $client->request('GET', '/api/v1/restaurants?sort=rating&limit=6');
+
+        self::assertResponseIsSuccessful();
+        $data = $this->json($client);
+
+        self::assertSame('rating', $data['meta']['sort']);
+
+        // Auf der ersten Seite (limit 6) hat keines der Top-Restaurants ein null-Rating.
+        $ratings = array_column($data['data'], 'rating');
+        self::assertNotEmpty($ratings);
+        for ($i = 0; $i < \count($ratings) - 1; ++$i) {
+            self::assertGreaterThanOrEqual($ratings[$i + 1], $ratings[$i]);
+        }
+    }
+
+    public function testIndexSortByNewestReturnsDescendingByCreatedAt(): void
+    {
+        $client = static::createClient();
+        $client->request('GET', '/api/v1/restaurants?sort=newest&limit=50');
+
+        self::assertResponseIsSuccessful();
+        $data = $this->json($client);
+
+        self::assertSame('newest', $data['meta']['sort']);
+
+        // ATOM-Strings gleicher Zeitzone sind lexikografisch = chronologisch vergleichbar;
+        // gleiche createdAt-Werte der Fixtures sind als Ties erlaubt.
+        $dates = array_column($data['data'], 'createdAt');
+        self::assertNotEmpty($dates);
+        for ($i = 0; $i < \count($dates) - 1; ++$i) {
+            self::assertGreaterThanOrEqual($dates[$i + 1], $dates[$i]);
+        }
+    }
+
+    public function testIndexInvalidSortFallsBackToRating(): void
+    {
+        $client = static::createClient();
+        $client->request('GET', '/api/v1/restaurants?sort=unsinn');
+
+        self::assertResponseIsSuccessful();
+        self::assertSame('rating', $this->json($client)['meta']['sort']);
     }
 
     public function testShowReturnsFullDetailWithoutPassword(): void
@@ -139,6 +203,52 @@ final class RestaurantApiControllerTest extends WebTestCase
         $data = $this->json($client);
         self::assertEqualsWithDelta(49.6116, (float) $data['location']['latitude'], 0.0000001);
         self::assertEqualsWithDelta(6.1319, (float) $data['location']['longitude'], 0.0000001);
+    }
+
+    public function testCreateMarksSubmitterAndIsUnverified(): void
+    {
+        $client = static::createClient();
+        $userId = static::getContainer()->get(UserRepository::class)->findOneBy(['email' => 'user@endlech.lu'])->getId();
+
+        $client->request(
+            'POST',
+            '/api/v1/restaurants',
+            server: ['CONTENT_TYPE' => 'application/json', 'HTTP_AUTHORIZATION' => 'Bearer ' . $this->token()],
+            content: json_encode(['name' => 'Eingereicht API ' . uniqid(), 'city' => 'Luxembourg']),
+        );
+
+        self::assertResponseStatusCodeSame(201);
+        $data = $this->json($client);
+        self::assertFalse($data['isVerified']);
+        self::assertNotNull($data['submittedBy']);
+        self::assertSame($userId, $data['submittedBy']['id']);
+    }
+
+    public function testCreateRejectsMissingNameWith422(): void
+    {
+        $client = static::createClient();
+        $client->request(
+            'POST',
+            '/api/v1/restaurants',
+            server: ['CONTENT_TYPE' => 'application/json', 'HTTP_AUTHORIZATION' => 'Bearer ' . $this->token()],
+            content: json_encode(['city' => 'Luxembourg']),
+        );
+
+        self::assertResponseStatusCodeSame(422);
+        self::assertArrayHasKey('name', $this->json($client)['error']['violations']);
+    }
+
+    public function testCreateRejectsInvalidJsonWith400(): void
+    {
+        $client = static::createClient();
+        $client->request(
+            'POST',
+            '/api/v1/restaurants',
+            server: ['CONTENT_TYPE' => 'application/json', 'HTTP_AUTHORIZATION' => 'Bearer ' . $this->token()],
+            content: '"kein-objekt"',
+        );
+
+        self::assertResponseStatusCodeSame(400);
     }
 
     /**

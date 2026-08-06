@@ -70,7 +70,7 @@ assets/
     └── app.css          # Tailwind import (@import "tailwindcss")
 
 migrations/              # Doctrine migrations (DoctrineMigrations namespace)
-tests/                   # PHPUnit tests (Service/OpeningHoursServiceTest)
+tests/                   # PHPUnit tests, nach Art gegliedert: Unit/, Integration/, Functional/
 translations/            # i18n files (de, en, fr, lb)
 public/                  # Web root (index.php front controller)
 public/images/platforms/    # SVG logos for delivery platforms (Uber Eats, Deliveroo, etc.)
@@ -124,13 +124,29 @@ php bin/console make:migration      # Generate migration from entity diff
 ## Testing
 
 ```bash
-php bin/phpunit                     # Run all tests
-php bin/phpunit tests/              # Run specific directory
+make test                           # Test-DB vorbereiten (create/migrate/fixtures) + PHPUnit
+make test-db-setup                  # Nur Test-DB aufsetzen (einmalig nötig)
+php bin/phpunit                     # Alle Tests (Test-DB muss bereits aufgesetzt sein)
+php bin/phpunit --testsuite Unit    # Nur Unit-Tests (keine DB, schnell)
+php bin/phpunit --testsuite Integration  # Nur Integration-Tests (KernelTestCase + DB)
+php bin/phpunit --testsuite Functional   # Nur Functional-Tests (WebTestCase, HTTP)
+php bin/phpunit tests/Unit/Service  # Einzelnes Verzeichnis
+php bin/phpunit --display-all-issues  # Volle Notice-/Deprecation-Texte
+composer test                       # Äquivalent zu `make test` (CI-tauglich)
 ```
 
-PHPUnit is configured in `phpunit.dist.xml` with strict mode: fails on deprecation, notices, and warnings. Bootstrap loads `.env.test` variables.
+PHPUnit is configured in `phpunit.dist.xml` with strict mode: fails on deprecation, notices, and warnings. Bootstrap loads `.env.test` variables. Läuft real auf PHP 8.5; Zielversion ist 8.4+.
 
-First test: `tests/Service/OpeningHoursServiceTest.php` (reiner Unit-Test ohne Kernel/DB). When writing tests, use `App\Tests\` namespace (PSR-4 mapped to `tests/`).
+**Test-Isolation:** `dama/doctrine-test-bundle` (in `config/bundles.php` nur `test`, Extension in `phpunit.dist.xml`) wickelt jeden Test in eine Transaktion mit Rollback. Fixtures werden **einmal vor** der Suite geladen (`make test-db-setup`), nicht in `setUp()`. Tests dürfen frei persistieren/flushen, ohne den Fixture-Stand zu verändern → wiederholbare, reihenfolgeunabhängige Läufe.
+
+**Mailer im Test:** `config/packages/messenger.yaml` (`when@test`) routet `SendEmailMessage` auf `sync` (+ `MAILER_DSN=null://null` in `.env.test`), damit `MailerAssertionsTrait` (`assertEmailCount`, `getMailerMessage`) greift.
+
+**Drei Test-Kategorien** — je ein eigener Ordner + gleichnamige `phpunit.dist.xml`-Testsuite, PSR-4-Namespace `App\Tests\{Unit,Integration,Functional}\…` gespiegelt zum Pfad. Unter jeder Kategorie bleibt die Schicht-Unterstruktur erhalten (z. B. `tests/Unit/Api/`, `tests/Integration/Repository/`, `tests/Functional/Controller/Api/V1/`):
+- **`tests/Unit/`** (`extends TestCase`, keine DB): Services mit mockbaren Deps (`PublicTransportService` via `MockHttpClient`, `AdminStatsService`), Transformer (`RestaurantTransformer`/`UserTransformer` – echter `AssetUrlBuilder` mit Base-URL, da `final`), Enums, Twig-Extension, `OpeningHoursService`, `ApiExceptionSubscriber`.
+- **`tests/Integration/`** (`extends KernelTestCase`, Container + DB, DAMA-isoliert): Repositories (v. a. `RestaurantRepositoryTest` – alle `findPaginated`-Filter und `sort`-Reihenfolgen), `ImageUploadService`/`AvatarUploadService` (Temp-Dir-Isolation via `sys_get_temp_dir`).
+- **`tests/Functional/`** (`extends AbstractWebTestCase`/`WebTestCase`, HTTP/Forms/Auth): Web- und Admin-Controller + `/api/v1`. Basisklasse `tests/AbstractWebTestCase.php` (bleibt im `tests/`-Root, Namespace `App\Tests`) mit `loginAs()`, `formWithField()`, `formByAction()`, `csrfTokenFrom()`. Web-Routen tragen den Locale-Prefix → `self::LOCALE` (`/de`) vor jeden Pfad.
+
+**PHPUnit-12-Konventionen (strict):** `#[DataProvider]`-Attribut statt Docblock-`@dataProvider`; `createStub()` für reine Rückgabe-Doubles, `createMock()` nur mit `expects()` (sonst Notice). Ungültige Formular-Submits liefern HTTP **422**, gültige einen 302-Redirect. Formular-CSRF ist stateless (`token_id: submit`) und passt im headless-Test via Same-Origin-Referer; Custom-Token-IDs (z. B. `toggle-verified-…`) sind session-basiert und werden als gerenderte Hidden-Felder mitgesendet.
 
 ## Architecture & Conventions
 
@@ -247,7 +263,7 @@ Stimulus: `opening_hours_form_controller.ts` — pro Tag „＋ Zeitfenster hinz
 Template: `templates/partials/_opening_hours.html.twig` — Wochenplan (Tag 1–7), mehrere Slots als `12:00 – 14:30 · 18:00 – 22:00`, hervorgehobener heutiger Tag.
 Admin-Template: `templates/admin/restaurant/_form.html.twig` — Öffnungszeiten nach Tag gruppiert.
 Filter: `?open=1` nutzt SQL JOIN mit TIME-Vergleich (inkl. Nachtschicht-Übertrag), `distinct()` gegen Duplikate bei mehreren Slots.
-Test: `tests/Service/OpeningHoursServiceTest.php` — Multi-Slot-, Nachtschicht- und Next-Opening-Logik.
+Test: `tests/Unit/Service/OpeningHoursServiceTest.php` — Multi-Slot-, Nachtschicht- und Next-Opening-Logik.
 Migrationen: `Version20260321000000` (erstellt Tabelle), `Version20260619000000` (entfernt UNIQUE-Constraint + `is_closed`-Spalte für Multi-Slot).
 
 ## REST-API für die iOS-App (Issue #87)
@@ -259,7 +275,7 @@ Versionierte, **locale-freie** REST/JSON-API unter `/api/v1/` als Backend für e
 **Security** (`config/packages/security.yaml`): zwei stateless Firewalls VOR `main`: `api_login` (`^/api/v1/auth/login$`, json_login mit `username_path: email`, Lexik success/failure-Handler) und `api` (`^/api/v1`, `jwt: ~`). `access_control`: `auth` + `GET restaurants` = PUBLIC; `me` + `POST restaurants` = IS_AUTHENTICATED_FULLY. Web-Regeln (`^/[a-z]{2}/...`) bleiben kollisionsfrei.
 **Fehler/CORS/Rate-Limit** (`src/EventSubscriber/`): `ApiExceptionSubscriber` (nur `^/api/v1`, JSON `{error:{code,message}}`; **anonyme** AccessDenied → 401, sonst 403; übernimmt Header der HTTP-Exception, z. B. `Retry-After`/`WWW-Authenticate`; im Debug-Modus Exception-Detail bei 500). `ApiRateLimitSubscriber` (IP-basiert, Login strenger; bei Limit `TooManyRequestsHttpException` → 429 inkl. `Retry-After`-Sekunden aus `RateLimit::getRetryAfter()`). Limiter in `config/packages/framework.yaml` (`api_anonymous` sliding_window 100/min, `api_login` fixed_window 5/min; in `when@test` auf 10000 gelockert). CORS in `config/packages/nelmio_cors.yaml` nur `^/api/v1/`. `bool $debug`-Bind in `config/services.yaml`.
 **Swagger:** `config/packages/nelmio_api_doc.yaml` (`areas.default.path_patterns: ^/api/v1`, Bearer-securityScheme), Routen `app.swagger_ui` (`/api/docs`) + `app.swagger` (`/api/docs.json`) in `config/routes/nelmio_api_doc.yaml`. OA-Tags + `#[Security(name:'Bearer')]` auf geschützten Endpunkten.
-**Tests** (`tests/Controller/Api/V1/`): `RestaurantApiControllerTest`, `AuthControllerTest`, `MeControllerTest` (WebTestCase, 13 Tests inkl. `password`-Regression). Token im Test via `JWTTokenManagerInterface::create()`. **Test-DB:** `DATABASE_URL` musste in `.env.test` ergänzt werden (`.env.local` wird im Test-Env nicht geladen). `when@test` in `messenger.yaml` routet `async` → `in-memory://` (kein `messenger_messages`-Table, E-Mails nicht real versendet).
+**Tests** (`tests/Functional/Controller/Api/V1/`): `RestaurantApiControllerTest`, `AuthControllerTest`, `MeControllerTest` (WebTestCase, inkl. `password`-Regression und `sort`-Reihenfolge/`meta.sort`). Token im Test via `JWTTokenManagerInterface::create()`. **Test-DB:** `DATABASE_URL` musste in `.env.test` ergänzt werden (`.env.local` wird im Test-Env nicht geladen). `when@test` in `messenger.yaml` routet `async` → `in-memory://` (kein `messenger_messages`-Table, E-Mails nicht real versendet).
 
 ## PWA – Installierbare iPhone-App (Issue #83)
 Endlech.lu ist als Progressive Web App über Safaris „Zum Home-Bildschirm" installierbar (Vollbild, App-Icon, Offline-Fallback). **Kein** separates Swift-Projekt; alle Templates werden weiterverwendet. Reiner Frontend-/Static-File-Ansatz — keine Entity/Migration/Backend-Logik.
@@ -397,9 +413,39 @@ Defined in `compose.yaml` and `compose.override.yaml`:
 
 The project uses **CalVer** (Calendar Versioning): `vYYYY.MM.DD` (e.g., `v2026.01.13`). See `CHANGELOG.md`.
 
-## CI/CD
+## CI
 
-No GitHub Actions workflows are configured yet. The `.github/` directory contains issue templates only (bug reports, feature requests, tasks).
+GitHub-Actions-Workflow `.github/workflows/ci.yml` (Trigger: **nur** `workflow_dispatch` – die automatischen Push-/PR-Trigger sind bewusst abgeschaltet, Lauf per „Run workflow" bzw. `gh workflow run ci.yml`):
+- **Job `tests`** – PHP 8.4 (`shivammathur/setup-php`, Extensions inkl. `pdo_mysql`, `gd`, `intl`), MySQL-8.0-Service, Composer-Install (gecacht, `--no-scripts`), JWT-Keypair (`lexik:jwt:generate-keypair --env=test --skip-if-exists`), Test-DB (create/migrate/fixtures), dann `php bin/phpunit`.
+- **Job `frontend`** – Node 20, `npm ci`, `npm run typecheck` (`tsc --noEmit`), `npm run lint` (ESLint).
+
+Das `.github/`-Verzeichnis enthält außerdem Issue-Templates (Bug Reports, Feature Requests, Tasks).
+
+## Deployment (CD)
+
+**Ein Merge nach `production` ist der Deploy.** Kein Deployer, keine atomic releases – der Runner öffnet eine SSH-Sitzung, der Server aktualisiert sich selbst. Zwei Dateien im Repo, drei Secrets (`SSH_PRIVATE_KEY`, `APP_USER`, `APP_HOST`), Ziel ist Cloudways (`~/public_html`).
+
+**`.github/workflows/cd.yml`** – Trigger `push` auf `production` + `workflow_dispatch`; `concurrency: deploy-production` (zwei parallele Deploys würden sich den Arbeitsbaum umschreiben). Zwei Jobs:
+- **`verify-assets`** – baut `public/build` neu und vergleicht mit dem committeten Stand. **Reihenfolge ist Pflicht: `composer install` VOR `npm ci`/`npm run build`**, weil `node_modules/@symfony/ux-turbo` ein Symlink nach `vendor/symfony/ux-turbo/assets` ist (`file:`-Dependency in `package.json`) – ohne `vendor/` scheitert Webpack am toten Link. Verglichen wird mit `git status --porcelain public/build`, **nicht** `git diff --exit-code`: bei aktivem `cleanupOutputBeforeBuild()` erscheint ein geänderter Hash als *untracked* Datei, die `git diff` nie meldet.
+- **`deploy`** (`needs: verify-assets`) – Sparse-Checkout nur von `.github/deploy.sh`, `webfactory/ssh-agent`, dann `ssh … 'bash -s' < .github/deploy.sh`.
+
+**`.github/deploy.sh`** – die gesamte Logik, versioniert und lokal mit `bash -n` prüfbar. `set -euo pipefail` (ohne die Zeile zählt nur der Exit-Code des letzten Befehls – eine gescheiterte Migration liefe durch und der Lauf würde grün), dann `git fetch` + `git reset --hard origin/production` + `git clean -fd`, `composer install --no-dev --optimize-autoloader`, `doctrine:migrations:migrate`, `cache:clear`.
+
+**Production-Umgebung (verifiziert am 2026-08-06):** Cloudways, SSH-Login `endlech` → Systembenutzer `nrzwptqsvx` (Application-User, dem auch `public_html` gehört – der richtige, nicht der Master-Login). Deploy-Pfad `$HOME/public_html`, Webroot zeigt auf dessen `public/`. PHP 8.4.22, Composer 2.10.1, git 2.30.2. `~/.ssh/` gehört **root** – deshalb liegt der Deploy-Key in `.git/deploy_key` (dort greift auch `git clean` nicht hin) und `known_hosts` wird per `ssh-keyscan` daneben geschrieben; der CI-Key des Runners liegt in `~/.openssh/authorized_keys` (Cloudways-Pfad, gehört dem App-User). `COMPOSER_CACHE_DIR` wird im Skript auf `$HOME/tmp/composer-cache` gesetzt, weil Composers Default `~/.cache` hier nicht beschreibbar ist – sonst läuft jeder Deploy cache-los.
+
+**Kein Messenger-Worker:** Production läuft mit `MESSENGER_TRANSPORT_DSN=sync://` (in `.env.local`, überschreibt das `doctrine://` aus `.env`) – E-Mails werden synchron im Request versendet, es gibt weder Queue noch Worker. `deploy.sh` enthält deshalb **kein** `pkill`. Auf derselben Maschine läuft ein `messenger:consume` einer fremden Application unter anderem Systembenutzer; ein pkill-Muster ohne `-u`-Filter wäre dort eine Fußangel.
+
+**Production-DB ist MariaDB 10.5**, lokal und in der CI läuft dagegen MySQL 8.0. Da `deploy.sh` bei jedem Lauf `doctrine:migrations:migrate` ausführt, müssen neue Migrationen gegen MariaDB 10.5 lauffähig sein – MySQL-8-only-Syntax (z. B. `CHECK`-Constraints mit JSON-Funktionen, Window-Functions in DDL) schlägt sonst erst auf Production fehl.
+
+**Konsequenzen für die tägliche Arbeit:**
+- **Änderung unter `assets/` → `npm run build` ausführen und `public/build` mitcommitten**, sonst blockt `verify-assets` den Deploy. Der Build ist deterministisch (verifiziert), ein Neubau ohne Quelltextänderung erzeugt keine Diffs.
+- **`.nvmrc` ist die gemeinsame Node-Version** für lokale Entwicklung, `ci.yml` und `cd.yml` (beide Workflows nutzen `node-version-file: '.nvmrc'`). Da der committete `public/build` aus der lokalen Node-Version stammt, würde eine abweichende Runner-Version den Vergleich potenziell grundlos rot färben. Wer lokal die Node-Version wechselt, aktualisiert `.nvmrc` mit.
+- `git clean -fd` läuft **ohne** `-x`: alles Gitignorierte überlebt (`.env.local`, `config/jwt/*.pem`, `public/uploads/{avatars,restaurants}`, `var/`, `vendor/`, `public/bundles/`). ⚠️ **`public/uploads/team/` ist per `!`-Regel aus `.gitignore` ausgenommen** – Dateien dort, die nicht committet sind, löscht der Deploy.
+- Kein Null-Downtime: zwischen `git reset` und dem Ende von `composer install` läuft die App für Sekunden gemischt.
+- Rollback = Revert-Commit auf `production`; der nächste Lauf bringt die passenden Assets automatisch mit, weil sie im selben Commit stecken.
+- PHPUnit ist **kein** Deploy-Gate (passend zur manuellen CI); zuschaltbar über `needs: [verify-assets, tests]`.
+
+Server-Setup (einmalig) und die Waisen-Inventur vor dem ersten Lauf: siehe README → „🚢 Deployment".
 
 ## Key Files Reference
 
@@ -414,5 +460,7 @@ No GitHub Actions workflows are configured yet. The `.github/` directory contain
 | `Makefile`            | Development workflow commands               |
 | `tsconfig.json`       | TypeScript compiler configuration          |
 | `eslint.config.mjs`   | ESLint flat config (TypeScript rules)      |
+| `.nvmrc`              | Node-Version für lokal + beide Workflows   |
+| `.github/deploy.sh`   | Deploy-Logik (läuft per SSH auf dem Server)|
 | `importmap.php`       | Symfony AssetMapper module mapping         |
 | `.editorconfig`       | Editor formatting rules                    |
