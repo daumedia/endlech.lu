@@ -413,13 +413,39 @@ Defined in `compose.yaml` and `compose.override.yaml`:
 
 The project uses **CalVer** (Calendar Versioning): `vYYYY.MM.DD` (e.g., `v2026.01.13`). See `CHANGELOG.md`.
 
-## CI/CD
+## CI
 
-GitHub-Actions-Workflow `.github/workflows/ci.yml` (Trigger: Push auf `dev`/`main` + alle Pull Requests):
-- **Job `tests`** – PHP 8.4 (`shivammathur/setup-php`, Extensions inkl. `pdo_mysql`, `gd`, `intl`), MySQL-8.0-Service, Composer-Install (gecacht), JWT-Keypair (`lexik:jwt:generate-keypair --env=test --skip-if-exists`, Passphrase `changeme`), Test-DB (create/migrate/fixtures), dann `php bin/phpunit`.
+GitHub-Actions-Workflow `.github/workflows/ci.yml` (Trigger: **nur** `workflow_dispatch` – die automatischen Push-/PR-Trigger sind bewusst abgeschaltet, Lauf per „Run workflow" bzw. `gh workflow run ci.yml`):
+- **Job `tests`** – PHP 8.4 (`shivammathur/setup-php`, Extensions inkl. `pdo_mysql`, `gd`, `intl`), MySQL-8.0-Service, Composer-Install (gecacht, `--no-scripts`), JWT-Keypair (`lexik:jwt:generate-keypair --env=test --skip-if-exists`), Test-DB (create/migrate/fixtures), dann `php bin/phpunit`.
 - **Job `frontend`** – Node 20, `npm ci`, `npm run typecheck` (`tsc --noEmit`), `npm run lint` (ESLint).
 
 Das `.github/`-Verzeichnis enthält außerdem Issue-Templates (Bug Reports, Feature Requests, Tasks).
+
+## Deployment (CD)
+
+**Ein Merge nach `production` ist der Deploy.** Kein Deployer, keine atomic releases – der Runner öffnet eine SSH-Sitzung, der Server aktualisiert sich selbst. Zwei Dateien im Repo, drei Secrets (`SSH_PRIVATE_KEY`, `APP_USER`, `APP_HOST`), Ziel ist Cloudways (`~/public_html`).
+
+**`.github/workflows/cd.yml`** – Trigger `push` auf `production` + `workflow_dispatch`; `concurrency: deploy-production` (zwei parallele Deploys würden sich den Arbeitsbaum umschreiben). Zwei Jobs:
+- **`verify-assets`** – baut `public/build` neu und vergleicht mit dem committeten Stand. **Reihenfolge ist Pflicht: `composer install` VOR `npm ci`/`npm run build`**, weil `node_modules/@symfony/ux-turbo` ein Symlink nach `vendor/symfony/ux-turbo/assets` ist (`file:`-Dependency in `package.json`) – ohne `vendor/` scheitert Webpack am toten Link. Verglichen wird mit `git status --porcelain public/build`, **nicht** `git diff --exit-code`: bei aktivem `cleanupOutputBeforeBuild()` erscheint ein geänderter Hash als *untracked* Datei, die `git diff` nie meldet.
+- **`deploy`** (`needs: verify-assets`) – Sparse-Checkout nur von `.github/deploy.sh`, `webfactory/ssh-agent`, dann `ssh … 'bash -s' < .github/deploy.sh`.
+
+**`.github/deploy.sh`** – die gesamte Logik, versioniert und lokal mit `bash -n` prüfbar. `set -euo pipefail` (ohne die Zeile zählt nur der Exit-Code des letzten Befehls – eine gescheiterte Migration liefe durch und der Lauf würde grün), dann `git fetch` + `git reset --hard origin/production` + `git clean -fd`, `composer install --no-dev --optimize-autoloader`, `doctrine:migrations:migrate`, `cache:clear`.
+
+**Production-Umgebung (verifiziert am 2026-08-06):** Cloudways, SSH-Login `endlech` → Systembenutzer `nrzwptqsvx` (Application-User, dem auch `public_html` gehört – der richtige, nicht der Master-Login). Deploy-Pfad `$HOME/public_html`, Webroot zeigt auf dessen `public/`. PHP 8.4.22, Composer 2.10.1, git 2.30.2. `~/.ssh/` gehört **root** – deshalb liegt der Deploy-Key in `.git/deploy_key` (dort greift auch `git clean` nicht hin) und `known_hosts` wird per `ssh-keyscan` daneben geschrieben; der CI-Key des Runners liegt in `~/.openssh/authorized_keys` (Cloudways-Pfad, gehört dem App-User). `COMPOSER_CACHE_DIR` wird im Skript auf `$HOME/tmp/composer-cache` gesetzt, weil Composers Default `~/.cache` hier nicht beschreibbar ist – sonst läuft jeder Deploy cache-los.
+
+**Kein Messenger-Worker:** Production läuft mit `MESSENGER_TRANSPORT_DSN=sync://` (in `.env.local`, überschreibt das `doctrine://` aus `.env`) – E-Mails werden synchron im Request versendet, es gibt weder Queue noch Worker. `deploy.sh` enthält deshalb **kein** `pkill`. Auf derselben Maschine läuft ein `messenger:consume` einer fremden Application unter anderem Systembenutzer; ein pkill-Muster ohne `-u`-Filter wäre dort eine Fußangel.
+
+**Production-DB ist MariaDB 10.5**, lokal und in der CI läuft dagegen MySQL 8.0. Da `deploy.sh` bei jedem Lauf `doctrine:migrations:migrate` ausführt, müssen neue Migrationen gegen MariaDB 10.5 lauffähig sein – MySQL-8-only-Syntax (z. B. `CHECK`-Constraints mit JSON-Funktionen, Window-Functions in DDL) schlägt sonst erst auf Production fehl.
+
+**Konsequenzen für die tägliche Arbeit:**
+- **Änderung unter `assets/` → `npm run build` ausführen und `public/build` mitcommitten**, sonst blockt `verify-assets` den Deploy. Der Build ist deterministisch (verifiziert), ein Neubau ohne Quelltextänderung erzeugt keine Diffs.
+- **`.nvmrc` ist die gemeinsame Node-Version** für lokale Entwicklung, `ci.yml` und `cd.yml` (beide Workflows nutzen `node-version-file: '.nvmrc'`). Da der committete `public/build` aus der lokalen Node-Version stammt, würde eine abweichende Runner-Version den Vergleich potenziell grundlos rot färben. Wer lokal die Node-Version wechselt, aktualisiert `.nvmrc` mit.
+- `git clean -fd` läuft **ohne** `-x`: alles Gitignorierte überlebt (`.env.local`, `config/jwt/*.pem`, `public/uploads/{avatars,restaurants}`, `var/`, `vendor/`, `public/bundles/`). ⚠️ **`public/uploads/team/` ist per `!`-Regel aus `.gitignore` ausgenommen** – Dateien dort, die nicht committet sind, löscht der Deploy.
+- Kein Null-Downtime: zwischen `git reset` und dem Ende von `composer install` läuft die App für Sekunden gemischt.
+- Rollback = Revert-Commit auf `production`; der nächste Lauf bringt die passenden Assets automatisch mit, weil sie im selben Commit stecken.
+- PHPUnit ist **kein** Deploy-Gate (passend zur manuellen CI); zuschaltbar über `needs: [verify-assets, tests]`.
+
+Server-Setup (einmalig) und die Waisen-Inventur vor dem ersten Lauf: siehe README → „🚢 Deployment".
 
 ## Key Files Reference
 
@@ -434,5 +460,7 @@ Das `.github/`-Verzeichnis enthält außerdem Issue-Templates (Bug Reports, Feat
 | `Makefile`            | Development workflow commands               |
 | `tsconfig.json`       | TypeScript compiler configuration          |
 | `eslint.config.mjs`   | ESLint flat config (TypeScript rules)      |
+| `.nvmrc`              | Node-Version für lokal + beide Workflows   |
+| `.github/deploy.sh`   | Deploy-Logik (läuft per SSH auf dem Server)|
 | `importmap.php`       | Symfony AssetMapper module mapping         |
 | `.editorconfig`       | Editor formatting rules                    |

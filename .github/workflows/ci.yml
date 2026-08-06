@@ -77,7 +77,8 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
-          node-version: '20'
+          # Gemeinsame Quelle mit cd.yml und der lokalen Entwicklung.
+          node-version-file: '.nvmrc'
           cache: 'npm'
 
       - name: Install dependencies
