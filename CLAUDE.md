@@ -413,6 +413,15 @@ Defined in `compose.yaml` and `compose.override.yaml`:
 
 The project uses **CalVer** (Calendar Versioning): `vYYYY.MM.DD` (e.g., `v2026.01.13`). See `CHANGELOG.md`.
 
+**Bei jedem Release müssen vier Stellen mitgezogen werden** – sie liegen auseinander und wurden schon mehrfach vergessen (das README-Badge stand zwei Releases lang auf einer alten Version, der Footer eines):
+
+1. `CHANGELOG.md` – `[Unreleased]`-Abschnitt zu `[YYYY.MM.DD] – Titel` schließen **und** das Version-Badge in Zeile 5.
+2. `README.md` – Version-Badge (Format mit `v`-Präfix).
+3. `config/services.yaml` – Parameter `app.version`; wird über `twig.yaml` als `app_version` global gesetzt und in `templates/base.html.twig` im Footer gerendert. **Das ist die einzige Stelle, die Besucher sehen.**
+4. Git-Tag `vYYYY.MM.DD` auf dem Release-Commit in `dev`, danach GitHub-Release (`gh release create`).
+
+Konvention: Release-Commit direkt auf `dev` mit dem Titel `Release vYYYY.MM.DD – Titel`, Tag darauf, anschließend Merge `dev` → `production` (= Deploy).
+
 ## CI
 
 GitHub-Actions-Workflow `.github/workflows/ci.yml` (Trigger: **nur** `workflow_dispatch` – die automatischen Push-/PR-Trigger sind bewusst abgeschaltet, Lauf per „Run workflow" bzw. `gh workflow run ci.yml`):
