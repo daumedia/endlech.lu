@@ -2,18 +2,23 @@
 
 Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
-![Version](https://img.shields.io/badge/version-2026.08.06-blue)
+![Version](https://img.shields.io/badge/version-2026.08.09-blue)
 ![Status](https://img.shields.io/badge/status-beta-green)
 
 ## [Unreleased]
+
+### Added
+- **Map:** Kartenansicht der Locations. *(geplant)*
+
+---
+
+## [2026.08.09] – Dreiwertige Vorschlags-Antworten & Fehler-Tracking
 
 ### Changed
 - **Restaurant vorschlagen – „Weiß nicht" ist jetzt eine eigene Antwort:** Barrierefreiheit, Ernährungsoptionen und Zahlungsmethoden waren 12 einfache Checkboxen; ein leeres Häkchen bedeutete dadurch zweierlei zugleich – „gibt es nicht" und „weiß ich nicht". Der alte Hint sagte das offen („Unbekannte Felder einfach frei lassen"), und das Admin-Detail zeigte es als „Nein / unbekannt" an. Für eine Barrierefreiheits-Plattform ist genau dieser Unterschied wesentlich: „kein barrierefreies WC" ist eine belastbare Information, „unbekannt" ist keine. Jede der 12 Fragen ist jetzt eine **Pflichtfrage mit Ja / Nein / Weiß nicht**, dargestellt als Segmented Control (echte Radio-Inputs als `sr-only` statt `hidden`, damit Tastatur- und Screenreader-Bedienung erhalten bleibt; sichtbarer Fokusring, Tap-Targets über 44 px). Der Wizard blockiert „Weiter", solange Fragen im aktuellen Schritt offen sind, markiert sie rot und springt hin – serverseitig sichert ein `NotNull`-Constraint ab (ungültiger Submit → 422). Neuer Enum `App\Enum\TriState`; bewusst nicht `?bool`, weil sich „Weiß nicht" sonst nicht von „noch nicht beantwortet" unterscheiden ließe und die Pflichtvalidierung damit unmöglich wäre. Das Admin-Detail zeigt Ja grün, Nein rot, Weiß nicht grau. Die `Restaurant`-Entity bleibt bei `bool` – beim Freigeben wird „Weiß nicht" als „Nein" übernommen, was Repository-Filter, den `RestaurantTransformer` (Boolean-Vertrag der iOS-API) und alle Restaurant-Templates unangetastet lässt. Migration `Version20260809000000` überführt `TINYINT(1)` nach `VARCHAR(10) NULL` (kein natives `ENUM` wegen MariaDB 10.5 auf Production) und übersetzt Bestandsdaten `1 → yes`, `0 → unknown`.
 
 ### Added
 - **Fehler-Tracking mit Sentry:** Fehler auf Production waren bislang unsichtbar – Monolog schrieb nur nach `php://stderr`, wo niemand aktiv hinschaut. `sentry/sentry-symfony` meldet jetzt uncaught Exceptions und Monolog-Records ab `WARNING` an ein Sentry-Projekt in der **EU-Region** (Frankfurt). Das Bundle ist in `config/bundles.php` bewusst **nur für `prod`** registriert: lokale Entwicklung und die Test-Suite kennen die Extension gar nicht und können nichts senden. Der DSN kommt aus `SENTRY_DSN` und wird ausschließlich in der `.env.local` auf dem Server gesetzt – nicht im öffentlichen Repo; ein leerer Wert deaktiviert Sentry lautlos (Muster von `MOBILITEIT_API_KEY`). Datenschutzseitig: `send_default_pii: false` (keine IP-Adressen, Cookies, Header oder Nutzerdaten), `zend.exception_ignore_args` bleibt auf dem PHP-Default `On`, damit keine Funktionsargumente wie Passwörter in Stacktraces landen. 404/405/403/429 sind über `ignore_exceptions` gefiltert, sonst hätte Bot-Traffic die Quota geflutet. Sentry-Releases hängen über `release: 'endlech@%app.version%'` am CalVer-Parameter und ziehen bei jedem Release automatisch mit. Datenschutzerklärung um einen Abschnitt „Fehleranalyse (Sentry)" in allen vier Sprachen ergänzt.
-
-- **Map:** Kartenansicht der Locations. *(geplant)*
 
 ---
 
