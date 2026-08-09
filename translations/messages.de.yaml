@@ -85,6 +85,11 @@ status:
     open: "Geöffnet"
     closed: "Geschlossen"
 
+tristate:
+    "yes": "Ja"
+    "no": "Nein"
+    "unknown": "Weiß nicht"
+
 accessibility:
     title: "Barrierefreiheit"
     wheelchair: "Rollstuhlgerecht"
@@ -245,7 +250,7 @@ community:
         text: "Kennst du ein barrierefreies Restaurant in Luxemburg, das noch fehlt? Schlage es vor – wir prüfen es und nehmen es auf!"
         basic_data: "Grunddaten"
         accessibility: "Barrierefreiheit"
-        accessibility_hint: "Kreuze an, was du weißt. Unbekannte Felder einfach frei lassen."
+        accessibility_hint: "Bitte beantworte jede Frage. Wenn du unsicher bist, wähle „Weiß nicht“."
         wheelchair: "Rollstuhlgerecht (stufenloser Zugang)"
         toilet: "Barrierefreies WC"
         dogs: "Assistenzhund erlaubt"
@@ -253,9 +258,9 @@ community:
         changing_table: "Wickeltisch vorhanden"
         disabled_parking: "Behindertenparkplatz"
         dietary: "Ernährungsoptionen"
-        dietary_hint: "Welche Ernährungsoptionen bietet das Restaurant an?"
+        dietary_hint: "Welche Ernährungsoptionen bietet das Restaurant an? Wenn du unsicher bist, wähle „Weiß nicht“."
         payment: "Zahlungsmethoden"
-        payment_hint: "Welche Zahlungsmethoden werden akzeptiert?"
+        payment_hint: "Welche Zahlungsmethoden werden akzeptiert? Wenn du unsicher bist, wähle „Weiß nicht“."
         contact: "Kontaktdaten"
         contact_hint: "Wenn du Kontaktdaten kennst, trage sie hier ein. Alles ist optional."
         social_media: "Social Media"
@@ -269,6 +274,7 @@ community:
         step_notes: "Notizen & Absenden"
         submit: "Vorschlag einreichen"
         cancel: "Abbrechen"
+        step_incomplete: "Bitte beantworte alle Fragen in diesem Schritt."
     thanks:
         title: "Danke für deinen Vorschlag – Endlech.lu"
         heading: "Danke für deinen Vorschlag!"

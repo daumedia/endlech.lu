@@ -62,7 +62,8 @@
     <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8"
          data-controller="suggestion-wizard"
          data-suggestion-wizard-current-value="{{ error_step > 0 ? error_step : 1 }}"
-         data-suggestion-wizard-total-value="5">
+         data-suggestion-wizard-total-value="5"
+         data-suggestion-wizard-incomplete-message-value="{{ 'community.suggest.step_incomplete'|trans }}">
 
         {# Step-Indikator #}
         <nav class="mb-8">
@@ -134,39 +135,16 @@
 
             {# === Step 2: Barrierefreiheit === #}
             <div data-suggestion-wizard-target="step" class="hidden">
-                <fieldset class="space-y-3">
+                <fieldset class="space-y-5">
                     <legend class="text-lg font-bold text-gray-700 border-b border-gray-200 pb-2 mb-4">{{ 'community.suggest.step_accessibility'|trans }}</legend>
                     <p class="text-sm text-gray-500 -mt-1 mb-3">{{ 'community.suggest.accessibility_hint'|trans }}</p>
 
-                    <label class="flex items-center gap-3 cursor-pointer group">
-                        {{ form_widget(form.isWheelchairAccessible, {'attr': {'class': 'rounded text-cyan-600 focus:ring-cyan-500 border-gray-300'}}) }}
-                        <span class="text-sm text-gray-600 group-hover:text-cyan-700">♿ {{ 'community.suggest.wheelchair'|trans }}</span>
-                    </label>
-
-                    <label class="flex items-center gap-3 cursor-pointer group">
-                        {{ form_widget(form.hasAccessibleToilet, {'attr': {'class': 'rounded text-cyan-600 focus:ring-cyan-500 border-gray-300'}}) }}
-                        <span class="text-sm text-gray-600 group-hover:text-cyan-700">🚻 {{ 'community.suggest.toilet'|trans }}</span>
-                    </label>
-
-                    <label class="flex items-center gap-3 cursor-pointer group">
-                        {{ form_widget(form.allowsAssistanceDogs, {'attr': {'class': 'rounded text-cyan-600 focus:ring-cyan-500 border-gray-300'}}) }}
-                        <span class="text-sm text-gray-600 group-hover:text-cyan-700">🐕 {{ 'community.suggest.dogs'|trans }}</span>
-                    </label>
-
-                    <label class="flex items-center gap-3 cursor-pointer group">
-                        {{ form_widget(form.hasBrightLighting, {'attr': {'class': 'rounded text-cyan-600 focus:ring-cyan-500 border-gray-300'}}) }}
-                        <span class="text-sm text-gray-600 group-hover:text-cyan-700">💡 {{ 'community.suggest.lighting'|trans }}</span>
-                    </label>
-
-                    <label class="flex items-center gap-3 cursor-pointer group">
-                        {{ form_widget(form.hasChangingTable, {'attr': {'class': 'rounded text-cyan-600 focus:ring-cyan-500 border-gray-300'}}) }}
-                        <span class="text-sm text-gray-600 group-hover:text-cyan-700">🍼 {{ 'community.suggest.changing_table'|trans }}</span>
-                    </label>
-
-                    <label class="flex items-center gap-3 cursor-pointer group">
-                        {{ form_widget(form.hasDisabledParking, {'attr': {'class': 'rounded text-cyan-600 focus:ring-cyan-500 border-gray-300'}}) }}
-                        <span class="text-sm text-gray-600 group-hover:text-cyan-700">🅿️ {{ 'community.suggest.disabled_parking'|trans }}</span>
-                    </label>
+                    {{ include('partials/_tristate_field.html.twig', {field: form.isWheelchairAccessible, emoji: '♿', label: 'community.suggest.wheelchair'|trans}) }}
+                    {{ include('partials/_tristate_field.html.twig', {field: form.hasAccessibleToilet, emoji: '🚻', label: 'community.suggest.toilet'|trans}) }}
+                    {{ include('partials/_tristate_field.html.twig', {field: form.allowsAssistanceDogs, emoji: '🐕', label: 'community.suggest.dogs'|trans}) }}
+                    {{ include('partials/_tristate_field.html.twig', {field: form.hasBrightLighting, emoji: '💡', label: 'community.suggest.lighting'|trans}) }}
+                    {{ include('partials/_tristate_field.html.twig', {field: form.hasChangingTable, emoji: '🍼', label: 'community.suggest.changing_table'|trans}) }}
+                    {{ include('partials/_tristate_field.html.twig', {field: form.hasDisabledParking, emoji: '🅿️', label: 'community.suggest.disabled_parking'|trans}) }}
                 </fieldset>
             </div>
 
@@ -174,45 +152,23 @@
             <div data-suggestion-wizard-target="step" class="hidden">
                 <div class="space-y-6">
                     {# Ernährungsoptionen #}
-                    <fieldset class="space-y-3">
+                    <fieldset class="space-y-5">
                         <legend class="text-lg font-bold text-gray-700 border-b border-gray-200 pb-2 mb-4">{{ 'community.suggest.dietary'|trans }}</legend>
                         <p class="text-sm text-gray-500 -mt-1 mb-3">{{ 'community.suggest.dietary_hint'|trans }}</p>
 
-                        <label class="flex items-center gap-3 cursor-pointer group">
-                            {{ form_widget(form.isVegan, {'attr': {'class': 'rounded text-cyan-600 focus:ring-cyan-500 border-gray-300'}}) }}
-                            <span class="text-sm text-gray-600 group-hover:text-cyan-700">🌱 {{ 'form.vegan'|trans }}</span>
-                        </label>
-
-                        <label class="flex items-center gap-3 cursor-pointer group">
-                            {{ form_widget(form.isVegetarian, {'attr': {'class': 'rounded text-cyan-600 focus:ring-cyan-500 border-gray-300'}}) }}
-                            <span class="text-sm text-gray-600 group-hover:text-cyan-700">🥗 {{ 'form.vegetarian'|trans }}</span>
-                        </label>
-
-                        <label class="flex items-center gap-3 cursor-pointer group">
-                            {{ form_widget(form.isHalal, {'attr': {'class': 'rounded text-cyan-600 focus:ring-cyan-500 border-gray-300'}}) }}
-                            <span class="text-sm text-gray-600 group-hover:text-cyan-700">🍖 {{ 'form.halal'|trans }}</span>
-                        </label>
+                        {{ include('partials/_tristate_field.html.twig', {field: form.isVegan, emoji: '🌱', label: 'form.vegan'|trans}) }}
+                        {{ include('partials/_tristate_field.html.twig', {field: form.isVegetarian, emoji: '🥗', label: 'form.vegetarian'|trans}) }}
+                        {{ include('partials/_tristate_field.html.twig', {field: form.isHalal, emoji: '🍖', label: 'form.halal'|trans}) }}
                     </fieldset>
 
                     {# Zahlungsmethoden #}
-                    <fieldset class="space-y-3">
+                    <fieldset class="space-y-5">
                         <legend class="text-lg font-bold text-gray-700 border-b border-gray-200 pb-2 mb-4">{{ 'community.suggest.payment'|trans }}</legend>
                         <p class="text-sm text-gray-500 -mt-1 mb-3">{{ 'community.suggest.payment_hint'|trans }}</p>
 
-                        <label class="flex items-center gap-3 cursor-pointer group">
-                            {{ form_widget(form.acceptsCash, {'attr': {'class': 'rounded text-cyan-600 focus:ring-cyan-500 border-gray-300'}}) }}
-                            <span class="text-sm text-gray-600 group-hover:text-cyan-700">💵 {{ 'form.accepts_cash'|trans }}</span>
-                        </label>
-
-                        <label class="flex items-center gap-3 cursor-pointer group">
-                            {{ form_widget(form.acceptsCard, {'attr': {'class': 'rounded text-cyan-600 focus:ring-cyan-500 border-gray-300'}}) }}
-                            <span class="text-sm text-gray-600 group-hover:text-cyan-700">💳 {{ 'form.accepts_card'|trans }}</span>
-                        </label>
-
-                        <label class="flex items-center gap-3 cursor-pointer group">
-                            {{ form_widget(form.acceptsPayconiq, {'attr': {'class': 'rounded text-cyan-600 focus:ring-cyan-500 border-gray-300'}}) }}
-                            <span class="text-sm text-gray-600 group-hover:text-cyan-700">📱 {{ 'form.accepts_payconiq'|trans }}</span>
-                        </label>
+                        {{ include('partials/_tristate_field.html.twig', {field: form.acceptsCash, emoji: '💵', label: 'form.accepts_cash'|trans}) }}
+                        {{ include('partials/_tristate_field.html.twig', {field: form.acceptsCard, emoji: '💳', label: 'form.accepts_card'|trans}) }}
+                        {{ include('partials/_tristate_field.html.twig', {field: form.acceptsPayconiq, emoji: '📱', label: 'form.accepts_payconiq'|trans}) }}
                     </fieldset>
                 </div>
             </div>
@@ -298,6 +254,10 @@
             </div>
 
             {# Navigation #}
+            <p data-suggestion-wizard-target="error"
+               role="alert"
+               class="hidden text-sm font-semibold text-red-600"></p>
+
             <div class="pt-4 border-t border-gray-200 flex items-center gap-4">
                 <button type="button"
                         data-suggestion-wizard-target="prevButton"

@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Enum\Language;
+use App\Enum\TriState;
 use App\Repository\RestaurantSuggestionRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -35,41 +35,41 @@ class RestaurantSuggestion
     #[ORM\Column(length: 10)]
     private string $emoji = '🍽️';
 
-    #[ORM\Column]
-    private bool $isWheelchairAccessible = false;
+    #[ORM\Column(length: 10, nullable: true, enumType: TriState::class)]
+    private ?TriState $isWheelchairAccessible = null;
 
-    #[ORM\Column]
-    private bool $hasAccessibleToilet = false;
+    #[ORM\Column(length: 10, nullable: true, enumType: TriState::class)]
+    private ?TriState $hasAccessibleToilet = null;
 
-    #[ORM\Column]
-    private bool $allowsAssistanceDogs = false;
+    #[ORM\Column(length: 10, nullable: true, enumType: TriState::class)]
+    private ?TriState $allowsAssistanceDogs = null;
 
-    #[ORM\Column]
-    private bool $hasBrightLighting = false;
+    #[ORM\Column(length: 10, nullable: true, enumType: TriState::class)]
+    private ?TriState $hasBrightLighting = null;
 
-    #[ORM\Column]
-    private bool $hasChangingTable = false;
+    #[ORM\Column(length: 10, nullable: true, enumType: TriState::class)]
+    private ?TriState $hasChangingTable = null;
 
-    #[ORM\Column]
-    private bool $hasDisabledParking = false;
+    #[ORM\Column(length: 10, nullable: true, enumType: TriState::class)]
+    private ?TriState $hasDisabledParking = null;
 
-    #[ORM\Column]
-    private bool $acceptsCash = false;
+    #[ORM\Column(length: 10, nullable: true, enumType: TriState::class)]
+    private ?TriState $acceptsCash = null;
 
-    #[ORM\Column]
-    private bool $acceptsCard = false;
+    #[ORM\Column(length: 10, nullable: true, enumType: TriState::class)]
+    private ?TriState $acceptsCard = null;
 
-    #[ORM\Column]
-    private bool $acceptsPayconiq = false;
+    #[ORM\Column(length: 10, nullable: true, enumType: TriState::class)]
+    private ?TriState $acceptsPayconiq = null;
 
-    #[ORM\Column]
-    private bool $isVegan = false;
+    #[ORM\Column(length: 10, nullable: true, enumType: TriState::class)]
+    private ?TriState $isVegan = null;
 
-    #[ORM\Column]
-    private bool $isVegetarian = false;
+    #[ORM\Column(length: 10, nullable: true, enumType: TriState::class)]
+    private ?TriState $isVegetarian = null;
 
-    #[ORM\Column]
-    private bool $isHalal = false;
+    #[ORM\Column(length: 10, nullable: true, enumType: TriState::class)]
+    private ?TriState $isHalal = null;
 
     /** @var string[] */
     #[ORM\Column(type: Types::JSON)]
@@ -175,144 +175,144 @@ class RestaurantSuggestion
         return $this;
     }
 
-    public function isWheelchairAccessible(): bool
+    public function isWheelchairAccessible(): ?TriState
     {
         return $this->isWheelchairAccessible;
     }
 
-    public function setIsWheelchairAccessible(bool $isWheelchairAccessible): static
+    public function setIsWheelchairAccessible(?TriState $isWheelchairAccessible): static
     {
         $this->isWheelchairAccessible = $isWheelchairAccessible;
 
         return $this;
     }
 
-    public function hasAccessibleToilet(): bool
+    public function hasAccessibleToilet(): ?TriState
     {
         return $this->hasAccessibleToilet;
     }
 
-    public function setHasAccessibleToilet(bool $hasAccessibleToilet): static
+    public function setHasAccessibleToilet(?TriState $hasAccessibleToilet): static
     {
         $this->hasAccessibleToilet = $hasAccessibleToilet;
 
         return $this;
     }
 
-    public function allowsAssistanceDogs(): bool
+    public function allowsAssistanceDogs(): ?TriState
     {
         return $this->allowsAssistanceDogs;
     }
 
-    public function setAllowsAssistanceDogs(bool $allowsAssistanceDogs): static
+    public function setAllowsAssistanceDogs(?TriState $allowsAssistanceDogs): static
     {
         $this->allowsAssistanceDogs = $allowsAssistanceDogs;
 
         return $this;
     }
 
-    public function hasBrightLighting(): bool
+    public function hasBrightLighting(): ?TriState
     {
         return $this->hasBrightLighting;
     }
 
-    public function setHasBrightLighting(bool $hasBrightLighting): static
+    public function setHasBrightLighting(?TriState $hasBrightLighting): static
     {
         $this->hasBrightLighting = $hasBrightLighting;
 
         return $this;
     }
 
-    public function hasChangingTable(): bool
+    public function hasChangingTable(): ?TriState
     {
         return $this->hasChangingTable;
     }
 
-    public function setHasChangingTable(bool $hasChangingTable): static
+    public function setHasChangingTable(?TriState $hasChangingTable): static
     {
         $this->hasChangingTable = $hasChangingTable;
 
         return $this;
     }
 
-    public function hasDisabledParking(): bool
+    public function hasDisabledParking(): ?TriState
     {
         return $this->hasDisabledParking;
     }
 
-    public function setHasDisabledParking(bool $hasDisabledParking): static
+    public function setHasDisabledParking(?TriState $hasDisabledParking): static
     {
         $this->hasDisabledParking = $hasDisabledParking;
 
         return $this;
     }
 
-    public function acceptsCash(): bool
+    public function acceptsCash(): ?TriState
     {
         return $this->acceptsCash;
     }
 
-    public function setAcceptsCash(bool $acceptsCash): static
+    public function setAcceptsCash(?TriState $acceptsCash): static
     {
         $this->acceptsCash = $acceptsCash;
 
         return $this;
     }
 
-    public function acceptsCard(): bool
+    public function acceptsCard(): ?TriState
     {
         return $this->acceptsCard;
     }
 
-    public function setAcceptsCard(bool $acceptsCard): static
+    public function setAcceptsCard(?TriState $acceptsCard): static
     {
         $this->acceptsCard = $acceptsCard;
 
         return $this;
     }
 
-    public function acceptsPayconiq(): bool
+    public function acceptsPayconiq(): ?TriState
     {
         return $this->acceptsPayconiq;
     }
 
-    public function setAcceptsPayconiq(bool $acceptsPayconiq): static
+    public function setAcceptsPayconiq(?TriState $acceptsPayconiq): static
     {
         $this->acceptsPayconiq = $acceptsPayconiq;
 
         return $this;
     }
 
-    public function isVegan(): bool
+    public function isVegan(): ?TriState
     {
         return $this->isVegan;
     }
 
-    public function setIsVegan(bool $isVegan): static
+    public function setIsVegan(?TriState $isVegan): static
     {
         $this->isVegan = $isVegan;
 
         return $this;
     }
 
-    public function isVegetarian(): bool
+    public function isVegetarian(): ?TriState
     {
         return $this->isVegetarian;
     }
 
-    public function setIsVegetarian(bool $isVegetarian): static
+    public function setIsVegetarian(?TriState $isVegetarian): static
     {
         $this->isVegetarian = $isVegetarian;
 
         return $this;
     }
 
-    public function isHalal(): bool
+    public function isHalal(): ?TriState
     {
         return $this->isHalal;
     }
 
-    public function setIsHalal(bool $isHalal): static
+    public function setIsHalal(?TriState $isHalal): static
     {
         $this->isHalal = $isHalal;
 

@@ -60,18 +60,20 @@ final class AdminSuggestionController extends AbstractController
                 $restaurant->addCuisine($cuisine);
             }
         }
-        $restaurant->setIsWheelchairAccessible($suggestion->isWheelchairAccessible());
-        $restaurant->setHasAccessibleToilet($suggestion->hasAccessibleToilet());
-        $restaurant->setAllowsAssistanceDogs($suggestion->allowsAssistanceDogs());
-        $restaurant->setHasBrightLighting($suggestion->hasBrightLighting());
-        $restaurant->setHasChangingTable($suggestion->hasChangingTable());
-        $restaurant->setHasDisabledParking($suggestion->hasDisabledParking());
-        $restaurant->setAcceptsCash($suggestion->acceptsCash());
-        $restaurant->setAcceptsCard($suggestion->acceptsCard());
-        $restaurant->setAcceptsPayconiq($suggestion->acceptsPayconiq());
-        $restaurant->setIsVegan($suggestion->isVegan());
-        $restaurant->setIsVegetarian($suggestion->isVegetarian());
-        $restaurant->setIsHalal($suggestion->isHalal());
+        // Restaurant kennt nur ja/nein: "Weiß nicht" wird als "nein" übernommen,
+        // der Admin kann es im Restaurant-Formular nachtragen.
+        $restaurant->setIsWheelchairAccessible($suggestion->isWheelchairAccessible()?->isYes() ?? false);
+        $restaurant->setHasAccessibleToilet($suggestion->hasAccessibleToilet()?->isYes() ?? false);
+        $restaurant->setAllowsAssistanceDogs($suggestion->allowsAssistanceDogs()?->isYes() ?? false);
+        $restaurant->setHasBrightLighting($suggestion->hasBrightLighting()?->isYes() ?? false);
+        $restaurant->setHasChangingTable($suggestion->hasChangingTable()?->isYes() ?? false);
+        $restaurant->setHasDisabledParking($suggestion->hasDisabledParking()?->isYes() ?? false);
+        $restaurant->setAcceptsCash($suggestion->acceptsCash()?->isYes() ?? false);
+        $restaurant->setAcceptsCard($suggestion->acceptsCard()?->isYes() ?? false);
+        $restaurant->setAcceptsPayconiq($suggestion->acceptsPayconiq()?->isYes() ?? false);
+        $restaurant->setIsVegan($suggestion->isVegan()?->isYes() ?? false);
+        $restaurant->setIsVegetarian($suggestion->isVegetarian()?->isYes() ?? false);
+        $restaurant->setIsHalal($suggestion->isHalal()?->isYes() ?? false);
         $restaurant->setSpokenLanguages($suggestion->getSpokenLanguages());
         $restaurant->setPhone($suggestion->getPhone());
         $restaurant->setEmail($suggestion->getEmail());
