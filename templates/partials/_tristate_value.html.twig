@@ -1,0 +1,12 @@
+{#
+    Anzeige einer dreiwertigen Antwort im Admin-Detail.
+
+    Parameter:
+      value  – TriState oder null (null = noch nicht beantwortet, wird wie "unbekannt" gezeigt)
+      emoji  – Emoji vor der Frage
+      label  – bereits übersetzter Fragetext
+#}
+{% set state = value ? value.value : 'unknown' %}
+<li class="{{ {'yes': 'text-green-700', 'no': 'text-red-600', 'unknown': 'text-gray-400'}[state] }}">
+    {{ emoji }} {{ label }}: <strong>{{ ('tristate.' ~ state)|trans }}</strong>
+</li>

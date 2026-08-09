@@ -85,6 +85,11 @@ status:
     open: "Open"
     closed: "Closed"
 
+tristate:
+    "yes": "Yes"
+    "no": "No"
+    "unknown": "Don't know"
+
 accessibility:
     title: "Accessibility"
     wheelchair: "Wheelchair Accessible"
@@ -245,7 +250,7 @@ community:
         text: "Know an accessible restaurant in Luxembourg that's missing? Suggest it — we'll review it and add it!"
         basic_data: "Basic Information"
         accessibility: "Accessibility"
-        accessibility_hint: "Check what you know. Leave unknown fields empty."
+        accessibility_hint: "Please answer every question. If you're not sure, choose “Don't know”."
         wheelchair: "Wheelchair accessible (step-free access)"
         toilet: "Accessible toilet"
         dogs: "Assistance dogs allowed"
@@ -253,9 +258,9 @@ community:
         changing_table: "Changing table available"
         disabled_parking: "Disabled parking"
         dietary: "Dietary Options"
-        dietary_hint: "What dietary options does the restaurant offer?"
+        dietary_hint: "What dietary options does the restaurant offer? If you're not sure, choose “Don't know”."
         payment: "Payment Methods"
-        payment_hint: "What payment methods are accepted?"
+        payment_hint: "What payment methods are accepted? If you're not sure, choose “Don't know”."
         contact: "Contact Details"
         contact_hint: "If you know the contact details, enter them here. Everything is optional."
         social_media: "Social Media"
@@ -269,6 +274,7 @@ community:
         step_notes: "Notes & Submit"
         submit: "Submit Suggestion"
         cancel: "Cancel"
+        step_incomplete: "Please answer all questions in this step."
     thanks:
         title: "Thank You – Endlech.lu"
         heading: "Thank you for your suggestion!"

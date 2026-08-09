@@ -46,3 +46,4 @@ suggestion:
     cuisine_max: "La cuisine ne doit pas dépasser {{ limit }} caractères."
     emoji_max: "L'emoji ne doit pas dépasser {{ limit }} caractères."
     notes_max: "Les remarques ne doivent pas dépasser {{ limit }} caractères."
+    answer_required: "Merci de choisir Oui, Non ou Je ne sais pas."

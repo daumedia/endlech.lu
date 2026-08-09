@@ -85,6 +85,11 @@ status:
     open: "Op"
     closed: "Zou"
 
+tristate:
+    "yes": "Jo"
+    "no": "Nee"
+    "unknown": "Weess net"
+
 accessibility:
     title: "Barrierefreiheet"
     wheelchair: "Rollstullgerecht"
@@ -245,7 +250,7 @@ community:
         text: "Kenns du e barrierefrät Restaurant zu Lëtzebuerg, dat nach feelt? Schlo et vir — mir préifen et a huelen et op!"
         basic_data: "Gronddaten"
         accessibility: "Barrierefreiheet"
-        accessibility_hint: "Kräiz un, wat s du weess. Onbekannt Felder einfach fräi loossen."
+        accessibility_hint: "Beäntwer w.e.g. all Fro. Wann s du onsécher bass, wiel „Weess net“."
         wheelchair: "Rollstullgerecht (ouni Trapen)"
         toilet: "Barrierefrä WC"
         dogs: "Assistenzhond erlaabt"
@@ -253,9 +258,9 @@ community:
         changing_table: "Wéckeldësch virgesinn"
         disabled_parking: "Behënnerteparkplaz"
         dietary: "Ernärungsoptiounen"
-        dietary_hint: "Wéi eng Ernärungsoptiounen bitt d'Restaurant un?"
+        dietary_hint: "Wéi eng Ernärungsoptiounen bitt d'Restaurant un? Wann s du onsécher bass, wiel „Weess net“."
         payment: "Bezuelmethoden"
-        payment_hint: "Wéi eng Bezuelmethoden ginn akzeptéiert?"
+        payment_hint: "Wéi eng Bezuelmethoden ginn akzeptéiert? Wann s du onsécher bass, wiel „Weess net“."
         contact: "Kontaktdaten"
         contact_hint: "Wann s du d'Kontaktdaten kenns, dro se hei an. Alles ass optional."
         social_media: "Social Media"
@@ -269,6 +274,7 @@ community:
         step_notes: "Notizen & Ofschécken"
         submit: "Virschlag ofschécken"
         cancel: "Ofbriechen"
+        step_incomplete: "Beäntwer w.e.g. all Froen an dësem Schrëtt."
     thanks:
         title: "Merci fir däi Virschlag – Endlech.lu"
         heading: "Merci fir däi Virschlag!"

@@ -46,3 +46,4 @@ suggestion:
     cuisine_max: "D'Kichen dierf maximal {{ limit }} Zeechen laang sinn."
     emoji_max: "Den Emoji dierf maximal {{ limit }} Zeechen laang sinn."
     notes_max: "D'Hiweiser dierfen maximal {{ limit }} Zeechen laang sinn."
+    answer_required: "Wiel w.e.g. Jo, Nee oder Weess net."
