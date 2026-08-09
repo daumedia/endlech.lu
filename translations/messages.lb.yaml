@@ -317,6 +317,8 @@ legal:
     links_text: "Eist Ugebot enthält Linken op extern Websäite vu Drëtten, op deenen hiren Inhalt mir keen Afloss hunn. Dofir kënne mir fir dës friem Inhalter och keng Garantie iwwerhuelen. Fir d'Inhalter vun de verlinkten Säiten ass ëmmer den jeweilegen Ubidder oder Bedreiwer vun de Säite verantwortlech."
     privacy_title: "Dateschutz"
     privacy_text: "D'Benotzung vun eiser Websäit ass an der Reegel ouni Ugab vu personebezunnenen Daten méiglech. Soubal op eise Säite personebezunnen Daten (zum Beispill Numm, Adress oder E-Mail-Adressen) erhuewe ginn, geschitt dat, soubal méiglech, ëmmer op fräiwëlleger Basis."
+    error_tracking_title: "Feeleranalyse (Sentry)"
+    error_tracking_text: "Fir technesch Feeler z'erkennen an ze behiewen, notze mir Sentry (Functional Software, Inc.). Wann op eiser Websäit e Feeler optrëtt, ginn technesch Uginne wéi Zäitpunkt, opgeruffe Säit a Feelermeldung u Serveren an der Europäescher Unioun (Frankfurt um Main) iwwerdroen. IP-Adressen an Notzerdate ginn dobäi net iwwerdroen. Rechtsgrondlag ass eise berechtegten Interessi un engem stabilen a séchere Betrib vun der Websäit no Art. 6 Abs. 1 lit. f DSGVO."
 
 criteria:
     title: "Critèren fir Barrierefreiheet – Endlech.lu"

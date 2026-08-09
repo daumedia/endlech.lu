@@ -317,6 +317,8 @@ legal:
     links_text: "Our website contains links to external third-party websites over whose content we have no influence. Therefore, we cannot accept any liability for this external content. The respective provider or operator of the pages is always responsible for the content of the linked pages."
     privacy_title: "Privacy"
     privacy_text: "The use of our website is generally possible without providing personal data. Insofar as personal data (e.g., name, address, or email addresses) is collected on our pages, this is always done on a voluntary basis as far as possible."
+    error_tracking_title: "Error tracking (Sentry)"
+    error_tracking_text: "To detect and fix technical errors, we use Sentry (Functional Software, Inc.). If an error occurs on our website, technical details such as the time, the page requested and the error message are transmitted to servers in the European Union (Frankfurt am Main). IP addresses and user data are not transmitted. The legal basis is our legitimate interest in the stable and secure operation of the website pursuant to Art. 6(1)(f) GDPR."
 
 criteria:
     title: "Accessibility Criteria – Endlech.lu"

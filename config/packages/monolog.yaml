@@ -53,3 +53,7 @@ when@prod:
                 channels: [deprecation]
                 path: php://stderr
                 formatter: monolog.formatter.json
+            # Strukturierte Logs ab WARNING an Sentry (Service + Level: sentry.yaml).
+            sentry_logs:
+                type: service
+                id: Sentry\SentryBundle\Monolog\LogsHandler

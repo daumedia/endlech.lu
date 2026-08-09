@@ -96,7 +96,14 @@ Ideas for version 2.0 (after the first stable release):
     APP_SECRET=your-secret-here
     # Production only (Brevo):
     # MAILER_DSN=brevo+api://YOUR_API_KEY@default
+    # Production only (Sentry error tracking, prod environment only):
+    # SENTRY_DSN=https://...@...ingest.de.sentry.io/...
     ```
+
+    > **Never commit the Sentry DSN** – this repository is public. It belongs in
+    > the server's `.env.local` only. An empty `SENTRY_DSN` silently disables
+    > error tracking, and the bundle is registered for `prod` only, so local
+    > development and the test suite never send anything.
 
 5.  **Database & fixtures:**
     ```bash
@@ -191,6 +198,11 @@ survives: `.env.local`, `config/jwt/*.pem`, `public/uploads/`, `var/`,
 
 Rollback: push a revert commit to `production`. The next run restores the previous
 state including matching assets, because they live in the same commit.
+
+Error tracking is active on production only. `SENTRY_DSN` must be present in the
+server's `~/public_html/.env.local` **before** the merge — otherwise the deploy
+goes green while Sentry stays silently disabled. Verify afterwards over SSH with
+`php bin/console sentry:test`.
 
 ### One-time server setup
 
