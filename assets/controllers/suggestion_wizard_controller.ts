@@ -1,25 +1,36 @@
 import { Controller } from '@hotwired/stimulus';
 
+// Markierung für unbeantwortete Pflichtfragen
+const MISSING_CLASSES = ['ring-2', 'ring-red-400', 'ring-offset-2', 'p-2', '-m-2'];
+
 export default class extends Controller {
-    static targets = ['step', 'indicator', 'prevButton', 'nextButton', 'submitButton'];
+    static targets = ['step', 'indicator', 'prevButton', 'nextButton', 'submitButton', 'error'];
     static values = {
         current: { type: Number, default: 1 },
         total: Number,
+        incompleteMessage: String,
     };
 
     declare currentValue: number;
     declare totalValue: number;
+    declare incompleteMessageValue: string;
     declare readonly stepTargets: HTMLElement[];
     declare readonly indicatorTargets: HTMLElement[];
     declare readonly prevButtonTarget: HTMLElement;
     declare readonly nextButtonTarget: HTMLElement;
     declare readonly submitButtonTarget: HTMLElement;
+    declare readonly errorTarget: HTMLElement;
+    declare readonly hasErrorTarget: boolean;
 
     connect(): void {
         this.updateView();
     }
 
     next(): void {
+        if (!this.validateStep()) {
+            return;
+        }
+
         if (this.currentValue < this.totalValue) {
             this.currentValue++;
             this.updateView();
@@ -42,7 +53,60 @@ export default class extends Controller {
         }
     }
 
+    /**
+     * Prüft, ob im aktuellen Step alle dreiwertigen Pflichtfragen beantwortet sind.
+     * Reine UX-Hilfe – die eigentliche Absicherung ist der NotNull-Constraint im Form-Type.
+     */
+    private validateStep(): boolean {
+        const step = this.stepTargets[this.currentValue - 1];
+        if (!step) {
+            return true;
+        }
+
+        const groups = Array.from(step.querySelectorAll<HTMLElement>('[data-tristate]'));
+        const isAnswered = (group: HTMLElement): boolean =>
+            group.querySelector('input[type="radio"]:checked') !== null;
+
+        for (const group of groups) {
+            const answered = isAnswered(group);
+            group.classList[answered ? 'remove' : 'add'](...MISSING_CLASSES);
+            group.setAttribute('aria-invalid', answered ? 'false' : 'true');
+        }
+
+        const missing = groups.find((group) => !isAnswered(group));
+
+        if (!missing) {
+            this.clearErrors();
+
+            return true;
+        }
+
+        if (this.hasErrorTarget) {
+            this.errorTarget.textContent = this.incompleteMessageValue;
+            this.errorTarget.classList.remove('hidden');
+        }
+
+        missing.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        missing.querySelector<HTMLInputElement>('input[type="radio"]')?.focus({ preventScroll: true });
+
+        return false;
+    }
+
+    private clearErrors(): void {
+        this.element.querySelectorAll<HTMLElement>('[data-tristate]').forEach((group) => {
+            group.classList.remove(...MISSING_CLASSES);
+            group.removeAttribute('aria-invalid');
+        });
+
+        if (this.hasErrorTarget) {
+            this.errorTarget.textContent = '';
+            this.errorTarget.classList.add('hidden');
+        }
+    }
+
     private updateView(): void {
+        this.clearErrors();
+
         // Steps ein-/ausblenden
         this.stepTargets.forEach((el, index) => {
             el.classList.toggle('hidden', index + 1 !== this.currentValue);

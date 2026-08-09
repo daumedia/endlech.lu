@@ -46,3 +46,4 @@ suggestion:
     cuisine_max: "Die Küche darf maximal {{ limit }} Zeichen lang sein."
     emoji_max: "Das Emoji darf maximal {{ limit }} Zeichen lang sein."
     notes_max: "Die Hinweise dürfen maximal {{ limit }} Zeichen lang sein."
+    answer_required: "Bitte wähle Ja, Nein oder Weiß nicht."

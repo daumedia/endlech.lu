@@ -1,0 +1,31 @@
+{#
+    Dreiwertige Pflichtfrage als Segmented Control: Ja / Nein / Weiß nicht.
+
+    Parameter:
+      field  – das ChoiceType-Feld (expanded, multiple: false)
+      emoji  – Emoji vor der Frage
+      label  – bereits übersetzter Fragetext
+
+    Die Radios bleiben echte Inputs (sr-only statt hidden), damit Tastatur- und
+    Screenreader-Bedienung erhalten bleibt; der Fokus wird über peer-focus-visible
+    sichtbar gemacht.
+#}
+<fieldset data-tristate class="rounded-lg transition">
+    <legend class="text-sm text-gray-700 mb-2">{{ emoji }} {{ label }}</legend>
+
+    <div class="inline-flex rounded-lg border border-gray-300 overflow-hidden divide-x divide-gray-300 bg-white">
+        {% for choice in field %}
+            <label class="cursor-pointer">
+                {{ form_widget(choice, {'attr': {'class': 'peer sr-only'}}) }}
+                <span class="block px-4 py-2.5 min-w-[5.5rem] text-center text-sm text-gray-600 transition
+                             hover:bg-gray-50
+                             peer-checked:bg-cyan-600 peer-checked:text-white peer-checked:font-semibold
+                             peer-focus-visible:ring-2 peer-focus-visible:ring-inset peer-focus-visible:ring-cyan-500">
+                    {{ choice.vars.label|trans }}
+                </span>
+            </label>
+        {% endfor %}
+    </div>
+
+    {{ form_errors(field) }}
+</fieldset>

@@ -322,22 +322,44 @@ Migration: `Version20260314200000`.
 
 ## Entity: RestaurantSuggestion
 Felder: id, suggestedBy (ManyToOne User nullable SET NULL), name (VARCHAR 150), city (VARCHAR 100), cuisine (VARCHAR 80), emoji (VARCHAR 10, default '🍽️').
-Barrierefreiheit (6 bool): isWheelchairAccessible, hasAccessibleToilet, allowsAssistanceDogs, hasBrightLighting, hasChangingTable, hasDisabledParking.
-Zahlung (3 bool): acceptsCash, acceptsCard, acceptsPayconiq.
-Ernährung (3 bool): isVegan, isVegetarian, isHalal.
+Barrierefreiheit (6 × `?TriState`): isWheelchairAccessible, hasAccessibleToilet, allowsAssistanceDogs, hasBrightLighting, hasChangingTable, hasDisabledParking.
+Zahlung (3 × `?TriState`): acceptsCash, acceptsCard, acceptsPayconiq.
+Ernährung (3 × `?TriState`): isVegan, isVegetarian, isHalal.
+**Dreiwertig statt bool (Ja / Nein / Weiß nicht):** siehe „Dreiwertige Antworten" unten.
 Sprachen: spokenLanguages (JSON, default []) — Werte aus `App\Enum\Language`.
 Kontakt: phone (VARCHAR 30 nullable), email (VARCHAR 180 nullable), website (VARCHAR 500 nullable).
 Social Media: instagramUrl (VARCHAR 500 nullable), facebookUrl (VARCHAR 500 nullable), tiktokUrl (VARCHAR 500 nullable).
 Meta: notes (TEXT nullable), status (VARCHAR 20, default 'pending'), adminNote (TEXT nullable), createdAt (DateTimeImmutable).
 Status-Konstanten: STATUS_PENDING, STATUS_APPROVED, STATUS_REJECTED.
 Form: `RestaurantSuggestionType` — Multi-Step Wizard mit 5 Steps (Grunddaten, Barrierefreiheit, Ernährung & Zahlung, Kontakt & Sprachen, Notizen).
-Stimulus: `suggestion_wizard_controller.ts` — Step-Navigation mit Prev/Next/GoTo, CSS-Klassen-Toggle.
+Stimulus: `suggestion_wizard_controller.ts` — Step-Navigation mit Prev/Next/GoTo, CSS-Klassen-Toggle, plus clientseitige Pflichtprüfung der Tri-State-Fragen.
 Template: `templates/community/vorschlagen.html.twig` — 5-Step Wizard mit Step-Indikator-Leiste, Fehler-Erkennung für automatischen Step-Sprung.
 Admin: `AdminSuggestionController` — CRUD + approve (überträgt alle Felder auf neues Restaurant) + reject.
 Admin-Template: `templates/admin/suggestion/show.html.twig` — zeigt alle Felder inkl. Ernährung, Zahlung, Sprachen, Kontakt.
 Routen: `admin_suggestion_index`, `admin_suggestion_show`, `admin_suggestion_approve`, `admin_suggestion_reject`.
 Community-Route: `/community/suggest` (CommunityController).
-Migrationen: `Version20260320000000` (Basis), `Version20260324000000` (neue Felder).
+Migrationen: `Version20260320000000` (Basis), `Version20260324000000` (neue Felder), `Version20260809000000` (bool → Tri-State).
+
+## Dreiwertige Antworten im Vorschlags-Wizard (Ja / Nein / Weiß nicht)
+Eine nicht angehakte Checkbox bedeutete früher zweierlei zugleich – „gibt es nicht" und „weiß ich nicht" (der alte Hint sagte „Unbekannte Felder einfach frei lassen", das Admin-UI zeigte `accessibility.no_unknown` = „Nein / unbekannt"). Für eine Barrierefreiheits-Plattform ist der Unterschied wesentlich, deshalb sind die 12 Fragen zu Barrierefreiheit, Ernährung und Zahlung jetzt **Pflichtfragen mit drei Antworten**.
+
+**Enum `App\Enum\TriState`** (`YES`/`NO`/`UNKNOWN`, backed string): `transKey()`, `label()`, `emoji()`, `isYes()`. Stil wie `Language`/`OrderingPlatform`.
+
+**Warum Enum und nicht `?bool`:** Mit `?bool` wäre „Weiß nicht" = `null` – ununterscheidbar von „noch nicht beantwortet". Genau diese Unterscheidung braucht die Pflichtvalidierung. Deshalb: Property `?TriState` (null = unbeantwortet) + `NotNull`-Constraint. Doctrine mappt via `#[ORM\Column(length: 10, nullable: true, enumType: TriState::class)]`.
+
+**Getternamen bleiben** (`isWheelchairAccessible(): ?TriState`, `acceptsCash(): ?TriState`, …) – Symfony PropertyAccess und Twig lösen die Properties über genau diese Namen auf.
+
+**Form** (`RestaurantSuggestionType::addTriState()`): `ChoiceType` mit `expanded: true`, `multiple: false`, `placeholder: false`, `NotNull(message: 'suggestion.answer_required')`.
+⚠️ **`'error_bubbling' => false` ist Pflicht** – ein expanded `ChoiceType` ist compound, und dort ist `error_bubbling` per Default `true`. Ohne die Zeile landen alle 12 Fehler am Root-Formular; `form_errors(feld)` bliebe leer und die Step-Erkennung im Template (prüft `form[field].vars.errors`) würde nie greifen.
+Keine Vorauswahl entsteht aus `placeholder: false` + Entity-Wert `null` – ein ungültiger Submit liefert dadurch verlässlich 422.
+
+**Rendering:** `templates/partials/_tristate_field.html.twig` (Segmented Control; echte Radios als `sr-only` statt `hidden`, damit Tastatur/Screenreader funktionieren, Fokus über `peer-focus-visible:ring-inset`) und `templates/partials/_tristate_value.html.twig` (Admin-Anzeige: Ja grün, Nein rot, Weiß nicht grau).
+
+**Approve:** `Restaurant` bleibt bewusst bei `bool` – „Weiß nicht" wird als „Nein" übernommen (`$suggestion->isWheelchairAccessible()?->isYes() ?? false`). Ein Durchziehen bis `Restaurant` hätte Repository-Filter, `RestaurantTransformer` (Boolean-Vertrag der iOS-API), 5 Templates und die Fixtures berührt.
+
+**Migration `Version20260809000000`:** `TINYINT(1)` → `VARCHAR(10) NULL` (kein natives `ENUM`, wegen MariaDB 10.5 auf Production), dann Datenmigration `1 → 'yes'`, `0 → 'unknown'` – nicht `'no'`, weil ein leeres Häkchen unter dem alten Hint „unbekannt" bedeutete.
+
+**Übersetzungen:** Block `tristate:` in `messages.{de,en,fr,lb}.yaml` mit **gequoteten** Keys (`"yes"`, `"no"`, `"unknown"`), `community.suggest.step_incomplete`, sowie `suggestion.answer_required` in `validators.{de,en,fr,lb}.yaml`.
 
 ### Data Fixtures
 - Restaurant fixtures: 11 Luxembourg restaurants (`RestaurantFixtures`); each restaurant has accessibility fields (`isWheelchairAccessible`, `hasAccessibleToilet`, `allowsAssistanceDogs`, `hasBrightLighting`, `hasChangingTable`, `hasDisabledParking`), payment method fields (`acceptsCash`, `acceptsCard`, `acceptsPayconiq`), dietary fields (`isVegan`, `isVegetarian`, `isHalal`), verification fields (`isVerified`, `verifiedAt`, `verifiedBy`), ordering options, contact/social media fields (`phone`, `email`, `website`, `instagramUrl`, `facebookUrl`, `tiktokUrl`), and coordinates (`latitude`, `longitude`). 3 restaurants are verified: Pizzeria Bella Vista, Sushi Zen, Green Bowl. 7 restaurants have ordering options: Pizzeria Bella Vista, Sushi Zen, Green Bowl, Burger & Co., Le Jardin Brasserie, Trattoria Roma. Plattformen inkl. Wolt, Wedely, Goosty. All 11 restaurants have varying contact data (not all fields filled for every restaurant). All 11 restaurants have real Luxembourg coordinates. Brasserie du Grund has a `nearbyStopsNote` example.
@@ -455,6 +477,28 @@ Das `.github/`-Verzeichnis enthält außerdem Issue-Templates (Bug Reports, Feat
 - PHPUnit ist **kein** Deploy-Gate (passend zur manuellen CI); zuschaltbar über `needs: [verify-assets, tests]`.
 
 Server-Setup (einmalig) und die Waisen-Inventur vor dem ersten Lauf: siehe README → „🚢 Deployment".
+
+## Fehler-Tracking (Sentry)
+
+`sentry/sentry-symfony` 5.x meldet uncaught Exceptions und Monolog-Records ab `WARNING` an ein Sentry-Projekt in der **EU-Region** (`ingest.de.sentry.io`, Frankfurt).
+
+**Nur `prod`.** `config/bundles.php` registriert `SentryBundle` mit `['prod' => true]` – in dev und test existiert die Extension nicht (`debug:config sentry` schlägt dort bewusst fehl). Damit kann weder lokale Entwicklung noch die Test-Suite Daten senden, und `ci.yml` braucht keine Anpassung. Zum lokalen Testen: `php bin/console sentry:test --env=prod` mit temporärem DSN in `.env.local`.
+
+**DSN.** `SENTRY_DSN` steht leer in `.env` (committed) und wird **ausschließlich in der `.env.local` auf dem Server** gesetzt – das Repo ist öffentlich, ein committeter DSN erlaubte Fremden das Einschleusen von Events. Leerer Wert = Sentry lautlos inaktiv (dasselbe Muster wie `MOBILITEIT_API_KEY`); der leere Default in `.env` verhindert zugleich, dass `%env(SENTRY_DSN)%` den Container-Build sprengt. ⚠️ Der Eintrag muss **vor** dem Merge nach `production` auf dem Server stehen, sonst deployt es grün und Sentry bleibt still.
+
+**`config/packages/sentry.yaml`** (alles unter `when@prod`):
+- `release: 'endlech@%app.version%'` – hängt am CalVer-Parameter aus `config/services.yaml` und zieht bei jedem Release automatisch mit (kein fünfter Handgriff in der Release-Checkliste).
+- `send_default_pii: false` – keine IP-Adressen, Cookies, Request-Header oder Nutzerdaten.
+- `enable_logs: true` – **reicht allein nicht**; der Handler muss zusätzlich in `monolog.yaml` registriert sein (das Sentry-Onboarding-Snippet verschweigt das).
+- `ignore_exceptions` filtert 404/405/403/429 – ohne das hätte Bot-Traffic die Quota geflutet. Matching läuft über `is_a($class, $pattern, true)`, greift also auch auf Subklassen und Interfaces.
+
+**Monolog.** `config/packages/monolog.yaml` hat im `when@prod`-Block den Handler `sentry_logs` (`type: service`, `id: Sentry\SentryBundle\Monolog\LogsHandler`) neben `main`/`console`/`deprecation`. Der Service wird in `sentry.yaml` mit `Monolog\Level::Warning` definiert (Monolog 3 – nicht die deprecatete Konstante `Monolog\Logger::WARNING`). Bewusst `LogsHandler` (schickt Sentry-*Logs*) statt `Sentry\Monolog\Handler` (schickt *Issues*) – deshalb bleibt `register_error_listener` aktiv, ohne dass Exceptions doppelt gemeldet werden.
+
+**Kein Eingriff am `ApiExceptionSubscriber` nötig:** Sentrys `ErrorListener` hängt mit Priorität **128** an `kernel.exception`, unser Subscriber mit **10**. Sentry sieht `/api/v1`-Exceptions also, bevor `setResponse()` sie in JSON verwandelt.
+
+**`zend.exception_ignore_args` bleibt auf dem PHP-Default `On`** – entgegen der Sentry-Empfehlung. `Off` würde Funktionsargumente in Stacktraces schreiben, also potenziell Passwörter aus `AuthController`. Das passt nicht zu `send_default_pii: false`.
+
+**Flex-Recipe.** Liegt nur in `recipes-contrib`; wegen `extra.symfony.allow-contrib: false` wird es übersprungen (auch mit `SYMFONY_ALLOW_CONTRIB=1`). Bundle-Eintrag, `sentry.yaml` und der `.env`-Block sind daher von Hand angelegt.
 
 ## Key Files Reference
 

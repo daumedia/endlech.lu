@@ -85,6 +85,11 @@ status:
     open: "Ouvert"
     closed: "Fermé"
 
+tristate:
+    "yes": "Oui"
+    "no": "Non"
+    "unknown": "Je ne sais pas"
+
 accessibility:
     title: "Accessibilité"
     wheelchair: "Accessible en fauteuil roulant"
@@ -245,7 +250,7 @@ community:
         text: "Vous connaissez un restaurant accessible au Luxembourg qui manque ? Proposez-le — nous le vérifierons et l'ajouterons !"
         basic_data: "Données de base"
         accessibility: "Accessibilité"
-        accessibility_hint: "Cochez ce que vous savez. Laissez les champs inconnus vides."
+        accessibility_hint: "Merci de répondre à chaque question. Si vous n'êtes pas sûr, choisissez « Je ne sais pas »."
         wheelchair: "Accessible en fauteuil roulant (accès de plain-pied)"
         toilet: "Toilettes accessibles"
         dogs: "Chiens d'assistance autorisés"
@@ -253,9 +258,9 @@ community:
         changing_table: "Table à langer disponible"
         disabled_parking: "Place handicapé"
         dietary: "Options alimentaires"
-        dietary_hint: "Quelles options alimentaires le restaurant propose-t-il ?"
+        dietary_hint: "Quelles options alimentaires le restaurant propose-t-il ? Si vous n'êtes pas sûr, choisissez « Je ne sais pas »."
         payment: "Moyens de paiement"
-        payment_hint: "Quels moyens de paiement sont acceptés ?"
+        payment_hint: "Quels moyens de paiement sont acceptés ? Si vous n'êtes pas sûr, choisissez « Je ne sais pas »."
         contact: "Coordonnées"
         contact_hint: "Si vous connaissez les coordonnées, entrez-les ici. Tout est optionnel."
         social_media: "Réseaux sociaux"
@@ -269,6 +274,7 @@ community:
         step_notes: "Notes & Envoi"
         submit: "Envoyer la proposition"
         cancel: "Annuler"
+        step_incomplete: "Merci de répondre à toutes les questions de cette étape."
     thanks:
         title: "Merci pour votre proposition – Endlech.lu"
         heading: "Merci pour votre proposition !"
@@ -317,6 +323,8 @@ legal:
     links_text: "Notre site contient des liens vers des sites web externes de tiers sur le contenu desquels nous n'avons aucune influence. Par conséquent, nous ne pouvons assumer aucune responsabilité pour ce contenu externe. Le fournisseur ou l'exploitant respectif des pages est toujours responsable du contenu des pages liées."
     privacy_title: "Protection des données"
     privacy_text: "L'utilisation de notre site web est généralement possible sans fournir de données personnelles. Dans la mesure où des données personnelles (par exemple nom, adresse ou adresses e-mail) sont collectées sur nos pages, cela se fait toujours sur une base volontaire dans la mesure du possible."
+    error_tracking_title: "Analyse des erreurs (Sentry)"
+    error_tracking_text: "Afin de détecter et de corriger les erreurs techniques, nous utilisons Sentry (Functional Software, Inc.). En cas d'erreur sur notre site web, des informations techniques telles que l'heure, la page consultée et le message d'erreur sont transmises à des serveurs situés dans l'Union européenne (Francfort-sur-le-Main). Les adresses IP et les données des utilisateurs ne sont pas transmises. La base juridique est notre intérêt légitime à assurer un fonctionnement stable et sûr du site web conformément à l'art. 6, par. 1, point f) du RGPD."
 
 criteria:
     title: "Critères d'accessibilité – Endlech.lu"

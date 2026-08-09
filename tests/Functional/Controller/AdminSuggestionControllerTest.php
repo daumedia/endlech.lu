@@ -3,6 +3,7 @@
 namespace App\Tests\Functional\Controller;
 
 use App\Entity\RestaurantSuggestion;
+use App\Enum\TriState;
 use App\Repository\RestaurantRepository;
 use App\Repository\RestaurantSuggestionRepository;
 use App\Repository\UserRepository;
@@ -61,6 +62,41 @@ final class AdminSuggestionControllerTest extends AbstractWebTestCase
         self::assertGreaterThanOrEqual(1, $restaurant->getCuisines()->count());
 
         self::assertSame(RestaurantSuggestion::STATUS_APPROVED, $this->suggestions($client)->find($id)->getStatus());
+    }
+
+    public function testApproveMapsUnknownToNo(): void
+    {
+        $client = static::createClient();
+        $this->loginAs($client, 'admin@endlech.lu');
+
+        $name = 'Vorschlag TriState '.uniqid();
+        $suggestion = $this->createSuggestion($client, $name);
+        $suggestion
+            ->setIsWheelchairAccessible(TriState::YES)
+            ->setHasAccessibleToilet(TriState::NO)
+            ->setAllowsAssistanceDogs(TriState::UNKNOWN)
+            ->setIsVegan(TriState::YES)
+            ->setAcceptsCard(TriState::UNKNOWN);
+
+        $em = $client->getContainer()->get(EntityManagerInterface::class);
+        $em->flush();
+        $id = $suggestion->getId();
+
+        $crawler = $client->request('GET', self::LOCALE.'/admin/vorschlaege/'.$id);
+        $client->submit($this->formByAction($crawler, '/'.$id.'/genehmigen'));
+
+        self::assertResponseRedirects(self::LOCALE.'/admin/vorschlaege');
+
+        $em->clear();
+        $restaurant = $client->getContainer()->get(RestaurantRepository::class)->findOneBy(['name' => $name]);
+        self::assertNotNull($restaurant);
+        self::assertTrue($restaurant->isWheelchairAccessible(), 'Ja muss als true ankommen.');
+        self::assertFalse($restaurant->hasAccessibleToilet(), 'Nein muss als false ankommen.');
+        self::assertFalse($restaurant->allowsAssistanceDogs(), 'Weiß nicht darf nicht als Ja durchgehen.');
+        self::assertTrue($restaurant->isVegan());
+        self::assertFalse($restaurant->acceptsCard());
+        // Nie beantwortet (null) verhält sich wie "Weiß nicht".
+        self::assertFalse($restaurant->hasBrightLighting());
     }
 
     public function testRejectMarksRejectedWithNote(): void

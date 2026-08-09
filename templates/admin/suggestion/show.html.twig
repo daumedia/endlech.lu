@@ -24,52 +24,28 @@
         {# Barrierefreiheit #}
         <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3">{{ 'admin.suggestion.accessibility'|trans }}</h3>
         <ul class="space-y-2 mb-6">
-            <li class="{{ suggestion.isWheelchairAccessible ? 'text-green-700' : 'text-gray-400' }}">
-                ♿ {{ 'accessibility.wheelchair'|trans }}: {{ suggestion.isWheelchairAccessible ? 'accessibility.yes'|trans : 'accessibility.no_unknown'|trans }}
-            </li>
-            <li class="{{ suggestion.hasAccessibleToilet ? 'text-green-700' : 'text-gray-400' }}">
-                🚻 {{ 'accessibility.toilet'|trans }}: {{ suggestion.hasAccessibleToilet ? 'accessibility.yes'|trans : 'accessibility.no_unknown'|trans }}
-            </li>
-            <li class="{{ suggestion.allowsAssistanceDogs ? 'text-green-700' : 'text-gray-400' }}">
-                🐕 {{ 'accessibility.dogs'|trans }}: {{ suggestion.allowsAssistanceDogs ? 'accessibility.yes'|trans : 'accessibility.no_unknown'|trans }}
-            </li>
-            <li class="{{ suggestion.hasBrightLighting ? 'text-green-700' : 'text-gray-400' }}">
-                💡 {{ 'accessibility.lighting'|trans }}: {{ suggestion.hasBrightLighting ? 'accessibility.yes'|trans : 'accessibility.no_unknown'|trans }}
-            </li>
-            <li class="{{ suggestion.hasChangingTable ? 'text-green-700' : 'text-gray-400' }}">
-                🍼 {{ 'accessibility.changing_table'|trans }}: {{ suggestion.hasChangingTable ? 'accessibility.yes'|trans : 'accessibility.no_unknown'|trans }}
-            </li>
-            <li class="{{ suggestion.hasDisabledParking ? 'text-green-700' : 'text-gray-400' }}">
-                🅿️ {{ 'accessibility.disabled_parking'|trans }}: {{ suggestion.hasDisabledParking ? 'accessibility.yes'|trans : 'accessibility.no_unknown'|trans }}
-            </li>
+            {{ include('partials/_tristate_value.html.twig', {value: suggestion.isWheelchairAccessible, emoji: '♿', label: 'accessibility.wheelchair'|trans}) }}
+            {{ include('partials/_tristate_value.html.twig', {value: suggestion.hasAccessibleToilet, emoji: '🚻', label: 'accessibility.toilet'|trans}) }}
+            {{ include('partials/_tristate_value.html.twig', {value: suggestion.allowsAssistanceDogs, emoji: '🐕', label: 'accessibility.dogs'|trans}) }}
+            {{ include('partials/_tristate_value.html.twig', {value: suggestion.hasBrightLighting, emoji: '💡', label: 'accessibility.lighting'|trans}) }}
+            {{ include('partials/_tristate_value.html.twig', {value: suggestion.hasChangingTable, emoji: '🍼', label: 'accessibility.changing_table'|trans}) }}
+            {{ include('partials/_tristate_value.html.twig', {value: suggestion.hasDisabledParking, emoji: '🅿️', label: 'accessibility.disabled_parking'|trans}) }}
         </ul>
 
         {# Ernährungsoptionen #}
         <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3">{{ 'admin.suggestion.dietary'|trans }}</h3>
         <ul class="space-y-2 mb-6">
-            <li class="{{ suggestion.isVegan ? 'text-green-700' : 'text-gray-400' }}">
-                🌱 {{ 'dietary.vegan'|trans }}: {{ suggestion.isVegan ? 'accessibility.yes'|trans : 'accessibility.no_unknown'|trans }}
-            </li>
-            <li class="{{ suggestion.isVegetarian ? 'text-green-700' : 'text-gray-400' }}">
-                🥗 {{ 'dietary.vegetarian'|trans }}: {{ suggestion.isVegetarian ? 'accessibility.yes'|trans : 'accessibility.no_unknown'|trans }}
-            </li>
-            <li class="{{ suggestion.isHalal ? 'text-green-700' : 'text-gray-400' }}">
-                🍖 {{ 'dietary.halal'|trans }}: {{ suggestion.isHalal ? 'accessibility.yes'|trans : 'accessibility.no_unknown'|trans }}
-            </li>
+            {{ include('partials/_tristate_value.html.twig', {value: suggestion.isVegan, emoji: '🌱', label: 'dietary.vegan'|trans}) }}
+            {{ include('partials/_tristate_value.html.twig', {value: suggestion.isVegetarian, emoji: '🥗', label: 'dietary.vegetarian'|trans}) }}
+            {{ include('partials/_tristate_value.html.twig', {value: suggestion.isHalal, emoji: '🍖', label: 'dietary.halal'|trans}) }}
         </ul>
 
         {# Zahlungsmethoden #}
         <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3">{{ 'admin.suggestion.payment'|trans }}</h3>
         <ul class="space-y-2 mb-6">
-            <li class="{{ suggestion.acceptsCash ? 'text-green-700' : 'text-gray-400' }}">
-                💵 {{ 'payment.cash'|trans }}: {{ suggestion.acceptsCash ? 'payment.accepted'|trans : 'payment.not_accepted'|trans }}
-            </li>
-            <li class="{{ suggestion.acceptsCard ? 'text-green-700' : 'text-gray-400' }}">
-                💳 {{ 'payment.card'|trans }}: {{ suggestion.acceptsCard ? 'payment.accepted'|trans : 'payment.not_accepted'|trans }}
-            </li>
-            <li class="{{ suggestion.acceptsPayconiq ? 'text-green-700' : 'text-gray-400' }}">
-                📱 {{ 'payment.payconiq'|trans }}: {{ suggestion.acceptsPayconiq ? 'payment.accepted'|trans : 'payment.not_accepted'|trans }}
-            </li>
+            {{ include('partials/_tristate_value.html.twig', {value: suggestion.acceptsCash, emoji: '💵', label: 'payment.cash'|trans}) }}
+            {{ include('partials/_tristate_value.html.twig', {value: suggestion.acceptsCard, emoji: '💳', label: 'payment.card'|trans}) }}
+            {{ include('partials/_tristate_value.html.twig', {value: suggestion.acceptsPayconiq, emoji: '📱', label: 'payment.payconiq'|trans}) }}
         </ul>
 
         {# Sprachen #}

@@ -4,8 +4,8 @@ namespace App\Form;
 
 use App\Entity\RestaurantSuggestion;
 use App\Enum\Language;
+use App\Enum\TriState;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
@@ -17,6 +17,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Url;
 
 class RestaurantSuggestionType extends AbstractType
@@ -55,55 +56,25 @@ class RestaurantSuggestionType extends AbstractType
                 'constraints' => [
                     new Length(max: 10, maxMessage: 'suggestion.emoji_max'),
                 ],
-            ])
-            ->add('isWheelchairAccessible', CheckboxType::class, [
-                'label' => 'form.wheelchair_accessible',
-                'required' => false,
-            ])
-            ->add('hasAccessibleToilet', CheckboxType::class, [
-                'label' => 'form.accessible_toilet',
-                'required' => false,
-            ])
-            ->add('allowsAssistanceDogs', CheckboxType::class, [
-                'label' => 'form.assistance_dogs',
-                'required' => false,
-            ])
-            ->add('hasBrightLighting', CheckboxType::class, [
-                'label' => 'form.bright_lighting',
-                'required' => false,
-            ])
-            ->add('hasChangingTable', CheckboxType::class, [
-                'label' => 'form.changing_table',
-                'required' => false,
-            ])
-            ->add('hasDisabledParking', CheckboxType::class, [
-                'label' => 'form.disabled_parking',
-                'required' => false,
-            ])
-            ->add('acceptsCash', CheckboxType::class, [
-                'label' => 'form.accepts_cash',
-                'required' => false,
-            ])
-            ->add('acceptsCard', CheckboxType::class, [
-                'label' => 'form.accepts_card',
-                'required' => false,
-            ])
-            ->add('acceptsPayconiq', CheckboxType::class, [
-                'label' => 'form.accepts_payconiq',
-                'required' => false,
-            ])
-            ->add('isVegan', CheckboxType::class, [
-                'label' => 'form.vegan',
-                'required' => false,
-            ])
-            ->add('isVegetarian', CheckboxType::class, [
-                'label' => 'form.vegetarian',
-                'required' => false,
-            ])
-            ->add('isHalal', CheckboxType::class, [
-                'label' => 'form.halal',
-                'required' => false,
-            ])
+            ]);
+
+        // Barrierefreiheit (Step 2)
+        $this->addTriState($builder, 'isWheelchairAccessible', 'form.wheelchair_accessible');
+        $this->addTriState($builder, 'hasAccessibleToilet', 'form.accessible_toilet');
+        $this->addTriState($builder, 'allowsAssistanceDogs', 'form.assistance_dogs');
+        $this->addTriState($builder, 'hasBrightLighting', 'form.bright_lighting');
+        $this->addTriState($builder, 'hasChangingTable', 'form.changing_table');
+        $this->addTriState($builder, 'hasDisabledParking', 'form.disabled_parking');
+
+        // Ernährung & Zahlung (Step 3)
+        $this->addTriState($builder, 'isVegan', 'form.vegan');
+        $this->addTriState($builder, 'isVegetarian', 'form.vegetarian');
+        $this->addTriState($builder, 'isHalal', 'form.halal');
+        $this->addTriState($builder, 'acceptsCash', 'form.accepts_cash');
+        $this->addTriState($builder, 'acceptsCard', 'form.accepts_card');
+        $this->addTriState($builder, 'acceptsPayconiq', 'form.accepts_payconiq');
+
+        $builder
             ->add('spokenLanguages', ChoiceType::class, [
                 'label' => 'form.spoken_languages',
                 'choices' => Language::cases(),
@@ -177,6 +148,32 @@ class RestaurantSuggestionType extends AbstractType
                     new Length(max: 1000, maxMessage: 'suggestion.notes_max'),
                 ],
             ]);
+    }
+
+    /**
+     * Pflichtfrage mit drei Antworten (Ja / Nein / Weiß nicht) als Radio-Gruppe.
+     *
+     * 'error_bubbling' => false ist nötig, weil ein expanded ChoiceType ein
+     * compound Feld ist und dort standardmäßig true gilt – die Fehler landeten
+     * sonst am Root-Formular statt am Feld, und der Wizard könnte den fehler-
+     * haften Step nicht mehr ermitteln.
+     */
+    private function addTriState(FormBuilderInterface $builder, string $name, string $label): void
+    {
+        $builder->add($name, ChoiceType::class, [
+            'label' => $label,
+            'choices' => TriState::cases(),
+            'choice_value' => fn (?TriState $state) => $state?->value,
+            'choice_label' => fn (TriState $state) => $state->transKey(),
+            'expanded' => true,
+            'multiple' => false,
+            'placeholder' => false,
+            'required' => true,
+            'error_bubbling' => false,
+            'constraints' => [
+                new NotNull(message: 'suggestion.answer_required'),
+            ],
+        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
