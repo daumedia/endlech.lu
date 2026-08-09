@@ -7,6 +7,9 @@ Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
 ## [Unreleased]
 
+### Added
+- **Fehler-Tracking mit Sentry:** Fehler auf Production waren bislang unsichtbar – Monolog schrieb nur nach `php://stderr`, wo niemand aktiv hinschaut. `sentry/sentry-symfony` meldet jetzt uncaught Exceptions und Monolog-Records ab `WARNING` an ein Sentry-Projekt in der **EU-Region** (Frankfurt). Das Bundle ist in `config/bundles.php` bewusst **nur für `prod`** registriert: lokale Entwicklung und die Test-Suite kennen die Extension gar nicht und können nichts senden. Der DSN kommt aus `SENTRY_DSN` und wird ausschließlich in der `.env.local` auf dem Server gesetzt – nicht im öffentlichen Repo; ein leerer Wert deaktiviert Sentry lautlos (Muster von `MOBILITEIT_API_KEY`). Datenschutzseitig: `send_default_pii: false` (keine IP-Adressen, Cookies, Header oder Nutzerdaten), `zend.exception_ignore_args` bleibt auf dem PHP-Default `On`, damit keine Funktionsargumente wie Passwörter in Stacktraces landen. 404/405/403/429 sind über `ignore_exceptions` gefiltert, sonst hätte Bot-Traffic die Quota geflutet. Sentry-Releases hängen über `release: 'endlech@%app.version%'` am CalVer-Parameter und ziehen bei jedem Release automatisch mit. Datenschutzerklärung um einen Abschnitt „Fehleranalyse (Sentry)" in allen vier Sprachen ergänzt.
+
 - **Map:** Kartenansicht der Locations. *(geplant)*
 
 ---
