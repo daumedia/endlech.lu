@@ -1,0 +1,15 @@
+{# Nachweis-Zeitstempel: DSGVO-relevant, deshalb immer sichtbar. #}
+<div class="mt-6 pt-6 border-t border-gray-200 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-gray-500">
+    <div>
+        <dt class="mb-0.5">{{ 'admin.waitlist.field.created'|trans }}</dt>
+        <dd class="font-semibold text-gray-700">{{ entry.createdAt|date('d.m.Y H:i') }}</dd>
+    </div>
+    <div>
+        <dt class="mb-0.5">{{ 'admin.waitlist.field.consent'|trans }}</dt>
+        <dd class="font-semibold text-gray-700">{{ entry.consentAt|date('d.m.Y H:i') }}</dd>
+    </div>
+    <div>
+        <dt class="mb-0.5">{{ 'admin.waitlist.field.confirmed'|trans }}</dt>
+        <dd class="font-semibold text-gray-700">{{ entry.confirmedAt ? entry.confirmedAt|date('d.m.Y H:i') : '—' }}</dd>
+    </div>
+</div>

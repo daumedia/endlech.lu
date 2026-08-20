@@ -1,0 +1,15 @@
+{# Ein Feld der Detailansicht. mailto/tel machen den Wert klickbar. #}
+<div>
+    <dt class="text-gray-500 mb-0.5">{{ label }}</dt>
+    <dd class="font-semibold text-gray-800">
+        {%- if value is empty -%}
+            —
+        {%- elseif mailto is defined and mailto -%}
+            <a href="mailto:{{ value }}" class="text-cyan-700 hover:underline focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700">{{ value }}</a>
+        {%- elseif tel is defined and tel -%}
+            <a href="tel:{{ value }}" class="text-cyan-700 hover:underline focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700">{{ value }}</a>
+        {%- else -%}
+            {{ value }}
+        {%- endif -%}
+    </dd>
+</div>

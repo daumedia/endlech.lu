@@ -18,6 +18,11 @@ framework:
             policy: 'fixed_window'
             limit: 5
             interval: '1 minute'
+        # Wartelisten-Anmeldung Partnerprogramm: pro IP 5 Versuche je Stunde.
+        partner_waitlist:
+            policy: 'sliding_window'
+            limit: 5
+            interval: '1 hour'
 
 when@test:
     framework:
@@ -34,3 +39,7 @@ when@test:
                 policy: 'fixed_window'
                 limit: 10000
                 interval: '1 minute'
+            partner_waitlist:
+                policy: 'sliding_window'
+                limit: 10000
+                interval: '1 hour'

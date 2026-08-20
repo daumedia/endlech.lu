@@ -54,15 +54,47 @@
         </a>
 
         {# 2. Desktop Navigation #}
-        <nav class="hidden md:flex items-center space-x-8">
+        <nav class="hidden md:flex items-center space-x-6 lg:space-x-8">
             <a href="{{ path('app_restaurant_index') }}" class="text-gray-600 font-medium hover:text-cyan-600 transition">
                 {{ 'nav.find_restaurants'|trans }}
             </a>
+            <a href="{{ path('community_vorschlagen') }}" class="text-gray-600 font-medium whitespace-nowrap hover:text-cyan-600 transition">
+                {{ 'nav.suggest_restaurant'|trans }}
+            </a>
+            {# Die beiden B2B-Zielgruppen unter einem Punkt.
+               Bewusst <details> statt eines Button-Dropdowns wie beim
+               Sprachumschalter: Das funktioniert ohne JavaScript, ist von Haus
+               aus tastaturbedienbar und meldet seinen Zustand selbst an
+               Screenreader. Der Stimulus-Controller schließt es nur zusätzlich
+               bei Escape oder Klick daneben. #}
+            <details class="relative group" data-controller="nav-dropdown">
+                <summary class="flex items-center gap-1.5 text-gray-600 font-medium cursor-pointer list-none whitespace-nowrap hover:text-cyan-600 transition rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-700 [&::-webkit-details-marker]:hidden">
+                    {{ 'nav.participate'|trans }}
+                    <svg class="w-3.5 h-3.5 motion-safe:transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </summary>
+
+                <div class="absolute left-0 mt-2 w-60 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
+                    {# Jede Zielgruppe hat eine eigene Seite. Die Slugs kommen aus
+                       App\Enum\OrganisationType::slug(). #}
+                    {% for item in [
+                        {href: path('app_partner'), label: 'nav.for_restaurants', emoji: '🍽️'},
+                        {href: path('app_organisations_type', {slug: 'gemeinden'}), label: 'nav.for_communes', emoji: '🏛️'},
+                        {href: path('app_organisations_type', {slug: 'unternehmen'}), label: 'nav.for_companies', emoji: '🏢'},
+                        {href: path('app_organisations_type', {slug: 'vereine'}), label: 'nav.for_associations', emoji: '🤲'}
+                    ] %}
+                        <a href="{{ item.href }}"
+                           class="flex items-center gap-2.5 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-100 hover:text-cyan-700 transition focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-cyan-700">
+                            <span aria-hidden="true">{{ item.emoji }}</span>
+                            {{ item.label|trans }}
+                        </a>
+                    {% endfor %}
+                </div>
+            </details>
+            {# Allgemeine Information ohne Handlungsaufforderung – steht deshalb zuletzt. #}
             <a href="{{ path('app_about') }}" class="text-gray-600 font-medium hover:text-cyan-600 transition">
                 {{ 'nav.about'|trans }}
-            </a>
-            <a href="{{ path('community_vorschlagen') }}" class="text-gray-600 font-medium hover:text-cyan-600 transition">
-                {{ 'nav.suggest_restaurant'|trans }}
             </a>
         </nav>
 
@@ -132,6 +164,8 @@
             <ul class="space-y-2">
                 <li><a href="#" class="hover:text-cyan-400 transition">{{ 'footer.search_restaurants'|trans }}</a></li>
                 <li><a href="{{ path('app_kriterien') }}" class="hover:text-cyan-400 transition">{{ 'footer.accessibility_criteria'|trans }}</a></li>
+                <li><a href="{{ path('app_partner') }}" class="hover:text-cyan-400 transition">{{ 'footer.partner'|trans }}</a></li>
+                <li><a href="{{ path('app_organisations') }}" class="hover:text-cyan-400 transition">{{ 'nav.organisations'|trans }}</a></li>
                 <li><a href="{{ path('app_impressum') }}" class="hover:text-cyan-400 transition">{{ 'footer.legal'|trans }}</a></li>
                 {% if not (app.request.attributes.get('_route') starts with 'admin_') %}
                     <li data-controller="cookie-consent">

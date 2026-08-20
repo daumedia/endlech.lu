@@ -1,0 +1,122 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block admin_title %}{{ 'admin.waitlist.title'|trans }}{% endblock %}
+
+{#
+    Kombinierte Liste beider Wartelisten. Der Controller normalisiert Partner-
+    und Organisationseinträge zu einheitlichen Zeilen, damit hier keine
+    Entity-Fallunterscheidung nötig ist.
+#}
+{% macro filter_link(label, params, active, count) %}
+    <a href="{{ path('admin_waitlist_index', params) }}"
+       {% if active %}aria-current="page"{% endif %}
+       class="px-3 py-1.5 rounded-full text-xs font-bold focus:outline-2 focus:outline-offset-2 focus:outline-purple-700 {{ active ? 'bg-purple-700 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
+        {{ label }}{% if count is not null %} ({{ count }}){% endif %}
+    </a>
+{% endmacro %}
+
+{% block admin_body %}
+    {% import _self as ui %}
+    {% set sort = direction|lower %}
+
+    <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">{{ 'admin.waitlist.title'|trans }}</h2>
+        <span class="bg-cyan-100 text-cyan-800 text-xs font-bold px-3 py-1 rounded-full">
+            {{ 'admin.waitlist.total'|trans({'%count%': rows|length}) }}
+        </span>
+    </div>
+
+    {# Filter als Links: teilbar, lesezeichenfähig, ohne JavaScript. #}
+    <div class="space-y-3 mb-6">
+        <nav class="flex flex-wrap items-center gap-2" aria-label="{{ 'admin.waitlist.filter_source'|trans }}">
+            <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider mr-1">{{ 'admin.waitlist.filter_source'|trans }}</span>
+            {{ ui.filter_link('admin.waitlist.filter_all'|trans, {sort: sort, status: activeStatus ? activeStatus.value : null}, activeSource is null and activeType is null, partnerTotal + organisationTotal) }}
+            {{ ui.filter_link('admin.waitlist.source_partner'|trans, {source: 'partner', sort: sort, status: activeStatus ? activeStatus.value : null}, activeSource == 'partner', partnerTotal) }}
+            {{ ui.filter_link('admin.waitlist.source_organisation'|trans, {source: 'organisation', sort: sort, status: activeStatus ? activeStatus.value : null}, activeSource == 'organisation' and activeType is null, organisationTotal) }}
+        </nav>
+
+        <nav class="flex flex-wrap items-center gap-2" aria-label="{{ 'admin.waitlist.filter_type'|trans }}">
+            <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider mr-1">{{ 'admin.waitlist.filter_type'|trans }}</span>
+            {% for type in types %}
+                {{ ui.filter_link(type.emoji ~ ' ' ~ type.transKey|trans, {type: type.value, sort: sort, status: activeStatus ? activeStatus.value : null}, activeType == type, typeCounts[type.value] ?? 0) }}
+            {% endfor %}
+        </nav>
+
+        <nav class="flex flex-wrap items-center gap-2" aria-label="{{ 'admin.waitlist.filter_status'|trans }}">
+            <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider mr-1">{{ 'admin.waitlist.filter_status'|trans }}</span>
+            {{ ui.filter_link('admin.waitlist.filter_all'|trans, {source: activeSource, type: activeType ? activeType.value : null, sort: sort}, activeStatus is null, null) }}
+            {% for status in statuses %}
+                {{ ui.filter_link(status.emoji ~ ' ' ~ status.transKey|trans, {source: activeSource, type: activeType ? activeType.value : null, status: status.value, sort: sort}, activeStatus == status, null) }}
+            {% endfor %}
+        </nav>
+    </div>
+
+    {% if rows is empty %}
+        <div class="bg-white rounded-xl border border-gray-200 p-8 text-center text-gray-500">
+            {{ 'admin.waitlist.empty'|trans }}
+        </div>
+    {% else %}
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <table class="w-full text-sm">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                    <tr>
+                        <th scope="col" class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                            <a href="{{ path('admin_waitlist_index', {
+                                    source: activeSource, type: activeType ? activeType.value : null,
+                                    status: activeStatus ? activeStatus.value : null,
+                                    sort: direction == 'ASC' ? 'desc' : 'asc'
+                                }) }}"
+                               class="inline-flex items-center gap-1 hover:text-purple-700 focus:outline-2 focus:outline-offset-2 focus:outline-purple-700">
+                                {{ 'admin.waitlist.table.date'|trans }}
+                                <span aria-hidden="true">{{ direction == 'ASC' ? '↑' : '↓' }}</span>
+                                <span class="sr-only">{{ (direction == 'ASC' ? 'admin.waitlist.sort_asc' : 'admin.waitlist.sort_desc')|trans }}</span>
+                            </a>
+                        </th>
+                        <th scope="col" class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">{{ 'admin.waitlist.table.source'|trans }}</th>
+                        <th scope="col" class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">{{ 'admin.waitlist.table.name'|trans }}</th>
+                        <th scope="col" class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden md:table-cell">{{ 'admin.waitlist.table.contact'|trans }}</th>
+                        <th scope="col" class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">{{ 'admin.waitlist.table.status'|trans }}</th>
+                        <th scope="col" class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">{{ 'admin.waitlist.table.actions'|trans }}</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    {% for row in rows %}
+                        <tr class="hover:bg-gray-50 transition">
+                            <td class="px-4 py-3 text-gray-500 whitespace-nowrap">{{ row.createdAt|date('d.m.Y') }}</td>
+                            <td class="px-4 py-3">
+                                {% if row.type %}
+                                    <span class="{{ row.type.badgeClasses }} text-xs font-bold px-2 py-0.5 rounded-full whitespace-nowrap">
+                                        {{ row.type.emoji }} {{ row.type.transKey|trans }}
+                                    </span>
+                                {% else %}
+                                    <span class="bg-gray-100 text-gray-700 text-xs font-bold px-2 py-0.5 rounded-full whitespace-nowrap">
+                                        🍽️ {{ 'admin.waitlist.source_partner'|trans }}
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td class="px-4 py-3 font-semibold text-gray-800">
+                                {{ row.name }}
+                                {% if row.detail %}
+                                    <span class="block text-xs font-normal text-gray-500">{{ row.detail }}</span>
+                                {% endif %}
+                            </td>
+                            <td class="px-4 py-3 text-gray-600 hidden md:table-cell">{{ row.contact }}</td>
+                            <td class="px-4 py-3">
+                                <span class="{{ row.status.badgeClasses }} text-xs font-bold px-2 py-0.5 rounded-full whitespace-nowrap">
+                                    {{ row.status.emoji }} {{ row.status.transKey|trans }}
+                                </span>
+                            </td>
+                            <td class="px-4 py-3 text-right">
+                                <a href="{{ path(row.route, {id: row.id}) }}"
+                                   class="text-purple-700 font-semibold hover:underline focus:outline-2 focus:outline-offset-2 focus:outline-purple-700">
+                                    {{ 'admin.waitlist.view'|trans }}
+                                    <span class="sr-only">– {{ row.name }}</span>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+{% endblock %}
