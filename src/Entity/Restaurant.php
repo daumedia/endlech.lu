@@ -11,6 +11,14 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: RestaurantRepository::class)]
 class Restaurant
 {
+    /**
+     * Schwellwerte nach DIN 18040-1 – 90 cm lichte Breite für Türen und
+     * Durchgänge. Als Konstanten, damit Entity, Repository-Filter und die
+     * Open-Startup-Auswertung nicht drei eigene Zahlen pflegen.
+     */
+    public const int MIN_DOOR_WIDTH_CM = 90;
+    public const int MIN_TABLE_SPACING_CM = 90;
+
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\Column]
@@ -50,6 +58,24 @@ class Restaurant
 
     #[ORM\Column]
     private bool $hasDisabledParking = false;
+
+    /**
+     * Lichte Durchgangsbreite der schmalsten Tür auf dem Weg von der Straße
+     * zum Tisch, in Zentimetern.
+     *
+     * Nullable und ohne Default: null heißt "nicht ausgemessen", nicht
+     * "zu schmal". Auf der Open-Startup-Seite zählen nur dokumentierte Maße –
+     * ein 0-Default würde jedes nie erfasste Haus als Negativbefund ausweisen.
+     */
+    #[ORM\Column(nullable: true)]
+    private ?int $doorWidthCm = null;
+
+    /**
+     * Schmalste Durchgangsbreite zwischen den Tischen, in Zentimetern.
+     * Gleiche Semantik für null wie bei $doorWidthCm.
+     */
+    #[ORM\Column(nullable: true)]
+    private ?int $tableSpacingCm = null;
 
     #[ORM\Column]
     private bool $acceptsCash = false;
@@ -293,6 +319,49 @@ class Restaurant
         $this->hasDisabledParking = $hasDisabledParking;
 
         return $this;
+    }
+
+    public function getDoorWidthCm(): ?int
+    {
+        return $this->doorWidthCm;
+    }
+
+    public function setDoorWidthCm(?int $doorWidthCm): static
+    {
+        $this->doorWidthCm = $doorWidthCm;
+
+        return $this;
+    }
+
+    public function getTableSpacingCm(): ?int
+    {
+        return $this->tableSpacingCm;
+    }
+
+    public function setTableSpacingCm(?int $tableSpacingCm): static
+    {
+        $this->tableSpacingCm = $tableSpacingCm;
+
+        return $this;
+    }
+
+    /**
+     * Tür breit genug für einen Rollstuhl (DIN 18040: 90 cm lichte Breite).
+     * Gibt null zurück, solange kein Maß erfasst ist – Twig und die API
+     * unterscheiden damit "zu schmal" von "unbekannt".
+     */
+    public function hasWideDoors(): ?bool
+    {
+        return null === $this->doorWidthCm
+            ? null
+            : $this->doorWidthCm >= self::MIN_DOOR_WIDTH_CM;
+    }
+
+    public function hasWheelchairTableSpacing(): ?bool
+    {
+        return null === $this->tableSpacingCm
+            ? null
+            : $this->tableSpacingCm >= self::MIN_TABLE_SPACING_CM;
     }
 
     public function acceptsCash(): bool

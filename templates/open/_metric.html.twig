@@ -1,0 +1,40 @@
+{# Kennzahl-Kachel.
+
+   Aufbau nach dem Stat-Tile-Muster: Beschriftung, Wert, optionale Veränderung,
+   optionale Einordnung – jede auf einer eigenen Zeile. Die Zahl trägt bewusst
+   KEIN `tabular-nums`; gleich breite Ziffern lassen eine 11 in dieser Größe
+   auseinandergezogen wirken. Ausgerichtet wird nur in Tabellenspalten.
+
+   emoji, value, label · optional: suffix, hint, delta ({value, since}),
+   deltaDecimals (Nachkommastellen der Veränderung, Standard 0),
+   invertDelta (true, wenn ein Rückgang die gute Richtung ist) #}
+<div class="bg-white border border-gray-200 rounded-xl p-5 shadow-sm break-inside-avoid">
+    <p class="w-11 h-11 bg-cyan-50 rounded-xl flex items-center justify-center text-2xl mb-3" aria-hidden="true">{{ emoji }}</p>
+
+    <p class="text-sm font-semibold text-gray-700">{{ label }}</p>
+
+    <div class="mt-1 flex items-baseline flex-wrap gap-x-2">
+        <span class="text-3xl font-bold text-gray-900">{{ value }}</span>
+        {% if suffix is defined and suffix %}
+            <span class="text-base text-gray-500">{{ suffix }}</span>
+        {% endif %}
+    </div>
+
+    {% if delta is defined and delta %}
+        <p class="mt-1.5 text-xs text-gray-500">
+            {% if delta.value != 0 %}
+                {% set positive = invertDelta|default(false) ? delta.value < 0 : delta.value > 0 %}
+                {# Vorzeichen und Farbe sagen dasselbe: Farbe allein wäre für
+                   farbfehlsichtige Leser keine Information. #}
+                <span class="font-semibold {{ positive ? 'text-green-700' : 'text-gray-700' }}">{{ delta.value > 0 ? '+' : '−' }}{{ delta.value|abs|format_number({fraction_digit: deltaDecimals|default(0)}) }}</span>
+                {{ 'open.delta.since'|trans({'%month%': delta.since}) }}
+            {% else %}
+                {{ 'open.delta.unchanged'|trans({'%month%': delta.since}) }}
+            {% endif %}
+        </p>
+    {% endif %}
+
+    {% if hint is defined and hint %}
+        <p class="mt-1 text-xs text-gray-500">{{ hint }}</p>
+    {% endif %}
+</div>

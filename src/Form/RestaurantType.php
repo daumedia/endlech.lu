@@ -10,6 +10,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -112,6 +113,35 @@ class RestaurantType extends AbstractType
             ->add('hasDisabledParking', CheckboxType::class, [
                 'label' => 'form.disabled_parking',
                 'required' => false,
+            ])
+            // Maße statt Häkchen: "breit genug" ist Auslegungssache, 92 cm
+            // nicht. Leer lassen heißt "nicht ausgemessen" – die
+            // Open-Startup-Seite zählt nur dokumentierte Maße.
+            ->add('doorWidthCm', IntegerType::class, [
+                'label' => 'form.door_width_cm',
+                'required' => false,
+                'help' => 'form.door_width_cm_help',
+                'attr' => ['placeholder' => '90', 'min' => 30, 'max' => 300],
+                'constraints' => [
+                    new Range(
+                        min: 30,
+                        max: 300,
+                        notInRangeMessage: 'restaurant.door_width_range',
+                    ),
+                ],
+            ])
+            ->add('tableSpacingCm', IntegerType::class, [
+                'label' => 'form.table_spacing_cm',
+                'required' => false,
+                'help' => 'form.table_spacing_cm_help',
+                'attr' => ['placeholder' => '90', 'min' => 30, 'max' => 300],
+                'constraints' => [
+                    new Range(
+                        min: 30,
+                        max: 300,
+                        notInRangeMessage: 'restaurant.table_spacing_range',
+                    ),
+                ],
             ])
             ->add('acceptsCash', CheckboxType::class, [
                 'label' => 'form.accepts_cash',

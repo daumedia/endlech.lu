@@ -1,4 +1,6 @@
 restaurant:
+    door_width_range: "The door width must be between {{ min }} and {{ max }} cm."
+    table_spacing_range: "The table spacing must be between {{ min }} and {{ max }} cm."
     name_blank: "Please enter the name."
     name_max: "The name must not exceed {{ limit }} characters."
     city_blank: "Please enter the city."
@@ -85,3 +87,12 @@ organisation_waitlist:
     commune_only: "This field is intended for municipalities only."
     company_only: "This selection is intended for companies only."
     association_only: "This selection is intended for organisations only."
+
+finance:
+    date_required: "Please provide a date."
+    category_required: "Please choose a category."
+    amount_required: "Please provide an amount."
+    amount_positive: "The amount must be greater than zero. Whether it counts as income or expense follows from the category."
+    quantity_positive: "The quantity must be at least 1."
+    quantity_not_allowed: "A quantity is only intended for Inclusion Box materials."
+    note_max: "The note may be at most {{ limit }} characters long."

@@ -75,6 +75,7 @@ final class RestaurantTransformer
                 'longitude' => $restaurant->getLongitude(),
                 'nearbyStopsNote' => $restaurant->getNearbyStopsNote(),
             ],
+            'measurements' => $this->measurements($restaurant),
             'accessibilityNotes' => $restaurant->getAccessibilityNotes(),
             'spokenLanguages' => array_map(
                 static fn ($lang) => [
@@ -141,6 +142,30 @@ final class RestaurantTransformer
             'brightLighting' => $restaurant->hasBrightLighting(),
             'changingTable' => $restaurant->hasChangingTable(),
             'disabledParking' => $restaurant->hasDisabledParking(),
+        ];
+    }
+
+    /**
+     * Maße in Zentimetern, jeweils mit der abgeleiteten Ja/Nein-Aussage.
+     *
+     * Bewusst ein eigener Block statt zusätzlicher Schlüssel in
+     * `accessibility`: Dort ist jeder Wert ein Boolean, und der Client
+     * verlässt sich darauf. Ein `null` in diesem Vertrag wäre ein
+     * Kompatibilitätsbruch, ein neues Feld daneben ist keiner.
+     *
+     * @return array<string, int|bool|null>
+     */
+    private function measurements(Restaurant $restaurant): array
+    {
+        return [
+            'doorWidthCm' => $restaurant->getDoorWidthCm(),
+            'tableSpacingCm' => $restaurant->getTableSpacingCm(),
+            // null heißt "nicht ausgemessen" – der Client soll das von
+            // "zu schmal" unterscheiden können.
+            'wideDoors' => $restaurant->hasWideDoors(),
+            'wheelchairTableSpacing' => $restaurant->hasWheelchairTableSpacing(),
+            'minDoorWidthCm' => Restaurant::MIN_DOOR_WIDTH_CM,
+            'minTableSpacingCm' => Restaurant::MIN_TABLE_SPACING_CM,
         ];
     }
 

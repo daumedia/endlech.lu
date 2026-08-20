@@ -38,8 +38,13 @@
 </head>
 <body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen font-sans">
 
-{# === HEADER / NAVIGATION === #}
-<header class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+{# === HEADER / NAVIGATION ===
+   print:hidden auf Header, Footer, Bottom-Nav und Cookie-Banner: Gedruckt oder
+   als PDF gespeichert ist Navigation nichts wert, und ein `sticky` Header
+   erscheint sonst auf jeder Papierseite erneut. Angelegt für /open, wo das
+   Speichern als PDF vor Fördergesprächen der erwartete Weg ist – gilt aber für
+   jede Seite, weil es überall dieselbe Verbesserung ist. #}
+<header class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm print:hidden">
     <div class="container mx-auto px-4 h-20 flex items-center justify-between">
 
         {# 1. Logo Bereich #}
@@ -136,12 +141,12 @@
 
 {# === HAUPTINHALT (Hier wird index.html.twig reingeladen) === #}
 {# pb-16 md:pb-0: auf Mobil Platz für die fixe Bottom-Nav schaffen #}
-<main class="flex-grow pb-16 md:pb-0">
+<main class="flex-grow pb-16 md:pb-0 print:pb-0">
     {% block body %}{% endblock %}
 </main>
 
 {# === FOOTER === #}
-<footer class="bg-gray-900 text-gray-300 py-12 mt-12">
+<footer class="bg-gray-900 text-gray-300 py-12 mt-12 print:hidden">
     <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 text-sm">
 
         {# Spalte 1 #}
@@ -166,6 +171,7 @@
                 <li><a href="{{ path('app_kriterien') }}" class="hover:text-cyan-400 transition">{{ 'footer.accessibility_criteria'|trans }}</a></li>
                 <li><a href="{{ path('app_partner') }}" class="hover:text-cyan-400 transition">{{ 'footer.partner'|trans }}</a></li>
                 <li><a href="{{ path('app_organisations') }}" class="hover:text-cyan-400 transition">{{ 'nav.organisations'|trans }}</a></li>
+                <li><a href="{{ path('app_open') }}" class="hover:text-cyan-400 transition">{{ 'footer.open'|trans }}</a></li>
                 <li><a href="{{ path('app_impressum') }}" class="hover:text-cyan-400 transition">{{ 'footer.legal'|trans }}</a></li>
                 {% if not (app.request.attributes.get('_route') starts with 'admin_') %}
                     <li data-controller="cookie-consent">
@@ -193,12 +199,12 @@
 
 {# === MOBILE BOTTOM-NAVIGATION (nur öffentliche Seiten) === #}
 {% if not (app.request.attributes.get('_route') starts with 'admin_') %}
-    {% include 'partials/_bottom_nav.html.twig' %}
+    <div class="print:hidden">{% include 'partials/_bottom_nav.html.twig' %}</div>
 {% endif %}
 
 {# === COOKIE-CONSENT-BANNER (nur öffentliche Seiten) === #}
 {% if not (app.request.attributes.get('_route') starts with 'admin_') %}
-    {% include 'partials/_cookie_banner.html.twig' %}
+    <div class="print:hidden">{% include 'partials/_cookie_banner.html.twig' %}</div>
 {% endif %}
 
 </body>

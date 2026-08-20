@@ -1,4 +1,6 @@
 restaurant:
+    door_width_range: "D'Dierbreet muss tëscht {{ min }} an {{ max }} cm leien."
+    table_spacing_range: "Den Dëschofstand muss tëscht {{ min }} an {{ max }} cm leien."
     name_blank: "Gëff w.e.g. den Numm an."
     name_max: "Den Numm dierf maximal {{ limit }} Zeechen laang sinn."
     city_blank: "Gëff w.e.g. d'Stad an."
@@ -85,3 +87,12 @@ organisation_waitlist:
     commune_only: "Dëst Feld ass just fir Gemenge virgesinn."
     company_only: "Dës Auswiel ass just fir Betriber virgesinn."
     association_only: "Dës Auswiel ass just fir Organisatioune virgesinn."
+
+finance:
+    date_required: "Gëff w.e.g. en Datum un."
+    category_required: "Wiel w.e.g. eng Kategorie."
+    amount_required: "Gëff w.e.g. e Betrag un."
+    amount_positive: "De Betrag muss méi grouss wéi null sinn. Ob et eng Recette oder eng Ausgab ass, ergëtt sech aus der Kategorie."
+    quantity_positive: "D'Stéckzuel muss op mannst 1 sinn."
+    quantity_not_allowed: "Eng Stéckzuel ass nëmme bei Material fir Inclusion Boxen virgesinn."
+    note_max: "D'Notiz dierf maximal {{ limit }} Zeeche laang sinn."

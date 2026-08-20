@@ -9,13 +9,27 @@ app_root:
         _locale: lb
         permanent: false
 
+# Locale-freier Kurzlink auf die Transparenzseite.
+# /open ist die URL, die in Fördermails, auf Visitenkarten und in Vorträgen
+# steht – sie darf nicht an einer Sprachwahl scheitern.
+app_open_redirect:
+    path: /open
+    controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController
+    defaults:
+        route: app_open
+        _locale: lb
+        permanent: false
+
 # Alle Controller mit /{_locale} Prefix (inkl. Admin)
-# Ausnahme: Api/V1 wird separat ohne Locale-Prefix unter /api/v1 importiert.
+# Ausnahmen: Api/V1 und Controller/Open werden separat ohne Locale-Prefix
+# importiert.
 controllers:
     resource:
         path: ../src/Controller/
         namespace: App\Controller
-        exclude: '../src/Controller/Api/V1/'
+        exclude:
+            - '../src/Controller/Api/V1/'
+            - '../src/Controller/Open/'
     type: attribute
     prefix: /{_locale}
     requirements:
@@ -30,3 +44,11 @@ api_v1:
         namespace: App\Controller\Api\V1
     type: attribute
     prefix: /api/v1
+
+# Maschinenlesbare Open-Startup-Daten – sprachfrei, damit zitierte URLs
+# eindeutig bleiben (/open.json, /open/dataset.csv, /open/dataset.json).
+open_data:
+    resource:
+        path: ../src/Controller/Open/
+        namespace: App\Controller\Open
+    type: attribute

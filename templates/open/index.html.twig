@@ -1,0 +1,384 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'open.title'|trans }} – Endlech.lu{% endblock %}
+
+{#
+    Open-Startup-Seite.
+
+    Genau ein <h1> (im Hero) – base.html.twig bringt keins mit. Jede Sektion
+    beginnt mit <h2>, Karten und Diagramm-Überschriften nutzen <h3>.
+
+    Farben: Ausgaben in Cyan, Einnahmen in Purple – die beiden Marken-Hues.
+    Bernstein für Ausgaben wäre eine Warnfarbe und läse sich wie ein Problem;
+    Betriebskosten sind aber genau das, was diese Seite rechtfertigen soll.
+    Das Paar ist geprüft: ΔE 26,4 (normal) / 13,6 (Deuteranopie), Kontrast
+    beide über 3:1 gegen Weiß.
+#}
+{% block body %}
+{% set platform = stats.platform %}
+{% set impact = stats.impact %}
+{% set finance = stats.finance %}
+
+{# === 1 · HERO ============================================================ #}
+<section class="bg-linear-to-r from-cyan-700 to-purple-800 text-white py-16 md:py-20">
+    <div class="container mx-auto px-4 max-w-3xl text-center">
+        <p class="inline-block bg-white/20 text-white text-sm font-semibold px-4 py-1.5 rounded-full mb-6">
+            {{ 'open.eyebrow'|trans }}
+        </p>
+
+        <h1 class="text-3xl md:text-5xl font-bold mb-6 leading-tight">{{ 'open.heading'|trans }}</h1>
+
+        {# Die Leitzahl der Seite. Wer drei Sekunden hinsieht, soll sie
+           mitnehmen – vier gleichrangige Kacheln hinterlassen nichts. #}
+        <p class="text-6xl md:text-7xl font-bold leading-none">{{ platform.restaurants|format_number }}</p>
+        <p class="mt-2 text-cyan-50 font-semibold">{{ 'open.hero.lead'|trans }}</p>
+        <p class="mt-1 text-sm text-cyan-100">
+            {{ 'open.hero.lead_context'|trans({
+                '%verified%': platform.verified,
+                '%communes%': platform.communesCovered,
+                '%cantons%': platform.cantonsCovered
+            }) }}
+        </p>
+
+        <p class="mt-8 text-cyan-50 leading-relaxed text-left md:text-center">{{ 'open.intro'|trans }}</p>
+
+        <div class="mt-8 flex flex-wrap gap-3 justify-center print:hidden">
+            <a href="#datensatz"
+               class="inline-flex items-center gap-2 min-h-[48px] bg-white text-cyan-900 font-bold px-6 py-3 rounded-full shadow-lg hover:shadow-xl hover:bg-cyan-50 motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-white">
+                <span aria-hidden="true">⬇</span> {{ 'open.link_dataset'|trans }}
+            </a>
+            <a href="{{ path('app_open_json') }}"
+               class="inline-flex items-center gap-2 min-h-[48px] border border-white/40 text-white font-semibold px-6 py-3 rounded-full hover:bg-white/10 motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-white">
+                <span aria-hidden="true">{ }</span> {{ 'open.link_json'|trans }}
+            </a>
+        </div>
+    </div>
+</section>
+
+{# === 2 · PLATTFORM ======================================================= #}
+<section class="bg-white py-16" aria-labelledby="platform-heading">
+    <div class="container mx-auto px-4 max-w-5xl">
+        <h2 id="platform-heading" class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">{{ 'open.platform.heading'|trans }}</h2>
+        <p class="text-gray-600 mb-8 max-w-3xl">{{ 'open.platform.intro'|trans }}</p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+            {{ include('open/_metric.html.twig', {
+                emoji: '✅',
+                value: platform.verified|format_number,
+                label: 'open.platform.verified'|trans,
+                delta: deltas.verified|default(null),
+                hint: 'open.platform.verified_hint'|trans({'%share%': platform.verifiedShare|format_number({fraction_digit: 1})})
+            }) }}
+            {{ include('open/_metric.html.twig', {
+                emoji: '🏘️',
+                value: platform.communesCovered,
+                suffix: '/ ' ~ platform.totalCommunes,
+                label: 'open.platform.communes'|trans,
+                delta: deltas.communesCovered|default(null),
+                hint: 'open.platform.communes_hint'|trans({'%share%': platform.communeCoverage|format_number({fraction_digit: 1})})
+            }) }}
+            {{ include('open/_metric.html.twig', {
+                emoji: '📊',
+                value: platform.averageScore|format_number({fraction_digit: 1}),
+                suffix: '/ ' ~ platform.maxScore,
+                label: 'open.platform.score'|trans,
+                delta: deltas.averageScore|default(null),
+                deltaDecimals: 2,
+                hint: 'open.platform.score_hint'|trans
+            }) }}
+        </div>
+
+        {# --- Punkteverteilung --- #}
+        <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm mb-6 break-inside-avoid">
+            <h3 class="text-lg font-semibold text-gray-900 mb-1">{{ 'open.platform.distribution_heading'|trans }}</h3>
+            <p class="text-sm text-gray-600">{{ 'open.platform.distribution_intro'|trans }}</p>
+
+            {{ include('open/_histogram.html.twig', {
+                distribution: platform.scoreDistribution,
+                maxScore: platform.maxScore
+            }) }}
+        </div>
+
+        {# --- Abdeckung nach Kanton --- #}
+        <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm break-inside-avoid">
+            <h3 class="text-lg font-semibold text-gray-900 mb-1">{{ 'open.platform.canton_heading'|trans }}</h3>
+            <p class="text-sm text-gray-600 mb-5">{{ 'open.platform.canton_intro'|trans }}</p>
+
+            <div class="overflow-x-auto">
+                <table id="canton-coverage" class="w-full text-sm">
+                    <caption class="sr-only">{{ 'open.platform.canton_heading'|trans }}</caption>
+                    <thead>
+                        <tr class="text-left text-xs uppercase tracking-wider text-gray-500 border-b border-gray-200">
+                            <th scope="col" class="py-2 pr-4 font-semibold">{{ 'open.platform.canton'|trans }}</th>
+                            <th scope="col" class="py-2 pr-4 font-semibold text-right">{{ 'open.platform.restaurants'|trans }}</th>
+                            <th scope="col" class="py-2 pr-4 font-semibold text-right">{{ 'open.platform.verified'|trans }}</th>
+                            <th scope="col" class="py-2 font-semibold text-right">{{ 'open.platform.canton_communes'|trans }}</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        {% for row in platform.byCanton %}
+                            <tr class="{{ row.restaurants == 0 ? 'text-gray-400' : 'text-gray-700' }}">
+                                <th scope="row" class="py-2 pr-4 font-medium text-left">{{ row.label }}</th>
+                                <td class="py-2 pr-4 text-right tabular-nums">{{ row.restaurants }}</td>
+                                <td class="py-2 pr-4 text-right tabular-nums">{{ row.verified }}</td>
+                                <td class="py-2 text-right">
+                                    <span class="tabular-nums">{{ row.communesCovered }} / {{ row.communeTotal }}</span>
+                                    {# Der Balken wiederholt nur den Bruch daneben – deshalb
+                                       ausgeblendet statt doppelt vorgelesen. #}
+                                    <span class="mt-1 block h-1.5 w-full max-w-24 ml-auto rounded-[2px] bg-cyan-50 overflow-hidden" aria-hidden="true">
+                                        {% if row.communesCovered > 0 %}
+                                            <span class="block h-full rounded-r-[4px] bg-cyan-600" style="width: {{ row.communeCoverage|round }}%"></span>
+                                        {% endif %}
+                                    </span>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {% if platform.unassigned > 0 %}
+                {# Sichtbare Lücke statt geratener Zuordnung: Wer die Zahlen
+                   nachrechnet, soll die Differenz erklärt bekommen. #}
+                <p class="mt-4 text-xs text-gray-500">
+                    {{ (platform.unassigned == 1 ? 'open.platform.unassigned_one' : 'open.platform.unassigned_other')|trans({'%count%': platform.unassigned}) }}
+                </p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+{# === 3 · WIRKUNG ========================================================= #}
+<section class="bg-gray-50 py-16" aria-labelledby="impact-heading">
+    <div class="container mx-auto px-4 max-w-5xl">
+        <h2 id="impact-heading" class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">{{ 'open.impact.heading'|trans }}</h2>
+        <p class="text-gray-600 mb-8 max-w-3xl">{{ 'open.impact.intro'|trans }}</p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {% for tile in [
+                {emoji: '♿', value: impact.stepFreeEntrances, label: 'open.impact.step_free'|trans, hint: 'open.impact.of_total'|trans({'%total%': impact.total})},
+                {emoji: '🚻', value: impact.accessibleRestrooms, label: 'open.impact.restrooms'|trans, hint: 'open.impact.of_total'|trans({'%total%': impact.total})},
+                {emoji: '🐕', value: impact.assistanceDogsWelcome, label: 'open.impact.assistance_dogs'|trans, hint: 'open.impact.of_total'|trans({'%total%': impact.total})},
+                {emoji: '🚪', value: impact.wideDoors, label: 'open.impact.wide_doors'|trans({'%min%': impact.minDoorWidthCm}), hint: 'open.impact.of_measured'|trans({'%measured%': impact.documentedDoorWidths})},
+                {emoji: '↔️', value: impact.wheelchairTableSpacing, label: 'open.impact.table_spacing'|trans({'%min%': impact.minTableSpacingCm}), hint: 'open.impact.of_measured'|trans({'%measured%': impact.documentedTableSpacing})},
+                {emoji: '📦', value: impact.inclusionBoxesDelivered, label: 'open.impact.inclusion_boxes'|trans, hint: 'open.impact.inclusion_boxes_hint'|trans}
+            ] %}
+                {{ include('open/_metric.html.twig', tile) }}
+            {% endfor %}
+        </div>
+
+        <p class="mt-5 text-xs text-gray-500 max-w-3xl">{{ 'open.impact.footnote'|trans }}</p>
+    </div>
+</section>
+
+{# === 4 · FINANZEN ======================================================== #}
+<section class="bg-white py-16" aria-labelledby="finance-heading">
+    <div class="container mx-auto px-4 max-w-5xl">
+        <h2 id="finance-heading" class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">{{ 'open.finance.heading'|trans }}</h2>
+        <p class="text-gray-600 mb-8 max-w-3xl">{{ 'open.finance.intro'|trans }}</p>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+            {# --- Ausgaben --- #}
+            <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm break-inside-avoid">
+                <h3 class="text-lg font-semibold text-gray-900">{{ 'open.finance.expenses'|trans }}</h3>
+                <p class="mt-1 text-3xl font-bold text-gray-900">{{ finance.totalExpenses|format_currency(finance.currency) }}</p>
+                <p class="mt-2 text-sm text-gray-600 mb-5">{{ 'open.finance.expenses_intro'|trans }}</p>
+
+                {% if finance.expenses is empty %}
+                    <p class="text-sm text-gray-500">{{ 'open.finance.no_data'|trans }}</p>
+                {% else %}
+                    <div class="space-y-3">
+                        {% for row in finance.expenses %}
+                            {{ include('open/_bar.html.twig', {
+                                label: row.emoji ~ ' ' ~ row.transKey|trans,
+                                value: row.total|format_currency(finance.currency),
+                                percent: row.share,
+                                colour: 'bg-cyan-600',
+                                track: 'bg-cyan-50'
+                            }) }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            {# --- Einnahmen --- #}
+            <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm break-inside-avoid">
+                <h3 class="text-lg font-semibold text-gray-900">{{ 'open.finance.income'|trans }}</h3>
+
+                {% if finance.incomeVisible %}
+                    <p class="mt-1 text-3xl font-bold text-gray-900">{{ finance.totalIncome|format_currency(finance.currency) }}</p>
+                    <p class="mt-2 text-sm text-gray-600 mb-5">{{ 'open.finance.income_intro'|trans }}</p>
+
+                    <div class="space-y-3">
+                        {% for row in finance.income %}
+                            {{ include('open/_bar.html.twig', {
+                                label: row.emoji ~ ' ' ~ row.transKey|trans,
+                                value: row.total|format_currency(finance.currency),
+                                percent: row.share,
+                                colour: 'bg-purple-600',
+                                track: 'bg-purple-50'
+                            }) }}
+                        {% endfor %}
+                    </div>
+
+                    <p class="mt-5 pt-4 border-t border-gray-100 text-sm">
+                        <span class="text-gray-600">{{ 'open.finance.balance'|trans }}:</span>
+                        <span class="font-semibold {{ finance.balance >= 0 ? 'text-green-700' : 'text-red-700' }}">
+                            {{ finance.balance|format_currency(finance.currency) }}
+                        </span>
+                    </p>
+                {% else %}
+                    {# Bewusste Zurückhaltung, nicht fehlende Daten. Der Grund
+                       steht dabei, sonst liest sich die leere Spalte als
+                       Nachlässigkeit. #}
+                    <div class="mt-4 rounded-lg bg-gray-50 border border-gray-100 p-4 text-sm text-gray-600">
+                        <p class="font-semibold text-gray-700 mb-1">{{ 'open.finance.income_pending_title'|trans }}</p>
+                        <p>{{ 'open.finance.income_pending'|trans }}</p>
+                        {% if finance.incomeVisibleFrom %}
+                            <p class="mt-2 text-xs text-gray-500">
+                                {{ 'open.finance.income_from'|trans({'%date%': finance.incomeVisibleFrom|date('d.m.Y')}) }}
+                            </p>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        {% set staleDays = finance.lastUpdatedAt ? date().diff(date(finance.lastUpdatedAt)).days : null %}
+        {# Ein Dashboard, dem man das Alter nicht ansieht, richtet mehr Schaden
+           an als gar keines. Ab 60 Tagen tritt der Hinweis deshalb aus dem
+           Kleingedruckten heraus. #}
+        <p class="mt-5 text-xs {{ staleDays is not null and staleDays > 60 ? 'inline-flex items-center gap-2 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 px-3 py-2' : 'text-gray-500' }}">
+            {% if staleDays is not null and staleDays > 60 %}<span aria-hidden="true">⚠️</span>{% endif %}
+            <span>
+                {% if finance.lastUpdatedAt %}
+                    {{ 'open.finance.last_updated'|trans({'%date%': finance.lastUpdatedAt|date('d.m.Y')}) }}
+                {% else %}
+                    {{ 'open.finance.never_updated'|trans }}
+                {% endif %}
+                · {{ 'open.finance.aggregation_note'|trans }}
+            </span>
+        </p>
+    </div>
+</section>
+
+{# === 5 · ENTWICKLUNG ===================================================== #}
+<section class="bg-gray-50 py-16" aria-labelledby="trend-heading">
+    <div class="container mx-auto px-4 max-w-5xl">
+        <h2 id="trend-heading" class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">{{ 'open.trend.heading'|trans }}</h2>
+        <p class="text-gray-600 mb-8 max-w-3xl">{{ 'open.trend.intro'|trans }}</p>
+
+        {% if hasTrend %}
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {% for chart in [
+                    {
+                        label: 'open.trend.restaurants'|trans,
+                        value: platform.restaurants|format_number,
+                        delta: deltas.restaurants|default(null),
+                        points: trend|map(s => {label: s.monthKey, value: s.restaurantCount}),
+                        max: max(trend|map(s => s.restaurantCount)),
+                        aria: 'open.trend.restaurants_aria'|trans,
+                        colour: 'text-cyan-600'
+                    },
+                    {
+                        label: 'open.trend.score'|trans,
+                        value: platform.averageScore|format_number({fraction_digit: 1}) ~ ' / ' ~ platform.maxScore,
+                        delta: deltas.averageScore|default(null),
+                        points: trend|map(s => {label: s.monthKey, value: s.averageAccessibilityScore}),
+                        max: platform.maxScore,
+                        aria: 'open.trend.score_aria'|trans,
+                        colour: 'text-purple-600',
+                        decimals: 2
+                    }
+                ] %}
+                    <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm break-inside-avoid">
+                        <h3 class="text-sm font-semibold text-gray-700">{{ chart.label }}</h3>
+                        <div class="mt-1 flex items-baseline gap-2">
+                            <span class="text-3xl font-bold text-gray-900">{{ chart.value }}</span>
+                            {% if chart.delta and chart.delta.value != 0 %}
+                                <span class="text-sm font-semibold {{ chart.delta.value > 0 ? 'text-green-700' : 'text-gray-500' }}">
+                                    {{ chart.delta.value > 0 ? '+' : '−' }}{{ chart.delta.value|abs|format_number({fraction_digit: chart.decimals|default(0)}) }}
+                                </span>
+                                <span class="text-xs text-gray-500">{{ 'open.delta.since'|trans({'%month%': chart.delta.since}) }}</span>
+                            {% endif %}
+                        </div>
+                        {{ include('open/_sparkline.html.twig', {
+                            points: chart.points, max: chart.max, aria: chart.aria, colour: chart.colour
+                        }) }}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <details class="mt-6 bg-white border border-gray-200 rounded-xl p-6 shadow-sm break-inside-avoid">
+                <summary class="cursor-pointer text-sm font-semibold text-gray-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600">
+                    {{ 'open.trend.table_toggle'|trans }}
+                </summary>
+                <div class="mt-4 overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="text-left text-xs uppercase tracking-wider text-gray-500 border-b border-gray-200">
+                                <th scope="col" class="py-2 pr-4 font-semibold">{{ 'open.trend.month'|trans }}</th>
+                                <th scope="col" class="py-2 pr-4 font-semibold text-right">{{ 'open.platform.restaurants'|trans }}</th>
+                                <th scope="col" class="py-2 pr-4 font-semibold text-right">{{ 'open.platform.verified'|trans }}</th>
+                                <th scope="col" class="py-2 pr-4 font-semibold text-right">{{ 'open.platform.communes'|trans }}</th>
+                                <th scope="col" class="py-2 font-semibold text-right">{{ 'open.platform.score'|trans }}</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100 text-gray-700">
+                            {% for snapshot in trend|reverse %}
+                                <tr>
+                                    <th scope="row" class="py-2 pr-4 font-medium text-left tabular-nums">{{ snapshot.monthKey }}</th>
+                                    <td class="py-2 pr-4 text-right tabular-nums">{{ snapshot.restaurantCount }}</td>
+                                    <td class="py-2 pr-4 text-right tabular-nums">{{ snapshot.verifiedCount }}</td>
+                                    <td class="py-2 pr-4 text-right tabular-nums">{{ snapshot.communesCovered }}</td>
+                                    <td class="py-2 text-right tabular-nums">{{ snapshot.averageAccessibilityScore|format_number({fraction_digit: 2}) }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </details>
+        {% else %}
+            <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm text-sm text-gray-600">
+                {{ 'open.trend.not_enough_data'|trans }}
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+{# === 6 · OFFENE DATEN ==================================================== #}
+<section id="datensatz" class="bg-linear-to-r from-cyan-700 to-purple-800 text-white py-16 scroll-mt-24" aria-labelledby="dataset-heading">
+    <div class="container mx-auto px-4 max-w-3xl">
+        <p class="inline-block bg-white/20 text-white text-sm font-semibold px-4 py-1.5 rounded-full mb-5">
+            {{ 'open.dataset.badge'|trans }}
+        </p>
+
+        <h2 id="dataset-heading" class="text-2xl md:text-3xl font-bold mb-4">{{ 'open.dataset.heading'|trans }}</h2>
+        <p class="text-lg text-cyan-50 leading-relaxed mb-8">{{ 'open.dataset.intro'|trans }}</p>
+
+        <div class="flex flex-wrap gap-3 print:hidden">
+            <a href="{{ path('app_open_dataset_csv') }}"
+               class="inline-flex items-center gap-2 min-h-[48px] bg-white text-cyan-900 font-bold px-6 py-3 rounded-full shadow-lg hover:shadow-xl hover:bg-cyan-50 motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-white">
+                <span aria-hidden="true">⬇</span> {{ 'open.dataset.csv'|trans }}
+            </a>
+            <a href="{{ path('app_open_dataset_json') }}"
+               class="inline-flex items-center gap-2 min-h-[48px] border border-white/40 text-white font-semibold px-6 py-3 rounded-full hover:bg-white/10 motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-white">
+                <span aria-hidden="true">⬇</span> {{ 'open.dataset.json'|trans }}
+            </a>
+            <a href="{{ path('app_open_json') }}"
+               class="inline-flex items-center gap-2 min-h-[48px] border border-white/40 text-white font-semibold px-6 py-3 rounded-full hover:bg-white/10 motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-white">
+                <span aria-hidden="true">{ }</span> {{ 'open.dataset.metrics_json'|trans }}
+            </a>
+        </div>
+
+        <p class="mt-6 text-sm text-cyan-100">
+            {{ 'open.dataset.licence'|trans }}
+            <a href="https://creativecommons.org/licenses/by/4.0/deed.de"
+               class="underline hover:no-underline focus:outline-2 focus:outline-offset-2 focus:outline-white"
+               target="_blank" rel="noopener noreferrer">CC BY 4.0</a>.
+            {{ 'open.dataset.privacy_note'|trans }}
+        </p>
+    </div>
+</section>
+{% endblock %}
