@@ -1,0 +1,9 @@
+{#
+    Turbo-Stream: ersetzt nur das Formular. Ohne JavaScript wird dieser Zweig
+    nie erreicht – der Controller liefert dann einen Redirect mit Flash.
+#}
+<turbo-stream action="replace" target="organisation-waitlist-form">
+    <template>
+        {{ include('organisation/_success.html.twig', {entry: entry}) }}
+    </template>
+</turbo-stream>

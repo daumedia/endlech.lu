@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html lang="{{ app.request.locale }}">
+{# app.request ist null, sobald eine Mail außerhalb eines Requests gerendert
+   wird (Messenger-Worker). Production versendet zwar synchron, ein Worker
+   ließe das Template hier aber ohne den Fallback hart scheitern. #}
+<html lang="{{ app.request ? app.request.locale : 'de' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

@@ -1,0 +1,15 @@
+{#
+    Erfolgsmeldung des Partner-Formulars. Der eigentliche Aufbau liegt im
+    geteilten Partial – hier stehen nur die partnerspezifischen Texte.
+
+    `entry` ist absichtlich optional: Bei einem Honeypot-Treffer liefert der
+    Controller dieselbe Ansicht ohne Datensatz.
+#}
+{{ include('partials/_waitlist_success.html.twig', {
+    target_id: 'partner-waitlist-form',
+    title: 'partner.form.success_title'|trans,
+    text: entry
+        ? 'partner.form.success_text_with_email'|trans({'%email%': entry.email})
+        : 'partner.form.success_text'|trans,
+    hint: 'partner.form.success_hint'|trans
+}) }}

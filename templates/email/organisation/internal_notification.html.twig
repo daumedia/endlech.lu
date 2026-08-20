@@ -1,0 +1,69 @@
+{#
+    Interne Meldung ans Team – durchgängig auf Deutsch (fester Locale-Parameter),
+    unabhängig von der Sprache des Bestätigenden. Der Typ steht im Betreff,
+    damit sich die Meldungen filtern lassen.
+#}
+{% extends 'email/base.html.twig' %}
+
+{% block title %}{{ 'email.organisation_internal_title'|trans({}, null, 'de') }}{% endblock %}
+
+{% block body %}
+    <h2 style="margin: 0 0 16px; color: #111827; font-size: 20px; font-weight: 700;">
+        {{ entry.type.emoji }} {{ 'email.organisation_internal_title'|trans({}, null, 'de') }}
+    </h2>
+
+    <p style="margin: 0 0 20px; color: #6b7280; font-size: 14px; line-height: 1.6;">
+        {{ 'email.organisation_internal_intro'|trans({'%type%': entry.type.transKey|trans({}, null, 'de')}, null, 'de') }}
+    </p>
+
+    <table role="presentation" style="width: 100%; border: 0; font-size: 14px; color: #374151;">
+        {% set rows = [
+            {label: 'Typ', value: entry.type.transKey|trans({}, null, 'de')},
+            {label: 'Organisation', value: entry.organisationName},
+            {label: 'Ansprechpartner', value: entry.contactName},
+            {label: 'Funktion', value: entry.contactRole ?: '—'},
+            {label: 'E-Mail', value: entry.email},
+            {label: 'Telefon', value: entry.phone ?: '—'},
+            {label: 'Webseite', value: entry.website ?: '—'},
+            {label: 'Sprache', value: entry.locale},
+            {label: 'Quelle', value: entry.source ?: '—'}
+        ] %}
+
+        {% if entry.type.value == 'commune' %}
+            {% set rows = rows|merge([
+                {label: 'Gemeinde', value: entry.communeName ?: '—'},
+                {label: 'Lokale (geschätzt)', value: entry.estimatedVenues ?: '—'},
+                {label: 'Zeitrahmen', value: entry.timeframe ? entry.timeframe.transKey|trans({}, null, 'de') : '—'}
+            ]) %}
+        {% elseif entry.type.value == 'company' %}
+            {% set rows = rows|merge([{label: 'Sponsoring', value: entry.sponsorshipInterests|length ? entry.sponsorshipInterests|join(', ') : '—'}]) %}
+        {% else %}
+            {% set rows = rows|merge([{label: 'Zusammenarbeit', value: entry.collaborationInterests|length ? entry.collaborationInterests|join(', ') : '—'}]) %}
+        {% endif %}
+
+        {% for row in rows %}
+            <tr>
+                <td style="padding: 6px 12px 6px 0; color: #9ca3af; vertical-align: top; white-space: nowrap;">{{ row.label }}</td>
+                <td style="padding: 6px 0; font-weight: 600;">{{ row.value }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    {% if entry.message %}
+        <p style="margin: 20px 0 6px; color: #9ca3af; font-size: 12px;">Nachricht</p>
+        <p style="margin: 0 0 20px; padding: 12px; background-color: #f9fafb; border-radius: 8px; color: #374151; font-size: 14px; line-height: 1.6;">
+            {{ entry.message|nl2br }}
+        </p>
+    {% endif %}
+
+    <table role="presentation" style="width: 100%; border: 0;">
+        <tr>
+            <td style="text-align: center; padding: 16px 0 0;">
+                <a href="{{ url('admin_waitlist_organisation_show', {id: entry.id, _locale: 'de'}) }}"
+                   style="display: inline-block; background-color: #7c3aed; color: #ffffff; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 14px;">
+                    {{ 'email.organisation_internal_button'|trans({}, null, 'de') }}
+                </a>
+            </td>
+        </tr>
+    </table>
+{% endblock %}

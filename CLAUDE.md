@@ -179,6 +179,19 @@ Autowiring and autoconfiguration are enabled by default in `config/services.yaml
 | `app_profile_edit`      | `/profile/edit` | `ProfileController::edit()`        |
 | `app_profile_password`  | `/profile/password` | `ProfileController::changePassword()` |
 | `app_profile_avatar_delete` | `/profile/avatar/delete` | `ProfileController::deleteAvatar()` |
+| `app_partner`           | `/partner`     | `PartnerController::index()` (Landing Page) |
+| `app_partner_submit`    | `/partner` (POST) | `PartnerController::submit()`    |
+| `app_partner_confirm`   | `/partner/confirmation/{token}` | `PartnerController::confirm()` |
+| `app_organisations`     | `/organisationen` | `OrganisationController::index()` (Übersicht) |
+| `app_organisations_type`| `/organisationen/{slug}` | `OrganisationController::type()` (gemeinden\|unternehmen\|vereine) |
+| `app_organisations_submit`| `/organisationen` (POST) | `OrganisationController::submit()` |
+| `app_organisations_confirm`| `/organisationen/confirmation/{token}` | `OrganisationController::confirm()` |
+| `admin_waitlist_index`  | `/admin/warteliste` | `AdminWaitlistController::index()` (beide Typen) |
+| `admin_waitlist_partner_show`| `/admin/warteliste/partner/{id}` | `AdminWaitlistController::showPartner()` |
+| `admin_waitlist_organisation_show`| `/admin/warteliste/organisation/{id}` | `AdminWaitlistController::showOrganisation()` |
+| `admin_waitlist_partner_status`| `/admin/warteliste/partner/{id}/status` | `AdminWaitlistController::changePartnerStatus()` |
+| `admin_waitlist_organisation_status`| `/admin/warteliste/organisation/{id}/status` | `AdminWaitlistController::changeOrganisationStatus()` |
+| `admin_waitlist_partner_link`| `/admin/warteliste/partner/{id}/restaurant` | `AdminWaitlistController::linkRestaurant()` |
 | `api_cuisine_search`  | `/api/cuisines/search` | `CuisineApiController::search()` |
 | `api_cuisine_create`  | `/api/cuisines`        | `CuisineApiController::create()` |
 | `api_v1_auth_login`   | `/api/v1/auth/login` (POST) | `Api\V1\AuthController::login()` (json_login) |
@@ -360,6 +373,70 @@ Keine Vorauswahl entsteht aus `placeholder: false` + Entity-Wert `null` – ein 
 **Migration `Version20260809000000`:** `TINYINT(1)` → `VARCHAR(10) NULL` (kein natives `ENUM`, wegen MariaDB 10.5 auf Production), dann Datenmigration `1 → 'yes'`, `0 → 'unknown'` – nicht `'no'`, weil ein leeres Häkchen unter dem alten Hint „unbekannt" bedeutete.
 
 **Übersetzungen:** Block `tristate:` in `messages.{de,en,fr,lb}.yaml` mit **gequoteten** Keys (`"yes"`, `"no"`, `"unknown"`), `community.suggest.step_incomplete`, sowie `suggestion.answer_required` in `validators.{de,en,fr,lb}.yaml`.
+
+## Entity: PartnerWaitlistEntry (Partnerprogramm-Warteliste)
+Wartelisten-Anmeldung für das kostenpflichtige Partnerprogramm. Preise und Paketumfang stehen noch nicht fest – die Seite verarbeitet deshalb **keine Zahlung** und legt **keinen Account** an.
+
+Felder: id, restaurantName (VARCHAR 180), contactName (VARCHAR 120), email (VARCHAR 180), phone (VARCHAR 40 nullable), locality (VARCHAR 120), restaurant (ManyToOne Restaurant nullable, SET NULL), message (TEXT nullable), status (VARCHAR 20, enumType), confirmationToken (VARCHAR 64 nullable UNIQUE), confirmedAt (nullable), consentAt (NOT NULL), locale (VARCHAR 5), source (VARCHAR 60 nullable), createdAt, updatedAt.
+Enum: `App\Enum\PartnerWaitlistStatus` – `pending`/`confirmed`/`contacted`/`converted`/`declined`, mit `transKey()`, `label()`, `emoji()`, `badgeClasses()` (Muster wie `TriState`).
+Repository: `findPendingOlderThan()`, `findFiltered()`, `countByStatus()`, `findOneByConfirmationToken()`.
+Migration: `Version20260820000000` – inkl. Kombi-Index `(status, created_at)`, der **auch im Entity-Mapping** deklariert ist (sonst meldet `doctrine:schema:validate` eine Abweichung).
+
+**`updatedAt` per `#[ORM\PreUpdate]`:** Das Projekt kannte bisher keine Lifecycle-Callbacks. Der Wert wird an drei Admin-Stellen geändert; ihn dort von Hand zu pflegen wäre fehleranfällig. Im Konstruktor initialisiert, da `PreUpdate` beim ersten `persist()` nicht feuert.
+
+**Token bleibt nach der Bestätigung stehen** (anders als `User::verificationToken`, der genullt wird): Nur so lässt sich ein zweiter Klick auf denselben Link („bereits bestätigt") von einem unbekannten Token („Link ungültig") unterscheiden. `confirm()` rendert drei Zustände in einer Vorlage und wirft nie eine Exception.
+
+**Honeypot ohne `Blank`-Constraint:** Ein Validierungsfehler würde dem Bot verraten, welches Feld die Falle ist. Der Controller prüft das Feld und liefert bei einem Treffer dieselbe Erfolgsantwort wie sonst – nur ohne zu speichern und ohne Mail. Das Feld ist bewusst **kein** `type="hidden"` (das füllen Bots zuverlässig), sondern per CSS aus dem Blickfeld genommen, mit `aria-hidden="true"` + `tabindex="-1"`.
+
+**Rate-Limiter `partner_waitlist`** (`config/packages/framework.yaml`): 5 Versuche je IP und Stunde, im Controller via `#[Autowire(service: 'limiter.partner_waitlist')]`. ⚠️ Der `when@test`-Override (Limit 10000) ist Pflicht, sonst wird die Test-Suite ab dem sechsten Submit rot.
+
+**Erster Turbo-Stream im Projekt.** `TurboBundle` war bereits registriert, aber ungenutzt. Erfolgsfall: `TurboBundle::STREAM_FORMAT === $request->getPreferredFormat()` → `setRequestFormat()` → `partner/success.stream.html.twig` ersetzt per `action="replace" target="partner-waitlist-form"` nur das Formular. Kein `<turbo-frame>` – „replace" adressiert eine gewöhnliche DOM-id. Der **Fehlerfall braucht keinen Stream**: `AbstractController::render()` setzt für ein submitted-invalides Formular selbst 422 (`vendor/symfony/framework-bundle/Controller/AbstractController.php:473`), und Turbo rendert 4xx-HTML an Ort und Stelle. Auf diesem Pfad darf `setRequestFormat()` **nicht** aufgerufen werden – die Antwort muss `text/html` bleiben.
+
+**`app.contact_email`** (`config/services.yaml`, env `CONTACT_EMAIL`): Empfänger der internen Meldung, wenn eine Anmeldung bestätigt wird. Fallback-Parameter statt leerem Default, weil eine leere Empfängeradresse beim Versand werfen würde. Die interne Mail ist fest auf Deutsch (`trans(..., null, 'de')`), unabhängig von der Sprache des Bestätigenden; die Bestätigungsmail an den Interessenten geht im Submit-Request raus und erbt dadurch automatisch dessen Locale.
+
+## Entity: OrganisationWaitlistEntry (Gemeinden, Unternehmen, Vereine)
+Zweite Warteliste neben dem Partnerprogramm, unter `/organisationen`. Drei Typen (`App\Enum\OrganisationType`), die kommerziell grundverschieden sind: `commune` = bezahlter Auftrag, `company` = Sponsoring, `association` = **kein Vertriebskanal** (Beirat, kein Geldfluss in beide Richtungen).
+
+Gemeinsame Felder: type, organisationName, contactName, contactRole, email, phone, website, message, status, confirmationToken, confirmedAt, consentAt, locale, source, createdAt, updatedAt.
+Typspezifisch (alle nullable): `communeName`, `estimatedVenues`, `timeframe` (nur commune) · `sponsorshipInterests` JSON (nur company) · `collaborationInterests` JSON (nur association).
+Weitere Enums: `OrganisationTimeframe`, `SponsorshipInterest`, `CollaborationInterest`.
+
+**Seitenstruktur:** `/organisationen` ist die Übersicht (Hero, drei Karten, Integritätsblock, Formular mit freier Typwahl). Jede Zielgruppe hat zusätzlich eine **eigene Seite** unter `/organisationen/{slug}` (`OrganisationType::slug()` → `gemeinden`, `unternehmen`, `vereine`; für ASSOCIATION bewusst „vereine", sonst hieße es `/organisationen/organisationen`). Die Inhalte liegen in `templates/organisation/_section_{type}.html.twig` und werden nur dort eingebunden – die Übersicht zeigt bewusst nur Teaser, damit derselbe Text nicht doppelt im Netz steht. Auf den Unterseiten ist der Formulartyp vorgewählt, der Selektor bleibt aber sichtbar (wer falsch gelandet ist, wechselt ohne Umweg). `_integrity.html.twig` steht auf allen vier Seiten.
+Repository: `findByType(string $type, ?string $status = null)` (nimmt bewusst Strings aus Query-Parametern und verwirft unbekannte Werte, statt zu werfen), `findFiltered()`, `countByStatus()`, `countByType()`.
+Migration: `Version20260820100000`.
+
+**Typabhängige Validierung – zwei Schichten:**
+1. `validation_groups` im FormType leitet die Gruppe aus `$type` ab (`['Default', 'commune']` usw.). Die jeweils fremden Felder tragen in den anderen Gruppen `IsNull` bzw. `Count(max: 0)`.
+2. `PRE_SUBMIT` baut nur die Felder des **übermittelten** Typs auf. Ein untergeschobenes Fremdfeld ist damit ein unerlaubtes Zusatzfeld → **422**, nicht stilles Ignorieren.
+
+⚠️ **`PRE_SET_DATA` baut dagegen ALLE Blöcke auf.** Das ist die Voraussetzung für die JS-freie Bedienung: Ohne JavaScript sind alle drei Feldgruppen sichtbar und beschriftet, man füllt die passende aus. Wer das auf den aktuellen Typ einschränkt, macht die Seite ohne JavaScript unbenutzbar.
+
+**Choices sind reine Strings, keine Enum-Cases.** Die JSON-Spalten speichern `string[]`; würde man Enum-Cases als `choices` übergeben, fänden Model- und Choice-Werte nicht zueinander (nichts wäre vorausgewählt) und es bräuchte einen Transformer. Der Array-Schlüssel ist der Übersetzungsschlüssel und wird als Label übersetzt (`OrganisationWaitlistType::enumChoices()`).
+
+⚠️ **Bei `expanded: true` ist `choice.vars.data` der Checked-Zustand (bool), nicht der Enum-Case.** Für Emoji/Label im Template deshalb eine Map `value → Case` aus den übergebenen `types` bauen (siehe `organisation/_form.html.twig`).
+
+**Stimulus `organisation_type_controller.ts`** blendet die Blöcke um und setzt `disabled` auf den Feldern der nicht gewählten Typen (nimmt sie aus der Tab-Reihenfolge). Der Wechsel wird in einer `aria-live`-Region angesagt.
+
+## Geteilte Wartelisten-Mechanik (`src/Waitlist/`)
+`WaitlistConfirmationService` kapselt Double-Opt-In für **beide** Wartelisten: `register()` (Token → flush → absolute URL → Mail), `confirm()` (liefert `RESULT_CONFIRMED|ALREADY|INVALID`), `notifyTeam()`. Die Reihenfolge Token → flush → Mail ist wesentlich: Scheitert der Transport, ist die Anmeldung trotzdem gespeichert.
+`WaitlistEntryInterface` ist der gemeinsame Vertrag beider Entities – Grundlage für den Service und die kombinierte Admin-Liste. `WaitlistRequestHelper::resolveSource()` liest UTM-Quelle bzw. Referrer-Host.
+Geteilte Templates: `templates/partials/_waitlist_success.html.twig`, `_waitlist_confirmation.html.twig`.
+Gemeinsames `App\Enum\WaitlistStatus` (pending, confirmed, contacted, **qualified**, converted, declined) – `qualified` sitzt zwischen Kontakt und Abschluss, weil bei Gemeinden und Unternehmen regelmäßig eine Vorprüfung dazwischenliegt.
+
+**Admin: `/admin/warteliste` zeigt beide Typen kombiniert.** Der Controller normalisiert Partner- und Organisationseinträge zu einheitlichen Zeilen, damit das Template keine Entity-Fallunterscheidung braucht; nach dem Zusammenführen wird erneut sortiert, sonst stünden erst alle Partner- und danach alle Organisationseinträge. Ein gesetzter Organisationstyp impliziert die Quelle „Organisation".
+
+## Barrierefreies Formular-Partial (`templates/partials/_form_field.html.twig`)
+Kapselt Label, Pflicht-/Optional-Hinweis, Widget, Hilfetext und Fehlermeldung samt `aria-describedby` und `aria-invalid`. Löst zugleich den Input-Klassenstring ab, der in `templates/community/vorschlagen.html.twig` **zehnmal** wortgleich steht.
+
+⚠️ **In `attr` unterdrückt nur `false` ein Attribut, nicht `null`.** `'aria-invalid': null` rendert `aria-invalid=""` – Screenreader lesen das als „ungültig". Siehe `form_div_layout.html.twig`, Block `attributes`.
+
+Bewusst ein Include und **kein** registriertes Form-Theme: Ein Theme würde global auf Wizard, Admin und Profil durchschlagen (Regressionsrisiko ohne Nutzen für diese Seite).
+
+Der Fehlercontainer existiert auch im Gutfall (leer), damit `aria-describedby` nie ins Leere zeigt. Fokus ist ein echtes `outline` statt eines `box-shadow`-Rings – Ringe verschwinden im Windows-Kontrastmodus. Deshalb steht dort auch nirgends `outline-none`.
+
+**Fokus ohne JavaScript:** Das erste fehlerhafte Feld bekommt serverseitig `autofocus`. Der Browser fokussiert es beim Rendern der 422-Antwort nativ; Turbo tut nach einem Render dasselbe.
+
+**FAQ ohne `aria-expanded`:** `<details>/<summary>` meldet seinen Zustand selbst an Screenreader. Ein handgeschriebenes `aria-expanded` ließe sich ohne JavaScript nicht aktualisieren und wäre nach dem ersten Klick falsch.
 
 ### Data Fixtures
 - Restaurant fixtures: 11 Luxembourg restaurants (`RestaurantFixtures`); each restaurant has accessibility fields (`isWheelchairAccessible`, `hasAccessibleToilet`, `allowsAssistanceDogs`, `hasBrightLighting`, `hasChangingTable`, `hasDisabledParking`), payment method fields (`acceptsCash`, `acceptsCard`, `acceptsPayconiq`), dietary fields (`isVegan`, `isVegetarian`, `isHalal`), verification fields (`isVerified`, `verifiedAt`, `verifiedBy`), ordering options, contact/social media fields (`phone`, `email`, `website`, `instagramUrl`, `facebookUrl`, `tiktokUrl`), and coordinates (`latitude`, `longitude`). 3 restaurants are verified: Pizzeria Bella Vista, Sushi Zen, Green Bowl. 7 restaurants have ordering options: Pizzeria Bella Vista, Sushi Zen, Green Bowl, Burger & Co., Le Jardin Brasserie, Trattoria Roma. Plattformen inkl. Wolt, Wedely, Goosty. All 11 restaurants have varying contact data (not all fields filled for every restaurant). All 11 restaurants have real Luxembourg coordinates. Brasserie du Grund has a `nearbyStopsNote` example.

@@ -11,6 +11,17 @@
     }
 }
 
+/* Partner-Seite: sanftes Scrollen vom Hero-CTA zum Wartelisten-Formular.
+   Bewusst `no-preference` statt eines `reduce`-Overrides – Umgebungen, die die
+   Media Query gar nicht melden, bekommen so den ruhigen Default (WCAG 2.3.3).
+   Per :has() auf diese eine Seite begrenzt, statt das Scrollverhalten der
+   gesamten Plattform zu ändern. */
+@media (prefers-reduced-motion: no-preference) {
+    html:has(#warteliste) {
+        scroll-behavior: smooth;
+    }
+}
+
 /* Tom Select Overrides */
 .ts-wrapper .ts-control {
     background-color: rgb(249 250 251);

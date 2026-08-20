@@ -1,0 +1,224 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'partner.meta_title'|trans }} – Endlech.lu{% endblock %}
+
+{#
+    Partnerprogramm-Landing-Page.
+
+    Genau ein <h1> (im Hero) – base.html.twig bringt keins mit. Jede Sektion
+    beginnt mit <h2>, Karten und FAQ-Fragen nutzen <h3>.
+
+    Nirgends steht ein Preis: Paketumfang und Preise sind noch nicht final.
+    Wo ein Preis stünde, steht der Hinweis auf die Warteliste.
+#}
+{% block body %}
+
+{# === 1 · HERO ============================================================ #}
+<section class="bg-linear-to-r from-cyan-700 to-purple-800 text-white py-20">
+    <div class="container mx-auto px-4 max-w-3xl text-center">
+        <p class="inline-block bg-white/20 text-white text-sm font-semibold px-4 py-1.5 rounded-full mb-6">
+            {{ 'partner.hero.eyebrow'|trans }}
+        </p>
+
+        <h1 class="text-3xl md:text-5xl font-bold mb-5 leading-tight">
+            {{ 'partner.hero.heading'|trans }}
+        </h1>
+
+        <p class="text-lg text-cyan-50 leading-relaxed mb-8">
+            {{ 'partner.hero.text'|trans }}
+        </p>
+
+        <a href="#warteliste"
+           class="inline-block min-h-[48px] bg-white text-cyan-900 font-bold px-8 py-3 rounded-full shadow-lg hover:shadow-xl hover:bg-cyan-50 motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-white">
+            {{ 'partner.hero.cta'|trans }}
+        </a>
+    </div>
+</section>
+
+{# === 2 · NUTZEN ========================================================== #}
+<section class="bg-white py-16">
+    <div class="container mx-auto px-4">
+        <h2 class="text-2xl md:text-3xl font-bold text-center text-gray-900 mb-12">
+            {{ 'partner.benefits.title'|trans }}
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            {% for item in [
+                {emoji: '📋', title: 'partner.benefits.advisory_title', text: 'partner.benefits.advisory_text'},
+                {emoji: '📦', title: 'partner.benefits.box_title', text: 'partner.benefits.box_text'},
+                {emoji: '📣', title: 'partner.benefits.visibility_title', text: 'partner.benefits.visibility_text'}
+            ] %}
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center">
+                    <p class="w-16 h-16 bg-cyan-50 rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl" aria-hidden="true">{{ item.emoji }}</p>
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">{{ item.title|trans }}</h3>
+                    <p class="text-gray-700 text-sm leading-relaxed">{{ item.text|trans }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{# === 3 · INTEGRITÄT ======================================================
+   Bewusst als eigener, farblich abgesetzter Block: Das Versprechen, dass
+   Bewertung und Sichtbarkeit unabhängig von Geld bleiben, ist ein
+   Verkaufsargument – kein Kleingedrucktes. #}
+<section class="bg-linear-to-r from-cyan-700 to-purple-800 text-white py-16">
+    <div class="container mx-auto px-4 max-w-3xl">
+        <p class="inline-block bg-white/20 text-white text-sm font-semibold px-4 py-1.5 rounded-full mb-5">
+            {{ 'partner.integrity.badge'|trans }}
+        </p>
+
+        <h2 class="text-2xl md:text-3xl font-bold mb-4">{{ 'partner.integrity.heading'|trans }}</h2>
+
+        <p class="text-lg text-cyan-50 leading-relaxed mb-6">{{ 'partner.integrity.text'|trans }}</p>
+
+        <ul class="space-y-3">
+            {% for point in ['partner.integrity.point_1', 'partner.integrity.point_2', 'partner.integrity.point_3'] %}
+                <li class="flex items-start gap-3">
+                    <span class="text-xl leading-none mt-0.5" aria-hidden="true">✓</span>
+                    <span class="leading-relaxed">{{ point|trans }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</section>
+
+{# === 4 · LEISTUNGSVERGLEICH ============================================== #}
+<section class="bg-gray-50 py-16">
+    <div class="container mx-auto px-4 max-w-4xl">
+        <h2 class="text-2xl md:text-3xl font-bold text-center text-gray-900 mb-3">
+            {{ 'partner.included.title'|trans }}
+        </h2>
+        <p class="text-center text-gray-700 mb-10">{{ 'partner.included.subtitle'|trans }}</p>
+
+        {# tabindex + role machen den Scroll-Container auf Mobil per Tastatur bedienbar. #}
+        <div class="overflow-x-auto rounded-xl border border-gray-300 bg-white"
+             tabindex="0" role="region" aria-label="{{ 'partner.included.caption'|trans }}">
+            <table class="w-full text-sm">
+                <caption class="sr-only">{{ 'partner.included.caption'|trans }}</caption>
+                <thead class="bg-gray-100 border-b border-gray-300">
+                    <tr>
+                        <th scope="col" class="text-left px-4 py-3 font-semibold text-gray-900">{{ 'partner.included.col_feature'|trans }}</th>
+                        <th scope="col" class="px-4 py-3 font-semibold text-gray-900">{{ 'partner.included.col_free'|trans }}</th>
+                        <th scope="col" class="px-4 py-3 font-semibold text-gray-900">{{ 'partner.included.col_partner'|trans }}</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    {% for row in [
+                        {key: 'partner.included.row_listing',      free: true,  partner: true},
+                        {key: 'partner.included.row_score',        free: true,  partner: true},
+                        {key: 'partner.included.row_badge',        free: true,  partner: true},
+                        {key: 'partner.included.row_search',       free: true,  partner: true},
+                        {key: 'partner.included.row_report',       free: false, partner: true},
+                        {key: 'partner.included.row_box',          free: false, partner: true},
+                        {key: 'partner.included.row_guidance',     free: false, partner: true},
+                        {key: 'partner.included.row_funding',      free: false, partner: true},
+                        {key: 'partner.included.row_plaque',       free: false, partner: true}
+                    ] %}
+                        <tr>
+                            <th scope="row" class="text-left px-4 py-3 font-normal text-gray-900">{{ row.key|trans }}</th>
+                            {% for included in [row.free, row.partner] %}
+                                <td class="px-4 py-3 text-center">
+                                    {% if included %}
+                                        <span class="text-green-700 text-lg" aria-hidden="true">✓</span>
+                                        <span class="sr-only">{{ 'partner.included.yes'|trans }}</span>
+                                    {% else %}
+                                        <span class="text-gray-500 text-lg" aria-hidden="true">–</span>
+                                        <span class="sr-only">{{ 'partner.included.no'|trans }}</span>
+                                    {% endif %}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {# Statt eines Preises: ehrlicher Hinweis, dass er noch nicht feststeht. #}
+        <p class="mt-6 rounded-xl border-2 border-dashed border-cyan-700 bg-cyan-50 px-5 py-4 text-center text-sm text-cyan-900 font-medium">
+            {{ 'partner.included.pricing_note'|trans }}
+        </p>
+    </div>
+</section>
+
+{# === 5 · RECHTLICHER RAHMEN ============================================= #}
+<section class="bg-white py-16">
+    <div class="container mx-auto px-4 max-w-3xl">
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-6">{{ 'partner.legal.title'|trans }}</h2>
+
+        <div class="rounded-xl border border-gray-300 bg-gray-50 p-6 space-y-4">
+            <p class="text-gray-800 leading-relaxed">{{ 'partner.legal.law'|trans }}</p>
+            <p class="text-gray-800 leading-relaxed">{{ 'partner.legal.aid'|trans }}</p>
+
+            <p>
+                <a href="https://guichet.public.lu/" target="_blank" rel="noopener noreferrer"
+                   class="font-semibold text-cyan-800 underline rounded focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700">
+                    {{ 'partner.legal.link'|trans }}
+                    <span class="sr-only">{{ 'partner.legal.link_new_window'|trans }}</span>
+                </a>
+            </p>
+
+            <p class="text-sm text-gray-700 border-t border-gray-300 pt-4">
+                <strong>{{ 'partner.legal.disclaimer_label'|trans }}</strong>
+                {{ 'partner.legal.disclaimer'|trans }}
+            </p>
+        </div>
+    </div>
+</section>
+
+{# === 6 · ABLAUF ========================================================== #}
+<section class="bg-gray-50 py-16">
+    <div class="container mx-auto px-4">
+        <h2 class="text-2xl md:text-3xl font-bold text-center text-gray-900 mb-12">{{ 'partner.how.title'|trans }}</h2>
+
+        <ol class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+            {% for i in 1..3 %}
+                <li class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center">
+                    <p class="w-12 h-12 rounded-full bg-cyan-700 text-white font-bold text-lg flex items-center justify-center mx-auto mb-4" aria-hidden="true">{{ i }}</p>
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">{{ ('partner.how.step' ~ i ~ '_title')|trans }}</h3>
+                    <p class="text-gray-700 text-sm leading-relaxed">{{ ('partner.how.step' ~ i ~ '_text')|trans }}</p>
+                </li>
+            {% endfor %}
+        </ol>
+    </div>
+</section>
+
+{# === 7 · FAQ =============================================================
+   <details>/<summary> statt eigenem Akkordeon: funktioniert ohne JavaScript,
+   ist von Haus aus tastaturbedienbar und meldet den Auf-/Zu-Zustand selbst an
+   Screenreader. Ein handgeschriebenes aria-expanded steht hier bewusst NICHT –
+   es ließe sich ohne JS nicht aktualisieren und wäre nach dem ersten Klick
+   schlicht falsch. #}
+<section class="bg-white py-16">
+    <div class="container mx-auto px-4 max-w-3xl">
+        <h2 class="text-2xl md:text-3xl font-bold text-center text-gray-900 mb-10">{{ 'partner.faq.title'|trans }}</h2>
+
+        <div class="space-y-3">
+            {% for i in 1..6 %}
+                <details class="group rounded-xl border border-gray-300 bg-white">
+                    <summary class="flex items-center justify-between gap-4 px-5 py-4 cursor-pointer rounded-xl focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700">
+                        <h3 class="text-base font-semibold text-gray-900">{{ ('partner.faq.q' ~ i)|trans }}</h3>
+                        <span class="text-cyan-800 text-lg shrink-0 motion-safe:transition-transform group-open:rotate-45" aria-hidden="true">+</span>
+                    </summary>
+                    <div class="px-5 pb-5 -mt-1 text-gray-800 text-sm leading-relaxed">
+                        {{ ('partner.faq.a' ~ i)|trans }}
+                    </div>
+                </details>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{# === 8 · WARTELISTE ====================================================== #}
+<section id="warteliste" class="bg-gray-50 py-16 scroll-mt-24">
+    <div class="container mx-auto px-4 max-w-2xl">
+        <h2 class="text-2xl md:text-3xl font-bold text-center text-gray-900 mb-3">{{ 'partner.form.title'|trans }}</h2>
+        <p class="text-center text-gray-700 mb-8">{{ 'partner.form.subtitle'|trans }}</p>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 md:p-8">
+            {{ include('partner/_form.html.twig', {form: form}) }}
+        </div>
+    </div>
+</section>
+
+{% endblock %}

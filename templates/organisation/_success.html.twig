@@ -1,0 +1,21 @@
+{#
+    Erfolgsmeldung des Organisations-Formulars.
+
+    Der Text hängt am Typ: Eine Gemeinde erfährt etwas über nächste Schritte und
+    Zeitrahmen, ein Verein über den Beirat. Die Vereins-Variante ist bewusst
+    frei von jeder Vertriebssprache – dort fließt in keine Richtung Geld.
+
+    `entry` ist optional: Bei einem Honeypot-Treffer liefert der Controller
+    dieselbe Ansicht ohne Datensatz.
+#}
+{% set type_key = entry and entry.type ? entry.type.value : 'default' %}
+
+{{ include('partials/_waitlist_success.html.twig', {
+    target_id: 'organisation-waitlist-form',
+    emoji: type_key == 'association' ? '🤲' : '📬',
+    title: ('organisation.success.' ~ type_key ~ '_title')|trans,
+    text: entry
+        ? ('organisation.success.' ~ type_key ~ '_text')|trans({'%email%': entry.email})
+        : 'organisation.success.default_text'|trans,
+    hint: 'organisation.success.hint'|trans
+}) }}

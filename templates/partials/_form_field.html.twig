@@ -1,0 +1,54 @@
+{#
+    Ein Formularfeld mit vollständiger Barrierefreiheits-Verdrahtung (WCAG 2.2 AA).
+
+    Parameter:
+      field      – FormView des Felds (Pflicht)
+      help       – optionaler, bereits übersetzter Hilfetext
+      autofocus  – true beim ERSTEN fehlerhaften Feld; verschiebt den Fokus
+                   nach einem Fehlversuch – ohne JavaScript
+      rows       – Zeilen für Textarea
+
+    Warum ein Include und kein Form-Theme: Das Projekt rendert Formulare überall
+    manuell; ein registriertes Theme würde global auf Wizard, Admin und Profil
+    durchschlagen. Der Include bleibt auf diese Seite begrenzt.
+
+    ⚠️ In `attr` unterdrückt NUR `false` ein Attribut. `null` würde
+    `aria-invalid=""` rendern – Screenreader lesen das als "ungültig".
+    Siehe form_div_layout.html.twig, Block `attributes`.
+
+    Der Fokus ist ein echtes `outline`, kein Ring per box-shadow: Ringe
+    verschwinden im Windows-Kontrastmodus. Deshalb steht hier auch nirgends
+    `outline-none`.
+#}
+{% set has_error = field.vars.errors|length > 0 %}
+{% set help_id = (help is defined and help) ? field.vars.id ~ '_help' : null %}
+{% set error_id = field.vars.id ~ '_error' %}
+{% set described_by = [help_id, error_id]|filter(v => v is not null)|join(' ') %}
+
+{% set input_class = 'w-full rounded-lg bg-white px-4 py-2.5 text-base text-gray-900 border motion-safe:transition'
+    ~ ' focus:outline-2 focus:outline-offset-2'
+    ~ (has_error
+        ? ' border-red-600 focus:outline-red-700'
+        : ' border-gray-500 focus:outline-cyan-700') %}
+
+<div>
+    {{ form_label(field, null, {'label_attr': {'class': 'block mb-1 text-sm font-semibold text-gray-900'}}) }}
+
+    <p class="mb-1.5 text-xs text-gray-700">
+        {{ (field.vars.required ? 'form.required_field' : 'form.optional_field')|trans }}
+        {%- if help is defined and help %} · <span id="{{ help_id }}">{{ help }}</span>{% endif %}
+    </p>
+
+    {{ form_widget(field, {'attr': {
+        'class': input_class,
+        'rows': rows is defined ? rows : false,
+        'aria-describedby': described_by,
+        'aria-invalid': has_error ? 'true' : false,
+        'autofocus': (autofocus is defined and autofocus) ? true : false,
+    }}) }}
+
+    {# Container existiert immer – so zeigt aria-describedby nie ins Leere. #}
+    <p id="{{ error_id }}" class="mt-1 text-sm font-semibold text-red-700">
+        {%- for error in field.vars.errors %}{{ error.message }}{{ loop.last ? '' : ' ' }}{% endfor -%}
+    </p>
+</div>
