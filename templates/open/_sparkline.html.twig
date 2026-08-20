@@ -1,0 +1,40 @@
+{# Verlaufslinie für eine Kennzahl.
+
+   Reines SVG ohne Diagramm-Bibliothek: Die Seite braucht sonst kein
+   JavaScript, und eine Abhängigkeit für zwei Linien wäre mehr Wartungslast
+   als Nutzen.
+
+   Bewusst NUR eine Linie, keine Punkte. `preserveAspectRatio="none"` streckt
+   das Koordinatensystem auf die Kartenbreite – richtig für einen Zeitverlauf,
+   aber Kreise würden dabei zu Ellipsen. Der aktuelle Wert steht deshalb als
+   Zahl über der Grafik, nicht als Punkt darin; die Strichstärke hält
+   `vector-effect="non-scaling-stroke"` bei 2 px.
+
+   points: Liste von {label, value} · max: Obergrenze der Skala · aria #}
+{% set count = points|length %}
+{% set scale = max > 0 ? max : 1 %}
+{% set width = 100 %}
+{% set height = 34 %}
+
+{% set coords = [] %}
+{% for point in points %}
+    {% set x = count > 1 ? loop.index0 * (width / (count - 1)) : width / 2 %}
+    {% set y = height - (point.value / scale * (height - 3)) %}
+    {% set coords = coords|merge([x|round(2) ~ ',' ~ y|round(2)]) %}
+{% endfor %}
+
+<figure class="mt-3">
+    <svg viewBox="0 0 {{ width }} {{ height }}" preserveAspectRatio="none"
+         class="w-full h-20" role="img" aria-label="{{ aria }}">
+        <line x1="0" y1="{{ height }}" x2="{{ width }}" y2="{{ height }}"
+              stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke" class="text-gray-200" />
+        <polyline points="{{ coords|join(' ') }}" fill="none" stroke="currentColor"
+                  stroke-width="2" stroke-linejoin="round" stroke-linecap="round"
+                  class="{{ colour|default('text-cyan-600') }}" vector-effect="non-scaling-stroke" />
+    </svg>
+
+    <figcaption class="mt-1.5 flex items-center justify-between text-xs text-gray-500 tabular-nums">
+        <span>{{ points|first.label }}</span>
+        <span>{{ points|last.label }}</span>
+    </figcaption>
+</figure>

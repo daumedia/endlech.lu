@@ -17,6 +17,7 @@ The UI language is German/Luxembourgish. The codebase comments (Makefile, templa
 - **CSS:** Tailwind CSS v4.1 via PostCSS
 - **JS/TS:** TypeScript, Hotwire (Stimulus 3.x + Turbo 7/8)
 - **Build:** Webpack Encore 5.1
+- **Scheduling:** `symfony/scheduler` + `dragonmantank/cron-expression` (braucht einen Messenger-Worker – siehe Open-Startup-Abschnitt)
 - **Testing:** PHPUnit 12.5
 - **Email:** Brevo (formerly Sendinblue) via `symfony/brevo-mailer` (production)
 - **Dev Mail:** Mailpit (SMTP on port 1025, UI on port 8025)
@@ -25,12 +26,18 @@ The UI language is German/Luxembourgish. The codebase comments (Makefile, templa
 
 ```
 src/
+├── Command/             # Console commands (app:metrics:snapshot)
 ├── Controller/          # Route controllers (attribute-based routing)
+│   └── Open/            # Locale-freie Daten-Endpunkte (/open.json, Datensatz-Downloads)
 ├── DataFixtures/        # Doctrine fixtures (restaurant data + user test data)
 ├── DTO/                 # Data Transfer Objects (NearbyStop)
-├── Entity/              # Doctrine entities (User, Restaurant, RestaurantImage, OrderingOption, Cuisine)
-├── Enum/                # PHP Backed Enums (Language, OrderingPlatform)
+├── Entity/              # Doctrine entities (User, Restaurant, RestaurantImage, OrderingOption, Cuisine, FinanceEntry, MetricSnapshot)
+├── Enum/                # PHP Backed Enums (Language, OrderingPlatform, FinanceType, FinanceCategory, Canton)
+├── Message/             # Messenger-Nachrichten (CaptureMetricSnapshot)
+├── MessageHandler/      # Messenger-Handler
+├── Open/                # Open-Startup-Logik (Stats, Kantonszuordnung, Punktzahl, Snapshots)
 ├── Repository/          # Doctrine repositories (UserRepository, RestaurantRepository, CuisineRepository)
+├── Schedule.php         # Wiederkehrende Aufgaben (#[AsSchedule])
 └── Kernel.php           # Symfony kernel
 
 config/
@@ -55,6 +62,12 @@ templates/
 ├── email/
 │   ├── base.html.twig       # Base email layout (header, footer, branding)
 │   └── verification.html.twig # Email verification template (extends base)
+├── open/
+│   ├── index.html.twig      # /open – Transparenzseite (Hero, Plattform, Wirkung, Finanzen, Verlauf, Daten)
+│   ├── _metric.html.twig    # Kennzahl-Kachel (Wert, Veränderung, Einordnung)
+│   ├── _bar.html.twig       # Anteilsbalken (aria-hidden, Zahl trägt die Aussage)
+│   ├── _histogram.html.twig # Punkteverteilung als Säulen
+│   └── _sparkline.html.twig # Verlaufslinie als reines SVG
 ├── profile/
 │   └── index.html.twig  # /profile – user profile page (edit info, avatar, password)
 └── restaurant/
@@ -142,9 +155,9 @@ PHPUnit is configured in `phpunit.dist.xml` with strict mode: fails on deprecati
 **Mailer im Test:** `config/packages/messenger.yaml` (`when@test`) routet `SendEmailMessage` auf `sync` (+ `MAILER_DSN=null://null` in `.env.test`), damit `MailerAssertionsTrait` (`assertEmailCount`, `getMailerMessage`) greift.
 
 **Drei Test-Kategorien** — je ein eigener Ordner + gleichnamige `phpunit.dist.xml`-Testsuite, PSR-4-Namespace `App\Tests\{Unit,Integration,Functional}\…` gespiegelt zum Pfad. Unter jeder Kategorie bleibt die Schicht-Unterstruktur erhalten (z. B. `tests/Unit/Api/`, `tests/Integration/Repository/`, `tests/Functional/Controller/Api/V1/`):
-- **`tests/Unit/`** (`extends TestCase`, keine DB): Services mit mockbaren Deps (`PublicTransportService` via `MockHttpClient`, `AdminStatsService`), Transformer (`RestaurantTransformer`/`UserTransformer` – echter `AssetUrlBuilder` mit Base-URL, da `final`), Enums, Twig-Extension, `OpeningHoursService`, `ApiExceptionSubscriber`.
-- **`tests/Integration/`** (`extends KernelTestCase`, Container + DB, DAMA-isoliert): Repositories (v. a. `RestaurantRepositoryTest` – alle `findPaginated`-Filter und `sort`-Reihenfolgen), `ImageUploadService`/`AvatarUploadService` (Temp-Dir-Isolation via `sys_get_temp_dir`).
-- **`tests/Functional/`** (`extends AbstractWebTestCase`/`WebTestCase`, HTTP/Forms/Auth): Web- und Admin-Controller + `/api/v1`. Basisklasse `tests/AbstractWebTestCase.php` (bleibt im `tests/`-Root, Namespace `App\Tests`) mit `loginAs()`, `formWithField()`, `formByAction()`, `csrfTokenFrom()`. Web-Routen tragen den Locale-Prefix → `self::LOCALE` (`/de`) vor jeden Pfad.
+- **`tests/Unit/`** (`extends TestCase`, keine DB): Services mit mockbaren Deps (`PublicTransportService` via `MockHttpClient`, `AdminStatsService`), Transformer (`RestaurantTransformer`/`UserTransformer` – echter `AssetUrlBuilder` mit Base-URL, da `final`), Enums, Twig-Extension, `OpeningHoursService`, `ApiExceptionSubscriber`, `CantonResolver` (Gemeinde-/Kantonszuordnung inkl. Abgleich der Gemeindezahlen gegen `Canton::communeCount()`), `AccessibilityScore`, `FinanceCategory`.
+- **`tests/Integration/`** (`extends KernelTestCase`, Container + DB, DAMA-isoliert): Repositories (v. a. `RestaurantRepositoryTest` – alle `findPaginated`-Filter und `sort`-Reihenfolgen), `ImageUploadService`/`AvatarUploadService` (Temp-Dir-Isolation via `sys_get_temp_dir`), `OpenStatsService` (Abdeckung, Punkteverteilung, Quartalssperre, Cache-Invalidierung), `MetricSnapshotService` (Idempotenz, `--force`, Payload), `FinanceEntryRepository`, `CaptureMetricSnapshotCommand` (`tests/Integration/Command/`).
+- **`tests/Functional/`** (`extends AbstractWebTestCase`/`WebTestCase`, HTTP/Forms/Auth): Web- und Admin-Controller + `/api/v1`. Dazu `OpenControllerTest`, `Open\OpenDataControllerTest` (locale-freie Endpunkte, CC-BY-Header, keine Kontaktdaten im Datensatz, öffentlicher Cache) und `AdminFinanceControllerTest`. Basisklasse `tests/AbstractWebTestCase.php` (bleibt im `tests/`-Root, Namespace `App\Tests`) mit `loginAs()`, `formWithField()`, `formByAction()`, `csrfTokenFrom()`. Web-Routen tragen den Locale-Prefix → `self::LOCALE` (`/de`) vor jeden Pfad.
 
 **PHPUnit-12-Konventionen (strict):** `#[DataProvider]`-Attribut statt Docblock-`@dataProvider`; `createStub()` für reine Rückgabe-Doubles, `createMock()` nur mit `expects()` (sonst Notice). Ungültige Formular-Submits liefern HTTP **422**, gültige einen 302-Redirect. Formular-CSRF ist stateless (`token_id: submit`) und passt im headless-Test via Same-Origin-Referer; Custom-Token-IDs (z. B. `toggle-verified-…`) sind session-basiert und werden als gerenderte Hidden-Felder mitgesendet.
 
@@ -192,6 +205,16 @@ Autowiring and autoconfiguration are enabled by default in `config/services.yaml
 | `admin_waitlist_partner_status`| `/admin/warteliste/partner/{id}/status` | `AdminWaitlistController::changePartnerStatus()` |
 | `admin_waitlist_organisation_status`| `/admin/warteliste/organisation/{id}/status` | `AdminWaitlistController::changeOrganisationStatus()` |
 | `admin_waitlist_partner_link`| `/admin/warteliste/partner/{id}/restaurant` | `AdminWaitlistController::linkRestaurant()` |
+| `admin_finance_index`   | `/admin/finanzen` | `AdminFinanceController::index()` |
+| `admin_finance_new`     | `/admin/finanzen/neu` | `AdminFinanceController::new()` |
+| `admin_finance_edit`    | `/admin/finanzen/{id}/bearbeiten` | `AdminFinanceController::edit()` |
+| `admin_finance_delete`  | `/admin/finanzen/{id}/loeschen` | `AdminFinanceController::delete()` |
+| `admin_finance_snapshot`| `/admin/finanzen/snapshot` (POST) | `AdminFinanceController::snapshot()` |
+| `app_open`              | `/open`        | `OpenController::index()` (Transparenzseite) |
+| `app_open_redirect`     | `/open` (locale-frei) | Redirect auf `app_open` |
+| `app_open_json`         | `/open.json`   | `Open\OpenDataController::stats()` |
+| `app_open_dataset_csv`  | `/open/dataset.csv` | `Open\OpenDataController::datasetCsv()` |
+| `app_open_dataset_json` | `/open/dataset.json` | `Open\OpenDataController::datasetJson()` |
 | `api_cuisine_search`  | `/api/cuisines/search` | `CuisineApiController::search()` |
 | `api_cuisine_create`  | `/api/cuisines`        | `CuisineApiController::create()` |
 | `api_v1_auth_login`   | `/api/v1/auth/login` (POST) | `Api\V1\AuthController::login()` (json_login) |
@@ -204,7 +227,7 @@ Autowiring and autoconfiguration are enabled by default in `config/services.yaml
 | `api_v1_me_submissions`| `/api/v1/me/submissions` (GET) | `Api\V1\MeController::submissions()` |
 | `app.swagger_ui`      | `/api/docs`    | NelmioApiDoc Swagger-UI |
 
-**Wichtig:** Die `/api/v1/`-Routen sind **locale-frei** (kein `/{_locale}`-Prefix). `config/routes.yaml` importiert `src/Controller/Api/V1/` in einem eigenen Block und `exclude`t es am `controllers`-Loader. Der ältere `CuisineApiController` (`/api/cuisines`) liegt weiterhin UNTER `/{_locale}` (also real `/{_locale}/api/cuisines`).
+**Wichtig:** Die `/api/v1/`-Routen sind **locale-frei** (kein `/{_locale}`-Prefix). `config/routes.yaml` importiert `src/Controller/Api/V1/` in einem eigenen Block und `exclude`t es am `controllers`-Loader. Genauso ist `src/Controller/Open/` locale-frei importiert (Block `open_data`) – `exclude` am `controllers`-Loader ist deshalb eine **Liste** mit zwei Einträgen. Die HTML-Seite `/open` liegt dagegen unter `/{_locale}`; die sprachfreie Route `app_open_redirect` leitet auf sie um. Der ältere `CuisineApiController` (`/api/cuisines`) liegt weiterhin UNTER `/{_locale}` (also real `/{_locale}/api/cuisines`).
 
 `/restaurants` accepts query params:
 - `?sort=rating` (default) – sorted by rating DESC
@@ -438,12 +461,65 @@ Der Fehlercontainer existiert auch im Gutfall (leer), damit `aria-describedby` n
 
 **FAQ ohne `aria-expanded`:** `<details>/<summary>` meldet seinen Zustand selbst an Screenreader. Ein handgeschriebenes `aria-expanded` ließe sich ohne JavaScript nicht aktualisieren und wäre nach dem ersten Klick falsch.
 
+## Open-Startup-Seite (`/open`)
+
+Öffentliche Transparenzseite mit drei Blöcken: **Plattform** (live aus der DB), **Wirkung** (live) und **Finanzen** (manuell im Admin gepflegt). Dazu maschinenlesbare Endpunkte und ein offener Datensatz unter CC BY 4.0.
+
+**Namensraum `App\Open\`** (nicht `App\Service\`) – der Bereich hat genug eigene Begriffe (Punktzahl, Gemeindezuordnung, Snapshot), um zusammenzubleiben. Nicht verwechseln mit `App\Controller\Open\` (locale-freie Daten-Endpunkte).
+
+- `OpenStatsService` — `platform()`, `impact()`, `finance()`, `all()` (gecacht) und `computeAll()` (ungecacht, für den Snapshot). **Alle Rückgaben sind reine Arrays aus Skalaren**: Dieselbe Struktur geht durch Cache, Twig, `/open.json` und den Snapshot – Enums oder Entities darin würden je nach Weg anders behandelt und die vier Ausgaben auseinanderlaufen lassen. `invalidate()` wirft den Cache weg (ruft der Admin nach jeder Finanzänderung auf).
+- `CantonResolver` — Freitext aus `Restaurant::$city` → Gemeinde + Kanton. Alle **100 Gemeinden in 12 Kantonen** (Stand nach den Fusionen vom 1. Januar 2024) plus Alias-Tabelle (Stadtteile der Stadt Luxemburg, luxemburgische/deutsche Namen, bekannte Ortschaften). ⚠️ **Gemeinde- und Alias-Index sind getrennt**: Beim Zerlegen zusammengesetzter Angaben („Rue de la Gare, Strassen") dürfen nur echte Gemeindenamen greifen – läge „gare" (Stadtteil) im selben Topf, landete der Eintrag in Luxemburg. Ein unbekannter Wert wird **nicht geraten**, sondern als unzugeordnet ausgewiesen.
+- `AccessibilityScore` — 0–10 aus acht gleichgewichteten Merkmalen. Nicht erfasste Maße zählen als nicht erfüllt: Der Wert misst *dokumentierte* Barrierefreiheit.
+- `MetricSnapshotService` — `capture(?month, force)`, idempotent, `defaultMonth()` = abgeschlossener **Vormonat** (der Lauf am Ersten hält den Endstand des Vormonats fest; würde er den laufenden Monat schreiben, endete jeder Verlauf mit einem künstlichen Einbruch).
+
+**Entity `FinanceEntry`:** `date` (Spalte `entry_date` – `date` ist in MySQL reserviert), `type` (enum, redundant zu `category->type()`, aber indiziert für die SQL-Aggregation), `category` (enum), `amount` (DECIMAL 10,2, **immer positiv** – die Richtung steckt in `type`), `quantity` (nur Inclusion Boxes), `note`, `createdAt`, `updatedAt` (`#[ORM\PreUpdate]`).
+⚠️ **Es gibt keinen `setType()`.** `setCategory()` setzt die Richtung mit und räumt `quantity` weg, wenn die Kategorie keine Menge führt. Eine Ausgabe unter einer Einnahmekategorie wäre in der veröffentlichten Summe nicht mehr als Fehler erkennbar.
+⚠️ **`setAmount()` normalisiert auf zwei Nachkommastellen.** `MoneyType` liefert `"42.5"`, die Datenbank `"42.50"` – ohne Normalisierung hinge die Schreibweise davon ab, ob die Entity zwischendurch neu geladen wurde.
+Kein Feld für Vertragspartner, Restaurant oder Rechnungsnummer: Was nicht erfasst ist, kann nicht versehentlich veröffentlicht werden.
+
+**Quartalssperre für Einnahmen:** Sichtbar ab dem Tag nach Ablauf des Kalenderquartals, in dem der erste Einnahmeposten liegt. Die Sperre ist **strukturell, nicht kosmetisch** – die Beträge stehen gar nicht erst im Ergebnis-Array von `computeFinance()`. Lägen sie darin und wären nur im Template verborgen, wären sie über `/open.json` abrufbar. Der **Snapshot speichert die Summe trotzdem** (direkt aus dem Repository), sonst stünde für die Anfangsmonate dauerhaft eine 0 in der Historie.
+
+**Entity `MetricSnapshot`:** `capturedFor` (DATE, **unique** → Idempotenz auf DB-Ebene), typisierte Spalten für die Verlaufsgrafiken plus `payload` (JSON) mit der vollständigen Momentaufnahme. Grund für die Entity: Ein aus den heutigen Daten zurückgerechneter Verlauf änderte sich rückwirkend, sobald jemand einen Eintrag bearbeitet – als Beleg gegenüber einem Ministerium wertlos.
+
+**Zeitplan vs. Cron:** `src/Schedule.php` (`#[AsSchedule]`, `RecurringMessage::cron('15 3 1 * *', …, Europe/Luxembourg)`) → `App\Message\CaptureMetricSnapshot` → `CaptureMetricSnapshotHandler`. ⚠️ **Symfony Scheduler braucht `messenger:consume scheduler_default`; Production läuft mit `sync://` und ohne Worker** – dort feuert der Zeitplan nicht. Der reale Auslöser ist der **Cron-Eintrag auf `app:metrics:snapshot`** (README → Deployment). Der Befehl unterstützt `--month=YYYY-MM` und `--force`. Zusätzlich gibt es im Admin einen Knopf (`admin_finance_snapshot`), weil eine ausgefallene Historie sonst unbemerkt bliebe und sich nicht rückwirkend erzeugen lässt.
+
+**Cache:** eigener Pool `cache.open_stats` in `config/packages/cache.yaml` (Filesystem, TTL 3600; in `when@test` `cache.adapter.array`). Ein eigener Pool statt `cache.app`, damit `clear()` nach einer Admin-Änderung nicht den halben Anwendungscache mitnimmt.
+
+**Daten-Endpunkte** (`src/Controller/Open/OpenDataController.php`, locale-frei): `/open.json` (Kennzahlen + Verlauf), `/open/dataset.csv`, `/open/dataset.json`. Der Datensatz enthält **keine** E-Mail-Adressen und Telefonnummern – ein Sammelabzug davon wäre eine Adressliste, kein Barrierefreiheits-Datensatz. Kein UTF-8-BOM im CSV (es landete im ersten Spaltennamen jedes gewöhnlichen Parsers).
+⚠️ **`AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER` ist Pflicht**, sonst überschreibt Symfonys Session-Listener `public, max-age=3600` mit `private, must-revalidate`, sobald irgendwo im Request eine Session angefasst wurde.
+
+**Templates:** `templates/open/index.html.twig` plus `_metric`, `_bar`, `_histogram`, `_sparkline`.
+
+Aufbau wie die übrigen Außenseiten (Partner, Organisationen): Hero-Band im Verlauf `from-cyan-700 to-purple-800`, danach Sektionsbänder mit wechselnder Fläche (weiß / `bg-gray-50`), Emoji in `bg-cyan-50`-Kacheln, `motion-safe:transition`, `focus:outline-2` und `min-h-[48px]` auf allen Aktionen. Die Zahl der Restaurants ist die **Leitzahl im Hero** – genau eine pro Seite.
+
+**Diagramm-Regeln, die hier bewusst gelten:**
+- **Eine Farbe je Serie.** Die frühere Ampel in der Punkteverteilung (grün/cyan/bernstein nach Punktzahl) kodierte die Balkenlänge ein zweites Mal als Farbe. Die Position trägt die Ordnung; die Farbe hätte nichts hinzugefügt und bernstein lag bei 1,49:1 Kontrast.
+- **Ausgaben in Cyan, Einnahmen in Purple** – die beiden Marken-Hues, geprüft (ΔE 26,4 normal / 13,6 Deuteranopie, beide > 3:1 gegen Weiß). ⚠️ **Kein Bernstein für Ausgaben:** Das ist eine Warnfarbe und ließe Betriebskosten wie ein Problem aussehen.
+- **Balken:** 4 px runde Datenkante, eckig an der Grundlinie; die Spur ist eine hellere Stufe derselben Farbe, nicht neutrales Grau. Balken sind `aria-hidden` – die Zahl daneben trägt die Aussage.
+- **Histogramm** (`_histogram`): Säulen, keine gestapelten Querbalken – die Punktzahl ist eine geordnete Skala und nur nebeneinander liest man die Verteilungsform. Die Säulen reichen auf **85 %** statt 100 %; die oberen 15 % sind der Streifen fürs Wertlabel, sonst liefe Label plus Säule oben aus dem Container. Beschriftet werden alle Säulen mit dem Höchstwert.
+- **Verlaufslinie** (`_sparkline`): reines SVG ohne Diagramm-Bibliothek. ⚠️ **Keine `<circle>`-Punkte:** `preserveAspectRatio="none"` streckt das Koordinatensystem (richtig für einen Zeitverlauf) und macht aus Kreisen Ellipsen. Der aktuelle Wert steht deshalb als Zahl über der Grafik. Strichstärke 2 px über `vector-effect="non-scaling-stroke"`.
+- Jede Grafik hat eine Tabellen-Entsprechung (`<details>` bzw. die Kanton-Tabelle mit `id="canton-coverage"`).
+
+**Zahlen** laufen über `format_number`/`format_currency` (`twig/intl-extra`, für dieses Feature ergänzt), nicht über `number_format` mit fester deutscher Notation – sonst stünde in der englischen Fassung „27,3 %".
+
+**Deltas** liefert `OpenController::deltas()` gegen `MetricSnapshotRepository::findLatest()`. Bezugspunkt ist der Snapshot, nicht „vor 30 Tagen": Nur er ist ein nachprüfbarer Stand. Ohne Snapshot gibt es **keine** Deltas – eine Veränderung gegen einen unbekannten Ausgangswert wäre erfunden.
+
+**Veralterung** der Finanzdaten: Ab 60 Tagen wechselt der „Stand vom"-Hinweis von grauem Kleingedruckten in einen `bg-amber-50`-Kasten. Ein Dashboard, dem man das Alter nicht ansieht, richtet mehr Schaden an als gar keines.
+
+**Druckansicht:** `print:hidden` auf Header, Footer, Bottom-Nav und Cookie-Banner in `templates/base.html.twig` (gilt für alle Seiten, angelegt für den PDF-Export vor Fördergesprächen); der `@media print`-Block in `assets/styles/app.css` nimmt den Verlaufsbändern die Fläche **samt Textfarbe der Nachfahren** (sonst weiß auf weiß), klappt `<details>` auf und verhindert Seitenumbrüche in Diagrammen. `print-color-adjust: exact`, weil die Balkenfarben hier Daten sind.
+
+**Migration:** `Version20260820200000` — `finance_entry`, `metric_snapshot`, `restaurant.door_width_cm`, `restaurant.table_spacing_cm`.
+
+**Restaurant-Maße:** `doorWidthCm`/`tableSpacingCm` (`?int`), Konstanten `Restaurant::MIN_DOOR_WIDTH_CM`/`MIN_TABLE_SPACING_CM` (90, DIN 18040). Helper `hasWideDoors()`/`hasWheelchairTableSpacing()` geben `?bool` zurück – `null` heißt „nicht ausgemessen". In der iOS-API stehen sie im eigenen Block `measurements`, **nicht** in `accessibility`: Dort ist jeder Wert ein Boolean, ein `null` wäre ein Kompatibilitätsbruch.
+
 ### Data Fixtures
 - Restaurant fixtures: 11 Luxembourg restaurants (`RestaurantFixtures`); each restaurant has accessibility fields (`isWheelchairAccessible`, `hasAccessibleToilet`, `allowsAssistanceDogs`, `hasBrightLighting`, `hasChangingTable`, `hasDisabledParking`), payment method fields (`acceptsCash`, `acceptsCard`, `acceptsPayconiq`), dietary fields (`isVegan`, `isVegetarian`, `isHalal`), verification fields (`isVerified`, `verifiedAt`, `verifiedBy`), ordering options, contact/social media fields (`phone`, `email`, `website`, `instagramUrl`, `facebookUrl`, `tiktokUrl`), and coordinates (`latitude`, `longitude`). 3 restaurants are verified: Pizzeria Bella Vista, Sushi Zen, Green Bowl. 7 restaurants have ordering options: Pizzeria Bella Vista, Sushi Zen, Green Bowl, Burger & Co., Le Jardin Brasserie, Trattoria Roma. Plattformen inkl. Wolt, Wedely, Goosty. All 11 restaurants have varying contact data (not all fields filled for every restaurant). All 11 restaurants have real Luxembourg coordinates. Brasserie du Grund has a `nearbyStopsNote` example.
 - User fixtures: 3 test users (`UserFixtures`) with hashed passwords via Symfony PasswordHasher
   - `admin@endlech.lu` / `admin123` — ROLE_ADMIN, verified
   - `user@endlech.lu` / `user123` — ROLE_USER, verified
   - `unverified@endlech.lu` / `unverified123` — ROLE_USER, unverified
+- Finance fixtures: `FinanceEntryFixtures` — zwölf Monate laufende Kosten, Domain, Apple Developer, zwei Inclusion-Box-Materiallieferungen mit Stückzahl, dazu zwei Einnahmen **im laufenden Quartal**. Letzteres mit Absicht: So greift die Quartalssperre lokal und man sieht, wie die Seite ohne Einnahmenblock aussieht.
+- Restaurant fixtures tragen zusätzlich `doorWidthCm`/`tableSpacingCm`; vier der elf Häuser haben bewusst **kein** Maß (deckt den Fall „nicht ausgemessen" ab), zwei liegen dokumentiert unter 90 cm.
 - Fixture references available: `UserFixtures::REFERENCE_ADMIN`, `REFERENCE_USER`, `REFERENCE_UNVERIFIED`
 
 ### Database

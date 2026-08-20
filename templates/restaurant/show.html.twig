@@ -156,6 +156,30 @@
                         </div>
                     </div>
 
+                    {# Türbreite und Tischabstand: dreiwertig, weil ein nicht
+                       ausgemessener Wert nicht dasselbe ist wie ein zu enger.
+                       Nicht erfasste Maße bleiben als offener Hinweis stehen,
+                       statt stillschweigend als "nicht vorhanden" zu gelten. #}
+                    {% for measure in [
+                        {value: restaurant.doorWidthCm, meets: restaurant.hasWideDoors, emoji: '🚪', label: 'accessibility.door_width'|trans, min: 90},
+                        {value: restaurant.tableSpacingCm, meets: restaurant.hasWheelchairTableSpacing, emoji: '↔️', label: 'accessibility.table_spacing'|trans, min: 90}
+                    ] %}
+                        <div class="flex items-center gap-3 p-3 rounded-lg {{ measure.meets is same as(true) ? 'bg-green-50 border border-green-100' : (measure.meets is same as(false) ? 'bg-amber-50 border border-amber-100' : 'bg-gray-50 border border-gray-100') }}">
+                            <span class="text-2xl">{{ measure.emoji }}</span>
+                            <div>
+                                <p class="text-sm font-semibold {{ measure.meets is same as(true) ? 'text-green-700' : (measure.meets is same as(false) ? 'text-amber-700' : 'text-gray-400') }}">{{ measure.label }}</p>
+                                <p class="text-xs {{ measure.meets is same as(true) ? 'text-green-600' : (measure.meets is same as(false) ? 'text-amber-600' : 'text-gray-400') }}">
+                                    {%- if measure.value is null -%}
+                                        {{ 'accessibility.not_measured'|trans }}
+                                    {%- else -%}
+                                        {{ 'accessibility.centimetres'|trans({'%value%': measure.value}) }}
+                                        {%- if not measure.meets %} · {{ 'accessibility.below_minimum'|trans({'%min%': measure.min}) }}{% endif -%}
+                                    {%- endif -%}
+                                </p>
+                            </div>
+                        </div>
+                    {% endfor %}
+
                 </div>
             </div>
 

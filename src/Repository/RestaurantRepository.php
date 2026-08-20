@@ -165,4 +165,64 @@ class RestaurantRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * Rohdaten für die Open-Startup-Auswertung: nur die Spalten, die in
+     * Abdeckung, Punktzahl und Impact einfließen, als Array statt als Entity.
+     *
+     * Bewusst keine hydrierten Objekte – die Auswertung liest jede Zeile genau
+     * einmal, ein UnitOfWork mit hunderten Entities wäre reiner Ballast. Der
+     * Zeitfilter macht die Methode zugleich für nachträglich erzeugte
+     * Monats-Snapshots brauchbar.
+     *
+     * @return list<array{
+     *     city: string,
+     *     isVerified: bool,
+     *     isWheelchairAccessible: bool,
+     *     hasAccessibleToilet: bool,
+     *     allowsAssistanceDogs: bool,
+     *     hasBrightLighting: bool,
+     *     hasChangingTable: bool,
+     *     hasDisabledParking: bool,
+     *     doorWidthCm: int|null,
+     *     tableSpacingCm: int|null
+     * }>
+     */
+    public function findMetricRows(?\DateTimeImmutable $createdUntil = null): array
+    {
+        $qb = $this->createQueryBuilder('r')
+            ->select(
+                'r.city AS city',
+                'r.isVerified AS isVerified',
+                'r.isWheelchairAccessible AS isWheelchairAccessible',
+                'r.hasAccessibleToilet AS hasAccessibleToilet',
+                'r.allowsAssistanceDogs AS allowsAssistanceDogs',
+                'r.hasBrightLighting AS hasBrightLighting',
+                'r.hasChangingTable AS hasChangingTable',
+                'r.hasDisabledParking AS hasDisabledParking',
+                'r.doorWidthCm AS doorWidthCm',
+                'r.tableSpacingCm AS tableSpacingCm',
+            );
+
+        if ($createdUntil) {
+            $qb->andWhere('r.createdAt <= :until')->setParameter('until', $createdUntil);
+        }
+
+        return $qb->getQuery()->getArrayResult();
+    }
+
+    /**
+     * Vollständiger Datensatz für den offenen CSV-/JSON-Export unter CC-BY.
+     *
+     * @return Restaurant[]
+     */
+    public function findAllForExport(): array
+    {
+        return $this->createQueryBuilder('r')
+            ->leftJoin('r.cuisines', 'c')
+            ->addSelect('c')
+            ->orderBy('r.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }

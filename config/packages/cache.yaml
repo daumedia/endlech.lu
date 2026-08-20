@@ -15,5 +15,24 @@ framework:
         #app: cache.adapter.apcu
 
         # Namespaced pools use the above "app" backend by default
-        #pools:
-            #my.dedicated.cache: null
+        pools:
+            # Kennzahlen der Open-Startup-Seite (/open).
+            #
+            # Ein eigener Pool statt cache.app, damit der Admin nach einer
+            # Änderung an den Finanzdaten gefahrlos clear() aufrufen kann –
+            # ein clear() auf cache.app würde den halben Anwendungscache
+            # mitnehmen.
+            cache.open_stats:
+                adapter: cache.adapter.filesystem
+                default_lifetime: 3600
+
+when@test:
+    framework:
+        cache:
+            pools:
+                # In Tests darf kein Ergebnis über Kernel-Neustarts hinweg
+                # überleben: Ein Test, der Restaurants anlegt und danach /open
+                # aufruft, sähe sonst den Stand eines früheren Tests.
+                cache.open_stats:
+                    adapter: cache.adapter.array
+                    default_lifetime: 3600

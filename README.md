@@ -199,6 +199,29 @@ survives: `.env.local`, `config/jwt/*.pem`, `public/uploads/`, `var/`,
 Rollback: push a revert commit to `production`. The next run restores the previous
 state including matching assets, because they live in the same commit.
 
+### Monthly metrics snapshot
+
+The `/open` page shows a trend built from stored monthly snapshots, not from
+recalculated history. Those snapshots are written by `app:metrics:snapshot`.
+
+`App\Schedule` declares the recurring task (1st of each month, 03:15
+Europe/Luxembourg), but Symfony Scheduler needs a running
+`messenger:consume scheduler_default` — and production has no worker. **The cron
+entry is what actually runs it there.** Add it once in the hosting panel:
+
+```
+15 3 1 * * /usr/bin/php ~/public_html/bin/console app:metrics:snapshot --env=prod --no-interaction
+```
+
+The command is idempotent: a month that already has a snapshot is left alone
+(`--force` overwrites, `--month=YYYY-MM` fills a gap). If the cron is missing or
+fails, nothing breaks and nothing warns you — the trend simply stays empty. The
+admin page at `/admin/finanzen` shows the month of the latest snapshot and has a
+button to capture one by hand, which is the fastest way to notice the gap.
+
+A snapshot can only record what is in the database when it runs. Filling in past
+months later gives them today's numbers, not the ones they had.
+
 Error tracking is active on production only. `SENTRY_DSN` must be present in the
 server's `~/public_html/.env.local` **before** the merge — otherwise the deploy
 goes green while Sentry stays silently disabled. Verify afterwards over SSH with

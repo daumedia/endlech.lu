@@ -75,3 +75,49 @@
     font-size: 0.875rem;
     color: rgb(107 33 168);
 }
+
+/* Druckansicht.
+
+   Der Anlass ist /open: Wer vor einem Fördergespräch die Zahlen braucht,
+   speichert die Seite als PDF. Navigation, Footer, Bottom-Nav und Cookie-Banner
+   sind über `print:hidden` im Layout ausgeblendet – hier steht nur, was sich
+   mit Utility-Klassen nicht ausdrücken lässt. */
+@media print {
+    /* Farbflächen erhalten: Balken und Diagramme sind hier die Daten, nicht
+       Dekoration. Ohne diese Zeile druckt der Browser sie standardmäßig weg. */
+    * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    /* Verlaufsbänder kosten Toner und tragen auf Papier nichts bei.
+       Die Nachfahren müssen mit: Sie tragen `text-white` und blieben sonst
+       weiß auf weißem Papier – also unsichtbar. */
+    section.bg-linear-to-r,
+    section.bg-linear-to-r * {
+        background-image: none !important;
+        background-color: transparent !important;
+        color: #111827 !important;
+        box-shadow: none !important;
+    }
+
+    /* Zugeklappte `<details>` beim Drucken öffnen: Die Tabellenansicht der
+       Diagramme ist auf Papier die einzige Fassung, die alle Werte trägt –
+       zugeklappt ginge sie ersatzlos verloren.
+       `content-visibility` ist nötig, weil Chromium den geschlossenen Zustand
+       darüber steuert und nicht über `display` allein. */
+    details > summary {
+        display: none;
+    }
+
+    details > :not(summary) {
+        display: block !important;
+        content-visibility: visible !important;
+    }
+
+    /* Diagramme und Tabellen nicht über eine Seitengrenze zerreißen. */
+    figure,
+    table {
+        break-inside: avoid;
+    }
+}
