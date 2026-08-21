@@ -8,6 +8,21 @@ Guide for AI assistants working on the endlech.lu codebase.
 
 The UI language is German/Luxembourgish. The codebase comments (Makefile, templates) use German.
 
+## Ausführliche Dokumentation unter `docs/`
+
+Diese Datei sammelt die **Implementierungs-Fallstricke** — sie ist chronologisch
+nach Issues gewachsen. Wer eine geordnete Referenz braucht, findet sie in `docs/`:
+
+| Datei | Inhalt |
+|---|---|
+| `docs/data-model.md` | vollständige Feldreferenz aller Entities, Enums und Repositories, ERD, Migrations-Historie |
+| `docs/design-system.md` | Farben, Typografie, kanonische Komponenten-Klassenketten, Barrierefreiheits-Regeln, Diagramm- und Druckregeln |
+| `docs/prd.md` | Vision, Zielgruppen, Produktprinzipien, Funktionsumfang, Kennzahlen, Geschäftsmodell, Roadmap, Risiken |
+
+**Bei Änderungen am Datenmodell oder an den Komponenten-Mustern die passende
+Datei mitziehen** — sonst laufen Code und Referenz auseinander. Die `⚠️`-Blöcke
+weiter unten bleiben die Quelle für alles, was beim Ändern schiefgehen kann.
+
 ## Tech Stack
 
 - **Backend:** PHP 8.4+, Symfony 8.0.*
@@ -719,3 +734,4 @@ Server-Setup (einmalig) und die Waisen-Inventur vor dem ersten Lauf: siehe READM
 | `.github/deploy.sh`   | Deploy-Logik (läuft per SSH auf dem Server)|
 | `importmap.php`       | Symfony AssetMapper module mapping         |
 | `.editorconfig`       | Editor formatting rules                    |
+| `docs/`               | Datenmodell-, Design-System- und PRD-Referenz |

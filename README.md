@@ -294,6 +294,19 @@ Three repository secrets are required — `SSH_PRIVATE_KEY`, `APP_USER`,
 * `/templates` — Twig templates (including `admin/` for the admin panel).
 * `/assets` — Stimulus controllers and CSS.
 * `/migrations` — Doctrine database migrations.
+* `/docs` — In-depth documentation (see below).
+
+## 📚 Documentation
+
+Detailed documentation lives in [`docs/`](docs/). These documents are written in
+German, matching `CHANGELOG.md` and the codebase comments.
+
+* [`docs/prd.md`](docs/prd.md) — Product requirements: vision, target groups,
+  product principles, feature scope, metrics, business model, roadmap, risks.
+* [`docs/data-model.md`](docs/data-model.md) — Complete reference of all Doctrine
+  entities, enums, repositories and migrations, including an ER diagram.
+* [`docs/design-system.md`](docs/design-system.md) — Colours, typography,
+  components, accessibility rules, charts and print styles.
 
 ---
 *Built with love in Luxembourg.*
