@@ -3,7 +3,8 @@ nav:
     restaurants: "Restaurants"
     bottom_navigation: "Main navigation"
     find_restaurants: "Find Restaurants"
-    about: "About Us"
+    about: "About Endlech"
+    about_short: "About Us"
     suggest_restaurant: "Suggest a Restaurant"
     participate: "Get involved"
     for_restaurants: "For restaurants"
@@ -297,8 +298,8 @@ community:
         discover: "Discover Restaurants"
 
 about:
-    title: "About Us | Endlech.lu"
-    heading: "About Us"
+    title: "About Endlech | Endlech.lu"
+    heading: "About Endlech"
     subtitle: "The story behind Endlech.lu — a platform that was long overdue."
     founder: "Founder"
     founder_bio: "I'm Michael, 30 years old, and affected by SMA2 (Spinal Muscular Atrophy Type 2) since birth. As a passionate programmer and photographer, I know from personal experience how important true accessibility is in daily life — and that's exactly what drives me at Endlech.lu."
