@@ -624,6 +624,10 @@ flash:
     partner_restaurant_missing: "Restaurant net fonnt."
     organisation_submitted: "Bal fäerdeg! Bestätegt w.e.g. de Link an Ärer E-Mail."
     organisation_email_failed: "Är Ufro ass gespäichert, mee d'Bestätegungsmail konnt net verschéckt ginn. Mellt Iech w.e.g. bei eis."
+    passkey_login_failed: "D’Umeldung mam Passkey huet net geklappt. Probéier et nach eng Kéier oder benotz däi Passwuert."
+    passkey_renamed: "Passkey ëmbenannt."
+    passkey_deleted: "Passkey ewechgeholl."
+    passkey_name_empty: "Gëff w.e.g. en Numm fir de Passkey un."
 
 email:
     verify_subject: "Bestäteg deng E-Mail-Adress"
@@ -792,6 +796,30 @@ profile:
         change_password: "Passwuert änneren"
         delete_avatar: "Profilbild ewechhuelen"
         delete_avatar_confirm: "Profilbild wierklech ewechhuelen?"
+
+passkey:
+    login: "Mat Passkey umellen"
+    login_hint: "Face ID, Touch ID oder de PIN vun dengem Apparat – ouni Passwuert."
+    busy: "Waarden op d’Bestätegung …"
+    or: "oder"
+    section: "Passkeys"
+    intro: "Mat engem Passkey mells du dech mat Face ID, Touch ID oder dem PIN vun dengem Apparat un. Däi Passwuert bleift doniewent bestoen."
+    empty: "Du hues nach kee Passkey hannerluecht."
+    add: "Passkey derbäisetzen"
+    created: "Ugeluecht den %date%"
+    last_used: "fir d’lescht benotzt den %date%"
+    never_used: "nach net benotzt"
+    rename: "Ëmbenennen"
+    rename_label: "Numm vum Passkey"
+    rename_submit: "Späicheren"
+    delete: "Ewechhuelen"
+    delete_confirm: "De Passkey „%name%“ wierklech ewechhuelen? Du kanns dech duerno net méi domat umellen."
+    error:
+        unsupported: "Dëse Browser ënnerstëtzt keng Passkeys. Mell dech mat E-Mail a Passwuert un."
+        failed: "D’Umeldung mam Passkey huet net geklappt. Probéier et nach eng Kéier oder benotz däi Passwuert."
+        server: "De Server huet net geäntwert. Probéier et w.e.g. méi spéit nach eng Kéier."
+        exists: "Dëse Passkey ass hei schonn hannerluecht."
+        config: "Passkeys si fir dës Adress net ariichtegt. Mell dech w.e.g. bei eis."
 
 verified:
     badge: "Verifizéiert"

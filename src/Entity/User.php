@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -43,12 +45,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $avatarFilename = null;
 
+    /**
+     * Kennung, unter der dieses Konto gegenüber Passkeys auftritt (WebAuthn user handle).
+     *
+     * Bewusst nicht die Datenbank-ID: Der Wert liegt dauerhaft auf dem Gerät des
+     * Nutzers und wandert bei jeder Anmeldung mit. Eine fortlaufende Zahl gäbe
+     * dort die Nutzerzahl preis und verknüpfte ein fremdverwahrtes Datum fest
+     * mit der internen Identität.
+     *
+     * Nullable, damit Bestandskonten ohne Datenmigration auskommen – der Wert
+     * entsteht erst beim ersten Passkey.
+     */
+    #[ORM\Column(length: 64, nullable: true, unique: true)]
+    private ?string $webauthnHandle = null;
+
+    /** @var Collection<int, WebauthnCredential> */
+    #[ORM\OneToMany(targetEntity: WebauthnCredential::class, mappedBy: 'user', orphanRemoval: true)]
+    #[ORM\OrderBy(['createdAt' => 'DESC'])]
+    private Collection $passkeys;
+
     #[ORM\Column]
     private \DateTimeImmutable $createdAt;
 
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
+        $this->passkeys = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -191,5 +213,53 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getCreatedAt(): \DateTimeImmutable
     {
         return $this->createdAt;
+    }
+
+    public function getWebauthnHandle(): ?string
+    {
+        return $this->webauthnHandle;
+    }
+
+    /**
+     * Erzeugt den WebAuthn-Handle beim ersten Passkey und gibt ihn danach unverändert zurück.
+     *
+     * 16 Zufallsbytes, nicht 32 wie bei generateVerificationToken(): Als Hex sind
+     * das 32 Zeichen, und PublicKeyCredentialUserEntity lässt für die Kennung
+     * höchstens 64 Byte zu. Ein 64-Zeichen-Handle läge exakt auf der Grenze.
+     */
+    public function obtainWebauthnHandle(): string
+    {
+        if ($this->webauthnHandle === null) {
+            $this->webauthnHandle = bin2hex(random_bytes(16));
+        }
+
+        return $this->webauthnHandle;
+    }
+
+    /**
+     * @return Collection<int, WebauthnCredential>
+     */
+    public function getPasskeys(): Collection
+    {
+        return $this->passkeys;
+    }
+
+    public function addPasskey(WebauthnCredential $passkey): static
+    {
+        if (!$this->passkeys->contains($passkey)) {
+            $this->passkeys->add($passkey);
+            $passkey->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePasskey(WebauthnCredential $passkey): static
+    {
+        if ($this->passkeys->removeElement($passkey) && $passkey->getUser() === $this) {
+            $passkey->setUser(null);
+        }
+
+        return $this;
     }
 }

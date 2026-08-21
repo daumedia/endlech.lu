@@ -1,0 +1,65 @@
+{#
+    Anmeldung per Passkey – eigenes Formular über dem Passwort-Formular.
+
+    Bewusst ein zweites <form> und nicht derselbe Container wie E-Mail und
+    Passwort: Der AuthenticationController prüft vor dem Start
+    `form.checkValidity()`. Im Passwort-Formular sind beide Felder `required`,
+    ein Klick auf „Mit Passkey anmelden" liefe dort also gegen die
+    Browser-Validierung und käme nie bis zum Authenticator.
+
+    Abgeschickt wird an denselben check_path wie beim Passwort. Welcher der
+    beiden Wege gemeint ist, erkennt App\Security\PasskeyAuthenticator am Feld
+    `_assertion`.
+
+    Kein CSRF-Feld: Der Authenticator verlangt kein Token, und eine Assertion
+    ist an Herkunft und Challenge gebunden – sie lässt sich von einer fremden
+    Seite aus nicht erzeugen. (Der Controller schickt das Formular ohnehin per
+    form.submit() ab, was das submit-Ereignis überspringt und damit auch die
+    Cookie-Hälfte des Double-Submit-Verfahrens nicht setzen würde.)
+#}
+<div data-controller="passkey-ui"
+     data-passkey-ui-unsupported-value="{{ 'passkey.error.unsupported'|trans }}"
+     data-passkey-ui-failed-value="{{ 'passkey.error.failed'|trans }}"
+     data-passkey-ui-server-value="{{ 'passkey.error.server'|trans }}"
+     data-passkey-ui-exists-value="{{ 'passkey.error.exists'|trans }}"
+     data-passkey-ui-config-value="{{ 'passkey.error.config'|trans }}"
+     data-passkey-ui-busy-value="{{ 'passkey.busy'|trans }}"
+     data-action="webauthn:unsupported->passkey-ui#unsupported
+                  webauthn:authentication:options:request->passkey-ui#start
+                  webauthn:authentication:error->passkey-ui#ceremonyError
+                  webauthn:authentication:options:error->passkey-ui#serverError">
+
+    {# Bleibt verborgen, bis der Controller WebAuthn im Browser bestätigt hat. #}
+    <div data-passkey-ui-target="panel" class="hidden">
+
+        <form method="post"
+              action="{{ path('app_login') }}"
+              data-controller="passkey-auth"
+              data-passkey-auth-options-url-value="{{ path('webauthn.controller.request.request.login') }}"
+              data-passkey-auth-submit-via-form-value="true">
+
+            {# Nimmt die Assertion auf, die der Browser zurückgibt. #}
+            <input type="hidden" name="_assertion" data-passkey-auth-target="result">
+
+            <button type="button"
+                    data-action="passkey-auth#authenticate"
+                    data-passkey-ui-target="button"
+                    class="w-full min-h-[48px] bg-cyan-600 hover:bg-cyan-700 disabled:opacity-60 disabled:cursor-wait text-white font-bold py-3 rounded-lg shadow-md hover:shadow-lg motion-safe:transition motion-safe:transform motion-safe:hover:-translate-y-0.5 focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700">
+                🔑 {{ 'passkey.login'|trans }}
+            </button>
+        </form>
+
+        <p class="text-xs text-gray-500 mt-2 text-center">{{ 'passkey.login_hint'|trans }}</p>
+
+        <p data-passkey-ui-target="message"
+           role="alert"
+           class="hidden bg-red-50 border-l-4 border-red-400 text-red-800 px-4 py-3 rounded-r-lg mt-4 text-sm font-medium"></p>
+
+        {# Trenner zwischen den beiden Anmeldewegen. #}
+        <div class="flex items-center gap-4 my-6" aria-hidden="true">
+            <span class="h-px flex-1 bg-gray-200"></span>
+            <span class="text-xs font-semibold uppercase tracking-wide text-gray-400">{{ 'passkey.or'|trans }}</span>
+            <span class="h-px flex-1 bg-gray-200"></span>
+        </div>
+    </div>
+</div>

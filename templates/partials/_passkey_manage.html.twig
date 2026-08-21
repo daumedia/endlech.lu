@@ -1,0 +1,108 @@
+{#
+    Passkey-Verwaltung im Profil.
+
+    Anlegen braucht zwingend JavaScript – ohne navigator.credentials gibt es
+    keinen Passkey. Umbenennen und Löschen dagegen sind gewöhnliche Formulare:
+    Wer einen Schlüssel loswerden will, soll nicht davon abhängen, ob ein Skript
+    geladen hat.
+#}
+<div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
+    <h2 class="text-lg font-bold text-gray-900 mb-2">{{ 'passkey.section'|trans }}</h2>
+    <p class="text-sm text-gray-500 mb-6">{{ 'passkey.intro'|trans }}</p>
+
+    {% if app.user.passkeys is not empty %}
+        <ul class="space-y-3 mb-6">
+            {% for passkey in app.user.passkeys %}
+                <li class="p-4 bg-gray-50 rounded-xl border border-gray-100">
+                    <div class="flex items-start justify-between gap-4">
+                        <div class="min-w-0">
+                            <p class="text-sm font-semibold text-gray-900 truncate">🔑 {{ passkey.name }}</p>
+                            <p class="text-xs text-gray-500 mt-0.5">
+                                {{ 'passkey.created'|trans({'%date%': passkey.createdAt|date('d.m.Y')}) }}
+                                ·
+                                {% if passkey.lastUsedAt %}
+                                    {{ 'passkey.last_used'|trans({'%date%': passkey.lastUsedAt|date('d.m.Y')}) }}
+                                {% else %}
+                                    {{ 'passkey.never_used'|trans }}
+                                {% endif %}
+                            </p>
+                        </div>
+
+                        <form method="post"
+                              action="{{ path('app_passkey_delete', {id: passkey.id}) }}"
+                              onsubmit="return confirm('{{ 'passkey.delete_confirm'|trans({'%name%': passkey.name})|e('js') }}')"
+                              class="flex-shrink-0">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete-passkey-' ~ passkey.id) }}">
+                            <button type="submit"
+                                    class="min-h-[44px] px-3 text-sm text-red-600 hover:text-red-800 font-medium motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-red-600">
+                                {{ 'passkey.delete'|trans }}
+                            </button>
+                        </form>
+                    </div>
+
+                    <details class="mt-2">
+                        <summary class="text-xs text-gray-500 hover:text-gray-700 cursor-pointer min-h-[44px] flex items-center focus:outline-2 focus:outline-offset-2 focus:outline-purple-600">
+                            {{ 'passkey.rename'|trans }}
+                        </summary>
+                        <form method="post"
+                              action="{{ path('app_passkey_rename', {id: passkey.id}) }}"
+                              class="flex flex-wrap items-end gap-2 mt-2">
+                            <input type="hidden" name="_token" value="{{ csrf_token('rename-passkey-' ~ passkey.id) }}">
+                            <div class="flex-1 min-w-[12rem]">
+                                <label for="passkey-name-{{ passkey.id }}" class="block text-xs font-semibold text-gray-700 mb-1">
+                                    {{ 'passkey.rename_label'|trans }}
+                                </label>
+                                <input type="text"
+                                       id="passkey-name-{{ passkey.id }}"
+                                       name="name"
+                                       value="{{ passkey.name }}"
+                                       maxlength="100"
+                                       required
+                                       class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:outline-none motion-safe:transition">
+                            </div>
+                            <button type="submit"
+                                    class="min-h-[44px] px-4 bg-gray-800 hover:bg-gray-900 text-white text-sm font-semibold rounded-lg motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-gray-800">
+                                {{ 'passkey.rename_submit'|trans }}
+                            </button>
+                        </form>
+                    </details>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="text-sm text-gray-500 mb-6">{{ 'passkey.empty'|trans }}</p>
+    {% endif %}
+
+    {# Anlegen: der einzige Teil, der ohne JavaScript nicht geht. #}
+    <div data-controller="passkey-ui"
+         data-passkey-ui-unsupported-value="{{ 'passkey.error.unsupported'|trans }}"
+         data-passkey-ui-failed-value="{{ 'passkey.error.failed'|trans }}"
+         data-passkey-ui-server-value="{{ 'passkey.error.server'|trans }}"
+         data-passkey-ui-exists-value="{{ 'passkey.error.exists'|trans }}"
+         data-passkey-ui-config-value="{{ 'passkey.error.config'|trans }}"
+         data-passkey-ui-busy-value="{{ 'passkey.busy'|trans }}"
+         data-action="webauthn:unsupported->passkey-ui#unsupported
+                      webauthn:registration:options:request->passkey-ui#start
+                      webauthn:registration:error->passkey-ui#ceremonyError
+                      webauthn:registration:options:error->passkey-ui#serverError
+                      webauthn:registration:verify:error->passkey-ui#serverError">
+
+        <div data-passkey-ui-target="panel" class="hidden">
+            <div data-controller="passkey-register"
+                 data-passkey-register-options-url-value="{{ path('webauthn.controller.creation.request.add_device') }}"
+                 data-passkey-register-result-url-value="{{ path('webauthn.controller.creation.response.add_device') }}"
+                 data-passkey-register-success-redirect-uri-value="{{ path('app_profile') }}">
+                <button type="button"
+                        data-action="passkey-register#register"
+                        data-passkey-ui-target="button"
+                        class="w-full min-h-[48px] bg-cyan-600 hover:bg-cyan-700 disabled:opacity-60 disabled:cursor-wait text-white font-bold py-3 rounded-lg shadow-md hover:shadow-lg motion-safe:transition motion-safe:transform motion-safe:hover:-translate-y-0.5 focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700">
+                    🔑 {{ 'passkey.add'|trans }}
+                </button>
+            </div>
+
+            <p data-passkey-ui-target="message"
+               role="alert"
+               class="hidden bg-red-50 border-l-4 border-red-400 text-red-800 px-4 py-3 rounded-r-lg mt-4 text-sm font-medium"></p>
+        </div>
+    </div>
+</div>

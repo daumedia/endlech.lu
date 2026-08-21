@@ -174,6 +174,23 @@ npm run build
 php bin/console cache:clear
 ```
 
+### 🔑 Passkeys (WebAuthn)
+
+`WEBAUTHN_RP_ID` is the bare domain passkeys are bound to — no scheme, no port,
+no path, no IP address. It also covers every subdomain, but never the other way
+round, so production must use `endlech.lu` and **not** `www.endlech.lu`.
+
+Set it in the server's `~/public_html/.env.local` **before** merging into
+`production`. A wrong value deploys green and only shows up when someone tries
+to sign in — the browser rejects the ceremony with a `SecurityError`.
+
+Locally the default `localhost` applies. Browsers treat `localhost` as a secure
+context, but the server-side check does not: with an empty `allowed_origins`
+list, `CheckAllowedOrigins` insists on HTTPS. `config/packages/webauthn.yaml`
+therefore whitelists `http://localhost:8000` in a `when@dev` block — adjust the
+port there if `symfony server:start` picks a different one. On production the
+list stays empty on purpose, so the spec's own rule applies.
+
 ## 🚢 Deployment
 
 A merge into `production` **is** the deploy. GitHub Actions opens an SSH session and

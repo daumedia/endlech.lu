@@ -21,6 +21,9 @@
                 </div>
             {% endif %}
 
+            {# Passkey zuerst – auch in der Tab-Reihenfolge, die der sichtbaren folgen muss. #}
+            {% include 'partials/_passkey_login.html.twig' %}
+
             <form method="post" class="space-y-5">
 
                 {# E-Mail #}
