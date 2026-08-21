@@ -624,6 +624,10 @@ flash:
     partner_restaurant_missing: "Restaurant not found."
     organisation_submitted: "Almost done! Please confirm the link in your email."
     organisation_email_failed: "Your enquiry is saved, but the confirmation email could not be sent. Please get in touch with us."
+    passkey_login_failed: "Signing in with a passkey did not work. Try again or use your password."
+    passkey_renamed: "Passkey renamed."
+    passkey_deleted: "Passkey removed."
+    passkey_name_empty: "Please enter a name for the passkey."
 
 email:
     verify_subject: "Confirm your email address"
@@ -792,6 +796,30 @@ profile:
         change_password: "Change Password"
         delete_avatar: "Remove Profile Picture"
         delete_avatar_confirm: "Really remove profile picture?"
+
+passkey:
+    login: "Sign in with a passkey"
+    login_hint: "Face ID, Touch ID or your device PIN – no password needed."
+    busy: "Waiting for confirmation …"
+    or: "or"
+    section: "Passkeys"
+    intro: "With a passkey you sign in using Face ID, Touch ID or your device PIN. Your password keeps working alongside it."
+    empty: "You have not added a passkey yet."
+    add: "Add a passkey"
+    created: "Added on %date%"
+    last_used: "last used on %date%"
+    never_used: "not used yet"
+    rename: "Rename"
+    rename_label: "Passkey name"
+    rename_submit: "Save"
+    delete: "Remove"
+    delete_confirm: "Really remove the passkey “%name%”? You will no longer be able to sign in with it."
+    error:
+        unsupported: "This browser does not support passkeys. Please sign in with your email and password."
+        failed: "Signing in with a passkey did not work. Try again or use your password."
+        server: "The server did not respond. Please try again later."
+        exists: "This passkey is already registered here."
+        config: "Passkeys are not set up for this address. Please get in touch with us."
 
 verified:
     badge: "Verified"

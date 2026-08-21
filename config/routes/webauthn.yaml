@@ -1,0 +1,5 @@
+# Die Endpunkte entstehen aus config/packages/webauthn.yaml und tragen bewusst
+# keinen Locale-Prefix – es sind Datenendpunkte, keine Seiten.
+webauthn_routes:
+    resource: .
+    type: webauthn

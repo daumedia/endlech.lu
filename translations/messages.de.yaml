@@ -624,6 +624,10 @@ flash:
     partner_restaurant_missing: "Restaurant nicht gefunden."
     organisation_submitted: "Fast geschafft! Bitte bestätigen Sie den Link in Ihrer E-Mail."
     organisation_email_failed: "Ihre Anfrage ist gespeichert, aber die Bestätigungsmail konnte nicht versendet werden. Bitte melden Sie sich bei uns."
+    passkey_login_failed: "Die Anmeldung mit Passkey hat nicht geklappt. Versuche es noch einmal oder nutze dein Passwort."
+    passkey_renamed: "Passkey umbenannt."
+    passkey_deleted: "Passkey entfernt."
+    passkey_name_empty: "Bitte gib einen Namen für den Passkey ein."
 
 email:
     verify_subject: "Bestätige deine E-Mail-Adresse"
@@ -792,6 +796,30 @@ profile:
         change_password: "Passwort ändern"
         delete_avatar: "Profilbild entfernen"
         delete_avatar_confirm: "Profilbild wirklich entfernen?"
+
+passkey:
+    login: "Mit Passkey anmelden"
+    login_hint: "Face ID, Touch ID oder die PIN deines Geräts – kein Passwort nötig."
+    busy: "Warte auf Bestätigung …"
+    or: "oder"
+    section: "Passkeys"
+    intro: "Mit einem Passkey meldest du dich per Face ID, Touch ID oder Geräte-PIN an. Dein Passwort bleibt daneben bestehen."
+    empty: "Du hast noch keinen Passkey hinterlegt."
+    add: "Passkey hinzufügen"
+    created: "Angelegt am %date%"
+    last_used: "zuletzt benutzt am %date%"
+    never_used: "noch nicht benutzt"
+    rename: "Umbenennen"
+    rename_label: "Name des Passkeys"
+    rename_submit: "Speichern"
+    delete: "Entfernen"
+    delete_confirm: "Passkey „%name%“ wirklich entfernen? Du kannst dich danach nicht mehr damit anmelden."
+    error:
+        unsupported: "Dieser Browser unterstützt keine Passkeys. Melde dich mit E-Mail und Passwort an."
+        failed: "Die Anmeldung mit Passkey hat nicht geklappt. Versuche es noch einmal oder nutze dein Passwort."
+        server: "Der Server hat nicht geantwortet. Bitte versuche es später noch einmal."
+        exists: "Dieser Passkey ist hier bereits hinterlegt."
+        config: "Passkeys sind für diese Adresse nicht eingerichtet. Bitte melde dich bei uns."
 
 verified:
     badge: "Verifiziert"

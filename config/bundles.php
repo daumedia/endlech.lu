@@ -21,4 +21,5 @@ return [
     Nelmio\ApiDocBundle\NelmioApiDocBundle::class => ['all' => true],
     DAMA\DoctrineTestBundle\DAMADoctrineTestBundle::class => ['test' => true],
     Sentry\SentryBundle\SentryBundle::class => ['prod' => true],
+    Webauthn\Bundle\WebauthnBundle::class => ['all' => true],
 ];

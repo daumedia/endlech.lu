@@ -624,6 +624,10 @@ flash:
     partner_restaurant_missing: "Restaurant introuvable."
     organisation_submitted: "Presque terminé ! Veuillez confirmer le lien dans votre e-mail."
     organisation_email_failed: "Votre demande est enregistrée, mais l'e-mail de confirmation n'a pas pu être envoyé. Merci de nous contacter."
+    passkey_login_failed: "La connexion avec la clé d’accès n’a pas fonctionné. Réessayez ou utilisez votre mot de passe."
+    passkey_renamed: "Clé d’accès renommée."
+    passkey_deleted: "Clé d’accès supprimée."
+    passkey_name_empty: "Veuillez saisir un nom pour la clé d’accès."
 
 email:
     verify_subject: "Confirmez votre adresse e-mail"
@@ -792,6 +796,30 @@ profile:
         change_password: "Modifier le mot de passe"
         delete_avatar: "Supprimer la photo de profil"
         delete_avatar_confirm: "Voulez-vous vraiment supprimer la photo de profil ?"
+
+passkey:
+    login: "Se connecter avec une clé d’accès"
+    login_hint: "Face ID, Touch ID ou le code de votre appareil – aucun mot de passe requis."
+    busy: "En attente de confirmation …"
+    or: "ou"
+    section: "Clés d’accès"
+    intro: "Avec une clé d’accès, vous vous connectez par Face ID, Touch ID ou le code de votre appareil. Votre mot de passe reste utilisable."
+    empty: "Vous n’avez pas encore enregistré de clé d’accès."
+    add: "Ajouter une clé d’accès"
+    created: "Ajoutée le %date%"
+    last_used: "dernière utilisation le %date%"
+    never_used: "pas encore utilisée"
+    rename: "Renommer"
+    rename_label: "Nom de la clé d’accès"
+    rename_submit: "Enregistrer"
+    delete: "Supprimer"
+    delete_confirm: "Supprimer vraiment la clé d’accès « %name% » ? Vous ne pourrez plus vous connecter avec."
+    error:
+        unsupported: "Ce navigateur ne prend pas en charge les clés d’accès. Connectez-vous avec votre e-mail et votre mot de passe."
+        failed: "La connexion avec la clé d’accès n’a pas fonctionné. Réessayez ou utilisez votre mot de passe."
+        server: "Le serveur n’a pas répondu. Veuillez réessayer plus tard."
+        exists: "Cette clé d’accès est déjà enregistrée ici."
+        config: "Les clés d’accès ne sont pas configurées pour cette adresse. Merci de nous contacter."
 
 verified:
     badge: "Vérifié"

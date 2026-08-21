@@ -31,12 +31,13 @@ src/
 │   └── Open/            # Locale-freie Daten-Endpunkte (/open.json, Datensatz-Downloads)
 ├── DataFixtures/        # Doctrine fixtures (restaurant data + user test data)
 ├── DTO/                 # Data Transfer Objects (NearbyStop)
-├── Entity/              # Doctrine entities (User, Restaurant, RestaurantImage, OrderingOption, Cuisine, FinanceEntry, MetricSnapshot)
+├── Entity/              # Doctrine entities (User, Restaurant, RestaurantImage, OrderingOption, Cuisine, FinanceEntry, MetricSnapshot, WebauthnCredential)
 ├── Enum/                # PHP Backed Enums (Language, OrderingPlatform, FinanceType, FinanceCategory, Canton)
 ├── Message/             # Messenger-Nachrichten (CaptureMetricSnapshot)
 ├── MessageHandler/      # Messenger-Handler
 ├── Open/                # Open-Startup-Logik (Stats, Kantonszuordnung, Punktzahl, Snapshots)
-├── Repository/          # Doctrine repositories (UserRepository, RestaurantRepository, CuisineRepository)
+├── Repository/          # Doctrine repositories (UserRepository, RestaurantRepository, CuisineRepository, WebauthnCredentialRepository)
+├── Security/            # PasskeyAuthenticator, WebauthnUserEntityRepository
 ├── Schedule.php         # Wiederkehrende Aufgaben (#[AsSchedule])
 └── Kernel.php           # Symfony kernel
 
@@ -192,6 +193,11 @@ Autowiring and autoconfiguration are enabled by default in `config/services.yaml
 | `app_profile_edit`      | `/profile/edit` | `ProfileController::edit()`        |
 | `app_profile_password`  | `/profile/password` | `ProfileController::changePassword()` |
 | `app_profile_avatar_delete` | `/profile/avatar/delete` | `ProfileController::deleteAvatar()` |
+| `app_passkey_rename`    | `/profile/passkeys/{id}/umbenennen` | `PasskeyController::rename()` |
+| `app_passkey_delete`    | `/profile/passkeys/{id}/loeschen` | `PasskeyController::delete()` |
+| `webauthn.controller.request.request.login` | `/passkey/login/options` (locale-frei) | Bundle-Controller (Challenge zum Anmelden) |
+| `webauthn.controller.creation.request.add_device` | `/passkey/register/options` (locale-frei) | Bundle-Controller (Challenge zum Anlegen) |
+| `webauthn.controller.creation.response.add_device` | `/passkey/register` (locale-frei) | Bundle-Controller (Passkey speichern) |
 | `app_partner`           | `/partner`     | `PartnerController::index()` (Landing Page) |
 | `app_partner_submit`    | `/partner` (POST) | `PartnerController::submit()`    |
 | `app_partner_confirm`   | `/partner/confirmation/{token}` | `PartnerController::confirm()` |
@@ -327,6 +333,49 @@ Endlech.lu ist als Progressive Web App über Safaris „Zum Home-Bildschirm" ins
 **`assets/styles/app.css`:** `@media (max-width: 767px)` setzt `input/select/textarea` auf `font-size: 16px` (verhindert iOS-Auto-Zoom).
 **Übersetzungen:** neue Keys `nav.home`, `nav.restaurants` in `messages.{de,en,fr,lb}.yaml` (für die Bottom-Nav; `nav.about`/`nav.profile`/`nav.login` wiederverwendet).
 **Bewusst nicht enthalten (Folge-Issues):** Apple-Splash-Screens, Pull-to-Refresh, Swipe-Gesten, Push-Notification-Scaffold, vollständiger 7-Seiten-Mobile-Audit.
+
+## Passkey-Login (WebAuthn)
+
+Anmeldung per Face ID, Touch ID oder Geräte-PIN – **zusätzlich** zum Passwort, das unverändert bestehen bleibt. Auf `/login` steht ein Knopf, der **keine E-Mail-Eingabe verlangt**: Der Browser zeigt die passenden Konten selbst an. Bundle: `web-auth/webauthn-symfony-bundle` ^5.3.5 (Flex-Recipe greift nicht – liegt nur in `recipes-contrib` und nur in Version 3.0; `bundles.php`, `config/packages/webauthn.yaml` und `config/routes/webauthn.yaml` sind von Hand angelegt, wie bei Sentry).
+
+**Anmeldung als Formular-Login, nicht als JSON-Schnittstelle.** `App\Security\PasskeyAuthenticator` erbt von `Webauthn\Bundle\Security\Authentication\WebauthnAuthenticator` (das ist ein `AbstractLoginFormAuthenticator`) und liest die Assertion aus dem Feld `_assertion`. Der `webauthn:`-Firewall-Schlüssel des Bundles wird bewusst **nicht** benutzt: Er ist für 6.0 abgekündigt und verlangt zwingend `Content-Type: application/json`. Über das Formular läuft der Passkey dagegen durch dieselbe Mechanik wie das Passwort – gleicher `check_path` (`app_login`), gleiche Weiterleitung, gleiches `remember_me`.
+
+⚠️ **`entry_point: form_login` ist Pflicht**, sobald eine Firewall zwei Authenticator führt – sonst bricht der Container-Build mit `RegisterEntryPointPass`. Nur `form_login` kennt den `login_path`.
+
+⚠️ **Der Passkey-Knopf hat ein eigenes `<form>`.** Der `AuthenticationController` aus dem npm-Paket ruft vor dem Start `form.checkValidity()`; im Passwort-Formular sind beide Felder `required`, ein Klick liefe dort gegen die Browser-Validierung. Das Passkey-Formular steht **zuerst im Markup**, weil die Tab-Reihenfolge der sichtbaren folgen muss. Deshalb nutzt `SecurityControllerTest` `formWithField()` statt `filter('form')` – wer dort auf `filter('form')` zurückfällt, greift das Passkey-Formular und bekommt „Unreachable field \"_username\"".
+
+**Entity `WebauthnCredential`** erbt von `Webauthn\CredentialRecord`. Das Bundle registriert dafür selbst eine mapped-superclass (`WebauthnBundle::registerMappings()`) und trägt fünf DBAL-Typen (`base64`, `aaguid`, `trust_path`, …) über `WebauthnExtension::prepend()` ein – für die geerbten Felder braucht es also **keine** ORM-Attribute und keine Konfigurationszeile. Eigene Felder: `id`, `user` (ManyToOne, `ON DELETE CASCADE`), `name`, `createdAt`, `lastUsedAt`.
+
+⚠️ **Die geerbten Spalten sind LONGTEXT** (der Typ `base64` deklariert sich als CLOB). Die bei jeder Anmeldung durchsuchte `public_key_credential_id` ist deshalb nur mit Längenangabe indizierbar – im Mapping als `#[ORM\Index(..., options: ['lengths' => [100]])]`.
+
+⚠️ **`findOneByCredentialId()` übergibt die ROHE Kennung**, nicht `base64_encode(...)`. Doctrine kodiert gebundene Parameter anhand des Feld-Mappings selbst; eine Kodierung von Hand käme doppelt an und fände nie etwas — der Login schlüge mit „The credential ID is invalid" fehl. (Das mitgelieferte `DoctrineCredentialSourceRepository` kodiert vor, baut die Abfrage aber über einen QueryBuilder ohne Feldbezug.)
+
+⚠️ **`saveCredentialRecord()` läuft bei JEDER Anmeldung**, nicht nur beim Anlegen: Der Signaturzähler wandert mit und ist der Klon-Schutz. Ein reines `persist()` erzeugte Duplikate. Beim Anmelden ist der übergebene Datensatz bereits die Entity (er kam aus `findOneByCredentialId()`), beim Anlegen ein frischer `PublicKeyCredentialSource` → `WebauthnCredential::fromRecord()`.
+
+**`User::$webauthnHandle`** (VARCHAR 64, nullable, unique) statt der Datenbank-ID: Der Handle liegt dauerhaft auf dem Gerät des Nutzers. Erzeugt bei Bedarf in `WebauthnUserEntityRepository::findOneByUsername()`.
+⚠️ **`bin2hex(random_bytes(16))`, nicht 32 wie bei `generateVerificationToken()`** – `PublicKeyCredentialUserEntity` erzwingt `strlen($id) <= 64`.
+
+**Keine Kontoerstellung per Passkey:** `WebauthnUserEntityRepository` implementiert bewusst **nicht** `CanRegisterUserEntity`/`CanGenerateUserEntity`. Ohne diese Schnittstellen lehnt das Bundle es strukturell ab – verlässlicher als eine Konfigurationszeile.
+
+**Konfiguration bewusst schmal** (`phpunit.dist.xml` hat `failOnDeprecation="true"`, jede abgekündigte Option färbt die Suite rot). Nicht gesetzt: `rp.name` (seit 5.3.0), `rp.icon` (seit 5.1.0), `secured_rp_ids` (seit 5.2.0), `options_storage` je Firewall (seit 5.2.0). Nicht benutzt: `DoctrineCredentialSourceRepository` (seit 5.2.0), `PublicKeyCredentialSourceRepositoryInterface`/`CanSaveCredentialSource` (seit 5.3) – stattdessen `CredentialRecordRepositoryInterface` + `CanSaveCredentialRecord`.
+
+⚠️ **`allowed_origins` bleibt auf Production leer.** Ist die Liste gefüllt, gilt nur noch exakter Origin-Abgleich inklusive Port, und Einträge ohne Schema werden still auf `https://…:443` normalisiert. Leer greift der Weg der Spezifikation (HTTPS-Zwang plus Abgleich gegen die rp id). **Lokal ist ein `when@dev`-Block nötig** (`http://localhost:8000`), weil `CheckAllowedOrigins` serverseitig HTTPS verlangt – Browser behandeln `localhost` als sicher, diese Prüfung nicht. Port anpassen, wenn `symfony server:start` ausweicht.
+
+**Frontend:** `@web-auth/webauthn-stimulus` (npm 5.3.5) + `@simplewebauthn/browser`.
+⚠️ **Nicht in `assets/controllers.json` eintragen** – das StimulusBundle löst jeden Eintrag dort gegen ein Composer-Paket auf und bricht mit „Could not find package". Registriert wird in `assets/stimulus_bootstrap.ts` unter den eigenen Bezeichnern `passkey-auth` und `passkey-register`.
+Daneben `assets/controllers/passkey_ui_controller.ts`: Feature-Detection (Knopf erscheint nur bei vorhandenem `window.PublicKeyCredential`), Ladezustand und übersetzte Meldungen aus den Events des Fremdpakets. `ERROR_CEREMONY_ABORTED` erzeugt bewusst **keine** Meldung – Abbruch ist eine Entscheidung, kein Fehler.
+⚠️ `submitViaForm` schickt per `form.submit()` ab, was das submit-Ereignis überspringt – `generateCsrfToken()` aus `csrf_protection_controller.ts` läuft dabei nicht. Unkritisch, weil der Authenticator kein CSRF-Badge setzt und eine Assertion an Herkunft und Challenge gebunden ist.
+
+**Verwaltung im Profil** (`PasskeyController`, `templates/partials/_passkey_manage.html.twig`): Umbenennen und Entfernen sind gewöhnliche Formulare und funktionieren ohne JavaScript; nur das Anlegen braucht zwingend eins. Der Anzeigename kommt beim Anlegen aus dem User-Agent (`WebauthnCredentialRepository::guessDeviceName()` → „iPhone", „Mac", „Android"; Produktnamen statt Übersetzungsschlüssel, weil der Wert einmal festgeschrieben wird).
+⚠️ **Die Besitzprüfung steht VOR der CSRF-Prüfung.** Wer nicht Eigentümer ist, hat dort unabhängig vom Token nichts verloren; die Antwort ist 403 statt einer Weiterleitung. Am Schutz ändert das nichts – ein Angriff über eine fremde Seite zielt auf eine ID des Opfers und scheitert danach am Token.
+
+**Tests:** `tests/Integration/Repository/WebauthnCredentialRepositoryTest.php` (Anlegen vs. Fortschreiben, base64-Kodierung in beide Richtungen, verwaister Handle) und `tests/Functional/Controller/PasskeyControllerTest.php` (Options-Endpunkte, Umbenennen/Löschen über die gerenderten Formulare, fremder Passkey → 403). Die Assertion selbst ist mit PHPUnit nicht testbar – dafür braucht es einen virtuellen Authenticator im Browser (Chrome DevTools Protocol, `WebAuthn.addVirtualAuthenticator`).
+
+**Migration:** `Version20260821000000` – `webauthn_credential` (FK auf `` `user` `` mit CASCADE, Präfix-Index) und `user.webauthn_handle`.
+
+**Übersetzungen:** Block `passkey:` in `messages.{de,en,fr,lb}.yaml`, dazu `flash.passkey_*`.
+
+**Bewusst nicht enthalten:** Conditional UI / Autofill (`conditionalUi: true` kann das Paket), Passkey-Registrierung neuer Konten, Passkeys in `/api/v1`, Attestation-Prüfung (`attestation_conveyance` bleibt `none` – ein Attestation-Zwang sperrte Authenticator aus, ohne dass jemand die Herstellerdaten auswertet).
 
 ## Cookie-Consent-Banner (Issue #82)
 DSGVO-Banner, das beim ersten Besuch unten erscheint und die Wahl (`accepted`/`declined`) 365 Tage im Cookie `cookie_consent` speichert. Keine Entity/Migration/Backend-Änderung — rein clientseitig.

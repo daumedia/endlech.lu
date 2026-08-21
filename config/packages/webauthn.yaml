@@ -1,0 +1,72 @@
+# Passkeys (WebAuthn). Recipe-frei von Hand angelegt: Das Flex-Recipe des
+# Bundles liegt nur in recipes-contrib und wird wegen
+# extra.symfony.allow-contrib=false übersprungen – dieselbe Lage wie bei Sentry.
+webauthn:
+    credential_repository: App\Repository\WebauthnCredentialRepository
+    user_repository: App\Security\WebauthnUserEntityRepository
+
+    # Bewusst OHNE rp.name (seit 5.3.0 abgekündigt), rp.icon (seit 5.1.0 ohne
+    # Wirkung), secured_rp_ids (seit 5.2.0 abgekündigt) und allowed_origins:
+    # phpunit.dist.xml lässt die Suite bei der ersten Deprecation scheitern.
+    #
+    # allowed_origins bliebe auch sonst leer. Sobald die Liste gefüllt ist,
+    # zählt nur noch exakter Abgleich inklusive Port, und Einträge ohne Schema
+    # werden still auf https://…:443 normalisiert. Leer greift stattdessen der
+    # Weg der Spezifikation: HTTPS-Zwang plus Abgleich gegen die rp id. Für eine
+    # Anwendung unter genau einer Domain ist das die richtige Prüfung.
+    creation_profiles:
+        default:
+            rp:
+                id: '%env(WEBAUTHN_RP_ID)%'
+            authenticator_selection_criteria:
+                user_verification: required
+                # Ohne einen auffindbaren Schlüssel („resident key") kann der
+                # Browser beim Anmelden keine Konten vorschlagen – dann bräuchte
+                # der Login doch wieder die E-Mail vorab. require_resident_key
+                # ist das ältere Feld derselben Aussage und steht für
+                # Authenticator da, die das neuere noch nicht kennen.
+                resident_key: required
+                require_resident_key: true
+
+    request_profiles:
+        default:
+            rp_id: '%env(WEBAUTHN_RP_ID)%'
+            user_verification: required
+
+    controllers:
+        enabled: true
+        request:
+            # Liefert die Challenge für die Anmeldung. Kein result_path: Die
+            # Assertion geht als Formularfeld an app_login und wird dort vom
+            # PasskeyAuthenticator übernommen.
+            login:
+                options_path: '/passkey/login/options'
+        creation:
+            # Zusätzlichen Passkey für das bereits angemeldete Konto anlegen.
+            add_device:
+                options_path: '/passkey/register/options'
+                result_path: '/passkey/register'
+                user_entity_guesser: Webauthn\Bundle\Security\Guesser\CurrentUserEntityGuesser
+                # Der Bereich ist angemeldet; die vorhandenen Schlüssel zu
+                # nennen verrät hier niemandem etwas und verhindert, dass
+                # derselbe Passkey ein zweites Mal angelegt wird.
+                hide_existing_credentials: false
+
+# Lokale Entwicklung über http://localhost.
+#
+# Browser behandeln localhost als sicheren Kontext, die serverseitige Prüfung
+# tut das nicht: Ist allowed_origins leer, verlangt CheckAllowedOrigins
+# ausdrücklich https. Ohne diesen Block bräuchte jede lokale Anmeldung eine
+# selbst ausgestellte Zertifizierungsstelle im System-Schlüsselbund
+# (symfony server:ca:install) – ein grosser Eingriff für einen Formularknopf.
+#
+# Nur when@dev: Auf Production bleibt die Liste leer, damit dort der Weg der
+# Spezifikation greift (https plus Abgleich gegen die rp id).
+#
+# Der Port muss zum lokalen Server passen. `symfony server:start` nimmt 8000,
+# weicht bei belegtem Port aber aus – dann hier ergänzen.
+when@dev:
+    webauthn:
+        allowed_origins:
+            - 'http://localhost:8000'
+            - 'http://localhost:8001'

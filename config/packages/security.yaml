@@ -30,6 +30,16 @@ security:
         main:
             lazy: true
             provider: app_user_provider
+            # Passkey-Anmeldung. Läuft über denselben check_path wie form_login;
+            # welcher der beiden greift, entscheidet allein das Feld _assertion
+            # (siehe App\Security\PasskeyAuthenticator::supports()).
+            custom_authenticator: App\Security\PasskeyAuthenticator
+            # Pflicht, sobald eine Firewall mehr als einen Authenticator führt:
+            # Symfony muss wissen, wer den Weg zur Anmeldung weist, wenn ein
+            # Gast eine geschützte Seite aufruft. Das ist form_login – es kennt
+            # den login_path. Der Passkey-Authenticator kann nichts anbieten,
+            # solange kein Formular abgeschickt wurde.
+            entry_point: form_login
             form_login:
                 login_path: app_login
                 check_path: app_login
@@ -48,6 +58,9 @@ security:
         - { path: '^/api/v1/restaurants', methods: [GET], roles: PUBLIC_ACCESS }
         - { path: '^/api/v1/me', roles: IS_AUTHENTICATED_FULLY }
         - { path: '^/api/v1/restaurants', methods: [POST], roles: IS_AUTHENTICATED_FULLY }
+        # Passkey-Endpunkte – locale-frei, deshalb vor den Web-Regeln.
+        - { path: '^/passkey/login/options', roles: PUBLIC_ACCESS }
+        - { path: '^/passkey/register', roles: IS_AUTHENTICATED_FULLY }
         # Web
         - { path: '^/[a-z]{2}/admin', roles: ROLE_ADMIN }
         - { path: '^/[a-z]{2}/profile', roles: IS_AUTHENTICATED_FULLY }
