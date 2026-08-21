@@ -3,7 +3,8 @@ nav:
     restaurants: "Restauranten"
     bottom_navigation: "Haaptnavigatioun"
     find_restaurants: "Restauranten fannen"
-    about: "Iwwer eis"
+    about: "Iwwer Endlech"
+    about_short: "Iwwer eis"
     suggest_restaurant: "Restaurant virschloen"
     participate: "Matmaachen"
     for_restaurants: "Fir Restauranten"
@@ -297,8 +298,8 @@ community:
         discover: "Restauranten entdecken"
 
 about:
-    title: "Iwwer eis | Endlech.lu"
-    heading: "Iwwer eis"
+    title: "Iwwer Endlech | Endlech.lu"
+    heading: "Iwwer Endlech"
     subtitle: "D'Geschicht hannert Endlech.lu — enger Plattform, déi scho laang iwwerfälleg war."
     founder: "Grënner"
     founder_bio: "Ech sinn de Michael, 30 Joer al a säit der Gebuert mat SMA2 (Spinale Muskelatrophie Typ 2) betraff. Als passionéierte Programméierer a Fotograf weess ech aus eegener Erfarung, wéi wichteg richteg Barrierefreiheet am Alldag ass — an dat ass genau dat, wat mech bei Endlech.lu undréift."

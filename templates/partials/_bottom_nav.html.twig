@@ -5,7 +5,7 @@
 {% set _items = [
     { route: 'app_home',             active: ['app_home'],                              label: 'nav.home',        href: path('app_home') },
     { route: 'app_restaurant_index', active: ['app_restaurant_index', 'app_restaurant_show'], label: 'nav.restaurants', href: path('app_restaurant_index') },
-    { route: 'app_about',            active: ['app_about'],                             label: 'nav.about',       href: path('app_about') },
+    { route: 'app_about',            active: ['app_about'],                             label: 'nav.about_short', href: path('app_about') },
     app.user
         ? { route: 'app_profile', active: ['app_profile'], label: 'nav.profile', href: path('app_profile') }
         : { route: 'app_login',   active: ['app_login'],   label: 'nav.login',   href: path('app_login') }
