@@ -599,6 +599,8 @@ flash:
     photo_not_found: "Photo not found."
     no_valid_files: "No valid files found."
     register_success: "Registration successful! Please check your inbox and confirm your email address."
+    register_rate_limited: "You have created too many accounts in a short time. Please try again in an hour."
+    verify_resend_rate_limited: "You have already requested a new confirmation email several times. Please try again in an hour."
     register_email_failed: "Registration successful, but the confirmation email could not be sent. Please try again later."
     verify_invalid_link: "Invalid confirmation link."
     verify_expired: "The confirmation link has expired. Please request a new one."

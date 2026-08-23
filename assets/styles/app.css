@@ -1,6 +1,17 @@
 @import "tailwindcss";
 @source not "../../public";
 
+/* Tailwind v4 scannt ohne weitere Angabe das gesamte Projekt – auch Markdown.
+   docs/design-system.md und die Spezifikationen unter features/ zitieren
+   Klassenketten als Prosa; Tailwind kann Zitat und Verwendung nicht
+   unterscheiden und nimmt sie ins CSS auf. Folge: Der CSS-Hash ändert sich,
+   sobald jemand Dokumentation schreibt, und `verify-assets` blockt den Deploy,
+   ohne dass eine Zeile Oberfläche angefasst wurde.
+   Nachgewiesen an `ring` aus docs/design-system.md: mit diesen beiden Zeilen
+   erzeugt `npm run build` wieder exakt den committeten app.b817e2f5.css. */
+@source not "../../docs";
+@source not "../../features";
+
 /* PWA: iOS-Auto-Zoom beim Fokus auf Formularfelder verhindern (Issue #83).
    Safari zoomt, sobald die Schriftgröße eines Felds < 16px ist. */
 @media (max-width: 767px) {

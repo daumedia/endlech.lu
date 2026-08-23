@@ -96,3 +96,9 @@ finance:
     quantity_positive: "La quantité doit être d'au moins 1."
     quantity_not_allowed: "Une quantité n'est prévue que pour le matériel des Inclusion Boxes."
     note_max: "La note ne peut pas dépasser {{ limit }} caractères."
+
+# RepeatedType::invalid_message wird in der Domäne "validators" aufgelöst,
+# nicht in "messages" – dort stand der Schlüssel bisher allein, weshalb
+# Nutzern der rohe Schlüssel angezeigt wurde.
+form:
+    password_mismatch: "Les mots de passe ne correspondent pas."

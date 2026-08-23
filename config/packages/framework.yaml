@@ -23,6 +23,20 @@ framework:
             policy: 'sliding_window'
             limit: 5
             interval: '1 hour'
+        # Registrierung: pro IP 5 Versuche je Stunde. Jede Anlage verschickt eine
+        # Bestätigungsmail über die Brevo-Quota – ohne Deckel zahlt der Betreiber
+        # die Rechnung des Angreifers. Dieselben Werte wie partner_waitlist, weil
+        # beides seltene, bewusste Handlungen sind.
+        registration:
+            policy: 'sliding_window'
+            limit: 5
+            interval: '1 hour'
+        # Erneutes Senden der Bestätigungsmail: strenger, weil das Ziel ein fremdes
+        # Postfach sein kann und der Absender bereits angemeldet ist.
+        verify_resend:
+            policy: 'sliding_window'
+            limit: 3
+            interval: '1 hour'
 
 when@test:
     framework:
@@ -40,6 +54,14 @@ when@test:
                 limit: 10000
                 interval: '1 minute'
             partner_waitlist:
+                policy: 'sliding_window'
+                limit: 10000
+                interval: '1 hour'
+            registration:
+                policy: 'sliding_window'
+                limit: 10000
+                interval: '1 hour'
+            verify_resend:
                 policy: 'sliding_window'
                 limit: 10000
                 interval: '1 hour'

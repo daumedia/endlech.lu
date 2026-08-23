@@ -96,3 +96,9 @@ finance:
     quantity_positive: "D'Stéckzuel muss op mannst 1 sinn."
     quantity_not_allowed: "Eng Stéckzuel ass nëmme bei Material fir Inclusion Boxen virgesinn."
     note_max: "D'Notiz dierf maximal {{ limit }} Zeeche laang sinn."
+
+# RepeatedType::invalid_message wird in der Domäne "validators" aufgelöst,
+# nicht in "messages" – dort stand der Schlüssel bisher allein, weshalb
+# Nutzern der rohe Schlüssel angezeigt wurde.
+form:
+    password_mismatch: "D'Passwierder stëmmen net iwwereneen."
