@@ -599,6 +599,8 @@ flash:
     photo_not_found: "Foto nicht gefunden."
     no_valid_files: "Keine gültigen Dateien gefunden."
     register_success: "Registrierung erfolgreich! Bitte überprüfe dein E-Mail-Postfach und bestätige deine Adresse."
+    register_rate_limited: "Du hast in kurzer Zeit zu viele Konten angelegt. Bitte versuche es in einer Stunde erneut."
+    verify_resend_rate_limited: "Du hast bereits mehrmals eine neue Bestätigungsmail angefordert. Bitte versuche es in einer Stunde erneut."
     register_email_failed: "Registrierung erfolgreich, aber die Bestätigungs-E-Mail konnte nicht gesendet werden. Bitte versuche es später erneut."
     verify_invalid_link: "Ungültiger Bestätigungslink."
     verify_expired: "Der Bestätigungslink ist abgelaufen. Bitte fordere einen neuen an."

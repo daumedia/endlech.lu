@@ -7,19 +7,24 @@ use App\Form\RegistrationType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\RateLimiter\RateLimiterFactoryInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class RegistrationController extends AbstractController
 {
-    public function __construct(private readonly TranslatorInterface $translator)
-    {
+    public function __construct(
+        private readonly TranslatorInterface $translator,
+        #[Autowire(service: 'limiter.registration')]
+        private readonly RateLimiterFactoryInterface $registrationLimiter,
+    ) {
     }
     #[Route('/register', name: 'app_register')]
     public function register(
@@ -36,6 +41,21 @@ final class RegistrationController extends AbstractController
         $form = $this->createForm(RegistrationType::class, $user);
         $form->handleRequest($request);
 
+        // Erst nach handleRequest und nur für abgeschickte Formulare: Das reine
+        // Aufrufen der Seite darf kein Kontingent verbrauchen – gedeckelt wird die
+        // Anlage, nicht das Lesen. Muster wie in PartnerController::submit().
+        if ($form->isSubmitted()) {
+            $limit = $this->registrationLimiter->create($request->getClientIp() ?? 'anonymous')->consume(1);
+
+            if (!$limit->isAccepted()) {
+                $this->addFlash('error', $this->translator->trans('flash.register_rate_limited'));
+
+                return $this->render('registration/register.html.twig', [
+                    'registrationForm' => $form,
+                ], new Response(null, Response::HTTP_TOO_MANY_REQUESTS));
+            }
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setPassword(
                 $passwordHasher->hashPassword($user, $form->get('plainPassword')->getData()),
@@ -50,6 +70,12 @@ final class RegistrationController extends AbstractController
 
             $email = (new TemplatedEmail())
                 ->to($user->getEmail())
+                // Ohne diese Zeile rendert das Template erst beim Versand – bei
+                // asynchronem Transport also im Worker, wo es keine Request-Sprache
+                // gibt und default_locale (lb) greift. Der Betreff wäre dann
+                // französisch, der Inhalt luxemburgisch. BodyRenderer wertet
+                // getLocale() aus und rendert über den LocaleSwitcher.
+                ->locale($request->getLocale())
                 ->subject($this->translator->trans('email.verify_subject'))
                 ->htmlTemplate('email/verification.html.twig')
                 ->context([

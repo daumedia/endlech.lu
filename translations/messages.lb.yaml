@@ -599,6 +599,8 @@ flash:
     photo_not_found: "Foto net fonnt."
     no_valid_files: "Keng gëlteg Dateien fonnt."
     register_success: "Registréierung erfollegräich! Préif w.e.g. deng E-Mail-Mailbox a bestäteg deng Adress."
+    register_rate_limited: "Du hues a kuerzer Zäit ze vill Konten ugeluecht. Probéier w.e.g. an enger Stonn nach eng Kéier."
+    verify_resend_rate_limited: "Du hues schonn e puer Kéier eng nei Bestätegungsmail ugefrot. Probéier w.e.g. an enger Stonn nach eng Kéier."
     register_email_failed: "Registréierung erfollegräich, mee d'Bestätegungs-E-Mail konnt net geschéckt ginn. Probéier et w.e.g. méi spéit nach eng Kéier."
     verify_invalid_link: "Ongëltegen Bestätegungslink."
     verify_expired: "De Bestätegungslink ass ofgelaf. Fro w.e.g. en neie un."

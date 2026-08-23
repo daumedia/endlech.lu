@@ -599,6 +599,8 @@ flash:
     photo_not_found: "Photo non trouvée."
     no_valid_files: "Aucun fichier valide trouvé."
     register_success: "Inscription réussie ! Veuillez vérifier votre boîte mail et confirmer votre adresse e-mail."
+    register_rate_limited: "Vous avez créé trop de comptes en peu de temps. Merci de réessayer dans une heure."
+    verify_resend_rate_limited: "Vous avez déjà demandé plusieurs fois un nouvel e-mail de confirmation. Merci de réessayer dans une heure."
     register_email_failed: "Inscription réussie, mais l'e-mail de confirmation n'a pas pu être envoyé. Veuillez réessayer plus tard."
     verify_invalid_link: "Lien de confirmation invalide."
     verify_expired: "Le lien de confirmation a expiré. Veuillez en demander un nouveau."
