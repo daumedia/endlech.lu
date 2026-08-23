@@ -17,8 +17,11 @@ zwei Befunde mit Grad *mittel*. Die Reparatur liegt committet auf
 `fix/b01-registrierung-qa` und ist **noch nicht ausgeliefert** — für Nutzer ist die
 Sackgasse offen, bis das gemerged ist.
 
-Nächster Schritt: `/sdd-deploy B01`. Danach `/sdd-qa B02` für das nächste
-Bestandsfeature; das neue Feature beginnt mit `/sdd-spec 01`.
+**2026-08-24 · B02 geprüft** → `review`, 14 von 17 Kriterien. Ein Befund mit Grad *hoch*
+(BF-13: Anmeldung ohne Sperre) — die Erfassung pausiert bis zur Reparatur.
+
+Nächster Schritt: `/sdd-build B02`. Danach `/sdd-qa B02`, dann `/sdd-deploy` für beide.
+Das neue Feature `01` beginnt mit `/sdd-spec 01`.
 
 **Zwei Namensräume:** Einträge mit Präfix `B` sind **Bestand** — gebaut, bevor die
 SDD-Kette da war, und rückwirkend erfasst. Einträge **ohne** Präfix (`01`, `02`, …)
@@ -37,7 +40,7 @@ Eingang von `sdd-build`. Der Weg ist: `bestand` → `/sdd-erfassen BNN` →
 |---|---|---|---|---|---|
 | 01 | Betroffenenrechte: Konto löschen, Daten exportieren, Passwort zurücksetzen | P0 | roadmap | B01, B04, B19 | 2026-08-23 · aus BF-04 herausgelöst |
 | B01 | Registrierung & E-Mail-Bestätigung | P0 | **approved** | — | 2026-08-23 · QA³: 17/20, nur mittlere Befunde offen |
-| B02 | Anmeldung mit Passwort | P0 | rekonstruiert | B01 | 2026-08-23 |
+| B02 | Anmeldung mit Passwort | P0 | **review** | B01 | 2026-08-24 · QA: 14/17, BF-13 *hoch* |
 | B03 | Passkey-Anmeldung & -Verwaltung | P0 | rekonstruiert | B01, B02 | 2026-08-23 |
 | B04 | Profil, Avatar & eigene Einreichungen | P0 | rekonstruiert | B01, B11 | 2026-08-23 |
 | B05 | Restaurantsuche, Filter & Sortierung | P0 | rekonstruiert | B07, B08 | 2026-08-23 |

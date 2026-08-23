@@ -1,6 +1,6 @@
 # B02 · Anmeldung mit Passwort — Systemdesign
 
-Status: `rekonstruiert` · Stand: 2026-08-23 · Stack-Profil: `symfony-doctrine`
+Status: `review` · Stand: 2026-08-23 · Stack-Profil: `symfony-doctrine`
 
 ## Überblick
 

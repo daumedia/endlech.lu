@@ -5,9 +5,9 @@ Stand: 2026-08-23 · Quelle: die `qa-report.md` aller geprüften Features
 Diese Liste wird von `sdd-qa` fortgeschrieben, nicht von Hand. Sie ist die Grundlage
 des Auditberichts, den `/sdd-erfassen abschluss` daraus baut.
 
-**Geprüft bisher:** B01 — drei Durchläufe, **abgenommen** (17 von 20 Kriterien, nur
-Befunde mit Grad *mittel* offen). Die Behebungen liegen committet auf
-`fix/b01-registrierung-qa` und sind **noch nicht ausgeliefert**.
+**Geprüft bisher:** B01 (abgenommen, 17/20) und B02 (**review**, 14/17).
+Die B01-Behebungen liegen auf `dev` und sind **noch nicht auf `production`**.
+B02 hat einen Befund mit Grad *hoch* — die Erfassung pausiert bis zur Reparatur.
 Offen: B02–B26 (Status `rekonstruiert`).
 
 **Zuordnung von Befunden:** Ein Befund steht bei dem Feature, in dem er **behoben** wird
@@ -24,6 +24,10 @@ obwohl dort nichts mehr zu reparieren ist.
 | ID | Feature | Befund | Grad | Fundstelle | Seit |
 |---|---|---|---|---|---|
 | BF-04 | **01** | Betroffenenrechte nicht bedienbar — keine Kontolöschung, kein Datenexport, kein Passwort-Zurücksetzen. **2026-08-23 aus B01 herausgelöst:** keine Reparaturaufgabe, sondern fehlende Funktionen über B01, B04 und B19 hinweg — läuft als reguläres Feature `01` durch die volle Kette | hoch | `src/Controller/ProfileController.php` (fehlend) | 2026-08-23 |
+| BF-13 | B02 | Anmeldung ohne Sperre — 20 Fehlversuche gegen das Admin-Konto alle angenommen, `login_throttling` nicht konfiguriert | **hoch** | `config/packages/security.yaml` | 2026-08-24 |
+| BF-14 | B02 | Abmelden ohne CSRF-Schutz — eine fremde Seite kann den Nutzer abmelden | niedrig | `config/packages/security.yaml`, `templates/base.html.twig:122` | 2026-08-24 |
+| BF-15 | B02 | „Angemeldet bleiben" wirkt für `/profile` nicht (`IS_AUTHENTICATED_FULLY`), die Kopfzeile zeigt den Nutzer trotzdem als angemeldet | mittel | `config/packages/security.yaml`, `templates/base.html.twig` | 2026-08-24 |
+| BF-16 | B02, B04 | **Rekonstruktion falsch:** B02/EC-04, B04/AK-13 und B04/FB-04 behaupten, Sitzungen und `remember_me`-Cookies überlebten eine Passwortänderung. Gemessen: Symfony entwertet beide. Kein Codefehler — eine falsche Spec, gegen die sonst geprüft würde | mittel | `features/B02-…/spec.md`, `features/B04-…/spec.md` | 2026-08-24 |
 | BF-09 | B01 | Registrierformular verrät bestehende Konten (Enumeration). Die Meldung ist seit 2026-08-23 übersetzt, die Auskunft bleibt. Produktentscheidung OF-02 — setzt einen Passwort-Vergessen-Weg voraus (BF-04) | mittel | `src/Entity/User.php:15` | 2026-08-23 |
 | BF-11 | B01, B14, B15 | Rate Limit verbraucht Kontingent auch bei **ungültigen** Formularen — 5 Tippfehler sperren eine Stunde aus, ohne dass ein Konto oder eine Mail entsteht | mittel | `src/Controller/RegistrationController.php:47`, `src/Controller/PartnerController.php:53` | 2026-08-23 |
 | BF-10 | B14, B15, B23 | Mail-Locale bei asynchronem Versand — dieselbe Ursache wie BF-08, dort behoben. `WaitlistConfirmationService` und `Api\V1\AuthController` bauen ihre Mails unverändert | mittel | `src/Waitlist/WaitlistConfirmationService.php`, `src/Controller/Api/V1/AuthController.php` | 2026-08-23 |
@@ -53,12 +57,19 @@ sondern vergessen.
 
 Was in mehr als einem Feature auftritt — der Grund, warum diese Liste existiert.
 
-- **Fehlende Rate Limits im Browser-Weg (BF-02).** Die Anwendung drosselt die API
-  (`api_login`: 5/min, in der QA belegt: ab dem sechsten Versuch 429), aber keinen
-  einzigen Web-Endpunkt. Die Rückerfassung führt dieselbe Lücke für Login, Passwortwechsel,
-  Passkey-Challenge, Vorschläge und Datensatz-Download (M-01 in
-  `fehlbestand-uebersicht.md`) — bestätigt ist bislang nur die Registrierung. Zu erwarten
-  bei der QA von B02, B04, B11.
+- **Fehlende Rate Limits im Browser-Weg (BF-02 behoben, BF-13 offen).** Die Anwendung
+  drosselt die API (`api_login`: 5/min, zweimal belegt: ab dem sechsten Versuch 429), aber
+  kaum einen Web-Endpunkt. Für die Registrierung ist es behoben, für die **Anmeldung**
+  nicht — dort wurden 20 Fehlversuche gegen das Admin-Konto alle angenommen. Offen bleiben
+  nach der Rückerfassung Passwortwechsel, Passkey-Challenge, Vorschläge und
+  Datensatz-Download (M-01 in `fehlbestand-uebersicht.md`). Das Muster hat sich damit
+  bestätigt: Geschützt ist der Weg, den eine App nimmt; ungeschützt der, den ein Browser
+  nimmt.
+- **Eine Rekonstruktion kann falsch sein (BF-16).** B02/EC-04 und zwei Stellen in B04
+  behaupteten, eine Passwortänderung lasse fremde Sitzungen unberührt — geschlossen aus
+  dem Projektcode, der tatsächlich nichts dergleichen tut. Gemessen erledigt Symfony es
+  selbst. Bei jedem weiteren Feature gilt: Was das Framework leistet, steht nicht im
+  Projektcode und lässt sich nur durch Ausführen feststellen.
 - **Ein Übersetzungsschlüssel, zwei Features (BF-05, behoben).** Derselbe Griff in die
   falsche Übersetzungsdomäne betraf Registrierung und Passwortwechsel. Die Reparatur wirkt
   für beide; bei der QA von B04 ist nur noch zu bestätigen.

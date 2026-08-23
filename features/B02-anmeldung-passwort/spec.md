@@ -1,7 +1,10 @@
 # B02 · Anmeldung mit Passwort — Spezifikation
 
-Status: `rekonstruiert` · Stand: 2026-08-23 · **Rückerfassung aus dem Bestand**
+Status: `review` · Stand: 2026-08-23 · **Rückerfassung aus dem Bestand**
 
+> QA vom 2026-08-24: 14 von 17 Kriterien, BF-13 *hoch*. **EC-04 ist widerlegt** —
+> siehe `qa-report.md`. Die dortige Annahme über Passwortänderungen war falsch.
+>
 > Beschreibt, **was der Code heute tut**. ⚠ markiert fragwürdiges Verhalten, das so im
 > Bestand steht. [Fehlbestand](#fehlbestand) ist kein Kriterium, sondern Suchliste.
 
