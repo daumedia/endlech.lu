@@ -1,5 +1,7 @@
 # Product Requirements Document
 
+Artefaktpfad: `docs/`
+
 **Endlech.lu** — die offene Plattform für barrierefreie Gastronomie in Luxemburg.
 
 | | |
@@ -10,6 +12,10 @@
 | **Sprachen** | Luxemburgisch (Vorgabe), Deutsch, Französisch, Englisch |
 
 Verwandte Dokumente: [Datenmodell](data-model.md) · [Design-System](design-system.md)
+ · [App-Shell](app-shell.md) · [Feature-Inventar](../features/index.md)
+
+Für die SDD-Kette: Der Artefaktpfad ist `docs/`. Das Datenmodell heißt hier aus
+gewachsenen Gründen `data-model.md`, nicht `datenmodell.md`.
 
 ---
 

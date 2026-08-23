@@ -18,10 +18,42 @@ nach Issues gewachsen. Wer eine geordnete Referenz braucht, findet sie in `docs/
 | `docs/data-model.md` | vollständige Feldreferenz aller Entities, Enums und Repositories, ERD, Migrations-Historie |
 | `docs/design-system.md` | Farben, Typografie, kanonische Komponenten-Klassenketten, Barrierefreiheits-Regeln, Diagramm- und Druckregeln |
 | `docs/prd.md` | Vision, Zielgruppen, Produktprinzipien, Funktionsumfang, Kennzahlen, Geschäftsmodell, Roadmap, Risiken |
+| `docs/app-shell.md` | Layout-Hierarchie, Kopf-/Fußzeile, Navigation, Bottom-Nav, Admin-Shell, Druckansicht, bekannte Lücken |
 
 **Bei Änderungen am Datenmodell oder an den Komponenten-Mustern die passende
 Datei mitziehen** — sonst laufen Code und Referenz auseinander. Die `⚠️`-Blöcke
 weiter unten bleiben die Quelle für alles, was beim Ändern schiefgehen kann.
+
+### SDD-Artefakte
+
+Dieses Projekt ist über `/sdd-erfassen` in die SDD-Kette aufgenommen worden.
+
+| | |
+|---|---|
+| **Artefaktpfad** | `docs/` — steht auch in Zeile 3 von `docs/prd.md` |
+| **Feature-Inventar** | `features/index.md` — 26 Bestandsfeatures mit IDs `B01`–`B26`, alle Status `rekonstruiert` |
+| **Je Feature** | `features/BNN-slug/spec.md` (Akzeptanzkriterien, Fehlbestand) und `design.md` (Struktur, Zugriffsregeln, AK-Abdeckung) |
+| **Projektweite Muster** | `features/fehlbestand-uebersicht.md` — zehn Muster, die mehrere Features gleichzeitig betreffen |
+| **Stack-Profil** | `symfony-doctrine` |
+
+⚠️ **Das Datenmodell heißt hier `data-model.md`, nicht `datenmodell.md`** wie in
+`~/.claude/sdd/artefakte.md` vorgesehen. Der Name ist gewachsen und in `docs/README.md`,
+im PRD und in dieser Datei verlinkt; umbenennen bräche alle drei Stellen.
+
+Alle Bestandsfeatures tragen das Präfix `B`. Daran ist ohne Nachschlagen erkennbar,
+dass ihre `spec.md` eine **Rekonstruktion** ist und selbst falsch sein kann — anders
+als bei einem Feature, das gegen eine Spezifikation gebaut wurde. Wer das verwechselt,
+sucht einen Fehler an der falschen Stelle.
+
+Der Weg für ein Bestandsfeature ist `bestand` → `/sdd-erfassen BNN` → `rekonstruiert`
+→ `/sdd-qa BNN`. **Stand 2026-08-23 sind alle 26 auf `rekonstruiert`** — die QA steht
+noch aus, `features/befunde.md` und der Auditbericht existieren deshalb noch nicht.
+
+⚠ **Die `spec.md` eines `B`-Features ist eine Rekonstruktion und kann selbst falsch
+sein.** Sie beschreibt, was der Code tut, nicht was er tun sollte; Kriterien mit ⚠
+markieren fragwürdiges Verhalten, das bewusst als Kriterium aufgenommen wurde. Wer
+sie wie eine Vorgabe liest, sucht Fehler an der falschen Stelle. Es läuft **nie** durch `sdd-tasks` und nie durch den regulären
+Eingang von `sdd-build` — es ist gebaut.
 
 ## Tech Stack
 
