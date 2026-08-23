@@ -5,9 +5,8 @@ Stand: 2026-08-23 · Quelle: die `qa-report.md` aller geprüften Features
 Diese Liste wird von `sdd-qa` fortgeschrieben, nicht von Hand. Sie ist die Grundlage
 des Auditberichts, den `/sdd-erfassen abschluss` daraus baut.
 
-**Geprüft bisher:** B01 (abgenommen, 17/20) und B02 (**review**, 14/17).
-Die B01-Behebungen liegen auf `dev` und sind **noch nicht auf `production`**.
-B02 hat einen Befund mit Grad *hoch* — die Erfassung pausiert bis zur Reparatur.
+**Geprüft bisher:** B01 (abgenommen, 17/20) und B02 (**abgenommen**, 16/17).
+Beide Reparaturen sind **noch nicht auf `production`**.
 Offen: B02–B26 (Status `rekonstruiert`).
 
 **Zuordnung von Befunden:** Ein Befund steht bei dem Feature, in dem er **behoben** wird
@@ -24,8 +23,7 @@ obwohl dort nichts mehr zu reparieren ist.
 | ID | Feature | Befund | Grad | Fundstelle | Seit |
 |---|---|---|---|---|---|
 | BF-04 | **01** | Betroffenenrechte nicht bedienbar — keine Kontolöschung, kein Datenexport, kein Passwort-Zurücksetzen. **2026-08-23 aus B01 herausgelöst:** keine Reparaturaufgabe, sondern fehlende Funktionen über B01, B04 und B19 hinweg — läuft als reguläres Feature `01` durch die volle Kette | hoch | `src/Controller/ProfileController.php` (fehlend) | 2026-08-23 |
-| BF-13 | B02 | Anmeldung ohne Sperre — 20 Fehlversuche gegen das Admin-Konto alle angenommen, `login_throttling` nicht konfiguriert | **hoch** | `config/packages/security.yaml` | 2026-08-24 |
-| BF-14 | B02 | Abmelden ohne CSRF-Schutz — eine fremde Seite kann den Nutzer abmelden | niedrig | `config/packages/security.yaml`, `templates/base.html.twig:122` | 2026-08-24 |
+| BF-17 | B02 | Gast auf `/de/logout` bekommt 403 statt einer Weiterleitung — Kehrseite von `enable_csrf` | niedrig | `config/packages/security.yaml` | 2026-08-24 |
 | BF-15 | B02 | „Angemeldet bleiben" wirkt für `/profile` nicht (`IS_AUTHENTICATED_FULLY`), die Kopfzeile zeigt den Nutzer trotzdem als angemeldet | mittel | `config/packages/security.yaml`, `templates/base.html.twig` | 2026-08-24 |
 | BF-16 | B02, B04 | **Rekonstruktion falsch:** B02/EC-04, B04/AK-13 und B04/FB-04 behaupten, Sitzungen und `remember_me`-Cookies überlebten eine Passwortänderung. Gemessen: Symfony entwertet beide. Kein Codefehler — eine falsche Spec, gegen die sonst geprüft würde | mittel | `features/B02-…/spec.md`, `features/B04-…/spec.md` | 2026-08-24 |
 | BF-09 | B01 | Registrierformular verrät bestehende Konten (Enumeration). Die Meldung ist seit 2026-08-23 übersetzt, die Auskunft bleibt. Produktentscheidung OF-02 — setzt einen Passwort-Vergessen-Weg voraus (BF-04) | mittel | `src/Entity/User.php:15` | 2026-08-23 |
@@ -42,6 +40,8 @@ obwohl dort nichts mehr zu reparieren ist.
 | BF-06 | B01 | Bestätigungstoken im Log — `doctrine`-Channel in `prod` ausgeschlossen. **Nur der prod-Weg**; der dev-Teil ist bewusst offen, siehe BF-12 | mittel | 2026-08-23 | **noch nicht** |
 | BF-07 | B01 | Hartkodierte deutsche Meldung — `user.email_unique` statt Klartext (Enumeration bleibt offen, siehe BF-09) | mittel | 2026-08-23 | **noch nicht** |
 | BF-08 | B01 | Mail-Locale bei asynchronem Versand — `->locale()` gesetzt (**nur B01**, B14/B15/B23 weiterhin betroffen) | mittel | 2026-08-23 | **noch nicht** |
+| BF-13 | B02 | Anmeldung ohne Sperre — `login_throttling` mit 5 Versuchen je 15 Minuten ergänzt | **hoch** | 2026-08-24 | **noch nicht** |
+| BF-14 | B02 | Abmelden ohne CSRF — `enable_csrf` plus POST-Formular in der Kopfzeile | niedrig | 2026-08-24 | **noch nicht** |
 
 ## Akzeptiert
 

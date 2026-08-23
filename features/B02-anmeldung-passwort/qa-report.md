@@ -1,9 +1,73 @@
 # B02 · Anmeldung mit Passwort — Testbericht
 
+> **Zwei Durchläufe.** Der erste fand vier Befunde, `/sdd-build B02` behob zwei davon.
+> Der **zweite Durchlauf** steht direkt hier darunter und ist der maßgebliche Stand.
+
+## Fazit — zweiter Durchlauf (2026-08-24)
+
+**Production-ready: ja**
+
+Beide gebauten Reparaturen halten. Die Anmeldung sperrt ab dem sechsten Fehlversuch
+(„Zu viele fehlgeschlagene Anmeldeversuche…"), das richtige Passwort wird während der
+Sperre ebenfalls abgewiesen, und ein zweites Konto von derselben Adresse bleibt
+unberührt. Das Abmelden per GET von fremder Herkunft antwortet 403, der Nutzer bleibt
+angemeldet; über das Formular meldet er sich regulär ab.
+
+**16 von 17 Kriterien bestanden** — AK-13 (unbestätigte Konten) bleibt durchgefallen,
+ist aber als BF-03 eine dokumentierte Betreiberentscheidung.
+
+**Eine Nebenwirkung ist neu:** Ein Gast, der `/de/logout` aufruft, bekommt jetzt eine
+403-Seite statt einer Weiterleitung (EC-02). Das ist die Kehrseite von `enable_csrf` —
+ohne Token ist auch der harmlose Aufruf abgewiesen. Grad *niedrig*, aber es ist eine
+Verschlechterung gegenüber vorher.
+
+Offen bleiben BF-15 (*mittel*, „Angemeldet bleiben" wirkt nicht für `/profile`) und
+BF-17 (*niedrig*, siehe oben). Beide blockieren nach den Regeln der Kette keine
+Auslieferung.
+
+| | Anzahl |
+|---|---|
+| Akzeptanzkriterien geprüft | 17 von 17 |
+| davon bestanden | **16** (erster Durchlauf: 14) |
+| davon durchgefallen | 1 (AK-13, akzeptiert als BF-03) |
+| Edge Cases belegt | 4 von 4 — EC-02 neu durchgefallen |
+| Tests | 323 grün, 1 dauerhaft übersprungen |
+
+### Nachweise des zweiten Durchlaufs
+
+| Prüfung | Beleg |
+|---|---|
+| AK-01…AK-10 | Formular 200 mit fünf Feldern; gültig → 302 + Profil 200; angemeldet auf `/login` → 302; falsches Passwort und unbekannte Adresse → **wortgleich** „Fehlerhafte Zugangsdaten."; `REMEMBERME` 7,00 Tage HttpOnly; ohne CSRF → nicht angemeldet; Abmelden per POST → 302; Gast auf drei geschützten Pfaden → 302; `ROLE_USER` auf `/admin` → **403** |
+| **AK-11** | ✅ **jetzt bestanden** — 8 Fehlversuche, ab dem sechsten „Zu viele fehlgeschlagene Anmeldeversuche, bitte versuchen Sie es in 15 Minuten noch einmal."; richtiges Passwort während der Sperre → `/de/admin` 302; **anderes Konto unberührt** (Profil 200) |
+| **AK-12** | ✅ **jetzt bestanden** — GET von `boese.example` → **403**, Nutzer bleibt angemeldet (Profil 200) |
+| AK-13 | ❌ unverändert: Profil 200, Wizard 302 → BF-03, akzeptiert |
+| AK-14…AK-17 | drei Passwörter je 0 Treffer im Log; Session-ID gewechselt; HttpOnly gesetzt |
+| EC-01 | `_assertion` gewinnt gegen `_username`/`_password` → nicht angemeldet |
+| **EC-02** | ❌ **neu durchgefallen** — Gast auf `/de/logout` → **403** (vorher 302 auf die Startseite) → BUG-13 |
+| EC-03 | Großschreibung → Profil 200 |
+| EC-04 | durch `testEc04PasswortaenderungEntwertetFremdeSitzungen` abgedeckt |
+
+### BUG-13 · Gast auf `/de/logout` bekommt eine Fehlerseite — niedrig
+
+**Betrifft:** EC-02
+**Reproduktion:** Ohne Anmeldung `/de/logout` aufrufen
+**Erwartet:** Weiterleitung auf die Startseite (so verhielt es sich vor der Reparatur)
+**Tatsächlich:** **403**, Symfonys Fehlerseite
+**Ort:** `config/packages/security.yaml`, `logout.enable_csrf: true` — ohne Token wird
+jeder Aufruf abgewiesen, auch der harmlose
+**Einordnung:** Betrifft alte Lesezeichen und Verlaufseinträge. Kein Sicherheitsproblem,
+aber eine unfreundliche Antwort auf eine harmlose Handlung.
+**Vorschlag:** Einen Gast auf `/logout` vor der CSRF-Prüfung auf die Startseite leiten —
+oder als hinnehmbar beschließen.
+
+---
+
+# Erster Durchlauf (2026-08-24, vor der Reparatur)
+
 Stand: 2026-08-24 · Geprüft gegen `spec.md` vom 2026-08-23 (Rückerfassung)
 Umgebung: lokal, `symfony server` auf `:8000`, MySQL 8.0 in Docker, Fixture-Stand
 
-## Fazit
+## Fazit des ersten Durchlaufs
 
 **Production-ready: nein**
 

@@ -1,6 +1,6 @@
 # B02 · Anmeldung mit Passwort — Spezifikation
 
-Status: `review` · Stand: 2026-08-23 · **Rückerfassung aus dem Bestand**
+Status: `approved` · Stand: 2026-08-23 · **Rückerfassung aus dem Bestand**
 
 > QA vom 2026-08-24: 14 von 17 Kriterien, BF-13 *hoch*. **EC-04 ist widerlegt** —
 > siehe `qa-report.md`. Die dortige Annahme über Passwortänderungen war falsch.
