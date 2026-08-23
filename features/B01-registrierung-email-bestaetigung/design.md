@@ -1,6 +1,6 @@
 # B01 · Registrierung & E-Mail-Bestätigung — Systemdesign
 
-Status: `review` · Stand: 2026-08-23 · Stack-Profil: `symfony-doctrine`
+Status: `approved` · Stand: 2026-08-23 · Stack-Profil: `symfony-doctrine`
 
 **Kein Code in diesem Dokument.** Beschreibend, nicht vorschreibend: So ist es gebaut.
 

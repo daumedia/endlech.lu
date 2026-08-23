@@ -1,6 +1,6 @@
 # B01 · Registrierung & E-Mail-Bestätigung — Spezifikation
 
-Status: `review` · Stand: 2026-08-23 · **Rückerfassung aus dem Bestand**
+Status: `approved` · Stand: 2026-08-23 · **Rückerfassung aus dem Bestand**
 > QA vom 2026-08-23: 15 von 20 Kriterien bestanden, 8 Befunde — siehe `qa-report.md`.
 > Reparatur vom 2026-08-23: 6 Befunde behoben, erneute Prüfung steht aus.
 

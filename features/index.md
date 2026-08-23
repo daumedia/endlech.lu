@@ -12,8 +12,13 @@ Features hinweg. Sie laufen jetzt als reguläres Feature `01` durch die volle Ke
 Damit hat B01 nur noch Befunde mit Grad *mittel* — was nach den Regeln der Kette eine
 Auslieferung nicht blockiert.
 
-Nächster Schritt: `/sdd-qa B01` (Fazit neu bewerten, ohne BF-04), danach
-`/sdd-deploy B01`. Das neue Feature beginnt mit `/sdd-spec 01`.
+**2026-08-23 · B01 abgenommen** (dritter QA-Durchlauf): 17 von 20 Kriterien, nur noch
+zwei Befunde mit Grad *mittel*. Die Reparatur liegt committet auf
+`fix/b01-registrierung-qa` und ist **noch nicht ausgeliefert** — für Nutzer ist die
+Sackgasse offen, bis das gemerged ist.
+
+Nächster Schritt: `/sdd-deploy B01`. Danach `/sdd-qa B02` für das nächste
+Bestandsfeature; das neue Feature beginnt mit `/sdd-spec 01`.
 
 **Zwei Namensräume:** Einträge mit Präfix `B` sind **Bestand** — gebaut, bevor die
 SDD-Kette da war, und rückwirkend erfasst. Einträge **ohne** Präfix (`01`, `02`, …)
@@ -31,7 +36,7 @@ Eingang von `sdd-build`. Der Weg ist: `bestand` → `/sdd-erfassen BNN` →
 | ID | Feature | Prio | Status | Abhängig von | Zuletzt |
 |---|---|---|---|---|---|
 | 01 | Betroffenenrechte: Konto löschen, Daten exportieren, Passwort zurücksetzen | P0 | roadmap | B01, B04, B19 | 2026-08-23 · aus BF-04 herausgelöst |
-| B01 | Registrierung & E-Mail-Bestätigung | P0 | **review** | — | 2026-08-23 · QA² : 17/20, 6 Befunde behoben, 1 neu (mittel) |
+| B01 | Registrierung & E-Mail-Bestätigung | P0 | **approved** | — | 2026-08-23 · QA³: 17/20, nur mittlere Befunde offen |
 | B02 | Anmeldung mit Passwort | P0 | rekonstruiert | B01 | 2026-08-23 |
 | B03 | Passkey-Anmeldung & -Verwaltung | P0 | rekonstruiert | B01, B02 | 2026-08-23 |
 | B04 | Profil, Avatar & eigene Einreichungen | P0 | rekonstruiert | B01, B11 | 2026-08-23 |

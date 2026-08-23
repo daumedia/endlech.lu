@@ -2,12 +2,84 @@
 
 Stand: 2026-08-23 · Geprüft gegen `spec.md` vom 2026-08-23 (Rückerfassung)
 
-> **Dieser Bericht hat zwei Durchläufe.** Der erste (unten, „Erster Durchlauf") fand
-> 8 Befunde. Danach lief `/sdd-build B01` und behob 6 davon. Der **zweite Durchlauf**
-> steht direkt hier darunter und ist der maßgebliche Stand.
+> **Dieser Bericht hat drei Durchläufe.** Der erste fand 8 Befunde, `/sdd-build B01`
+> behob 6 davon, der zweite bestätigte die Reparatur und fand einen neuen. Der
+> **dritte Durchlauf** steht direkt hier darunter und ist der maßgebliche Stand;
+> die beiden früheren bleiben zur Nachvollziehbarkeit erhalten.
 Umgebung: lokal, `symfony server` auf `:8000`, MySQL 8.0 in Docker, Mailpit als SMTP-Senke
 
-## Fazit — zweiter Durchlauf (2026-08-23)
+## Fazit — dritter Durchlauf (2026-08-23)
+
+**Production-ready: ja**
+
+Anlass war keine Codeänderung, sondern zwei Ereignisse: BF-04 (Betroffenenrechte) wurde
+aus B01 herausgelöst und läuft als reguläres Feature `01` durch die Kette, und die
+Reparatur wurde committet. Beides musste geprüft werden — das Erste, weil es die
+Bewertung verschiebt, das Zweite, weil beim Committen selektiv `git add` benutzt wurde
+und etwas hätte fehlen können.
+
+**Der committete Stand entspricht dem geprüften.** Alle sieben reparierten Dateien sind
+gegen `HEAD` diff-frei, und die fünf Kernänderungen sind in `HEAD` nachweisbar
+(`git show HEAD:… | grep`). Im Arbeitsverzeichnis bleibt nur `public/build` — ein
+Dev-Build-Artefakt mit unhashten Dateinamen, das nicht zur Reparatur gehört.
+
+**Alle 20 Kriterien wurden erneut ausgeführt**, nicht aus dem zweiten Durchlauf
+übernommen. Ergebnis unverändert: 17 bestanden, 3 durchgefallen. Ebenso die fünf Edge
+Cases und der vollständige Angriffsdurchlauf.
+
+**Damit sind für B01 nur noch Befunde mit Grad *mittel* offen** — BF-09 (Enumeration)
+und BF-11 (Kontingent bei Tippfehlern). Nach den Regeln der Kette blockiert das eine
+Auslieferung nicht. Die drei durchgefallenen Kriterien haben keinen offenen Befund mehr
+hinter sich: AK-13 und AK-17 sind als bewusste Entscheidungen unter *Akzeptiert*
+verbucht, AK-14 entspricht BF-09.
+
+| | Anzahl |
+|---|---|
+| Akzeptanzkriterien geprüft | 20 von 20 |
+| davon bestanden | 17 |
+| davon durchgefallen | 3 (AK-13, AK-14, AK-17) |
+| **nicht prüfbar** | 0 |
+| Edge Cases belegt | 5 von 5 |
+| Tests | 317 grün, 0 übersprungen |
+| Offene Befunde | 2, beide *mittel* |
+
+### Nachweise dieses Durchlaufs
+
+| Prüfung | Beleg |
+|---|---|
+| AK-01…AK-08 | Formular 200; angemeldet `302 → /de/`; Name 1 Zeichen 422; Passwort 7 → 422, **Grenzwert 8 → 302**; ungleich → 422 **mit lesbarer Meldung**; gültig → 302, DB `is_verified=0`, Token 64, `$2y$13$`; danach `/de/profile` → 302 |
+| AK-09…AK-12 | Bestätigen `302 → /de/login`, DB `is_verified=1`, Token `NULL`; zweiter Aufruf `302 → /de/`; unbekannter Token `302 → /de/`; abgelaufen `302 → /de/verify`, bleibt 0; Mailpit gestoppt → 302 + Warnung, Konto gespeichert |
+| AK-15 | Rettungsweg vollständig: abgelaufen → resend → neue Mail → `is_verified=1` |
+| AK-13, AK-14 | unverändert reproduziert: Login gelingt, `/de/profile` 200; `/fr/register` zeigt „déjà utilisée", die Auskunft selbst bleibt |
+| AK-16…AK-20 | 11 Spalten; Klartextpasswort 0 Treffer, Token im dev-Log 1; `prod`: `channels: exclusive [deprecation, doctrine]`; 3 Token à 64 Hex, verschieden, Präfix 0; Payload ohne Passwort und Hash, Inhalt in der Sprache der Registrierung |
+| EC-01…EC-05 | `Duplicate entry`; `router:match` → `app_verify_resend`; Ablauf `NULL` → nicht verifiziert; 5000 → 422 / 4096 → 302; Konto bleibt bei Versandfehler |
+| Angriff 1/2 | `/de/register` 200/302, `/de/verify` 200, `/de/verify/resend` anonym 302 |
+| Angriff 3 | Registrierung `302×5 429 429`; resend 5 Aufrufe → **3 Mails**; kein Kontingentverbrauch durch GET |
+| Angriff 5 | Mail-Payload ohne Passwort, ohne Hash |
+| Angriff 6 | 0 getrackte Geheimnisse |
+| Angriff 7 | XSS und SQL-Einschleusung → 302, Tabelle intakt (18 Konten) |
+| Angriff 8 | weiterhin 0 Routen für Löschung/Export — jetzt Feature `01` |
+| Verifikation | `lint:yaml` 41 OK, `lint:twig` 77 OK, `prod`-Container baubar, 317 Tests / 1094 Assertions |
+
+### Was das „ja" nicht bedeutet
+
+- **Zwei Befunde bleiben offen.** BF-09: Das Registrierformular verrät weiterhin, ob
+  eine Adresse existiert — die Anti-Enumeration der API läuft dadurch ins Leere. BF-11:
+  Fünf Tippfehler sperren einen Nutzer eine Stunde aus, ohne dass ein Konto entsteht.
+  Beide gehören in einen nächsten Reparaturlauf, nicht in den Papierkorb.
+- **AK-17 ist formal durchgefallen.** In `prod` ist der Weg geschlossen, im `dev`-Log
+  steht der Token bewusst weiter (BF-12, akzeptiert). Der Laufzeitnachweis für `prod`
+  konnte im zweiten Durchlauf nicht erbracht werden und wurde hier nicht erneut versucht
+  — belegt ist die Konfiguration, nicht das Verhalten unter Last.
+- **Die Reparatur ist nicht ausgeliefert.** Sie liegt committet auf
+  `fix/b01-registrierung-qa`. Für Nutzer ist die Sackgasse weiterhin offen, bis das
+  gemerged ist.
+
+---
+
+# Zweiter Durchlauf (2026-08-23)
+
+## Fazit — zweiter Durchlauf
 
 **Production-ready: nein**
 
