@@ -8,7 +8,7 @@ des Auditberichts, den `/sdd-erfassen abschluss` daraus baut.
 **Geprüft bisher:** B01 (17/20), B02 (16/17), B03 (16/20), B04 (23/24 im zweiten
 Durchlauf), B23 (34/35 im zweiten Durchlauf), B19 (17/17, davon eines nicht prüfbar),
 B14 (28/28), B15 (27/27), B22 (30/30), B17 (25/25) — abgenommen.
-B10 (24/24 im zweiten Durchlauf), B18 (29/29), B11 (18/19, eines nicht prüfbar), B20 (19/20), B21 (20/20), B09 (18/18) — abgenommen. B23s beide
+B10 (24/24 im zweiten Durchlauf), B18 (29/29), B11 (18/19, eines nicht prüfbar), B20 (19/20), B21 (20/20), B09 (18/18), B05 (24/24) — abgenommen. B23s beide
 *hoch*-Befunde sind repariert und nachgemessen; dabei fielen drei neue an, zwei davon
 als Folge der Reparatur.
 Alle Reparaturen sind **noch nicht auf `production`**.
@@ -33,6 +33,8 @@ obwohl dort nichts mehr zu reparieren ist.
 | BF-42 | B17 | Kein Rate Limit auf den Datenendpunkten — 12 Abrufe, zwölfmal 200; jeder lädt den gesamten Bestand. **Sechste Wiederholung von M-01**, und die erste, die nicht unter den Wortlaut der Konvention fällt (löst keine Mail aus, prüft kein Geheimnis — ist nur teuer) | niedrig | `src/Controller/Open/OpenDataController.php` | 2026-08-24 |
 | BF-41 | B17 | Unverifizierte Einträge stehen im veröffentlichten Datensatz (8 von 11). **Neu bewertet:** Die Spec führte das als schwerste Verkettung des Projekts — sie ist seit BF-24 unterbrochen. Bleibt eine Produktfrage samt fehlender Dokumentation von `isVerified` | niedrig | `RestaurantRepository::findAllForExport()` | 2026-08-24 |
 | BF-40 | B22 | Die Verwaltungsliste skaliert nicht — kein Blättern, keine Obergrenze; die Restaurant-Auswahlliste lädt den **kompletten Kernbestand** (`findBy([], …)`). Blättern ist im Projekt vorhanden (B05, B20) und hier nur nicht angewandt | niedrig | `AdminWaitlistController.php:96`, `PartnerWaitlistEntryRepository::findFiltered()` | 2026-08-24 |
+| BF-59 | B05 | `%` und `_` hebeln den Ortsfilter aus — `?city=%` liefert alle statt keiner. Der Parameter ist gebunden (keine Injection), nur die Filterwirkung fällt weg. Auffällig ist die Inkonsequenz: `sort`, `cuisine` und `lang` prüfen ihre Eingabe, der Freitext nicht | niedrig | `RestaurantRepository::findPaginated()` | 2026-08-24 |
+| BF-60 | B05 | `?page=99999` liefert **200** mit leerer Liste statt 404 — beliebig viele indexierbare Leerseiten | niedrig | `RestaurantController::index()` | 2026-08-24 |
 | BF-57 | B09 | Hochgeladenes Skript läuft im eigenen Ursprung — `.html` wird als `text/html` ausgeliefert, `.svg` mit `<script>` ebenso. Kein `File`-Constraint, keine MIME-Prüfung; der Avatar-Upload macht es im selben Projekt richtig. `.php` landet endungslos, Polyglot bleibt GIF — insoweit unbedenklich | mittel | `ImageUploadService::upload()`, `AdminRestaurantController::uploadImage()` | 2026-08-24 |
 | BF-58 | B09 | Keine Größengrenze in der Anwendung — und über `post_max_size` meldet der Server **„Ungültiges CSRF-Token"**, weil PHP den ganzen Body verwirft. Der Admin sucht an einer Stelle, an der nichts kaputt ist | niedrig | `ImageUploadService::upload()` | 2026-08-24 |
 | BF-54 | B21 | Genehmigen ist **nicht idempotent** — zweimal dasselbe Formular abgesendet erzeugt zwei Restaurants (IDs 318, 319), beide mit Erfolgsmeldung. `approve()` prüft den Status nicht. Die Dublette landet sofort im öffentlichen Bestand und in den Kennzahlen | mittel | `AdminSuggestionController::approve()` | 2026-08-24 |
