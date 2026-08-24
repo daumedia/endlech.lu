@@ -3,7 +3,10 @@
 namespace App\Tests\Unit\Service;
 
 use App\DTO\NearbyStop;
+use App\Monolog\SecretMaskingProcessor;
 use App\Service\PublicTransportService;
+use Monolog\Level;
+use Monolog\LogRecord;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\AbstractLogger;
 use Psr\Log\LoggerInterface;
@@ -150,14 +153,17 @@ final class PublicTransportServiceTest extends TestCase
     }
 
     /**
-     * AK-12 / BF-44: Der Aufruf trägt keine Zeitvorgabe. Gemessen wurde das gegen
-     * einen hängenden Dienst: ohne `timeout` keine Antwort nach 30 Sekunden, mit
-     * `'timeout' => 3` Abbruch nach exakt 3,0 s.
+     * AK-12 / BF-44: Der Aufruf trägt eine eigene Zeitvorgabe.
      *
-     * Der Test hält den Befund fest — er schlägt fehl, sobald eine Zeitvorgabe
-     * gesetzt ist, und genau dann gehört BF-44 geschlossen.
+     * Ohne sie greift `default_socket_timeout` — auf dem Messsystem 60 Sekunden, und
+     * genau so lange wartete der Besucher der Detailseite, wenn die Schnittstelle
+     * hängt statt zu antworten. Gemessen: ohne Vorgabe nach 30 s keine Antwort, mit
+     * 3 s Abbruch nach exakt 3,0 s.
+     *
+     * Der Test stand vor der Reparatur in umgekehrter Richtung und hielt den Befund
+     * fest, bis er behoben war.
      */
-    public function testAk12AufrufTraegtKeineZeitvorgabe(): void
+    public function testAk12AufrufTraegtEineZeitvorgabe(): void
     {
         $optionen = null;
         $aufzeichnen = function (string $method, string $url, array $options) use (&$optionen) {
@@ -168,25 +174,27 @@ final class PublicTransportServiceTest extends TestCase
 
         $this->service($aufzeichnen)->findNearbyStops('49.61', '6.13');
 
-        // Der Service setzt nichts, also greift der PHP-Standard `default_socket_timeout`
-        // — auf diesem System 60 Sekunden. Genau so lange wartet der Besucher der
-        // Detailseite, wenn die Schnittstelle hängt statt zu antworten.
-        self::assertSame(
+        self::assertSame(3.0, (float) $optionen['timeout'], 'Ohne eigene Vorgabe greift default_socket_timeout (60 s).');
+        self::assertSame(5.0, (float) $optionen['max_duration'], 'max_duration deckelt auch langsame, aber antwortende Verbindungen.');
+        self::assertLessThan(
             (float) \ini_get('default_socket_timeout'),
-            $optionen['timeout'],
-            'Sobald hier eine eigene Zeitvorgabe steht, ist BF-44 behoben.',
+            (float) $optionen['timeout'],
+            'Die Vorgabe muss unter dem PHP-Standard liegen, sonst ändert sie nichts.',
         );
-        self::assertEquals(0, $optionen['max_duration'] ?? 0, 'Auch max_duration ist nicht gesetzt.');
     }
 
     /**
-     * AK-15 / BF-45: Die Exception-Meldung von Symfonys HttpClient enthält die
-     * vollständige URL — samt `accessId`. Der Service loggt genau diese Meldung.
+     * AK-15 / BF-45: Der API-Schlüssel darf nicht im eigenen Protokoll landen.
      *
-     * Im echten Log stand deshalb:
+     * Die Exception-Meldung von Symfonys HttpClient enthält die vollständige URL —
+     * samt `accessId`, weil HAFAS die Übergabe so vorsieht. Vorher reichte der
+     * Service genau diese Meldung weiter, und im Log stand:
      *   app.ERROR: HAFAS API error: HTTP/2 401 returned for "https://…?accessId=…"
+     *
+     * Jetzt protokolliert er nur Klasse und Code. Für die Fehlersuche reicht das —
+     * ein 401 ist ein 401, unabhängig davon, welche URL ihn ausgelöst hat.
      */
-    public function testAk15FehlerprotokollEnthaeltDenSchluessel(): void
+    public function testAk15FehlerprotokollEnthaeltDenSchluesselNicht(): void
     {
         $logger = new class extends AbstractLogger {
             public array $zeilen = [];
@@ -200,6 +208,55 @@ final class PublicTransportServiceTest extends TestCase
         $this->service([new MockResponse('', ['http_code' => 401])], logger: $logger)->findNearbyStops('49.61', '6.13');
 
         $protokoll = implode("\n", $logger->zeilen);
-        self::assertStringContainsString('accessId', $protokoll, 'Sobald der Schlüssel nicht mehr im Log steht, ist BF-45 behoben.');
+
+        self::assertNotEmpty($protokoll, 'Der Fehler muss weiterhin protokolliert werden.');
+        self::assertStringNotContainsString('accessId', $protokoll);
+        self::assertStringNotContainsString('TESTKEY', $protokoll);
+        self::assertStringContainsString('401', $protokoll, 'Der Statuscode gehört ins Protokoll.');
+    }
+
+    /**
+     * BF-45, zweiter Weg: Symfonys eigener `http_client`-Kanal protokolliert jede
+     * Anfrage samt vollständiger URL — davon hält kein Anwendungscode etwas ab.
+     * Dafür gibt es den Processor.
+     */
+    public function testBf45ProcessorMaskiertDenSchluesselInFremdenLogzeilen(): void
+    {
+        $processor = new SecretMaskingProcessor();
+
+        $record = new LogRecord(
+            new \DateTimeImmutable(),
+            'http_client',
+            Level::Info,
+            'Request: "GET https://cdt.hafas.de/opendata/apiserver/location.nearbystops?accessId=c56e38ea-cdd3-408c&originCoordLat=49.61"',
+            ['url' => 'https://example.org/x?token=geheim123&format=json'],
+        );
+
+        $maskiert = $processor($record);
+
+        self::assertStringContainsString('accessId=<maskiert>', $maskiert->message);
+        self::assertStringNotContainsString('c56e38ea', $maskiert->message);
+        self::assertStringContainsString('originCoordLat=49.61', $maskiert->message, 'Der Rest der URL bleibt lesbar.');
+        self::assertStringContainsString('token=<maskiert>', $maskiert->context['url']);
+        self::assertStringNotContainsString('geheim123', $maskiert->context['url']);
+    }
+
+    /**
+     * Die Maskierung darf nicht zu weit greifen: Ein Log ohne verwertbare
+     * Information ist so unbrauchbar wie eines mit dem Schlüssel darin.
+     */
+    public function testBf45ProcessorLaesstGewoehnlicheZeilenUnveraendert(): void
+    {
+        $processor = new SecretMaskingProcessor();
+
+        $record = new LogRecord(
+            new \DateTimeImmutable(),
+            'app',
+            Level::Error,
+            'Matched route "app_restaurant_show" with id=42 and sort=rating',
+            ['route' => 'app_restaurant_show'],
+        );
+
+        self::assertSame($record->message, $processor($record)->message);
     }
 }

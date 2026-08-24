@@ -154,7 +154,8 @@ contact:
 nearby_stops:
     title: "Ëffentlechen Transport an der Géigend"
     walking: "%meters% m"
-    no_stops: "Keng barrierefrä Haltestellen an der Géigend fonnt."
+    no_stops: "Keng Haltestell am Ëmkrees vu %meters% Meter fonnt."
+    source: "Informatioune vum Verkéiersverbond, ouni Ausso iwwer d’Barrièrefräiheet vun den Haltestellen."
 
 ordering:
     title: "Online bestellen"
@@ -482,7 +483,7 @@ admin:
         notes_hint: "Format: ok:Text oder warn:Text"
         add_note: "+ Hiweis derbäisetzen"
         location: "Standuert & Nahverkéier"
-        location_hint: "GPS-Koordinaten erlaben d'automatesch Sich no barrierefrä Haltestellen an der Géigend."
+        location_hint: "GPS-Koordinate erméiglechen déi automatesch Sich no Haltestellen an der Géigend."
         opening_hours: "Öffnungszäiten"
         opening_hours_hint: "Setz pro Dag esou vill Zäitfenstere bäi wéi néideg (z. B. Mëtteg an Owend). En Dag ouni Zäitfenster gëllt als zou."
         add_opening_slot: "＋ Zäitfenster derbäisetzen"

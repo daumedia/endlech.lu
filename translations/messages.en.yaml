@@ -154,7 +154,8 @@ contact:
 nearby_stops:
     title: "Public Transport Nearby"
     walking: "%meters% m"
-    no_stops: "No accessible stops found nearby."
+    no_stops: "No stop found within %meters% metres."
+    source: "Public transport data from the Verkéiersverbond; it says nothing about the accessibility of the stops."
 
 ordering:
     title: "Order Online"
@@ -482,7 +483,7 @@ admin:
         notes_hint: "Format: ok:Text or warn:Text"
         add_note: "+ Add note"
         location: "Location & Public Transport"
-        location_hint: "GPS coordinates enable automatic search for accessible stops nearby."
+        location_hint: "GPS coordinates enable the automatic search for nearby stops."
         opening_hours: "Opening Hours"
         opening_hours_hint: "Add as many time slots per day as needed (e.g. lunch and dinner). A day without any slot counts as closed."
         add_opening_slot: "＋ Add time slot"

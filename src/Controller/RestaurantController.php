@@ -8,6 +8,7 @@ use App\Repository\CuisineRepository;
 use App\Repository\RestaurantRepository;
 use App\Service\PublicTransportService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -67,8 +68,12 @@ final class RestaurantController extends AbstractController
     }
 
     #[Route('/restaurants/{id}', name: 'app_restaurant_show', requirements: ['id' => '\d+'])]
-    public function show(Restaurant $restaurant, PublicTransportService $publicTransportService): Response
-    {
+    public function show(
+        Restaurant $restaurant,
+        PublicTransportService $publicTransportService,
+        #[Autowire('%app.mobiliteit_radius%')]
+        int $nearbyStopsRadius,
+    ): Response {
         $now = new \DateTimeImmutable('now', new \DateTimeZone('Europe/Luxembourg'));
 
         $nearbyStops = [];
@@ -83,6 +88,9 @@ final class RestaurantController extends AbstractController
             'restaurant' => $restaurant,
             'todayDayOfWeek' => (int) $now->format('N'),
             'nearbyStops' => $nearbyStops,
+            // Der Radius gehört in die Meldung: „keine Haltestelle gefunden" ohne
+            // Angabe, in welchem Umkreis gesucht wurde, ist keine Information.
+            'nearbyStopsRadius' => $nearbyStopsRadius,
         ]);
     }
 }

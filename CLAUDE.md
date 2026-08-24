@@ -537,6 +537,29 @@ Helper: `hasCoordinates(): bool` — prüft ob lat+lng gesetzt.
 DTO: `App\DTO\NearbyStop` (readonly) — name, distance (Meter), lines (string[]), type (bus/tram/mixed).
 Service: `App\Service\PublicTransportService` — `findNearbyStops(string $lat, string $lng): NearbyStop[]`. Nutzt HAFAS API (`cdt.hafas.de`), Cache 24h, Graceful Degradation (leerer API-Key → `[]`). Parameter: `app.mobiliteit_api_key`, `app.mobiliteit_radius` (500), `app.mobiliteit_max_stops` (5).
 Env: `MOBILITEIT_API_KEY` in `.env` (leer = deaktiviert).
+
+⚠️ **Der Block heißt „Nahverkehr", nicht „barrierefreie Haltestellen".** Die
+HAFAS-Abfrage kennt **kein** Barrierefreiheitsmerkmal — `grep` nach
+`accessib|barrier|wheelchair` in `PublicTransportService` und `NearbyStop` findet
+nichts. Bis 2026-08-24 stand auf der Detailseite trotzdem „Keine barrierefreien
+Haltestellen in der Nähe gefunden" und im Admin-Formular „automatische Suche nach
+barrierefreien Haltestellen" (QA B10, BF-46). Auf dieser Plattform ist eine erfundene
+Barrierefreiheitsaussage der schwerste Fehler, den ein Text machen kann. Die Texte
+sagen jetzt, was tatsächlich geprüft wurde, und der Block trägt einen Herkunftshinweis.
+
+⚠️ **Radius 1000, nicht 500.** Bei 500 m lieferte die Schnittstelle für **8 von 11**
+Restaurants null Haltestellen; an denselben Koordinaten sind es bei 2000 m sieben. Nach
+der Umstellung: 8 von 11 mit Treffern.
+
+⚠️ **`'timeout' => 3` ist Pflicht.** Ohne eigene Vorgabe greift `default_socket_timeout`
+— gemessen 60 s, so lange wartete der Besucher der Detailseite bei hängender
+Schnittstelle. Der `catch (\Throwable)` fängt den **Ausfall**, nicht die **Verzögerung**.
+
+⚠️ **Die Exception-Meldung nicht ins Log durchreichen.** Sie enthält die vollständige
+URL samt `accessId` — HAFAS sieht die Übergabe des Schlüssels als Query-Parameter vor.
+Protokolliert werden Klasse und Statuscode. Den zweiten Weg (Symfonys eigener
+`http_client`-Kanal, der in `prod` **nicht** ausgeschlossen ist) deckt
+`App\Monolog\SecretMaskingProcessor` ab.
 Template: `templates/partials/_nearby_stops.html.twig` — Haltestellen-Karten mit Bus/Tram-Icons, Linien-Badges, Distanz.
 Form: `latitude` (NumberType, Range -90/90), `longitude` (NumberType, Range -180/180), `nearbyStopsNote` (TextType, max 1000).
 Admin-Fieldset: "Standort & Nahverkehr" in `_form.html.twig`.

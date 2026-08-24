@@ -154,7 +154,8 @@ contact:
 nearby_stops:
     title: "Transports en commun à proximité"
     walking: "%meters% m"
-    no_stops: "Aucun arrêt accessible trouvé à proximité."
+    no_stops: "Aucun arrêt trouvé dans un rayon de %meters% mètres."
+    source: "Données de transport public du Verkéiersverbond ; elles ne disent rien de l’accessibilité des arrêts."
 
 ordering:
     title: "Commander en ligne"
@@ -482,7 +483,7 @@ admin:
         notes_hint: "Format : ok:Texte ou warn:Texte"
         add_note: "+ Ajouter une note"
         location: "Localisation & Transports"
-        location_hint: "Les coordonnées GPS permettent la recherche automatique d'arrêts accessibles à proximité."
+        location_hint: "Les coordonnées GPS permettent la recherche automatique des arrêts à proximité."
         opening_hours: "Horaires d'ouverture"
         opening_hours_hint: "Ajoutez autant de créneaux que nécessaire par jour (p. ex. midi et soir). Un jour sans créneau est considéré comme fermé."
         add_opening_slot: "＋ Ajouter un créneau"

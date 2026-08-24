@@ -154,7 +154,8 @@ contact:
 nearby_stops:
     title: "Nahverkehr in der Nähe"
     walking: "%meters% m"
-    no_stops: "Keine barrierefreien Haltestellen in der Nähe gefunden."
+    no_stops: "Keine Haltestelle im Umkreis von %meters% Metern gefunden."
+    source: "Angaben zum Nahverkehr vom Verkéiersverbond, ohne Aussage zur Barrierefreiheit der Haltestellen."
 
 ordering:
     title: "Online bestellen"
@@ -482,7 +483,7 @@ admin:
         notes_hint: "Format: ok:Text oder warn:Text"
         add_note: "+ Hinweis hinzufügen"
         location: "Standort & Nahverkehr"
-        location_hint: "GPS-Koordinaten ermöglichen die automatische Suche nach barrierefreien Haltestellen in der Nähe."
+        location_hint: "GPS-Koordinaten ermöglichen die automatische Suche nach Haltestellen in der Nähe."
         opening_hours: "Öffnungszeiten"
         opening_hours_hint: "Füge pro Tag beliebig viele Zeitfenster hinzu (z. B. Mittag und Abend). Ein Tag ohne Zeitfenster gilt als geschlossen."
         add_opening_slot: "＋ Zeitfenster hinzufügen"

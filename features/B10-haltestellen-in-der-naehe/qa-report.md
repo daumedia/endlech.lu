@@ -23,6 +23,41 @@ kaputt ist.
 
 Nächster Aufruf: **`/sdd-build B10`** mit BF-46. **Die Erfassung wartet.**
 
+## Nachtrag vom 2026-08-24, nach der Reparatur
+
+**Eine Angabe in diesem Bericht war zu weitgehend und wird hier richtiggestellt, statt
+sie stillschweigend anzugleichen.**
+
+Oben steht, der Satz *„Keine barrierefreien Haltestellen in der Nähe gefunden"* stehe
+„bei 8 von 11 Restaurants" auf der Seite. Gemessen habe ich das an einem Restaurant, dem
+ich für den AK-10-Test selbst eine `nearbyStopsNote` gesetzt hatte — und genau die ist
+die Bedingung dafür, dass der Satz überhaupt erscheint:
+
+```twig
+{% if nearbyStops is not empty or restaurant.nearbyStopsNote %}   ← äußere Bedingung
+    …
+    {% elseif restaurant.hasCoordinates %}                        ← hier steht der Satz
+```
+
+Ohne Haltestellen **und** ohne Note wird der ganze Block übersprungen. Im
+Fixture-Bestand trägt genau **ein** Restaurant eine Note (Brasserie du Grund) — und das
+hatte Haltestellen. **Der falsche Satz war dort also nie zu sehen.**
+
+Was davon unberührt bleibt:
+
+- Der Text stand in **allen vier Sprachkatalogen** und wäre erschienen, sobald ein
+  Betreiber eine Note bei einem Restaurant ohne Haltestellen hinterlegt — ein Fall, den
+  das Formular ausdrücklich vorsieht.
+- Der **Admin-Hinweis** (`messages.de.yaml:485`, *„automatische Suche nach barrierefreien
+  Haltestellen"*) war dagegen **immer** sichtbar. Das ist der Teil, der real gewirkt hat:
+  Er sagt dem Betreiber, das Feature prüfe Barrierefreiheit.
+- Der **Radius** war real zu klein: 3 von 11 Restaurants mit Treffern, nach der
+  Reparatur 8 von 11.
+
+Der Befund bleibt damit gültig, seine Reichweite war kleiner als beschrieben. Die
+Einstufung *mittel* halte ich aufrecht — wegen des Admin-Hinweises und weil ein falscher
+Text im Katalog nur darauf wartet, sichtbar zu werden.
+
 ## Die Messung, um die es geht
 
 Der lokale `.env.local` trägt einen gültigen Schlüssel; das Feature ist also aktiv und
