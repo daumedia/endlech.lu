@@ -24,7 +24,7 @@ Abmelden verlangt ein Token. 16 von 17 Kriterien, nur *mittel*/*niedrig* offen.
 virtuellen WebAuthn-Authenticator (CDP) durchgespielt, inklusive Anmeldung ohne
 E-Mail-Eingabe. Ein Befund *mittel* (BF-18), drei Kriterien nicht prüfbar.
 
-Nächster Schritt: `/sdd-erfassen B22`. Die Reparaturen von B01, B02, B04 und B23 warten auf
+Nächster Schritt: `/sdd-erfassen B17`. Die Reparaturen von B01, B02, B04 und B23 warten auf
 `/sdd-deploy`; das neue Feature `01` beginnt mit `/sdd-spec 01`.
 
 **Zwei Namensräume:** Einträge mit Präfix `B` sind **Bestand** — gebaut, bevor die
@@ -64,7 +64,7 @@ Eingang von `sdd-build`. Der Weg ist: `bestand` → `/sdd-erfassen BNN` →
 | B19 | Admin-Zugang & Dashboard | P0 | **approved** | B02 | 2026-08-24 · QA: 17/17, ein Befund *mittel* |
 | B20 | Restaurantverwaltung (Admin) | P0 | rekonstruiert | B19 | 2026-08-23 |
 | B21 | Vorschläge prüfen (Admin) | P0 | rekonstruiert | B19, B11 | 2026-08-23 |
-| B22 | Wartelisten-Verwaltung (Admin) | P1 | rekonstruiert | B19, B14, B15 | 2026-08-23 |
+| B22 | Wartelisten-Verwaltung (Admin) | P1 | **approved** | B19, B14, B15 | 2026-08-24 · QA: 30/30, ein Befund *niedrig* |
 | B23 | REST-API v1 (iOS-Backend) | P0 | **approved** | B01, B05 | 2026-08-24 · QA 2. Durchlauf: 34/35, drei Befunde *mittel/niedrig* |
 | B24 | Mehrsprachigkeit | P1 | rekonstruiert | — | 2026-08-23 |
 | B25 | PWA & mobile Navigation | P1 | rekonstruiert | — | 2026-08-23 |

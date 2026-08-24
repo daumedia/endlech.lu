@@ -192,4 +192,87 @@ final class AdminWaitlistControllerTest extends AbstractWebTestCase
 
         return $entry;
     }
+
+    /**
+     * AK-02: Die beiden Listen werden nach dem Zusammenführen **erneut** sortiert.
+     *
+     * Ohne das stünden erst alle Partner-, dann alle Organisationseinträge — die
+     * Liste sähe sortiert aus, wäre es aber nur innerhalb jeder Hälfte. Das ist
+     * ein Fehler, der bei zwei Testeinträgen nie auffällt und bei zwanzig sofort.
+     */
+    public function testAk02BeideQuellenSindNachDatumDurchmischt(): void
+    {
+        $client = static::createClient();
+        $this->loginAs($client, 'admin@endlech.lu');
+        $em = $client->getContainer()->get(EntityManagerInterface::class);
+
+        // Abwechselnd anlegen: P(alt) O(mitte) P(neu) O(neuest)
+        $namen = [];
+        foreach ([['p', '-4 days'], ['o', '-3 days'], ['p', '-2 days'], ['o', '-1 day']] as $i => [$art, $wann]) {
+            if ($art === 'p') {
+                $e = $this->createEntry($client);
+                $namen[] = $e->getRestaurantName();
+            } else {
+                $e = $this->createOrganisation($client);
+                $namen[] = $e->getOrganisationName();
+            }
+            $em->createQuery(sprintf(
+                'UPDATE %s x SET x.createdAt = :d WHERE x.id = :id',
+                $art === 'p' ? PartnerWaitlistEntry::class : OrganisationWaitlistEntry::class,
+            ))->setParameter('d', new \DateTimeImmutable($wann))->setParameter('id', $e->getId())->execute();
+        }
+
+        $text = $client->request('GET', self::LOCALE.'/admin/warteliste')->filter('tbody')->text();
+        $positionen = array_map(static fn (string $n) => mb_strpos($text, $n), $namen);
+
+        // Absteigend nach Datum: der zuletzt angelegte steht oben.
+        self::assertGreaterThan($positionen[3], $positionen[2], 'Reihenfolge nicht absteigend.');
+        self::assertGreaterThan($positionen[2], $positionen[1]);
+        self::assertGreaterThan($positionen[1], $positionen[0]);
+    }
+
+    /**
+     * AK-21: Das CSRF-Token trägt die ID des Eintrags. Ein Token von Eintrag A darf
+     * gegen Eintrag B nicht wirken — sonst genügte ein einziges abgegriffenes Token
+     * für die ganze Liste.
+     */
+    public function testAk21TokenEinesFremdenEintragsWirktNicht(): void
+    {
+        $client = static::createClient();
+        $this->loginAs($client, 'admin@endlech.lu');
+        $a = $this->createEntry($client);
+        $b = $this->createEntry($client);
+
+        $crawler = $client->request('GET', self::LOCALE.'/admin/warteliste/partner/'.$a->getId());
+        $fremdesToken = $crawler->filter('form[action$="/status"] input[name="_token"]')->attr('value');
+
+        $client->request('POST', self::LOCALE.'/admin/warteliste/partner/'.$b->getId().'/status', [
+            '_token' => $fremdesToken,
+            'status' => 'declined',
+        ]);
+
+        // Frisch laden statt refresh(): Der Test-Client bootet den Kernel je Request
+        // neu, die Entity aus dem Vorher-Container ist danach nicht mehr verwaltet.
+        $frisch = $client->getContainer()->get(EntityManagerInterface::class)
+            ->getRepository(PartnerWaitlistEntry::class)
+            ->find($b->getId());
+
+        self::assertNotSame(WaitlistStatus::DECLINED, $frisch->getStatus());
+    }
+
+    /**
+     * AK-07: Unbekannte Filterwerte werden verworfen, nicht geworfen.
+     */
+    public function testAk07UnbekannteFilterwerteZeigenDieVolleListe(): void
+    {
+        $client = static::createClient();
+        $this->loginAs($client, 'admin@endlech.lu');
+        $partner = $this->createEntry($client);
+
+        $text = $client->request('GET', self::LOCALE.'/admin/warteliste?status=erfunden&type=erfunden')
+            ->filter('tbody')->text();
+
+        self::assertResponseIsSuccessful();
+        self::assertStringContainsString($partner->getRestaurantName(), $text);
+    }
 }
