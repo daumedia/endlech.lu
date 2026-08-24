@@ -5,8 +5,9 @@ Stand: 2026-08-23 · Quelle: die `qa-report.md` aller geprüften Features
 Diese Liste wird von `sdd-qa` fortgeschrieben, nicht von Hand. Sie ist die Grundlage
 des Auditberichts, den `/sdd-erfassen abschluss` daraus baut.
 
-**Geprüft bisher:** B01 (17/20), B02 (16/17), B03 (16/20) — abgenommen. B04 (15/18) →
-beide Befunde am 2026-08-24 repariert, wartet auf die erneute QA.
+**Geprüft bisher:** B01 (17/20), B02 (16/17), B03 (16/20), B04 (23/24 im zweiten Durchlauf)
+— alle abgenommen. B04s beide Befunde sind repariert und nachgemessen; dabei fielen drei
+neue *mittel*-Befunde an, einer davon als Nebenwirkung der Reparatur.
 Alle Reparaturen sind **noch nicht auf `production`**.
 Offen: B05–B26 (Status `rekonstruiert`).
 
@@ -24,6 +25,9 @@ obwohl dort nichts mehr zu reparieren ist.
 | ID | Feature | Befund | Grad | Fundstelle | Seit |
 |---|---|---|---|---|---|
 | BF-04 | **01** | Betroffenenrechte nicht bedienbar — keine Kontolöschung, kein Datenexport, kein Passwort-Zurücksetzen. **2026-08-23 aus B01 herausgelöst:** keine Reparaturaufgabe, sondern fehlende Funktionen über B01, B04 und B19 hinweg — läuft als reguläres Feature `01` durch die volle Kette | hoch | `src/Controller/ProfileController.php` (fehlend) | 2026-08-23 |
+| BF-21 | B04 | Adressänderung ohne Rate Limit — zehn Durchläufe erzeugten 20 Mails, davon 10 an ein frei gewähltes fremdes Postfach. **Nebenwirkung der BF-19-Reparatur**: Vorher verschickte dieser Weg gar keine Mail | mittel | `src/Controller/ProfileController.php::edit()` | 2026-08-24 |
+| BF-22 | B04 | Ungültiges Stammdatenformular mit geänderter Adresse meldet den Nutzer ab — `handleRequest()` setzt `setEmail()` auch bei fehlgeschlagener Validierung, der veränderte Nutzer wandert in die Sitzung. Bestand vor der Reparatur | mittel | `src/Controller/ProfileController.php::edit()` | 2026-08-24 |
+| BF-23 | B01, B04 | Bestätigungstoken im `request`-Kanal (`Matched route`), der in `prod` **nicht** ausgeschlossen ist — **BF-06 war nur halb behoben**. 31 Zeilen für `app_email_change_confirm`, 22 für `app_verify_email` | mittel | `config/packages/monolog.yaml` | 2026-08-24 |
 | BF-18 | B03 | Passkey-Challenge-Endpunkte ohne Rate Limit — 10 Anfragen an `/passkey/login/options` alle mit 200 beantwortet | mittel | `config/routes/webauthn.yaml`, `access_control` | 2026-08-24 |
 | BF-17 | B02 | Gast auf `/de/logout` bekommt 403 statt einer Weiterleitung — Kehrseite von `enable_csrf` | niedrig | `config/packages/security.yaml` | 2026-08-24 |
 | BF-15 | B02 | „Angemeldet bleiben" wirkt für `/profile` nicht (`IS_AUTHENTICATED_FULLY`), die Kopfzeile zeigt den Nutzer trotzdem als angemeldet | mittel | `config/packages/security.yaml`, `templates/base.html.twig` | 2026-08-24 |

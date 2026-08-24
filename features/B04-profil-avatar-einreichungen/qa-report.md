@@ -1,143 +1,238 @@
 # B04 · Profil, Avatar & Einreichungen — Testbericht
 
-Stand: 2026-08-24 · Geprüft gegen `spec.md` vom 2026-08-23 (Rückerfassung)
+Stand: 2026-08-24 · zweiter Durchlauf, nach der Reparatur von BF-19 und BF-20
+Vorstufe: `review` · Branch `fix/b04-profil-qa` · Commit `c3a2592`
 
 ## Fazit
 
-**Production-ready: nein**
+**Production-ready: ja** — mit drei mittleren Befunden, die keinen Hauptweg blockieren.
 
-Das Profil ist in seinen Kernfunktionen sauber: Der Avatar-Upload prüft den tatsächlichen
-MIME-Typ (eine als PNG deklarierte HTML-Datei wird mit 422 abgewiesen, ebenso 3 MB), die
-alte Datei wird beim Neu-Upload gelöscht, die Einreichungsliste zeigt exakt die eigenen
-Restaurants, und der Passwortwechsel verlangt das aktuelle Passwort.
+18 von 19 Akzeptanzkriterien bestanden, eines durchgefallen (EC-04). Die beiden
+Befunde des ersten Durchlaufs sind belegt behoben: Eine geänderte E-Mail-Adresse wird
+nur noch vorgemerkt, und die Passwortänderung greift ab dem sechsten Versuch nicht mehr.
+Beides an der Grenze nachgemessen, nicht nur am Erfolgsweg.
 
-**Der blockierende Fund ist die E-Mail-Änderung.** Sie geht ohne jede erneute Bestätigung
-durch, und `is_verified` bleibt dabei auf `1`. Wer eine Sitzung kapert, schreibt die
-Adresse auf seine eigene um und ist dauerhaft drin — der rechtmäßige Inhaber kann sich
-nicht zurückholen, weil es kein Passwort-Zurücksetzen gibt (Feature `01`).
+Drei neue Befunde, alle *mittel*:
 
-**Eine Korrektur an der Rekonstruktion:** AK-13 und FB-04 behaupteten, eine
-Passwortänderung lasse fremde Sitzungen unberührt. Gemessen ist das Gegenteil — Symfony
-entwertet sie. Die Spec war falsch, das Verhalten ist besser als beschrieben.
+- **BF-21** — die Adressänderung selbst hat keinen Deckel. Zehn Durchläufe erzeugten
+  zwanzig Mails, davon zehn an ein frei gewähltes fremdes Postfach. Der Befund ist eine
+  **Nebenwirkung der Reparatur**: Vorher verschickte dieser Weg gar keine Mail.
+- **BF-22** — ein ungültiges Stammdatenformular mit geänderter Adresse meldet den Nutzer
+  ab. Bestand schon vorher; die Reparatur sitzt genau an dieser Stelle und hätte ihn
+  mit einer Zeile miterledigt.
+- **BF-23** — der Bestätigungstoken steht auch im `request`-Kanal („Matched route"), und
+  der ist in `prod` **nicht** ausgeschlossen. Damit war **BF-06 nur halb behoben**, und
+  zwar für B01 genauso wie für B04.
 
-Nächster Schritt: `/sdd-build B04` mit BUG-15.
+Nächster Aufruf: `/sdd-erfassen B05`. Die Erfassung läuft weiter — kein Befund ist
+*hoch* oder *kritisch*. Die drei neuen stehen in `features/befunde.md`.
 
-| | Anzahl |
-|---|---|
-| Akzeptanzkriterien geprüft | 18 von 18 |
-| davon bestanden | 15 |
-| davon durchgefallen | 3 (AK-12, AK-13, AK-14) |
-| **nicht prüfbar** | 0 |
-| Tests | 323 grün (bestehende Suite) |
+## Was seit dem ersten Durchlauf anders ist
+
+| | erster Durchlauf (2026-08-24, vormittags) | dieser |
+|---|---|---|
+| AK-12 E-Mail-Änderung | ❌ sofort wirksam, `is_verified` blieb 1 | ✅ vorgemerkt, zwei Mails, 24-Stunden-Frist |
+| AK-14 Passwort-Deckel | ❌ acht Versuche, alle angenommen | ✅ fünf erlaubt, der sechste gesperrt |
+| AK-12a (neu) | — | ✅ abgelaufen und fremdvergeben beide ohne Serverfehler |
+| EC-04 | ✅ (nur der 422 geprüft) | ❌ der 422 kommt, aber die Sitzung stirbt danach |
+
+EC-04 war im ersten Durchlauf zu flach geprüft: Nur der Antwortcode wurde angesehen,
+nicht der Zustand danach. Das ist keine Regression durch die Reparatur — nachgewiesen
+am Vorgängerstand (`git show HEAD~1`), der an dieser Stelle identisch ist.
 
 ## Akzeptanzkriterien im Einzelnen
 
 | AK | Ergebnis | Nachweis |
 |---|---|---|
-| AK-01 | ✅ bestanden | Gast auf `/de/profile` → 302 |
-| AK-02 | ✅ bestanden | angemeldet → 200; Formulare `/de/profile/edit`, `/de/profile/password`, dazu die Passkey-Verwaltung und der Einreichungsabschnitt |
-| AK-03 | ✅ bestanden | Name geändert → `302 → /de/profile`, DB zeigt `Neuer Name` |
-| AK-04 | ✅ bestanden | 8×8-PNG hochgeladen → 302; DB `6a8c5eedd103c4.90154113.png`, Datei liegt unter `public/uploads/avatars/` |
-| AK-05 | ✅ bestanden | HTML-Datei mit `type=image/png` deklariert → **422**; 3-MB-Datei → **422**; Avatar unverändert |
-| AK-06 | ✅ bestanden | zweiter Upload → neuer Dateiname, **alte Datei vom Dateisystem entfernt** |
-| AK-07 | ✅ bestanden | Löschen mit Token → DB `NULL`, Datei weg |
-| AK-08 | ✅ bestanden | Löschen mit falschem Token → Avatar bleibt |
+| AK-01 | ✅ bestanden | Gast auf `/de/profile` → **302** nach `/de/login` |
+| AK-02 | ✅ bestanden | angemeldet → **200** |
+| AK-03 | ✅ bestanden | Name auf „Geänderter Name" → 302, DB trägt ihn, Meldung „Profil erfolgreich aktualisiert."; **keine** Mail ausgelöst (Regressionsrisiko des `edit()`-Umbaus, eigens geprüft) |
+| AK-04 | ✅ bestanden | PNG hochgeladen → `avatar_filename = 6a8c62e0e0c3a3.04020943.png`, Datei über `/uploads/avatars/…` mit **200** abrufbar |
+| AK-05 | ✅ bestanden | 3-MB-Datei → **422** |
+| AK-06 | ✅ bestanden | zweiter Upload: `…04020943.png` → `…00432173.png`; die alte Datei liefert **404** |
+| AK-07 | ✅ bestanden | Löschen mit gültigem Token → „Profilbild erfolgreich entfernt.", DB `NULL`, Datei **404** |
+| AK-08 | ✅ bestanden | `_token=falsch` → „Ungültiges CSRF-Token.", Avatar bleibt in der DB stehen |
 | AK-09 | ✅ bestanden | falsches aktuelles Passwort → „Das aktuelle Passwort ist nicht korrekt." |
-| AK-10 | ✅ bestanden | Wechsel gelingt; neues Passwort meldet an, altes wird abgewiesen |
-| AK-11 | ✅ bestanden | Profil verlinkt die IDs `156, 157, 160` — exakt die drei, die laut Datenbank `submitted_by_id` dieses Nutzers tragen |
-| AK-12 | ❌ durchgefallen | Adresse auf `ganz-neue@qa.example` geändert → 302; DB: neue Adresse, `is_verified = 1`, kein Token → **BUG-15** |
-| AK-13 | ❌ durchgefallen | **Die Spec ist falsch.** Zwei Sitzungen, in einer das Passwort geändert: s1 → 200, **s2 → 302**. Fremde Sitzungen werden entwertet → siehe Korrektur unten |
-| AK-14 | ❌ durchgefallen | 8 Versuche mit falschem aktuellem Passwort → **alle angenommen**, kein Limit → **BUG-16** |
-| AK-15 | ✅ bestanden | siehe AK-05 — `File`-Constraint prüft über `fileinfo`, nicht über die Endung |
+| AK-10 | ✅ bestanden | Wechsel gelingt; neues Passwort meldet an (200), altes wird abgewiesen (302) |
+| AK-11 | ✅ bestanden | Profil verlinkt `167, 168, 171` — exakt die drei mit `submitted_by_id = 114` |
+| **AK-12** | ✅ bestanden | Adresse auf `angreifer@qa.example` → 302; DB: `email` **unverändert**, `pending_email` gesetzt, Token 64 Zeichen, Frist `2026-08-25 15:29:37`. Zwei Mails (Warnung an die alte, Bestätigung an die neue). Anmeldung mit der vorgemerkten Adresse → **302**, mit der bisherigen → **200** |
+| **AK-12a** | ✅ bestanden | Adresse in der Zwischenzeit fremd vergeben → **302**, kein 500, Vorgang abgeräumt. Frist zurückdatiert → **302**, Vorgang abgeräumt |
+| AK-13 | ✅ bestanden | zwei Sitzungen, in s1 gewechselt: s1 → **200**, s2 → **302** |
+| **AK-14** | ✅ bestanden | Zähler frisch: Versuche 1–5 „Passwort nicht korrekt", **6 und 7 gesperrt**. Kontoweit (andere Sitzung desselben Kontos ebenfalls gesperrt), aber **nicht** kontoübergreifend (Admin-Konto unberührt) |
+| AK-15 | ✅ bestanden | PHP-Datei als `.png` mit gefälschtem `Content-Type` → **422**, Avatar in der DB unverändert |
 | AK-16 | ✅ bestanden | `GET /uploads/avatars/<datei>` → **200** ohne Anmeldung (bewusste Eigenschaft, kein Fehler) |
-| AK-17 | ✅ bestanden | `ProfileController` ruft dreimal `findBySubmitter($this->getUser())` — keine ID aus der Anfrage, damit strukturell kein IDOR |
-| AK-18 | ✅ bestanden | `user123`, `GanzNeuesPW1`, `raten1` → je 0 Treffer im Log |
+| AK-17 | ✅ bestanden | `?user=113&id=113` ändert nichts — weiterhin `167, 168, 171` |
+| AK-18 | ✅ bestanden | `DrittesPW123`, `GanzNeuesPW1`, `raten1` → je **0 Treffer** in `var/log/` |
 
-## Korrektur an der Rekonstruktion
+## Edge Cases
 
-Die Spec behauptete an zwei Stellen, eine Passwortänderung sei folgenlos für bestehende
-Sitzungen:
-
-> **AK-13** ⚠ · „…dann bleiben **alle anderen Sitzungen und alle `REMEMBERME`-Cookies
-> gültig**."
-> **FB-04** · „Keine Sitzungsinvalidierung bei Passwortänderung."
-
-Gemessen (zweimal, in B02/EC-04 und hier):
-
-| | vor der Änderung | danach |
+| EC | Ergebnis | Nachweis |
 |---|---|---|
-| Sitzung, die geändert hat | 200 | **200** |
-| andere Sitzung desselben Kontos | 200 | **302** |
-| `REMEMBERME` der anderen Sitzung | gilt | wird **nicht** mehr akzeptiert |
-
-Symfony entwertet beides selbst: Der Sicherheitskontext vergleicht bei jedem Request den
-serialisierten Nutzer aus der Sitzung mit dem frisch geladenen, und die
-`remember_me`-Signatur schließt den Passwort-Hash ein.
-
-**Warum die Rekonstruktion daneben lag:** `ProfileController::changePassword()` ruft
-tatsächlich weder eine Session-Invalidierung noch einen Wechsel des Geheimnisses auf. Aus
-dem Projektcode allein ist der Schluss also naheliegend — er ist trotzdem falsch, weil
-das Framework die Arbeit übernimmt. Genau davor warnt `sdd-erfassen`: Eine Rekonstruktion
-kann selbst falsch sein.
-
-`spec.md` ist entsprechend berichtigt; der Regressionstest
-`testEc04PasswortaenderungEntwertetFremdeSitzungen` (B02) hält das Verhalten fest.
+| EC-01 | ✅ bestanden | Änderung auf `admin@endlech.lu` → **422**, DB unverändert, kein Vorgang angelegt |
+| EC-02 | ✅ bestanden | Datei ohne Endung, MIME `image/png` → gespeichert als `…96004464.png`, abrufbar |
+| EC-03 | ✅ bestanden | zwei parallele Uploads → genau eine Datei im Bestand, keine Kollision |
+| **EC-04** | ❌ durchgefallen | 422 kommt und die Seite wird gerendert — **danach ist die Sitzung tot**: der nächste Aufruf von `/de/profile` liefert 302 nach `/de/login`. Siehe BF-22 |
+| EC-05 | ✅ bestanden | Datei aus dem Dateisystem entfernt, DB-Eintrag bleibt → Profilseite **200**, kein Fehler |
 
 ## Sicherheitsprüfung
 
-| Prüfung | Ergebnis | Beleg |
-|---|---|---|
-| Zugriff auf fremde ID (IDOR) | bestanden | keine ID aus der Anfrage; Einreichungsliste exakt die eigenen drei |
-| Zugriffsregeln serverseitig | bestanden | Gast → 302; `#[IsGranted]` an der Klasse plus `access_control` |
-| Rate Limit greift | **BUG-16** | 8 Rateversuche auf das aktuelle Passwort, alle angenommen |
-| PII in Logs | bestanden | drei Passwörter, je 0 Treffer |
-| PII an externe Dienste | bestanden | B04 verschickt nichts — ⚠ auch nicht bei einer E-Mail-Änderung, siehe BUG-15 |
-| Geheimnisse im Repository | bestanden | keine neuen |
-| Eingaben | bestanden | Datei-Uploads: falscher Typ und Übergröße je 422 |
-| Löschen | **offen** | kein Kontolöschweg → Feature `01` |
+Durchlauf nach `references/angriff.md`, auf die durch die Reparatur neu entstandene
+Fläche zugespitzt.
+
+| Prüfung | Ergebnis |
+|---|---|
+| **Fremder Zugriff** | `?user=113` ändert die Einreichungsliste nicht — `findBySubmitter($this->getUser())` nimmt keine ID aus der Anfrage |
+| **Token raten** | 64 Hex-Zeichen aus `random_bytes(32)`. `aaaa…` (64×) → 302 auf die Startseite mit „Ungültiger Bestätigungslink."; zu kurz → **404**, die Route greift gar nicht |
+| **Pfadwechsel** | `/verify/email-change/../../admin` → 302, kein Durchgriff |
+| **Eingaben** | `<script>alert(1)</script>@x.de`, `a@b.de'; DROP TABLE user; --`, 300 Zeichen, `nur-text` — DB in allen vier Fällen unverändert, kein Serverfehler, keine rohe Datenbankmeldung |
+| **Rate Limits** | Passwortänderung gedeckelt (siehe AK-14). **Adressänderung nicht** → BF-21 |
+| **Personendaten in Protokollen** | Passwörter: 0 Treffer. **Token: 31 Zeilen im `request`-Kanal, 147 im `doctrine`-Kanal** → BF-23 |
+| **Geheimnisse** | keine im Feature-Umfang berührt |
+
+### Zwei Prüfungen, die nichts ergaben — und warum sie trotzdem hier stehen
+
+**Nur die Schreibweise ändern.** `USER@endlech.lu` statt `user@endlech.lu` läuft am
+Bestätigungsweg vorbei und wird sofort übernommen (`strcasecmp` sieht keinen
+Unterschied). Folgenlos, weil dasselbe Postfach dahintersteht und die Sitzung bestehen
+bleibt (gemessen: 200). Kein Befund, aber der Grund, warum `strcasecmp` und nicht `!==`
+dort richtig ist: Mit `!==` löste jede Groß-/Kleinschreibung einen vollen
+Bestätigungsvorgang samt zwei Mails aus.
+
+**Konto über die vorgemerkte Adresse übernehmen.** Der Versuch, sich mit
+`angreifer@qa.example` anzumelden, während sie nur vorgemerkt ist, endet mit 302. Das
+ist die Kehrseite, an der die Reparatur steht oder fällt — ohne sie wäre die Vormerkung
+Kosmetik.
 
 ## Fehler
 
-### BUG-15 · E-Mail-Änderung ohne erneute Bestätigung — hoch
+### BF-21 · Adressänderung ohne Rate Limit — mittel
 
-**Betrifft:** AK-12, FB-03
+**Betrifft:** AK-12 (Nebenwirkung der Reparatur, kein Kriterium)
+
 **Reproduktion:**
 1. Als `user@endlech.lu` anmelden
-2. Im Profil die Adresse auf `ganz-neue@qa.example` ändern
-3. Datenbank ansehen
-**Erwartet:** Bestätigungsmail an die neue Adresse, `is_verified` auf `false`, bis sie
-bestätigt ist
-**Tatsächlich:** `302`, Adresse sofort geändert, **`is_verified` bleibt `1`**, kein Token
-**Ort:** `src/Form/ProfileType.php` führt `email` als reguläres Feld;
-`ProfileController::edit()` ruft nur `flush()`
-**Warum *hoch*:** Der Bestätigungsstatus gilt danach für eine Adresse, die nie bestätigt
-wurde. Wer eine Sitzung kapert, schreibt die Adresse um und ist dauerhaft drin — und der
-rechtmäßige Inhaber kann sich nicht zurückholen, weil es kein Passwort-Zurücksetzen gibt
-(BF-04, Feature `01`). Es gibt auch keine Benachrichtigung an die alte Adresse (FB-05).
-**Vorschlag:** Änderung erst nach Bestätigung wirksam werden lassen — die Mechanik dafür
-steht in B01 bereits (Token, Frist, Mailvorlage). Alternativ mindestens eine
-Benachrichtigung an die alte Adresse.
+2. Zehnmal hintereinander `POST /de/profile/edit` mit `profile[email]=opfer@qa.example`
 
-### BUG-16 · Passwortänderung ohne Rate Limit — niedrig
+**Erwartet:** eine Sperre nach wenigen Versuchen
+**Tatsächlich:** zehnmal 302, **20 Mails** in Mailpit — zehn an `opfer@qa.example`, zehn
+an die eigene Adresse. Keine Sperre.
 
-**Betrifft:** AK-14, FB-07
-**Reproduktion:** Achtmal `/de/profile/password` mit falschem `currentPassword` absenden
-**Erwartet:** Sperre nach wenigen Versuchen
-**Tatsächlich:** 8× `302`, alle angenommen
-**Ort:** `src/Controller/ProfileController.php::changePassword()` — kein Limiter
-**Einordnung:** Setzt eine bereits gekaperte Sitzung voraus, ist also nachrangig
-gegenüber BUG-15. Gehört zum Rate-Limit-Muster M-01.
+**Ort:** `src/Controller/ProfileController.php::edit()` — kein Limiter
+
+**Warum das zählt:** Der Empfänger ist frei wählbar und muss dem Konto nicht gehören.
+Damit ist der Weg ein Mail-Versender auf fremde Adressen, gedeckt von der Absenderdomäne
+von Endlech.lu — das trifft die Brevo-Quota und die Zustellreputation. Der Bruder-Befund
+BF-02 (Registrierung) lief als *hoch*, weil er **ohne Konto** ausnutzbar war; hier
+braucht es ein bestätigtes Konto, deshalb *mittel*.
+
+**Vorschlag:** Limiter wie `verify_resend` (3 je Stunde), gezählt am Konto. Der Vorgang
+ist selten und bewusst; ein enger Deckel stört niemanden. Zusätzlich erwägen, den
+laufenden Vorgang zu entwerten, statt bei jedem Aufruf einen neuen anzulegen.
+
+**Drittes Auftreten desselben Musters** (M-01 in `fehlbestand-uebersicht.md`): Der
+API-Weg ist gedeckelt, der Browser-Weg nicht. Nach BF-02 (Registrierung), BF-13
+(Anmeldung) und BF-18 (Passkey-Challenge) ist das kein Einzelfall mehr, sondern eine
+fehlende Konvention: **Jeder Weg, der eine Mail auslöst oder ein Geheimnis prüft,
+braucht einen Limiter — unabhängig davon, ob eine App oder ein Browser ihn geht.**
+
+### BF-22 · Ungültiges Stammdatenformular meldet den Nutzer ab — mittel
+
+**Betrifft:** EC-04
+
+**Reproduktion:**
+1. Als `user@endlech.lu` anmelden, `/de/profile` → 200
+2. `POST /de/profile/edit` mit `profile[email]=kaputt` (oder einer vergebenen Adresse)
+3. Antwort: **422**, Seite wird gerendert
+4. `/de/profile` erneut aufrufen
+
+**Erwartet:** 200 — der Nutzer korrigiert seine Eingabe
+**Tatsächlich:** **302 nach `/de/login`**. Wortlos abgemeldet, Eingaben verloren.
+
+**Gegenprobe zur Eingrenzung:** Ein ungültiges Formular **ohne** Adressbezug
+(`profile[name]=X`, zu kurz) → 422 und danach **200**. Es liegt also an der Adresse,
+nicht am ungültigen Formular an sich.
+
+**Ort:** `src/Controller/ProfileController.php::edit()` — `handleRequest()` setzt
+`$user->setEmail()` auch dann, wenn die Validierung anschließend scheitert. Der
+veränderte Nutzer wandert in die Sitzung; beim nächsten Request passt der Anmeldename
+nicht mehr zum Konto und Symfony meldet ab.
+
+**Bestand vor der Reparatur** — nachgewiesen an `git show HEAD~1:src/Controller/ProfileController.php`:
+dort steht `handleRequest()` ohne jeden Reset. Die Reparatur hat den Fall nicht
+verursacht, aber auch nicht mitgenommen, obwohl die dafür nötige Variable
+(`$bisherigeAdresse`) inzwischen zwei Zeilen darüber steht.
+
+**Vorschlag:** Im ungültigen Zweig `$user->setEmail($bisherigeAdresse)` zurücksetzen —
+dieselbe Zeile, die im gültigen Zweig schon steht. Nebenwirkung mit Wert: Der
+eingegebene Wert bleibt trotzdem im Feld stehen, weil das Formular ihn aus dem
+Submit-Zustand rendert, nicht aus der Entity.
+
+### BF-23 · Bestätigungstoken im `request`-Kanal — mittel
+
+**Betrifft:** AK-18 (Kriterium bestanden, weil es nur Passwörter nennt), B01 gleichermaßen
+
+**Reproduktion:**
+```
+$ grep -n "verify/email-change" var/log/dev.log | tail -1
+request.INFO: Matched route "app_email_change_confirm".
+  {"route":"app_email_change_confirm","route_parameters":{…,"token":"d831e667…"}}
+```
+Kanalverteilung der Zeilen mit einem 64-Hex-Token in `var/log/dev.log`:
+`doctrine: 147 Zeilen`, **`request: 31 Zeilen`**. Für `app_verify_email` (B01) sind es
+22 Treffer im selben Kanal.
+
+**Erwartet:** Kein gültiger Token in einem Protokoll, das auf Production geschrieben wird
+**Tatsächlich:** `config/packages/monolog.yaml` schließt im `prod`-Block
+`["!deprecation", "!doctrine"]` aus — `request` läuft durch. Der `fingers_crossed`-Handler
+schreibt bei jedem Fehler ab WARNING seinen gesamten Puffer nach `php://stderr`, samt der
+`Matched route`-Zeile mit dem Token darin.
+
+**Damit war BF-06 nur halb behoben.** Dort wurde der `doctrine`-Kanal geschlossen — der
+Weg über die gebundenen Abfrageparameter. Der zweite Weg, die Route selbst, blieb offen
+und betrifft beide Token-Routen.
+
+**Ort:** `config/packages/monolog.yaml` (prod-Handler `main`)
+
+**Vorschlag:** Entweder den `request`-Kanal in `prod` mit ausschließen — dann fehlt im
+Fehlerfall die Route, was die Fehlersuche spürbar verschlechtert — oder einen Processor,
+der `route_parameters.token` maskiert. Die zweite Fassung ist die bessere: Sie trifft
+genau das Feld und lässt den Rest stehen. Zu prüfen ist zusätzlich das
+**Zugriffsprotokoll des Webservers**, das die vollständige URL unabhängig von Monolog
+mitschreibt; dort hilft nur, den Token nicht im Pfad zu führen.
 
 ## Hinweise ohne Fehlerstatus
 
-- **Avatare behalten ihre Metadaten** (FB-06 der Spec). Die Datei wird unverändert
-  verschoben; ein Handyfoto brächte seine GPS-Koordinaten in ein öffentlich abrufbares
-  Verzeichnis. Nicht als Fehler gewertet, weil kein Kriterium es fordert — für eine
-  Plattform mit Kontaktdaten aber bedenkenswert.
-- **Der Kontrast zu B09 ist auffällig:** Hier greift ein `File`-Constraint mit MIME-Prüfung,
-  dort läuft der Upload an Symfonys Formularsystem vorbei und prüft nichts. Zwei
-  Upload-Wege im selben Projekt, zwei Sorgfaltsmaßstäbe (M-06).
+- **Der Deckel auf der Passwortänderung zählt auch erfolgreiche Wechsel.** Nach fünf
+  legitimen Änderungen in 15 Minuten ist gesperrt. Vertretbar — wer sein Passwort
+  fünfmal in einer Viertelstunde wechselt, hat ein anderes Problem —, aber es steht
+  nirgends.
+- **Die Bestätigung eines Adresswechsels setzt `is_verified` nicht auf `1`.** Wer sein
+  Konto nie bestätigt hat und dann die Adresse wechselt, hat den Zugriff auf das neue
+  Postfach damit bewiesen, gilt aber weiter als unbestätigt. Kein Fehler nach der Spec,
+  aber eine Frage an den Betreiber (als OF-05 aufgenommen).
+- **Fehlerzweige des Bestätigungslinks leiten auf `/de/profile`.** Für einen Gast heißt
+  das: Weiterleitung auf die Anmeldung. Die Flash-Meldung überlebt (gemessen: Endstation
+  `/de/` mit 200), aber der Weg ist ein Umweg.
+- **`code-reviewer`-Agent nicht eingesetzt.** Die Sitzungsvorgaben untersagen den Aufruf
+  von Subagenten ohne ausdrückliche Anforderung. Die Codequalitätsprüfung erfolgte
+  manuell; die drei Befunde stammen aus dem Angriffsdurchlauf, nicht aus der Lektüre.
+
+## Regressionstests
+
+Sieben neue Tests in `tests/Functional/Controller/ProfileControllerTest.php`:
+`testEmailAenderungWirdNurVorgemerkt`, `testEmailAenderungBenachrichtigtBeideAdressen`,
+`testBestaetigungUebernimmtDieNeueAdresse`,
+`testAbgelaufenerBestaetigungslinkWechseltNicht`,
+`testBereitsVergebeneAdresseFuehrtNichtZumFehler`,
+`testOffenerVorgangLaesstSichAbbrechen`, `testNamensaenderungLoestKeinenAdresswechselAus`.
+
+Gesamtsuite: **330 Tests, 1137 Assertions, 1 übersprungen, 0 Fehler.**
+
+Der Deckel selbst ist nicht als Test abgebildet: In `when@test` steht das Limit auf
+10000, sonst summierten sich die Versuche über die Suite. Nachweis ist die
+Reproduktion oben — dieselbe Regelung wie bei BF-02 und BF-13.
 
 ## Nächster Schritt
 
-`/sdd-build B04` mit BUG-15 (*hoch*, blockiert) und BUG-16 (*niedrig*, im selben Lauf).
+`/sdd-erfassen B05`. B04 geht auf `approved`; ausgeliefert ist noch nichts — die
+Reparaturen von B01, B02 und B04 liegen zusammen auf `dev` und warten auf `/sdd-deploy`.

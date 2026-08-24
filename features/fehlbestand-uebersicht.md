@@ -30,10 +30,11 @@ nimmt, und der ungeschützt, den ein Browser nimmt.
 | Endpunkt | Limit | Nachweis |
 |---|---|---|
 | `POST /api/v1/auth/login` | 5/min je IP | B23/AK-18 |
-| `POST /{locale}/login` | **keins** | B02/FB-01 — Symfony bringt `login_throttling` mit, es ist nicht gesetzt |
-| `POST /{locale}/register` | **keins** | B01/FB-01 |
-| `/{locale}/verify/resend` | **keins** | B01/FB-02 |
-| `POST /{locale}/profile/password` | **keins** | B04/FB-07 |
+| `POST /{locale}/login` | ~~keins~~ → 5 je 15 Min | B02/FB-01, behoben 2026-08-24 (BF-13) |
+| `POST /{locale}/register` | ~~keins~~ → 5/h | B01/FB-01, behoben 2026-08-23 (BF-02) |
+| `/{locale}/verify/resend` | ~~keins~~ → 3/h | B01/FB-02, behoben 2026-08-23 (BF-02) |
+| `POST /{locale}/profile/password` | ~~keins~~ → 5 je 15 Min | B04/FB-07, behoben 2026-08-24 (BF-20) |
+| `POST /{locale}/profile/edit` | **keins** | B04/BF-21 — verschickt seit der BF-19-Reparatur zwei Mails je Aufruf, an eine **frei wählbare** Adresse |
 | `/passkey/login/options` | **keins** | B03/FB-01 |
 | `POST /{locale}/community/suggest` | **keins** | B11/FB-01 |
 | `/open/dataset.csv` | **keins** | B17/FB-02 |
@@ -41,10 +42,23 @@ nimmt, und der ungeschützt, den ein Browser nimmt.
 
 **Schwerste Folge:** B02/FB-01. Unbegrenztes Passwortraten trifft ein
 Anwendungssystem, dessen Verwaltungszugang an genau einem Konto hängt (B19/FB-01) und
-das keine zweite Stufe kennt (B02/FB-03).
+das keine zweite Stufe kennt (B02/FB-03). **Behoben am 2026-08-24.**
 
 **Kleinster wirksamer Schritt:** `login_throttling: max_attempts: 5` in der
-`main`-Firewall. Eine Zeile.
+`main`-Firewall. Eine Zeile. — *erledigt.*
+
+**Stand 2026-08-24: vier der neun Zeilen sind zu, und trotzdem ist das Muster nicht
+weg.** `POST /profile/edit` kam neu dazu — als Nebenwirkung einer Reparatur, die diesem
+Weg erstmals einen Mailversand gab, ohne ihm einen Deckel mitzugeben. Genau das ist der
+Punkt, an dem eine Einzelbehebung zu wenig ist:
+
+> **Konvention, die dem Projekt fehlt:** Jeder Weg, der eine Mail auslöst oder ein
+> Geheimnis prüft, bekommt einen Limiter — unabhängig davon, ob eine App oder ein
+> Browser ihn geht. Wer einen solchen Weg neu anlegt oder einen bestehenden um einen
+> Mailversand erweitert, legt den Limiter im selben Commit an.
+
+Ohne diesen Satz irgendwo im Projekt wird die Liste weiter Zeilen bekommen, während oben
+welche verschwinden.
 
 ---
 

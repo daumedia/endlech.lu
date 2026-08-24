@@ -171,6 +171,9 @@ ob sie geprüft wurden. Auf derselben Seite verwaltet er seine Passkeys (B03).
 - **OF-04** · Soll auch die **Passwortänderung** eine Benachrichtigung an die
   hinterlegte Adresse auslösen (FB-05)? Die Mechanik dafür steht seit 2026-08-24
   bereit. — Betreiber
+- **OF-05** · Soll die Bestätigung eines Adresswechsels `is_verified` auf `1` setzen?
+  Wer sein Konto nie bestätigt hat und dann die Adresse wechselt, hat den Zugriff auf
+  das neue Postfach damit bewiesen, gilt aber weiter als unbestätigt. — Betreiber
 - **OF-03** · Sollen Avatare beim Upload neu kodiert werden (FB-06)? Ohne
   Bildbibliothek im Projekt wäre das eine neue Abhängigkeit. — Betreiber
 
