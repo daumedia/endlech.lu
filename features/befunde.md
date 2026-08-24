@@ -5,7 +5,7 @@ Stand: 2026-08-23 · Quelle: die `qa-report.md` aller geprüften Features
 Diese Liste wird von `sdd-qa` fortgeschrieben, nicht von Hand. Sie ist die Grundlage
 des Auditberichts, den `/sdd-erfassen abschluss` daraus baut.
 
-**Geprüft bisher:** B01 (abgenommen, 17/20) und B02 (**abgenommen**, 16/17).
+**Geprüft bisher:** B01 (17/20), B02 (16/17) und B03 (16/20) — alle **abgenommen**.
 Beide Reparaturen sind **noch nicht auf `production`**.
 Offen: B02–B26 (Status `rekonstruiert`).
 
@@ -23,6 +23,7 @@ obwohl dort nichts mehr zu reparieren ist.
 | ID | Feature | Befund | Grad | Fundstelle | Seit |
 |---|---|---|---|---|---|
 | BF-04 | **01** | Betroffenenrechte nicht bedienbar — keine Kontolöschung, kein Datenexport, kein Passwort-Zurücksetzen. **2026-08-23 aus B01 herausgelöst:** keine Reparaturaufgabe, sondern fehlende Funktionen über B01, B04 und B19 hinweg — läuft als reguläres Feature `01` durch die volle Kette | hoch | `src/Controller/ProfileController.php` (fehlend) | 2026-08-23 |
+| BF-18 | B03 | Passkey-Challenge-Endpunkte ohne Rate Limit — 10 Anfragen an `/passkey/login/options` alle mit 200 beantwortet | mittel | `config/routes/webauthn.yaml`, `access_control` | 2026-08-24 |
 | BF-17 | B02 | Gast auf `/de/logout` bekommt 403 statt einer Weiterleitung — Kehrseite von `enable_csrf` | niedrig | `config/packages/security.yaml` | 2026-08-24 |
 | BF-15 | B02 | „Angemeldet bleiben" wirkt für `/profile` nicht (`IS_AUTHENTICATED_FULLY`), die Kopfzeile zeigt den Nutzer trotzdem als angemeldet | mittel | `config/packages/security.yaml`, `templates/base.html.twig` | 2026-08-24 |
 | BF-16 | B02, B04 | **Rekonstruktion falsch:** B02/EC-04, B04/AK-13 und B04/FB-04 behaupten, Sitzungen und `remember_me`-Cookies überlebten eine Passwortänderung. Gemessen: Symfony entwertet beide. Kein Codefehler — eine falsche Spec, gegen die sonst geprüft würde | mittel | `features/B02-…/spec.md`, `features/B04-…/spec.md` | 2026-08-24 |
@@ -64,7 +65,8 @@ Was in mehr als einem Feature auftritt — der Grund, warum diese Liste existier
   nach der Rückerfassung Passwortwechsel, Passkey-Challenge, Vorschläge und
   Datensatz-Download (M-01 in `fehlbestand-uebersicht.md`). Das Muster hat sich damit
   bestätigt: Geschützt ist der Weg, den eine App nimmt; ungeschützt der, den ein Browser
-  nimmt.
+  nimmt. Mit BF-18 kommt ein dritter Fall dazu: die sprachfreien Passkey-Endpunkte fallen
+  weder unter die Web- noch unter die API-Limiter.
 - **Eine Rekonstruktion kann falsch sein (BF-16).** B02/EC-04 und zwei Stellen in B04
   behaupteten, eine Passwortänderung lasse fremde Sitzungen unberührt — geschlossen aus
   dem Projektcode, der tatsächlich nichts dergleichen tut. Gemessen erledigt Symfony es

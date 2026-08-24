@@ -1,6 +1,6 @@
 # B03 · Passkey-Anmeldung & -Verwaltung — Systemdesign
 
-Status: `rekonstruiert` · Stand: 2026-08-23 · Stack-Profil: `symfony-doctrine`
+Status: `approved` · Stand: 2026-08-23 · Stack-Profil: `symfony-doctrine`
 
 ## Überblick
 
