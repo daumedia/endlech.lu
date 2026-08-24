@@ -8,7 +8,7 @@ des Auditberichts, den `/sdd-erfassen abschluss` daraus baut.
 **Geprüft bisher:** B01 (17/20), B02 (16/17), B03 (16/20), B04 (23/24 im zweiten
 Durchlauf), B23 (34/35 im zweiten Durchlauf), B19 (17/17, davon eines nicht prüfbar),
 B14 (28/28), B15 (27/27), B22 (30/30), B17 (25/25) — abgenommen.
-B10 (24/24 im zweiten Durchlauf), B18 (29/29), B11 (18/19, eines nicht prüfbar), B20 (19/20) — abgenommen. B23s beide
+B10 (24/24 im zweiten Durchlauf), B18 (29/29), B11 (18/19, eines nicht prüfbar), B20 (19/20), B21 (20/20) — abgenommen. B23s beide
 *hoch*-Befunde sind repariert und nachgemessen; dabei fielen drei neue an, zwei davon
 als Folge der Reparatur.
 Alle Reparaturen sind **noch nicht auf `production`**.
@@ -33,6 +33,9 @@ obwohl dort nichts mehr zu reparieren ist.
 | BF-42 | B17 | Kein Rate Limit auf den Datenendpunkten — 12 Abrufe, zwölfmal 200; jeder lädt den gesamten Bestand. **Sechste Wiederholung von M-01**, und die erste, die nicht unter den Wortlaut der Konvention fällt (löst keine Mail aus, prüft kein Geheimnis — ist nur teuer) | niedrig | `src/Controller/Open/OpenDataController.php` | 2026-08-24 |
 | BF-41 | B17 | Unverifizierte Einträge stehen im veröffentlichten Datensatz (8 von 11). **Neu bewertet:** Die Spec führte das als schwerste Verkettung des Projekts — sie ist seit BF-24 unterbrochen. Bleibt eine Produktfrage samt fehlender Dokumentation von `isVerified` | niedrig | `RestaurantRepository::findAllForExport()` | 2026-08-24 |
 | BF-40 | B22 | Die Verwaltungsliste skaliert nicht — kein Blättern, keine Obergrenze; die Restaurant-Auswahlliste lädt den **kompletten Kernbestand** (`findBy([], …)`). Blättern ist im Projekt vorhanden (B05, B20) und hier nur nicht angewandt | niedrig | `AdminWaitlistController.php:96`, `PartnerWaitlistEntryRepository::findFiltered()` | 2026-08-24 |
+| BF-54 | B21 | Genehmigen ist **nicht idempotent** — zweimal dasselbe Formular abgesendet erzeugt zwei Restaurants (IDs 318, 319), beide mit Erfolgsmeldung. `approve()` prüft den Status nicht. Die Dublette landet sofort im öffentlichen Bestand und in den Kennzahlen | mittel | `AdminSuggestionController::approve()` | 2026-08-24 |
+| BF-55 | B21 | Die Ablehnungsnotiz erreicht den Einreicher nie — gespeichert, aber 0 Routen, 0 Mails, nicht im Profil. Zusammen mit B11/AK-10 sieht er seinen Vorschlag zu **keinem** Zeitpunkt wieder | niedrig | `AdminSuggestionController::reject()` | 2026-08-24 |
+| BF-56 | B21 | Genehmigte Vorschläge starten ohne Maße und Öffnungszeiten — der Assistent erhebt sie nicht. Zwei von zehn Punkten fehlen, ohne dass jemand nachgemessen hat | niedrig | `RestaurantSuggestionType`, `AccessibilityScore` | 2026-08-24 |
 | BF-51 | B20 | Leeres Pflichtfeld im Admin-Formular → **HTTP 500** statt 422. `setName(string)` nimmt kein `null`, und der PropertyAccessor schreibt **vor** der Validierung — die vorhandenen `NotBlank`-Constraints kommen nie zum Zug. Jeder Fall erzeugt in `prod` einen Sentry-Bericht | mittel | `src/Entity/Restaurant.php:182`, `RestaurantType.php:43` | 2026-08-24 |
 | BF-52 | B20 | Die Verwaltungsliste blättert nicht — **zweites Auftreten** nach BF-40. Die öffentliche Liste blättert zu sechs, die API deckelt bei 50; ausgerechnet der Bereich, der jeden Datensatz mit Bildern rendert, lädt alles | niedrig | `AdminRestaurantController.php:32` | 2026-08-24 |
 | BF-53 | B20 | Bilddateien überleben das Löschen — Datenbankzeilen verschwinden über die Kaskade, `ImageUploadService::delete()` wird nie durchlaufen. Die Dateien bleiben abrufbar und überleben jeden Deploy | niedrig | `AdminRestaurantController::delete()` | 2026-08-24 |
