@@ -5,10 +5,10 @@ Stand: 2026-08-23 · Quelle: die `qa-report.md` aller geprüften Features
 Diese Liste wird von `sdd-qa` fortgeschrieben, nicht von Hand. Sie ist die Grundlage
 des Auditberichts, den `/sdd-erfassen abschluss` daraus baut.
 
-**Geprüft bisher:** B01 (17/20), B02 (16/17), B03 (16/20) — abgenommen. B04 (15/18) → **review**,
-ein Befund mit Grad *hoch*: Die Erfassung pausiert bis zur Reparatur.
-Beide Reparaturen sind **noch nicht auf `production`**.
-Offen: B02–B26 (Status `rekonstruiert`).
+**Geprüft bisher:** B01 (17/20), B02 (16/17), B03 (16/20) — abgenommen. B04 (15/18) →
+beide Befunde am 2026-08-24 repariert, wartet auf die erneute QA.
+Alle Reparaturen sind **noch nicht auf `production`**.
+Offen: B05–B26 (Status `rekonstruiert`).
 
 **Zuordnung von Befunden:** Ein Befund steht bei dem Feature, in dem er **behoben** wird
 — nicht bei dem, in dem er gefunden wurde. BF-04 wurde in B01 gefunden und ist seit
@@ -24,8 +24,6 @@ obwohl dort nichts mehr zu reparieren ist.
 | ID | Feature | Befund | Grad | Fundstelle | Seit |
 |---|---|---|---|---|---|
 | BF-04 | **01** | Betroffenenrechte nicht bedienbar — keine Kontolöschung, kein Datenexport, kein Passwort-Zurücksetzen. **2026-08-23 aus B01 herausgelöst:** keine Reparaturaufgabe, sondern fehlende Funktionen über B01, B04 und B19 hinweg — läuft als reguläres Feature `01` durch die volle Kette | hoch | `src/Controller/ProfileController.php` (fehlend) | 2026-08-23 |
-| BF-19 | B04 | E-Mail-Änderung ohne erneute Bestätigung — `is_verified` bleibt 1 für eine nie bestätigte Adresse; mit gekaperter Sitzung eine dauerhafte Kontoübernahme, da es kein Passwort-Zurücksetzen gibt | **hoch** | `src/Form/ProfileType.php`, `src/Controller/ProfileController.php` | 2026-08-24 |
-| BF-20 | B04 | Passwortänderung ohne Rate Limit — 8 Rateversuche auf das aktuelle Passwort alle angenommen | niedrig | `src/Controller/ProfileController.php` | 2026-08-24 |
 | BF-18 | B03 | Passkey-Challenge-Endpunkte ohne Rate Limit — 10 Anfragen an `/passkey/login/options` alle mit 200 beantwortet | mittel | `config/routes/webauthn.yaml`, `access_control` | 2026-08-24 |
 | BF-17 | B02 | Gast auf `/de/logout` bekommt 403 statt einer Weiterleitung — Kehrseite von `enable_csrf` | niedrig | `config/packages/security.yaml` | 2026-08-24 |
 | BF-15 | B02 | „Angemeldet bleiben" wirkt für `/profile` nicht (`IS_AUTHENTICATED_FULLY`), die Kopfzeile zeigt den Nutzer trotzdem als angemeldet | mittel | `config/packages/security.yaml`, `templates/base.html.twig` | 2026-08-24 |
@@ -46,6 +44,8 @@ obwohl dort nichts mehr zu reparieren ist.
 | BF-16 | B02, B04 | **Rekonstruktion falsch** — B02/EC-04, B04/AK-13 und B04/FB-04 behaupteten, Sitzungen und `remember_me`-Cookies überlebten eine Passwortänderung. **Beide Specs am 2026-08-24 berichtigt**, Regressionstest angelegt | mittel | 2026-08-24 | entfällt (Dokumentation) |
 | BF-13 | B02 | Anmeldung ohne Sperre — `login_throttling` mit 5 Versuchen je 15 Minuten ergänzt | **hoch** | 2026-08-24 | **noch nicht** |
 | BF-14 | B02 | Abmelden ohne CSRF — `enable_csrf` plus POST-Formular in der Kopfzeile | niedrig | 2026-08-24 | **noch nicht** |
+| BF-19 | B04 | E-Mail-Änderung ohne erneute Bestätigung — neue Adresse wird nur noch vorgemerkt (`User::$pendingEmail`), Bestätigungslink an die neue und Warnung an die bisherige Adresse | **hoch** | 2026-08-24 | **noch nicht** — Branch `fix/b04-profil-qa` |
+| BF-20 | B04 | Passwortänderung ohne Rate Limit — Limiter `password_change` (5 je 15 Minuten), gezählt **am Konto** statt an der IP | niedrig | 2026-08-24 | **noch nicht** |
 
 ## Akzeptiert
 

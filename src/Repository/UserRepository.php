@@ -35,6 +35,11 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         return $this->findOneBy(['verificationToken' => $token]);
     }
 
+    public function findByPendingEmailToken(string $token): ?User
+    {
+        return $this->findOneBy(['pendingEmailToken' => $token]);
+    }
+
     public function countRegisteredSince(\DateTimeImmutable $since): int
     {
         return (int) $this->createQueryBuilder('u')

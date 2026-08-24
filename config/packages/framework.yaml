@@ -31,6 +31,13 @@ framework:
             policy: 'sliding_window'
             limit: 5
             interval: '1 hour'
+        # Passwortänderung im Profil: gedeckelt am KONTO, nicht an der IP – der
+        # Angriff ist das Raten des aktuellen Passworts aus einer gekaperten
+        # Sitzung heraus, und dort wechselt die IP mühelos.
+        password_change:
+            policy: 'sliding_window'
+            limit: 5
+            interval: '15 minutes'
         # Erneutes Senden der Bestätigungsmail: strenger, weil das Ziel ein fremdes
         # Postfach sein kann und der Absender bereits angemeldet ist.
         verify_resend:
@@ -65,3 +72,7 @@ when@test:
                 policy: 'sliding_window'
                 limit: 10000
                 interval: '1 hour'
+            password_change:
+                policy: 'sliding_window'
+                limit: 10000
+                interval: '15 minutes'

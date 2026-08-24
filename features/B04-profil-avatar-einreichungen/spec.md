@@ -66,13 +66,21 @@ ob sie geprüft wurden. Auf derselben Seite verwaltet er seine Passkeys (B03).
 
 ### Fragwürdiges Verhalten — als Kriterium aufgenommen, zur Klärung vorgelegt
 
-- **AK-12** ⚠ · Angenommen, ein Nutzer ändert seine E-Mail-Adresse auf eine beliebige
-  andere, wenn abgeschickt wird, dann wird sie sofort übernommen und `is_verified`
-  bleibt auf `true` — es geht **keine** Bestätigungsmail an die neue Adresse.
-  *(So verhält sich der Code heute: `ProfileType` führt `email` als reguläres Feld,
-  `ProfileController::edit()` ruft nur `flush()`. Folge: Der Bestätigungsstatus gilt
-  für eine Adresse, die nie bestätigt wurde. Wer ein Konto übernimmt, kann die Adresse
-  auf seine eigene umschreiben und ist damit dauerhaft drin.)*
+- **AK-12** · Angenommen, ein Nutzer ändert seine E-Mail-Adresse, wenn abgeschickt
+  wird, dann bleibt die bisherige Adresse gültig und die neue wird nur **vorgemerkt**;
+  an die neue geht ein Bestätigungslink mit 24-Stunden-Frist, an die bisherige eine
+  Warnung. Erst der Klick auf den Link tauscht die Adresse.
+  *(**Repariert am 2026-08-24**, BF-19. Vorher wurde die Adresse sofort übernommen und
+  `is_verified` blieb auf `true` — der Bestätigungsstatus galt damit für eine nie
+  bestätigte Adresse, und wer eine Sitzung kaperte, schrieb das Konto dauerhaft auf
+  sich um. Neu: `User::$pendingEmail` mit eigenem Token, `app_email_change_confirm`,
+  zwei Mailvorlagen. Der offene Vorgang ist im Profil sichtbar und dort abbrechbar.)*
+
+- **AK-12a** · Angenommen, die vorgemerkte Adresse wurde in der Zwischenzeit von
+  jemand anderem registriert oder die Frist ist abgelaufen, wenn der Link angeklickt
+  wird, dann wird der Vorgang abgeräumt und eine Meldung gezeigt — kein Serverfehler.
+  *(`pending_email` trägt keine Eindeutigkeit, `email` schon; ohne die Prüfung liefe
+  der `flush()` in eine Unique-Verletzung.)*
 
 - **AK-13** · Angenommen, ein Nutzer ändert sein Passwort, wenn die Änderung durchläuft,
   dann bleibt **seine eigene** Sitzung bestehen, während **andere Sitzungen desselben
@@ -85,10 +93,13 @@ ob sie geprüft wurden. Auf derselben Seite verwaltet er seine Passkeys (B03).
   `remember_me`-Signatur schließt den Passwort-Hash ein. Nachweis in `qa-report.md`
   sowie im Regressionstest `testEc04PasswortaenderungEntwertetFremdeSitzungen`.)*
 
-- **AK-14** ⚠ · Angenommen, jemand kennt eine gültige Sitzung, wenn er das aktuelle
-  Passwort im Änderungsformular durchprobiert, dann greift **keine** Sperre.
-  *(Kein Rate-Limiter auf `app_profile_password`; `isPasswordValid()` wird beliebig oft
-  gerufen. Weniger gewichtig als B02/AK-11, weil eine Sitzung Voraussetzung ist.)*
+- **AK-14** · Angenommen, jemand probiert das aktuelle Passwort im Änderungsformular
+  durch, wenn der sechste Versuch innerhalb von 15 Minuten kommt, dann wird er
+  abgewiesen — gezählt wird **am Konto**, nicht an der IP.
+  *(**Repariert am 2026-08-24**, BF-20. Der Angriff setzt eine gekaperte Sitzung
+  voraus; dort wechselt die IP mühelos, das Konto nicht. Limiter `password_change`,
+  5 Versuche je 15 Minuten. Nachgestellt: Versuche 1–5 melden „Passwort nicht
+  korrekt", der sechste die Sperre.)*
 
 ### Datenschutz und Missbrauchsschutz
 
@@ -126,18 +137,23 @@ ob sie geprüft wurden. Auf derselben Seite verwaltet er seine Passkeys (B03).
   Sicherheitskatalog nennt das als **Pflicht**. (Identisch mit B01/FB-04, hier
   wiederholt, weil das Profil der Ort wäre.)
 - **FB-02 · Kein Datenexport.** Auskunftsrecht nach Art. 15 DSGVO nicht erfüllbar.
-- **FB-03 · Keine erneute Bestätigung bei E-Mail-Änderung.** Siehe AK-12.
+- ~~**FB-03 · Keine erneute Bestätigung bei E-Mail-Änderung.**~~ **Behoben am
+  2026-08-24** (BF-19) — siehe AK-12.
 - ~~**FB-04 · Keine Sitzungsinvalidierung bei Passwortänderung.**~~ **Entfällt —
   2026-08-24 widerlegt.** Symfony entwertet fremde Sitzungen und `remember_me`-Cookies
   von sich aus; siehe AK-13. Der Eintrag bleibt durchgestrichen stehen, damit
   nachvollziehbar ist, dass hier einmal eine Lücke vermutet wurde, die es nicht gibt.
-- **FB-05 · Keine Benachrichtigung an die alte Adresse**, wenn E-Mail oder Passwort
-  geändert werden. Der übliche Schutz gegen stille Kontoübernahme fehlt.
+- **FB-05 · Keine Benachrichtigung an die alte Adresse**, wenn das **Passwort**
+  geändert wird. Für die E-Mail-Änderung ist der Punkt seit 2026-08-24 erledigt (die
+  Warnmail an die bisherige Adresse ist dort der eigentliche Schutz — wer übernimmt,
+  liest die Bestätigung im neuen Postfach ohnehin mit); beim Passwortwechsel fehlt sie
+  weiterhin.
 - **FB-06 · Avatare werden nicht verkleinert oder neu kodiert.** Die hochgeladene Datei
   wird unverändert abgelegt (im Bestand liegt eine mit 1,1 MB). *Folge:* Metadaten wie
   GPS-Koordinaten aus einem Handyfoto bleiben in der öffentlich abrufbaren Datei
   erhalten.
-- **FB-07 · Kein Rate Limit auf der Passwortänderung.** Siehe AK-14.
+- ~~**FB-07 · Kein Rate Limit auf der Passwortänderung.**~~ **Behoben am 2026-08-24**
+  (BF-20) — siehe AK-14.
 - **FB-08 · Dateiname ist nicht kryptografisch zufällig.** `uniqid('', true)` ist
   zeitbasiert. Für öffentliche Avatare unkritisch, wäre bei nicht-öffentlichen Dateien
   aber ein Aufzählungspfad.
@@ -148,7 +164,13 @@ ob sie geprüft wurden. Auf derselben Seite verwaltet er seine Passkeys (B03).
   (SET NULL), `WebauthnCredential` (CASCADE), `RestaurantSuggestion.suggestedBy`
   (SET NULL) und die Avatardatei — die Kaskaden sind bereits alle gesetzt, es fehlt nur
   der Auslöser. — Betreiber
-- **OF-02** · Soll eine E-Mail-Änderung erneut bestätigt werden (AK-12)? — Betreiber
+- ~~**OF-02** · Soll eine E-Mail-Änderung erneut bestätigt werden (AK-12)?~~
+  **Beantwortet am 2026-08-24 durch die Reparatur:** ja. Die Frage war ohnehin keine
+  echte Wahl — ohne Bestätigung ist die Adresse ein Übernahmehebel, und ein
+  Passwort-Zurücksetzen als Rückweg gibt es nicht (siehe Feature `01`).
+- **OF-04** · Soll auch die **Passwortänderung** eine Benachrichtigung an die
+  hinterlegte Adresse auslösen (FB-05)? Die Mechanik dafür steht seit 2026-08-24
+  bereit. — Betreiber
 - **OF-03** · Sollen Avatare beim Upload neu kodiert werden (FB-06)? Ohne
   Bildbibliothek im Projekt wäre das eine neue Abhängigkeit. — Betreiber
 

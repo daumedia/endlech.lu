@@ -240,6 +240,8 @@ Autowiring and autoconfiguration are enabled by default in `config/services.yaml
 | `app_profile_edit`      | `/profile/edit` | `ProfileController::edit()`        |
 | `app_profile_password`  | `/profile/password` | `ProfileController::changePassword()` |
 | `app_profile_avatar_delete` | `/profile/avatar/delete` | `ProfileController::deleteAvatar()` |
+| `app_profile_email_cancel` | `/profile/email/abbrechen` (POST) | `ProfileController::cancelEmailChange()` |
+| `app_email_change_confirm` | `/verify/email-change/{token}` | `EmailVerificationController::confirmEmailChange()` |
 | `app_passkey_rename`    | `/profile/passkeys/{id}/umbenennen` | `PasskeyController::rename()` |
 | `app_passkey_delete`    | `/profile/passkeys/{id}/loeschen` | `PasskeyController::delete()` |
 | `webauthn.controller.request.request.login` | `/passkey/login/options` (locale-frei) | Bundle-Controller (Challenge zum Anmelden) |
@@ -423,6 +425,51 @@ Daneben `assets/controllers/passkey_ui_controller.ts`: Feature-Detection (Knopf 
 **Übersetzungen:** Block `passkey:` in `messages.{de,en,fr,lb}.yaml`, dazu `flash.passkey_*`.
 
 **Bewusst nicht enthalten:** Conditional UI / Autofill (`conditionalUi: true` kann das Paket), Passkey-Registrierung neuer Konten, Passkeys in `/api/v1`, Attestation-Prüfung (`attestation_conveyance` bleibt `none` – ein Attestation-Zwang sperrte Authenticator aus, ohne dass jemand die Herstellerdaten auswertet).
+
+## E-Mail-Änderung mit Bestätigung (QA B04, BF-19)
+
+Eine im Profil eingegebene neue Adresse wird **vorgemerkt, nicht übernommen**. Vorher
+wechselte `User::$email` im selben Request und `is_verified` blieb auf `true` — der
+Bestätigungsstatus galt damit für eine nie bestätigte Adresse, und wer eine Sitzung
+kaperte, schrieb das Konto dauerhaft auf sich um. Einen Rückweg gäbe es nicht: Ein
+Passwort-Zurücksetzen existiert im Projekt bis heute nicht (Feature `01`).
+
+**Felder:** `pendingEmail`, `pendingEmailToken`, `pendingEmailTokenExpiresAt`
+(Migration `Version20260824120000`, reine `ADD COLUMN` — MariaDB-10.5-tauglich).
+Methoden auf `User`: `requestEmailChange()`, `confirmEmailChange()`,
+`clearPendingEmail()`, `isPendingEmailTokenExpired()`.
+
+⚠️ **`ProfileController::edit()` merkt sich die bisherige Adresse VOR `handleRequest()`
+und setzt sie danach zurück.** `ProfileType` ist an die Entity gebunden; nach
+`handleRequest()` steht dort bereits der eingegebene Wert. Genau der soll nicht wirksam
+werden — die Validierung muss ihn aber sehen, sonst prüfte `UniqueEntity` auf dem alten
+Wert und eine bereits vergebene Adresse ginge durch.
+
+⚠️ **Zwei Mails, und die wichtigere geht an die ALTE Adresse.** Wer ein Konto übernehmen
+will, sitzt im neuen Postfach und liest die Bestätigung ohnehin mit; nur die Warnung an
+die bisherige Adresse erreicht den rechtmäßigen Inhaber. Vorlagen:
+`email/email_change.html.twig` (Knopf) und `email/email_change_notice.html.twig`
+(Warnung, kein Knopf).
+
+⚠️ **`pending_email` hat keinen Unique-Index** — siehe `docs/data-model.md`. Beim
+Einlösen prüft der Controller gegen `email` und räumt den Vorgang ab; ohne das liefe
+der `flush()` in eine Unique-Verletzung und der Nutzer sähe einen 500er.
+
+**Die Bestätigungsroute liegt unter `/verify/…`, nicht unter `/profile/…`** — dort
+greift `IsGranted('IS_AUTHENTICATED_FULLY')` auf Klassenebene. Der Token *ist* der
+Nachweis (Zugriff auf das neue Postfach); eine Anmeldepflicht machte den Klick aus dem
+Postfach heraus unbenutzbar, ohne etwas zu sichern. `access_control` deckt
+`^/[a-z]{2}/verify` bereits als `PUBLIC_ACCESS` ab. Zwei Pfadsegmente, deshalb kein
+Konflikt mit `/verify/{token}`.
+
+⚠️ **Der Hinweis auf den offenen Vorgang steht AUSSERHALB des Profilformulars.** Ein
+`<form>` im `<form>` ist ungültiges HTML — der Browser verwirft das innere, und der
+Abbrechen-Knopf wäre wirkungslos. Im Test fiel das als „Kein Formular mit action
+/profile/email/abbrechen" auf.
+
+**Limiter `password_change`** (5 je 15 Minuten, BF-20) zählt **am Konto**, nicht an der
+IP: Der Angriff ist das Raten des aktuellen Passworts aus einer gekaperten Sitzung
+heraus, und dort wechselt die IP mühelos.
 
 ## Cookie-Consent-Banner (Issue #82)
 DSGVO-Banner, das beim ersten Besuch unten erscheint und die Wahl (`accepted`/`declined`) 365 Tage im Cookie `cookie_consent` speichert. Keine Entity/Migration/Backend-Änderung — rein clientseitig.
