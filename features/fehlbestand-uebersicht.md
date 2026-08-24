@@ -38,7 +38,7 @@ nimmt, und der ungeschützt, den ein Browser nimmt.
 | `POST /api/v1/auth/register` | ~~100/min~~ → 5/h | B23/FB-02, behoben 2026-08-24 (BF-25) |
 | `POST /api/v1/restaurants` | **keins** (100/min anonym) | B23/BF-30 — 40 Aufrufe, 40 Vorschläge in der Moderationsschlange |
 | `/passkey/login/options` | **keins** | B03/FB-01 |
-| `POST /{locale}/community/suggest` | **keins** | B11/FB-01 |
+| `POST /{locale}/community/suggest` | **keins** | B11/BF-50 — gemessen 2026-08-24; gemildert durch Konto- und Bestätigungspflicht |
 | `/open/dataset.csv` | **keins** | B17/BF-42 — gemessen 2026-08-24: 12 Abrufe, zwölfmal 200; jeder lädt den gesamten Bestand |
 | alle Verwaltungs-POSTs | **keins** | B19/FB-05, gemessen 2026-08-24 (BF-35): acht in Folge, keine Sperre |
 
