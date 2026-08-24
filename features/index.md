@@ -24,7 +24,10 @@ Abmelden verlangt ein Token. 16 von 17 Kriterien, nur *mittel*/*niedrig* offen.
 virtuellen WebAuthn-Authenticator (CDP) durchgespielt, inklusive Anmeldung ohne
 E-Mail-Eingabe. Ein Befund *mittel* (BF-18), drei Kriterien nicht prüfbar.
 
-Nächster Schritt: `/sdd-erfassen B05`. Die Reparaturen von B01, B02 und B04 warten auf
+Nächster Schritt: `/sdd-build B23` (BF-24 und BF-25, beide *hoch*). **Die Erfassung
+pausiert** — mit einer Vorfrage an den Betreiber: Gibt es die iOS-App schon (OF-04)?
+Bei Nein lassen sich beide Befunde folgenlos schließen.
+Die Reparaturen von B01, B02 und B04 warten auf
 `/sdd-deploy`; das neue Feature `01` beginnt mit `/sdd-spec 01`.
 
 **Zwei Namensräume:** Einträge mit Präfix `B` sind **Bestand** — gebaut, bevor die
@@ -65,7 +68,7 @@ Eingang von `sdd-build`. Der Weg ist: `bestand` → `/sdd-erfassen BNN` →
 | B20 | Restaurantverwaltung (Admin) | P0 | rekonstruiert | B19 | 2026-08-23 |
 | B21 | Vorschläge prüfen (Admin) | P0 | rekonstruiert | B19, B11 | 2026-08-23 |
 | B22 | Wartelisten-Verwaltung (Admin) | P1 | rekonstruiert | B19, B14, B15 | 2026-08-23 |
-| B23 | REST-API v1 (iOS-Backend) | P0 | rekonstruiert | B01, B05 | 2026-08-23 |
+| B23 | REST-API v1 (iOS-Backend) | P0 | **review** | B01, B05 | 2026-08-24 · QA: 33/35, BF-24 + BF-25 *hoch* |
 | B24 | Mehrsprachigkeit | P1 | rekonstruiert | — | 2026-08-23 |
 | B25 | PWA & mobile Navigation | P1 | rekonstruiert | — | 2026-08-23 |
 | B26 | Cookie-Banner | P2 | rekonstruiert | — | 2026-08-23 |

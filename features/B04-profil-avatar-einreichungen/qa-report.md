@@ -24,7 +24,8 @@ Drei neue Befunde, alle *mittel*:
   der ist in `prod` **nicht** ausgeschlossen. Damit war **BF-06 nur halb behoben**, und
   zwar für B01 genauso wie für B04.
 
-Nächster Aufruf: `/sdd-erfassen B05`. Die Erfassung läuft weiter — kein Befund ist
+Nächster Aufruf: `/sdd-qa B23` (Rang 1 der Risikoreihenfolge; B05 steht in Rang 4).
+Die Erfassung läuft weiter — kein Befund ist
 *hoch* oder *kritisch*. Die drei neuen stehen in `features/befunde.md`.
 
 ## Was seit dem ersten Durchlauf anders ist
@@ -234,5 +235,5 @@ Reproduktion oben — dieselbe Regelung wie bei BF-02 und BF-13.
 
 ## Nächster Schritt
 
-`/sdd-erfassen B05`. B04 geht auf `approved`; ausgeliefert ist noch nichts — die
+`/sdd-qa B23`. B04 geht auf `approved`; ausgeliefert ist noch nichts — die
 Reparaturen von B01, B02 und B04 liegen zusammen auf `dev` und warten auf `/sdd-deploy`.

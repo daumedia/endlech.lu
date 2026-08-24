@@ -5,11 +5,11 @@ Stand: 2026-08-23 · Quelle: die `qa-report.md` aller geprüften Features
 Diese Liste wird von `sdd-qa` fortgeschrieben, nicht von Hand. Sie ist die Grundlage
 des Auditberichts, den `/sdd-erfassen abschluss` daraus baut.
 
-**Geprüft bisher:** B01 (17/20), B02 (16/17), B03 (16/20), B04 (23/24 im zweiten Durchlauf)
-— alle abgenommen. B04s beide Befunde sind repariert und nachgemessen; dabei fielen drei
-neue *mittel*-Befunde an, einer davon als Nebenwirkung der Reparatur.
+**Geprüft bisher:** B01 (17/20), B02 (16/17), B03 (16/20), B04 (23/24 im zweiten
+Durchlauf) — abgenommen. **B23 (33/35) → `review`: zwei Befunde mit Grad *hoch*, die
+Erfassung pausiert.**
 Alle Reparaturen sind **noch nicht auf `production`**.
-Offen: B05–B26 (Status `rekonstruiert`).
+Offen: B05–B22, B24–B26 (Status `rekonstruiert`).
 
 **Zuordnung von Befunden:** Ein Befund steht bei dem Feature, in dem er **behoben** wird
 — nicht bei dem, in dem er gefunden wurde. BF-04 wurde in B01 gefunden und ist seit
@@ -25,6 +25,12 @@ obwohl dort nichts mehr zu reparieren ist.
 | ID | Feature | Befund | Grad | Fundstelle | Seit |
 |---|---|---|---|---|---|
 | BF-04 | **01** | Betroffenenrechte nicht bedienbar — keine Kontolöschung, kein Datenexport, kein Passwort-Zurücksetzen. **2026-08-23 aus B01 herausgelöst:** keine Reparaturaufgabe, sondern fehlende Funktionen über B01, B04 und B19 hinweg — läuft als reguläres Feature `01` durch die volle Kette | hoch | `src/Controller/ProfileController.php` (fehlend) | 2026-08-23 |
+| BF-24 | B23 | **Die API umgeht die Moderation vollständig** — ein `POST /api/v1/restaurants` erscheint sofort in der öffentlichen Liste, auf der Detailseite, im CC-BY-Datensatz und in den Kennzahlen von `/open` (gemessen: `verifiedShare` 27,3 % → 23,1 %). Dazu Kontaktdaten Dritter (AK-24) und eine von außen beschreibbare Filterauswahl (EC-06) | **hoch** | `Api/V1/RestaurantApiController::create()`, `RestaurantRepository::findPaginated()` | 2026-08-24 |
+| BF-25 | B23 | `register` fällt unter das schwache Limit (100/min statt 5) — 11 Hinweis-Mails an eine **fremde** Adresse in Sekunden, anonym. Der Web-Weg ist seit BF-02 gedeckelt, der API-Weg nicht | **hoch** | `src/EventSubscriber/ApiRateLimitSubscriber.php` | 2026-08-24 |
+| BF-26 | B23 | Die Fehlerantworten des JWT-Bundles brechen den Formatvertrag — `{code,message}` statt `{error:{code,message}}` bei falschem Passwort und abgelaufenem Token, also den beiden häufigsten Fällen eines Mobil-Clients | mittel | `config/packages/security.yaml` (Lexik-failure_handler) | 2026-08-24 |
+| BF-27 | B23 | Küchen-Typ über 80 Zeichen → **HTTP 500** statt 422; jeder Aufruf erzeugt in Produktion einen Sentry-Bericht | niedrig | `Api/V1/RestaurantApiController::create()` | 2026-08-24 |
+| BF-28 | B23 | 404-Meldungen geben `App\Entity\Restaurant` und `EntityValueResolver` preis — auch in Produktion, kein Debug-Zusatz | niedrig | `src/EventSubscriber/ApiExceptionSubscriber.php:46` | 2026-08-24 |
+| BF-29 | B23 | Der `Host`-Header steuert die ausgegebenen Bild-URLs; `trusted_hosts` nicht gesetzt, `APP_API_BASE_URL` leer | niedrig | `src/Api/AssetUrlBuilder.php`, `config/packages/framework.yaml` | 2026-08-24 |
 | BF-21 | B04 | Adressänderung ohne Rate Limit — zehn Durchläufe erzeugten 20 Mails, davon 10 an ein frei gewähltes fremdes Postfach. **Nebenwirkung der BF-19-Reparatur**: Vorher verschickte dieser Weg gar keine Mail | mittel | `src/Controller/ProfileController.php::edit()` | 2026-08-24 |
 | BF-22 | B04 | Ungültiges Stammdatenformular mit geänderter Adresse meldet den Nutzer ab — `handleRequest()` setzt `setEmail()` auch bei fehlgeschlagener Validierung, der veränderte Nutzer wandert in die Sitzung. Bestand vor der Reparatur | mittel | `src/Controller/ProfileController.php::edit()` | 2026-08-24 |
 | BF-23 | B01, B04 | Bestätigungstoken im `request`-Kanal (`Matched route`), der in `prod` **nicht** ausgeschlossen ist — **BF-06 war nur halb behoben**. 31 Zeilen für `app_email_change_confirm`, 22 für `app_verify_email` | mittel | `config/packages/monolog.yaml` | 2026-08-24 |
