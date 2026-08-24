@@ -1212,3 +1212,9 @@ open:
         metrics_json: "Figures as JSON"
         licence: "The dataset is published under"
         privacy_note: "Email addresses and phone numbers are deliberately excluded: a bulk export of those would be a mailing list, not an accessibility dataset."
+
+api:
+    token_invalid: "The token is invalid. Please sign in again."
+    token_expired: "The token has expired. Please sign in again."
+    token_missing: "Authentication required."
+    moderation_pending: "Thank you! Your suggestion has been received and will be reviewed before it appears publicly."

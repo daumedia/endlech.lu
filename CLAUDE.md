@@ -361,10 +361,39 @@ Migrationen: `Version20260321000000` (erstellt Tabelle), `Version20260619000000`
 Versionierte, **locale-freie** REST/JSON-API unter `/api/v1/` als Backend für eine native iOS-App. Bestehende Web-App unverändert. Ansatz: **Plain Controller + explizite Transformer** (kein API Platform, keine Serializer-Groups).
 **Bundles:** `lexik/jwt-authentication-bundle` (JWT), `nelmio/cors-bundle` (CORS), `nelmio/api-doc-bundle` (Swagger), `symfony/rate-limiter`. JWT-Keypair in `config/jwt/*.pem` (gitignored) via `php bin/console lexik:jwt:generate-keypair`; env: `JWT_SECRET_KEY`, `JWT_PUBLIC_KEY`, `JWT_PASSPHRASE`, `CORS_ALLOW_ORIGIN`.
 **Routing:** `config/routes.yaml` — eigener `api_v1`-Block (prefix `/api/v1`, kein `_locale`) + `exclude: '../src/Controller/Api/V1/'` am `controllers`-Loader (sonst landete die API unter `/{_locale}/api/v1`).
+⚠️ **`POST /api/v1/restaurants` legt einen `RestaurantSuggestion` an, kein `Restaurant`** —
+und antwortet mit **202**, nicht 201 (QA B23, BF-24). Vorher entstand hier sofort ein
+öffentlicher Eintrag: Er stand augenblicklich in der Restaurantliste, auf einer
+Detailseite, in den veröffentlichten Kennzahlen von `/open` und im Datensatz unter
+CC BY 4.0 — ohne dass jemand ihn gesehen hatte. Gemessen: zwei Aufrufe drückten
+`verifiedShare` von 27,3 auf 23,1 %. Der Web-Weg (B11) läuft seit jeher über einen
+Vorschlag mit Admin-Freigabe (B21); die API umging genau das.
+
+⚠️ **`cuisines` ruft NICHT mehr `findOrCreateByName()`.** Die Namen landen als Freitext
+in `RestaurantSuggestion::$cuisine` (max. 80 Zeichen, sonst 422 statt eines 500ers aus
+der Datenbankschicht). Vorher schrieb jeder Aufruf dauerhaft in die **öffentliche
+Filterauswahl der Website** — gemessen wurden dort „Pizzza" und „JETZT BEI UNS
+BESTELLEN 0900-123456", 50 Stück je Anfrage. Welcher echte Küchen-Typ gemeint ist,
+entscheidet der Admin bei der Freigabe.
+
+⚠️ **Nicht übermittelte Merkmale sind `TriState::UNKNOWN`, nicht `false`.** Der Vorschlag
+unterscheidet „nein" von „weiß nicht"; die alte Fassung machte aus jedem nicht gefragten
+Merkmal ein „nein", das niemand behauptet hatte.
+
+**`ApiAuthenticationFailureSubscriber`** bringt die Antworten des JWT-Bundles auf dieselbe
+Form wie alle anderen (`{error:{code,message}}`). Das Bundle wirft keine Exception,
+sondern schreibt die Antwort selbst — `ApiExceptionSubscriber` kommt dort nicht zum Zug.
+Betroffen waren die beiden häufigsten Fälle eines Mobil-Clients: falsches Passwort und
+abgelaufenes Token (BF-26).
+
+⚠️ **Ohne `Accept-Language` antwortet die API luxemburgisch** (`translation.yaml`:
+`default_locale: lb`). Bewusst nicht geändert — das wäre ein Eingriff in die gesamte
+Website.
+
 **Controller** (`src/Controller/Api/V1/`): `AuthController` (`login` = json_login-Stub, Rumpf nie erreicht; `register` repliziert den Web-Flow inkl. E-Mail-Verifikation, gibt KEIN Token zurück; **Anti-User-Enumeration**: identische generische 201-Antwort, egal ob die E-Mail existiert – bestehende Adressen erhalten einen Hinweis-Mail statt einer Bestätigung, Passwort wird in beiden Zweigen gehasht (Timing)), `RestaurantApiController` (`index` mit Envelope `{data, meta:{page,limit,total,totalPages,sort}}` + Filter-Mapping auf `RestaurantRepository::findPaginated`; `show`; `images`; `create` mit `submittedBy`=current user, `isVerified=false`), `MeController` (`me`, `submissions` via `findBySubmitter`; `#[IsGranted('IS_AUTHENTICATED_FULLY')]`).
 **Transformer** (`src/Api/`): `RestaurantTransformer` (`list()`/`detail()`/`image()`, injiziert `OpeningHoursService` für `isOpenNow` + `nextOpeningTime`, Öffnungszeiten gruppiert nach Tag 1–7) und `UserTransformer` (`profile()`). Bild-/Avatar-URLs sind **absolut** (für native iOS-Clients) via `AssetUrlBuilder` (`src/Api/`): nutzt Scheme+Host des aktuellen Requests, optionaler Env-Override `APP_API_BASE_URL` (Proxy/CDN). Koordinaten im `create`-Endpoint werden auf Dezimalformat + Bereich ±90/±180 geprüft (422 statt DBAL-500). Bewusst explizit statt Serializer-Groups, weil die Entity untypische Getter hat (`acceptsCash()`, `isWheelchairAccessible()`, `hasAccessibleToilet()`), die der ObjectNormalizer nicht zuverlässig erkennt. `password`/Token werden strukturell NIE ausgegeben.
 **Security** (`config/packages/security.yaml`): zwei stateless Firewalls VOR `main`: `api_login` (`^/api/v1/auth/login$`, json_login mit `username_path: email`, Lexik success/failure-Handler) und `api` (`^/api/v1`, `jwt: ~`). `access_control`: `auth` + `GET restaurants` = PUBLIC; `me` + `POST restaurants` = IS_AUTHENTICATED_FULLY. Web-Regeln (`^/[a-z]{2}/...`) bleiben kollisionsfrei.
-**Fehler/CORS/Rate-Limit** (`src/EventSubscriber/`): `ApiExceptionSubscriber` (nur `^/api/v1`, JSON `{error:{code,message}}`; **anonyme** AccessDenied → 401, sonst 403; übernimmt Header der HTTP-Exception, z. B. `Retry-After`/`WWW-Authenticate`; im Debug-Modus Exception-Detail bei 500). `ApiRateLimitSubscriber` (IP-basiert, Login strenger; bei Limit `TooManyRequestsHttpException` → 429 inkl. `Retry-After`-Sekunden aus `RateLimit::getRetryAfter()`). Limiter in `config/packages/framework.yaml` (`api_anonymous` sliding_window 100/min, `api_login` fixed_window 5/min; in `when@test` auf 10000 gelockert). CORS in `config/packages/nelmio_cors.yaml` nur `^/api/v1/`. `bool $debug`-Bind in `config/services.yaml`.
+**Fehler/CORS/Rate-Limit** (`src/EventSubscriber/`): `ApiExceptionSubscriber` (nur `^/api/v1`, JSON `{error:{code,message}}`; **anonyme** AccessDenied → 401, sonst 403; übernimmt Header der HTTP-Exception, z. B. `Retry-After`/`WWW-Authenticate`; im Debug-Modus Exception-Detail bei 500). `ApiRateLimitSubscriber` (IP-basiert, Login **und Registrierung** strenger — letztere seit BF-25 unter `api_register` mit 5/Stunde statt 100/Minute; ohne den Deckel waren das bis zu 100 Mails je Minute an eine frei wählbare **fremde** Adresse, weil die Anti-Enumeration bewusst auch an bestehende Adressen schreibt; bei Limit `TooManyRequestsHttpException` → 429 inkl. `Retry-After`-Sekunden aus `RateLimit::getRetryAfter()`). Limiter in `config/packages/framework.yaml` (`api_anonymous` sliding_window 100/min, `api_login` fixed_window 5/min, `api_register` sliding_window 5/h; in `when@test` alle auf 10000 gelockert). CORS in `config/packages/nelmio_cors.yaml` nur `^/api/v1/`. `bool $debug`-Bind in `config/services.yaml`.
 **Swagger:** `config/packages/nelmio_api_doc.yaml` (`areas.default.path_patterns: ^/api/v1`, Bearer-securityScheme), Routen `app.swagger_ui` (`/api/docs`) + `app.swagger` (`/api/docs.json`) in `config/routes/nelmio_api_doc.yaml`. OA-Tags + `#[Security(name:'Bearer')]` auf geschützten Endpunkten.
 **Tests** (`tests/Functional/Controller/Api/V1/`): `RestaurantApiControllerTest`, `AuthControllerTest`, `MeControllerTest` (WebTestCase, inkl. `password`-Regression und `sort`-Reihenfolge/`meta.sort`). Token im Test via `JWTTokenManagerInterface::create()`. **Test-DB:** `DATABASE_URL` musste in `.env.test` ergänzt werden (`.env.local` wird im Test-Env nicht geladen). `when@test` in `messenger.yaml` routet `async` → `in-memory://` (kein `messenger_messages`-Table, E-Mails nicht real versendet).
 

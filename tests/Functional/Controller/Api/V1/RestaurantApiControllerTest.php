@@ -2,9 +2,14 @@
 
 namespace App\Tests\Functional\Controller\Api\V1;
 
+use App\Entity\Cuisine;
+use App\Entity\Restaurant;
+use App\Entity\RestaurantSuggestion;
 use App\Entity\User;
+use App\Enum\TriState;
 use App\Repository\RestaurantRepository;
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -199,29 +204,152 @@ final class RestaurantApiControllerTest extends WebTestCase
             ]),
         );
 
-        self::assertResponseStatusCodeSame(201);
-        $data = $this->json($client);
-        self::assertEqualsWithDelta(49.6116, (float) $data['location']['latitude'], 0.0000001);
-        self::assertEqualsWithDelta(6.1319, (float) $data['location']['longitude'], 0.0000001);
+        self::assertResponseStatusCodeSame(202);
+
+        // Die Koordinaten wandern in den Vorschlag, nicht in ein Restaurant. Ohne
+        // die Spalten dort gingen sie zwischen Eingang und Freigabe verloren.
+        $suggestion = static::getContainer()->get(EntityManagerInterface::class)
+            ->getRepository(RestaurantSuggestion::class)
+            ->find($this->json($client)['id']);
+
+        self::assertEqualsWithDelta(49.6116, (float) $suggestion->getLatitude(), 0.0000001);
+        self::assertEqualsWithDelta(6.1319, (float) $suggestion->getLongitude(), 0.0000001);
     }
 
-    public function testCreateMarksSubmitterAndIsUnverified(): void
+    /**
+     * BF-24: Der Endpunkt legt einen Vorschlag an, kein öffentliches Restaurant.
+     *
+     * Vorher stand der Eintrag augenblicklich in der Restaurantliste, auf einer
+     * Detailseite, in den Kennzahlen von /open und im Datensatz unter CC BY 4.0 —
+     * ohne dass jemand ihn gesehen hatte.
+     */
+    public function testAk21CreateLegtEinenVorschlagAnKeinRestaurant(): void
     {
         $client = static::createClient();
+        $em = static::getContainer()->get(EntityManagerInterface::class);
         $userId = static::getContainer()->get(UserRepository::class)->findOneBy(['email' => 'user@endlech.lu'])->getId();
+        $name = 'Eingereicht API ' . uniqid();
 
         $client->request(
             'POST',
             '/api/v1/restaurants',
             server: ['CONTENT_TYPE' => 'application/json', 'HTTP_AUTHORIZATION' => 'Bearer ' . $this->token()],
-            content: json_encode(['name' => 'Eingereicht API ' . uniqid(), 'city' => 'Luxembourg']),
+            content: json_encode(['name' => $name, 'city' => 'Luxembourg']),
         );
 
-        self::assertResponseStatusCodeSame(201);
+        self::assertResponseStatusCodeSame(202);
         $data = $this->json($client);
-        self::assertFalse($data['isVerified']);
-        self::assertNotNull($data['submittedBy']);
-        self::assertSame($userId, $data['submittedBy']['id']);
+        self::assertSame('pending', $data['status']);
+
+        $suggestion = $em->getRepository(RestaurantSuggestion::class)->find($data['id']);
+        self::assertSame($name, $suggestion->getName());
+        self::assertSame(RestaurantSuggestion::STATUS_PENDING, $suggestion->getStatus());
+        self::assertSame($userId, $suggestion->getSuggestedBy()->getId());
+
+        // Und genau das nicht: ein Restaurant unter diesem Namen.
+        self::assertNull($em->getRepository(Restaurant::class)->findOneBy(['name' => $name]));
+    }
+
+    /**
+     * BF-24, zweite Hälfte: Der Vorschlag darf auf keinem öffentlichen Weg auftauchen.
+     */
+    public function testAk21VorschlagErscheintNichtInDerOeffentlichenListe(): void
+    {
+        $client = static::createClient();
+        $name = 'Unsichtbar API ' . uniqid();
+
+        $client->request(
+            'POST',
+            '/api/v1/restaurants',
+            server: ['CONTENT_TYPE' => 'application/json', 'HTTP_AUTHORIZATION' => 'Bearer ' . $this->token()],
+            content: json_encode(['name' => $name, 'city' => 'Luxembourg']),
+        );
+        self::assertResponseStatusCodeSame(202);
+
+        $client->request('GET', '/api/v1/restaurants?sort=newest&limit=50');
+        self::assertStringNotContainsString($name, $client->getResponse()->getContent());
+
+        $client->request('GET', '/open/dataset.csv');
+        self::assertStringNotContainsString($name, $client->getResponse()->getContent());
+    }
+
+    /**
+     * BF-24, dritter Teil: `cuisines` schrieb über `findOrCreateByName()` dauerhaft
+     * in die öffentliche Filterauswahl der Website. Gemessen wurden dort „Pizzza"
+     * und „JETZT BEI UNS BESTELLEN 0900-123456".
+     */
+    public function testAk21CuisinesLegenKeineOeffentlichenKuechenTypenAn(): void
+    {
+        $client = static::createClient();
+        $em = static::getContainer()->get(EntityManagerInterface::class);
+        $vorher = $em->getRepository(Cuisine::class)->count([]);
+
+        $client->request(
+            'POST',
+            '/api/v1/restaurants',
+            server: ['CONTENT_TYPE' => 'application/json', 'HTTP_AUTHORIZATION' => 'Bearer ' . $this->token()],
+            content: json_encode([
+                'name' => 'Kuechen API ' . uniqid(),
+                'city' => 'Luxembourg',
+                'cuisines' => ['Pizzza', 'JETZT BESTELLEN'],
+            ]),
+        );
+
+        self::assertResponseStatusCodeSame(202);
+        self::assertSame($vorher, $em->getRepository(Cuisine::class)->count([]), 'Kein neuer Küchen-Typ darf entstehen.');
+
+        $suggestion = $em->getRepository(RestaurantSuggestion::class)->find($this->json($client)['id']);
+        self::assertSame('Pizzza, JETZT BESTELLEN', $suggestion->getCuisine(), 'Der Wunsch bleibt als Freitext erhalten.');
+    }
+
+    /**
+     * BF-27: Zu lange Küchen-Angaben endeten in einem 500er aus der Datenbankschicht
+     * — jeder davon erzeugt in Produktion einen Sentry-Bericht.
+     */
+    public function testBf27ZuLangeKuechenAngabeLiefert422(): void
+    {
+        $client = static::createClient();
+        $client->request(
+            'POST',
+            '/api/v1/restaurants',
+            server: ['CONTENT_TYPE' => 'application/json', 'HTTP_AUTHORIZATION' => 'Bearer ' . $this->token()],
+            content: json_encode([
+                'name' => 'Lang API',
+                'city' => 'Luxembourg',
+                'cuisines' => [str_repeat('A', 200)],
+            ]),
+        );
+
+        self::assertResponseStatusCodeSame(422);
+        self::assertArrayHasKey('cuisines', $this->json($client)['error']['violations']);
+    }
+
+    /**
+     * Nicht übermittelte Merkmale sind „weiß nicht", nicht „nein" — für eine
+     * Barrierefreiheits-Plattform ist das der wesentliche Unterschied.
+     */
+    public function testNichtUebermittelteMerkmaleWerdenNichtAlsNeinGespeichert(): void
+    {
+        $client = static::createClient();
+        $client->request(
+            'POST',
+            '/api/v1/restaurants',
+            server: ['CONTENT_TYPE' => 'application/json', 'HTTP_AUTHORIZATION' => 'Bearer ' . $this->token()],
+            content: json_encode([
+                'name' => 'Tristate API ' . uniqid(),
+                'city' => 'Luxembourg',
+                'accessibility' => ['wheelchairAccessible' => true, 'accessibleToilet' => false],
+            ]),
+        );
+
+        self::assertResponseStatusCodeSame(202);
+        $suggestion = static::getContainer()->get(EntityManagerInterface::class)
+            ->getRepository(RestaurantSuggestion::class)
+            ->find($this->json($client)['id']);
+
+        self::assertSame(TriState::YES, $suggestion->isWheelchairAccessible());
+        self::assertSame(TriState::NO, $suggestion->hasAccessibleToilet());
+        self::assertSame(TriState::UNKNOWN, $suggestion->allowsAssistanceDogs(), 'Nicht gefragt ist nicht "nein".');
     }
 
     public function testCreateRejectsMissingNameWith422(): void

@@ -1212,3 +1212,9 @@ open:
         metrics_json: "Zuelen als JSON"
         licence: "Den Datesaz steet ënner"
         privacy_note: "E-Mail-Adressen an Telefonsnummere sinn bewosst net dran: E Sammelofzuch dovunner wier eng Adresslëscht, kee Barrièrefräiheets-Datesaz."
+
+api:
+    token_invalid: "D’Token ass ongëlteg. Mell dech w.e.g. nach eng Kéier un."
+    token_expired: "D’Token ass ofgelaf. Mell dech w.e.g. nach eng Kéier un."
+    token_missing: "Authentifikatioun néideg."
+    moderation_pending: "Merci! Däi Virschlag ass ukomm a gëtt gepréift, ier en ëffentlech erschéngt."

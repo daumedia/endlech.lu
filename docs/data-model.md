@@ -334,6 +334,16 @@ Die Getter behalten ihre untypischen Namen (`isWheelchairAccessible()`,
 als rohe Strings), `phone`, `email`, `website`, `instagramUrl`, `facebookUrl`,
 `tiktokUrl`.
 
+**Standort** (seit 2026-08-24) — `latitude` (`decimal(10,8)`), `longitude`
+(`decimal(11,8)`), `nearbyStopsNote` (`longtext`), alle nullable.
+
+> **Warum ein Vorschlag Koordinaten führt, obwohl der Wizard sie nicht abfragt.**
+> Seit der Reparatur von BF-24 legt `POST /api/v1/restaurants` einen Vorschlag an
+> statt eines öffentlichen Eintrags. Die API nimmt Koordinaten entgegen und prüft
+> sie (±90/±180, AK-15) — ohne diese Spalten gingen sie zwischen Eingang und
+> Freigabe verloren. Über den Web-Wizard bleiben sie leer.
+> `AdminSuggestionController::approve()` überträgt sie mit.
+
 **Relation:** `suggestedBy` ManyToOne → `User`, `SET NULL`, unidirektional.
 
 **Konstanten:** `STATUS_PENDING`, `STATUS_APPROVED`, `STATUS_REJECTED`.

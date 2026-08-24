@@ -1212,3 +1212,9 @@ open:
         metrics_json: "Chiffres en JSON"
         licence: "Le jeu de données est publié sous"
         privacy_note: "Les adresses e-mail et numéros de téléphone en sont délibérément exclus : un export groupé de ces données serait un fichier d'adresses, pas un jeu de données sur l'accessibilité."
+
+api:
+    token_invalid: "Le jeton n’est pas valide. Veuillez vous reconnecter."
+    token_expired: "Le jeton a expiré. Veuillez vous reconnecter."
+    token_missing: "Authentification requise."
+    moderation_pending: "Merci ! Votre suggestion a bien été reçue et sera vérifiée avant d’être publiée."

@@ -1212,3 +1212,9 @@ open:
         metrics_json: "Kennzahlen als JSON"
         licence: "Der Datensatz steht unter"
         privacy_note: "E-Mail-Adressen und Telefonnummern sind bewusst nicht enthalten: Ein Sammelabzug davon wäre eine Adressliste, kein Barrierefreiheits-Datensatz."
+
+api:
+    token_invalid: "Das Token ist ungültig. Bitte melde dich erneut an."
+    token_expired: "Das Token ist abgelaufen. Bitte melde dich erneut an."
+    token_missing: "Authentifizierung erforderlich."
+    moderation_pending: "Danke! Dein Vorschlag ist eingegangen und wird geprüft, bevor er öffentlich erscheint."

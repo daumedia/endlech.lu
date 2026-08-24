@@ -62,11 +62,14 @@ final class ApiExceptionSubscriberTest extends TestCase
     }
 
     /**
-     * AK-19/AK-28: Die Meldung einer HttpException wird unverändert übernommen —
-     * auch in Produktion. Der EntityValueResolver schreibt dort den vollständigen
-     * Klassennamen hinein. Siehe BF-26.
+     * BF-28: Die Meldung des EntityValueResolver nennt Entity, Framework-Aufbau und
+     * ORM. Sie darf nicht durchgereicht werden — und war kein Debug-Zusatz, sondern
+     * stand auch in Produktion in der Antwort.
+     *
+     * Dieser Test stand vor der Reparatur in umgekehrter Richtung: Er hielt fest,
+     * dass die Meldung durchkommt, und schlug fehl, sobald sie es nicht mehr tut.
      */
-    public function testHttpExceptionMeldungWirdAuchInProduktionDurchgereicht(): void
+    public function testAk28VerraetKeineInternenKlassennamenBei404(): void
     {
         $event = $this->dispatch(
             '/api/v1/restaurants/999999',
@@ -77,8 +80,22 @@ final class ApiExceptionSubscriberTest extends TestCase
         $data = json_decode($event->getResponse()->getContent(), true);
 
         self::assertSame(404, $data['error']['code']);
-        self::assertStringContainsString('App\\Entity\\Restaurant', $data['error']['message']);
-        self::assertStringContainsString('EntityValueResolver', $data['error']['message']);
+        self::assertSame('Nicht gefunden.', $data['error']['message']);
+        self::assertStringNotContainsString('App\\Entity', $event->getResponse()->getContent());
+        self::assertStringNotContainsString('EntityValueResolver', $event->getResponse()->getContent());
+    }
+
+    /**
+     * Die Meldung anderer HttpExceptions bleibt erhalten — sie kommt meist aus
+     * eigenem Code und sagt etwas Nützliches.
+     */
+    public function testMeldungAndererHttpExceptionsBleibtErhalten(): void
+    {
+        $event = $this->dispatch('/api/v1/restaurants', new TooManyRequestsHttpException(30, 'Zu viele Anfragen.'), debug: false);
+
+        $data = json_decode($event->getResponse()->getContent(), true);
+
+        self::assertSame('Zu viele Anfragen.', $data['error']['message']);
     }
 
     private function dispatch(string $path, \Throwable $throwable, bool $debug = false): ExceptionEvent

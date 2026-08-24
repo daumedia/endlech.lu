@@ -189,8 +189,19 @@ Einreichungen abrufen, neue Restaurants anlegen. Dokumentiert unter `/api/docs`.
 - **OF-02** · Soll `register` unter den strengen Limiter (AK-22)? Ein Einzeiler im
   Subscriber. — Betreiber
 - **OF-03** · Was steht auf Produktion in `CORS_ALLOW_ORIGIN`? — Betreiber
-- **OF-04** · Gibt es die iOS-App überhaupt schon? Falls nein, ließen sich AK-21 und
-  AK-22 folgenlos schließen. — Betreiber
+- ~~**OF-04** · Gibt es die iOS-App überhaupt schon?~~ **Beantwortet am 2026-08-24 aus
+  dem Projekt selbst:** nein. `docs/prd.md:418` sagt wörtlich, die Kategorie
+  `APPLE_DEVELOPER` belege, „dass die iOS-App bereits Geld kostet, **bevor sie
+  existiert**"; die App steht dort unter *Belegt offen*, im CHANGELOG heißt sie
+  „künftig", und es gibt keine Swift-Datei im Repository. AK-21 und AK-22 wurden auf
+  dieser Grundlage geschlossen.
+- **OF-05** · Über die API eingereichte Vorschläge tauchen in `/api/v1/me/submissions`
+  **nicht** auf — der Endpunkt liest `findBySubmitter()`, also genehmigte Restaurants.
+  Wer etwas einreicht, sieht es bis zur Freigabe nirgends. Soll `submissions` die
+  offenen Vorschläge mitführen? Das wäre neue Funktion, keine Reparatur. — Betreiber
+- **OF-06** · Der Rumpf der 202-Antwort (`{status, id, message}`) ist in dieser Spec
+  nicht beschrieben. Er sollte festgeschrieben werden, bevor jemand einen Client
+  dagegen baut. — Betreiber
 
 ## Decision Log
 
