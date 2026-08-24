@@ -40,7 +40,7 @@ nimmt, und der ungeschützt, den ein Browser nimmt.
 | `/passkey/login/options` | **keins** | B03/FB-01 |
 | `POST /{locale}/community/suggest` | **keins** | B11/FB-01 |
 | `/open/dataset.csv` | **keins** | B17/FB-02 |
-| alle Verwaltungs-POSTs | **keins** | B19/FB-05 |
+| alle Verwaltungs-POSTs | **keins** | B19/FB-05, gemessen 2026-08-24 (BF-35): acht in Folge, keine Sperre |
 
 **Schwerste Folge:** B02/FB-01. Unbegrenztes Passwortraten trifft ein
 Anwendungssystem, dessen Verwaltungszugang an genau einem Konto hängt (B19/FB-01) und

@@ -6,7 +6,8 @@ Diese Liste wird von `sdd-qa` fortgeschrieben, nicht von Hand. Sie ist die Grund
 des Auditberichts, den `/sdd-erfassen abschluss` daraus baut.
 
 **Geprüft bisher:** B01 (17/20), B02 (16/17), B03 (16/20), B04 (23/24 im zweiten
-Durchlauf), B23 (34/35 im zweiten Durchlauf) — alle abgenommen. B23s beide
+Durchlauf), B23 (34/35 im zweiten Durchlauf), B19 (17/17, davon eines nicht prüfbar)
+— alle abgenommen. B23s beide
 *hoch*-Befunde sind repariert und nachgemessen; dabei fielen drei neue an, zwei davon
 als Folge der Reparatur.
 Alle Reparaturen sind **noch nicht auf `production`**.
@@ -27,6 +28,9 @@ obwohl dort nichts mehr zu reparieren ist.
 |---|---|---|---|---|---|
 | BF-04 | **01** | Betroffenenrechte nicht bedienbar — keine Kontolöschung, kein Datenexport, kein Passwort-Zurücksetzen. **2026-08-23 aus B01 herausgelöst:** keine Reparaturaufgabe, sondern fehlende Funktionen über B01, B04 und B19 hinweg — läuft als reguläres Feature `01` durch die volle Kette | hoch | `src/Controller/ProfileController.php` (fehlend) | 2026-08-23 |
 | BF-29 | B23 | Der `Host`-Header steuert die ausgegebenen Bild-URLs. **Bewusst nicht im Code behoben:** `trusted_hosts` hätte bei leerem Wert jeden Host abgewiesen. Der Weg über `APP_API_BASE_URL` ist in `.env` dokumentiert — **Serveraufgabe, gehört auf die Deployment-Liste** | niedrig | `src/Api/AssetUrlBuilder.php`, `.env` | 2026-08-24 |
+| BF-33 | B19 | Open Redirect in `admin_set_locale` — `Referer` wird ungeprüft übernommen; `https://boeswillig.example`, `//evil.example/x` und `javascript:alert(1)` alle drei akzeptiert. Zielt auf den einzigen Zugang **ohne zweite Stufe** | mittel | `src/Controller/AdminLocaleController.php:26` | 2026-08-24 |
+| BF-34 | B19 | Der Sprachumschalter im Verwaltungsbereich wirkt nicht — `_locale` landet in der Sitzung, aber kein `LocaleSubscriber` liest ihn; die Seite bleibt deutsch. **Beantwortet B19/OF-02** | niedrig | `src/Controller/AdminLocaleController.php` | 2026-08-24 |
+| BF-35 | B19 | Keine Drosselung auf Verwaltungsschreibvorgängen — acht Umschaltungen in Folge, alle 302. **Fünfte Wiederholung von M-01** | niedrig | `admin_*`-Routen | 2026-08-24 |
 | BF-30 | B23 | Die Moderationsschlange lässt sich fluten — 40 Aufrufe erzeugten 40 Vorschläge, alle 202. **Vierte Wiederholung von M-01**, und die erste, bei der die Konvention schon formuliert war | mittel | `src/EventSubscriber/ApiRateLimitSubscriber.php:54` | 2026-08-24 |
 | BF-31 | B23 | Die `id` der 202-Antwort ist eine Vorschlags-ID im Rumpf eines Restaurant-Endpunkts — `GET /restaurants/{id}` liefert bei Überlappung der Zähler ein **fremdes** Restaurant mit 200 | mittel | `Api/V1/RestaurantApiController::create()` | 2026-08-24 |
 | BF-32 | B23 | Wer über die API einreicht, sieht seinen Vorschlag nirgends — `/me/submissions` liest nur genehmigte Restaurants | niedrig | `Api/V1/MeController::submissions()` | 2026-08-24 |
