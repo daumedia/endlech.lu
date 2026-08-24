@@ -566,6 +566,25 @@ Admin-Fieldset: "Standort & Nahverkehr" in `_form.html.twig`.
 Migration: `Version20260322000000`.
 Fixtures: Alle 11 Restaurants mit echten Luxemburg-Koordinaten. Brasserie du Grund mit Beispiel-`nearbyStopsNote`.
 
+## ⚠️ `setMaxResults()` mit `addSelect()`-Joins braucht `Paginator`
+
+Ein `leftJoin` mit `addSelect` holt eine Collection mit (gegen N+1) — und vervielfacht
+dabei die SQL-Zeilen je Entity. `setMaxResults()` begrenzt aber die **Zeilen**, nicht
+die Objekte. `RestaurantRepository::findTopRated(6)` lieferte dadurch **ein** Restaurant
+statt sechs: Das bestbewertete Haus brachte allein 14 Zeilen mit (7 Öffnungszeiten × 2
+Küchen), und das `LIMIT 6` war innerhalb des ersten Datensatzes verbraucht (QA B12,
+BF-64).
+
+Gemessen vor der Reparatur: `findTopRated(6)` → 1, `(20)` → 2, `(100)` → 7.
+
+**Die Lösung ist `new Paginator($qb->getQuery(), true)`** — der zweite Parameter
+`$fetchJoinCollection` ist genau dafür da. `findPaginated()` im selben Repository macht
+es seit jeher so; nur `findTopRated()` tat es nicht.
+
+⚠️ **Ein Test mit `assertLessThanOrEqual($limit, count(...))` fängt das nicht.** Genau so
+stand er in `RestaurantRepositoryTest` und war grün, während die Startseite eine Karte
+zeigte. Bei einer Begrenzung gehört `assertCount(min($limit, $bestand), …)` geprüft.
+
 ## Entity: OrderingOption (Issue #43)
 Felder: id (int, PK), platform (VARCHAR 20 – Werte aus `App\Enum\OrderingPlatform`), url (VARCHAR 500), restaurant (ManyToOne Restaurant, CASCADE DELETE).
 Collection auf Restaurant: `$orderingOptions` (OneToMany, cascade persist+remove, orphanRemoval).
