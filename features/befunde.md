@@ -8,7 +8,7 @@ des Auditberichts, den `/sdd-erfassen abschluss` daraus baut.
 **Geprüft bisher:** B01 (17/20), B02 (16/17), B03 (16/20), B04 (23/24 im zweiten
 Durchlauf), B23 (34/35 im zweiten Durchlauf), B19 (17/17, davon eines nicht prüfbar),
 B14 (28/28), B15 (27/27), B22 (30/30), B17 (25/25) — abgenommen.
-B10 (24/24 im zweiten Durchlauf), B18 (29/29), B11 (18/19, eines nicht prüfbar), B20 (19/20), B21 (20/20), B09 (18/18), B05 (24/24), **B06 (23/23 — das erste Feature ohne eigenen Befund)**, B07 (17/17, eines nicht ausgeführt) — abgenommen. B23s beide
+B10 (24/24 im zweiten Durchlauf), B18 (29/29), B11 (18/19, eines nicht prüfbar), B20 (19/20), B21 (20/20), B09 (18/18), B05 (24/24), **B06 (23/23 — das erste Feature ohne eigenen Befund)**, B07 (17/17, eines nicht ausgeführt), B08 (16/16) — abgenommen. B23s beide
 *hoch*-Befunde sind repariert und nachgemessen; dabei fielen drei neue an, zwei davon
 als Folge der Reparatur.
 Alle Reparaturen sind **noch nicht auf `production`**.
@@ -33,6 +33,8 @@ obwohl dort nichts mehr zu reparieren ist.
 | BF-42 | B17 | Kein Rate Limit auf den Datenendpunkten — 12 Abrufe, zwölfmal 200; jeder lädt den gesamten Bestand. **Sechste Wiederholung von M-01**, und die erste, die nicht unter den Wortlaut der Konvention fällt (löst keine Mail aus, prüft kein Geheimnis — ist nur teuer) | niedrig | `src/Controller/Open/OpenDataController.php` | 2026-08-24 |
 | BF-41 | B17 | Unverifizierte Einträge stehen im veröffentlichten Datensatz (8 von 11). **Neu bewertet:** Die Spec führte das als schwerste Verkettung des Projekts — sie ist seit BF-24 unterbrochen. Bleibt eine Produktfrage samt fehlender Dokumentation von `isVerified` | niedrig | `RestaurantRepository::findAllForExport()` | 2026-08-24 |
 | BF-40 | B22 | Die Verwaltungsliste skaliert nicht — kein Blättern, keine Obergrenze; die Restaurant-Auswahlliste lädt den **kompletten Kernbestand** (`findBy([], …)`). Blättern ist im Projekt vorhanden (B05, B20) und hier nur nicht angewandt | niedrig | `AdminWaitlistController.php:96`, `PartnerWaitlistEntryRepository::findFiltered()` | 2026-08-24 |
+| BF-62 | B08 | Zu langer Küchenname → **500** statt 422 (`SQLSTATE[22001] Data too long`). Dasselbe Muster wie BF-27 und BF-51; BF-27 ist behoben, dieser Weg läuft über einen anderen Controller und blieb offen | niedrig | `CuisineApiController::create()` | 2026-08-24 |
+| BF-63 | B08 | Die Küchenliste kann nur wachsen — kein Löschweg, weder Oberfläche noch Endpunkt. **Seit BF-24 kleiner geworden** (der API-Weg ist zu), bleibt aber für Admin-Tippfehler und genehmigte Vorschläge | niedrig | `CuisineApiController` (fehlend) | 2026-08-24 |
 | BF-61 | B07 | Ein Haus mit nur einem Öffnungstag verliert nach Ladenschluss seinen Status — `getNextOpeningTime()` liefert `null`, weil die Folgetagsschleife nur sechs Tage weit läuft. Auf der Seite steht dann weder „geöffnet" noch eine nächste Öffnung, und die Seite sieht dabei nicht kaputt aus | niedrig | `OpeningHoursService::getNextOpeningTime()` | 2026-08-24 |
 | BF-59 | B05 | `%` und `_` hebeln den Ortsfilter aus — `?city=%` liefert alle statt keiner. Der Parameter ist gebunden (keine Injection), nur die Filterwirkung fällt weg. Auffällig ist die Inkonsequenz: `sort`, `cuisine` und `lang` prüfen ihre Eingabe, der Freitext nicht | niedrig | `RestaurantRepository::findPaginated()` | 2026-08-24 |
 | BF-60 | B05 | `?page=99999` liefert **200** mit leerer Liste statt 404 — beliebig viele indexierbare Leerseiten | niedrig | `RestaurantController::index()` | 2026-08-24 |
