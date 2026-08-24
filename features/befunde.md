@@ -8,8 +8,7 @@ des Auditberichts, den `/sdd-erfassen abschluss` daraus baut.
 **Geprüft bisher:** B01 (17/20), B02 (16/17), B03 (16/20), B04 (23/24 im zweiten
 Durchlauf), B23 (34/35 im zweiten Durchlauf), B19 (17/17, davon eines nicht prüfbar),
 B14 (28/28), B15 (27/27), B22 (30/30), B17 (25/25) — abgenommen.
-**B10 (22/24) → `review`:** drei Befunde *mittel*, darunter eine erfundene
-Barrierefreiheitsaussage. Die Erfassung pausiert. B23s beide
+B10 (24/24 im zweiten Durchlauf) — abgenommen. B23s beide
 *hoch*-Befunde sind repariert und nachgemessen; dabei fielen drei neue an, zwei davon
 als Folge der Reparatur.
 Alle Reparaturen sind **noch nicht auf `production`**.
@@ -30,9 +29,6 @@ obwohl dort nichts mehr zu reparieren ist.
 |---|---|---|---|---|---|
 | BF-04 | **01** | Betroffenenrechte nicht bedienbar — keine Kontolöschung, kein Datenexport, kein Passwort-Zurücksetzen. **2026-08-23 aus B01 herausgelöst:** keine Reparaturaufgabe, sondern fehlende Funktionen über B01, B04 und B19 hinweg — läuft als reguläres Feature `01` durch die volle Kette | hoch | `src/Controller/ProfileController.php` (fehlend) | 2026-08-23 |
 | BF-29 | B23 | Der `Host`-Header steuert die ausgegebenen Bild-URLs. **Bewusst nicht im Code behoben:** `trusted_hosts` hätte bei leerem Wert jeden Host abgewiesen. Der Weg über `APP_API_BASE_URL` ist in `.env` dokumentiert — **Serveraufgabe, gehört auf die Deployment-Liste** | niedrig | `src/Api/AssetUrlBuilder.php`, `.env` | 2026-08-24 |
-| BF-46 | B10 | **Das Feature behauptet Barrierefreiheit, die es nie geprüft hat.** „Keine barrierefreien Haltestellen in der Nähe gefunden" steht bei 8 von 11 Restaurants — die Abfrage kennt kein einziges Barrierefreiheitsmerkmal, der Radius von 500 m ist schlicht zu klein (r=2000 liefert an denselben Koordinaten 7 Treffer) | mittel | `config/services.yaml:16`, `messages.*.yaml:157` und `:485` | 2026-08-24 |
-| BF-44 | B10 | Kein Timeout auf dem HAFAS-Aufruf — gemessen: ohne Vorgabe nach 30 s keine Antwort, mit `'timeout' => 3` Abbruch nach 3,0 s. `default_socket_timeout` steht auf 60 | mittel | `src/Service/PublicTransportService.php:42` | 2026-08-24 |
-| BF-45 | B10 | Der API-Schlüssel steht im eigenen Log — 30 Zeilen im `http_client`-Kanal, 7 im `app`-Kanal (die Exception-Meldung trägt die volle URL). `http_client` ist in `prod` nicht ausgeschlossen. **Dritte Ausprägung von BF-23** | mittel | `PublicTransportService.php:58`, `config/packages/monolog.yaml:46` | 2026-08-24 |
 | BF-43 | B17 | Formelinjektion im CC-BY-Datensatz — ein Restaurantname mit führendem `=` steht unverändert im CSV und wird von Excel als Formel ausgeführt. Die CSV-Struktur selbst hält. Einzige Hürde ist die Moderation; die Zielgruppe des Datensatzes sind Ministerien und Forschende | niedrig | `src/Controller/Open/OpenDataController.php:100` | 2026-08-24 |
 | BF-42 | B17 | Kein Rate Limit auf den Datenendpunkten — 12 Abrufe, zwölfmal 200; jeder lädt den gesamten Bestand. **Sechste Wiederholung von M-01**, und die erste, die nicht unter den Wortlaut der Konvention fällt (löst keine Mail aus, prüft kein Geheimnis — ist nur teuer) | niedrig | `src/Controller/Open/OpenDataController.php` | 2026-08-24 |
 | BF-41 | B17 | Unverifizierte Einträge stehen im veröffentlichten Datensatz (8 von 11). **Neu bewertet:** Die Spec führte das als schwerste Verkettung des Projekts — sie ist seit BF-24 unterbrochen. Bleibt eine Produktfrage samt fehlender Dokumentation von `isVerified` | niedrig | `RestaurantRepository::findAllForExport()` | 2026-08-24 |
@@ -49,7 +45,7 @@ obwohl dort nichts mehr zu reparieren ist.
 | BF-32 | B23 | Wer über die API einreicht, sieht seinen Vorschlag nirgends — `/me/submissions` liest nur genehmigte Restaurants | niedrig | `Api/V1/MeController::submissions()` | 2026-08-24 |
 | BF-21 | B04 | Adressänderung ohne Rate Limit — zehn Durchläufe erzeugten 20 Mails, davon 10 an ein frei gewähltes fremdes Postfach. **Nebenwirkung der BF-19-Reparatur**: Vorher verschickte dieser Weg gar keine Mail | mittel | `src/Controller/ProfileController.php::edit()` | 2026-08-24 |
 | BF-22 | B04 | Ungültiges Stammdatenformular mit geänderter Adresse meldet den Nutzer ab — `handleRequest()` setzt `setEmail()` auch bei fehlgeschlagener Validierung, der veränderte Nutzer wandert in die Sitzung. Bestand vor der Reparatur | mittel | `src/Controller/ProfileController.php::edit()` | 2026-08-24 |
-| BF-23 | B01, B04 | Bestätigungstoken im `request`-Kanal (`Matched route`), der in `prod` **nicht** ausgeschlossen ist — **BF-06 war nur halb behoben**. 31 Zeilen für `app_email_change_confirm`, 22 für `app_verify_email` | mittel | `config/packages/monolog.yaml` | 2026-08-24 |
+| BF-23 | B01, B04 | **Seit 2026-08-24 entschärft** durch `SecretMaskingProcessor` (aus der B10-Reparatur, maskiert `token=` in allen Kanälen) — ob das reicht, entscheidet die erneute QA zu B04. Bestätigungstoken im `request`-Kanal (`Matched route`), der in `prod` **nicht** ausgeschlossen ist — **BF-06 war nur halb behoben**. 31 Zeilen für `app_email_change_confirm`, 22 für `app_verify_email` | mittel | `config/packages/monolog.yaml` | 2026-08-24 |
 | BF-18 | B03 | Passkey-Challenge-Endpunkte ohne Rate Limit — 10 Anfragen an `/passkey/login/options` alle mit 200 beantwortet | mittel | `config/routes/webauthn.yaml`, `access_control` | 2026-08-24 |
 | BF-17 | B02 | Gast auf `/de/logout` bekommt 403 statt einer Weiterleitung — Kehrseite von `enable_csrf` | niedrig | `config/packages/security.yaml` | 2026-08-24 |
 | BF-15 | B02 | „Angemeldet bleiben" wirkt für `/profile` nicht (`IS_AUTHENTICATED_FULLY`), die Kopfzeile zeigt den Nutzer trotzdem als angemeldet | mittel | `config/packages/security.yaml`, `templates/base.html.twig` | 2026-08-24 |
@@ -74,6 +70,9 @@ obwohl dort nichts mehr zu reparieren ist.
 | BF-26 | B23 | Formatvertrag der JWT-Antworten — `ApiAuthenticationFailureSubscriber` für alle vier Fälle des Bundles | mittel | 2026-08-24 | **noch nicht** |
 | BF-27 | B23 | Zu lange Küchen-Angabe → 422 statt 500 | niedrig | 2026-08-24 | **noch nicht** |
 | BF-28 | B23 | 404-Meldungen ohne interne Klassennamen | niedrig | 2026-08-24 | **noch nicht** |
+| BF-46 | B10 | Erfundene Barrierefreiheitsaussage — Texte sagen jetzt, was tatsächlich geprüft wurde, samt Radius und Herkunftshinweis; Radius 500 → 1000, damit 8 statt 3 von 11 Restaurants Haltestellen zeigen | mittel | 2026-08-24 | **noch nicht** — Branch `fix/b04-profil-qa` |
+| BF-44 | B10 | Kein Timeout — `'timeout' => 3`, `'max_duration' => 5`; Rückkehr nach 0,3 s statt >30 s | mittel | 2026-08-24 | **noch nicht** |
+| BF-45 | B10 | API-Schlüssel im Log — Service protokolliert Klasse und Code statt der URL; `SecretMaskingProcessor` deckt Symfonys `http_client`-Kanal ab. 22 Zeilen mit `accessId=`, **0 im Klartext** | mittel | 2026-08-24 | **noch nicht** |
 | BF-14 | B02 | Abmelden ohne CSRF — `enable_csrf` plus POST-Formular in der Kopfzeile | niedrig | 2026-08-24 | **noch nicht** |
 | BF-19 | B04 | E-Mail-Änderung ohne erneute Bestätigung — neue Adresse wird nur noch vorgemerkt (`User::$pendingEmail`), Bestätigungslink an die neue und Warnung an die bisherige Adresse | **hoch** | 2026-08-24 | **noch nicht** — Branch `fix/b04-profil-qa` |
 | BF-20 | B04 | Passwortänderung ohne Rate Limit — Limiter `password_change` (5 je 15 Minuten), gezählt **am Konto** statt an der IP | niedrig | 2026-08-24 | **noch nicht** |
