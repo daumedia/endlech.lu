@@ -6,8 +6,9 @@ Diese Liste wird von `sdd-qa` fortgeschrieben, nicht von Hand. Sie ist die Grund
 des Auditberichts, den `/sdd-erfassen abschluss` daraus baut.
 
 **Geprüft bisher:** B01 (17/20), B02 (16/17), B03 (16/20), B04 (23/24 im zweiten
-Durchlauf) — abgenommen. **B23 (33/35) → `review`: zwei Befunde mit Grad *hoch*, die
-Erfassung pausiert.**
+Durchlauf), B23 (34/35 im zweiten Durchlauf) — alle abgenommen. B23s beide
+*hoch*-Befunde sind repariert und nachgemessen; dabei fielen drei neue an, zwei davon
+als Folge der Reparatur.
 Alle Reparaturen sind **noch nicht auf `production`**.
 Offen: B05–B22, B24–B26 (Status `rekonstruiert`).
 
@@ -25,12 +26,10 @@ obwohl dort nichts mehr zu reparieren ist.
 | ID | Feature | Befund | Grad | Fundstelle | Seit |
 |---|---|---|---|---|---|
 | BF-04 | **01** | Betroffenenrechte nicht bedienbar — keine Kontolöschung, kein Datenexport, kein Passwort-Zurücksetzen. **2026-08-23 aus B01 herausgelöst:** keine Reparaturaufgabe, sondern fehlende Funktionen über B01, B04 und B19 hinweg — läuft als reguläres Feature `01` durch die volle Kette | hoch | `src/Controller/ProfileController.php` (fehlend) | 2026-08-23 |
-| BF-24 | B23 | **Die API umgeht die Moderation vollständig** — ein `POST /api/v1/restaurants` erscheint sofort in der öffentlichen Liste, auf der Detailseite, im CC-BY-Datensatz und in den Kennzahlen von `/open` (gemessen: `verifiedShare` 27,3 % → 23,1 %). Dazu Kontaktdaten Dritter (AK-24) und eine von außen beschreibbare Filterauswahl (EC-06) | **hoch** | `Api/V1/RestaurantApiController::create()`, `RestaurantRepository::findPaginated()` | 2026-08-24 |
-| BF-25 | B23 | `register` fällt unter das schwache Limit (100/min statt 5) — 11 Hinweis-Mails an eine **fremde** Adresse in Sekunden, anonym. Der Web-Weg ist seit BF-02 gedeckelt, der API-Weg nicht | **hoch** | `src/EventSubscriber/ApiRateLimitSubscriber.php` | 2026-08-24 |
-| BF-26 | B23 | Die Fehlerantworten des JWT-Bundles brechen den Formatvertrag — `{code,message}` statt `{error:{code,message}}` bei falschem Passwort und abgelaufenem Token, also den beiden häufigsten Fällen eines Mobil-Clients | mittel | `config/packages/security.yaml` (Lexik-failure_handler) | 2026-08-24 |
-| BF-27 | B23 | Küchen-Typ über 80 Zeichen → **HTTP 500** statt 422; jeder Aufruf erzeugt in Produktion einen Sentry-Bericht | niedrig | `Api/V1/RestaurantApiController::create()` | 2026-08-24 |
-| BF-28 | B23 | 404-Meldungen geben `App\Entity\Restaurant` und `EntityValueResolver` preis — auch in Produktion, kein Debug-Zusatz | niedrig | `src/EventSubscriber/ApiExceptionSubscriber.php:46` | 2026-08-24 |
-| BF-29 | B23 | Der `Host`-Header steuert die ausgegebenen Bild-URLs; `trusted_hosts` nicht gesetzt, `APP_API_BASE_URL` leer | niedrig | `src/Api/AssetUrlBuilder.php`, `config/packages/framework.yaml` | 2026-08-24 |
+| BF-29 | B23 | Der `Host`-Header steuert die ausgegebenen Bild-URLs. **Bewusst nicht im Code behoben:** `trusted_hosts` hätte bei leerem Wert jeden Host abgewiesen. Der Weg über `APP_API_BASE_URL` ist in `.env` dokumentiert — **Serveraufgabe, gehört auf die Deployment-Liste** | niedrig | `src/Api/AssetUrlBuilder.php`, `.env` | 2026-08-24 |
+| BF-30 | B23 | Die Moderationsschlange lässt sich fluten — 40 Aufrufe erzeugten 40 Vorschläge, alle 202. **Vierte Wiederholung von M-01**, und die erste, bei der die Konvention schon formuliert war | mittel | `src/EventSubscriber/ApiRateLimitSubscriber.php:54` | 2026-08-24 |
+| BF-31 | B23 | Die `id` der 202-Antwort ist eine Vorschlags-ID im Rumpf eines Restaurant-Endpunkts — `GET /restaurants/{id}` liefert bei Überlappung der Zähler ein **fremdes** Restaurant mit 200 | mittel | `Api/V1/RestaurantApiController::create()` | 2026-08-24 |
+| BF-32 | B23 | Wer über die API einreicht, sieht seinen Vorschlag nirgends — `/me/submissions` liest nur genehmigte Restaurants | niedrig | `Api/V1/MeController::submissions()` | 2026-08-24 |
 | BF-21 | B04 | Adressänderung ohne Rate Limit — zehn Durchläufe erzeugten 20 Mails, davon 10 an ein frei gewähltes fremdes Postfach. **Nebenwirkung der BF-19-Reparatur**: Vorher verschickte dieser Weg gar keine Mail | mittel | `src/Controller/ProfileController.php::edit()` | 2026-08-24 |
 | BF-22 | B04 | Ungültiges Stammdatenformular mit geänderter Adresse meldet den Nutzer ab — `handleRequest()` setzt `setEmail()` auch bei fehlgeschlagener Validierung, der veränderte Nutzer wandert in die Sitzung. Bestand vor der Reparatur | mittel | `src/Controller/ProfileController.php::edit()` | 2026-08-24 |
 | BF-23 | B01, B04 | Bestätigungstoken im `request`-Kanal (`Matched route`), der in `prod` **nicht** ausgeschlossen ist — **BF-06 war nur halb behoben**. 31 Zeilen für `app_email_change_confirm`, 22 für `app_verify_email` | mittel | `config/packages/monolog.yaml` | 2026-08-24 |
@@ -53,6 +52,11 @@ obwohl dort nichts mehr zu reparieren ist.
 | BF-08 | B01 | Mail-Locale bei asynchronem Versand — `->locale()` gesetzt (**nur B01**, B14/B15/B23 weiterhin betroffen) | mittel | 2026-08-23 | **noch nicht** |
 | BF-16 | B02, B04 | **Rekonstruktion falsch** — B02/EC-04, B04/AK-13 und B04/FB-04 behaupteten, Sitzungen und `remember_me`-Cookies überlebten eine Passwortänderung. **Beide Specs am 2026-08-24 berichtigt**, Regressionstest angelegt | mittel | 2026-08-24 | entfällt (Dokumentation) |
 | BF-13 | B02 | Anmeldung ohne Sperre — `login_throttling` mit 5 Versuchen je 15 Minuten ergänzt | **hoch** | 2026-08-24 | **noch nicht** |
+| BF-24 | B23 | API umging die Moderation — `create()` legt jetzt einen `RestaurantSuggestion` an und antwortet mit 202; `cuisines` ohne `findOrCreateByName()`; nicht übermittelte Merkmale sind `UNKNOWN` statt `false` | **hoch** | 2026-08-24 | **noch nicht** — Branch `fix/b04-profil-qa` |
+| BF-25 | B23 | `register` unter dem schwachen Limit — eigener Limiter `api_register` (5/h) | **hoch** | 2026-08-24 | **noch nicht** |
+| BF-26 | B23 | Formatvertrag der JWT-Antworten — `ApiAuthenticationFailureSubscriber` für alle vier Fälle des Bundles | mittel | 2026-08-24 | **noch nicht** |
+| BF-27 | B23 | Zu lange Küchen-Angabe → 422 statt 500 | niedrig | 2026-08-24 | **noch nicht** |
+| BF-28 | B23 | 404-Meldungen ohne interne Klassennamen | niedrig | 2026-08-24 | **noch nicht** |
 | BF-14 | B02 | Abmelden ohne CSRF — `enable_csrf` plus POST-Formular in der Kopfzeile | niedrig | 2026-08-24 | **noch nicht** |
 | BF-19 | B04 | E-Mail-Änderung ohne erneute Bestätigung — neue Adresse wird nur noch vorgemerkt (`User::$pendingEmail`), Bestätigungslink an die neue und Warnung an die bisherige Adresse | **hoch** | 2026-08-24 | **noch nicht** — Branch `fix/b04-profil-qa` |
 | BF-20 | B04 | Passwortänderung ohne Rate Limit — Limiter `password_change` (5 je 15 Minuten), gezählt **am Konto** statt an der IP | niedrig | 2026-08-24 | **noch nicht** |

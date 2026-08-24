@@ -35,6 +35,8 @@ nimmt, und der ungeschützt, den ein Browser nimmt.
 | `/{locale}/verify/resend` | ~~keins~~ → 3/h | B01/FB-02, behoben 2026-08-23 (BF-02) |
 | `POST /{locale}/profile/password` | ~~keins~~ → 5 je 15 Min | B04/FB-07, behoben 2026-08-24 (BF-20) |
 | `POST /{locale}/profile/edit` | **keins** | B04/BF-21 — verschickt seit der BF-19-Reparatur zwei Mails je Aufruf, an eine **frei wählbare** Adresse |
+| `POST /api/v1/auth/register` | ~~100/min~~ → 5/h | B23/FB-02, behoben 2026-08-24 (BF-25) |
+| `POST /api/v1/restaurants` | **keins** (100/min anonym) | B23/BF-30 — 40 Aufrufe, 40 Vorschläge in der Moderationsschlange |
 | `/passkey/login/options` | **keins** | B03/FB-01 |
 | `POST /{locale}/community/suggest` | **keins** | B11/FB-01 |
 | `/open/dataset.csv` | **keins** | B17/FB-02 |
@@ -59,6 +61,12 @@ Punkt, an dem eine Einzelbehebung zu wenig ist:
 
 Ohne diesen Satz irgendwo im Projekt wird die Liste weiter Zeilen bekommen, während oben
 welche verschwinden.
+
+**Stand 2026-08-24, abends: genau das ist eingetreten.** BF-30 (`POST /api/v1/restaurants`
+ohne Deckel) entstand am selben Tag, an dem der Satz oben geschrieben wurde — in einer
+Reparatur, die diesen Weg umbaute, ohne ihm einen Limiter mitzugeben. Die Konvention
+steht damit an der falschen Stelle: Sie wird beim **Prüfen** gelesen, nicht beim
+**Bauen**. Sie gehört nach `CLAUDE.md`, wo sie vor jedem Eingriff im Blick ist.
 
 ---
 

@@ -68,9 +68,14 @@ Einreichungen abrufen, neue Restaurants anlegen. Dokumentiert unter `/api/docs`.
   betrachtet wird, dann enthält sie **nur** Restaurants, deren `submittedBy` der
   Token-Inhaber ist.
 - **AK-14** · Angenommen, `POST /api/v1/restaurants` wird mit gültigem Token und
-  gültigem Body aufgerufen, wenn die Anfrage durchläuft, dann entsteht ein Restaurant
-  mit `submittedBy` = Aufrufer und `isVerified = false`, und die Antwort ist 201 mit
-  der Detaildarstellung.
+  gültigem Body aufgerufen, wenn die Anfrage durchläuft, dann entsteht ein
+  **`RestaurantSuggestion`** mit `suggestedBy` = Aufrufer und Status `pending`, und die
+  Antwort ist **202** mit `{status, id, message}` — kein öffentlicher Eintrag.
+  *(**Berichtigt am 2026-08-24.** Die ursprüngliche Rekonstruktion lautete: „dann
+  entsteht ein Restaurant … und die Antwort ist 201 mit der Detaildarstellung." Sie
+  beschrieb damit dasselbe Verhalten, das AK-21 als fragwürdig markiert hatte — der
+  Widerspruch fiel erst auf, als AK-21 repariert war. Der alte Wortlaut steht hier,
+  damit niemand später den Widerspruch für einen Fund hält.)*
 - **AK-15** · Angenommen, eine Koordinate liegt außerhalb ±90 bzw. ±180 oder ist keine
   Dezimalzahl, wenn angelegt wird, dann antwortet der Server mit **422** — nicht mit 500
   aus der Datenbankschicht.
@@ -90,10 +95,14 @@ Einreichungen abrufen, neue Restaurants anlegen. Dokumentiert unter `/api/docs`.
 
 ### Fragwürdiges Verhalten — als Kriterium aufgenommen, zur Klärung vorgelegt
 
-- **AK-21** ⚠ · Angenommen, ein beliebiger angemeldeter Nutzer legt über
-  `POST /api/v1/restaurants` einen Eintrag an, wenn danach die **öffentliche Website**
-  `/{locale}/restaurants` aufgerufen wird, dann erscheint der Eintrag dort sofort — ohne
-  jede Prüfung durch einen Admin.
+- **AK-21** · Angenommen, ein angemeldeter Nutzer reicht über
+  `POST /api/v1/restaurants` einen Eintrag ein, wenn danach die **öffentliche Website**
+  `/{locale}/restaurants` aufgerufen wird, dann erscheint er dort **nicht** — er wartet
+  auf die Freigabe durch einen Admin, wie beim Web-Weg (B11 → B21).
+  *(**Repariert am 2026-08-24**, BF-24. Vorher: sofort öffentlich, in der Liste, auf
+  der Detailseite, im CC-BY-Datensatz und in den Kennzahlen von `/open` — zwei Aufrufe
+  drückten `verifiedShare` von 27,3 auf 23,1 %. Der ursprüngliche Wortlaut lautete:
+  „dann erscheint der Eintrag dort sofort — ohne jede Prüfung durch einen Admin.")*
   *(So verhält sich der Code heute: `RestaurantRepository::findPaginated()` filtert
   **nicht** auf `isVerified`; der Wert steuert nur ein Abzeichen und den optionalen
   Filter `?verified=1`. Der Web-Weg für dieselbe Absicht (B11) legt dagegen eine
@@ -160,9 +169,10 @@ Einreichungen abrufen, neue Restaurants anlegen. Dokumentiert unter `/api/docs`.
 
 ## Fehlbestand
 
-- **FB-01 · Keine Moderation für über die API angelegte Restaurants.** Siehe AK-21. Der
-  gewichtigste Befund des Features.
-- **FB-02 · Registrierung fällt unter das schwache Limit.** Siehe AK-22.
+- ~~**FB-01 · Keine Moderation für über die API angelegte Restaurants.**~~ **Behoben am
+  2026-08-24** (BF-24) — siehe AK-21. War der gewichtigste Befund des Features.
+- ~~**FB-02 · Registrierung fällt unter das schwache Limit.**~~ **Behoben am 2026-08-24**
+  (BF-25) — eigener Limiter `api_register`, 5 je Stunde. Siehe AK-22.
 - **FB-03 · Kein Ablaufmanagement für Token.** Kein Refresh-Token, kein Widerruf. Ein
   ausgestelltes JWT gilt bis zum Ablauf; ein kompromittiertes lässt sich nicht
   zurückziehen.
@@ -175,7 +185,9 @@ Einreichungen abrufen, neue Restaurants anlegen. Dokumentiert unter `/api/docs`.
   öffnete die API für jede Herkunft; welcher Wert auf Produktion gesetzt ist, geht aus
   dem Repository nicht hervor.
 - **FB-08 · Kein Rate Limit je **Konto**, nur je IP.** Ein Angreifer mit wechselnden
-  IPs umgeht AK-17 und AK-18 vollständig.
+  IPs umgeht AK-17 und AK-18 vollständig. **Seit 2026-08-24 zusätzlich relevant:**
+  `POST /restaurants` hat gar keinen eigenen Deckel und lässt sich mit 100 Anfragen je
+  Minute in die Moderationsschlange kippen (BF-30).
 - **FB-09 · Validierung von Hand statt über den Validator.** `register` und `create`
   prüfen mit `mb_strlen` und `filter_var` — die Regeln stehen damit zweimal im Projekt
   (hier und in den FormTypes) und können auseinanderlaufen. Bereits sichtbar: Der

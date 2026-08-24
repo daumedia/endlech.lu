@@ -55,6 +55,28 @@ markieren fragwürdiges Verhalten, das bewusst als Kriterium aufgenommen wurde. 
 sie wie eine Vorgabe liest, sucht Fehler an der falschen Stelle. Es läuft **nie** durch `sdd-tasks` und nie durch den regulären
 Eingang von `sdd-build` — es ist gebaut.
 
+## Konvention: Jeder Weg, der eine Mail auslöst oder ein Geheimnis prüft, braucht einen Limiter
+
+Unabhängig davon, ob eine App oder ein Browser ihn geht. Wer einen solchen Weg **neu
+anlegt oder einen bestehenden um einen Mailversand erweitert, legt den Limiter im selben
+Commit an.**
+
+Der Satz steht hier und nicht nur in `features/fehlbestand-uebersicht.md`, weil er dort
+beim *Prüfen* gelesen wurde und nicht beim *Bauen* — mit dem Ergebnis, dass BF-30 am
+selben Tag entstand, an dem er formuliert wurde.
+
+Fünfmal gefunden, jedes Mal an einer anderen Stelle: Registrierung (BF-02), Anmeldung
+(BF-13), Passkey-Challenge (BF-18), Adressänderung (BF-21), API-Einreichung (BF-30).
+Gemeinsam ist allen, dass der **API**-Weg gedeckelt war und der Browser-Weg nicht — oder
+dass eine Reparatur einem Weg erstmals einen Mailversand gab, ohne den Deckel mitzunehmen.
+
+Vorhandene Limiter stehen in `config/packages/framework.yaml`; **der `when@test`-Override
+auf 10000 ist Pflicht**, sonst summieren sich die Aufrufe über die Testsuite.
+
+⚠️ **Am Konto zählen, nicht an der IP**, wenn der Angriff eine bestehende Sitzung oder
+ein bestehendes Konto voraussetzt — dort wechselt die IP mühelos, das Konto nicht
+(siehe `password_change`).
+
 ## Tech Stack
 
 - **Backend:** PHP 8.4+, Symfony 8.0.*
