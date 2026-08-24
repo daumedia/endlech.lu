@@ -305,4 +305,55 @@ final class OrganisationControllerTest extends AbstractWebTestCase
         return $client->getContainer()->get(OrganisationWaitlistEntryRepository::class)
             ->findOneBy([], ['id' => 'DESC']);
     }
+
+    /**
+     * AK-13: Der zielgruppenspezifische Text steht nur auf der Unterseite; die
+     * Übersicht zeigt Teaser. Gemeinsam ist beiden nur der Integritätsblock, und
+     * der steht dort mit Absicht.
+     */
+    public function testAk13ZielgruppentextStehtNurAufDerUnterseite(): void
+    {
+        $client = static::createClient();
+
+        $client->request('GET', self::LOCALE.'/organisationen/gemeinden');
+        $unterseite = $client->getResponse()->getContent();
+
+        $client->request('GET', self::LOCALE.'/organisationen');
+        $uebersicht = $client->getResponse()->getContent();
+
+        // Ein Satz aus dem Gemeinden-Abschnitt, der die Übersicht nicht erreichen darf.
+        self::assertStringContainsString('Was die Erhebung umfasst', $unterseite);
+        self::assertStringNotContainsString('Was die Erhebung umfasst', $uebersicht);
+
+        // Der Integritätsblock dagegen steht auf beiden.
+        self::assertStringContainsString('Niemand kann die Bewertung', $unterseite);
+        self::assertStringContainsString('Niemand kann die Bewertung', $uebersicht);
+    }
+
+    /**
+     * AK-04: Das Routen-Requirement fängt unbekannte Slugs ab.
+     */
+    public function testAk04UnbekannterSlugErgibt404(): void
+    {
+        $client = static::createClient();
+        $client->request('GET', self::LOCALE.'/organisationen/erfunden');
+
+        self::assertResponseStatusCodeSame(404);
+    }
+
+    /**
+     * AK-05 / AK-19: Ohne JavaScript sind alle drei Feldgruppen im Markup —
+     * `PRE_SET_DATA` baut sie alle auf. Wer das auf den aktuellen Typ einschränkt,
+     * macht die Seite ohne JavaScript unbenutzbar.
+     */
+    public function testAk05AlleDreiFeldgruppenStehenImMarkup(): void
+    {
+        $client = static::createClient();
+        $client->request('GET', self::LOCALE.'/organisationen/gemeinden');
+        $html = $client->getResponse()->getContent();
+
+        foreach (['communeName', 'estimatedVenues', 'timeframe', 'sponsorshipInterests', 'collaborationInterests'] as $feld) {
+            self::assertStringContainsString('organisation_waitlist['.$feld.']', $html, "Feld {$feld} fehlt im Markup.");
+        }
+    }
 }
