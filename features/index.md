@@ -24,7 +24,7 @@ Abmelden verlangt ein Token. 16 von 17 Kriterien, nur *mittel*/*niedrig* offen.
 virtuellen WebAuthn-Authenticator (CDP) durchgespielt, inklusive Anmeldung ohne
 E-Mail-Eingabe. Ein Befund *mittel* (BF-18), drei Kriterien nicht prüfbar.
 
-Nächster Schritt: `/sdd-erfassen B09`. Die Reparaturen von B01, B02, B04 und B23 warten auf
+Nächster Schritt: `/sdd-erfassen B05`. Die Reparaturen von B01, B02, B04 und B23 warten auf
 `/sdd-deploy`; das neue Feature `01` beginnt mit `/sdd-spec 01`.
 
 **Zwei Namensräume:** Einträge mit Präfix `B` sind **Bestand** — gebaut, bevor die
@@ -51,7 +51,7 @@ Eingang von `sdd-build`. Der Weg ist: `bestand` → `/sdd-erfassen BNN` →
 | B06 | Restaurant-Detailseite | P0 | rekonstruiert | B07, B08, B09, B10 | 2026-08-23 |
 | B07 | Öffnungszeiten | P1 | rekonstruiert | — | 2026-08-23 |
 | B08 | Küchen-Typen | P1 | rekonstruiert | — | 2026-08-23 |
-| B09 | Restaurantfotos & Galerie | P1 | rekonstruiert | B20 | 2026-08-23 |
+| B09 | Restaurantfotos & Galerie | P1 | **approved** | B20 | 2026-08-24 · QA: 18/18, ein Befund *mittel* |
 | B10 | Haltestellen in der Nähe | P2 | **approved** | — | 2026-08-24 · QA 2. Durchlauf: 24/24 |
 | B11 | Restaurant vorschlagen (Wizard) | P0 | **approved** | B01 | 2026-08-24 · QA: 18/19, ein Befund *mittel* |
 | B12 | Startseite | P1 | rekonstruiert | B05 | 2026-08-23 |
