@@ -7,7 +7,7 @@ des Auditberichts, den `/sdd-erfassen abschluss` daraus baut.
 
 **Geprüft bisher:** B01 (17/20), B02 (16/17), B03 (16/20), B04 (23/24 im zweiten
 Durchlauf), B23 (34/35 im zweiten Durchlauf), B19 (17/17, davon eines nicht prüfbar),
-B14 (28/28), B15 (27/27), B22 (30/30) — alle abgenommen. B23s beide
+B14 (28/28), B15 (27/27), B22 (30/30), B17 (25/25) — alle abgenommen. B23s beide
 *hoch*-Befunde sind repariert und nachgemessen; dabei fielen drei neue an, zwei davon
 als Folge der Reparatur.
 Alle Reparaturen sind **noch nicht auf `production`**.
@@ -28,6 +28,9 @@ obwohl dort nichts mehr zu reparieren ist.
 |---|---|---|---|---|---|
 | BF-04 | **01** | Betroffenenrechte nicht bedienbar — keine Kontolöschung, kein Datenexport, kein Passwort-Zurücksetzen. **2026-08-23 aus B01 herausgelöst:** keine Reparaturaufgabe, sondern fehlende Funktionen über B01, B04 und B19 hinweg — läuft als reguläres Feature `01` durch die volle Kette | hoch | `src/Controller/ProfileController.php` (fehlend) | 2026-08-23 |
 | BF-29 | B23 | Der `Host`-Header steuert die ausgegebenen Bild-URLs. **Bewusst nicht im Code behoben:** `trusted_hosts` hätte bei leerem Wert jeden Host abgewiesen. Der Weg über `APP_API_BASE_URL` ist in `.env` dokumentiert — **Serveraufgabe, gehört auf die Deployment-Liste** | niedrig | `src/Api/AssetUrlBuilder.php`, `.env` | 2026-08-24 |
+| BF-43 | B17 | Formelinjektion im CC-BY-Datensatz — ein Restaurantname mit führendem `=` steht unverändert im CSV und wird von Excel als Formel ausgeführt. Die CSV-Struktur selbst hält. Einzige Hürde ist die Moderation; die Zielgruppe des Datensatzes sind Ministerien und Forschende | niedrig | `src/Controller/Open/OpenDataController.php:100` | 2026-08-24 |
+| BF-42 | B17 | Kein Rate Limit auf den Datenendpunkten — 12 Abrufe, zwölfmal 200; jeder lädt den gesamten Bestand. **Sechste Wiederholung von M-01**, und die erste, die nicht unter den Wortlaut der Konvention fällt (löst keine Mail aus, prüft kein Geheimnis — ist nur teuer) | niedrig | `src/Controller/Open/OpenDataController.php` | 2026-08-24 |
+| BF-41 | B17 | Unverifizierte Einträge stehen im veröffentlichten Datensatz (8 von 11). **Neu bewertet:** Die Spec führte das als schwerste Verkettung des Projekts — sie ist seit BF-24 unterbrochen. Bleibt eine Produktfrage samt fehlender Dokumentation von `isVerified` | niedrig | `RestaurantRepository::findAllForExport()` | 2026-08-24 |
 | BF-40 | B22 | Die Verwaltungsliste skaliert nicht — kein Blättern, keine Obergrenze; die Restaurant-Auswahlliste lädt den **kompletten Kernbestand** (`findBy([], …)`). Blättern ist im Projekt vorhanden (B05, B20) und hier nur nicht angewandt | niedrig | `AdminWaitlistController.php:96`, `PartnerWaitlistEntryRepository::findFiltered()` | 2026-08-24 |
 | BF-39 | B15 | Die Typansage für Screenreader sagt „Organisation" statt „Verein" — der Oberbegriff der ganzen Seite. Beim Slug war dieselbe Verwechslung erkannt und behoben (`vereine`, mit Kommentar); beim Label nicht | niedrig | `src/Enum/OrganisationType.php:31` | 2026-08-24 |
 | BF-37 | B14 | Die Einwilligung lässt sich nicht widerrufen — 0 Routen, 0 Abmeldelinks, keine Löschfunktion in der Verwaltung. Verstärkt durch die fehlende Löschfrist: `findPendingOlderThan()` existiert, wird aber **nur im Test** aufgerufen — toter Code, der eine Aufräumroutine vortäuscht. Art. 7 Abs. 3 / Art. 5 Abs. 1 lit. e DSGVO | mittel | `src/Repository/PartnerWaitlistEntryRepository.php:31` (ungenutzt) | 2026-08-24 |

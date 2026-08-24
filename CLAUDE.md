@@ -57,9 +57,10 @@ Eingang von `sdd-build` — es ist gebaut.
 
 ## Konvention: Jeder Weg, der eine Mail auslöst oder ein Geheimnis prüft, braucht einen Limiter
 
+— und ebenso jeder Weg, der **bei jedem Aufruf den gesamten Bestand lädt**.
+
 Unabhängig davon, ob eine App oder ein Browser ihn geht. Wer einen solchen Weg **neu
-anlegt oder einen bestehenden um einen Mailversand erweitert, legt den Limiter im selben
-Commit an.**
+anlegt oder einen bestehenden darum erweitert, legt den Limiter im selben Commit an.**
 
 Der Satz steht hier und nicht nur in `features/fehlbestand-uebersicht.md`, weil er dort
 beim *Prüfen* gelesen wurde und nicht beim *Bauen* — mit dem Ergebnis, dass BF-30 am

@@ -39,7 +39,7 @@ nimmt, und der ungeschützt, den ein Browser nimmt.
 | `POST /api/v1/restaurants` | **keins** (100/min anonym) | B23/BF-30 — 40 Aufrufe, 40 Vorschläge in der Moderationsschlange |
 | `/passkey/login/options` | **keins** | B03/FB-01 |
 | `POST /{locale}/community/suggest` | **keins** | B11/FB-01 |
-| `/open/dataset.csv` | **keins** | B17/FB-02 |
+| `/open/dataset.csv` | **keins** | B17/BF-42 — gemessen 2026-08-24: 12 Abrufe, zwölfmal 200; jeder lädt den gesamten Bestand |
 | alle Verwaltungs-POSTs | **keins** | B19/FB-05, gemessen 2026-08-24 (BF-35): acht in Folge, keine Sperre |
 
 **Schwerste Folge:** B02/FB-01. Unbegrenztes Passwortraten trifft ein
@@ -54,10 +54,13 @@ weg.** `POST /profile/edit` kam neu dazu — als Nebenwirkung einer Reparatur, d
 Weg erstmals einen Mailversand gab, ohne ihm einen Deckel mitzugeben. Genau das ist der
 Punkt, an dem eine Einzelbehebung zu wenig ist:
 
-> **Konvention, die dem Projekt fehlt:** Jeder Weg, der eine Mail auslöst oder ein
-> Geheimnis prüft, bekommt einen Limiter — unabhängig davon, ob eine App oder ein
-> Browser ihn geht. Wer einen solchen Weg neu anlegt oder einen bestehenden um einen
-> Mailversand erweitert, legt den Limiter im selben Commit an.
+> **Konvention, die dem Projekt fehlt:** Jeder Weg, der eine Mail auslöst, ein Geheimnis
+> prüft **oder bei jedem Aufruf den gesamten Bestand lädt**, bekommt einen Limiter —
+> unabhängig davon, ob eine App oder ein Browser ihn geht. Wer einen solchen Weg neu
+> anlegt oder einen bestehenden darum erweitert, legt den Limiter im selben Commit an.
+
+*Der dritte Fall kam am 2026-08-24 durch BF-42 dazu: `/open/dataset.csv` löst keine Mail
+aus und prüft kein Geheimnis — die erste Fassung des Satzes hätte ihn nicht erfasst.*
 
 Ohne diesen Satz irgendwo im Projekt wird die Liste weiter Zeilen bekommen, während oben
 welche verschwinden.

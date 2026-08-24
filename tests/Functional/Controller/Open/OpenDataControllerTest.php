@@ -113,4 +113,58 @@ final class OpenDataControllerTest extends AbstractWebTestCase
         self::assertStringContainsString('public', $cacheControl);
         self::assertStringContainsString('max-age=3600', $cacheControl);
     }
+
+    /**
+     * AK-05: Kein UTF-8-BOM. Ein BOM landet in gewöhnlichen Parsern im ersten
+     * Spaltennamen — aus `id` wird `\xEF\xBB\xBFid`, und jeder Zugriff auf die
+     * Spalte scheitert, ohne dass man dem Datensatz ansieht warum.
+     */
+    public function testAk05CsvBeginntOhneBom(): void
+    {
+        $client = static::createClient();
+        $client->request('GET', '/open/dataset.csv');
+
+        $inhalt = $client->getResponse()->getContent();
+
+        self::assertStringStartsWith('id,', $inhalt);
+        self::assertStringStartsNotWith("\xEF\xBB\xBF", $inhalt);
+    }
+
+    /**
+     * AK-07: Der Datensatz führt 21 Spalten. Die Zahl steht hier, damit ein
+     * versehentlich hinzugefügtes Feld auffällt — besonders eines, das Kontaktdaten
+     * trägt (siehe AK-06).
+     */
+    public function testAk07DatensatzFuehrtEinundzwanzigSpalten(): void
+    {
+        $client = static::createClient();
+        $client->request('GET', '/open/dataset.csv');
+
+        $kopf = strtok($client->getResponse()->getContent(), "\n");
+        $spalten = str_getcsv($kopf, ',', '"', '');
+
+        self::assertCount(21, $spalten);
+        self::assertSame('id', $spalten[0]);
+        self::assertNotContains('email', $spalten);
+        self::assertNotContains('phone', $spalten);
+    }
+
+    /**
+     * AK-11: Der Session-Listener darf `public` nicht auf `private, must-revalidate`
+     * herunterstufen. Geprüft wird mit angemeldetem Nutzer — dort ist eine Session
+     * garantiert angefasst worden.
+     */
+    public function testAk11CacheHeaderBleibtOeffentlichTrotzSession(): void
+    {
+        $client = static::createClient();
+        $this->loginAs($client, 'admin@endlech.lu');
+
+        foreach (['/open.json', '/open/dataset.csv', '/open/dataset.json'] as $pfad) {
+            $client->request('GET', $pfad);
+            $cacheControl = $client->getResponse()->headers->get('Cache-Control');
+
+            self::assertStringContainsString('public', $cacheControl, $pfad.' ist nicht öffentlich cachebar.');
+            self::assertStringNotContainsString('private', $cacheControl, $pfad.' wurde auf private herabgestuft.');
+        }
+    }
 }
