@@ -122,6 +122,13 @@ An B20 hängen: B09 (Fotos im selben Formular), B07, B08 (Teilformulare).
 
 ## Offene Fragen
 
+
+- **OF-neu** · Soll beim Löschen eines Restaurants ein Hinweis erscheinen, wenn eine
+  Wartelisten-Anmeldung darauf verweist (AK-14)? Die Kaskade `SET NULL` ist richtig —
+  der Eintrag soll erhalten bleiben —, aber der Admin erfährt nichts davon
+  (2026-08-24 gemessen). — Betreiber
+- **OF-neu2** · Soll der Restaurantname im Admin eine Mindestlänge haben? Ein Name mit
+  einem Zeichen geht durch; Vorschlags-Wizard und API verlangen 2–150. — Betreiber
 - **OF-01** · Sollen Bilddateien beim Löschen des Restaurants mit entfernt werden
   (FB-01)? Ein `PreRemove`-Callback oder ein Aufruf von `reorderAfterDelete`-Verwandtem
   wäre der Weg. Vorher zu klären: Wie viele verwaiste Dateien liegen bereits auf
