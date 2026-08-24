@@ -1,6 +1,6 @@
 # B04 · Profil, Avatar & eigene Einreichungen — Spezifikation
 
-Status: `rekonstruiert` · Stand: 2026-08-23 · **Rückerfassung aus dem Bestand**
+Status: `review` · Stand: 2026-08-23 · **Rückerfassung aus dem Bestand**
 
 ## Zweck
 
@@ -74,12 +74,16 @@ ob sie geprüft wurden. Auf derselben Seite verwaltet er seine Passkeys (B03).
   für eine Adresse, die nie bestätigt wurde. Wer ein Konto übernimmt, kann die Adresse
   auf seine eigene umschreiben und ist damit dauerhaft drin.)*
 
-- **AK-13** ⚠ · Angenommen, ein Nutzer ändert sein Passwort, wenn die Änderung
-  durchläuft, dann bleiben **alle anderen Sitzungen und alle `REMEMBERME`-Cookies
-  gültig**.
-  *(So verhält sich der Code heute: `changePassword()` ruft weder eine
-  Session-Invalidierung noch einen Wechsel des `remember_me`-Geheimnisses auf. Folge:
-  Eine Passwortänderung nach einer Kontoübernahme sperrt den Angreifer nicht aus.)*
+- **AK-13** · Angenommen, ein Nutzer ändert sein Passwort, wenn die Änderung durchläuft,
+  dann bleibt **seine eigene** Sitzung bestehen, während **andere Sitzungen desselben
+  Kontos und deren `REMEMBERME`-Cookies entwertet** werden.
+  *(**Berichtigt am 2026-08-24.** Die ursprüngliche Rekonstruktion behauptete das
+  Gegenteil — geschlossen daraus, dass `changePassword()` tatsächlich weder eine
+  Session-Invalidierung noch einen Wechsel des Geheimnisses aufruft. Gemessen erledigt
+  Symfony beides selbst: Der Sicherheitskontext vergleicht bei jedem Request den
+  serialisierten Nutzer aus der Sitzung mit dem frisch geladenen, und die
+  `remember_me`-Signatur schließt den Passwort-Hash ein. Nachweis in `qa-report.md`
+  sowie im Regressionstest `testEc04PasswortaenderungEntwertetFremdeSitzungen`.)*
 
 - **AK-14** ⚠ · Angenommen, jemand kennt eine gültige Sitzung, wenn er das aktuelle
   Passwort im Änderungsformular durchprobiert, dann greift **keine** Sperre.
@@ -123,7 +127,10 @@ ob sie geprüft wurden. Auf derselben Seite verwaltet er seine Passkeys (B03).
   wiederholt, weil das Profil der Ort wäre.)
 - **FB-02 · Kein Datenexport.** Auskunftsrecht nach Art. 15 DSGVO nicht erfüllbar.
 - **FB-03 · Keine erneute Bestätigung bei E-Mail-Änderung.** Siehe AK-12.
-- **FB-04 · Keine Sitzungsinvalidierung bei Passwortänderung.** Siehe AK-13.
+- ~~**FB-04 · Keine Sitzungsinvalidierung bei Passwortänderung.**~~ **Entfällt —
+  2026-08-24 widerlegt.** Symfony entwertet fremde Sitzungen und `remember_me`-Cookies
+  von sich aus; siehe AK-13. Der Eintrag bleibt durchgestrichen stehen, damit
+  nachvollziehbar ist, dass hier einmal eine Lücke vermutet wurde, die es nicht gibt.
 - **FB-05 · Keine Benachrichtigung an die alte Adresse**, wenn E-Mail oder Passwort
   geändert werden. Der übliche Schutz gegen stille Kontoübernahme fehlt.
 - **FB-06 · Avatare werden nicht verkleinert oder neu kodiert.** Die hochgeladene Datei

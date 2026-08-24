@@ -5,7 +5,8 @@ Stand: 2026-08-23 · Quelle: die `qa-report.md` aller geprüften Features
 Diese Liste wird von `sdd-qa` fortgeschrieben, nicht von Hand. Sie ist die Grundlage
 des Auditberichts, den `/sdd-erfassen abschluss` daraus baut.
 
-**Geprüft bisher:** B01 (17/20), B02 (16/17) und B03 (16/20) — alle **abgenommen**.
+**Geprüft bisher:** B01 (17/20), B02 (16/17), B03 (16/20) — abgenommen. B04 (15/18) → **review**,
+ein Befund mit Grad *hoch*: Die Erfassung pausiert bis zur Reparatur.
 Beide Reparaturen sind **noch nicht auf `production`**.
 Offen: B02–B26 (Status `rekonstruiert`).
 
@@ -23,10 +24,11 @@ obwohl dort nichts mehr zu reparieren ist.
 | ID | Feature | Befund | Grad | Fundstelle | Seit |
 |---|---|---|---|---|---|
 | BF-04 | **01** | Betroffenenrechte nicht bedienbar — keine Kontolöschung, kein Datenexport, kein Passwort-Zurücksetzen. **2026-08-23 aus B01 herausgelöst:** keine Reparaturaufgabe, sondern fehlende Funktionen über B01, B04 und B19 hinweg — läuft als reguläres Feature `01` durch die volle Kette | hoch | `src/Controller/ProfileController.php` (fehlend) | 2026-08-23 |
+| BF-19 | B04 | E-Mail-Änderung ohne erneute Bestätigung — `is_verified` bleibt 1 für eine nie bestätigte Adresse; mit gekaperter Sitzung eine dauerhafte Kontoübernahme, da es kein Passwort-Zurücksetzen gibt | **hoch** | `src/Form/ProfileType.php`, `src/Controller/ProfileController.php` | 2026-08-24 |
+| BF-20 | B04 | Passwortänderung ohne Rate Limit — 8 Rateversuche auf das aktuelle Passwort alle angenommen | niedrig | `src/Controller/ProfileController.php` | 2026-08-24 |
 | BF-18 | B03 | Passkey-Challenge-Endpunkte ohne Rate Limit — 10 Anfragen an `/passkey/login/options` alle mit 200 beantwortet | mittel | `config/routes/webauthn.yaml`, `access_control` | 2026-08-24 |
 | BF-17 | B02 | Gast auf `/de/logout` bekommt 403 statt einer Weiterleitung — Kehrseite von `enable_csrf` | niedrig | `config/packages/security.yaml` | 2026-08-24 |
 | BF-15 | B02 | „Angemeldet bleiben" wirkt für `/profile` nicht (`IS_AUTHENTICATED_FULLY`), die Kopfzeile zeigt den Nutzer trotzdem als angemeldet | mittel | `config/packages/security.yaml`, `templates/base.html.twig` | 2026-08-24 |
-| BF-16 | B02, B04 | **Rekonstruktion falsch:** B02/EC-04, B04/AK-13 und B04/FB-04 behaupten, Sitzungen und `remember_me`-Cookies überlebten eine Passwortänderung. Gemessen: Symfony entwertet beide. Kein Codefehler — eine falsche Spec, gegen die sonst geprüft würde | mittel | `features/B02-…/spec.md`, `features/B04-…/spec.md` | 2026-08-24 |
 | BF-09 | B01 | Registrierformular verrät bestehende Konten (Enumeration). Die Meldung ist seit 2026-08-23 übersetzt, die Auskunft bleibt. Produktentscheidung OF-02 — setzt einen Passwort-Vergessen-Weg voraus (BF-04) | mittel | `src/Entity/User.php:15` | 2026-08-23 |
 | BF-11 | B01, B14, B15 | Rate Limit verbraucht Kontingent auch bei **ungültigen** Formularen — 5 Tippfehler sperren eine Stunde aus, ohne dass ein Konto oder eine Mail entsteht | mittel | `src/Controller/RegistrationController.php:47`, `src/Controller/PartnerController.php:53` | 2026-08-23 |
 | BF-10 | B14, B15, B23 | Mail-Locale bei asynchronem Versand — dieselbe Ursache wie BF-08, dort behoben. `WaitlistConfirmationService` und `Api\V1\AuthController` bauen ihre Mails unverändert | mittel | `src/Waitlist/WaitlistConfirmationService.php`, `src/Controller/Api/V1/AuthController.php` | 2026-08-23 |
@@ -41,6 +43,7 @@ obwohl dort nichts mehr zu reparieren ist.
 | BF-06 | B01 | Bestätigungstoken im Log — `doctrine`-Channel in `prod` ausgeschlossen. **Nur der prod-Weg**; der dev-Teil ist bewusst offen, siehe BF-12 | mittel | 2026-08-23 | **noch nicht** |
 | BF-07 | B01 | Hartkodierte deutsche Meldung — `user.email_unique` statt Klartext (Enumeration bleibt offen, siehe BF-09) | mittel | 2026-08-23 | **noch nicht** |
 | BF-08 | B01 | Mail-Locale bei asynchronem Versand — `->locale()` gesetzt (**nur B01**, B14/B15/B23 weiterhin betroffen) | mittel | 2026-08-23 | **noch nicht** |
+| BF-16 | B02, B04 | **Rekonstruktion falsch** — B02/EC-04, B04/AK-13 und B04/FB-04 behaupteten, Sitzungen und `remember_me`-Cookies überlebten eine Passwortänderung. **Beide Specs am 2026-08-24 berichtigt**, Regressionstest angelegt | mittel | 2026-08-24 | entfällt (Dokumentation) |
 | BF-13 | B02 | Anmeldung ohne Sperre — `login_throttling` mit 5 Versuchen je 15 Minuten ergänzt | **hoch** | 2026-08-24 | **noch nicht** |
 | BF-14 | B02 | Abmelden ohne CSRF — `enable_csrf` plus POST-Formular in der Kopfzeile | niedrig | 2026-08-24 | **noch nicht** |
 
