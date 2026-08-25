@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Account\AccountDataExporter;
+use App\Account\AccountDeleter;
 use App\Form\ChangePasswordType;
 use App\Form\ProfileType;
 use App\RateLimit\ActionLimiter;
@@ -12,6 +14,7 @@ use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
@@ -39,6 +42,9 @@ final class ProfileController extends AbstractController
         // wechselt die IP mühelos, das Konto nicht.
         #[Autowire(service: 'limiter.email_change')]
         private readonly RateLimiterFactoryInterface $emailChangeLimiter,
+        // Feature 01: Der Export liest den halben Bestand eines Kontos zusammen.
+        #[Autowire(service: 'limiter.account_export')]
+        private readonly RateLimiterFactoryInterface $exportLimiter,
     ) {
     }
 
@@ -142,6 +148,114 @@ final class ProfileController extends AbstractController
             'passwordForm' => $passwordForm,
             'submittedRestaurants' => $this->restaurantRepository->findBySubmitter($this->getUser()),
         ]);
+    }
+
+    /**
+     * Alles herunterladen, was zu diesem Konto gespeichert ist (Art. 20 DSGVO).
+     *
+     * JSON, weil der Artikel ein „strukturiertes, gängiges, maschinenlesbares
+     * Format" verlangt — und weil sich damit prüfen lässt, was drinsteht.
+     */
+    #[Route('/daten', name: 'app_profile_export', methods: ['GET'])]
+    public function exportData(Request $request, AccountDataExporter $exporter): Response
+    {
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
+        $limiter = ActionLimiter::for($this->exportLimiter, $user->getUserIdentifier());
+
+        if (!$limiter->isAllowed()) {
+            $this->addFlash('error', $this->translator->trans('flash.export_rate_limited'));
+
+            return $this->redirectToRoute('app_profile');
+        }
+
+        $limiter->consume();
+
+        $inhalt = json_encode(
+            $exporter->export($user),
+            \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES | \JSON_UNESCAPED_UNICODE | \JSON_THROW_ON_ERROR,
+        );
+
+        $antwort = new Response($inhalt);
+        $antwort->headers->set('Content-Type', 'application/json; charset=utf-8');
+        $antwort->headers->set('Content-Disposition', HeaderUtils::makeDisposition(
+            HeaderUtils::DISPOSITION_ATTACHMENT,
+            'endlech-meine-daten.json',
+        ));
+        // Ein Export gehört in keinen Zwischenspeicher — weder im Browser noch
+        // in einem Proxy davor.
+        $antwort->headers->set('Cache-Control', 'no-store, private');
+
+        return $antwort;
+    }
+
+    /**
+     * Konto endgültig löschen (Art. 17 DSGVO).
+     *
+     * ⚠ Das Passwort ist Pflicht. Ein Klick allein genügt nicht: Eine gekaperte
+     * Sitzung könnte sonst ein Konto samt Zugang vernichten, und einen Rückweg
+     * gibt es naturgemäß nicht.
+     */
+    #[Route('/loeschen', name: 'app_profile_delete', methods: ['POST'])]
+    public function deleteAccount(
+        Request $request,
+        UserPasswordHasherInterface $passwordHasher,
+        AccountDeleter $deleter,
+        MailerInterface $mailer,
+    ): Response {
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
+        if (!$this->isCsrfTokenValid('delete-account', $request->request->getString('_token'))) {
+            $this->addFlash('error', $this->translator->trans('flash.invalid_csrf'));
+
+            return $this->redirectToRoute('app_profile');
+        }
+
+        if (!$passwordHasher->isPasswordValid($user, $request->request->getString('password'))) {
+            $this->addFlash('error', $this->translator->trans('flash.profile_wrong_password'));
+
+            return $this->redirectToRoute('app_profile');
+        }
+
+        if ($deleter->istLetzterAdmin($user)) {
+            $this->addFlash('error', $this->translator->trans('flash.delete_last_admin'));
+
+            return $this->redirectToRoute('app_profile');
+        }
+
+        // Die Mail VOR dem Löschen: Danach gibt es die Adresse nicht mehr, und ein
+        // Versandfehler soll die Löschung nicht aufhalten.
+        $this->sendeLoeschbestaetigung($mailer, (string) $user->getEmail(), (string) $user->getName(), $request->getLocale());
+
+        $deleter->delete($user);
+
+        // Sitzung abräumen: Ohne das trüge der Container weiterhin einen Nutzer,
+        // den es nicht mehr gibt.
+        $request->getSession()->invalidate();
+        $this->container->get('security.token_storage')->setToken(null);
+
+        $this->addFlash('success', $this->translator->trans('flash.account_deleted'));
+
+        return $this->redirectToRoute('app_home');
+    }
+
+    private function sendeLoeschbestaetigung(MailerInterface $mailer, string $email, string $name, string $locale): void
+    {
+        $mail = (new TemplatedEmail())
+            ->to($email)
+            ->subject($this->translator->trans('email.account_deleted_subject', [], null, $locale))
+            ->locale($locale)
+            ->htmlTemplate('email/account_deleted.html.twig')
+            ->context(['name' => $name]);
+
+        try {
+            $mailer->send($mail);
+        } catch (TransportExceptionInterface) {
+            // Die Löschung läuft trotzdem durch — sie ist das Recht, die Mail ist
+            // die Höflichkeit.
+        }
     }
 
     #[Route('/password', name: 'app_profile_password', methods: ['POST'])]

@@ -86,6 +86,7 @@ final class PartnerController extends AbstractController
             'app_partner_confirm',
             'email/partner/confirmation.html.twig',
             'email.partner_confirm_subject',
+            revokeRoute: 'app_partner_revoke',
         );
 
         if (!$sent) {
@@ -154,5 +155,26 @@ final class PartnerController extends AbstractController
         }
 
         return $response;
+    }
+
+    /**
+     * Anmeldung zurückziehen (Art. 7 Abs. 3 DSGVO, BF-37).
+     *
+     * ⚠ Der Eintrag wird gelöscht, nicht markiert. Ein Widerruf, nach dem Name,
+     * Adresse und Einwilligungszeitpunkt weiter in der Datenbank stehen, ist
+     * keiner. Der Link steht in jeder Mail — ein Widerruf, der einen Anruf
+     * verlangt, ist nicht „ebenso einfach" wie die Einwilligung.
+     */
+    #[Route('/abmelden/{token}', name: 'app_partner_revoke', requirements: ['token' => '[a-f0-9]{64}'], methods: ['GET'])]
+    public function revoke(string $token, PartnerWaitlistEntryRepository $repository): Response
+    {
+        $state = $this->confirmationService->revoke($repository->findOneByConfirmationToken($token));
+
+        return $this->render('partner/confirmation.html.twig', [
+            'state' => $state,
+            'entry' => null,
+        ], WaitlistConfirmationService::RESULT_INVALID === $state
+            ? new Response(null, Response::HTTP_NOT_FOUND)
+            : null);
     }
 }

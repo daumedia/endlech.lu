@@ -81,6 +81,12 @@ security:
         - { path: '^/[a-z]{2}/register', roles: PUBLIC_ACCESS }
         - { path: '^/[a-z]{2}/login', roles: PUBLIC_ACCESS }
         - { path: '^/[a-z]{2}/verify', roles: PUBLIC_ACCESS }
+        # Feature 01: Wer sein Passwort vergessen hat, ist naturgemäß nicht
+        # angemeldet. Der Token IST der Nachweis — eine Anmeldepflicht machte den
+        # Weg unbenutzbar, ohne etwas zu sichern (dasselbe Muster wie bei
+        # `/verify/email-change`, BF-19).
+        - { path: '^/[a-z]{2}/passwort-vergessen', roles: PUBLIC_ACCESS }
+        - { path: '^/[a-z]{2}/passwort-zuruecksetzen', roles: PUBLIC_ACCESS }
 
 when@test:
     security:

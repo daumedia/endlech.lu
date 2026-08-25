@@ -660,8 +660,16 @@ flash:
     upload_too_large: '„%file%" ass ze grouss. Erlaabt sinn bis zu %max% MB.'
     upload_exceeds_server_limit: 'Den Upload war am Ganze ze grouss (Serverobergrenz: %limit%). Lued w.e.g. manner Biller op eemol erop.'
     suggestion_rejected_mail_failed: "D Oflehnung ass gespäichert, mee d Noriicht un den Areecher konnt net zougestallt ginn."
+    password_reset_sent: "Wa mir e Kont zu dëser Adress hunn, ass de Link ënnerwee."
+    password_reset_done: "Däi Passwuert ass gesat. Du kanns dech elo umellen."
+    password_reset_rate_limited: "Ze vill Ufroen. Probéier w.e.g. an enger Stonn nach eng Kéier."
+    account_deleted: "Däi Kont gouf geläscht."
+    delete_last_admin: "Du bass dat eenzegt Kont mat Verwaltungsrechter. Leet fir d éischt en zweet un."
+    export_rate_limited: "Ze vill Downloads. Probéier w.e.g. méi spéit nach eng Kéier."
 
 email:
+    waitlist_revoke_hint: 'Du wëlls dach net op der Lëscht stoen?'
+    waitlist_revoke_link: 'Hei ofmellen'
     verify_subject: "Bestäteg deng E-Mail-Adress"
     verify_title: "E-Mail bestätegen"
     verify_greeting: "Moien %name%!"
@@ -716,6 +724,18 @@ email:
     suggestion_rejected_note_label: "De Grond"
     suggestion_rejected_outro: "Dat ass keng Bewäertung vun denger Aarbecht — dacks feelen eis nëmmen Uginn, déi mir net selwer nokucke kënnen. Wanns du méi weess, reech de Virschlag gär nach eng Kéier an."
     suggestion_rejected_cta: "Neie Virschlag areechen"
+    password_reset_subject: "Däi Link zum Zrécksetzen vum Passwuert"
+    password_reset_title: "Passwuert zrécksetzen"
+    password_reset_greeting: "Moien %name%,"
+    password_reset_text: "Du hues en neit Passwuert ugefrot. Klick op de Knäppchen, fir ee ze setzen."
+    password_reset_cta: "Neit Passwuert setzen"
+    password_reset_expiry: "De Link gëllt eng Stonn."
+    password_reset_ignore: "Waars du dat net, kanns du dës E-Mail ignoréieren. Däi Passwuert bleift onverännert."
+    account_deleted_subject: "Däi Kont bei Endlech.lu gouf geläscht"
+    account_deleted_title: "Kont geläscht"
+    account_deleted_greeting: "Moien %name%,"
+    account_deleted_text: "Däi Kont ass geläscht. Deng Stammdonnéeën, däi Profilbild an deng Passkeys sinn ewech."
+    account_deleted_kept: "Restauranten, déis du agereecht hues, bleiwen an der Datebank — ouni Bezuch zu denger Persoun. Merci, datts du se bäigedroen hues."
 
 ordering_platform:
     uber_eats: "Uber Eats"
@@ -847,6 +867,14 @@ profile:
         change_password: "Passwuert änneren"
         delete_avatar: "Profilbild ewechhuelen"
         delete_avatar_confirm: "Profilbild wierklech ewechhuelen?"
+    export_title: "Meng Donnéeën"
+    export_text: "Lued alles erof, wat mir iwwer dech gespäichert hunn — als JSON-Datei."
+    export_action: "Donnéeën eroflueden"
+    delete_title: "Kont läschen"
+    delete_text: "Däi Kont, däi Profilbild an deng Passkeys verschwannen endgülteg. Restauranten, déis du agereecht hues, bleiwen bestoen — ouni däin Numm drun."
+    delete_password_label: "Zur Bestätegung: däi Passwuert"
+    delete_action: "Kont endgülteg läschen"
+    delete_confirm: "Däi Kont gëtt endgülteg geläscht. Dat léisst sech net réckgängeg maachen. Weiderfueren?"
 
 passkey:
     login: "Mat Passkey umellen"
@@ -974,6 +1002,8 @@ partner:
         success_text_with_email: "Mir hunn eng E-Mail un %email% geschéckt. Klickt w.e.g. op de Link dran, fir Är Umeldung ze bestätegen."
         success_hint: "Keng E-Mail kritt? Kuckt w.e.g. am Spam-Dossier no."
     confirm:
+        revoked_heading: 'Du stees net méi op der Lëscht'
+        revoked_text: 'Deng Umeldung ass geläscht — mat allem, wat dozou gehéiert huet. Wanns du et der anescht iwwerleeë sollts, mell dech einfach nei un.'
         title: "Umeldung bestätegen"
         success_heading: "Dir stitt op der Waardelëscht."
         success_text: "Villmools merci fir Är Bestätegung. Mir mellen eis bei Iech, sobal mir déi éischt Terminen ausginn."
@@ -1137,6 +1167,8 @@ organisation:
         default_text: "Mir hunn Iech eng E-Mail geschéckt. Klickt w.e.g. op de Link dran, fir Är Ufro ze bestätegen."
         hint: "Keng E-Mail kritt? Kuckt w.e.g. am Spam-Dossier no."
     confirm:
+        revoked_heading: 'Du stees net méi op der Lëscht'
+        revoked_text: 'Deng Umeldung ass geläscht — mat allem, wat dozou gehéiert huet. Wanns du et der anescht iwwerleeë sollts, mell dech einfach nei un.'
         title: "Ufro bestätegen"
         success_heading: "Är Ufro ass bestätegt."
         success_text: "Villmools merci. Mir hunn Är Ufro kritt a mellen eis bei Iech."
@@ -1254,3 +1286,21 @@ api:
     token_missing: "Authentifikatioun néideg."
     moderation_pending: "Merci! Däi Virschlag ass ukomm a gëtt gepréift, ier en ëffentlech erschéngt."
     register_generic: 'Bal fäerdeg! Wann d''Uginn gëlteg sinn, hu mir dir eng E-Mail geschéckt. Bestäteg w.e.g. deng Adress.'
+
+password_reset:
+    request_title: "Passwuert vergiess"
+    request_intro: "Gëff deng E-Mail-Adress an. Wa mir e Kont dozou hunn, schécke mir dir e Link zum Zrécksetzen."
+    request_action: "Link ufroen"
+    back_to_login: "Zréck bei d Umeldung"
+    email_label: "E-Mail-Adress"
+    title: "Neit Passwuert setzen"
+    intro: "Wiel e Passwuert mat op mannst aacht Zeechen."
+    new_label: "Neit Passwuert"
+    repeat_label: "Neit Passwuert widderhuelen"
+    action: "Passwuert späicheren"
+    expired_heading: "Dëse Link ass ofgelaf"
+    expired_text: "Linken zum Zrécksetzen gëllen eng Stonn. Frot einfach en neie un."
+    invalid_heading: "Dëse Link féiert an d Eidelt"
+    invalid_text: "De Link ass ongëlteg oder gouf schonn benotzt. Frot en neien un."
+    request_new: "Neie Link ufroen"
+    forgot_link: "Passwuert vergiess?"

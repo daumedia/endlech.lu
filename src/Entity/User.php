@@ -63,6 +63,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $avatarFilename = null;
 
     /**
+     * Token zum Zurücksetzen des Passworts (Feature 01).
+     *
+     * ⚠ Kürzere Frist als bei der Registrierung (eine Stunde statt 24): Wer sein
+     * Passwort zurücksetzt, sitzt vor dem Postfach. Und der Token ist mächtiger —
+     * er öffnet ein bestehendes Konto, während der Registrierungstoken nur eines
+     * bestätigt, das ohnehin dem Aufrufer gehört.
+     */
+    #[ORM\Column(length: 64, nullable: true)]
+    private ?string $passwordResetToken = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $passwordResetTokenExpiresAt = null;
+
+    /**
      * Kennung, unter der dieses Konto gegenüber Passkeys auftritt (WebAuthn user handle).
      *
      * Bewusst nicht die Datenbank-ID: Der Wert liegt dauerhaft auf dem Gerät des
@@ -208,6 +222,39 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->verificationTokenExpiresAt = new \DateTimeImmutable('+24 hours');
 
         return $this->verificationToken;
+    }
+
+    /**
+     * Erzeugt einen Token zum Zurücksetzen und gibt ihn zurück.
+     */
+    public function generatePasswordResetToken(): string
+    {
+        $this->passwordResetToken = bin2hex(random_bytes(32));
+        $this->passwordResetTokenExpiresAt = new \DateTimeImmutable('+1 hour');
+
+        return $this->passwordResetToken;
+    }
+
+    public function getPasswordResetToken(): ?string
+    {
+        return $this->passwordResetToken;
+    }
+
+    public function isPasswordResetTokenExpired(): bool
+    {
+        return null === $this->passwordResetTokenExpiresAt
+            || $this->passwordResetTokenExpiresAt < new \DateTimeImmutable();
+    }
+
+    /**
+     * Verbraucht den Token — ein zweiter Aufruf desselben Links läuft ins Leere.
+     */
+    public function clearPasswordResetToken(): static
+    {
+        $this->passwordResetToken = null;
+        $this->passwordResetTokenExpiresAt = null;
+
+        return $this;
     }
 
     public function getPendingEmail(): ?string

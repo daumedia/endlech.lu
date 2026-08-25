@@ -117,6 +117,7 @@ final class OrganisationController extends AbstractController
             'app_organisations_confirm',
             'email/organisation/' . $type->value . '.html.twig',
             'email.organisation_confirm_subject_' . $type->value,
+            revokeRoute: 'app_organisations_revoke',
         );
 
         if (!$sent) {
@@ -189,5 +190,26 @@ final class OrganisationController extends AbstractController
         }
 
         return $response;
+    }
+
+    /**
+     * Anmeldung zurückziehen (Art. 7 Abs. 3 DSGVO, BF-37).
+     *
+     * ⚠ Der Eintrag wird gelöscht, nicht markiert. Ein Widerruf, nach dem Name,
+     * Adresse und Einwilligungszeitpunkt weiter in der Datenbank stehen, ist
+     * keiner. Der Link steht in jeder Mail — ein Widerruf, der einen Anruf
+     * verlangt, ist nicht „ebenso einfach" wie die Einwilligung.
+     */
+    #[Route('/abmelden/{token}', name: 'app_organisations_revoke', requirements: ['token' => '[a-f0-9]{64}'], methods: ['GET'])]
+    public function revoke(string $token, OrganisationWaitlistEntryRepository $repository): Response
+    {
+        $state = $this->confirmationService->revoke($repository->findOneByConfirmationToken($token));
+
+        return $this->render('organisation/confirmation.html.twig', [
+            'state' => $state,
+            'entry' => null,
+        ], WaitlistConfirmationService::RESULT_INVALID === $state
+            ? new Response(null, Response::HTTP_NOT_FOUND)
+            : null);
     }
 }

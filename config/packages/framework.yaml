@@ -91,6 +91,20 @@ framework:
             policy: 'sliding_window'
             limit: 120
             interval: '5 minutes'
+        # Passwort zurücksetzen (Feature 01): Jeder Aufruf verschickt eine Mail an
+        # eine FREI WÄHLBARE Adresse — dieselbe Lage wie bei der Registrierung,
+        # deshalb dieselben Werte. Ohne Deckel wäre das Formular ein Versandweg
+        # gegen Dritte.
+        password_reset:
+            policy: 'sliding_window'
+            limit: 5
+            interval: '1 hour'
+        # Datenexport (Feature 01, AK-11): liest den halben Bestand eines Kontos
+        # zusammen. Am Konto gezählt — der Weg setzt eine Anmeldung voraus.
+        account_export:
+            policy: 'sliding_window'
+            limit: 10
+            interval: '1 hour'
         # Erneutes Senden der Bestätigungsmail: strenger, weil das Ziel ein fremdes
         # Postfach sein kann und der Absender bereits angemeldet ist.
         verify_resend:
@@ -157,3 +171,11 @@ when@test:
                 policy: 'sliding_window'
                 limit: 10000
                 interval: '5 minutes'
+            password_reset:
+                policy: 'sliding_window'
+                limit: 10000
+                interval: '1 hour'
+            account_export:
+                policy: 'sliding_window'
+                limit: 10000
+                interval: '1 hour'

@@ -660,8 +660,16 @@ flash:
     upload_too_large: '« %file% » est trop volumineux. Taille maximale : %max% Mo.'
     upload_exceeds_server_limit: 'L’envoi était trop volumineux au total (limite du serveur : %limit%). Merci d’envoyer moins d’images à la fois.'
     suggestion_rejected_mail_failed: "Le refus est enregistré, mais le message n’a pas pu être remis à l’auteur."
+    password_reset_sent: "Si un compte correspond à cette adresse, le lien est en route."
+    password_reset_done: "Votre mot de passe est défini. Vous pouvez vous connecter."
+    password_reset_rate_limited: "Trop de demandes. Merci de réessayer dans une heure."
+    account_deleted: "Votre compte a été supprimé."
+    delete_last_admin: "Vous êtes le seul compte disposant de droits d’administration. Créez-en d’abord un second."
+    export_rate_limited: "Trop de téléchargements. Merci de réessayer plus tard."
 
 email:
+    waitlist_revoke_hint: 'Vous ne souhaitez plus figurer sur la liste ?'
+    waitlist_revoke_link: 'Se désinscrire'
     verify_subject: "Confirmez votre adresse e-mail"
     verify_title: "Confirmer l'e-mail"
     verify_greeting: "Bonjour %name% !"
@@ -716,6 +724,18 @@ email:
     suggestion_rejected_note_label: "La raison"
     suggestion_rejected_outro: "Ce n’est pas un jugement sur votre travail — il nous manque souvent des informations que nous ne pouvons pas vérifier nous-mêmes. Si vous en savez plus, n’hésitez pas à soumettre à nouveau."
     suggestion_rejected_cta: "Soumettre une nouvelle proposition"
+    password_reset_subject: "Votre lien de réinitialisation du mot de passe"
+    password_reset_title: "Réinitialiser le mot de passe"
+    password_reset_greeting: "Bonjour %name%,"
+    password_reset_text: "Vous avez demandé un nouveau mot de passe. Cliquez sur le bouton pour en définir un."
+    password_reset_cta: "Définir un nouveau mot de passe"
+    password_reset_expiry: "Le lien est valable une heure."
+    password_reset_ignore: "Si ce n’était pas vous, ignorez cet e-mail. Votre mot de passe reste inchangé."
+    account_deleted_subject: "Votre compte Endlech.lu a été supprimé"
+    account_deleted_title: "Compte supprimé"
+    account_deleted_greeting: "Bonjour %name%,"
+    account_deleted_text: "Votre compte est supprimé. Vos données personnelles, votre photo de profil et vos passkeys ont disparu."
+    account_deleted_kept: "Les restaurants que vous avez proposés restent dans la base de données — sans lien avec votre personne. Merci de les avoir contribués."
 
 ordering_platform:
     uber_eats: "Uber Eats"
@@ -847,6 +867,14 @@ profile:
         change_password: "Modifier le mot de passe"
         delete_avatar: "Supprimer la photo de profil"
         delete_avatar_confirm: "Voulez-vous vraiment supprimer la photo de profil ?"
+    export_title: "Mes données"
+    export_text: "Téléchargez tout ce que nous avons enregistré à votre sujet — au format JSON."
+    export_action: "Télécharger mes données"
+    delete_title: "Supprimer le compte"
+    delete_text: "Votre compte, votre photo de profil et vos passkeys disparaissent définitivement. Les restaurants que vous avez proposés restent — sans votre nom. Une information sur l’existence d’une rampe appartient aux personnes qui en ont besoin."
+    delete_password_label: "Pour confirmer : votre mot de passe"
+    delete_action: "Supprimer définitivement le compte"
+    delete_confirm: "Votre compte sera définitivement supprimé. Cette action est irréversible. Continuer ?"
 
 passkey:
     login: "Se connecter avec une clé d’accès"
@@ -974,6 +1002,8 @@ partner:
         success_text_with_email: "Nous avons envoyé un e-mail à %email%. Cliquez sur le lien qu’il contient pour confirmer votre inscription."
         success_hint: "Pas reçu d’e-mail ? Vérifiez votre dossier spam."
     confirm:
+        revoked_heading: 'Vous ne figurez plus sur la liste'
+        revoked_text: 'Votre inscription a été supprimée — avec tout ce qui s’y rattachait. Si vous changez d’avis, inscrivez-vous simplement à nouveau.'
         title: "Confirmer l'inscription"
         success_heading: "Vous êtes sur la liste d'attente."
         success_text: "Merci pour votre confirmation. Nous vous contacterons dès que nous attribuerons les premiers rendez-vous."
@@ -1137,6 +1167,8 @@ organisation:
         default_text: "Nous vous avons envoyé un e-mail. Cliquez sur le lien qu'il contient pour confirmer votre demande."
         hint: "Pas reçu d’e-mail ? Vérifiez votre dossier spam."
     confirm:
+        revoked_heading: 'Vous ne figurez plus sur la liste'
+        revoked_text: 'Votre inscription a été supprimée — avec tout ce qui s’y rattachait. Si vous changez d’avis, inscrivez-vous simplement à nouveau.'
         title: "Confirmer la demande"
         success_heading: "Votre demande est confirmée."
         success_text: "Merci. Nous avons bien reçu votre demande et reviendrons vers vous."
@@ -1254,3 +1286,21 @@ api:
     token_missing: "Authentification requise."
     moderation_pending: "Merci ! Votre suggestion a bien été reçue et sera vérifiée avant d’être publiée."
     register_generic: 'Presque terminé ! Si les données sont valides, nous vous avons envoyé un e-mail. Merci de confirmer votre adresse.'
+
+password_reset:
+    request_title: "Mot de passe oublié"
+    request_intro: "Saisissez votre adresse e-mail. Si un compte y correspond, nous vous enverrons un lien de réinitialisation."
+    request_action: "Demander un lien"
+    back_to_login: "Retour à la connexion"
+    email_label: "Adresse e-mail"
+    title: "Définir un nouveau mot de passe"
+    intro: "Choisissez un mot de passe d’au moins huit caractères."
+    new_label: "Nouveau mot de passe"
+    repeat_label: "Répéter le nouveau mot de passe"
+    action: "Enregistrer le mot de passe"
+    expired_heading: "Ce lien a expiré"
+    expired_text: "Les liens de réinitialisation sont valables une heure. Demandez-en simplement un nouveau."
+    invalid_heading: "Ce lien ne mène nulle part"
+    invalid_text: "Le lien est invalide ou a déjà été utilisé. Demandez-en un nouveau."
+    request_new: "Demander un nouveau lien"
+    forgot_link: "Mot de passe oublié ?"

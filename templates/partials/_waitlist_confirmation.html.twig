@@ -10,7 +10,7 @@
     „prüf die Adresse". Ohne die Unterscheidung stünde bei beiden dasselbe.
 
     Parameter:
-      state       – 'confirmed' | 'already' | 'expired' | 'invalid'
+      state       – 'confirmed' | 'already' | 'expired' | 'revoked' | 'invalid'
       prefix      – Übersetzungs-Präfix, z. B. 'partner.confirm'
       back_route  – Route des Zurück-Links
 #}
@@ -23,6 +23,8 @@
             {% set emoji, key = '✅', 'already' %}
         {% elseif state == 'expired' %}
             {% set emoji, key = '⌛', 'expired' %}
+        {% elseif state == 'revoked' %}
+            {% set emoji, key = '👋', 'revoked' %}
         {% else %}
             {% set emoji, key = '🔗', 'invalid' %}
         {% endif %}
