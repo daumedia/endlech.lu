@@ -12,7 +12,17 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-#[UniqueEntity(fields: ['email'], message: 'user.email_unique')]
+/**
+ * ⚠ BF-09: Die Eindeutigkeitsprüfung läuft in der Gruppe `strict` und NICHT in
+ * `Default`. Grund ist die Anti-Enumeration des Registrierformulars: Eine Meldung
+ * „Diese Adresse wird bereits verwendet" verrät, wer hier ein Konto hat — bei
+ * einer Barrierefreiheitsplattform eine Angabe, die niemanden etwas angeht. Die
+ * API macht es seit jeher richtig; der Browser-Weg zog erst jetzt nach.
+ *
+ * Wo die Auskunft unbedenklich ist — im Profil, wo der Nutzer sein eigenes Konto
+ * bearbeitet —, wird die Gruppe ausdrücklich angefordert.
+ */
+#[UniqueEntity(fields: ['email'], message: 'user.email_unique', groups: ['strict'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -61,6 +71,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $avatarFilename = null;
+
+    /**
+     * Token zum Zurücksetzen des Passworts (Feature 01).
+     *
+     * ⚠ Kürzere Frist als bei der Registrierung (eine Stunde statt 24): Wer sein
+     * Passwort zurücksetzt, sitzt vor dem Postfach. Und der Token ist mächtiger —
+     * er öffnet ein bestehendes Konto, während der Registrierungstoken nur eines
+     * bestätigt, das ohnehin dem Aufrufer gehört.
+     */
+    #[ORM\Column(length: 64, nullable: true)]
+    private ?string $passwordResetToken = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $passwordResetTokenExpiresAt = null;
 
     /**
      * Kennung, unter der dieses Konto gegenüber Passkeys auftritt (WebAuthn user handle).
@@ -208,6 +232,39 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->verificationTokenExpiresAt = new \DateTimeImmutable('+24 hours');
 
         return $this->verificationToken;
+    }
+
+    /**
+     * Erzeugt einen Token zum Zurücksetzen und gibt ihn zurück.
+     */
+    public function generatePasswordResetToken(): string
+    {
+        $this->passwordResetToken = bin2hex(random_bytes(32));
+        $this->passwordResetTokenExpiresAt = new \DateTimeImmutable('+1 hour');
+
+        return $this->passwordResetToken;
+    }
+
+    public function getPasswordResetToken(): ?string
+    {
+        return $this->passwordResetToken;
+    }
+
+    public function isPasswordResetTokenExpired(): bool
+    {
+        return null === $this->passwordResetTokenExpiresAt
+            || $this->passwordResetTokenExpiresAt < new \DateTimeImmutable();
+    }
+
+    /**
+     * Verbraucht den Token — ein zweiter Aufruf desselben Links läuft ins Leere.
+     */
+    public function clearPasswordResetToken(): static
+    {
+        $this->passwordResetToken = null;
+        $this->passwordResetTokenExpiresAt = null;
+
+        return $this;
     }
 
     public function getPendingEmail(): ?string

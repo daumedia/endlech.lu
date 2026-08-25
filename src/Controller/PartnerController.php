@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\PartnerWaitlistEntry;
 use App\Form\PartnerWaitlistType;
+use App\RateLimit\ActionLimiter;
 use App\Repository\PartnerWaitlistEntryRepository;
 use App\Waitlist\WaitlistConfirmationService;
 use App\Waitlist\WaitlistRequestHelper;
@@ -50,9 +51,12 @@ final class PartnerController extends AbstractController
 
         // Erst nach handleRequest prüfen, damit ein GET-Aufruf der Seite nie
         // Kontingent verbraucht – gedeckelt wird das Absenden, nicht das Lesen.
-        $limit = $this->waitlistLimiter->create($request->getClientIp() ?? 'anonymous')->consume(1);
+        //
+        // ⚠ BF-11: `consume(0)` fragt ab, ohne zu verbrauchen. Der Verbrauch steht
+        // unten, wo die Anmeldung wirklich entsteht.
+        $limiter = ActionLimiter::for($this->waitlistLimiter, $request->getClientIp());
 
-        if (!$limit->isAccepted()) {
+        if (!$limiter->isAllowed()) {
             $this->addFlash('error', $this->translator->trans('flash.partner_rate_limited'));
 
             return $this->renderLandingPage($form, Response::HTTP_TOO_MANY_REQUESTS);
@@ -71,6 +75,8 @@ final class PartnerController extends AbstractController
             return $this->renderLandingPage($form);
         }
 
+        $limiter->consume();
+
         $entry->setConsentAt(new \DateTimeImmutable());
         $entry->setLocale($request->getLocale());
         $entry->setSource(WaitlistRequestHelper::resolveSource($request));
@@ -80,6 +86,7 @@ final class PartnerController extends AbstractController
             'app_partner_confirm',
             'email/partner/confirmation.html.twig',
             'email.partner_confirm_subject',
+            revokeRoute: 'app_partner_revoke',
         );
 
         if (!$sent) {
@@ -111,9 +118,14 @@ final class PartnerController extends AbstractController
         return $this->render('partner/confirmation.html.twig', [
             'state' => $state,
             'entry' => $entry,
-        ], WaitlistConfirmationService::RESULT_INVALID === $state
-            ? new Response(null, Response::HTTP_NOT_FOUND)
-            : null);
+        ], match ($state) {
+            // ⚠ BF-36: 410 statt 404 bei einem abgelaufenen Link. Der Unterschied
+            // ist nicht Kosmetik: 404 heißt „gab es nie", 410 heißt „gab es, ist
+            // weg" — und genau das ist hier der Fall.
+            WaitlistConfirmationService::RESULT_INVALID => new Response(null, Response::HTTP_NOT_FOUND),
+            WaitlistConfirmationService::RESULT_EXPIRED => new Response(null, Response::HTTP_GONE),
+            default => null,
+        });
     }
 
     /**
@@ -143,5 +155,26 @@ final class PartnerController extends AbstractController
         }
 
         return $response;
+    }
+
+    /**
+     * Anmeldung zurückziehen (Art. 7 Abs. 3 DSGVO, BF-37).
+     *
+     * ⚠ Der Eintrag wird gelöscht, nicht markiert. Ein Widerruf, nach dem Name,
+     * Adresse und Einwilligungszeitpunkt weiter in der Datenbank stehen, ist
+     * keiner. Der Link steht in jeder Mail — ein Widerruf, der einen Anruf
+     * verlangt, ist nicht „ebenso einfach" wie die Einwilligung.
+     */
+    #[Route('/abmelden/{token}', name: 'app_partner_revoke', requirements: ['token' => '[a-f0-9]{64}'], methods: ['GET'])]
+    public function revoke(string $token, PartnerWaitlistEntryRepository $repository): Response
+    {
+        $state = $this->confirmationService->revoke($repository->findOneByConfirmationToken($token));
+
+        return $this->render('partner/confirmation.html.twig', [
+            'state' => $state,
+            'entry' => null,
+        ], WaitlistConfirmationService::RESULT_INVALID === $state
+            ? new Response(null, Response::HTTP_NOT_FOUND)
+            : null);
     }
 }

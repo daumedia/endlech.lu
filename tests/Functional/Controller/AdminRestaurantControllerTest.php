@@ -6,7 +6,6 @@ use App\Entity\Restaurant;
 use App\Entity\RestaurantImage;
 use App\Repository\RestaurantRepository;
 use App\Tests\AbstractWebTestCase;
-use Symfony\Component\PropertyAccess\Exception\InvalidTypeException;
 use Doctrine\ORM\EntityManagerInterface;
 
 final class AdminRestaurantControllerTest extends AbstractWebTestCase
@@ -238,18 +237,17 @@ final class AdminRestaurantControllerTest extends AbstractWebTestCase
     }
 
     /**
-     * AK-03 / BF-51: Ein leeres Pflichtfeld endet in einem **500er**, nicht in einem 422.
+     * AK-03 / BF-51: Ein leeres Pflichtfeld liefert 422 mit Meldung.
      *
-     * Ursache: `Restaurant::setName(string $name)` nimmt kein `null`. Das Formular ist
-     * an die Entity gebunden, `handleRequest()` schreibt **vor** der Validierung — der
-     * TypeError fliegt, bevor die `NotBlank`-Constraints je zum Zug kommen.
-     *
-     * Der Test hält den Befund fest und schlägt fehl, sobald er behoben ist.
+     * Vorher endete es in einem 500er: `Restaurant::setName(string)` nimmt kein
+     * `null`, das Formular ist an die Entity gebunden, und `handleRequest()`
+     * schreibt **vor** der Validierung — der TypeError flog, bevor die
+     * `NotBlank`-Constraints je zum Zug kamen. Die Reparatur ist `empty_data => ''`
+     * am Feld: Dann kommt ein leerer String an, und die Meldung greift.
      */
-    public function testAk03LeeresPflichtfeldEndetImServerfehler(): void
+    public function testAk03LeeresPflichtfeldLiefertMeldungStattServerfehler(): void
     {
         $client = static::createClient();
-        $client->catchExceptions(false);
         $this->loginAs($client, 'admin@endlech.lu');
 
         $crawler = $client->request('GET', self::LOCALE.'/admin/restaurants/neu');
@@ -257,10 +255,10 @@ final class AdminRestaurantControllerTest extends AbstractWebTestCase
         $form['restaurant[name]'] = '';
         $form['restaurant[city]'] = '';
 
-        // Der PropertyAccessor verpackt den TypeError aus dem Setter.
-        $this->expectException(InvalidTypeException::class);
-        $this->expectExceptionMessage('Expected argument of type "string", "null" given at property path "name"');
-        $client->submit($form);
+        $crawler = $client->submit($form);
+
+        self::assertResponseStatusCodeSame(422);
+        self::assertStringContainsString('Bitte gib den Namen ein.', $crawler->filter('body')->text());
     }
 
     /**

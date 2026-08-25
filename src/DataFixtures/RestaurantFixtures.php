@@ -408,6 +408,11 @@ class RestaurantFixtures extends Fixture implements DependentFixtureInterface
             $restaurant->setIsVegetarian($data['isVegetarian']);
             $restaurant->setIsHalal($data['isHalal']);
             $restaurant->setAccessibilityNotes($data['accessibilityNotes']);
+            // BF-49/BF-67: Die elf Häuser stammen aus Recherche des Teams — dort
+            // wurde hingesehen, auch wo das Ergebnis „nein" war. Ohne diese Zeile
+            // wäre der gesamte Fixture-Bestand „nicht bewertet", und die
+            // Durchschnittspunktzahl stützte sich auf null Häuser.
+            $restaurant->setAssessedFeatures(Restaurant::assessableFeatures());
             $restaurant->setSpokenLanguages($data['spokenLanguages'] ?? []);
             $restaurant->setPhone($data['phone'] ?? null);
             $restaurant->setEmail($data['email'] ?? null);

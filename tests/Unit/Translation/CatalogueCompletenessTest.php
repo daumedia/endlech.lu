@@ -69,6 +69,103 @@ final class CatalogueCompletenessTest extends TestCase
     }
 
     /**
+     * Jeder im Code verwendete Schlüssel muss in allen vier Katalogen stehen.
+     *
+     * BF-69: Elf Schlüssel wurden verwendet und waren nirgends definiert — sie
+     * standen als roher Text auf der Seite (`admin.restaurant.cancel` als
+     * Beschriftung eines Knopfes, `suggestion.email_invalid` als Fehlermeldung).
+     * `debug:translation` hätte sie gezeigt, läuft aber in keinem Workflow.
+     * Dieser Test ist der Ersatz dafür.
+     */
+    public function testJederVerwendeteSchluesselIstDefiniert(): void
+    {
+        $wurzel = \dirname(__DIR__, 3);
+        $verwendet = self::verwendeteSchluessel($wurzel);
+        self::assertNotEmpty($verwendet, 'Es wurden keine Schlüssel gefunden — der Scanner greift ins Leere.');
+
+        $definiert = [];
+        foreach (['messages', 'validators'] as $domain) {
+            foreach (self::LOCALES as $locale) {
+                $definiert += self::flatten(Yaml::parseFile($wurzel.'/translations/'.$domain.'.'.$locale.'.yaml') ?? []);
+            }
+        }
+
+        $fehlend = array_values(array_diff($verwendet, array_keys($definiert)));
+        sort($fehlend);
+
+        self::assertSame([], $fehlend, sprintf(
+            "%d verwendete Schlüssel sind in keinem Katalog definiert:\n  %s",
+            \count($fehlend),
+            implode("\n  ", $fehlend),
+        ));
+    }
+
+    /**
+     * Sammelt Schlüssel aus `|trans`-Aufrufen in Templates und aus den
+     * Constraint-Meldungen der Formularklassen.
+     *
+     * Bewusst konservativ: erfasst werden nur Literale in einfachen
+     * Anführungszeichen mit mindestens einem Punkt — dynamisch zusammengesetzte
+     * Schlüssel (`'status.' ~ eintrag.status`) kann kein Scanner auflösen, und ein
+     * Fehlalarm wäre schlimmer als eine Lücke.
+     *
+     * @return list<string>
+     */
+    private static function verwendeteSchluessel(string $wurzel): array
+    {
+        $treffer = [];
+
+        foreach (self::dateien($wurzel.'/templates', 'twig') as $datei) {
+            preg_match_all("/'([a-z][a-z0-9_]*(?:\.[a-z0-9_]+)+)'\s*\|\s*trans/i", (string) file_get_contents($datei), $m);
+            $treffer = array_merge($treffer, $m[1]);
+        }
+
+        foreach (self::dateien($wurzel.'/src/Form', 'php') as $datei) {
+            $inhalt = (string) file_get_contents($datei);
+
+            // Constraint-Meldungen (`message:`, `maxMessage:` …).
+            preg_match_all(
+                "/(?:message|maxMessage|minMessage|notInRangeMessage|invalidMessage):\s*'([a-z][a-z0-9_]*(?:\.[a-z0-9_]+)+)'/i",
+                $inhalt,
+                $m,
+            );
+            $treffer = array_merge($treffer, $m[1]);
+
+            // Beschriftungen und Hilfetexte (`'label' => '…'`, `'help' => '…'`).
+            // ⚠ Ohne diese Zeile fiel BF-56 durch: Zwei neue Felder trugen Labels,
+            // die in keinem Katalog standen, und der Test blieb grün.
+            preg_match_all(
+                "/'(?:label|help|placeholder)'\s*=>\s*'([a-z][a-z0-9_]*(?:\.[a-z0-9_]+)+)'/i",
+                $inhalt,
+                $m,
+            );
+            $treffer = array_merge($treffer, $m[1]);
+        }
+
+        return array_values(array_unique($treffer));
+    }
+
+    /**
+     * @return list<string>
+     */
+    private static function dateien(string $verzeichnis, string $endung): array
+    {
+        if (!is_dir($verzeichnis)) {
+            return [];
+        }
+
+        $gefunden = [];
+        $lauf = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($verzeichnis, \FilesystemIterator::SKIP_DOTS));
+        foreach ($lauf as $datei) {
+            if ($datei instanceof \SplFileInfo && $endung === $datei->getExtension()) {
+                $gefunden[] = $datei->getPathname();
+            }
+        }
+
+        return $gefunden;
+    }
+
+    /**
      * @param array<string, mixed> $daten
      *
      * @return array<string, scalar>

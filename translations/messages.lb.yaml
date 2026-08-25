@@ -121,6 +121,7 @@ accessibility:
     notes_title: "Hiweiser zur Barrierefreiheet"
     yes: "Jo"
     no_unknown: "Nee / onbekannt"
+    notes_language_hint: 'Dës Hiweiser kommen aus der Erfaassung virun Uert a sinn nëmmen op Däitsch do.'
 
 dietary:
     title: "Ernärungsoptiounen"
@@ -261,6 +262,10 @@ verify:
 
 community:
     suggest:
+        measurements: 'Moossen (wanns du se kenns)'
+        measurements_hint: 'Zwou Zuelen, déi vill soen: Vun 90 cm un gëllt eng Dier als rollstullgerecht, genee wéi den Ofstand tëscht den Dëscher (DIN 18040). Loosst d Felder eidel, wanns du net nogemooss hues.'
+        door_width_help: 'Lucht Breet vun der Agangsdier a Zentimeter'
+        table_spacing_help: 'Schmaalst Plaz tëscht zwee Dëscher a Zentimeter'
         title: "Restaurant virschloen – Endlech.lu"
         heading: "Restaurant virschloen"
         text: "Kenns du e barrierefrät Restaurant zu Lëtzebuerg, dat nach feelt? Schlo et vir — mir préifen et a huelen et op!"
@@ -338,11 +343,39 @@ legal:
     links_title: "Haftung fir Linken"
     links_text: "Eist Ugebot enthält Linken op extern Websäite vu Drëtten, op deenen hiren Inhalt mir keen Afloss hunn. Dofir kënne mir fir dës friem Inhalter och keng Garantie iwwerhuelen. Fir d'Inhalter vun de verlinkten Säiten ass ëmmer den jeweilegen Ubidder oder Bedreiwer vun de Säite verantwortlech."
     privacy_title: "Dateschutz"
-    privacy_text: "D'Benotzung vun eiser Websäit ass an der Reegel ouni Ugab vu personebezunnenen Daten méiglech. Soubal op eise Säite personebezunnen Daten (zum Beispill Numm, Adress oder E-Mail-Adressen) erhuewe ginn, geschitt dat, soubal méiglech, ëmmer op fräiwëlleger Basis."
+    privacy_text: "D Restaurantlëscht, d Detailsäiten an den offenen Datesaz kann ee ouni Kont an ouni perséinlech Donnéeë benotzen. Wien e Kont uleet, e Restaurant virschléit oder sech op eng Waardelëscht setzt, gëtt dobäi bewosst Donnéeën un — wéi eng dat sinn a wouhin se ginn, steet an de folgenden Abschnitter."
     error_tracking_title: "Feeleranalyse (Sentry)"
     error_tracking_text: "Fir technesch Feeler z'erkennen an ze behiewen, notze mir Sentry (Functional Software, Inc.). Wann op eiser Websäit e Feeler optrëtt, ginn technesch Uginne wéi Zäitpunkt, opgeruffe Säit a Feelermeldung u Serveren an der Europäescher Unioun (Frankfurt um Main) iwwerdroen. IP-Adressen an Notzerdate ginn dobäi net iwwerdroen. Rechtsgrondlag ass eise berechtegten Interessi un engem stabilen a séchere Betrib vun der Websäit no Art. 6 Abs. 1 lit. f DSGVO."
+    mail_title: "E-Mail-Versand (Brevo)"
+    mail_text: "Fir de Versand vun E-Maile — Bestätegungen, Noriichten, Waardelëschten — benotze mir Brevo (Sendinblue GmbH, Köln). Iwwerdroe ginn d E-Mail-Adress an den Numm vum Empfänger souwéi den Inhalt vun der Noriicht. Rechtsgrondlag ass Art. 6 Abs. 1 lit. b DSGVO respektiv lit. a bei Waardelëscht-Umeldungen. En Optragsveraarbechtungsvertrag läit vir."
+    transit_title: "Haltestellen an der Noperschaft (Verkéiersverbond)"
+    transit_text: "Op de Restaurant-Detailsäite weise mir Haltestelle vum ëffentlechen Transport. Dofir froe mir d Schnëttplaz vum Verkéiersverbond un — iwwerdroe ginn ausschliisslech d Koordinate vum Restaurant. Keng Donnéeë vun de Besucher: weder IP-Adress nach Kennung. D Äntwert späichere mir 24 Stonne queschent."
+    rights_title: "Deng Rechter"
+    rights_intro: "Du hues zu all Moment d Recht op:"
+    rights_access: "Auskonft iwwer déi zu dir gespäichert Donnéeën (Art. 15 DSGVO)"
+    rights_erasure: "Läschung vun dengem Kont an de verbonnenen Donnéeën (Art. 17 DSGVO)"
+    rights_portability: "Iwwerdrobarkeet — eng maschinneliesbar Kopie vun dengen Donnéeën (Art. 20 DSGVO)"
+    rights_withdraw: "Widerruff vun denger Awëllegung, zum Beispill bei enger Waardelëscht (Art. 7 Abs. 3 DSGVO)"
+    rights_complaint: "Reklamatioun bei der Commission nationale pour la protection des données (CNPD), Lëtzebuerg"
+    rights_how: "Auskonft, Export a Läschung mécha du selwer an dengem Profil — direkt an ouni Ufro:"
+    rights_profile_link: "bei mäi Profil"
+    retention_title: "Späicherdauer"
+    retention_text: "Kontdonnéeë späichere mir, soulaang de Kont besteet; no der Läschung verschwanne se direkt. Waardelëscht-Umeldunge bleiwen, bis se zréckgezu ginn oder d Programm ufänkt. Restaurant-Uginn bleiwen dauerhaft — si si Sachuginn a ginn no enger Kontläschung vun der Persoun getrennt."
 
 criteria:
+    score_title: "Wéi d Punktzuel entsteet"
+    score_intro: "Op der Transparenzsäit an am offenen Datesaz steet pro Restaurant eng Punktzuel vun 0 bis 10. Si ergëtt sech aus aacht gläichgewichtege Merkmaler:"
+    score_wheelchair: "Stufelosen Zougang"
+    score_toilet: "Barrièrefräi Toilette"
+    score_dogs: "Assistenzhonn wëllkomm"
+    score_lighting: "Gutt Beliichtung"
+    score_changing_table: "Wéckeldësch"
+    score_parking: "Behënnertepark"
+    score_door_width: "Dierbreet op mannst 90 cm (DIN 18040)"
+    score_table_spacing: "Dëschofstand op mannst 90 cm (DIN 18040)"
+    score_unmeasured: "Wichteg: Wat mir net erfaasst hunn, zielt wéi net erfëllt. D Zuel mësst also dokumentéiert Barrièrefräiheet — net déi tatsächlech. E Restaurant, iwwer dee mir näischt wëssen, kritt 0 vun 10, och wann virun Uert alles stëmmt."
+    score_where: "Déi aktuell Zuele stinn op der Transparenzsäit:"
+    score_open_link: "bei /open"
     title: "Critèren fir Barrierefreiheet – Endlech.lu"
     heading: "Critèren fir Barrierefreiheet"
     intro: "Dës Critèren hëllefen eis, Restauranten objektiv op hir Barrierefreiheet ze bewäerten. All Restaurant gëtt op Basis vun de folgenden Punkten agestuuft."
@@ -376,6 +409,8 @@ admin:
         total_income: "Recetten am Ganzen"
         last_snapshot: "Leschte Snapshot"
         capture_snapshot: "Elo festhalen"
+        snapshot_overwrite: 'virhandenen ersetzen'
+        snapshot_overwrite_confirm: 'E virhandene Snapshot gëtt duerch d Zuelen vun haut ersat. De bisherege Stand ass duerno net méi nozevollzéien. Weiderfueren?'
         last_updated: "Fir d'lescht gepflegt den %date%"
         updated_at: "Fir d'lescht geännert den %date%"
         field:
@@ -425,6 +460,11 @@ admin:
         no_recent_restaurants: "Nach keng Restauranten do."
         no_recent_users: "Nach keng Benotzer registréiert."
     restaurant:
+        search_label: 'Restauranten duerchsichen'
+        search_placeholder: 'Numm oder Stad …'
+        search_action: 'Sichen'
+        search_reset: 'Filter zrécksetzen'
+        pagination_label: 'Säitennavigatioun'
         manage: "Restauranten verwalten"
         new_title: "Neit Restaurant erstellen"
         edit_title: "%name% änneren"
@@ -534,6 +574,8 @@ admin:
         upload_button: "Eroplueden"
 
     waitlist:
+        restaurant_search: 'Restaurant sichen …'
+        restaurant_truncated: 'Et gi maximal %limit% Haiser gewisen. Benotz d''Sich, wann deng net derbäi ass.'
         title: "Waardelëschten"
         total: "%count% Andréi"
         empty: "Nach keng Umeldungen."
@@ -585,6 +627,8 @@ admin:
             confirmed: "Bestätegt"
 
 flash:
+    suggestion_already_handled: 'Dëse Virschlag gouf schonn bearbecht.'
+    snapshot_exists: 'Fir %month% gëtt et schonn e Snapshot. Hie gouf net geännert.'
     finance_created: "Finanzentrée ugeluecht."
     finance_updated: "Finanzentrée aktualiséiert."
     finance_deleted: "Finanzentrée geläscht."
@@ -638,8 +682,22 @@ flash:
     passkey_renamed: "Passkey ëmbenannt."
     passkey_deleted: "Passkey ewechgeholl."
     passkey_name_empty: "Gëff w.e.g. en Numm fir de Passkey un."
+    email_change_rate_limited: 'Ze vill Adressännerungen. Probéier w.e.g. an enger Stonn nach eng Kéier.'
+    suggest_rate_limited: 'Du hues an der leschter Stonn vill Virschléi agereecht. Waart w.e.g. e bëssen — mir kucken eis all un.'
+    upload_wrong_type: '„%file%" ass kee Bild. Erlaabt sinn %types%.'
+    upload_too_large: '„%file%" ass ze grouss. Erlaabt sinn bis zu %max% MB.'
+    upload_exceeds_server_limit: 'Den Upload war am Ganze ze grouss (Serverobergrenz: %limit%). Lued w.e.g. manner Biller op eemol erop.'
+    suggestion_rejected_mail_failed: "D Oflehnung ass gespäichert, mee d Noriicht un den Areecher konnt net zougestallt ginn."
+    password_reset_sent: "Wa mir e Kont zu dëser Adress hunn, ass de Link ënnerwee."
+    password_reset_done: "Däi Passwuert ass gesat. Du kanns dech elo umellen."
+    password_reset_rate_limited: "Ze vill Ufroen. Probéier w.e.g. an enger Stonn nach eng Kéier."
+    account_deleted: "Däi Kont gouf geläscht."
+    delete_last_admin: "Du bass dat eenzegt Kont mat Verwaltungsrechter. Leet fir d éischt en zweet un."
+    export_rate_limited: "Ze vill Downloads. Probéier w.e.g. méi spéit nach eng Kéier."
 
 email:
+    waitlist_revoke_hint: 'Du wëlls dach net op der Lëscht stoen?'
+    waitlist_revoke_link: 'Hei ofmellen'
     verify_subject: "Bestäteg deng E-Mail-Adress"
     verify_title: "E-Mail bestätegen"
     verify_greeting: "Moien %name%!"
@@ -686,6 +744,26 @@ email:
     organisation_internal_intro: "Eng Organisatioun vum Typ %type% huet hir Ufro bestätegt."
     organisation_internal_button: "Am Admin opmaachen"
     footer: "Made with love in Luxembourg"
+    account_exists_subject: 'Du hues schonn e Kont bei Endlech.lu'
+    account_exists_text: "Moien,\n\nelo grad gouf et e Registréierungsversuch mat dëser E-Mail-Adress. Du hues schonn e Kont bei Endlech.lu – mell dech einfach un. Hues du däi Passwuert vergiess, kanns du et iwwer „Passwuert vergiess“ op der Umeldungssäit zrécksetzen.\n\nWaars du dat net, kanns du dës E-Mail ignoréieren.\n\nDäin Endlech.lu-Team"
+    suggestion_rejected_subject: "Zu dengem Virschlag „%name%\""
+    suggestion_rejected_heading: "Merci — dëse Virschlag ass et dës Kéier net ginn"
+    suggestion_rejected_intro: "Du hues eis %name% zu %city% virgeschloen. Mir hunn hien ugekuckt an dës Kéier net opgeholl."
+    suggestion_rejected_note_label: "De Grond"
+    suggestion_rejected_outro: "Dat ass keng Bewäertung vun denger Aarbecht — dacks feelen eis nëmmen Uginn, déi mir net selwer nokucke kënnen. Wanns du méi weess, reech de Virschlag gär nach eng Kéier an."
+    suggestion_rejected_cta: "Neie Virschlag areechen"
+    password_reset_subject: "Däi Link zum Zrécksetzen vum Passwuert"
+    password_reset_title: "Passwuert zrécksetzen"
+    password_reset_greeting: "Moien %name%,"
+    password_reset_text: "Du hues en neit Passwuert ugefrot. Klick op de Knäppchen, fir ee ze setzen."
+    password_reset_cta: "Neit Passwuert setzen"
+    password_reset_expiry: "De Link gëllt eng Stonn."
+    password_reset_ignore: "Waars du dat net, kanns du dës E-Mail ignoréieren. Däi Passwuert bleift onverännert."
+    account_deleted_subject: "Däi Kont bei Endlech.lu gouf geläscht"
+    account_deleted_title: "Kont geläscht"
+    account_deleted_greeting: "Moien %name%,"
+    account_deleted_text: "Däi Kont ass geläscht. Deng Stammdonnéeën, däi Profilbild an deng Passkeys sinn ewech."
+    account_deleted_kept: "Restauranten, déis du agereecht hues, bleiwen an der Datebank — ouni Bezuch zu denger Persoun. Merci, datts du se bäigedroen hues."
 
 ordering_platform:
     uber_eats: "Uber Eats"
@@ -817,6 +895,14 @@ profile:
         change_password: "Passwuert änneren"
         delete_avatar: "Profilbild ewechhuelen"
         delete_avatar_confirm: "Profilbild wierklech ewechhuelen?"
+    export_title: "Meng Donnéeën"
+    export_text: "Lued alles erof, wat mir iwwer dech gespäichert hunn — als JSON-Datei."
+    export_action: "Donnéeën eroflueden"
+    delete_title: "Kont läschen"
+    delete_text: "Däi Kont, däi Profilbild an deng Passkeys verschwannen endgülteg. Restauranten, déis du agereecht hues, bleiwen bestoen — ouni däin Numm drun."
+    delete_password_label: "Zur Bestätegung: däi Passwuert"
+    delete_action: "Kont endgülteg läschen"
+    delete_confirm: "Däi Kont gëtt endgülteg geläscht. Dat léisst sech net réckgängeg maachen. Weiderfueren?"
 
 passkey:
     login: "Mat Passkey umellen"
@@ -944,6 +1030,8 @@ partner:
         success_text_with_email: "Mir hunn eng E-Mail un %email% geschéckt. Klickt w.e.g. op de Link dran, fir Är Umeldung ze bestätegen."
         success_hint: "Keng E-Mail kritt? Kuckt w.e.g. am Spam-Dossier no."
     confirm:
+        revoked_heading: 'Du stees net méi op der Lëscht'
+        revoked_text: 'Deng Umeldung ass geläscht — mat allem, wat dozou gehéiert huet. Wanns du et der anescht iwwerleeë sollts, mell dech einfach nei un.'
         title: "Umeldung bestätegen"
         success_heading: "Dir stitt op der Waardelëscht."
         success_text: "Villmools merci fir Är Bestätegung. Mir mellen eis bei Iech, sobal mir déi éischt Terminen ausginn."
@@ -951,6 +1039,8 @@ partner:
         already_text: "Är Umeldung ass scho aktiv — Dir musst näischt weider maachen. Mir mellen eis, sobal et lassgeet."
         invalid_heading: "Dëse Link féiert an d'Eidel."
         invalid_text: "De Bestätegungslink ass onbekannt oder onvollstänneg. Méiglecherweis gouf en beim Kopéieren ofgeschnidden. Dréit Iech einfach nach eng Kéier an."
+        expired_heading: 'Dëse Link ass ofgelaf'
+        expired_text: 'Bestätegungslinken gëllen siwe Deeg. Mell dech einfach nach eng Kéier un — dat dauert eng Minutt, a mir schécken dir e frëschen Link.'
         back: "Op d'Partnersäit"
 
 waitlist_status:
@@ -979,7 +1069,7 @@ organisation:
     type:
         commune: "Gemeng"
         company: "Betrib"
-        association: "Organisatioun"
+        association: 'Veräin'
     timeframe:
         asap: "Sou séier wéi méiglech"
         this_year: "Nach dëst Joer"
@@ -1105,6 +1195,8 @@ organisation:
         default_text: "Mir hunn Iech eng E-Mail geschéckt. Klickt w.e.g. op de Link dran, fir Är Ufro ze bestätegen."
         hint: "Keng E-Mail kritt? Kuckt w.e.g. am Spam-Dossier no."
     confirm:
+        revoked_heading: 'Du stees net méi op der Lëscht'
+        revoked_text: 'Deng Umeldung ass geläscht — mat allem, wat dozou gehéiert huet. Wanns du et der anescht iwwerleeë sollts, mell dech einfach nei un.'
         title: "Ufro bestätegen"
         success_heading: "Är Ufro ass bestätegt."
         success_text: "Villmools merci. Mir hunn Är Ufro kritt a mellen eis bei Iech."
@@ -1112,6 +1204,8 @@ organisation:
         already_text: "Är Ufro ass scho aktiv — Dir musst näischt weider maachen."
         invalid_heading: "Dëse Link féiert an d'Eidel."
         invalid_text: "De Bestätegungslink ass onbekannt oder onvollstänneg. Méiglecherweis gouf en beim Kopéieren ofgeschnidden. Schéckt d'Ufro einfach nach eng Kéier."
+        expired_heading: 'Dëse Link ass ofgelaf'
+        expired_text: 'Bestätegungslinken gëllen siwe Deeg. Mell dech einfach nach eng Kéier un — dat dauert eng Minutt, a mir schécken dir e frëschen Link.'
         back: "Op d'Iwwersiicht"
 
 finance_type:
@@ -1145,6 +1239,9 @@ open:
         since: "zënter %month%"
         unchanged: "onverännert zënter %month%"
     platform:
+        unscored: "nach net bewäert"
+        unscored_hint: "Haiser, zu deene mir keng eenzeg Uginn hunn. Si kréien keng Punktzuel — eng Null géif heeschen „näischt dovun do\", an dat huet keen behaapt."
+        distribution_unscored: "%count% Haiser ouni Uginn sinn net dran."
         heading: "D'Plattform"
         intro: "All Wäerter ginn live aus der Datebank gerechent an all Stonn opgefrëscht."
         restaurants: "Restauranten"
@@ -1155,7 +1252,7 @@ open:
         canton: "Kanton"
         canton_communes: "Gemengen"
         score: "Ø Punktzuel"
-        score_hint: "Aacht Critèren, gläich gewiicht"
+        score_hint: "Duerchschnëtt iwwer %scored% bewäert Haiser. Aacht gläichgewichteg Merkmaler; net Erfaasst zielt als net erfëllt."
         distribution_heading: "Verdeelung vun de Punktzuelen"
         distribution_intro: "Wéi vill Restauranten wéi vill vun den aacht Critèren erfëllen. Net erfaasste Moosser zielen als net erfëllt – d'Zuel mëscht dokumentéiert Barrièrefräiheet, net vermutet."
         distribution_row: "%score% vun %max%"
@@ -1219,3 +1316,22 @@ api:
     token_expired: "D’Token ass ofgelaf. Mell dech w.e.g. nach eng Kéier un."
     token_missing: "Authentifikatioun néideg."
     moderation_pending: "Merci! Däi Virschlag ass ukomm a gëtt gepréift, ier en ëffentlech erschéngt."
+    register_generic: 'Bal fäerdeg! Wann d''Uginn gëlteg sinn, hu mir dir eng E-Mail geschéckt. Bestäteg w.e.g. deng Adress.'
+
+password_reset:
+    request_title: "Passwuert vergiess"
+    request_intro: "Gëff deng E-Mail-Adress an. Wa mir e Kont dozou hunn, schécke mir dir e Link zum Zrécksetzen."
+    request_action: "Link ufroen"
+    back_to_login: "Zréck bei d Umeldung"
+    email_label: "E-Mail-Adress"
+    title: "Neit Passwuert setzen"
+    intro: "Wiel e Passwuert mat op mannst aacht Zeechen."
+    new_label: "Neit Passwuert"
+    repeat_label: "Neit Passwuert widderhuelen"
+    action: "Passwuert späicheren"
+    expired_heading: "Dëse Link ass ofgelaf"
+    expired_text: "Linken zum Zrécksetzen gëllen eng Stonn. Frot einfach en neie un."
+    invalid_heading: "Dëse Link féiert an d Eidelt"
+    invalid_text: "De Link ass ongëlteg oder gouf schonn benotzt. Frot en neien un."
+    request_new: "Neie Link ufroen"
+    forgot_link: "Passwuert vergiess?"

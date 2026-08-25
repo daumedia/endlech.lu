@@ -153,10 +153,13 @@ Umgekehrt hängen B16 und B17 daran.
 - **OF-01** · Soll der Snapshot-Knopf `force: false` verwenden und einen vorhandenen
   Monat unangetastet lassen (AK-16)? Dann bräuchte es einen zweiten, ausdrücklich
   benannten Weg zum Überschreiben. — Betreiber
+  **Entschieden 2026-08-25:** Ja, umgesetzt (BF-47, 2026-08-25). Der erste Knopf lässt einen vorhandenen Monat unangetastet; das Überschreiben ist ein zweiter Knopf mit Rückfrage.
+
 - **OF-02** · Ist der Cron-Eintrag auf Produktion tatsächlich eingerichtet (AK-17)? —
   Betreiber, vor dem nächsten Monatswechsel
 - **OF-03** · Soll `src/Schedule.php` bleiben, obwohl es nicht feuert? Ein Kommentar im
   Code wäre das Mindeste. — Betreiber
+  **Entschieden 2026-08-25:** Bleibt, mit Kommentar (BF-48, 2026-08-25). Die Klasse ist in dem Moment richtig, in dem ein Worker dazukommt; der Kommentar verhindert, dass jemand bei einer ausgefallenen Historie hier sucht.
 
 ## Decision Log
 

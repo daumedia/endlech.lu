@@ -1,6 +1,6 @@
 # Fehlbestand — projektweite Muster
 
-Stand: 2026-08-23 · Quelle: die Abschnitte *Fehlbestand* und die ⚠-Kriterien aller
+Stand: 2026-08-25 · Quelle: die Abschnitte *Fehlbestand* und die ⚠-Kriterien aller
 26 rückerfassten Features.
 
 > **Das ist nicht `befunde.md`.** Jene Liste schreibt `sdd-qa` aus geprüften
@@ -18,6 +18,36 @@ Stand: 2026-08-23 · Quelle: die Abschnitte *Fehlbestand* und die ⚠-Kriterien 
 Der Ertrag einer Vollerfassung liegt nicht in den Einzelbefunden, sondern hier: Was in
 acht Features gleichzeitig fehlt, fehlt in der Konvention, nicht in der Sorgfalt des
 Einzelfalls.
+
+## Stand nach dem Reparaturdurchgang (2026-08-25)
+
+Acht der zehn Muster sind geschlossen. Was bei jedem einzelnen zählt, ist nicht die
+Reparatur, sondern die Vorkehrung dagegen, dass es wiederkommt:
+
+| Muster | Stand | Vorkehrung |
+|---|---|---|
+| M-01 · Browser-Weg ungedrosselt | **zu** | `App\RateLimit\ActionLimiter` plus sechs neue Limiter; `LimiterCoverageTest` prüft, dass jeder konfigurierte Limiter verdrahtet ist und einen `when@test`-Override hat |
+| M-02 · Ungeprüfte Eingabe im Datensatz | **zu** | BF-24: Die API legt Vorschläge an, keine Restaurants. BF-43: CSV-Formeln entschärft |
+| M-03 · Betroffenenrechte | **zu** | Feature `01` — löschen, exportieren, Passwort zurücksetzen, widerrufen |
+| M-04 · Keine Aufzeichnung, wer was tat | offen | Ein Auditlog ist ein eigenes Feature, kein Befund |
+| M-05 · Vertrauen in den `Host`-Header | **entschärft** | `APP_API_BASE_URL`; `deploy.sh` warnt, wenn es fehlt. `trusted_hosts` geht nicht aus der Umgebung — der Grund steht in `.env` |
+| M-06 · Zwei Upload-Wege, zwei Maßstäbe | **zu** | BF-57: Die Prüfung sitzt im Dienst und damit auf jedem Aufrufweg |
+| M-07 · Code, der aussieht, als liefe er | **zu** | BF-48: `src/Schedule.php` sagt es selbst |
+| M-08 · Auf dem Telefon fehlt die Navigation | **teilweise** | BF-72: Der Sprachumschalter ist da. Der Rest ist B25/OF-01 |
+| M-09 · Wiederholbare Vorgänge | **zu** | BF-54 (Genehmigen), BF-47 (Snapshot) |
+| M-10 · Dieselbe Regel steht zweimal | offen | Redaktionell, kein Codebefund |
+
+Zwei Muster kamen im Durchgang dazu und sind ebenfalls zu:
+
+| Muster | Vorkommen | Vorkehrung |
+|---|---|---|
+| Fehlende Eingabeprüfung endet im 500er | BF-27, BF-51, BF-62 (zweimal) | `empty_data` an Pflichtfeldern, Längenprüfung am Endpunkt, Slug-Kürzung im Repository |
+| Übersetzungsschlüssel als Text auf der Seite | BF-69, BF-56 | `CatalogueCompletenessTest` scannt 736 Template-Schlüssel und 187 Formularangaben gegen alle vier Kataloge |
+
+⚠ **Der zweite fand sich mit dem eigenen Werkzeug — beim zweiten Anlauf.** Der Scanner
+aus dem ersten Block prüfte nur Constraint-Meldungen; zwei neu angelegte Formularfelder
+trugen Beschriftungen, die in keinem Katalog standen, und der Test blieb grün. Ein
+Werkzeug, das den eigenen Fehler nicht findet, gehört benannt.
 
 ---
 

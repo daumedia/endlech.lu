@@ -121,6 +121,7 @@ accessibility:
     notes_title: "Notes sur l'accessibilité"
     yes: "Oui"
     no_unknown: "Non / inconnu"
+    notes_language_hint: 'Ces remarques proviennent du relevé sur place et ne sont disponibles qu’en allemand.'
 
 dietary:
     title: "Options alimentaires"
@@ -261,6 +262,10 @@ verify:
 
 community:
     suggest:
+        measurements: 'Mesures (si vous les connaissez)'
+        measurements_hint: 'Deux chiffres qui en disent long : à partir de 90 cm, une porte est considérée comme accessible en fauteuil, de même que l’espace entre les tables (DIN 18040). Laissez les champs vides si vous n’avez pas mesuré.'
+        door_width_help: 'Largeur utile de la porte d’entrée en centimètres'
+        table_spacing_help: 'Passage le plus étroit entre deux tables, en centimètres'
         title: "Proposer un restaurant – Endlech.lu"
         heading: "Proposer un restaurant"
         text: "Vous connaissez un restaurant accessible au Luxembourg qui manque ? Proposez-le — nous le vérifierons et l'ajouterons !"
@@ -338,11 +343,39 @@ legal:
     links_title: "Responsabilité des liens"
     links_text: "Notre site contient des liens vers des sites web externes de tiers sur le contenu desquels nous n'avons aucune influence. Par conséquent, nous ne pouvons assumer aucune responsabilité pour ce contenu externe. Le fournisseur ou l'exploitant respectif des pages est toujours responsable du contenu des pages liées."
     privacy_title: "Protection des données"
-    privacy_text: "L'utilisation de notre site web est généralement possible sans fournir de données personnelles. Dans la mesure où des données personnelles (par exemple nom, adresse ou adresses e-mail) sont collectées sur nos pages, cela se fait toujours sur une base volontaire dans la mesure du possible."
+    privacy_text: "La liste des restaurants, les pages de détail et le jeu de données ouvert s’utilisent sans compte et sans indication de données personnelles. Toute personne qui crée un compte, propose un restaurant ou s’inscrit sur une liste d’attente fournit sciemment des données — lesquelles et à qui elles sont transmises est expliqué dans les sections suivantes."
     error_tracking_title: "Analyse des erreurs (Sentry)"
     error_tracking_text: "Afin de détecter et de corriger les erreurs techniques, nous utilisons Sentry (Functional Software, Inc.). En cas d'erreur sur notre site web, des informations techniques telles que l'heure, la page consultée et le message d'erreur sont transmises à des serveurs situés dans l'Union européenne (Francfort-sur-le-Main). Les adresses IP et les données des utilisateurs ne sont pas transmises. La base juridique est notre intérêt légitime à assurer un fonctionnement stable et sûr du site web conformément à l'art. 6, par. 1, point f) du RGPD."
+    mail_title: "Envoi d’e-mails (Brevo)"
+    mail_text: "Pour l’envoi d’e-mails — confirmations, notifications, listes d’attente — nous utilisons Brevo (Sendinblue GmbH, Cologne). Sont transmis l’adresse e-mail et le nom du destinataire ainsi que le contenu du message. La base légale est l’art. 6 par. 1 lit. b RGPD, respectivement lit. a pour les inscriptions aux listes d’attente. Un contrat de sous-traitance est en place."
+    transit_title: "Arrêts à proximité (Verkéiersverbond)"
+    transit_text: "Sur les pages de détail des restaurants, nous affichons les arrêts de transports en commun. Pour cela, nous interrogeons l’interface du Verkéiersverbond — seules les coordonnées du restaurant sont transmises. Aucune donnée des visiteurs : ni adresse IP ni identifiant. Nous mettons la réponse en cache pendant 24 heures."
+    rights_title: "Vos droits"
+    rights_intro: "Vous avez à tout moment le droit à :"
+    rights_access: "l’accès aux données enregistrées à votre sujet (art. 15 RGPD)"
+    rights_erasure: "la suppression de votre compte et des données associées (art. 17 RGPD)"
+    rights_portability: "la portabilité — une copie lisible par machine de vos données (art. 20 RGPD)"
+    rights_withdraw: "le retrait de votre consentement, par exemple pour une liste d’attente (art. 7 par. 3 RGPD)"
+    rights_complaint: "introduire une réclamation auprès de la Commission nationale pour la protection des données (CNPD), Luxembourg"
+    rights_how: "L’accès, l’export et la suppression se font directement dans votre profil — immédiatement et sans demande :"
+    rights_profile_link: "vers mon profil"
+    retention_title: "Durée de conservation"
+    retention_text: "Les données de compte sont conservées tant que le compte existe ; après suppression, elles disparaissent immédiatement. Les inscriptions aux listes d’attente restent jusqu’à leur retrait ou le lancement du programme. Les informations sur les restaurants restent durablement — ce sont des données factuelles, dissociées de la personne après une suppression de compte."
 
 criteria:
+    score_title: "Comment le score est calculé"
+    score_intro: "Sur la page de transparence et dans le jeu de données ouvert, chaque restaurant reçoit un score de 0 à 10. Il résulte de huit critères de poids égal :"
+    score_wheelchair: "Accès de plain-pied"
+    score_toilet: "Toilettes accessibles"
+    score_dogs: "Chiens d’assistance bienvenus"
+    score_lighting: "Bon éclairage"
+    score_changing_table: "Table à langer"
+    score_parking: "Place de stationnement PMR"
+    score_door_width: "Largeur de porte d’au moins 90 cm (DIN 18040)"
+    score_table_spacing: "Espace entre les tables d’au moins 90 cm (DIN 18040)"
+    score_unmeasured: "Important : ce que nous n’avons pas relevé compte comme non rempli. Le score mesure donc l’accessibilité documentée — pas l’accessibilité réelle. Un restaurant sur lequel nous ne savons rien obtient 0 sur 10, même si tout est en ordre sur place."
+    score_where: "Les chiffres actuels figurent sur la page de transparence :"
+    score_open_link: "vers /open"
     title: "Critères d'accessibilité – Endlech.lu"
     heading: "Critères d'accessibilité"
     intro: "Ces critères nous aident à évaluer objectivement l'accessibilité des restaurants. Chaque restaurant est évalué sur la base des points suivants."
@@ -376,6 +409,8 @@ admin:
         total_income: "Total des recettes"
         last_snapshot: "Dernier instantané"
         capture_snapshot: "Enregistrer maintenant"
+        snapshot_overwrite: 'remplacer l’existant'
+        snapshot_overwrite_confirm: 'Un instantané existant sera remplacé par les chiffres d’aujourd’hui. L’état précédent ne sera plus vérifiable. Continuer ?'
         last_updated: "Dernière mise à jour le %date%"
         updated_at: "Dernière modification le %date%"
         field:
@@ -425,6 +460,11 @@ admin:
         no_recent_restaurants: "Aucun restaurant pour le moment."
         no_recent_users: "Aucun utilisateur inscrit pour le moment."
     restaurant:
+        search_label: 'Rechercher des restaurants'
+        search_placeholder: 'Nom ou ville …'
+        search_action: 'Rechercher'
+        search_reset: 'Réinitialiser'
+        pagination_label: 'Navigation par pages'
         manage: "Gérer les restaurants"
         new_title: "Créer un nouveau restaurant"
         edit_title: "Modifier %name%"
@@ -534,6 +574,8 @@ admin:
         upload_button: "Télécharger"
 
     waitlist:
+        restaurant_search: 'Rechercher un restaurant …'
+        restaurant_truncated: 'Au maximum %limit% établissements sont affichés. Utilisez la recherche si le vôtre n’apparaît pas.'
         title: "Listes d'attente"
         total: "%count% entrées"
         empty: "Aucune inscription pour le moment."
@@ -585,6 +627,8 @@ admin:
             confirmed: "Confirmée le"
 
 flash:
+    suggestion_already_handled: 'Cette proposition a déjà été traitée.'
+    snapshot_exists: 'Un instantané existe déjà pour %month%. Il n’a pas été modifié.'
     finance_created: "Écriture financière créée."
     finance_updated: "Écriture financière mise à jour."
     finance_deleted: "Écriture financière supprimée."
@@ -638,8 +682,22 @@ flash:
     passkey_renamed: "Clé d’accès renommée."
     passkey_deleted: "Clé d’accès supprimée."
     passkey_name_empty: "Veuillez saisir un nom pour la clé d’accès."
+    email_change_rate_limited: 'Trop de changements d’adresse. Merci de réessayer dans une heure.'
+    suggest_rate_limited: 'Vous avez soumis beaucoup de propositions dans la dernière heure. Merci de patienter un peu — nous les examinons toutes.'
+    upload_wrong_type: '« %file% » n’est pas une image. Formats autorisés : %types%.'
+    upload_too_large: '« %file% » est trop volumineux. Taille maximale : %max% Mo.'
+    upload_exceeds_server_limit: 'L’envoi était trop volumineux au total (limite du serveur : %limit%). Merci d’envoyer moins d’images à la fois.'
+    suggestion_rejected_mail_failed: "Le refus est enregistré, mais le message n’a pas pu être remis à l’auteur."
+    password_reset_sent: "Si un compte correspond à cette adresse, le lien est en route."
+    password_reset_done: "Votre mot de passe est défini. Vous pouvez vous connecter."
+    password_reset_rate_limited: "Trop de demandes. Merci de réessayer dans une heure."
+    account_deleted: "Votre compte a été supprimé."
+    delete_last_admin: "Vous êtes le seul compte disposant de droits d’administration. Créez-en d’abord un second."
+    export_rate_limited: "Trop de téléchargements. Merci de réessayer plus tard."
 
 email:
+    waitlist_revoke_hint: 'Vous ne souhaitez plus figurer sur la liste ?'
+    waitlist_revoke_link: 'Se désinscrire'
     verify_subject: "Confirmez votre adresse e-mail"
     verify_title: "Confirmer l'e-mail"
     verify_greeting: "Bonjour %name% !"
@@ -686,6 +744,26 @@ email:
     organisation_internal_intro: "Une organisation de type %type% a confirmé sa demande."
     organisation_internal_button: "Ouvrir dans l'admin"
     footer: "Made with love in Luxembourg"
+    account_exists_subject: 'Vous avez déjà un compte chez Endlech.lu'
+    account_exists_text: "Bonjour,\n\nune tentative d'inscription vient d'avoir lieu avec cette adresse e-mail. Vous avez déjà un compte chez Endlech.lu – il vous suffit de vous connecter. Si vous avez oublié votre mot de passe, vous pouvez le réinitialiser via « Mot de passe oublié » sur la page de connexion.\n\nSi ce n'était pas vous, vous pouvez ignorer cet e-mail.\n\nVotre équipe Endlech.lu"
+    suggestion_rejected_subject: "À propos de votre proposition « %name% »"
+    suggestion_rejected_heading: "Merci — cette proposition n’a pas été retenue cette fois"
+    suggestion_rejected_intro: "Vous nous avez proposé %name% à %city%. Nous l’avons examinée et ne l’avons pas retenue cette fois."
+    suggestion_rejected_note_label: "La raison"
+    suggestion_rejected_outro: "Ce n’est pas un jugement sur votre travail — il nous manque souvent des informations que nous ne pouvons pas vérifier nous-mêmes. Si vous en savez plus, n’hésitez pas à soumettre à nouveau."
+    suggestion_rejected_cta: "Soumettre une nouvelle proposition"
+    password_reset_subject: "Votre lien de réinitialisation du mot de passe"
+    password_reset_title: "Réinitialiser le mot de passe"
+    password_reset_greeting: "Bonjour %name%,"
+    password_reset_text: "Vous avez demandé un nouveau mot de passe. Cliquez sur le bouton pour en définir un."
+    password_reset_cta: "Définir un nouveau mot de passe"
+    password_reset_expiry: "Le lien est valable une heure."
+    password_reset_ignore: "Si ce n’était pas vous, ignorez cet e-mail. Votre mot de passe reste inchangé."
+    account_deleted_subject: "Votre compte Endlech.lu a été supprimé"
+    account_deleted_title: "Compte supprimé"
+    account_deleted_greeting: "Bonjour %name%,"
+    account_deleted_text: "Votre compte est supprimé. Vos données personnelles, votre photo de profil et vos passkeys ont disparu."
+    account_deleted_kept: "Les restaurants que vous avez proposés restent dans la base de données — sans lien avec votre personne. Merci de les avoir contribués."
 
 ordering_platform:
     uber_eats: "Uber Eats"
@@ -817,6 +895,14 @@ profile:
         change_password: "Modifier le mot de passe"
         delete_avatar: "Supprimer la photo de profil"
         delete_avatar_confirm: "Voulez-vous vraiment supprimer la photo de profil ?"
+    export_title: "Mes données"
+    export_text: "Téléchargez tout ce que nous avons enregistré à votre sujet — au format JSON."
+    export_action: "Télécharger mes données"
+    delete_title: "Supprimer le compte"
+    delete_text: "Votre compte, votre photo de profil et vos passkeys disparaissent définitivement. Les restaurants que vous avez proposés restent — sans votre nom. Une information sur l’existence d’une rampe appartient aux personnes qui en ont besoin."
+    delete_password_label: "Pour confirmer : votre mot de passe"
+    delete_action: "Supprimer définitivement le compte"
+    delete_confirm: "Votre compte sera définitivement supprimé. Cette action est irréversible. Continuer ?"
 
 passkey:
     login: "Se connecter avec une clé d’accès"
@@ -944,6 +1030,8 @@ partner:
         success_text_with_email: "Nous avons envoyé un e-mail à %email%. Cliquez sur le lien qu’il contient pour confirmer votre inscription."
         success_hint: "Pas reçu d’e-mail ? Vérifiez votre dossier spam."
     confirm:
+        revoked_heading: 'Vous ne figurez plus sur la liste'
+        revoked_text: 'Votre inscription a été supprimée — avec tout ce qui s’y rattachait. Si vous changez d’avis, inscrivez-vous simplement à nouveau.'
         title: "Confirmer l'inscription"
         success_heading: "Vous êtes sur la liste d'attente."
         success_text: "Merci pour votre confirmation. Nous vous contacterons dès que nous attribuerons les premiers rendez-vous."
@@ -951,6 +1039,8 @@ partner:
         already_text: "Votre inscription est déjà active — vous n'avez rien d'autre à faire. Nous vous contacterons dès le lancement."
         invalid_heading: "Ce lien ne mène nulle part."
         invalid_text: "Le lien de confirmation est inconnu ou incomplet. Il a peut-être été tronqué lors de la copie. Inscrivez-vous simplement à nouveau."
+        expired_heading: 'Ce lien a expiré'
+        expired_text: 'Les liens de confirmation sont valables sept jours. Inscrivez-vous simplement à nouveau — cela prend une minute et nous vous enverrons un nouveau lien.'
         back: "Vers la page partenaire"
 
 waitlist_status:
@@ -979,7 +1069,7 @@ organisation:
     type:
         commune: "Commune"
         company: "Entreprise"
-        association: "Organisation"
+        association: 'Association'
     timeframe:
         asap: "Dès que possible"
         this_year: "Encore cette année"
@@ -1105,6 +1195,8 @@ organisation:
         default_text: "Nous vous avons envoyé un e-mail. Cliquez sur le lien qu'il contient pour confirmer votre demande."
         hint: "Pas reçu d’e-mail ? Vérifiez votre dossier spam."
     confirm:
+        revoked_heading: 'Vous ne figurez plus sur la liste'
+        revoked_text: 'Votre inscription a été supprimée — avec tout ce qui s’y rattachait. Si vous changez d’avis, inscrivez-vous simplement à nouveau.'
         title: "Confirmer la demande"
         success_heading: "Votre demande est confirmée."
         success_text: "Merci. Nous avons bien reçu votre demande et reviendrons vers vous."
@@ -1112,6 +1204,8 @@ organisation:
         already_text: "Votre demande est déjà active — vous n'avez rien d'autre à faire."
         invalid_heading: "Ce lien ne mène nulle part."
         invalid_text: "Le lien de confirmation est inconnu ou incomplet. Il a peut-être été tronqué lors de la copie. Renvoyez simplement la demande."
+        expired_heading: 'Ce lien a expiré'
+        expired_text: 'Les liens de confirmation sont valables sept jours. Inscrivez-vous simplement à nouveau — cela prend une minute et nous vous enverrons un nouveau lien.'
         back: "Vers la vue d'ensemble"
 
 finance_type:
@@ -1145,6 +1239,9 @@ open:
         since: "depuis %month%"
         unchanged: "inchangé depuis %month%"
     platform:
+        unscored: "pas encore évalués"
+        unscored_hint: "Établissements pour lesquels nous n’avons aucune information. Ils ne reçoivent pas de score — un zéro signifierait « rien de tout cela », et personne ne l’a affirmé."
+        distribution_unscored: "%count% établissements sans informations ne sont pas inclus."
         heading: "La plateforme"
         intro: "Tous les chiffres sont calculés en direct depuis la base de données et actualisés toutes les heures."
         restaurants: "Restaurants"
@@ -1155,7 +1252,7 @@ open:
         canton: "Canton"
         canton_communes: "Communes"
         score: "Score moyen"
-        score_hint: "Huit critères, pondérés à parts égales"
+        score_hint: "Moyenne sur %scored% établissements évalués. Huit critères de poids égal ; ce qui n’est pas relevé compte comme non rempli."
         distribution_heading: "Répartition des scores"
         distribution_intro: "Combien de restaurants remplissent combien des huit critères d'accessibilité. Les mesures jamais relevées comptent comme non remplies – le chiffre mesure l'accessibilité documentée, pas l'accessibilité supposée."
         distribution_row: "%score% sur %max%"
@@ -1219,3 +1316,22 @@ api:
     token_expired: "Le jeton a expiré. Veuillez vous reconnecter."
     token_missing: "Authentification requise."
     moderation_pending: "Merci ! Votre suggestion a bien été reçue et sera vérifiée avant d’être publiée."
+    register_generic: 'Presque terminé ! Si les données sont valides, nous vous avons envoyé un e-mail. Merci de confirmer votre adresse.'
+
+password_reset:
+    request_title: "Mot de passe oublié"
+    request_intro: "Saisissez votre adresse e-mail. Si un compte y correspond, nous vous enverrons un lien de réinitialisation."
+    request_action: "Demander un lien"
+    back_to_login: "Retour à la connexion"
+    email_label: "Adresse e-mail"
+    title: "Définir un nouveau mot de passe"
+    intro: "Choisissez un mot de passe d’au moins huit caractères."
+    new_label: "Nouveau mot de passe"
+    repeat_label: "Répéter le nouveau mot de passe"
+    action: "Enregistrer le mot de passe"
+    expired_heading: "Ce lien a expiré"
+    expired_text: "Les liens de réinitialisation sont valables une heure. Demandez-en simplement un nouveau."
+    invalid_heading: "Ce lien ne mène nulle part"
+    invalid_text: "Le lien est invalide ou a déjà été utilisé. Demandez-en un nouveau."
+    request_new: "Demander un nouveau lien"
+    forgot_link: "Mot de passe oublié ?"

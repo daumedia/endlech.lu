@@ -32,6 +32,16 @@ git reset --hard "origin/${DEPLOY_BRANCH}"
 # public/uploads/{avatars,restaurants}, var/, vendor/, public/bundles/.
 git clean -fd
 
+
+# ⚠ BF-29: Ohne APP_API_BASE_URL baut die REST-API ihre Bild- und Avatar-URLs aus
+# Schema und Host des Requests — ein gefälschter `Host:`-Header steuert damit,
+# was in der Antwort steht. Kein Abbruch: Die Website funktioniert auch ohne, und
+# ein Deploy, der daran scheitert, hilft niemandem. Aber es soll im Protokoll
+# stehen, damit es nicht dauerhaft übersehen wird.
+if ! grep -qE '^APP_API_BASE_URL=.+' .env.local 2>/dev/null; then
+    echo "::warning::APP_API_BASE_URL ist in .env.local nicht gesetzt – die API baut ihre Bild-URLs aus dem Host-Header (BF-29)."
+fi
+
 composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
 
 php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration

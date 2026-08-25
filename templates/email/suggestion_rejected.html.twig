@@ -1,0 +1,40 @@
+{% extends 'email/base.html.twig' %}
+
+{#
+    BF-55: Rückmeldung an den Einreicher, wenn sein Vorschlag nicht übernommen wird.
+
+    Die Ablehnungsnotiz wurde bisher gespeichert und erreichte niemanden — der
+    Einreicher sah seinen Vorschlag zu keinem Zeitpunkt wieder. Wer sich die Mühe
+    macht, ein Haus zu erfassen, hat eine Antwort verdient, und sei es eine
+    absagende.
+#}
+
+{% block title %}{{ 'email.suggestion_rejected_heading'|trans }}{% endblock %}
+
+{% block body %}
+    <h1 style="margin:0 0 16px;font-size:22px;color:#111827;">
+        {{ 'email.suggestion_rejected_heading'|trans }}
+    </h1>
+
+    <p style="margin:0 0 16px;font-size:16px;line-height:1.6;color:#374151;">
+        {{ 'email.suggestion_rejected_intro'|trans({'%name%': suggestion.name, '%city%': suggestion.city}) }}
+    </p>
+
+    {% if suggestion.adminNote %}
+        <div style="margin:0 0 16px;padding:16px;background:#f9fafb;border-left:4px solid #0891b2;">
+            <p style="margin:0 0 4px;font-size:13px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.05em;">
+                {{ 'email.suggestion_rejected_note_label'|trans }}
+            </p>
+            <p style="margin:0;font-size:16px;line-height:1.6;color:#111827;">{{ suggestion.adminNote }}</p>
+        </div>
+    {% endif %}
+
+    <p style="margin:0 0 24px;font-size:16px;line-height:1.6;color:#374151;">
+        {{ 'email.suggestion_rejected_outro'|trans }}
+    </p>
+
+    <a href="{{ suggestUrl }}"
+       style="display:inline-block;background:#0891b2;color:#ffffff;font-weight:700;padding:12px 28px;border-radius:9999px;text-decoration:none;">
+        {{ 'email.suggestion_rejected_cta'|trans }}
+    </a>
+{% endblock %}

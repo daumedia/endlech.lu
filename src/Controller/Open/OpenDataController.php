@@ -27,6 +27,16 @@ use Symfony\Component\Routing\Attribute\Route;
  * E-Mail-Adressen und Telefonnummern: Sie stehen zwar auf jeder Detailseite,
  * aber ein Sammelabzug davon ist eine Adressliste, kein Barrierefreiheits-
  * Datensatz.
+ *
+ * ⚠ BF-41: **Der Datensatz enthält auch unverifizierte Einträge**, und das ist
+ * Absicht. Wer ihn auswertet, muss es aber wissen — deshalb tragen die
+ * Metadaten seit dieser Runde eine ausdrückliche Erklärung der Spalten
+ * `verified` und `assessed`.
+ *
+ * Die Alternative — nur geprüfte Häuser auszuliefern — hieße, acht von elf
+ * wegzulassen und einen Datensatz zu veröffentlichen, der die Lage besser
+ * darstellt, als sie ist. Die ehrlichere Antwort ist eine Spalte, die sagt,
+ * woran man ist.
  */
 final class OpenDataController extends AbstractController
 {
@@ -81,6 +91,18 @@ final class OpenDataController extends AbstractController
             'attribution' => 'Endlech.lu',
             'generatedAt' => (new \DateTimeImmutable())->format(\DATE_ATOM),
             'count' => \count($rows),
+            // ⚠ BF-41 + BF-67: Zwei Spalten, die man kennen muss, um den Datensatz
+            // nicht falsch zu lesen. Ohne diese Erklärung wirkt jede Zeile wie eine
+            // geprüfte Angabe, und `accessibilityScore: null` wie ein Datenfehler.
+            'fieldNotes' => [
+                'verified' => 'true means a member of the team visited this venue. '
+                    .'The dataset deliberately includes unverified entries — leaving them out '
+                    .'would present a better picture than reality.',
+                'assessed' => 'false means no accessibility feature has been recorded for this venue. '
+                    .'In that case accessibilityScore is null, not 0 — nobody claimed the features are absent.',
+                'accessibilityScore' => '0 to 10 from eight equally weighted features; '
+                    .'what is not recorded counts as not met. null when assessed is false.',
+            ],
             'data' => $rows,
         ]));
     }
@@ -101,12 +123,12 @@ final class OpenDataController extends AbstractController
 
         foreach ($restaurants as $restaurant) {
             fputcsv($handle, array_map(
-                static fn ($value) => match (true) {
+                static fn ($value) => self::csvSafe(match (true) {
                     null === $value => '',
                     \is_bool($value) => $value ? 'true' : 'false',
                     \is_array($value) => implode('|', $value),
                     default => $value,
-                },
+                }),
                 $this->row($restaurant, $cantons),
             ), ',', '"', '');
         }
@@ -123,6 +145,31 @@ final class OpenDataController extends AbstractController
         $response->headers->set('X-Licence', self::LICENCE);
 
         return $this->cached($response);
+    }
+
+    /**
+     * Entschärft Werte, die eine Tabellenkalkulation als Formel liest.
+     *
+     * ⚠ BF-43: Ein Restaurantname mit führendem `=` stand unverändert im CSV und
+     * wurde von Excel, LibreOffice und Google Sheets beim Öffnen ausgeführt. Die
+     * CSV-Struktur selbst hielt — der Angriff zielt nicht auf den Parser, sondern
+     * auf das Programm dahinter.
+     *
+     * Die Zielgruppe des Datensatzes sind Ministerien und Forschende; die einzige
+     * Hürde davor war bisher die Moderation. Das ist zu wenig für eine Datei, die
+     * unter CC BY 4.0 zum Herunterladen einlädt.
+     *
+     * Ein vorangestelltes Apostroph ist die Empfehlung von OWASP: Der Wert bleibt
+     * lesbar, die Formel wird zu Text. Betroffen sind `= + - @` sowie Tab und
+     * Wagenrücklauf — letztere, weil manche Programme sie als Zeilenanfang werten.
+     */
+    private static function csvSafe(string $wert): string
+    {
+        if ('' === $wert) {
+            return $wert;
+        }
+
+        return \in_array($wert[0], ['=', '+', '-', '@', "\t", "\r"], true) ? "'".$wert : $wert;
     }
 
     /**
@@ -147,7 +194,12 @@ final class OpenDataController extends AbstractController
             'website' => $restaurant->getWebsite(),
             'isVerified' => $restaurant->isVerified(),
             'verifiedAt' => $restaurant->getVerifiedAt()?->format('Y-m-d'),
+            // ⚠ BF-67: `null` heißt „nicht bewertet" und ist etwas anderes als 0.
+            // Wer den Datensatz auswertet, darf beides nicht verwechseln — eine
+            // glatte Null las sich als „nichts davon vorhanden", und das hat
+            // niemand behauptet.
             'accessibilityScore' => AccessibilityScore::forRestaurant($restaurant),
+            'assessed' => $restaurant->isAssessed(),
             'stepFreeEntrance' => $restaurant->isWheelchairAccessible(),
             'accessibleRestroom' => $restaurant->hasAccessibleToilet(),
             'assistanceDogsWelcome' => $restaurant->allowsAssistanceDogs(),

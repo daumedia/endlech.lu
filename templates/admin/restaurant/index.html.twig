@@ -11,6 +11,24 @@
     </a>
 </div>
 
+{# ⚠ BF-52: Suche und Blättern. Vorher lud die Seite den gesamten Bestand mit
+   allen Bildern — die öffentliche Liste blättert seit jeher zu sechst, die API
+   deckelt bei 50. Die Suche ist serverseitig und braucht kein JavaScript. #}
+<form method="get" action="{{ path('admin_restaurant_index') }}" class="flex flex-wrap gap-2 mb-4">
+    <label for="admin-restaurant-suche" class="sr-only">{{ 'admin.restaurant.search_label'|trans }}</label>
+    <input type="search" id="admin-restaurant-suche" name="q" value="{{ suche }}"
+           placeholder="{{ 'admin.restaurant.search_placeholder'|trans }}"
+           class="flex-1 min-w-[14rem] bg-white border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-2 focus:outline-offset-2 focus:outline-purple-600">
+    <button type="submit" class="min-h-[44px] px-5 rounded-lg bg-gray-800 text-white text-sm font-semibold hover:bg-gray-900 transition">
+        {{ 'admin.restaurant.search_action'|trans }}
+    </button>
+    {% if suche %}
+        <a href="{{ path('admin_restaurant_index') }}" class="min-h-[44px] px-4 flex items-center text-sm text-gray-500 hover:text-gray-800 underline">
+            {{ 'admin.restaurant.search_reset'|trans }}
+        </a>
+    {% endif %}
+</form>
+
 <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
     <div class="overflow-x-auto">
         <table class="w-full text-sm text-left">
@@ -123,5 +141,29 @@
     </div>
 </div>
 
-<p class="text-sm text-gray-400 mt-4">{{ restaurants|length == 1 ? 'admin.restaurant.count_one'|trans({'%count%': restaurants|length}) : 'admin.restaurant.count_other'|trans({'%count%': restaurants|length}) }}</p>
+<div class="flex flex-wrap items-center justify-between gap-4 mt-4">
+    <p class="text-sm text-gray-400">
+        {{ total == 1 ? 'admin.restaurant.count_one'|trans({'%count%': total}) : 'admin.restaurant.count_other'|trans({'%count%': total}) }}
+    </p>
+
+    {% if lastPage > 1 %}
+        <nav class="flex items-center gap-2" aria-label="{{ 'admin.restaurant.pagination_label'|trans }}">
+            {% if currentPage > 1 %}
+                <a href="{{ path('admin_restaurant_index', {page: currentPage - 1, q: suche ?: null}) }}"
+                   rel="prev"
+                   class="min-h-[44px] px-4 flex items-center rounded-lg border border-gray-300 text-sm hover:border-purple-400 transition">
+                    ‹ {{ 'pagination.previous'|trans }}
+                </a>
+            {% endif %}
+            <span class="text-sm text-gray-500">{{ currentPage }} / {{ lastPage }}</span>
+            {% if currentPage < lastPage %}
+                <a href="{{ path('admin_restaurant_index', {page: currentPage + 1, q: suche ?: null}) }}"
+                   rel="next"
+                   class="min-h-[44px] px-4 flex items-center rounded-lg border border-gray-300 text-sm hover:border-purple-400 transition">
+                    {{ 'pagination.next'|trans }} ›
+                </a>
+            {% endif %}
+        </nav>
+    {% endif %}
+</div>
 {% endblock %}

@@ -55,6 +55,14 @@ final class RestaurantController extends AbstractController
         $total = count($paginator);
         $lastPage = max(1, (int) ceil($total / self::LIMIT));
 
+        // ⚠ BF-60: Eine Seite jenseits des Endes ist keine leere Seite, sondern
+        // keine Seite. Vorher lieferte `?page=99999` eine 200 mit leerer Liste —
+        // beliebig viele indexierbare Adressen mit identischem, leerem Inhalt.
+        // Seite 1 bleibt erreichbar, auch wenn der Bestand leer ist.
+        if ($page > $lastPage && $page > 1) {
+            throw $this->createNotFoundException('Diese Seite gibt es nicht.');
+        }
+
         return $this->render('restaurant/index.html.twig', [
             'restaurants' => $paginator,
             'currentPage' => $page,

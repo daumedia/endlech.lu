@@ -115,6 +115,8 @@ wieder? Nachtschichten über Mitternacht werden mitgerechnet.
 - **OF-01** · Soll die Folgetagsschleife auf sieben Tage erweitert werden (AK-14)? Die
   Änderung ist ein Zeichen; sie braucht aber einen Test, der den Fall abdeckt. —
   Betreiber
+  **Entschieden 2026-08-25:** Ja, umgesetzt (BF-61, 2026-08-25). Die Schleife läuft bis 7; zwei Tests decken den Fall ab, einer davon mit Gegenprobe.
+
 - **OF-02** · Sollen Feiertage erfasst werden (FB-02)? In Luxemburg sind das elf feste
   Tage plus Ostermontag und Pfingstmontag. — Betreiber
 

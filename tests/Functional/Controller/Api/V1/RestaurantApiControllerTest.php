@@ -210,7 +210,7 @@ final class RestaurantApiControllerTest extends WebTestCase
         // die Spalten dort gingen sie zwischen Eingang und Freigabe verloren.
         $suggestion = static::getContainer()->get(EntityManagerInterface::class)
             ->getRepository(RestaurantSuggestion::class)
-            ->find($this->json($client)['id']);
+            ->find($this->json($client)['submissionId']);
 
         self::assertEqualsWithDelta(49.6116, (float) $suggestion->getLatitude(), 0.0000001);
         self::assertEqualsWithDelta(6.1319, (float) $suggestion->getLongitude(), 0.0000001);
@@ -241,7 +241,7 @@ final class RestaurantApiControllerTest extends WebTestCase
         $data = $this->json($client);
         self::assertSame('pending', $data['status']);
 
-        $suggestion = $em->getRepository(RestaurantSuggestion::class)->find($data['id']);
+        $suggestion = $em->getRepository(RestaurantSuggestion::class)->find($data['submissionId']);
         self::assertSame($name, $suggestion->getName());
         self::assertSame(RestaurantSuggestion::STATUS_PENDING, $suggestion->getStatus());
         self::assertSame($userId, $suggestion->getSuggestedBy()->getId());
@@ -298,7 +298,7 @@ final class RestaurantApiControllerTest extends WebTestCase
         self::assertResponseStatusCodeSame(202);
         self::assertSame($vorher, $em->getRepository(Cuisine::class)->count([]), 'Kein neuer Küchen-Typ darf entstehen.');
 
-        $suggestion = $em->getRepository(RestaurantSuggestion::class)->find($this->json($client)['id']);
+        $suggestion = $em->getRepository(RestaurantSuggestion::class)->find($this->json($client)['submissionId']);
         self::assertSame('Pizzza, JETZT BESTELLEN', $suggestion->getCuisine(), 'Der Wunsch bleibt als Freitext erhalten.');
     }
 
@@ -345,7 +345,7 @@ final class RestaurantApiControllerTest extends WebTestCase
         self::assertResponseStatusCodeSame(202);
         $suggestion = static::getContainer()->get(EntityManagerInterface::class)
             ->getRepository(RestaurantSuggestion::class)
-            ->find($this->json($client)['id']);
+            ->find($this->json($client)['submissionId']);
 
         self::assertSame(TriState::YES, $suggestion->isWheelchairAccessible());
         self::assertSame(TriState::NO, $suggestion->hasAccessibleToilet());

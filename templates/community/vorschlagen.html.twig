@@ -145,6 +145,20 @@
                     {{ include('partials/_tristate_field.html.twig', {field: form.hasBrightLighting, emoji: '💡', label: 'community.suggest.lighting'|trans}) }}
                     {{ include('partials/_tristate_field.html.twig', {field: form.hasChangingTable, emoji: '🍼', label: 'community.suggest.changing_table'|trans}) }}
                     {{ include('partials/_tristate_field.html.twig', {field: form.hasDisabledParking, emoji: '🅿️', label: 'community.suggest.disabled_parking'|trans}) }}
+
+                    {# ⚠ BF-56: Die beiden Maße aus DIN 18040. Optional und ans Ende
+                       gestellt: Wer sie nicht kennt, geht weiter; wer ein Maßband
+                       dabei hat, spart dem Team einen Besuch. Ohne sie startete
+                       jedes genehmigte Haus mit zwei fehlenden von zehn Punkten. #}
+                    <div class="pt-2 border-t border-gray-100">
+                        <p class="text-sm font-semibold text-gray-700 mb-1">{{ 'community.suggest.measurements'|trans }}</p>
+                        <p class="text-sm text-gray-500 mb-4">{{ 'community.suggest.measurements_hint'|trans }}</p>
+
+                        <div class="grid gap-4 sm:grid-cols-2">
+                            {{ include('partials/_form_field.html.twig', {field: form.doorWidthCm}) }}
+                            {{ include('partials/_form_field.html.twig', {field: form.tableSpacingCm}) }}
+                        </div>
+                    </div>
                 </fieldset>
             </div>
 

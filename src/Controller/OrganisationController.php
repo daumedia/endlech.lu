@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\OrganisationWaitlistEntry;
 use App\Enum\OrganisationType;
 use App\Form\OrganisationWaitlistType;
+use App\RateLimit\ActionLimiter;
 use App\Repository\OrganisationWaitlistEntryRepository;
 use App\Waitlist\WaitlistConfirmationService;
 use App\Waitlist\WaitlistRequestHelper;
@@ -32,7 +33,10 @@ final class OrganisationController extends AbstractController
     public function __construct(
         private readonly TranslatorInterface $translator,
         private readonly WaitlistConfirmationService $confirmationService,
-        #[Autowire(service: 'limiter.partner_waitlist')]
+        // ⚠ BF-38: Eigener Zähler statt des geteilten `limiter.partner_waitlist`.
+        // Vorher sperrten fünf Anmeldungen auf /partner das Formular hier mit —
+        // zwei getrennte Formulare, ein Kontingent.
+        #[Autowire(service: 'limiter.organisation_waitlist')]
         private readonly RateLimiterFactoryInterface $waitlistLimiter,
     ) {
     }
@@ -79,9 +83,12 @@ final class OrganisationController extends AbstractController
         $form = $this->createForm(OrganisationWaitlistType::class, $entry);
         $form->handleRequest($request);
 
-        $limit = $this->waitlistLimiter->create($request->getClientIp() ?? 'anonymous')->consume(1);
+        // ⚠ BF-11: `consume(0)` fragt ab, ohne zu verbrauchen. Der Verbrauch steht
+        // unten, wo die Anmeldung wirklich entsteht — ein Tippfehler darf keine
+        // Stunde kosten.
+        $limiter = ActionLimiter::for($this->waitlistLimiter, $request->getClientIp());
 
-        if (!$limit->isAccepted()) {
+        if (!$limiter->isAllowed()) {
             $this->addFlash('error', $this->translator->trans('flash.partner_rate_limited'));
 
             return $this->renderLandingPage($form, Response::HTTP_TOO_MANY_REQUESTS);
@@ -97,6 +104,8 @@ final class OrganisationController extends AbstractController
             return $this->renderLandingPage($form);
         }
 
+        $limiter->consume();
+
         $entry->setConsentAt(new \DateTimeImmutable());
         $entry->setLocale($request->getLocale());
         $entry->setSource(WaitlistRequestHelper::resolveSource($request));
@@ -108,6 +117,7 @@ final class OrganisationController extends AbstractController
             'app_organisations_confirm',
             'email/organisation/' . $type->value . '.html.twig',
             'email.organisation_confirm_subject_' . $type->value,
+            revokeRoute: 'app_organisations_revoke',
         );
 
         if (!$sent) {
@@ -141,9 +151,14 @@ final class OrganisationController extends AbstractController
         return $this->render('organisation/confirmation.html.twig', [
             'state' => $state,
             'entry' => $entry,
-        ], WaitlistConfirmationService::RESULT_INVALID === $state
-            ? new Response(null, Response::HTTP_NOT_FOUND)
-            : null);
+        ], match ($state) {
+            // ⚠ BF-36: 410 statt 404 bei einem abgelaufenen Link. Der Unterschied
+            // ist nicht Kosmetik: 404 heißt „gab es nie", 410 heißt „gab es, ist
+            // weg" — und genau das ist hier der Fall.
+            WaitlistConfirmationService::RESULT_INVALID => new Response(null, Response::HTTP_NOT_FOUND),
+            WaitlistConfirmationService::RESULT_EXPIRED => new Response(null, Response::HTTP_GONE),
+            default => null,
+        });
     }
 
     /**
@@ -175,5 +190,26 @@ final class OrganisationController extends AbstractController
         }
 
         return $response;
+    }
+
+    /**
+     * Anmeldung zurückziehen (Art. 7 Abs. 3 DSGVO, BF-37).
+     *
+     * ⚠ Der Eintrag wird gelöscht, nicht markiert. Ein Widerruf, nach dem Name,
+     * Adresse und Einwilligungszeitpunkt weiter in der Datenbank stehen, ist
+     * keiner. Der Link steht in jeder Mail — ein Widerruf, der einen Anruf
+     * verlangt, ist nicht „ebenso einfach" wie die Einwilligung.
+     */
+    #[Route('/abmelden/{token}', name: 'app_organisations_revoke', requirements: ['token' => '[a-f0-9]{64}'], methods: ['GET'])]
+    public function revoke(string $token, OrganisationWaitlistEntryRepository $repository): Response
+    {
+        $state = $this->confirmationService->revoke($repository->findOneByConfirmationToken($token));
+
+        return $this->render('organisation/confirmation.html.twig', [
+            'state' => $state,
+            'entry' => null,
+        ], WaitlistConfirmationService::RESULT_INVALID === $state
+            ? new Response(null, Response::HTTP_NOT_FOUND)
+            : null);
     }
 }

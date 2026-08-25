@@ -107,6 +107,9 @@ Fußzeile lässt sie sich erneut aufrufen.
   Analysewerkzeug kommt. — Betreiber
 - **OF-02** · Soll der Fokus beim Erscheinen ins Banner wandern (FB-05)? Auf einer
   Barrierefreiheitsplattform wiegt das schwerer als anderswo. — Betreiber
+  **Geprüft 2026-08-25:** Bereits umgesetzt. `cookie_consent_controller.ts:59`
+  ruft `this.bannerTarget.focus()` beim Anzeigen, das Banner trägt
+  `tabindex="-1"`. Die Frage war offen, die Antwort stand im Code.
 
 ## Decision Log
 

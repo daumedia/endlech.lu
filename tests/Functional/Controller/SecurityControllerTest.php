@@ -200,6 +200,10 @@ final class SecurityControllerTest extends AbstractWebTestCase
     /**
      * AK-12 · Das Abmelden verlangt seit der Reparatur einen POST mit CSRF-Token.
      * Ein GET von einer fremden Seite darf niemanden abmelden.
+     *
+     * Die Antwort ist seit BF-17 eine Weiterleitung statt einer 403 — für den
+     * Aufrufer war die Fehlerseite eine Meldung ohne Fehler. Am Schutz ändert das
+     * nichts, und genau das prüft die zweite Hälfte: Der Nutzer bleibt angemeldet.
      */
     public function testAk12AbmeldenPerGetWirdAbgewiesen(): void
     {
@@ -210,11 +214,23 @@ final class SecurityControllerTest extends AbstractWebTestCase
             'HTTP_REFERER' => 'https://boese.example/falle.html',
         ]);
 
-        self::assertResponseStatusCodeSame(403);
+        self::assertResponseRedirects();
 
         // Und der Nutzer ist danach immer noch angemeldet.
         $client->request('GET', self::LOCALE.'/profile');
-        self::assertResponseIsSuccessful();
+        self::assertResponseIsSuccessful('Der GET-Aufruf hat den Nutzer abgemeldet.');
+    }
+
+    /**
+     * BF-17 · Ein Gast, der die Abmeldeadresse aufruft, landet auf der Startseite.
+     */
+    public function testBf17GastWirdZurStartseiteGeschickt(): void
+    {
+        $client = static::createClient();
+
+        $client->request('GET', self::LOCALE.'/logout');
+
+        self::assertResponseRedirects(self::LOCALE.'/');
     }
 
     /**

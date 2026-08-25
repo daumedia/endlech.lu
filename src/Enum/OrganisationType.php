@@ -23,12 +23,21 @@ enum OrganisationType: string
         return 'organisation.type.' . $this->value;
     }
 
+    /**
+     * Deutscher Anzeigename — wird dort verwendet, wo kein Übersetzungskatalog
+     * greift (Screenreader-Ansage, interne Meldungen).
+     *
+     * ⚠ BF-39: ASSOCIATION heißt „Verein", nicht „Organisation". Letzteres ist der
+     * Oberbegriff der ganzen Seite und sagt einem Screenreader-Nutzer beim Wechsel
+     * des Formulartyps nichts. Beim Slug war dieselbe Verwechslung erkannt und
+     * behoben (`vereine` mit Kommentar); beim Label nicht.
+     */
     public function label(): string
     {
         return match ($this) {
             self::COMMUNE => 'Gemeinde',
             self::COMPANY => 'Unternehmen',
-            self::ASSOCIATION => 'Organisation',
+            self::ASSOCIATION => 'Verein',
         };
     }
 

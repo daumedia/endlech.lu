@@ -8,6 +8,7 @@ use App\Enum\TriState;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -18,6 +19,7 @@ use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
+use Symfony\Component\Validator\Constraints\Range;
 use Symfony\Component\Validator\Constraints\Url;
 
 class RestaurantSuggestionType extends AbstractType
@@ -26,6 +28,12 @@ class RestaurantSuggestionType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
+                // ⚠ BF-51: `empty_data` ist Pflicht, sobald der Setter der Entity ein
+                // striktes `string` verlangt. Ohne die Zeile übergibt Symfony `null`,
+                // und `setName(string)` wirft — der Nutzer bekommt einen 500er statt
+                // der Meldung, die direkt daneben konfiguriert ist. Der Fehler steckte
+                // im Admin-Formular UND im Vorschlags-Assistenten.
+                'empty_data' => '',
                 'label' => 'form.suggestion_name',
                 'attr' => ['placeholder' => 'form.suggestion_name_placeholder'],
                 'constraints' => [
@@ -34,6 +42,7 @@ class RestaurantSuggestionType extends AbstractType
                 ],
             ])
             ->add('city', TextType::class, [
+                'empty_data' => '',
                 'label' => 'form.city',
                 'attr' => ['placeholder' => 'form.city_placeholder'],
                 'constraints' => [
@@ -42,6 +51,7 @@ class RestaurantSuggestionType extends AbstractType
                 ],
             ])
             ->add('cuisine', TextType::class, [
+                'empty_data' => '',
                 'label' => 'form.suggestion_cuisine',
                 'attr' => ['placeholder' => 'form.suggestion_cuisine_placeholder'],
                 'constraints' => [
@@ -67,6 +77,28 @@ class RestaurantSuggestionType extends AbstractType
         $this->addTriState($builder, 'hasDisabledParking', 'form.disabled_parking');
 
         // Ernährung & Zahlung (Step 3)
+        // ⚠ BF-56: Die beiden Maße aus DIN 18040. Optional — wer sie nicht kennt,
+        // lässt sie leer; wer ein Maßband dabei hat, spart dem Team einen Besuch.
+        $builder
+            ->add('doorWidthCm', IntegerType::class, [
+                'label' => 'accessibility.door_width',
+                'required' => false,
+                'help' => 'community.suggest.door_width_help',
+                'attr' => ['min' => 40, 'max' => 300, 'inputmode' => 'numeric'],
+                'constraints' => [
+                    new Range(min: 40, max: 300, notInRangeMessage: 'suggestion.door_width_range'),
+                ],
+            ])
+            ->add('tableSpacingCm', IntegerType::class, [
+                'label' => 'accessibility.table_spacing',
+                'required' => false,
+                'help' => 'community.suggest.table_spacing_help',
+                'attr' => ['min' => 40, 'max' => 300, 'inputmode' => 'numeric'],
+                'constraints' => [
+                    new Range(min: 40, max: 300, notInRangeMessage: 'suggestion.table_spacing_range'),
+                ],
+            ]);
+
         $this->addTriState($builder, 'isVegan', 'form.vegan');
         $this->addTriState($builder, 'isVegetarian', 'form.vegetarian');
         $this->addTriState($builder, 'isHalal', 'form.halal');

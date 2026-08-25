@@ -8,13 +8,17 @@ use App\Entity\RestaurantSuggestion;
 use App\Entity\User;
 use App\Enum\Language;
 use App\Enum\TriState;
+use App\RateLimit\ActionLimiter;
 use App\Repository\RestaurantRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
+use Symfony\Component\RateLimiter\RateLimiterFactoryInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -39,6 +43,13 @@ final class RestaurantApiController extends AbstractController
         private readonly RestaurantTransformer $transformer,
         private readonly EntityManagerInterface $entityManager,
         private readonly TranslatorInterface $translator,
+        // ⚠ BF-30: Am KONTO gezählt, nicht an der IP. Der Endpunkt fiel unter
+        // `api_anonymous` (100/Minute) und füllte damit die Moderationsschlange
+        // schneller, als ein Mensch sie leeren kann — nachgestellt: 40 Aufrufe,
+        // 40 Vorschläge, alle 202. Derselbe Zähler wie der Browser-Weg (BF-50):
+        // Es ist dieselbe Schlange, und der Deckel gehört an die Schlange.
+        #[Autowire(service: 'limiter.suggestion_submit')]
+        private readonly RateLimiterFactoryInterface $suggestionLimiter,
     ) {
     }
 
@@ -133,11 +144,25 @@ final class RestaurantApiController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
 
+        // Erst nach der Prüfung des Rumpfs (BF-11): Ein fehlerhafter Aufruf einer
+        // App soll das Kontingent des Nutzers nicht verbrauchen.
+        $limiter = ActionLimiter::for($this->suggestionLimiter, $user->getUserIdentifier());
+
+        if (!$limiter->isAllowed()) {
+            throw new TooManyRequestsHttpException(
+                max(1, $limiter->retryAfter()),
+                'Zu viele Vorschläge. Bitte später erneut versuchen.',
+            );
+        }
+
+        $limiter->consume();
+
         $suggestion = new RestaurantSuggestion();
         $suggestion->setName($name);
         $suggestion->setCity($city);
         $suggestion->setCuisine($cuisines);
         $suggestion->setSuggestedBy($user);
+        $suggestion->setLocale($request->getLocale());
         $suggestion->setStatus(RestaurantSuggestion::STATUS_PENDING);
         $this->applyOptionalData($suggestion, $payload);
 
@@ -147,9 +172,14 @@ final class RestaurantApiController extends AbstractController
         // 202, nicht 201: Die Anfrage ist angenommen, aber die Ressource entsteht
         // erst mit der Freigabe durch einen Admin. Ein 201 mit Location-Header
         // behauptete etwas, das es noch nicht gibt.
+        // ⚠ BF-31: Das Feld heißt `submissionId`, nicht `id`. Ein `id` im Rumpf
+        // eines Restaurant-Endpunkts liest sich wie eine Restaurant-ID — ein Client,
+        // der damit `GET /restaurants/{id}` aufruft, bekommt bei überlappenden
+        // Zählern ein FREMDES Restaurant mit 200 zurück und zeigt es als das eigene
+        // an. Der Name sagt jetzt, worauf sich die Zahl bezieht.
         return new JsonResponse([
             'status' => 'pending',
-            'id' => $suggestion->getId(),
+            'submissionId' => $suggestion->getId(),
             'message' => $this->translator->trans('api.moderation_pending'),
         ], 202);
     }

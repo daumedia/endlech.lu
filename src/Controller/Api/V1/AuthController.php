@@ -86,7 +86,7 @@ final class AuthController extends AbstractController
         $hashedPassword = $passwordHasher->hashPassword(new User(), $password);
 
         if ($userRepository->findOneBy(['email' => $email]) !== null) {
-            $this->sendAccountExistsHint($mailer, $email);
+            $this->sendAccountExistsHint($mailer, $email, $request->getLocale());
         } else {
             $user = new User();
             $user->setName($name);
@@ -97,21 +97,29 @@ final class AuthController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            $this->sendVerificationEmail($mailer, $user, $token);
+            $this->sendVerificationEmail($mailer, $user, $token, $request->getLocale());
         }
 
         return new JsonResponse([
-            'message' => 'Fast geschafft! Wenn die Angaben gültig sind, haben wir dir eine E-Mail geschickt. Bitte bestätige deine Adresse.',
+            'message' => $this->translator->trans('api.register_generic', [], null, $request->getLocale()),
         ], 201);
     }
 
-    private function sendVerificationEmail(MailerInterface $mailer, User $user, string $token): void
+    /**
+     * ⚠ BF-10: `->locale()` ist Pflicht, sobald der Versand asynchron laufen kann.
+     * Der Worker hat keine Anfrage und damit keine Sprache — er nimmt
+     * `default_locale` (lb). Die Sprache stammt aus `Accept-Language` des
+     * API-Aufrufs; ohne Header ist es luxemburgisch, und das ist eine bewusste
+     * Entscheidung des Projekts (siehe CLAUDE.md).
+     */
+    private function sendVerificationEmail(MailerInterface $mailer, User $user, string $token, string $locale): void
     {
         $verifyUrl = $this->generateUrl('app_verify_email', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL);
 
         $message = (new TemplatedEmail())
             ->to((string) $user->getEmail())
-            ->subject($this->translator->trans('email.verify_subject'))
+            ->subject($this->translator->trans('email.verify_subject', [], null, $locale))
+            ->locale($locale)
             ->htmlTemplate('email/verification.html.twig')
             ->context([
                 'user' => $user,
@@ -128,19 +136,15 @@ final class AuthController extends AbstractController
     /**
      * Hinweis an eine bereits registrierte Adresse, ohne dies dem Aufrufer zu verraten.
      */
-    private function sendAccountExistsHint(MailerInterface $mailer, string $email): void
+    private function sendAccountExistsHint(MailerInterface $mailer, string $email, string $locale): void
     {
+        // ⚠ BF-10: Auch dieser Weg übersetzt in der Sprache des Aufrufs. Vorher
+        // stand hier ein fest einprogrammierter deutscher Text — in einer
+        // Schnittstelle, die `Accept-Language` sonst durchgehend auswertet.
         $message = (new Email())
             ->to($email)
-            ->subject('Du hast bereits ein Konto bei Endlech.lu')
-            ->text(
-                "Hallo,\n\n"
-                ."soeben gab es einen Registrierungsversuch mit dieser E-Mail-Adresse. "
-                ."Du hast bereits ein Konto bei Endlech.lu – bitte melde dich einfach an. "
-                ."Falls du dein Passwort vergessen hast, kannst du es über die Anmeldeseite zurücksetzen.\n\n"
-                ."Warst du das nicht, kannst du diese E-Mail ignorieren.\n\n"
-                .'Dein Endlech.lu-Team',
-            );
+            ->subject($this->translator->trans('email.account_exists_subject', [], null, $locale))
+            ->text($this->translator->trans('email.account_exists_text', [], null, $locale));
 
         try {
             $mailer->send($message);

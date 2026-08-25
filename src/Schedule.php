@@ -19,6 +19,22 @@ use Symfony\Contracts\Cache\CacheInterface;
  * Deployment). Der Zeitplan hier ist die saubere Anlaufstelle, sobald ein
  * Worker existiert, und der Weg für lokale Läufe.
  */
+/*
+ * ⚠ BF-48: DIESER ZEITPLAN FEUERT AUF PRODUCTION NICHT.
+ *
+ * Symfonys Scheduler braucht einen laufenden `messenger:consume scheduler_default`.
+ * Production läuft mit `MESSENGER_TRANSPORT_DSN=sync://` und ohne Worker — die
+ * wiederkehrende Nachricht wird dort nie erzeugt.
+ *
+ * Der echte Auslöser ist ein **Cron-Eintrag auf `app:metrics:snapshot`** (README →
+ * Deployment). Dieser Hinweis steht hier und nicht nur dort, weil er sonst beim
+ * *Lesen des Codes* fehlt: Wer bei einer ausgefallenen Historie hier nachsieht,
+ * findet einen Zeitplan, der richtig aussieht, und sucht danach an der falschen
+ * Stelle weiter.
+ *
+ * Die Klasse bleibt, weil sie in dem Moment richtig ist, in dem ein Worker
+ * dazukommt — und weil sie im Entwicklungsbetrieb funktioniert.
+ */
 #[AsSchedule]
 class Schedule implements ScheduleProviderInterface
 {

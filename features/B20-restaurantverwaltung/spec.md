@@ -133,8 +133,11 @@ An B20 hängen: B09 (Fotos im selben Formular), B07, B08 (Teilformulare).
   (FB-01)? Ein `PreRemove`-Callback oder ein Aufruf von `reorderAfterDelete`-Verwandtem
   wäre der Weg. Vorher zu klären: Wie viele verwaiste Dateien liegen bereits auf
   Produktion? — Betreiber
+  **Entschieden 2026-08-25:** Ja, umgesetzt (BF-53, 2026-08-25) — als Entity-Listener auf `postRemove`, damit jeder Löschweg erfasst ist. Dazu `app:uploads:prune` für die Waisen, die vorher entstanden sind.
+
 - **OF-02** · Ab welcher Größe wird das Fehlen des Seitenblätterns spürbar (AK-12)? —
   Betreiber
+  **Entschieden 2026-08-25:** Beantwortet durch die Reparatur (BF-52, 2026-08-25): 25 Zeilen je Seite plus serverseitige Suche über Name und Stadt.
 
 ## Decision Log
 

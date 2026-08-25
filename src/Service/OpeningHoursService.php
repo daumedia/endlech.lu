@@ -91,7 +91,14 @@ class OpeningHoursService
         }
 
         // Folgetage: erster Tag mit Slots, dessen frühester Slot.
-        for ($i = 1; $i <= 6; ++$i) {
+        //
+        // ⚠ BF-61: Die Schleife läuft bis 7, nicht bis 6. Der siebte Durchlauf ist
+        // wieder der heutige Wochentag – eine Woche später. Bei einem Haus, das nur
+        // an einem Tag öffnet (Sonntagsbrunch, Wochenmarkt, Vereinslokal), waren
+        // dessen Slots im Schritt davor als „schon vorbei" verworfen worden, und die
+        // Seite zeigte danach weder „geöffnet" noch eine nächste Öffnung. Sie sah
+        // dabei nicht kaputt aus — niemand vermisst, was er nicht kennt.
+        for ($i = 1; $i <= 7; ++$i) {
             $day = (($currentDay - 1 + $i) % 7) + 1;
             $earliest = null;
             foreach ($restaurant->getOpeningHoursForDay($day) as $slot) {

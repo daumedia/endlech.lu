@@ -25,6 +25,15 @@ final class WaitlistConfirmationService
     public const RESULT_ALREADY = 'already';
     public const RESULT_INVALID = 'invalid';
 
+    /** Der Link war gültig, ist aber zu alt (BF-36). */
+    public const RESULT_EXPIRED = 'expired';
+
+    /** Die Anmeldung wurde zurückgezogen (BF-37). */
+    public const RESULT_REVOKED = 'revoked';
+
+    /** Gültigkeitsdauer eines Bestätigungslinks in Tagen. */
+    public const TOKEN_LIFETIME_DAYS = 7;
+
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly MailerInterface $mailer,
@@ -53,6 +62,7 @@ final class WaitlistConfirmationService
         string $emailTemplate,
         string $subjectKey,
         array $subjectParams = [],
+        ?string $revokeRoute = null,
     ): bool {
         $token = $entry->generateConfirmationToken();
 
@@ -65,13 +75,34 @@ final class WaitlistConfirmationService
             UrlGeneratorInterface::ABSOLUTE_URL,
         );
 
+        // ⚠ BF-10: `->locale()` ist Pflicht, sobald der Versand asynchron laufen
+        // kann. Der Worker hat keine Anfrage und damit keine Sprache — er nimmt
+        // `default_locale` (lb), und ein französischsprachiger Interessent bekäme
+        // seine Bestätigung auf Luxemburgisch. Auf Production fällt es heute nicht
+        // auf, weil dort synchron versendet wird (`sync://`); es kippt in dem
+        // Moment, in dem ein Messenger-Worker dazukommt — und genau der ist für die
+        // Monats-Snapshots vorgesehen (B18/AK-17).
+        //
+        // Der Betreff wird ebenfalls in der Sprache des Eintrags übersetzt, nicht
+        // in der der aktuellen Anfrage: Beides muss zusammenpassen.
+        $locale = $entry->getLocale();
+
         $email = (new TemplatedEmail())
             ->to($entry->getEmail())
-            ->subject($this->translator->trans($subjectKey, $subjectParams))
+            ->subject($this->translator->trans($subjectKey, $subjectParams, null, $locale))
+            ->locale($locale)
             ->htmlTemplate($emailTemplate)
             ->context([
                 'entry' => $entry,
                 'confirmUrl' => $confirmUrl,
+                // BF-37: Jede Mail trägt den Rückweg. Eine Einwilligung, die sich
+                // nur über einen Anruf zurücknehmen lässt, ist nach Art. 7 Abs. 3
+                // keine „ebenso einfach" widerrufbare.
+                'revokeUrl' => null === $revokeRoute ? null : $this->urlGenerator->generate(
+                    $revokeRoute,
+                    ['token' => $token, '_locale' => $locale],
+                    UrlGeneratorInterface::ABSOLUTE_URL,
+                ),
             ]);
 
         try {
@@ -92,6 +123,20 @@ final class WaitlistConfirmationService
      *
      * @return self::RESULT_* Zustand für die Bestätigungsseite
      */
+    /**
+     * ⚠ BF-36: Der Token hatte kein Ablaufdatum — anders als
+     * `User::generateVerificationToken()`, der nach 24 Stunden verfällt. Ein Link
+     * aus einer Mail, die vor einem Jahr verschickt wurde, bestätigte weiterhin
+     * eine Einwilligung, die inzwischen niemand mehr im Kopf hat.
+     *
+     * Gemessen wird an `createdAt` statt an einer neuen Spalte: Der Zeitpunkt steht
+     * bereits in beiden Entities, und eine Migration für eine Frist, die aus ihm
+     * folgt, wäre eine Spalte mehr ohne eigene Aussage.
+     *
+     * Sieben Tage, nicht 24 Stunden: Eine Wartelisten-Anmeldung ist kein
+     * Anmeldevorgang: Wer sie an einem Freitagabend abschickt, liest die Mail
+     * vielleicht erst am Montag.
+     */
     public function confirm(?WaitlistEntryInterface $entry): string
     {
         if (!$entry) {
@@ -100,6 +145,10 @@ final class WaitlistConfirmationService
 
         if ($entry->isConfirmed()) {
             return self::RESULT_ALREADY;
+        }
+
+        if ($this->isExpired($entry)) {
+            return self::RESULT_EXPIRED;
         }
 
         $entry->confirm();
@@ -117,6 +166,37 @@ final class WaitlistConfirmationService
      * @param array<string, mixed> $subjectParams
      * @param array<string, mixed> $context
      */
+    /**
+     * Zieht eine Anmeldung zurück (Art. 7 Abs. 3 DSGVO, BF-37).
+     *
+     * ⚠ Der Eintrag wird **gelöscht**, nicht auf einen Status gesetzt. Ein
+     * Widerruf, nach dem der Datensatz mit Namen, Adresse und
+     * Einwilligungszeitpunkt weiterhin in der Datenbank steht, ist keiner.
+     *
+     * Kein Bestätigungsschritt: Der Link steht in einer Mail, die nur im Postfach
+     * des Betroffenen liegt — mehr Nachweis gibt es nicht, und eine Zwischenseite
+     * mit „wirklich?" ist bei einem Widerruf eine Hürde auf der falschen Seite.
+     */
+    public function revoke(?WaitlistEntryInterface $entry): string
+    {
+        if (!$entry) {
+            return self::RESULT_INVALID;
+        }
+
+        $this->entityManager->remove($entry);
+        $this->entityManager->flush();
+
+        return self::RESULT_REVOKED;
+    }
+
+    /**
+     * Ein Bestätigungslink verfällt nach dieser Frist.
+     */
+    public function isExpired(WaitlistEntryInterface $entry): bool
+    {
+        return $entry->getCreatedAt() < new \DateTimeImmutable('-'.self::TOKEN_LIFETIME_DAYS.' days');
+    }
+
     public function notifyTeam(
         WaitlistEntryInterface $entry,
         string $emailTemplate,

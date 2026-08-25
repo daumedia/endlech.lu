@@ -87,13 +87,33 @@ final class AdminWaitlistController extends AbstractController
         ]);
     }
 
+    /**
+     * Auswahlliste für die Verknüpfung — begrenzt und durchsuchbar.
+     *
+     * ⚠ BF-40: Vorher `findBy([], ['name' => 'ASC'])`, also der komplette
+     * Kernbestand in ein `<select>`. Bei elf Häusern fällt das nicht auf; bei
+     * dreitausend ist es eine Seite, die nicht mehr lädt. Blättern ist im Projekt
+     * vorhanden (B05, B20) und war hier nur nicht angewandt.
+     *
+     * Die Suche läuft serverseitig über denselben Query-Parameter wie die
+     * Verwaltungsliste und braucht kein JavaScript — der Admin tippt einen Namen
+     * und bekommt die Treffer.
+     */
+    private const RESTAURANT_CHOICES = 50;
+
     #[Route('/partner/{id}', name: 'admin_waitlist_partner_show', requirements: ['id' => '\d+'])]
-    public function showPartner(PartnerWaitlistEntry $entry, RestaurantRepository $restaurantRepository): Response
+    public function showPartner(PartnerWaitlistEntry $entry, Request $request, RestaurantRepository $restaurantRepository): Response
     {
+        $suche = trim($request->query->getString('rq', ''));
+        $auswahl = $restaurantRepository->findForAdmin(1, self::RESTAURANT_CHOICES, $suche);
+
         return $this->render('admin/waitlist/partner_show.html.twig', [
             'entry' => $entry,
             'statuses' => WaitlistStatus::cases(),
-            'restaurants' => $restaurantRepository->findBy([], ['name' => 'ASC']),
+            'restaurants' => $auswahl,
+            'restaurantSuche' => $suche,
+            'restaurantTotal' => \count($auswahl),
+            'restaurantLimit' => self::RESTAURANT_CHOICES,
         ]);
     }
 

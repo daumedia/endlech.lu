@@ -1,11 +1,16 @@
 {#
     Bestätigungsseite des Double-Opt-In – geteilt von Partner und Organisationen.
 
-    Drei Zustände in einer Vorlage, damit ein unbekannter oder erneut geöffneter
-    Link nie in einem Fehler endet (siehe WaitlistConfirmationService::confirm).
+    Vier Zustände in einer Vorlage, damit ein unbekannter, erneut geöffneter oder
+    abgelaufener Link nie in einem Fehler endet (siehe
+    WaitlistConfirmationService::confirm).
+
+    ⚠ BF-36: 'expired' ist von 'invalid' getrennt. Ein abgelaufener Link ist eine
+    andere Lage als ein falscher: Der eine sagt „melde dich neu an", der andere
+    „prüf die Adresse". Ohne die Unterscheidung stünde bei beiden dasselbe.
 
     Parameter:
-      state       – 'confirmed' | 'already' | 'invalid'
+      state       – 'confirmed' | 'already' | 'expired' | 'revoked' | 'invalid'
       prefix      – Übersetzungs-Präfix, z. B. 'partner.confirm'
       back_route  – Route des Zurück-Links
 #}
@@ -16,6 +21,10 @@
             {% set emoji, key = '🎉', 'success' %}
         {% elseif state == 'already' %}
             {% set emoji, key = '✅', 'already' %}
+        {% elseif state == 'expired' %}
+            {% set emoji, key = '⌛', 'expired' %}
+        {% elseif state == 'revoked' %}
+            {% set emoji, key = '👋', 'revoked' %}
         {% else %}
             {% set emoji, key = '🔗', 'invalid' %}
         {% endif %}

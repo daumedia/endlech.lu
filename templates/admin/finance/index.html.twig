@@ -27,10 +27,21 @@
         {# Der Zeitplan braucht einen Messenger-Worker, den Production nicht
            hat. Ohne diesen Knopf bliebe eine ausgefallene Historie unbemerkt –
            und ein Verlauf lässt sich nicht rückwirkend erzeugen. #}
-        <form method="post" action="{{ path('admin_finance_snapshot') }}" class="mt-2">
+        <form method="post" action="{{ path('admin_finance_snapshot') }}" class="mt-2 flex flex-wrap items-center gap-3">
             <input type="hidden" name="_token" value="{{ csrf_token('metric-snapshot') }}">
             <button type="submit" class="text-xs font-semibold text-purple-600 hover:text-purple-800 underline">
                 {{ 'admin.finance.capture_snapshot'|trans }}
+            </button>
+            {# ⚠ BF-47: Das Überschreiben ist ein eigener Knopf mit eigener Rückfrage.
+               Vorher ersetzte der einzige Knopf einen vorhandenen Snapshot durch die
+               Zahlen von heute – ohne Rückfrage und mit Erfolgsmeldung. Ein Snapshot
+               ist der einzige nachprüfbare Stand eines Monats; ist er überschrieben,
+               ist er weg. #}
+            <button type="submit" name="overwrite" value="1"
+                    onsubmit="return true"
+                    onclick="return confirm('{{ 'admin.finance.snapshot_overwrite_confirm'|trans|e('js') }}');"
+                    class="text-xs font-medium text-gray-500 hover:text-red-700 underline">
+                {{ 'admin.finance.snapshot_overwrite'|trans }}
             </button>
         </form>
     </div>
@@ -81,13 +92,13 @@
                         <td class="px-4 py-3 text-gray-500 max-w-xs truncate">{{ entry.note ?: '—' }}</td>
                         <td class="px-4 py-3 text-right whitespace-nowrap">
                             <a href="{{ path('admin_finance_edit', {id: entry.id}) }}" class="text-purple-600 hover:text-purple-800 font-medium">
-                                {{ 'admin.restaurant.edit'|trans }}
+                                {{ 'admin.restaurant.edit_action'|trans }}
                             </a>
                             <form method="post" action="{{ path('admin_finance_delete', {id: entry.id}) }}" class="inline ml-3"
                                   onsubmit="return confirm('{{ 'admin.finance.delete_confirm'|trans|e('js') }}')">
                                 <input type="hidden" name="_token" value="{{ csrf_token('delete-finance-' ~ entry.id) }}">
                                 <button type="submit" class="text-red-500 hover:text-red-700 font-medium">
-                                    {{ 'admin.restaurant.delete'|trans }}
+                                    {{ 'admin.restaurant.delete_action'|trans }}
                                 </button>
                             </form>
                         </td>

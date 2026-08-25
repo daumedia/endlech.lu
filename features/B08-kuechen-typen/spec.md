@@ -117,8 +117,11 @@ Freitexts), B23 (Anlage über die API).
 - **OF-01** · Soll die API-Anlage neuer Küchen unterbunden werden (AK-10)? Eine
   Alternative wäre, in `RestaurantApiController` nur **bestehende** Küchen zuzuordnen
   und unbekannte zu verwerfen. — Betreiber
+  **Entschieden 2026-08-25:** Ja, unterbunden (BF-24, 2026-08-24). `cuisines` landet als Freitext im Vorschlag; welcher Typ gemeint ist, entscheidet der Admin bei der Freigabe.
+
 - **OF-02** · Braucht die Küchenliste eine Verwaltungsansicht (FB-01)? Sie wird mit
   jedem Tippfehler länger. — Betreiber
+  **Entschieden 2026-08-25:** Teilweise (BF-63, 2026-08-25): `DELETE /api/cuisines/{id}` entfernt ungenutzte Typen, ein benutzter liefert 409 mit der Zahl der Verwendungen. Eine eigene Oberfläche gibt es weiterhin nicht.
 
 ## Decision Log
 

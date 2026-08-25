@@ -3,6 +3,7 @@
 namespace App\Tests\Functional\Controller;
 
 use App\Entity\FinanceEntry;
+use App\Entity\MetricSnapshot;
 use App\Enum\FinanceCategory;
 use App\Enum\FinanceType;
 use App\Repository\FinanceEntryRepository;
@@ -206,5 +207,79 @@ final class AdminFinanceControllerTest extends AbstractWebTestCase
     private function repository(KernelBrowser $client): FinanceEntryRepository
     {
         return $client->getContainer()->get(FinanceEntryRepository::class);
+    }
+
+    /**
+     * BF-47: Der Snapshot-Knopf überschreibt keine Geschichte mehr.
+     *
+     * `capture(null, true)` war fest verdrahtet — ein Klick ersetzte einen
+     * vorhandenen Snapshot durch die Zahlen von heute, ohne Rückfrage und mit
+     * Erfolgsmeldung. Ein Snapshot ist aber genau das, was ein zurückgerechneter
+     * Verlauf nicht ist: ein nachprüfbarer Stand. Wer ihn überschreibt, vernichtet
+     * den einzigen Beleg dafür, wie es damals aussah.
+     */
+    public function testSnapshotUeberschreibtNichtOhneAusdrucklichenWunsch(): void
+    {
+        $client = static::createClient();
+        $this->loginAs($client, 'admin@endlech.lu');
+
+        $em = static::getContainer()->get(EntityManagerInterface::class);
+        $repo = $em->getRepository(MetricSnapshot::class);
+
+        // Erster Klick legt an.
+        $crawler = $client->request('GET', self::LOCALE.'/admin/finanzen');
+        $formular = $this->formByAction($crawler, '/finanzen/snapshot');
+        $client->submit($formular);
+
+        $snapshot = $repo->findOneBy([], ['capturedFor' => 'DESC']);
+        self::assertNotNull($snapshot, 'Der erste Klick hat keinen Snapshot angelegt.');
+
+        // Den gespeicherten Stand verfälschen, damit ein Überschreiben sichtbar wird.
+        $snapshot->setRestaurantCount(999);
+        $em->flush();
+        $monat = $snapshot->getMonthKey();
+
+        // Zweiter Klick ohne `overwrite` — der Stand muss stehen bleiben.
+        $crawler = $client->request('GET', self::LOCALE.'/admin/finanzen');
+        $client->submit($this->formByAction($crawler, '/finanzen/snapshot'));
+
+        $em->clear();
+        $unveraendert = $repo->findOneBy([], ['capturedFor' => 'DESC']);
+        self::assertSame(999, $unveraendert?->getRestaurantCount(), 'Der Snapshot wurde ohne Nachfrage überschrieben.');
+        self::assertSame($monat, $unveraendert?->getMonthKey());
+    }
+
+    /**
+     * Mit ausdrücklichem Wunsch geht es weiterhin — sonst wäre eine ausgefallene
+     * Historie nicht mehr zu reparieren.
+     */
+    public function testSnapshotUeberschreibtMitAusdrucklichemWunsch(): void
+    {
+        $client = static::createClient();
+        $this->loginAs($client, 'admin@endlech.lu');
+
+        $em = static::getContainer()->get(EntityManagerInterface::class);
+        $repo = $em->getRepository(MetricSnapshot::class);
+
+        $crawler = $client->request('GET', self::LOCALE.'/admin/finanzen');
+        $client->submit($this->formByAction($crawler, '/finanzen/snapshot'));
+
+        $snapshot = $repo->findOneBy([], ['capturedFor' => 'DESC']);
+        self::assertNotNull($snapshot);
+        $snapshot->setRestaurantCount(999);
+        $em->flush();
+
+        $crawler = $client->request('GET', self::LOCALE.'/admin/finanzen');
+        $formular = $this->formByAction($crawler, '/finanzen/snapshot');
+        $client->request('POST', $formular->getUri(), $formular->getPhpValues() + ['overwrite' => '1'], [], [
+            'HTTP_REFERER' => 'http://localhost'.self::LOCALE.'/admin/finanzen',
+        ]);
+
+        $em->clear();
+        self::assertNotSame(
+            999,
+            $repo->findOneBy([], ['capturedFor' => 'DESC'])?->getRestaurantCount(),
+            'Mit overwrite=1 muss der Snapshot neu geschrieben werden.',
+        );
     }
 }

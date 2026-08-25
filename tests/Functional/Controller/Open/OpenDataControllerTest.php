@@ -135,7 +135,7 @@ final class OpenDataControllerTest extends AbstractWebTestCase
      * versehentlich hinzugefügtes Feld auffällt — besonders eines, das Kontaktdaten
      * trägt (siehe AK-06).
      */
-    public function testAk07DatensatzFuehrtEinundzwanzigSpalten(): void
+    public function testAk07DatensatzFuehrtZweiundzwanzigSpalten(): void
     {
         $client = static::createClient();
         $client->request('GET', '/open/dataset.csv');
@@ -143,8 +143,12 @@ final class OpenDataControllerTest extends AbstractWebTestCase
         $kopf = strtok($client->getResponse()->getContent(), "\n");
         $spalten = str_getcsv($kopf, ',', '"', '');
 
-        self::assertCount(21, $spalten);
+        // 22 seit BF-67: `assessed` sagt, ob zu diesem Haus überhaupt etwas
+        // erhoben wurde. Ohne die Spalte ließe sich `accessibilityScore: null`
+        // nicht von einem fehlenden Wert unterscheiden.
+        self::assertCount(22, $spalten);
         self::assertSame('id', $spalten[0]);
+        self::assertContains('assessed', $spalten);
         self::assertNotContains('email', $spalten);
         self::assertNotContains('phone', $spalten);
     }

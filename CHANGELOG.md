@@ -7,6 +7,91 @@ Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
 ## [Unreleased]
 
+### Alle 72 Befunde der SDD-Rückerfassung sind behoben (2026-08-25)
+
+Zehn Blöcke, nach Schweregrad statt nach Feature-Nummer. Was dabei zählt, ist
+nicht die Zahl, sondern dass vier **Muster** geschlossen wurden — jedes mit einer
+Vorkehrung dagegen, dass es wiederkommt.
+
+**Sicherheit**
+- **Der Sprachumschalter führte auf fremde Seiten.** `?_locale=//fremd.example/de`
+  erzeugte `href="///fremd.example/…"`, und der Browser navigierte auf den fremden
+  Host — ein Open Redirect von der echten Domain aus, auf jeder öffentlichen Seite.
+  Andere Werte desselben Parameters kippten zehn von zehn Seiten in einen 500er,
+  und `sentry.yaml` filtert keine 500er. (BF-68)
+- `admin_set_locale` übernahm den Referer ungeprüft als Weiterleitungsziel — mit
+  ausgerechnet dem Zugang, der ohne zweite Stufe auskommt. (BF-33)
+- Eine hochgeladene `.html` wurde als `text/html` ausgeliefert und lief damit im
+  Ursprung der Anwendung; dasselbe galt für eine `.svg` mit `<script>`. (BF-57)
+- Der Bestätigungstoken stand im `request`-Kanal des Produktionslogs: 31 Zeilen für
+  `app_email_change_confirm`. Wer das Hoster-Log lesen konnte, konnte eine
+  E-Mail-Änderung fremd bestätigen. (BF-23)
+- Das Registrierformular verriet, wer hier ein Konto hat. Auf einer
+  Barrierefreiheitsplattform erfährt man damit nicht, dass jemand hier isst,
+  sondern dass jemand nach barrierefreien Lokalen sucht. (BF-09)
+- Ein Restaurantname mit führendem `=` wurde von Excel beim Öffnen des
+  CC-BY-Datensatzes ausgeführt. (BF-43)
+
+**Betroffenenrechte — Feature `01`**
+- Konto löschen (Art. 17), Daten als JSON mitnehmen (Art. 20), Passwort
+  zurücksetzen, Einwilligung widerrufen (Art. 7 Abs. 3). Nichts davon existierte.
+- Die Sackgasse war real: Seit die E-Mail-Änderung eine Bestätigung verlangt, war
+  ein vergessenes Passwort der Verlust des Kontos.
+- Restaurants bleiben bei einer Kontolöschung bestehen — eine Angabe darüber, ob
+  ein Lokal eine Rampe hat, gehört den Menschen, die sie brauchen.
+
+**Drosselung — sieben ungedeckelte Wege**
+- Passkey-Challenge, Adressänderung, API- und Web-Vorschläge, Verwaltungsvorgänge,
+  Organisations-Warteliste, offene Datenendpunkte.
+- `ActionLimiter` verbraucht Kontingent erst, wenn die Handlung stattfindet: Fünf
+  Tippfehler sperrten vorher eine Stunde lang aus. **Der naheliegende Umbau war
+  falsch** — `consume(0)` prüft nicht, acht gültige Anmeldungen liefen durch.
+
+**Datenqualität**
+- Ein Haus ohne jede Erhebung senkte die veröffentlichte Durchschnittspunktzahl
+  (5,09 → 4,67) und hob zugleich die Gemeindeabdeckung (8 → 9). Zwei Leitzahlen auf
+  derselben Seite in gegenläufige Richtungen. Solche Häuser bekommen jetzt keine
+  Punktzahl, sondern erscheinen als eigene Zahl. (BF-67, BF-49)
+- Zweimal genehmigen erzeugte zwei Restaurants; der Snapshot-Knopf überschrieb
+  Geschichte ohne Rückfrage. (BF-54, BF-47)
+- Bilddateien überlebten das Löschen ihres Restaurants — fünf Waisen aus Februar
+  und Juni lagen noch im Verzeichnis, öffentlich abrufbar. (BF-53)
+
+**Verständlichkeit**
+- Ein leeres Pflichtfeld endete in einem 500er, ein zu langer Küchenname ebenfalls
+  — und die naheliegende Längenprüfung reichte nicht: `AsciiSlugger` macht aus 80 ×
+  „ß" 160 Zeichen. (BF-51, BF-62)
+- Elf Übersetzungsschlüssel standen als roher Text auf der Seite. (BF-69)
+- Die Datenschutzerklärung nannte einen von drei Empfängern — Brevo, das jede
+  gespeicherte E-Mail-Adresse empfängt, fehlte. (BF-65)
+- Die Kriterienseite erklärte die Punktzahl nicht, während `/open` sie
+  veröffentlicht. (BF-66)
+- Die Ablehnungsnotiz erreichte den Einreicher nie. (BF-55)
+
+**Bedienbarkeit**
+- Der Sprachumschalter war auf Mobil unerreichbar — auf genau dem Gerät, für das
+  diese Anwendung als PWA gebaut ist. (BF-72, BF-71)
+- „Angemeldet bleiben" hielt für alles außer dem Profil. (BF-15)
+- Verwaltungslisten luden den gesamten Bestand. (BF-40, BF-52)
+
+### Hinzugefügt
+- `App\RateLimit\ActionLimiter` und sechs neue Limiter
+- `app:uploads:prune` — findet hochgeladene Dateien ohne Datenbankzeile
+- `CatalogueCompletenessTest` — prüft 923 verwendete Schlüssel gegen vier Kataloge
+- `LimiterCoverageTest` — prüft die Limiter-Konvention aus `CLAUDE.md`
+- Vier Migrationen: `restaurant_suggestion.locale`, die beiden Maßspalten,
+  `user.password_reset_token`, `restaurant.assessed_features`
+
+### Geändert
+- `POST /api/v1/restaurants` antwortet mit `submissionId` statt `id` (BF-31)
+- `/api/v1/me/submissions` zeigt auch wartende Vorschläge, mit `state` (BF-32)
+- Der offene Datensatz führt 22 statt 21 Spalten und erklärt sie in `fieldNotes`
+
+**Testsuite: 474 Tests** (vorher 365).
+
+---
+
+
 ### Security
 - **Die Anmeldung sperrt nach fünf Fehlversuchen.** Bis dahin nahm sie beliebig viele entgegen – nachgestellt mit zwanzig Versuchen gegen das Admin-Konto: alle angenommen, danach griff das richtige Passwort sofort. Dieselben Zugangsdaten gegen `/api/v1/auth/login` waren längst ab dem sechsten Versuch mit 429 abgewiesen worden. Geschützt war also der Weg, den eine App nimmt, nicht der, den ein Browser nimmt – und dahinter steht ein Verwaltungszugang an genau einem Konto, ohne zweite Stufe und ohne Benachrichtigung bei fremder Anmeldung. Jetzt `login_throttling` mit fünf Versuchen je Kombination aus IP und Benutzername in 15 Minuten. Ein anderes Konto von derselben Adresse bleibt unberührt; in `when@test` ist der Wert bewusst ausgehebelt, weil sich Fehlversuche sonst über die Suite summieren.
 - **Das Abmelden verlangt einen POST mit CSRF-Token.** Vorher genügte ein `<img src="/de/logout">` auf einer fremden Seite, um einen angemeldeten Besucher abzumelden. Der Schaden war gering, aber es war kein Schutz. Der Abmeldelink in der Kopfzeile ist deshalb jetzt ein Formular statt eines `<a href>`.

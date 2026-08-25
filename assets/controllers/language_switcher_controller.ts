@@ -23,6 +23,22 @@ export default class extends Controller {
         }
     }
 
+    /**
+     * BF-71: Escape schließt das Menü und gibt den Fokus zurück.
+     *
+     * `close` hängt an `click@window` und ist damit eine Maushandlung. Wer das Menü
+     * per Tastatur öffnet, konnte es ohne Maus nicht wieder schließen — bei einem
+     * Element mit `aria-haspopup` widerspricht das den ARIA Authoring Practices.
+     */
+    closeOnEscape(): void {
+        if (this.menuTarget.classList.contains('hidden')) {
+            return;
+        }
+
+        this.closeMenu();
+        this.buttonTarget.focus();
+    }
+
     private openMenu(): void {
         this.menuTarget.classList.remove('hidden');
         this.buttonTarget.setAttribute('aria-expanded', 'true');
