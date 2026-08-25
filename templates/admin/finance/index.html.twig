@@ -81,13 +81,13 @@
                         <td class="px-4 py-3 text-gray-500 max-w-xs truncate">{{ entry.note ?: '—' }}</td>
                         <td class="px-4 py-3 text-right whitespace-nowrap">
                             <a href="{{ path('admin_finance_edit', {id: entry.id}) }}" class="text-purple-600 hover:text-purple-800 font-medium">
-                                {{ 'admin.restaurant.edit'|trans }}
+                                {{ 'admin.restaurant.edit_action'|trans }}
                             </a>
                             <form method="post" action="{{ path('admin_finance_delete', {id: entry.id}) }}" class="inline ml-3"
                                   onsubmit="return confirm('{{ 'admin.finance.delete_confirm'|trans|e('js') }}')">
                                 <input type="hidden" name="_token" value="{{ csrf_token('delete-finance-' ~ entry.id) }}">
                                 <button type="submit" class="text-red-500 hover:text-red-700 font-medium">
-                                    {{ 'admin.restaurant.delete'|trans }}
+                                    {{ 'admin.restaurant.delete_action'|trans }}
                                 </button>
                             </form>
                         </td>

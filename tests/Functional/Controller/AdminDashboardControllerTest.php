@@ -3,6 +3,7 @@
 namespace App\Tests\Functional\Controller;
 
 use App\Tests\AbstractWebTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 final class AdminDashboardControllerTest extends AbstractWebTestCase
 {
@@ -35,23 +36,51 @@ final class AdminDashboardControllerTest extends AbstractWebTestCase
     }
 
     /**
-     * AK-11 / BF-33: `admin_set_locale` leitet ungeprüft auf den Referer weiter.
+     * AK-11 / BF-33: Ein fremder Referer wird nicht übernommen.
      *
-     * Der Test hält den Befund fest, bis er behoben ist — er schlägt fehl, sobald
-     * die Weiterleitung auf die eigene Herkunft beschränkt wird. Das ist Absicht:
-     * Ohne ihn fiele beim nächsten Durchlauf niemandem auf, dass sich hier etwas
-     * geändert hat.
+     * Der Referer ist seit der Reparatur nur noch ein Wegweiser — aus ihm stammt der
+     * Routenname, die Adresse baut der Router. Ein fremder Host kann so gar nicht
+     * entstehen. Vorher landete ein Admin hier bei `https://boeswillig.example/phishing`.
      */
-    public function testAk11SprachwahlLeitetUngeprueftAufDenRefererWeiter(): void
+    #[DataProvider('fremdeReferer')]
+    public function testAk11FremderRefererFuehrtAufsEigeneDashboard(string $referer): void
+    {
+        $client = static::createClient();
+        $this->loginAs($client, 'admin@endlech.lu');
+
+        $client->request('GET', self::LOCALE.'/admin/locale/fr', server: ['HTTP_REFERER' => $referer]);
+
+        self::assertResponseRedirects('/fr/admin');
+    }
+
+    /**
+     * @return iterable<string, array{string}>
+     */
+    public static function fremdeReferer(): iterable
+    {
+        yield 'fremder Host' => ['https://boeswillig.example/phishing'];
+        yield 'protokollrelativ' => ['//evil.example/x'];
+        yield 'javascript-Schema' => ['javascript:alert(1)'];
+        yield 'eigener Host, fremder Bereich' => ['http://localhost/de/restaurants'];
+    }
+
+    /**
+     * BF-34: Der Sprachwechsel wirkt — er schreibt den Pfad um statt in die Sitzung.
+     */
+    public function testAk10SprachwechselFuehrtAufDieselbeSeiteInDerNeuenSprache(): void
     {
         $client = static::createClient();
         $this->loginAs($client, 'admin@endlech.lu');
 
         $client->request('GET', self::LOCALE.'/admin/locale/fr', server: [
-            'HTTP_REFERER' => 'https://boeswillig.example/phishing',
+            'HTTP_REFERER' => 'http://localhost'.self::LOCALE.'/admin/restaurants',
         ]);
 
-        self::assertResponseRedirects('https://boeswillig.example/phishing');
+        self::assertResponseRedirects('/fr/admin/restaurants');
+
+        $crawler = $client->followRedirect();
+        self::assertResponseIsSuccessful();
+        self::assertStringContainsString('Gérer les restaurants', $crawler->filter('body')->text());
     }
 
     public function testEc02OhneRefererLandetManAufDemDashboard(): void

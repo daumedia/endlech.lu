@@ -105,10 +105,14 @@
 
         {# 3. Buttons (Login / Register / Benutzer / Sprache) #}
         <div class="flex items-center gap-4">
-            {# Language Switcher #}
-            <div class="hidden md:block">
-                {% include 'partials/_language_switcher.html.twig' %}
-            </div>
+            {# Sprachumschalter — BF-72: auch auf Mobil sichtbar.
+               Er stand in `hidden md:block` und war damit auf genau dem Gerät
+               unerreichbar, für das diese Anwendung als PWA ausgelegt ist (B25);
+               drei der vier gepflegten Kataloge waren dort nur über die Adresszeile
+               zu erreichen. Nicht in die Bottom-Nav (OF-01): die hat vier Felder
+               und ist für Ziele da, nicht für Einstellungen — der Umschalter gehört
+               dorthin, wo er auf dem Desktop auch steht. #}
+            {% include 'partials/_language_switcher.html.twig' %}
             {% if app.user %}
                 <a href="{{ path('app_profile') }}" class="hidden md:inline-flex items-center gap-2 text-sm text-gray-600 hover:text-purple-600 transition">
                     {% include 'partials/_avatar.html.twig' with {user: app.user, size: 'sm'} %}

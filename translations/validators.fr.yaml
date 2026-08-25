@@ -17,6 +17,9 @@ restaurant:
     url_max: "L'URL ne doit pas dépasser {{ limit }} caractères."
     note_blank: "La note ne doit pas être vide."
     note_format: "Format : \"ok:Texte\" ou \"warn:Texte\""
+    latitude_range: 'La latitude doit être comprise entre {{ min }} et {{ max }}.'
+    longitude_range: 'La longitude doit être comprise entre {{ min }} et {{ max }}.'
+    nearby_stops_note_max: 'La remarque sur les transports en commun ne doit pas dépasser {{ limit }} caractères.'
 
 user:
     email_unique: "Cette adresse e-mail est déjà utilisée."
@@ -49,6 +52,11 @@ suggestion:
     emoji_max: "L'emoji ne doit pas dépasser {{ limit }} caractères."
     notes_max: "Les remarques ne doivent pas dépasser {{ limit }} caractères."
     answer_required: "Merci de choisir Oui, Non ou Je ne sais pas."
+    phone_max: 'Le numéro de téléphone ne doit pas dépasser {{ limit }} caractères.'
+    email_invalid: 'Veuillez saisir une adresse e-mail valide.'
+    email_max: 'L''adresse e-mail ne doit pas dépasser {{ limit }} caractères.'
+    url_invalid: 'Veuillez saisir une adresse valide — précédée de https://.'
+    url_max: 'L''adresse ne doit pas dépasser {{ limit }} caractères.'
 # Die Partner-Seite richtet sich an Restaurantbetreiber (B2B) und siezt deshalb
 # bewusst – abweichend von den übrigen Meldungen hier, die durchgängig duzen.
 partner_waitlist:

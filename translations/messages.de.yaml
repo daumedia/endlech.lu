@@ -121,6 +121,7 @@ accessibility:
     notes_title: "Hinweise zur Barrierefreiheit"
     yes: "Ja"
     no_unknown: "Nein / unbekannt"
+    notes_language_hint: 'Diese Hinweise stammen aus der Erfassung vor Ort und liegen nur auf Deutsch vor.'
 
 dietary:
     title: "Ernährungsoptionen"

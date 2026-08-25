@@ -121,6 +121,7 @@ accessibility:
     notes_title: "Notes sur l'accessibilité"
     yes: "Oui"
     no_unknown: "Non / inconnu"
+    notes_language_hint: 'Ces remarques proviennent du relevé sur place et ne sont disponibles qu’en allemand.'
 
 dietary:
     title: "Options alimentaires"

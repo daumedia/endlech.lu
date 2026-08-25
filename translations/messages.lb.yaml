@@ -121,6 +121,7 @@ accessibility:
     notes_title: "Hiweiser zur Barrierefreiheet"
     yes: "Jo"
     no_unknown: "Nee / onbekannt"
+    notes_language_hint: 'Dës Hiweiser kommen aus der Erfaassung virun Uert a sinn nëmmen op Däitsch do.'
 
 dietary:
     title: "Ernärungsoptiounen"

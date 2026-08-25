@@ -121,6 +121,7 @@ accessibility:
     notes_title: "Accessibility Notes"
     yes: "Yes"
     no_unknown: "No / unknown"
+    notes_language_hint: 'These notes come from the on-site survey and are only available in German.'
 
 dietary:
     title: "Dietary Options"

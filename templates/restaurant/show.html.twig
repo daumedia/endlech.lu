@@ -393,7 +393,16 @@
             {% if restaurant.accessibilityNotes is not empty %}
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
                     <h2 class="text-lg font-bold text-gray-800 mb-4">{{ 'accessibility.notes_title'|trans }}</h2>
-                    <div class="space-y-3">
+                    {# BF-70: Diese Hinweise sind Freitext aus der Erfassung und liegen
+                       nur in der Originalsprache vor — bei den heutigen Einträgen
+                       Deutsch. Ohne `lang` läse ein Screenreader sie in der Sprache der
+                       Seite vor; ohne den Hinweis wüsste ein Besucher nicht, warum hier
+                       eine andere Sprache steht. Die eigentliche Übersetzbarkeit ist
+                       OF-02 und braucht eine Entscheidung am Datenmodell. #}
+                    {% if app.request.locale != 'de' %}
+                        <p class="text-xs text-gray-500 mb-3">{{ 'accessibility.notes_language_hint'|trans }}</p>
+                    {% endif %}
+                    <div class="space-y-3" lang="de">
                         {% for note in restaurant.accessibilityNotes %}
                             {% set parts = note|split(':') %}
                             {% set type = parts|first %}

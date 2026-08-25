@@ -297,7 +297,9 @@
 
                                     {% if restaurant.accessibilityNotes is not empty %}
                                         <hr class="my-4 border-gray-100">
-                                        <div class="space-y-2">
+                                        {# BF-70: Freitext aus der Erfassung, nur in der
+                                           Originalsprache vorhanden — siehe show.html.twig. #}
+                                        <div class="space-y-2" lang="de">
                                             {% for note in restaurant.accessibilityNotes %}
                                                 {% set parts = note|split(':') %}
                                                 {% set type = parts|first %}
