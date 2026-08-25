@@ -123,6 +123,8 @@ vierzehn kombinierbare Filter, drei Sortierungen, Seitenblättern zu je sechs. A
 - **OF-01** · Sollen ungeprüfte Häuser gekennzeichnet oder herausgefiltert werden
   (AK-15)? Hängt an derselben Entscheidung wie B16/OF-02, B17/OF-01 und B23/OF-01. —
   Betreiber
+  **Entschieden 2026-08-25:** Gekennzeichnet, nicht gefiltert — und das ist seit BF-41/BF-67 (2026-08-25) durchgehend so umgesetzt. Ungeprüfte Häuser tragen ihr Fehlen des Abzeichens, der Datensatz führt die Spalten `verified` und `assessed` samt Erklärung in den Metadaten, und `/open` weist „noch nicht bewertet" als eigene Zahl aus. Herauszufiltern hieße, acht von elf wegzulassen und die Lage besser darzustellen, als sie ist.
+
 - **OF-02** · Warum sind die Maße nicht filterbar (FB-05)? — Betreiber
 
 ## Decision Log

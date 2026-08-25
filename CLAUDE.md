@@ -55,6 +55,36 @@ markieren fragwürdiges Verhalten, das bewusst als Kriterium aufgenommen wurde. 
 sie wie eine Vorgabe liest, sucht Fehler an der falschen Stelle. Es läuft **nie** durch `sdd-tasks` und nie durch den regulären
 Eingang von `sdd-build` — es ist gebaut.
 
+## Konvention: `ActionLimiter` statt `consume(1)` von Hand
+
+⚠ **`consume(0)` ist keine Prüfung.** Der naheliegende Umbau — abfragen mit
+`consume(0)`, verbrauchen mit `consume(1)` — sieht richtig aus und ist es nicht:
+`SlidingWindowLimiter` vergleicht `verfügbar >= angefordert`, und `0 >= 0` gilt auch
+bei erschöpftem Kontingent. Nachgestellt: **acht gültige Anmeldungen liefen durch**, wo
+die sechste hätte scheitern müssen — der Deckel war weg, nicht repariert. Maßgeblich ist
+`getRemainingTokens()`.
+
+Deshalb gibt es `App\RateLimit\ActionLimiter`:
+
+```php
+$limiter = ActionLimiter::for($this->registrationLimiter, $request->getClientIp());
+if (!$limiter->isAllowed()) { /* 429 */ }
+// … Formular prüfen, Honeypot, alles was fehlschlagen darf …
+$limiter->consume();   // erst hier: die Handlung findet statt
+```
+
+⚠ **Erst verbrauchen, wenn die Handlung stattfindet** (BF-11). Fünf Tippfehler sperrten
+vorher eine Stunde lang aus, ohne dass ein Konto oder eine Mail entstanden wäre. Der
+Deckel soll den Angreifer treffen, nicht den, der sich vertippt.
+
+⚠ **Eine Ausnahme, und sie steht im Code:** Der Passwortwechsel verbraucht **vor** der
+Prüfung. Dort ist der Fehlversuch kein Tippfehler, sondern der Angriff — genau ihn soll
+der Deckel zählen. Nicht „vereinheitlichen".
+
+`LimiterCoverageTest` prüft, dass jeder konfigurierte Limiter irgendwo verdrahtet ist
+und einen `when@test`-Override hat. Ein Limiter, den niemand ruft, ist eine Zeile
+Konfiguration und kein Schutz.
+
 ## Konvention: Jeder Weg, der eine Mail auslöst oder ein Geheimnis prüft, braucht einen Limiter
 
 — und ebenso jeder Weg, der **bei jedem Aufruf den gesamten Bestand lädt**.
@@ -77,6 +107,37 @@ auf 10000 ist Pflicht**, sonst summieren sich die Aufrufe über die Testsuite.
 ⚠️ **Am Konto zählen, nicht an der IP**, wenn der Angriff eine bestehende Sitzung oder
 ein bestehendes Konto voraussetzt — dort wechselt die IP mühelos, das Konto nicht
 (siehe `password_change`).
+
+## Konvention: Die Prüfung gehört dorthin, wo der Wert hereinkommt
+
+Viermal derselbe Fehler, jedes Mal an einer anderen Stelle (BF-27, BF-51, BF-62 zweimal):
+Ein Wert, den niemand geprüft hat, fällt in die nächste Schicht und kommt dort als
+**HTTP 500** heraus statt als Meldung.
+
+- ⚠ **`'empty_data' => ''` ist Pflicht**, sobald der Setter der Entity ein striktes
+  `string` verlangt. Ohne die Zeile übergibt Symfony `null`, `setName(string)` wirft, und
+  der Nutzer bekommt einen Serverfehler statt der `NotBlank`-Meldung, die direkt daneben
+  konfiguriert ist.
+- ⚠ **Eine Längenprüfung am Endpunkt reicht nicht, wenn daraus ein Slug wird.**
+  `AsciiSlugger` macht aus „ß" ein „ss", aus einem japanischen Zeichen bis zu drei
+  Buchstaben: 80 × „ß" ergeben 160 Zeichen, 80 × „日" ergeben 239. Der `SQLSTATE[22001]`
+  wandert dann von `name` auf `slug`.
+
+## Konvention: Übersetzungsschlüssel werden getestet, nicht gehofft
+
+`tests/Unit/Translation/CatalogueCompletenessTest.php` prüft dreierlei:
+
+1. Alle vier Kataloge tragen **dieselbe Schlüsselmenge** (`messages` 1084+, `validators` 82+).
+2. Kein Wert ist leer.
+3. **Jeder im Code verwendete Schlüssel ist definiert** — 736 aus `|trans` in Templates,
+   187 aus `src/Form/` (Constraint-Meldungen, `label`, `help`, `placeholder`).
+
+⚠ **Punkt 3 fand seinen eigenen blinden Fleck erst im zweiten Anlauf.** Die erste Fassung
+prüfte nur Constraint-Meldungen; zwei neue Formularfelder trugen Beschriftungen, die in
+keinem Katalog standen, und der Test blieb grün. Wer den Scanner erweitert, prüft mit
+einem absichtlich falschen Schlüssel gegen, ob er rot wird.
+
+`debug:translation <locale> --only-missing` ist der manuelle Weg dazu.
 
 ## Tech Stack
 
