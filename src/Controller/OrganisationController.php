@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\OrganisationWaitlistEntry;
 use App\Enum\OrganisationType;
 use App\Form\OrganisationWaitlistType;
+use App\RateLimit\ActionLimiter;
 use App\Repository\OrganisationWaitlistEntryRepository;
 use App\Waitlist\WaitlistConfirmationService;
 use App\Waitlist\WaitlistRequestHelper;
@@ -32,7 +33,10 @@ final class OrganisationController extends AbstractController
     public function __construct(
         private readonly TranslatorInterface $translator,
         private readonly WaitlistConfirmationService $confirmationService,
-        #[Autowire(service: 'limiter.partner_waitlist')]
+        // ⚠ BF-38: Eigener Zähler statt des geteilten `limiter.partner_waitlist`.
+        // Vorher sperrten fünf Anmeldungen auf /partner das Formular hier mit —
+        // zwei getrennte Formulare, ein Kontingent.
+        #[Autowire(service: 'limiter.organisation_waitlist')]
         private readonly RateLimiterFactoryInterface $waitlistLimiter,
     ) {
     }
@@ -79,9 +83,12 @@ final class OrganisationController extends AbstractController
         $form = $this->createForm(OrganisationWaitlistType::class, $entry);
         $form->handleRequest($request);
 
-        $limit = $this->waitlistLimiter->create($request->getClientIp() ?? 'anonymous')->consume(1);
+        // ⚠ BF-11: `consume(0)` fragt ab, ohne zu verbrauchen. Der Verbrauch steht
+        // unten, wo die Anmeldung wirklich entsteht — ein Tippfehler darf keine
+        // Stunde kosten.
+        $limiter = ActionLimiter::for($this->waitlistLimiter, $request->getClientIp());
 
-        if (!$limit->isAccepted()) {
+        if (!$limiter->isAllowed()) {
             $this->addFlash('error', $this->translator->trans('flash.partner_rate_limited'));
 
             return $this->renderLandingPage($form, Response::HTTP_TOO_MANY_REQUESTS);
@@ -96,6 +103,8 @@ final class OrganisationController extends AbstractController
         if (!$form->isSubmitted() || !$form->isValid()) {
             return $this->renderLandingPage($form);
         }
+
+        $limiter->consume();
 
         $entry->setConsentAt(new \DateTimeImmutable());
         $entry->setLocale($request->getLocale());

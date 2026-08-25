@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Form\ChangePasswordType;
 use App\Form\ProfileType;
+use App\RateLimit\ActionLimiter;
 use App\Repository\RestaurantRepository;
 use App\Service\AvatarUploadService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -31,6 +32,13 @@ final class ProfileController extends AbstractController
         private readonly RestaurantRepository $restaurantRepository,
         #[Autowire(service: 'limiter.password_change')]
         private readonly RateLimiterFactoryInterface $passwordChangeLimiter,
+        // ⚠ BF-21: Am KONTO gezählt, nicht an der IP — derselbe Grund wie beim
+        // Passwortwechsel. Der Weg verschickt seit der BF-19-Reparatur zwei Mails
+        // je Durchlauf, eine davon an eine FREI GEWÄHLTE fremde Adresse; zehn
+        // Durchläufe erzeugten zwanzig Mails. Wer eine Sitzung gekapert hat,
+        // wechselt die IP mühelos, das Konto nicht.
+        #[Autowire(service: 'limiter.email_change')]
+        private readonly RateLimiterFactoryInterface $emailChangeLimiter,
     ) {
     }
 
@@ -80,6 +88,14 @@ final class ProfileController extends AbstractController
                 && strcasecmp($gewuenschteAdresse, (string) $bisherigeAdresse) !== 0;
 
             if ($adresseGeaendert) {
+                $limiter = ActionLimiter::for($this->emailChangeLimiter, $user->getUserIdentifier());
+
+                if (!$limiter->isAllowed()) {
+                    $this->addFlash('error', $this->translator->trans('flash.email_change_rate_limited'));
+
+                    return $this->redirectToRoute('app_profile');
+                }
+
                 // Zurück auf die bestätigte Adresse. Eine sofort wirksame Änderung
                 // machte aus einer gekaperten Sitzung eine dauerhafte Übernahme:
                 // Der rechtmäßige Inhaber könnte sich nicht mehr anmelden und hat
@@ -87,6 +103,8 @@ final class ProfileController extends AbstractController
                 $user->setEmail($bisherigeAdresse);
                 $token = $user->requestEmailChange($gewuenschteAdresse);
                 $em->flush();
+
+                $limiter->consume();
 
                 $this->sendeAdressbestaetigung($request, $mailer, $user, $bisherigeAdresse, $gewuenschteAdresse, $token);
 
@@ -126,6 +144,11 @@ final class ProfileController extends AbstractController
             // heraus – dort wechselt die IP mühelos, das Konto nicht. Die
             // Anmeldung ist über login_throttling gedrosselt, dieser zweite Weg
             // zur Passwortprüfung war es nicht.
+            //
+            // ⚠ Hier wird BEWUSST vor der Prüfung verbraucht — anders als bei
+            // Registrierung und Wartelisten (BF-11). Dort ist ein Fehlversuch ein
+            // Tippfehler; hier IST der Fehlversuch der Angriff, und genau ihn soll
+            // der Deckel zählen. Nicht „vereinheitlichen".
             $limit = $this->passwordChangeLimiter->create($user->getUserIdentifier())->consume(1);
 
             if (!$limit->isAccepted()) {

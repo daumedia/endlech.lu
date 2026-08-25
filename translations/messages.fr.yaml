@@ -639,6 +639,8 @@ flash:
     passkey_renamed: "Clé d’accès renommée."
     passkey_deleted: "Clé d’accès supprimée."
     passkey_name_empty: "Veuillez saisir un nom pour la clé d’accès."
+    email_change_rate_limited: 'Trop de changements d’adresse. Merci de réessayer dans une heure.'
+    suggest_rate_limited: 'Vous avez soumis beaucoup de propositions dans la dernière heure. Merci de patienter un peu — nous les examinons toutes.'
 
 email:
     verify_subject: "Confirmez votre adresse e-mail"

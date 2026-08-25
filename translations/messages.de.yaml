@@ -639,6 +639,8 @@ flash:
     passkey_renamed: "Passkey umbenannt."
     passkey_deleted: "Passkey entfernt."
     passkey_name_empty: "Bitte gib einen Namen für den Passkey ein."
+    email_change_rate_limited: 'Zu viele Adressänderungen. Bitte versuche es in einer Stunde erneut.'
+    suggest_rate_limited: 'Du hast in der letzten Stunde viele Vorschläge eingereicht. Bitte warte etwas — wir schauen sie uns alle an.'
 
 email:
     verify_subject: "Bestätige deine E-Mail-Adresse"

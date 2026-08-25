@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\PartnerWaitlistEntry;
 use App\Form\PartnerWaitlistType;
+use App\RateLimit\ActionLimiter;
 use App\Repository\PartnerWaitlistEntryRepository;
 use App\Waitlist\WaitlistConfirmationService;
 use App\Waitlist\WaitlistRequestHelper;
@@ -50,9 +51,12 @@ final class PartnerController extends AbstractController
 
         // Erst nach handleRequest prüfen, damit ein GET-Aufruf der Seite nie
         // Kontingent verbraucht – gedeckelt wird das Absenden, nicht das Lesen.
-        $limit = $this->waitlistLimiter->create($request->getClientIp() ?? 'anonymous')->consume(1);
+        //
+        // ⚠ BF-11: `consume(0)` fragt ab, ohne zu verbrauchen. Der Verbrauch steht
+        // unten, wo die Anmeldung wirklich entsteht.
+        $limiter = ActionLimiter::for($this->waitlistLimiter, $request->getClientIp());
 
-        if (!$limit->isAccepted()) {
+        if (!$limiter->isAllowed()) {
             $this->addFlash('error', $this->translator->trans('flash.partner_rate_limited'));
 
             return $this->renderLandingPage($form, Response::HTTP_TOO_MANY_REQUESTS);
@@ -70,6 +74,8 @@ final class PartnerController extends AbstractController
             // Formular selbst 422; Turbo rendert die Seite daraufhin neu.
             return $this->renderLandingPage($form);
         }
+
+        $limiter->consume();
 
         $entry->setConsentAt(new \DateTimeImmutable());
         $entry->setLocale($request->getLocale());

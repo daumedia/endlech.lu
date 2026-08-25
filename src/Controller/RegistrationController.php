@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationType;
+use App\RateLimit\ActionLimiter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -44,10 +45,16 @@ final class RegistrationController extends AbstractController
         // Erst nach handleRequest und nur für abgeschickte Formulare: Das reine
         // Aufrufen der Seite darf kein Kontingent verbrauchen – gedeckelt wird die
         // Anlage, nicht das Lesen. Muster wie in PartnerController::submit().
-        if ($form->isSubmitted()) {
-            $limit = $this->registrationLimiter->create($request->getClientIp() ?? 'anonymous')->consume(1);
+        //
+        // ⚠ BF-11: `consume(0)` FRAGT nur ab, es verbraucht nichts. Verbraucht wird
+        // erst, wenn die Anlage tatsächlich stattfindet — sonst sperren fünf
+        // Tippfehler eine Stunde lang aus, ohne dass ein Konto oder eine Mail
+        // entstanden wäre. Der Deckel soll den Angreifer treffen, nicht den, der
+        // sich beim Passwort vertippt.
+        $limiter = ActionLimiter::for($this->registrationLimiter, $request->getClientIp());
 
-            if (!$limit->isAccepted()) {
+        if ($form->isSubmitted()) {
+            if (!$limiter->isAllowed()) {
                 $this->addFlash('error', $this->translator->trans('flash.register_rate_limited'));
 
                 return $this->render('registration/register.html.twig', [
@@ -57,6 +64,8 @@ final class RegistrationController extends AbstractController
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $limiter->consume();
+
             $user->setPassword(
                 $passwordHasher->hashPassword($user, $form->get('plainPassword')->getData()),
             );

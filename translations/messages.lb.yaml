@@ -639,6 +639,8 @@ flash:
     passkey_renamed: "Passkey ëmbenannt."
     passkey_deleted: "Passkey ewechgeholl."
     passkey_name_empty: "Gëff w.e.g. en Numm fir de Passkey un."
+    email_change_rate_limited: 'Ze vill Adressännerungen. Probéier w.e.g. an enger Stonn nach eng Kéier.'
+    suggest_rate_limited: 'Du hues an der leschter Stonn vill Virschléi agereecht. Waart w.e.g. e bëssen — mir kucken eis all un.'
 
 email:
     verify_subject: "Bestäteg deng E-Mail-Adress"
