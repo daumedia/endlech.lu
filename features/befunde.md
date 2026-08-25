@@ -9,7 +9,7 @@ des Auditberichts, den `/sdd-erfassen abschluss` daraus baut.
 Durchlauf), B23 (34/35 im zweiten Durchlauf), B19 (17/17, davon eines nicht prüfbar),
 B14 (28/28), B15 (27/27), B22 (30/30), B17 (25/25) — abgenommen.
 B10 (24/24 im zweiten Durchlauf), B18 (29/29), B11 (18/19, eines nicht prüfbar), B20 (19/20), B21 (20/20), B09 (18/18), B05 (24/24), **B06 (23/23 — das erste Feature ohne eigenen Befund)**, B07 (17/17, eines nicht ausgeführt), B08 (16/16) — abgenommen.
-B12 (15/15 nach der Reparatur), B13 (14/14), B16 (29/29) — abgenommen. B23s beide
+B12 (15/15 nach der Reparatur), B13 (14/14), B16 (29/29) — abgenommen. B24 (16/16 bestätigt) — **auf `review`**, BF-68 ist *hoch*. B23s beide
 *hoch*-Befunde sind repariert und nachgemessen; dabei fielen drei neue an, zwei davon
 als Folge der Reparatur.
 Alle Reparaturen sind **noch nicht auf `production`**.
@@ -34,6 +34,11 @@ obwohl dort nichts mehr zu reparieren ist.
 | BF-42 | B17 | Kein Rate Limit auf den Datenendpunkten — 12 Abrufe, zwölfmal 200; jeder lädt den gesamten Bestand. **Sechste Wiederholung von M-01**, und die erste, die nicht unter den Wortlaut der Konvention fällt (löst keine Mail aus, prüft kein Geheimnis — ist nur teuer) | niedrig | `src/Controller/Open/OpenDataController.php` | 2026-08-24 |
 | BF-41 | B17 | Unverifizierte Einträge stehen im veröffentlichten Datensatz (8 von 11). **Neu bewertet:** Die Spec führte das als schwerste Verkettung des Projekts — sie ist seit BF-24 unterbrochen. Bleibt eine Produktfrage samt fehlender Dokumentation von `isVerified` | niedrig | `RestaurantRepository::findAllForExport()` | 2026-08-24 |
 | BF-40 | B22 | Die Verwaltungsliste skaliert nicht — kein Blättern, keine Obergrenze; die Restaurant-Auswahlliste lädt den **kompletten Kernbestand** (`findBy([], …)`). Blättern ist im Projekt vorhanden (B05, B20) und hier nur nicht angewandt | niedrig | `AdminWaitlistController.php:96`, `PartnerWaitlistEntryRepository::findFiltered()` | 2026-08-24 |
+| BF-68 | B24 | **Ein Query-Parameter kapert den Sprachumschalter.** `?_locale=//fremd.example/de` erzeugt `href="///fremd.example/…"`, und der Browser navigiert auf den **fremden Host** — Open Redirect von der echten Domain aus, im Browser belegt. Andere Werte werfen: **10 von 10 öffentlichen Seiten → HTTP 500** (`strict_requirements: true` gilt auch in prod, `sentry.yaml` filtert keine 500er). Mit gültigen Werten zeigt der Umschalter dreimal dieselbe Sprache. Ursache: `merge(query_params)` steht **hinter** `merge({'_locale': locale})`. Kein XSS, keine Header-Injection — beides geprüft | **hoch** | `templates/partials/_language_switcher.html.twig:5,36` | 2026-08-25 |
+| BF-69 | B24 | **Elf Übersetzungsschlüssel stehen als Text auf der Seite** — in allen vier Sprachen. Live: der Abbrechen-Knopf auf `/admin/finanzen/neu` heißt `admin.restaurant.cancel`; ein Vorschlag mit ungültiger E-Mail zeigt `suggestion.email_invalid`. Der Rest der Kataloge ist vollständig (1084 + 82 Schlüssel, vier Sprachen, **0** Lücken) — `debug:translation` läuft nur in keinem Workflow | mittel | `translations/{messages,validators}.*.yaml` | 2026-08-25 |
+| BF-70 | B24 | **Barrierefreiheitshinweise stehen in allen Sprachen auf Deutsch.** Die Merkmale werden übersetzt (`Accessible en fauteuil roulant`), die Freitexte daneben nicht: `Kopfsteinpflaster vor dem Eingang`, `Treppen im Inneren` — **Warnungen** — erscheinen auf `/fr/` und `/en/` wortgleich deutsch. Dazu 20 Küchentypen in der Filterauswahl. FB-05 sieht nur die Küchentypen | mittel | `Restaurant::$accessibilityNotes`, `Cuisine::$name` | 2026-08-25 |
+| BF-71 | B24 | Escape schließt den Sprachumschalter nicht (`aria-expanded` bleibt `true`). `close` hängt an `click@window`, es gibt keinen `keydown`-Handler. Gemildert dadurch, dass `Tab` in die Liste führt — es fehlt der Rückweg ohne Maus | niedrig | `assets/controllers/language_switcher_controller.ts` | 2026-08-25 |
+| BF-72 | B24 | **Auf dem Telefon gibt es nur eine Sprache.** Bei 390 px: Umschalter im DOM, `isVisible() = false`, **null** sichtbare Sprachlinks; Bottom-Nav `["Home","Restaurants","Über uns","Login"]`. Die Plattform ist als installierbare Telefon-App ausgelegt (B25) — auf genau dem Gerät sind drei der vier Kataloge nur über die Adresszeile erreichbar. Zusammen mit dem fehlenden `Accept-Language` (B12/FB-03) bekommt ein frankophoner Besucher Luxemburgisch ohne Ausweg | mittel | `templates/base.html.twig:110` | 2026-08-25 |
 | BF-67 | B16 | **Die Leitkennzahlen zeigen in gegenläufige Richtungen.** Ein Haus ohne erfasste Merkmale hebt `communesCovered` (8 → 9) und senkt `averageScore` (**5,09 → 4,67**) — auf derselben Seite. `AccessibilityScore` zählt nicht Erfasstes als nicht erfüllt. Wer die Kurven nebeneinander sieht, liest „wächst und wird schlechter"; tatsächlich heißt es „noch nicht gemessen". **Gehört mit BF-49 zusammen gebaut** | mittel | `src/Open/AccessibilityScore.php`, `OpenStatsService` | 2026-08-24 |
 | BF-65 | B13 | Die Datenschutzerklärung nennt **einen von drei Empfängern**: Sentry ja, **Brevo nein** (empfängt jede gespeicherte E-Mail-Adresse), HAFAS nein. Auch Auskunfts-, Widerrufs- und Löschfristen fehlen. Der einleitende Satz („Nutzung in der Regel ohne Angabe personenbezogener Daten") stammt aus einer Zeit ohne Konten und Wartelisten. **Gehört nach Feature `01` gebaut**, nicht davor | mittel | `templates/impressum/index.html.twig` | 2026-08-24 |
 | BF-66 | B13 | Die Kriterienseite erklärt die Punktzahl nicht — „Punktzahl", „Score", „acht Merkmale" kommen dort nicht vor, während `/open` und der CC-BY-Datensatz sie veröffentlichen. Sechs gelistete Kriterien gegen acht bewertete Merkmale | niedrig | `templates/kriterien/index.html.twig` | 2026-08-24 |
@@ -113,6 +118,19 @@ sondern vergessen.
 
 Was in mehr als einem Feature auftritt — der Grund, warum diese Liste existiert.
 
+- **Fehlende Eingabeprüfung endet im 500er (BF-27 behoben, BF-51, BF-62, BF-68 offen).**
+  Viermal dasselbe: Ein Wert, den niemand geprüft hat, fällt in die nächste Schicht und
+  kommt dort als Serverfehler heraus — zu lange Küchen-Angabe über die API (BF-27), leeres
+  Pflichtfeld (BF-51), zu langer Küchenname (BF-62), Sprachcode aus dem Query (BF-68).
+  Der vierte Fall ist der schwerste, weil er **ohne Anmeldung und ohne POST** auslösbar ist
+  und jede öffentliche Seite trifft. Gemeinsam ist allen, dass die Prüfung an der Stelle
+  fehlt, an der der Wert **hereinkommt** — nicht dort, wo er verbraucht wird.
+- **Eine Rekonstruktion kann auch richtig sein und trotzdem in die Irre führen (BF-68).**
+  B24/AK-12 beschreibt die Merge-Reihenfolge im Sprachumschalter **korrekt** — und nennt
+  sie „harmlos, aber leicht zu beheben". Gemessen ist sie ein Open Redirect plus ein
+  auslösbarer 500er auf zehn Seiten. Das Verhalten war richtig erfasst, der Schaden nicht.
+  Ergänzung zu BF-16: Eine `spec.md` eines Bestandsfeatures ist nicht nur dort angreifbar,
+  wo sie das Verhalten falsch beschreibt, sondern auch dort, wo sie es bewertet.
 - **Fehlende Rate Limits im Browser-Weg (BF-02 behoben, BF-13 offen).** Die Anwendung
   drosselt die API (`api_login`: 5/min, zweimal belegt: ab dem sechsten Versuch 429), aber
   kaum einen Web-Endpunkt. Für die Registrierung ist es behoben, für die **Anmeldung**
