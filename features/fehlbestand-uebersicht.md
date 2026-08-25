@@ -30,21 +30,46 @@ nimmt, und der ungeschützt, den ein Browser nimmt.
 | Endpunkt | Limit | Nachweis |
 |---|---|---|
 | `POST /api/v1/auth/login` | 5/min je IP | B23/AK-18 |
-| `POST /{locale}/login` | **keins** | B02/FB-01 — Symfony bringt `login_throttling` mit, es ist nicht gesetzt |
-| `POST /{locale}/register` | **keins** | B01/FB-01 |
-| `/{locale}/verify/resend` | **keins** | B01/FB-02 |
-| `POST /{locale}/profile/password` | **keins** | B04/FB-07 |
+| `POST /{locale}/login` | ~~keins~~ → 5 je 15 Min | B02/FB-01, behoben 2026-08-24 (BF-13) |
+| `POST /{locale}/register` | ~~keins~~ → 5/h | B01/FB-01, behoben 2026-08-23 (BF-02) |
+| `/{locale}/verify/resend` | ~~keins~~ → 3/h | B01/FB-02, behoben 2026-08-23 (BF-02) |
+| `POST /{locale}/profile/password` | ~~keins~~ → 5 je 15 Min | B04/FB-07, behoben 2026-08-24 (BF-20) |
+| `POST /{locale}/profile/edit` | **keins** | B04/BF-21 — verschickt seit der BF-19-Reparatur zwei Mails je Aufruf, an eine **frei wählbare** Adresse |
+| `POST /api/v1/auth/register` | ~~100/min~~ → 5/h | B23/FB-02, behoben 2026-08-24 (BF-25) |
+| `POST /api/v1/restaurants` | **keins** (100/min anonym) | B23/BF-30 — 40 Aufrufe, 40 Vorschläge in der Moderationsschlange |
 | `/passkey/login/options` | **keins** | B03/FB-01 |
-| `POST /{locale}/community/suggest` | **keins** | B11/FB-01 |
-| `/open/dataset.csv` | **keins** | B17/FB-02 |
-| alle Verwaltungs-POSTs | **keins** | B19/FB-05 |
+| `POST /{locale}/community/suggest` | **keins** | B11/BF-50 — gemessen 2026-08-24; gemildert durch Konto- und Bestätigungspflicht |
+| `/open/dataset.csv` | **keins** | B17/BF-42 — gemessen 2026-08-24: 12 Abrufe, zwölfmal 200; jeder lädt den gesamten Bestand |
+| alle Verwaltungs-POSTs | **keins** | B19/FB-05, gemessen 2026-08-24 (BF-35): acht in Folge, keine Sperre |
 
 **Schwerste Folge:** B02/FB-01. Unbegrenztes Passwortraten trifft ein
 Anwendungssystem, dessen Verwaltungszugang an genau einem Konto hängt (B19/FB-01) und
-das keine zweite Stufe kennt (B02/FB-03).
+das keine zweite Stufe kennt (B02/FB-03). **Behoben am 2026-08-24.**
 
 **Kleinster wirksamer Schritt:** `login_throttling: max_attempts: 5` in der
-`main`-Firewall. Eine Zeile.
+`main`-Firewall. Eine Zeile. — *erledigt.*
+
+**Stand 2026-08-24: vier der neun Zeilen sind zu, und trotzdem ist das Muster nicht
+weg.** `POST /profile/edit` kam neu dazu — als Nebenwirkung einer Reparatur, die diesem
+Weg erstmals einen Mailversand gab, ohne ihm einen Deckel mitzugeben. Genau das ist der
+Punkt, an dem eine Einzelbehebung zu wenig ist:
+
+> **Konvention, die dem Projekt fehlt:** Jeder Weg, der eine Mail auslöst, ein Geheimnis
+> prüft **oder bei jedem Aufruf den gesamten Bestand lädt**, bekommt einen Limiter —
+> unabhängig davon, ob eine App oder ein Browser ihn geht. Wer einen solchen Weg neu
+> anlegt oder einen bestehenden darum erweitert, legt den Limiter im selben Commit an.
+
+*Der dritte Fall kam am 2026-08-24 durch BF-42 dazu: `/open/dataset.csv` löst keine Mail
+aus und prüft kein Geheimnis — die erste Fassung des Satzes hätte ihn nicht erfasst.*
+
+Ohne diesen Satz irgendwo im Projekt wird die Liste weiter Zeilen bekommen, während oben
+welche verschwinden.
+
+**Stand 2026-08-24, abends: genau das ist eingetreten.** BF-30 (`POST /api/v1/restaurants`
+ohne Deckel) entstand am selben Tag, an dem der Satz oben geschrieben wurde — in einer
+Reparatur, die diesen Weg umbaute, ohne ihm einen Limiter mitzugeben. Die Konvention
+steht damit an der falschen Stelle: Sie wird beim **Prüfen** gelesen, nicht beim
+**Bauen**. Sie gehört nach `CLAUDE.md`, wo sie vor jedem Eingriff im Blick ist.
 
 ---
 

@@ -1,6 +1,6 @@
 # B04 · Profil, Avatar & eigene Einreichungen — Systemdesign
 
-Status: `rekonstruiert` · Stand: 2026-08-23 · Stack-Profil: `symfony-doctrine`
+Status: `review` · Stand: 2026-08-23 · Stack-Profil: `symfony-doctrine`
 
 ## Überblick
 
@@ -132,7 +132,7 @@ Keine. Avatare liegen lokal, es gibt kein CDN und keinen Objektspeicher.
 | AK-10 | `hashPassword()` + `flush()` | |
 | AK-11 | `RestaurantRepository::findBySubmitter()` | |
 | AK-12 ⚠ | `ProfileType` führt `email`; `edit()` flusht ohne Weiteres | Lücke, siehe FB-03 |
-| AK-13 ⚠ | **Abwesenheit** einer Sitzungsinvalidierung | Lücke, siehe FB-04 |
+| AK-13 | Symfonys Sicherheitskontext (`hasUserChanged`) und die `remember_me`-Signatur | **berichtigt 2026-08-24** — keine Lücke, das Framework erledigt es |
 | AK-14 ⚠ | **Abwesenheit** eines Limiters | Lücke, siehe FB-07 |
 | AK-15 | `File`-Constraint, `fileinfo` | |
 | AK-16 | Speicherort `public/uploads/avatars` | beschreibt eine bewusste Eigenschaft, keine Lücke |

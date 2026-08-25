@@ -1,0 +1,26 @@
+{% extends 'email/base.html.twig' %}
+
+{% block title %}{{ 'email.email_change_notice_title'|trans }}{% endblock %}
+
+{% block body %}
+    <h2 style="margin: 0 0 16px; color: #111827; font-size: 20px; font-weight: 700;">
+        {{ 'email.verify_greeting'|trans({'%name%': user.name}) }}
+    </h2>
+
+    <p style="margin: 0 0 16px; color: #6b7280; font-size: 14px; line-height: 1.6;">
+        {{ 'email.email_change_notice_text'|trans({'%new%': newEmail}) }}
+    </p>
+
+    {# Diese Mail geht an die BISHERIGE Adresse und ist der eigentliche Schutz:
+       Wer das Konto übernehmen will, sitzt im neuen Postfach – hier liest der
+       rechtmäßige Inhaber mit. Deshalb kein Knopf, sondern eine Warnung. #}
+    <table role="presentation" style="width: 100%; border: 0; background-color: #fffbeb; border-radius: 8px;">
+        <tr>
+            <td style="padding: 16px;">
+                <p style="margin: 0; color: #92400e; font-size: 14px; line-height: 1.6;">
+                    {{ 'email.email_change_notice_warning'|trans }}
+                </p>
+            </td>
+        </tr>
+    </table>
+{% endblock %}

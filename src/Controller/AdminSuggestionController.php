@@ -81,6 +81,12 @@ final class AdminSuggestionController extends AbstractController
         $restaurant->setInstagramUrl($suggestion->getInstagramUrl());
         $restaurant->setFacebookUrl($suggestion->getFacebookUrl());
         $restaurant->setTiktokUrl($suggestion->getTiktokUrl());
+        // Standort, sofern der Vorschlag ihn trägt (kommt über die REST-API; der
+        // Web-Wizard fragt ihn nicht ab). Ohne diese drei Zeilen ginge die Angabe
+        // bei der Freigabe verloren.
+        $restaurant->setLatitude($suggestion->getLatitude());
+        $restaurant->setLongitude($suggestion->getLongitude());
+        $restaurant->setNearbyStopsNote($suggestion->getNearbyStopsNote());
         $restaurant->setSubmittedBy($suggestion->getSuggestedBy());
 
         $suggestion->setStatus(RestaurantSuggestion::STATUS_APPROVED);

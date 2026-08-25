@@ -154,7 +154,8 @@ contact:
 nearby_stops:
     title: "Nahverkehr in der Nähe"
     walking: "%meters% m"
-    no_stops: "Keine barrierefreien Haltestellen in der Nähe gefunden."
+    no_stops: "Keine Haltestelle im Umkreis von %meters% Metern gefunden."
+    source: "Angaben zum Nahverkehr vom Verkéiersverbond, ohne Aussage zur Barrierefreiheit der Haltestellen."
 
 ordering:
     title: "Online bestellen"
@@ -482,7 +483,7 @@ admin:
         notes_hint: "Format: ok:Text oder warn:Text"
         add_note: "+ Hinweis hinzufügen"
         location: "Standort & Nahverkehr"
-        location_hint: "GPS-Koordinaten ermöglichen die automatische Suche nach barrierefreien Haltestellen in der Nähe."
+        location_hint: "GPS-Koordinaten ermöglichen die automatische Suche nach Haltestellen in der Nähe."
         opening_hours: "Öffnungszeiten"
         opening_hours_hint: "Füge pro Tag beliebig viele Zeitfenster hinzu (z. B. Mittag und Abend). Ein Tag ohne Zeitfenster gilt als geschlossen."
         add_opening_slot: "＋ Zeitfenster hinzufügen"
@@ -616,6 +617,13 @@ flash:
     profile_password_changed: "Passwort erfolgreich geändert."
     profile_wrong_password: "Das aktuelle Passwort ist nicht korrekt."
     profile_avatar_deleted: "Profilbild erfolgreich entfernt."
+    profile_email_pending: "Fast geschafft: Wir haben einen Bestätigungslink an %email% geschickt. Deine bisherige Adresse bleibt gültig, bis du ihn anklickst."
+    profile_email_mail_failed: "Die Bestätigungs-E-Mail konnte nicht versendet werden. Bitte versuche es später erneut."
+    profile_email_cancelled: "Die Änderung der E-Mail-Adresse wurde abgebrochen."
+    profile_email_expired: "Der Bestätigungslink ist abgelaufen. Bitte gib die neue Adresse erneut ein."
+    profile_email_taken: "Diese E-Mail-Adresse wird inzwischen bereits verwendet."
+    profile_email_changed: "Deine E-Mail-Adresse wurde geändert. Bitte melde dich mit der neuen Adresse an."
+    profile_password_rate_limited: "Zu viele Versuche. Bitte warte 15 Minuten, bevor du das Passwort erneut änderst."
     partner_waitlist_submitted: "Fast geschafft! Bitte bestätigen Sie den Link in Ihrer E-Mail."
     partner_email_failed: "Ihre Anmeldung ist gespeichert, aber die Bestätigungsmail konnte nicht versendet werden. Bitte melden Sie sich bei uns."
     partner_rate_limited: "Sie haben in kurzer Zeit mehrere Anmeldungen abgeschickt. Bitte versuchen Sie es in einer Stunde erneut."
@@ -639,6 +647,14 @@ email:
     verify_button: "E-Mail bestätigen"
     verify_expiry: "Dieser Link ist 24 Stunden gültig. Falls du dich nicht bei Endlech.lu registriert hast, kannst du diese E-Mail ignorieren."
     verify_fallback: "Falls der Button nicht funktioniert, kopiere diesen Link in deinen Browser:"
+    email_change_subject: "Bestätige deine neue E-Mail-Adresse"
+    email_change_title: "Neue E-Mail-Adresse bestätigen"
+    email_change_text: "Du möchtest die E-Mail-Adresse deines Endlech.lu-Kontos von %old% auf %new% ändern. Bitte bestätige die neue Adresse mit einem Klick:"
+    email_change_button: "Neue Adresse bestätigen"
+    email_change_notice_subject: "Änderung deiner E-Mail-Adresse angefordert"
+    email_change_notice_title: "Änderung angefordert"
+    email_change_notice_text: "Für dein Endlech.lu-Konto wurde die neue E-Mail-Adresse %new% angefordert. Solange sie nicht bestätigt ist, bleibt diese Adresse gültig."
+    email_change_notice_warning: "Warst du das nicht? Dann ändere umgehend dein Passwort — jemand hat Zugriff auf dein Konto. Ohne Bestätigung der neuen Adresse ändert sich nichts."
     partner_confirm_subject: "Bestätigen Sie Ihre Anmeldung zur Warteliste"
     partner_confirm_title: "Anmeldung bestätigen"
     partner_confirm_greeting: "Hallo %name%!"
@@ -778,6 +794,9 @@ form:
     suggestion_notes_placeholder: "z.B. Eingang stufenlos, Parkplatz für Rollstuhlfahrer vorhanden ..."
 
 profile:
+    email_pending_title: "Bestätigung ausstehend"
+    email_pending_text: "Für %email% liegt ein Bestätigungslink in deinem Postfach. Bis zum Klick bleibt deine bisherige Adresse gültig."
+    email_pending_cancel: "Änderung abbrechen"
     title: "Mein Profil – Endlech.lu"
     heading: "Mein Profil"
     subtitle: "Verwalte deine persönlichen Daten"
@@ -1194,3 +1213,9 @@ open:
         metrics_json: "Kennzahlen als JSON"
         licence: "Der Datensatz steht unter"
         privacy_note: "E-Mail-Adressen und Telefonnummern sind bewusst nicht enthalten: Ein Sammelabzug davon wäre eine Adressliste, kein Barrierefreiheits-Datensatz."
+
+api:
+    token_invalid: "Das Token ist ungültig. Bitte melde dich erneut an."
+    token_expired: "Das Token ist abgelaufen. Bitte melde dich erneut an."
+    token_missing: "Authentifizierung erforderlich."
+    moderation_pending: "Danke! Dein Vorschlag ist eingegangen und wird geprüft, bevor er öffentlich erscheint."

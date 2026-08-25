@@ -334,6 +334,16 @@ Die Getter behalten ihre untypischen Namen (`isWheelchairAccessible()`,
 als rohe Strings), `phone`, `email`, `website`, `instagramUrl`, `facebookUrl`,
 `tiktokUrl`.
 
+**Standort** (seit 2026-08-24) — `latitude` (`decimal(10,8)`), `longitude`
+(`decimal(11,8)`), `nearbyStopsNote` (`longtext`), alle nullable.
+
+> **Warum ein Vorschlag Koordinaten führt, obwohl der Wizard sie nicht abfragt.**
+> Seit der Reparatur von BF-24 legt `POST /api/v1/restaurants` einen Vorschlag an
+> statt eines öffentlichen Eintrags. Die API nimmt Koordinaten entgegen und prüft
+> sie (±90/±180, AK-15) — ohne diese Spalten gingen sie zwischen Eingang und
+> Freigabe verloren. Über den Web-Wizard bleiben sie leer.
+> `AdminSuggestionController::approve()` überträgt sie mit.
+
 **Relation:** `suggestedBy` ManyToOne → `User`, `SET NULL`, unidirektional.
 
 **Konstanten:** `STATUS_PENDING`, `STATUS_APPROVED`, `STATUS_REJECTED`.
@@ -365,12 +375,26 @@ Backticks im Tabellennamen, weil `user` in MySQL reserviert ist. Implementiert
 | `isVerified` | `is_verified` | `tinyint(1)` | nein | – | E-Mail bestätigt |
 | `verificationToken` | `verification_token` | `varchar(64)` | ja | – | nach Bestätigung genullt |
 | `verificationTokenExpiresAt` | `verification_token_expires_at` | `datetime` | ja | – | 24 Stunden |
+| `pendingEmail` | `pending_email` | `varchar(180)` | ja | – | gewünschte, noch nicht bestätigte Adresse |
+| `pendingEmailToken` | `pending_email_token` | `varchar(64)` | ja | – | eigener Token, nicht der Registrierungstoken |
+| `pendingEmailTokenExpiresAt` | `pending_email_token_expires_at` | `datetime` | ja | – | 24 Stunden |
 | `avatarFilename` | `avatar_filename` | `varchar(255)` | ja | – | Datei unter `public/uploads/avatars/` |
 | `webauthnHandle` | `webauthn_handle` | `varchar(64)` | ja | **ja** | dauerhafte Kennung auf dem Gerät |
 | `createdAt` | `created_at` | `datetime` | nein | – | |
 
 **Relation:** `passkeys` OneToMany → `WebauthnCredential`, `orphanRemoval: true`,
 **kein cascade**, `OrderBy createdAt DESC`.
+
+⚠️ **`pendingEmail` trägt bewusst keine Eindeutigkeit.** Zwei Konten dürfen dieselbe
+Adresse gleichzeitig vormerken — wer zuerst bestätigt, bekommt sie. Ein Unique-Index
+hier wäre zugleich ein Auskunftskanal: Die Fehlermeldung verriete, dass eine fremde
+Adresse in einem anderen Konto vorgemerkt ist. Stattdessen prüft
+`EmailVerificationController::confirmEmailChange()` beim Einlösen gegen `email` und
+räumt den Vorgang ab, statt in eine Unique-Verletzung zu laufen.
+
+⚠️ **Getrennt vom Registrierungstoken.** Ein unbestätigtes Konto hat bereits einen
+`verificationToken` — würden sich beide Vorgänge ein Feld teilen, entwertete der eine
+den anderen.
 
 **Helper mit Geschäftslogik**
 

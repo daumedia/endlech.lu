@@ -42,6 +42,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $verificationTokenExpiresAt = null;
 
+    /**
+     * Eine gewünschte, noch nicht bestätigte E-Mail-Adresse.
+     *
+     * Bewusst getrennt von $email: Wäre die Änderung sofort wirksam, genügte eine
+     * gekaperte Sitzung, um ein Konto dauerhaft zu übernehmen – der rechtmäßige
+     * Inhaber käme nicht zurück, weil es kein Passwort-Zurücksetzen gibt. Die neue
+     * Adresse wandert deshalb erst hierher und wird bei der Bestätigung getauscht.
+     */
+    #[ORM\Column(length: 180, nullable: true)]
+    private ?string $pendingEmail = null;
+
+    #[ORM\Column(length: 64, nullable: true)]
+    private ?string $pendingEmailToken = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $pendingEmailTokenExpiresAt = null;
+
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $avatarFilename = null;
 
@@ -191,6 +208,59 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->verificationTokenExpiresAt = new \DateTimeImmutable('+24 hours');
 
         return $this->verificationToken;
+    }
+
+    public function getPendingEmail(): ?string
+    {
+        return $this->pendingEmail;
+    }
+
+    /**
+     * Merkt eine gewünschte Adresse vor und gibt den Bestätigungstoken zurück.
+     *
+     * Dieselbe Frist wie bei der Registrierung (24 Stunden) und dieselbe
+     * Token-Länge – ein zweites Verfahren daneben wäre eine zweite Fehlerquelle.
+     */
+    public function requestEmailChange(string $email): string
+    {
+        $this->pendingEmail = $email;
+        $this->pendingEmailToken = bin2hex(random_bytes(32));
+        $this->pendingEmailTokenExpiresAt = new \DateTimeImmutable('+24 hours');
+
+        return $this->pendingEmailToken;
+    }
+
+    public function getPendingEmailToken(): ?string
+    {
+        return $this->pendingEmailToken;
+    }
+
+    public function isPendingEmailTokenExpired(): bool
+    {
+        if ($this->pendingEmailTokenExpiresAt === null) {
+            return true;
+        }
+
+        return $this->pendingEmailTokenExpiresAt < new \DateTimeImmutable();
+    }
+
+    /**
+     * Übernimmt die vorgemerkte Adresse und räumt den Vorgang ab.
+     */
+    public function confirmEmailChange(): void
+    {
+        if ($this->pendingEmail !== null) {
+            $this->email = $this->pendingEmail;
+        }
+
+        $this->clearPendingEmail();
+    }
+
+    public function clearPendingEmail(): void
+    {
+        $this->pendingEmail = null;
+        $this->pendingEmailToken = null;
+        $this->pendingEmailTokenExpiresAt = null;
     }
 
     public function getAvatarFilename(): ?string

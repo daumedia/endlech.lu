@@ -154,7 +154,8 @@ contact:
 nearby_stops:
     title: "Ëffentlechen Transport an der Géigend"
     walking: "%meters% m"
-    no_stops: "Keng barrierefrä Haltestellen an der Géigend fonnt."
+    no_stops: "Keng Haltestell am Ëmkrees vu %meters% Meter fonnt."
+    source: "Informatioune vum Verkéiersverbond, ouni Ausso iwwer d’Barrièrefräiheet vun den Haltestellen."
 
 ordering:
     title: "Online bestellen"
@@ -482,7 +483,7 @@ admin:
         notes_hint: "Format: ok:Text oder warn:Text"
         add_note: "+ Hiweis derbäisetzen"
         location: "Standuert & Nahverkéier"
-        location_hint: "GPS-Koordinaten erlaben d'automatesch Sich no barrierefrä Haltestellen an der Géigend."
+        location_hint: "GPS-Koordinate erméiglechen déi automatesch Sich no Haltestellen an der Géigend."
         opening_hours: "Öffnungszäiten"
         opening_hours_hint: "Setz pro Dag esou vill Zäitfenstere bäi wéi néideg (z. B. Mëtteg an Owend). En Dag ouni Zäitfenster gëllt als zou."
         add_opening_slot: "＋ Zäitfenster derbäisetzen"
@@ -616,6 +617,13 @@ flash:
     profile_password_changed: "Passwuert erfollegräich geännert."
     profile_wrong_password: "Dat aktuellt Passwuert ass net korrekt."
     profile_avatar_deleted: "Profilbild erfollegräich ewechgeholl."
+    profile_email_pending: "Bal fäerdeg: Mir hunn e Bestätegungslink un %email% geschéckt. Deng bestoend Adress bleift gëlteg, bis du drop klacks."
+    profile_email_mail_failed: "D’Bestätegungs-E-Mail konnt net verschéckt ginn. Probéier w.e.g. méi spéit nach eng Kéier."
+    profile_email_cancelled: "D’Ännerung vun der E-Mail-Adress gouf ofgebrach."
+    profile_email_expired: "De Bestätegungslink ass ofgelaf. Gëff w.e.g. déi nei Adress nach eng Kéier an."
+    profile_email_taken: "Dës E-Mail-Adress gëtt mëttlerweil scho benotzt."
+    profile_email_changed: "Deng E-Mail-Adress gouf geännert. Mell dech w.e.g. mat der neier Adress un."
+    profile_password_rate_limited: "Ze vill Versich. Waart w.e.g. 15 Minutten, ier du d’Passwuert nach eng Kéier änners."
     partner_waitlist_submitted: "Bal fäerdeg! Bestätegt w.e.g. de Link an Ärer E-Mail."
     partner_email_failed: "Är Umeldung ass gespäichert, mee d'Bestätegungsmail konnt net verschéckt ginn. Mellt Iech w.e.g. bei eis."
     partner_rate_limited: "Dir hutt a kuerzer Zäit méi Umeldunge geschéckt. Probéiert w.e.g. an enger Stonn nach eng Kéier."
@@ -639,6 +647,14 @@ email:
     verify_button: "E-Mail bestätegen"
     verify_expiry: "Dëse Link ass 24 Stonnen gëlteg. Wann s du dech net bei Endlech.lu registréiert hues, kanns du dës E-Mail ignoréieren."
     verify_fallback: "Wann de Button net funktionéiert, kopéier dëse Link an däi Browser:"
+    email_change_subject: "Bestäteg deng nei E-Mail-Adress"
+    email_change_title: "Nei E-Mail-Adress bestätegen"
+    email_change_text: "Du wëlls d’E-Mail-Adress vun dengem Endlech.lu-Kont vu %old% op %new% änneren. Bestäteg w.e.g. déi nei Adress mat engem Klick:"
+    email_change_button: "Nei Adress bestätegen"
+    email_change_notice_subject: "Ännerung vun denger E-Mail-Adress ugefrot"
+    email_change_notice_title: "Ännerung ugefrot"
+    email_change_notice_text: "Fir däin Endlech.lu-Kont gouf déi nei E-Mail-Adress %new% ugefrot. Sou laang se net bestätegt ass, bleift dës Adress gëlteg."
+    email_change_notice_warning: "Waars du dat net? Da wiessel direkt däi Passwuert — een huet Zougrëff op däi Kont. Ouni Bestätegung vun der neier Adress ännert sech näischt."
     partner_confirm_subject: "Bestätegt Är Umeldung op der Waardelëscht"
     partner_confirm_title: "Umeldung bestätegen"
     partner_confirm_greeting: "Moien %name%!"
@@ -778,6 +794,9 @@ form:
     suggestion_notes_placeholder: "z.B. Agang ouni Trapen, Parkplaz fir Rollstullfuerer virgesinn ..."
 
 profile:
+    email_pending_title: "Bestätegung ausstoend"
+    email_pending_text: "Fir %email% läit e Bestätegungslink an dengem Postfach. Bis zum Klick bleift deng bestoend Adress gëlteg."
+    email_pending_cancel: "Ännerung ofbriechen"
     title: "Mäi Profil – Endlech.lu"
     heading: "Mäi Profil"
     subtitle: "Verwalte deng perséinlech Donnéeën"
@@ -1194,3 +1213,9 @@ open:
         metrics_json: "Zuelen als JSON"
         licence: "Den Datesaz steet ënner"
         privacy_note: "E-Mail-Adressen an Telefonsnummere sinn bewosst net dran: E Sammelofzuch dovunner wier eng Adresslëscht, kee Barrièrefräiheets-Datesaz."
+
+api:
+    token_invalid: "D’Token ass ongëlteg. Mell dech w.e.g. nach eng Kéier un."
+    token_expired: "D’Token ass ofgelaf. Mell dech w.e.g. nach eng Kéier un."
+    token_missing: "Authentifikatioun néideg."
+    moderation_pending: "Merci! Däi Virschlag ass ukomm a gëtt gepréift, ier en ëffentlech erschéngt."

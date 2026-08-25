@@ -1,6 +1,6 @@
 # B03 · Passkey-Anmeldung & -Verwaltung — Spezifikation
 
-Status: `rekonstruiert` · Stand: 2026-08-23 · **Rückerfassung aus dem Bestand**
+Status: `approved` · Stand: 2026-08-23 · **Rückerfassung aus dem Bestand**
 
 ## Zweck
 

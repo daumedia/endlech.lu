@@ -17,8 +17,15 @@ zwei Befunde mit Grad *mittel*. Die Reparatur liegt committet auf
 `fix/b01-registrierung-qa` und ist **noch nicht ausgeliefert** — für Nutzer ist die
 Sackgasse offen, bis das gemerged ist.
 
-Nächster Schritt: `/sdd-deploy B01`. Danach `/sdd-qa B02` für das nächste
-Bestandsfeature; das neue Feature beginnt mit `/sdd-spec 01`.
+**2026-08-24 · B02 abgenommen** nach Reparatur: Anmeldung sperrt nach fünf Fehlversuchen,
+Abmelden verlangt ein Token. 16 von 17 Kriterien, nur *mittel*/*niedrig* offen.
+
+**2026-08-24 · B03 abgenommen** — der Passkey-Ablauf wurde im echten Browser mit einem
+virtuellen WebAuthn-Authenticator (CDP) durchgespielt, inklusive Anmeldung ohne
+E-Mail-Eingabe. Ein Befund *mittel* (BF-18), drei Kriterien nicht prüfbar.
+
+Nächster Schritt: `/sdd-build B24` mit BF-68 — **die Erfassung pausiert**, bis der Open Redirect repariert und erneut geprüft ist. Die Reparaturen von B01, B02, B04 und B23 warten auf
+`/sdd-deploy`; das neue Feature `01` beginnt mit `/sdd-spec 01`.
 
 **Zwei Namensräume:** Einträge mit Präfix `B` sind **Bestand** — gebaut, bevor die
 SDD-Kette da war, und rückwirkend erfasst. Einträge **ohne** Präfix (`01`, `02`, …)
@@ -37,29 +44,29 @@ Eingang von `sdd-build`. Der Weg ist: `bestand` → `/sdd-erfassen BNN` →
 |---|---|---|---|---|---|
 | 01 | Betroffenenrechte: Konto löschen, Daten exportieren, Passwort zurücksetzen | P0 | roadmap | B01, B04, B19 | 2026-08-23 · aus BF-04 herausgelöst |
 | B01 | Registrierung & E-Mail-Bestätigung | P0 | **approved** | — | 2026-08-23 · QA³: 17/20, nur mittlere Befunde offen |
-| B02 | Anmeldung mit Passwort | P0 | rekonstruiert | B01 | 2026-08-23 |
-| B03 | Passkey-Anmeldung & -Verwaltung | P0 | rekonstruiert | B01, B02 | 2026-08-23 |
-| B04 | Profil, Avatar & eigene Einreichungen | P0 | rekonstruiert | B01, B11 | 2026-08-23 |
-| B05 | Restaurantsuche, Filter & Sortierung | P0 | rekonstruiert | B07, B08 | 2026-08-23 |
-| B06 | Restaurant-Detailseite | P0 | rekonstruiert | B07, B08, B09, B10 | 2026-08-23 |
-| B07 | Öffnungszeiten | P1 | rekonstruiert | — | 2026-08-23 |
-| B08 | Küchen-Typen | P1 | rekonstruiert | — | 2026-08-23 |
-| B09 | Restaurantfotos & Galerie | P1 | rekonstruiert | B20 | 2026-08-23 |
-| B10 | Haltestellen in der Nähe | P2 | rekonstruiert | — | 2026-08-23 |
-| B11 | Restaurant vorschlagen (Wizard) | P0 | rekonstruiert | B01 | 2026-08-23 |
-| B12 | Startseite | P1 | rekonstruiert | B05 | 2026-08-23 |
-| B13 | Statische Inhaltsseiten | P2 | rekonstruiert | — | 2026-08-23 |
-| B14 | Partner-Warteliste | P0 | rekonstruiert | — | 2026-08-23 |
-| B15 | Organisations-Wartelisten | P0 | rekonstruiert | B14 | 2026-08-23 |
-| B16 | Transparenzseite `/open` | P1 | rekonstruiert | B18 | 2026-08-23 |
-| B17 | Offener Datensatz & Kennzahl-Endpunkte | P1 | rekonstruiert | B18 | 2026-08-23 |
-| B18 | Finanzposten & Kennzahl-Snapshots | P1 | rekonstruiert | B19 | 2026-08-23 |
-| B19 | Admin-Zugang & Dashboard | P0 | rekonstruiert | B02 | 2026-08-23 |
-| B20 | Restaurantverwaltung (Admin) | P0 | rekonstruiert | B19 | 2026-08-23 |
-| B21 | Vorschläge prüfen (Admin) | P0 | rekonstruiert | B19, B11 | 2026-08-23 |
-| B22 | Wartelisten-Verwaltung (Admin) | P1 | rekonstruiert | B19, B14, B15 | 2026-08-23 |
-| B23 | REST-API v1 (iOS-Backend) | P0 | rekonstruiert | B01, B05 | 2026-08-23 |
-| B24 | Mehrsprachigkeit | P1 | rekonstruiert | — | 2026-08-23 |
+| B02 | Anmeldung mit Passwort | P0 | **approved** | B01 | 2026-08-24 · QA²: 16/17, repariert |
+| B03 | Passkey-Anmeldung & -Verwaltung | P0 | **approved** | B01, B02 | 2026-08-24 · QA: 16/20, 3 nicht prüfbar |
+| B04 | Profil, Avatar & eigene Einreichungen | P0 | **approved** | B01, B11 | 2026-08-24 · QA 2. Durchlauf: 23/24, drei Befunde *mittel* |
+| B05 | Restaurantsuche, Filter & Sortierung | P0 | **approved** | B07, B08 | 2026-08-24 · QA: 24/24, zwei Befunde *niedrig* |
+| B06 | Restaurant-Detailseite | P0 | **approved** | B07, B08, B09, B10 | 2026-08-24 · QA: 23/23, **kein Befund** |
+| B07 | Öffnungszeiten | P1 | **approved** | — | 2026-08-24 · QA: 17/17, ein Befund *niedrig* |
+| B08 | Küchen-Typen | P1 | **approved** | — | 2026-08-24 · QA: 16/16, zwei Befunde *niedrig* |
+| B09 | Restaurantfotos & Galerie | P1 | **approved** | B20 | 2026-08-24 · QA: 18/18, ein Befund *mittel* |
+| B10 | Haltestellen in der Nähe | P2 | **approved** | — | 2026-08-24 · QA 2. Durchlauf: 24/24 |
+| B11 | Restaurant vorschlagen (Wizard) | P0 | **approved** | B01 | 2026-08-24 · QA: 18/19, ein Befund *mittel* |
+| B12 | Startseite | P1 | **approved** | B05 | 2026-08-24 · QA²: 15/15, BF-64 repariert |
+| B13 | Statische Inhaltsseiten | P2 | **approved** | — | 2026-08-24 · QA: 14/14, ein Befund *mittel* |
+| B14 | Partner-Warteliste | P0 | **approved** | — | 2026-08-24 · QA: 28/28, ein Befund *mittel* |
+| B15 | Organisations-Wartelisten | P0 | **approved** | B14 | 2026-08-24 · QA: 27/27, ein Befund *niedrig* |
+| B16 | Transparenzseite `/open` | P1 | **approved** | B18 | 2026-08-24 · QA: 29/29, ein Befund *mittel* |
+| B17 | Offener Datensatz & Kennzahl-Endpunkte | P1 | **approved** | B18 | 2026-08-24 · QA: 25/25, drei Befunde *niedrig* |
+| B18 | Finanzposten & Kennzahl-Snapshots | P1 | **approved** | B19 | 2026-08-24 · QA: 29/29, ein Befund *mittel* |
+| B19 | Admin-Zugang & Dashboard | P0 | **approved** | B02 | 2026-08-24 · QA: 17/17, ein Befund *mittel* |
+| B20 | Restaurantverwaltung (Admin) | P0 | **approved** | B19 | 2026-08-24 · QA: 19/20, ein Befund *mittel* |
+| B21 | Vorschläge prüfen (Admin) | P0 | **approved** | B19, B11 | 2026-08-24 · QA: 20/20, ein Befund *mittel* |
+| B22 | Wartelisten-Verwaltung (Admin) | P1 | **approved** | B19, B14, B15 | 2026-08-24 · QA: 30/30, ein Befund *niedrig* |
+| B23 | REST-API v1 (iOS-Backend) | P0 | **approved** | B01, B05 | 2026-08-24 · QA 2. Durchlauf: 34/35, drei Befunde *mittel/niedrig* |
+| B24 | Mehrsprachigkeit | P1 | **review** | — | 2026-08-25 · QA: 16/16 bestätigt, **BF-68 *hoch*** |
 | B25 | PWA & mobile Navigation | P1 | rekonstruiert | — | 2026-08-23 |
 | B26 | Cookie-Banner | P2 | rekonstruiert | — | 2026-08-23 |
 

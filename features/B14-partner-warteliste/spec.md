@@ -151,8 +151,12 @@ Teilt sich `WaitlistConfirmationService`, `WaitlistEntryInterface`,
   B01/FB-09 — hier mit demselben Angriffsweg.
 - **FB-05 · Keine Auskunftsfunktion.** Wer wissen will, welche Daten über ihn
   gespeichert sind, hat keinen Weg dorthin.
-- **FB-06 · Der Freitext `message` wird nicht begrenzt geprüft.** Er landet unverändert
-  in der internen Mail und in der Verwaltungsansicht.
+- ~~**FB-06 · Der Freitext `message` wird nicht begrenzt geprüft.**~~ **Entfällt —
+  2026-08-24 widerlegt.** `PartnerWaitlistType.php:77` trägt
+  `Length(max: 2000)`; gemessen: 20.000 Zeichen → **422**. Alle fünf Textfelder haben
+  Längengrenzen (180/120/180/40/120/2000). Der Eintrag bleibt durchgestrichen stehen,
+  damit nachvollziehbar ist, dass hier einmal eine Lücke vermutet wurde, die es nicht
+  gibt. In der Verwaltungsansicht wird der Text zudem maskiert — kein XSS.
 
 ## Offene Fragen
 
@@ -160,8 +164,10 @@ Teilt sich `WaitlistConfirmationService`, `WaitlistEntryInterface`,
   jeder Mail wäre der übliche Weg und deckte zugleich FB-05 teilweise ab. — Betreiber
 - **OF-02** · Soll `findPendingOlderThan()` an einen Cron gehängt werden (FB-02)? Ein
   Befehl dafür existiert nicht; `app:metrics:snapshot` zeigt das Muster. — Betreiber
-- **OF-03** · Sollen beide Wartelisten getrennte Kontingente bekommen (AK-23)? —
-  Betreiber
+- **OF-03** · Sollen beide Wartelisten getrennte Kontingente bekommen (AK-23)?
+  **Gemessen am 2026-08-24 (BF-38):** Nach fünf Partner-Submits liefert das
+  Organisationsformular 429. Die Frage ist damit nicht mehr, *ob* es passiert, sondern
+  ob es so bleiben soll. — Betreiber
 
 ## Decision Log
 

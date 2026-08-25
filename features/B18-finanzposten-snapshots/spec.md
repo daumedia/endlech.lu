@@ -44,8 +44,15 @@ Umgekehrt hängen B16 und B17 daran.
 - **AK-04** · Angenommen, eine Kategorie wird gewählt, wenn der Posten gespeichert wird,
   dann folgt die Richtung (`type`) automatisch aus der Kategorie — es gibt **keinen**
   `setType()`.
-- **AK-05** · Angenommen, eine Kategorie führt keine Stückzahl, wenn sie gewählt wird,
-  dann wird ein zuvor gesetztes `quantity` geleert.
+- **AK-05** · Angenommen, eine Kategorie führt keine Stückzahl, wenn trotzdem eine
+  übermittelt wird, dann antwortet der Server mit **422** und einem Feldfehler an
+  `quantity` (`finance.quantity_not_allowed`, `FinanceEntryType.php:110`). Unabhängig
+  davon räumt `setCategory()` ein gesetztes `quantity` weg (`FinanceEntry.php:128`) —
+  das greift, wenn die Kategorie programmatisch gewechselt wird.
+  *(**Berichtigt am 2026-08-24.** Die ursprüngliche Rekonstruktion nannte nur die
+  Entity-Hälfte: „dann wird ein zuvor gesetztes `quantity` geleert." Gemessen liefert
+  das Formular vorher einen 422 — die bessere Lösung, weil ein stilles Leeren den Admin
+  glauben ließe, die Stückzahl sei gespeichert.)*
 - **AK-06** · Angenommen, ein Betrag wird eingegeben, wenn er gespeichert ist, dann
   steht er mit **zwei** Nachkommastellen in der Datenbank — unabhängig davon, ob das
   Formular `42.5` oder `42.50` lieferte.

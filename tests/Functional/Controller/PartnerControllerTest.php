@@ -201,4 +201,62 @@ final class PartnerControllerTest extends AbstractWebTestCase
 
         return $repository->findOneBy([], ['id' => 'DESC']);
     }
+
+    /**
+     * AK-15: Die interne Meldung ans Team ist fest auf Deutsch — unabhängig davon,
+     * in welcher Sprache der Interessent bestätigt hat. Sonst käme die Meldung an
+     * ein deutschsprachiges Team auf Französisch, weil ein Gemeindesekretär den
+     * Link auf der französischen Fassung angeklickt hat.
+     */
+    public function testAk15InterneMeldungBleibtDeutschBeiFranzoesischerBestaetigung(): void
+    {
+        $client = static::createClient();
+        $token = $this->submitAndGetToken($client);
+
+        $client->request('GET', '/fr/partner/confirmation/' . $token);
+
+        self::assertResponseIsSuccessful();
+        self::assertEmailCount(1);
+
+        $mail = self::getMailerMessage();
+        self::assertStringContainsString('Partner-Anmeldung', $mail->getSubject());
+    }
+
+    /**
+     * AK-15, zweite Hälfte: Die Adresse des Interessenten steht als Reply-To, damit
+     * eine Antwort aus dem Postfach heraus beim richtigen Empfänger landet.
+     */
+    public function testAk15InterneMeldungTraegtDenInteressentenAlsReplyTo(): void
+    {
+        $client = static::createClient();
+        $token = $this->submitAndGetToken($client);
+
+        $client->request('GET', self::LOCALE . '/partner/confirmation/' . $token);
+
+        $replyTo = self::getMailerMessage()->getReplyTo();
+        self::assertNotEmpty($replyTo, 'Ohne Reply-To geht die Antwort an die Absenderadresse der Plattform.');
+    }
+
+    /**
+     * AK-23 / BF-38: Beide Wartelisten beziehen denselben Limiter. Hinter einer
+     * geteilten IP — einer Gemeindeverwaltung etwa — blockieren sich damit
+     * unabhängige Interessenten gegenseitig.
+     *
+     * In `when@test` steht das Limit auf 10000, der Grenzwert ist hier also nicht
+     * messbar. Geprüft wird deshalb die Ursache: dass beide Controller auf
+     * denselben Dienst zeigen. Der Test schlägt fehl, sobald sie getrennt werden —
+     * und genau dann gehört der Befund geschlossen.
+     */
+    public function testAk23BeideWartelistenTeilenSichDenLimiter(): void
+    {
+        $partner = file_get_contents(__DIR__ . '/../../../src/Controller/PartnerController.php');
+        $organisation = file_get_contents(__DIR__ . '/../../../src/Controller/OrganisationController.php');
+
+        self::assertStringContainsString("limiter.partner_waitlist", $partner);
+        self::assertStringContainsString(
+            "limiter.partner_waitlist",
+            $organisation,
+            'Sobald die Organisationsliste einen eigenen Limiter hat, ist BF-38 behoben — dieser Test darf dann fallen.',
+        );
+    }
 }

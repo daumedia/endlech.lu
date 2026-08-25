@@ -4,9 +4,10 @@ namespace App\Controller\Api\V1;
 
 use App\Api\RestaurantTransformer;
 use App\Entity\Restaurant;
+use App\Entity\RestaurantSuggestion;
 use App\Entity\User;
 use App\Enum\Language;
-use App\Repository\CuisineRepository;
+use App\Enum\TriState;
 use App\Repository\RestaurantRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
@@ -16,6 +17,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route('/restaurants')]
 #[OA\Tag(name: 'Restaurants')]
@@ -36,7 +38,7 @@ final class RestaurantApiController extends AbstractController
         private readonly RestaurantRepository $restaurants,
         private readonly RestaurantTransformer $transformer,
         private readonly EntityManagerInterface $entityManager,
-        private readonly CuisineRepository $cuisines,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -72,9 +74,21 @@ final class RestaurantApiController extends AbstractController
         ]);
     }
 
+    /**
+     * Nimmt einen Restaurantvorschlag entgegen.
+     *
+     * Legt bewusst KEIN Restaurant an, sondern einen `RestaurantSuggestion` — denselben
+     * Datensatz, den auch der Web-Wizard erzeugt, und der dieselbe Freigabe durch einen
+     * Admin durchläuft. Vorher entstand hier sofort ein öffentlicher Eintrag: Er stand
+     * augenblicklich in der Restaurantliste, auf einer Detailseite, in den
+     * veröffentlichten Kennzahlen von /open und im Datensatz unter CC BY 4.0 — ohne dass
+     * jemand ihn gesehen hatte. Zwei Aufrufe genügten, um die veröffentlichte
+     * Verifizierungsquote von 27,3 auf 23,1 Prozent zu drücken.
+     */
     #[Route('', name: 'api_v1_restaurants_create', methods: ['POST'])]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     #[Security(name: 'Bearer')]
+    #[OA\Response(response: 202, description: 'Vorschlag angenommen, wartet auf Freigabe')]
     public function create(Request $request): JsonResponse
     {
         $payload = json_decode($request->getContent(), true);
@@ -101,6 +115,15 @@ final class RestaurantApiController extends AbstractController
             $violations['longitude'] = $lngError;
         }
 
+        // Die Küchen-Typen landen als Freitext im Vorschlag; die Spalte fasst 80
+        // Zeichen. Ohne diese Prüfung schlug die Einfügung mit einem 500er aus der
+        // Datenbankschicht fehl — und jeder davon erzeugt in Produktion einen
+        // Sentry-Bericht.
+        $cuisines = $this->cuisineNames($payload);
+        if (mb_strlen($cuisines) > 80) {
+            $violations['cuisines'] = 'Die Küchen-Typen dürfen zusammen höchstens 80 Zeichen lang sein.';
+        }
+
         if ($violations !== []) {
             return new JsonResponse([
                 'error' => ['code' => 422, 'message' => 'Validierung fehlgeschlagen.', 'violations' => $violations],
@@ -110,17 +133,25 @@ final class RestaurantApiController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
 
-        $restaurant = new Restaurant();
-        $restaurant->setName($name);
-        $restaurant->setCity($city);
-        $restaurant->setSubmittedBy($user);
-        $restaurant->setIsVerified(false);
-        $this->applyOptionalData($restaurant, $payload);
+        $suggestion = new RestaurantSuggestion();
+        $suggestion->setName($name);
+        $suggestion->setCity($city);
+        $suggestion->setCuisine($cuisines);
+        $suggestion->setSuggestedBy($user);
+        $suggestion->setStatus(RestaurantSuggestion::STATUS_PENDING);
+        $this->applyOptionalData($suggestion, $payload);
 
-        $this->entityManager->persist($restaurant);
+        $this->entityManager->persist($suggestion);
         $this->entityManager->flush();
 
-        return new JsonResponse($this->transformer->detail($restaurant), 201);
+        // 202, nicht 201: Die Anfrage ist angenommen, aber die Ressource entsteht
+        // erst mit der Freigabe durch einen Admin. Ein 201 mit Location-Header
+        // behauptete etwas, das es noch nicht gibt.
+        return new JsonResponse([
+            'status' => 'pending',
+            'id' => $suggestion->getId(),
+            'message' => $this->translator->trans('api.moderation_pending'),
+        ], 202);
     }
 
     #[Route('/{id}', name: 'api_v1_restaurants_show', methods: ['GET'], requirements: ['id' => '\d+'])]
@@ -146,42 +177,52 @@ final class RestaurantApiController extends AbstractController
      *
      * @param array<string, mixed> $payload
      */
-    private function applyOptionalData(Restaurant $restaurant, array $payload): void
+    /**
+     * Überträgt die optionalen Angaben auf den Vorschlag.
+     *
+     * Die dreiwertige Zuordnung ist kein Beiwerk: Der Vorschlag unterscheidet
+     * „ja", „nein" und „weiß nicht" (siehe TriState), und für eine
+     * Barrierefreiheits-Plattform ist der Unterschied zwischen „gibt es nicht" und
+     * „wurde nicht angegeben" wesentlich. Vorher setzte diese Methode jedes nicht
+     * übermittelte Merkmal auf `false` — daraus wurde ein „nein", das niemand
+     * behauptet hatte.
+     */
+    private function applyOptionalData(RestaurantSuggestion $suggestion, array $payload): void
     {
         if (isset($payload['emoji']) && \is_string($payload['emoji']) && $payload['emoji'] !== '') {
-            $restaurant->setEmoji(mb_substr($payload['emoji'], 0, 10));
+            $suggestion->setEmoji(mb_substr($payload['emoji'], 0, 10));
         }
 
         $access = (array) ($payload['accessibility'] ?? []);
-        $restaurant->setIsWheelchairAccessible((bool) ($access['wheelchairAccessible'] ?? false));
-        $restaurant->setHasAccessibleToilet((bool) ($access['accessibleToilet'] ?? false));
-        $restaurant->setAllowsAssistanceDogs((bool) ($access['assistanceDogs'] ?? false));
-        $restaurant->setHasBrightLighting((bool) ($access['brightLighting'] ?? false));
-        $restaurant->setHasChangingTable((bool) ($access['changingTable'] ?? false));
-        $restaurant->setHasDisabledParking((bool) ($access['disabledParking'] ?? false));
+        $suggestion->setIsWheelchairAccessible($this->triState($access, 'wheelchairAccessible'));
+        $suggestion->setHasAccessibleToilet($this->triState($access, 'accessibleToilet'));
+        $suggestion->setAllowsAssistanceDogs($this->triState($access, 'assistanceDogs'));
+        $suggestion->setHasBrightLighting($this->triState($access, 'brightLighting'));
+        $suggestion->setHasChangingTable($this->triState($access, 'changingTable'));
+        $suggestion->setHasDisabledParking($this->triState($access, 'disabledParking'));
 
         $dietary = (array) ($payload['dietary'] ?? []);
-        $restaurant->setIsVegan((bool) ($dietary['vegan'] ?? false));
-        $restaurant->setIsVegetarian((bool) ($dietary['vegetarian'] ?? false));
-        $restaurant->setIsHalal((bool) ($dietary['halal'] ?? false));
+        $suggestion->setIsVegan($this->triState($dietary, 'vegan'));
+        $suggestion->setIsVegetarian($this->triState($dietary, 'vegetarian'));
+        $suggestion->setIsHalal($this->triState($dietary, 'halal'));
 
         $payment = (array) ($payload['payment'] ?? []);
-        $restaurant->setAcceptsCash((bool) ($payment['cash'] ?? false));
-        $restaurant->setAcceptsCard((bool) ($payment['card'] ?? false));
-        $restaurant->setAcceptsPayconiq((bool) ($payment['payconiq'] ?? false));
+        $suggestion->setAcceptsCash($this->triState($payment, 'cash'));
+        $suggestion->setAcceptsCard($this->triState($payment, 'card'));
+        $suggestion->setAcceptsPayconiq($this->triState($payment, 'payconiq'));
 
         $contact = (array) ($payload['contact'] ?? []);
-        $restaurant->setPhone($this->nullableString($contact['phone'] ?? null));
-        $restaurant->setEmail($this->nullableString($contact['email'] ?? null));
-        $restaurant->setWebsite($this->nullableString($contact['website'] ?? null));
-        $restaurant->setInstagramUrl($this->nullableString($contact['instagramUrl'] ?? null));
-        $restaurant->setFacebookUrl($this->nullableString($contact['facebookUrl'] ?? null));
-        $restaurant->setTiktokUrl($this->nullableString($contact['tiktokUrl'] ?? null));
+        $suggestion->setPhone($this->nullableString($contact['phone'] ?? null));
+        $suggestion->setEmail($this->nullableString($contact['email'] ?? null));
+        $suggestion->setWebsite($this->nullableString($contact['website'] ?? null));
+        $suggestion->setInstagramUrl($this->nullableString($contact['instagramUrl'] ?? null));
+        $suggestion->setFacebookUrl($this->nullableString($contact['facebookUrl'] ?? null));
+        $suggestion->setTiktokUrl($this->nullableString($contact['tiktokUrl'] ?? null));
 
         $location = (array) ($payload['location'] ?? []);
-        $restaurant->setLatitude($this->coordinateString($location['latitude'] ?? null));
-        $restaurant->setLongitude($this->coordinateString($location['longitude'] ?? null));
-        $restaurant->setNearbyStopsNote($this->nullableString($location['nearbyStopsNote'] ?? null));
+        $suggestion->setLatitude($this->coordinateString($location['latitude'] ?? null));
+        $suggestion->setLongitude($this->coordinateString($location['longitude'] ?? null));
+        $suggestion->setNearbyStopsNote($this->nullableString($location['nearbyStopsNote'] ?? null));
 
         // Nur gültige Sprachcodes übernehmen.
         $languages = array_values(array_filter(
@@ -191,15 +232,40 @@ final class RestaurantApiController extends AbstractController
             ),
         ));
         if ($languages !== []) {
-            $restaurant->setSpokenLanguages($languages);
+            $suggestion->setSpokenLanguages($languages);
         }
 
-        // Küchen-Typen per Name (findet bestehende oder legt neue an).
-        foreach ((array) ($payload['cuisines'] ?? []) as $cuisineName) {
-            if (\is_string($cuisineName) && trim($cuisineName) !== '') {
-                $restaurant->addCuisine($this->cuisines->findOrCreateByName(trim($cuisineName)));
-            }
+        $suggestion->setNotes($this->nullableString($payload['notes'] ?? null));
+    }
+
+    /**
+     * Nicht übermittelt heißt „weiß nicht", nicht „nein".
+     */
+    private function triState(array $daten, string $feld): TriState
+    {
+        if (!\array_key_exists($feld, $daten) || $daten[$feld] === null) {
+            return TriState::UNKNOWN;
         }
+
+        return $daten[$feld] ? TriState::YES : TriState::NO;
+    }
+
+    /**
+     * Die Küchen-Typen kommen als Liste und werden als Freitext abgelegt.
+     *
+     * Bewusst KEIN findOrCreateByName() mehr: Damit legte jeder Aufruf dauerhaft
+     * neue Einträge in der öffentlichen Filterauswahl der Website an — gemessen
+     * wurden „Pizzza" und „JETZT BEI UNS BESTELLEN 0900-123456". Welcher echte
+     * Küchen-Typ gemeint ist, entscheidet jetzt der Admin bei der Freigabe.
+     */
+    private function cuisineNames(array $payload): string
+    {
+        $namen = array_values(array_filter(array_map(
+            static fn ($name) => \is_string($name) ? trim($name) : '',
+            (array) ($payload['cuisines'] ?? []),
+        ), static fn (string $name) => $name !== ''));
+
+        return implode(', ', $namen);
     }
 
     private function nullableString(mixed $value): ?string

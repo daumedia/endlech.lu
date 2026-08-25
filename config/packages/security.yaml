@@ -45,12 +45,26 @@ security:
                 check_path: app_login
                 default_target_path: app_home
                 enable_csrf: true
+            # Ohne diese drei Zeilen nimmt die Anmeldung beliebig viele Fehlversuche
+            # entgegen – nachgestellt mit 20 Versuchen gegen das Admin-Konto, alle
+            # angenommen. Ausgerechnet die API war längst gedrosselt (api_login,
+            # 5/Minute): geschützt war der Weg, den eine App nimmt, nicht der, den ein
+            # Browser nimmt. Dahinter steht ein Verwaltungszugang an genau einem Konto,
+            # ohne zweite Stufe.
+            login_throttling:
+                max_attempts: 5          # je Kombination aus IP und Benutzername
+                interval: '15 minutes'
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 604800 # 1 week
             logout:
                 path: app_logout
                 target: app_home
+                # Ohne das genügte ein <img src="/de/logout"> auf einer fremden Seite,
+                # um einen angemeldeten Besucher abzumelden. Der Schaden ist gering,
+                # aber es ist kein Schutz. Verlangt einen POST mit Token – der
+                # Abmeldelink in base.html.twig ist deshalb ein Formular.
+                enable_csrf: true
 
     access_control:
         # API (/api/v1) – locale-frei, reihenfolgeabhängig: spezifisch vor allgemein.
@@ -70,6 +84,13 @@ security:
 
 when@test:
     security:
+        # Ohne diesen Wert scheitert jeder Test, der mehr als fünf Anmeldungen
+        # durchspielt – dieselbe Vorsichtsmaßnahme wie bei den Limitern in
+        # framework.yaml.
+        firewalls:
+            main:
+                login_throttling:
+                    max_attempts: 10000
         password_hashers:
             Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
                 algorithm: auto

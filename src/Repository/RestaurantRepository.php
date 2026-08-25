@@ -19,20 +19,31 @@ class RestaurantRepository extends ServiceEntityRepository
     }
 
     /**
+     * Die bestbewerteten Häuser für die Startseite.
+     *
+     * ⚠️ **`Paginator` ist hier Pflicht, nicht Bequemlichkeit.** Die beiden
+     * `addSelect()` holen Öffnungszeiten und Küchen mit (gegen N+1) — dadurch
+     * erzeugt jedes Restaurant so viele SQL-Zeilen, wie es Kombinationen aus
+     * beidem hat. `setMaxResults()` begrenzt aber die **Zeilen**, nicht die
+     * Entities: Das bestbewertete Haus allein brachte 14 Zeilen mit, und
+     * `findTopRated(6)` lieferte dadurch **ein** Restaurant statt sechs
+     * (QA B12, BF-64). Der zweite Parameter `$fetchJoinCollection` ist genau
+     * für diesen Fall da.
+     *
      * @return Restaurant[]
      */
     public function findTopRated(int $limit = 6): array
     {
-        return $this->createQueryBuilder('r')
+        $qb = $this->createQueryBuilder('r')
             ->leftJoin('r.openingHours', 'oh')
             ->addSelect('oh')
             ->leftJoin('r.cuisines', 'c')
             ->addSelect('c')
             ->orderBy('r.rating', 'DESC')
             ->addOrderBy('r.name', 'ASC')
-            ->setMaxResults($limit)
-            ->getQuery()
-            ->getResult();
+            ->setMaxResults($limit);
+
+        return iterator_to_array(new Paginator($qb->getQuery(), true), false);
     }
 
     public function findPaginated(string $sort = 'rating', int $page = 1, int $limit = 6, array $filters = []): Paginator

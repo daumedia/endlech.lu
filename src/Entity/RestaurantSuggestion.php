@@ -93,6 +93,22 @@ class RestaurantSuggestion
     #[ORM\Column(length: 500, nullable: true)]
     private ?string $tiktokUrl = null;
 
+    /**
+     * Standort, sofern der Einreicher ihn kennt.
+     *
+     * Der Web-Wizard fragt ihn nicht ab; die REST-API nimmt ihn entgegen und prüft
+     * ihn (±90/±180). Ohne diese Felder ginge die Angabe zwischen Eingang und
+     * Freigabe verloren.
+     */
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 8, nullable: true)]
+    private ?string $latitude = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 11, scale: 8, nullable: true)]
+    private ?string $longitude = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $nearbyStopsNote = null;
+
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $notes = null;
 
@@ -405,6 +421,42 @@ class RestaurantSuggestion
     public function setTiktokUrl(?string $tiktokUrl): static
     {
         $this->tiktokUrl = $tiktokUrl;
+
+        return $this;
+    }
+
+    public function getLatitude(): ?string
+    {
+        return $this->latitude;
+    }
+
+    public function setLatitude(?string $latitude): static
+    {
+        $this->latitude = $latitude;
+
+        return $this;
+    }
+
+    public function getLongitude(): ?string
+    {
+        return $this->longitude;
+    }
+
+    public function setLongitude(?string $longitude): static
+    {
+        $this->longitude = $longitude;
+
+        return $this;
+    }
+
+    public function getNearbyStopsNote(): ?string
+    {
+        return $this->nearbyStopsNote;
+    }
+
+    public function setNearbyStopsNote(?string $nearbyStopsNote): static
+    {
+        $this->nearbyStopsNote = $nearbyStopsNote;
 
         return $this;
     }

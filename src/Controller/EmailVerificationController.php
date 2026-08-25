@@ -68,6 +68,64 @@ final class EmailVerificationController extends AbstractController
         return $this->redirectToRoute('app_login');
     }
 
+    /**
+     * Bestätigt eine im Profil gewünschte neue Adresse (QA B04, BUG-15).
+     *
+     * Bewusst ohne Anmeldepflicht: Der Token IST der Nachweis, und zwar genau
+     * der, um den es geht – Zugriff auf das neue Postfach. Wer den Link im
+     * Postfach anklickt, sitzt oft an einem Gerät ohne offene Sitzung; eine
+     * Anmeldepflicht machte den Vorgang dort unbenutzbar, ohne etwas zu sichern.
+     *
+     * Zwei Segmente, deshalb kein Konflikt mit /verify/{token}.
+     */
+    #[Route('/verify/email-change/{token}', name: 'app_email_change_confirm', requirements: ['token' => '[a-f0-9]{64}'])]
+    public function confirmEmailChange(
+        string $token,
+        UserRepository $userRepository,
+        EntityManagerInterface $entityManager,
+    ): Response {
+        $user = $userRepository->findByPendingEmailToken($token);
+
+        if (!$user) {
+            $this->addFlash('error', $this->translator->trans('flash.verify_invalid_link'));
+
+            return $this->redirectToRoute('app_home');
+        }
+
+        if ($user->isPendingEmailTokenExpired()) {
+            $user->clearPendingEmail();
+            $entityManager->flush();
+
+            $this->addFlash('error', $this->translator->trans('flash.profile_email_expired'));
+
+            return $this->redirectToRoute('app_profile');
+        }
+
+        // In der Zwischenzeit kann sich jemand anderes mit genau dieser Adresse
+        // registriert haben – pending_email trägt keine Eindeutigkeit, email
+        // dagegen schon. Ohne diese Prüfung liefe der flush() in eine
+        // Unique-Verletzung und der Nutzer sähe einen 500er.
+        if ($userRepository->findOneBy(['email' => $user->getPendingEmail()]) !== null) {
+            $user->clearPendingEmail();
+            $entityManager->flush();
+
+            $this->addFlash('error', $this->translator->trans('flash.profile_email_taken'));
+
+            return $this->redirectToRoute('app_profile');
+        }
+
+        $user->confirmEmailChange();
+        $entityManager->flush();
+
+        // Die Adresse ist der Anmeldename (User::getUserIdentifier()). Nach dem
+        // Wechsel passt die laufende Sitzung nicht mehr zum Konto und Symfony
+        // meldet ab – das ist richtig so und wird deshalb angesagt, statt den
+        // Nutzer wortlos auf der Anmeldeseite landen zu lassen.
+        $this->addFlash('success', $this->translator->trans('flash.profile_email_changed'));
+
+        return $this->redirectToRoute('app_login');
+    }
+
     #[Route('/verify/resend', name: 'app_verify_resend')]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function resend(
