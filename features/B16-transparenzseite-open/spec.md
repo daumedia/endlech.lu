@@ -131,6 +131,8 @@ Fördergespräch gestellt wird.
   werten (AK-18)? Das PRD führt es als Risiko; eine Alternative wäre, den Nenner auf
   die erfassten Merkmale zu begrenzen und die Erfassungsquote separat auszuweisen. —
   Betreiber
+  **Entschieden 2026-08-25:** Teils (BF-67, 2026-08-25). Innerhalb eines bewerteten Hauses zählt nicht Erfasstes weiterhin als nicht erfüllt. Ein Haus, über das GAR NICHTS erhoben wurde, bekommt aber keine Punktzahl mehr, sondern `null` — und erscheint als eigene Zahl „noch nicht bewertet".
+
 - **OF-02** · Sollen die Kennzahlen auf verifizierte Einträge beschränkt werden
   (AK-17)? Hängt an derselben Entscheidung wie B17/OF-01 und B23/OF-01. — Betreiber
 

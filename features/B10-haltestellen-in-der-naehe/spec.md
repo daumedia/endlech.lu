@@ -121,6 +121,8 @@ Kernangabe — nicht Beiwerk.
 
 - **OF-01** · Welcher Timeout ist angemessen (FB-01)? Drei Sekunden wären großzügig
   und lägen deutlich unter jeder Geduldsschwelle. — Betreiber
+  **Entschieden 2026-08-25:** Drei Sekunden, umgesetzt (BF-44, 2026-08-24), dazu `max_duration: 5`.
+
 - **OF-02** · Ist ein Schlüssel auf Produktion hinterlegt? Ohne ihn ist das Feature
   unsichtbar, und niemand würde es bemerken. **Lokal ist einer hinterlegt und gültig
   (2026-08-24 gemessen).** Nach der BF-46-Reparatur ist die Frage weniger heikel: Mit
@@ -129,10 +131,14 @@ Kernangabe — nicht Beiwerk.
 - **OF-03** · Lohnt sich nach der BF-44-Reparatur noch ein Circuit Breaker (FB-02)? Ein
   Ausfall kostet jetzt 3 statt 60 Sekunden je Seitenaufruf; die fehlende negative
   Zwischenspeicherung wiegt dadurch deutlich leichter. — Betreiber
+  **Entschieden 2026-08-25:** Nein. Nach BF-44 kostet ein Ausfall drei statt sechzig Sekunden; ein Circuit Breaker wäre eine Abhängigkeit mehr für einen Fall, der jetzt erträglich ist.
+
 - **OF-04** · Steht der Hinweis „ohne Aussage zur Barrierefreiheit der Haltestellen" an
   der richtigen Stelle? Er erscheint seit 2026-08-24 unter jeder Haltestellenliste. Auf
   einer Seite, die sonst ausschließlich Barrierefreiheitsangaben macht, wäre er
   vielleicht einmal prominent besser aufgehoben als zwölfmal kleingedruckt. — Betreiber
+  **Entschieden 2026-08-25:** Ja. Der Hinweis steht seit BF-46 unter jeder Haltestellenliste und im Admin-Formular; die QA zu B10 hat beide Stellen bestätigt.
+
 - **OF-05** · Ist 1000 m der richtige Radius? Drei von elf Restaurants zeigen weiterhin
   keine Haltestellen; ob das an ihrer Lage liegt oder der Wert immer noch zu klein ist,
   wurde nicht untersucht. — Betreiber

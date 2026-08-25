@@ -198,8 +198,12 @@ Einreichungen abrufen, neue Restaurants anlegen. Dokumentiert unter `/api/docs`.
 - **OF-01** · Soll die API dieselbe Moderation durchlaufen wie der Web-Weg (AK-21)?
   Naheliegend wäre, `create` eine `RestaurantSuggestion` anlegen zu lassen statt eines
   `Restaurant`. Das ändert allerdings den Antwortvertrag der App. — Betreiber
+  **Entschieden 2026-08-25:** Ja, umgesetzt (BF-24, 2026-08-24). `POST /restaurants` legt einen `RestaurantSuggestion` an und antwortet mit 202.
+
 - **OF-02** · Soll `register` unter den strengen Limiter (AK-22)? Ein Einzeiler im
   Subscriber. — Betreiber
+  **Entschieden 2026-08-25:** Ja, umgesetzt (BF-25, 2026-08-24): eigener Limiter `api_register` mit 5/Stunde.
+
 - **OF-03** · Was steht auf Produktion in `CORS_ALLOW_ORIGIN`? — Betreiber
 - ~~**OF-04** · Gibt es die iOS-App überhaupt schon?~~ **Beantwortet am 2026-08-24 aus
   dem Projekt selbst:** nein. `docs/prd.md:418` sagt wörtlich, die Kategorie
@@ -211,9 +215,12 @@ Einreichungen abrufen, neue Restaurants anlegen. Dokumentiert unter `/api/docs`.
   **nicht** auf — der Endpunkt liest `findBySubmitter()`, also genehmigte Restaurants.
   Wer etwas einreicht, sieht es bis zur Freigabe nirgends. Soll `submissions` die
   offenen Vorschläge mitführen? Das wäre neue Funktion, keine Reparatur. — Betreiber
+  **Entschieden 2026-08-25:** Behoben (BF-32, 2026-08-25). `/me/submissions` liefert beide Arten in einer Liste, unterschieden durch `state`.
+
 - **OF-06** · Der Rumpf der 202-Antwort (`{status, id, message}`) ist in dieser Spec
   nicht beschrieben. Er sollte festgeschrieben werden, bevor jemand einen Client
   dagegen baut. — Betreiber
+  **Entschieden 2026-08-25:** Festgeschrieben (BF-31, 2026-08-25): `{status, submissionId, message}`. Das Feld hieß vorher `id` und las sich im Rumpf eines Restaurant-Endpunkts wie eine Restaurant-ID.
 
 ## Decision Log
 

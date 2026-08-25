@@ -129,6 +129,8 @@ und — bei entsprechender Rolle — zur Verwaltung.
 
 - **OF-01** · `login_throttling` ist eine Konfigurationszeile und behebt FB-01
   vollständig. Warum fehlt sie? — Betreiber
+  **Entschieden 2026-08-25:** Ergänzt (BF-14, 2026-08-24): `login_throttling` mit fünf Versuchen, im Test auf 10000 gelockert.
+
 - **OF-02** · Soll `ROLE_ADMIN` eine zweite Stufe bekommen (FB-03)? Der Bestand hat
   genau ein Admin-Konto; das Risiko konzentriert sich dort. — Betreiber
 

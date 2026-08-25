@@ -193,6 +193,8 @@ als bestanden, sondern nimmt es als Suchliste.
 - **OF-02** · Soll der Web-Weg dieselbe Anti-Enumeration bekommen wie die API (AK-14)?
   Das kostet die verständliche Fehlermeldung „bereits registriert" und braucht dann
   zwingend FB-05 (Passwort vergessen) als Ausweg. — Betreiber
+  **Entschieden 2026-08-25:** Ja, umgesetzt (BF-09, 2026-08-25). Die Meldung im Formular ist weg; die bestehende Adresse bekommt stattdessen einen Hinweis per Mail. Das Passwort wird in beiden Zweigen gehasht, damit die Antwortzeit nichts verrät (528 gegen 522 ms).
+
 - **OF-03** · ~~Reihenfolge der Reparaturen: AK-15 (Routen-Kollision) ist ein Einzeiler,
   öffnet aber FB-02 (Mailversand ohne Limit). Beide zusammen ausliefern.~~ — **erledigt
   2026-08-23:** beides zusammen behoben, `verify_resend` mit eigenem Limit (3/Stunde).

@@ -115,6 +115,8 @@ und acht Übersetzungskatalogen.
 
 - **OF-01** · Wo soll der Sprachumschalter auf Mobil hin (FB-01)? Die Bottom-Navigation
   hat vier Felder und keinen Platz; ein fünftes wäre eng. — Betreiber
+  **Entschieden 2026-08-25:** In die Kopfzeile, nicht in die Bottom-Nav (BF-72, 2026-08-25). Die hat vier Felder und ist für Ziele da, nicht für Einstellungen. Bei 320 und 390 px sichtbar, ohne waagerechten Überlauf.
+
 - **OF-02** · Sollen Küchentypen übersetzbar werden (FB-05)? Das änderte die
   Entity-Struktur und beträfe B08, B05, B06, B17 und B23. — Betreiber
 

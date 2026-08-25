@@ -127,8 +127,11 @@ die Prüfung (B21), nicht direkt auf die Seite.
   `RestaurantTransformer` (Boolean-Vertrag der iOS-API), fünf Templates und die Fixtures
   berührt. Für die Aussagekraft der Punktzahl (B16) wäre es dennoch der richtige
   Schritt. — Betreiber
+  **Entschieden 2026-08-25:** Anders gelöst (BF-49, 2026-08-25). `Restaurant` bleibt zweiwertig — eine neue Spalte `assessedFeatures` hält fest, wonach jemand gesehen hat. Damit ist „weiß nicht" von „nein" unterscheidbar, ohne Repository-Filter, Transformer, Templates und Fixtures anzufassen.
+
 - **OF-02** · Soll der Einreicher über den Ausgang informiert werden (FB-02/FB-03)?
   `adminNote` wird bereits erfasst und wäre der Text dafür. — Betreiber
+  **Entschieden 2026-08-25:** Ja, umgesetzt (BF-55, 2026-08-25). Die Ablehnungsmail trägt `adminNote` und geht in der Sprache raus, in der eingereicht wurde.
 
 ## Decision Log
 

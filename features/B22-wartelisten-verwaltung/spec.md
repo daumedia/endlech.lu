@@ -138,6 +138,8 @@ Trichters und ordnet einer Partneranmeldung ein bestehendes Restaurant zu.
 - **OF-01** · Löschen: soll es harte Löschung oder Anonymisierung sein? Bei einem
   bestätigten Interessenten mit Einwilligungsnachweis ist das nicht dasselbe. —
   Betreiber
+  **Entschieden 2026-08-25:** Harte Löschung (BF-37, 2026-08-25). Ein Widerruf, nach dem Name, Adresse und Einwilligungszeitpunkt weiter in der Datenbank stehen, ist keiner.
+
 - **OF-02** · Braucht die Verwaltung eine Notizfunktion (FB-06)? — Betreiber
 
 ## Decision Log

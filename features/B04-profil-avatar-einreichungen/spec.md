@@ -168,6 +168,8 @@ ob sie geprüft wurden. Auf derselben Seite verwaltet er seine Passkeys (B03).
   **Beantwortet am 2026-08-24 durch die Reparatur:** ja. Die Frage war ohnehin keine
   echte Wahl — ohne Bestätigung ist die Adresse ein Übernahmehebel, und ein
   Passwort-Zurücksetzen als Rückweg gibt es nicht (siehe Feature `01`).
+  **Entschieden 2026-08-25:** Beantwortet durch Feature `01` (2026-08-25). Die Restaurants bleiben, `submittedBy` wird `NULL` — eine Barrierefreiheitsangabe ist eine Sachangabe und gehört den Menschen, die sie brauchen.
+
 - **OF-04** · Soll auch die **Passwortänderung** eine Benachrichtigung an die
   hinterlegte Adresse auslösen (FB-05)? Die Mechanik dafür steht seit 2026-08-24
   bereit. — Betreiber

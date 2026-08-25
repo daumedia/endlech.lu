@@ -136,6 +136,8 @@ ordnet sie per Ziehen und löscht sie wieder. Das erste Bild ist das Titelbild; 
 - **OF-01** · Reicht es, den Upload durch ein Formular mit `File`-Constraint zu führen
   (FB-01), oder soll zusätzlich das Verzeichnis abgesichert werden (FB-03)? Beides
   zusammen wäre die vollständige Antwort. — Betreiber
+  **Entschieden 2026-08-25:** Weder noch — die Prüfung sitzt im Dienst (BF-57, 2026-08-25). Der Upload-Weg geht nicht über ein Formular, deshalb hätte ein `File`-Constraint ihn nicht erreicht; im `ImageUploadService` passiert sie jeder Aufrufweg.
+
 - **OF-02** · Soll ein Alternativtext je Bild erzwungen werden (FB-06)? — Betreiber
 
 ## Decision Log

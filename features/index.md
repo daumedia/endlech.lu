@@ -24,7 +24,7 @@ Abmelden verlangt ein Token. 16 von 17 Kriterien, nur *mittel*/*niedrig* offen.
 virtuellen WebAuthn-Authenticator (CDP) durchgespielt, inklusive Anmeldung ohne
 E-Mail-Eingabe. Ein Befund *mittel* (BF-18), drei Kriterien nicht prüfbar.
 
-Nächster Schritt: `/sdd-build B24` mit BF-68 — **die Erfassung pausiert**, bis der Open Redirect repariert und erneut geprüft ist. Die Reparaturen von B01, B02, B04 und B23 warten auf
+Nächster Schritt: `/sdd-erfassen B25`. Die Reparaturen von B01, B02, B04 und B23 warten auf
 `/sdd-deploy`; das neue Feature `01` beginnt mit `/sdd-spec 01`.
 
 **Zwei Namensräume:** Einträge mit Präfix `B` sind **Bestand** — gebaut, bevor die
@@ -66,7 +66,7 @@ Eingang von `sdd-build`. Der Weg ist: `bestand` → `/sdd-erfassen BNN` →
 | B21 | Vorschläge prüfen (Admin) | P0 | **approved** | B19, B11 | 2026-08-24 · QA: 20/20, ein Befund *mittel* |
 | B22 | Wartelisten-Verwaltung (Admin) | P1 | **approved** | B19, B14, B15 | 2026-08-24 · QA: 30/30, ein Befund *niedrig* |
 | B23 | REST-API v1 (iOS-Backend) | P0 | **approved** | B01, B05 | 2026-08-24 · QA 2. Durchlauf: 34/35, drei Befunde *mittel/niedrig* |
-| B24 | Mehrsprachigkeit | P1 | **review** | — | 2026-08-25 · QA: 16/16 bestätigt, **BF-68 *hoch*** |
+| B24 | Mehrsprachigkeit | P1 | **approved** | — | 2026-08-25 · QA 16/16, BF-68 bis BF-72 behoben |
 | B25 | PWA & mobile Navigation | P1 | rekonstruiert | — | 2026-08-23 |
 | B26 | Cookie-Banner | P2 | rekonstruiert | — | 2026-08-23 |
 

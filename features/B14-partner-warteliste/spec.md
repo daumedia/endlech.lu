@@ -162,12 +162,15 @@ Teilt sich `WaitlistConfirmationService`, `WaitlistEntryInterface`,
 
 - **OF-01** · Wie soll der Widerruf aussehen (AK-22)? Ein signierter Abmeldelink in
   jeder Mail wäre der übliche Weg und deckte zugleich FB-05 teilweise ab. — Betreiber
+  **Entschieden 2026-08-25:** Ja, genau so (BF-37, 2026-08-25). Der Abmeldelink steht in jeder Wartelisten-Mail und löscht den Eintrag — ein Widerruf, nach dem der Datensatz bleibt, ist keiner.
+
 - **OF-02** · Soll `findPendingOlderThan()` an einen Cron gehängt werden (FB-02)? Ein
   Befehl dafür existiert nicht; `app:metrics:snapshot` zeigt das Muster. — Betreiber
 - **OF-03** · Sollen beide Wartelisten getrennte Kontingente bekommen (AK-23)?
   **Gemessen am 2026-08-24 (BF-38):** Nach fünf Partner-Submits liefert das
   Organisationsformular 429. Die Frage ist damit nicht mehr, *ob* es passiert, sondern
   ob es so bleiben soll. — Betreiber
+  **Entschieden 2026-08-25:** Ja, umgesetzt (BF-38, 2026-08-25): eigener Limiter `organisation_waitlist`.
 
 ## Decision Log
 
