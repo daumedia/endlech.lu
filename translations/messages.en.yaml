@@ -745,7 +745,7 @@ email:
     organisation_internal_button: "Open in admin"
     footer: "Made with love in Luxembourg"
     account_exists_subject: 'You already have an Endlech.lu account'
-    account_exists_text: "Hello,\n\nsomeone just tried to register with this email address. You already have an account at Endlech.lu – simply sign in.\n\nIf this was not you, you can ignore this email.\n\nYour Endlech.lu team"
+    account_exists_text: "Hello,\n\nsomeone just tried to register with this email address. You already have an account at Endlech.lu – simply sign in. If you forgot your password, you can reset it via “Forgot your password” on the sign-in page.\n\nIf this was not you, you can ignore this email.\n\nYour Endlech.lu team"
     suggestion_rejected_subject: "About your suggestion “%name%”"
     suggestion_rejected_heading: "Thank you — this one did not make it this time"
     suggestion_rejected_intro: "You suggested %name% in %city%. We looked at it and did not take it on this time."

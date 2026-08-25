@@ -27,6 +27,16 @@ use Symfony\Component\Routing\Attribute\Route;
  * E-Mail-Adressen und Telefonnummern: Sie stehen zwar auf jeder Detailseite,
  * aber ein Sammelabzug davon ist eine Adressliste, kein Barrierefreiheits-
  * Datensatz.
+ *
+ * ⚠ BF-41: **Der Datensatz enthält auch unverifizierte Einträge**, und das ist
+ * Absicht. Wer ihn auswertet, muss es aber wissen — deshalb tragen die
+ * Metadaten seit dieser Runde eine ausdrückliche Erklärung der Spalten
+ * `verified` und `assessed`.
+ *
+ * Die Alternative — nur geprüfte Häuser auszuliefern — hieße, acht von elf
+ * wegzulassen und einen Datensatz zu veröffentlichen, der die Lage besser
+ * darstellt, als sie ist. Die ehrlichere Antwort ist eine Spalte, die sagt,
+ * woran man ist.
  */
 final class OpenDataController extends AbstractController
 {
@@ -81,6 +91,18 @@ final class OpenDataController extends AbstractController
             'attribution' => 'Endlech.lu',
             'generatedAt' => (new \DateTimeImmutable())->format(\DATE_ATOM),
             'count' => \count($rows),
+            // ⚠ BF-41 + BF-67: Zwei Spalten, die man kennen muss, um den Datensatz
+            // nicht falsch zu lesen. Ohne diese Erklärung wirkt jede Zeile wie eine
+            // geprüfte Angabe, und `accessibilityScore: null` wie ein Datenfehler.
+            'fieldNotes' => [
+                'verified' => 'true means a member of the team visited this venue. '
+                    .'The dataset deliberately includes unverified entries — leaving them out '
+                    .'would present a better picture than reality.',
+                'assessed' => 'false means no accessibility feature has been recorded for this venue. '
+                    .'In that case accessibilityScore is null, not 0 — nobody claimed the features are absent.',
+                'accessibilityScore' => '0 to 10 from eight equally weighted features; '
+                    .'what is not recorded counts as not met. null when assessed is false.',
+            ],
             'data' => $rows,
         ]));
     }

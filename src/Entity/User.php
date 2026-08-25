@@ -12,7 +12,17 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-#[UniqueEntity(fields: ['email'], message: 'user.email_unique')]
+/**
+ * ⚠ BF-09: Die Eindeutigkeitsprüfung läuft in der Gruppe `strict` und NICHT in
+ * `Default`. Grund ist die Anti-Enumeration des Registrierformulars: Eine Meldung
+ * „Diese Adresse wird bereits verwendet" verrät, wer hier ein Konto hat — bei
+ * einer Barrierefreiheitsplattform eine Angabe, die niemanden etwas angeht. Die
+ * API macht es seit jeher richtig; der Browser-Weg zog erst jetzt nach.
+ *
+ * Wo die Auskunft unbedenklich ist — im Profil, wo der Nutzer sein eigenes Konto
+ * bearbeitet —, wird die Gruppe ausdrücklich angefordert.
+ */
+#[UniqueEntity(fields: ['email'], message: 'user.email_unique', groups: ['strict'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]

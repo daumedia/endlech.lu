@@ -745,7 +745,7 @@ email:
     organisation_internal_button: "Im Admin öffnen"
     footer: "Made with love in Luxembourg"
     account_exists_subject: 'Du hast bereits ein Konto bei Endlech.lu'
-    account_exists_text: "Hallo,\n\nsoeben gab es einen Registrierungsversuch mit dieser E-Mail-Adresse. Du hast bereits ein Konto bei Endlech.lu – bitte melde dich einfach an.\n\nWarst du das nicht, kannst du diese E-Mail ignorieren.\n\nDein Endlech.lu-Team"
+    account_exists_text: "Hallo,\n\nsoeben gab es einen Registrierungsversuch mit dieser E-Mail-Adresse. Du hast bereits ein Konto bei Endlech.lu – bitte melde dich einfach an. Falls du dein Passwort vergessen hast, kannst du es über „Passwort vergessen“ auf der Anmeldeseite zurücksetzen.\n\nWarst du das nicht, kannst du diese E-Mail ignorieren.\n\nDein Endlech.lu-Team"
     suggestion_rejected_subject: "Zu deinem Vorschlag „%name%\""
     suggestion_rejected_heading: "Danke — dieser Vorschlag ist es diesmal nicht geworden"
     suggestion_rejected_intro: "Du hast uns %name% in %city% vorgeschlagen. Wir haben ihn angesehen und diesmal nicht aufgenommen."

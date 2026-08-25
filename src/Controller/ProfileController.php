@@ -27,7 +27,17 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route('/profile')]
-#[IsGranted('IS_AUTHENTICATED_FULLY')]
+/**
+ * ⚠ BF-15: `IS_AUTHENTICATED_REMEMBERED`, nicht `_FULLY`. Vorher zeigte die
+ * Kopfzeile den Nutzer als angemeldet, und ein Klick auf sein eigenes Profil warf
+ * ihn auf die Anmeldeseite — „Angemeldet bleiben" hielt für alles außer der einen
+ * Seite, für die man es anhakt.
+ *
+ * Die empfindlichen Wege sind einzeln abgesichert und bleiben es: Passwortwechsel
+ * und Kontolöschung verlangen das aktuelle Passwort, die Adressänderung eine
+ * Bestätigung per Mail (BF-19).
+ */
+#[IsGranted('IS_AUTHENTICATED_REMEMBERED')]
 final class ProfileController extends AbstractController
 {
     public function __construct(

@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\RateLimiter\RateLimiterFactoryInterface;
 use Symfony\Component\Routing\Attribute\Route;
@@ -66,9 +67,30 @@ final class RegistrationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $limiter->consume();
 
-            $user->setPassword(
-                $passwordHasher->hashPassword($user, $form->get('plainPassword')->getData()),
-            );
+            // ⚠ BF-09: Anti-Enumeration, wie sie die API seit jeher hat. Vorher
+            // meldete das Formular „Diese E-Mail-Adresse wird bereits verwendet"
+            // und verriet damit, wer hier ein Konto hat. Auf einer
+            // Barrierefreiheitsplattform ist das eine Angabe, die niemanden etwas
+            // angeht: Wer sie abfragt, erfährt nicht, dass jemand hier isst,
+            // sondern dass jemand nach barrierefreien Lokalen sucht.
+            //
+            // Das Passwort wird in BEIDEN Zweigen gehasht. Ohne das verriete die
+            // Antwortzeit, was die Meldung verschweigt — Argon2 braucht spürbar
+            // länger als eine Abfrage, die nichts findet.
+            $hash = $passwordHasher->hashPassword($user, $form->get('plainPassword')->getData());
+
+            $vorhanden = $entityManager->getRepository(User::class)
+                ->findOneBy(['email' => $user->getEmail()]);
+
+            if ($vorhanden instanceof User) {
+                $this->sendeKontoExistiertHinweis($mailer, (string) $user->getEmail(), $request->getLocale());
+
+                $this->addFlash('success', $this->translator->trans('flash.register_success'));
+
+                return $this->redirectToRoute('app_verify_notice');
+            }
+
+            $user->setPassword($hash);
 
             $token = $user->generateVerificationToken();
 
@@ -108,5 +130,25 @@ final class RegistrationController extends AbstractController
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form,
         ]);
+    }
+
+    /**
+     * Sagt einem bestehenden Konto Bescheid, ohne es dem Aufrufer zu verraten.
+     *
+     * Der Hinweis auf das Zurücksetzen des Passworts steht seit Feature 01 wieder
+     * drin — vorher verwies er auf eine Funktion, die es nicht gab.
+     */
+    private function sendeKontoExistiertHinweis(MailerInterface $mailer, string $email, string $locale): void
+    {
+        $mail = (new Email())
+            ->to($email)
+            ->subject($this->translator->trans('email.account_exists_subject', [], null, $locale))
+            ->text($this->translator->trans('email.account_exists_text', [], null, $locale));
+
+        try {
+            $mailer->send($mail);
+        } catch (TransportExceptionInterface) {
+            // Die Antwort bleibt in jedem Fall dieselbe.
+        }
     }
 }

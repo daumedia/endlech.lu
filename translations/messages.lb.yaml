@@ -745,7 +745,7 @@ email:
     organisation_internal_button: "Am Admin opmaachen"
     footer: "Made with love in Luxembourg"
     account_exists_subject: 'Du hues schonn e Kont bei Endlech.lu'
-    account_exists_text: "Moien,\n\nelo grad gouf et e Registréierungsversuch mat dëser E-Mail-Adress. Du hues schonn e Kont bei Endlech.lu – mell dech einfach un.\n\nWaars du dat net, kanns du dës E-Mail ignoréieren.\n\nDäin Endlech.lu-Team"
+    account_exists_text: "Moien,\n\nelo grad gouf et e Registréierungsversuch mat dëser E-Mail-Adress. Du hues schonn e Kont bei Endlech.lu – mell dech einfach un. Hues du däi Passwuert vergiess, kanns du et iwwer „Passwuert vergiess“ op der Umeldungssäit zrécksetzen.\n\nWaars du dat net, kanns du dës E-Mail ignoréieren.\n\nDäin Endlech.lu-Team"
     suggestion_rejected_subject: "Zu dengem Virschlag „%name%\""
     suggestion_rejected_heading: "Merci — dëse Virschlag ass et dës Kéier net ginn"
     suggestion_rejected_intro: "Du hues eis %name% zu %city% virgeschloen. Mir hunn hien ugekuckt an dës Kéier net opgeholl."
