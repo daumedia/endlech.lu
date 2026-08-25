@@ -43,6 +43,8 @@ profile:
     new_password_min: "Dat neit Passwuert muss mindestens {{ limit }} Zeechen laang sinn."
 
 suggestion:
+    door_width_range: 'D Dierbreet muss tëscht {{ min }} an {{ max }} cm leien.'
+    table_spacing_range: 'Den Dëschofstand muss tëscht {{ min }} an {{ max }} cm leien.'
     name_blank: "Gëff w.e.g. den Numm an."
     name_max: "Den Numm dierf maximal {{ limit }} Zeechen laang sinn."
     city_blank: "Gëff w.e.g. d'Stad an."

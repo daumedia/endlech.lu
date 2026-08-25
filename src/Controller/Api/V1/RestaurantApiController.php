@@ -162,6 +162,7 @@ final class RestaurantApiController extends AbstractController
         $suggestion->setCity($city);
         $suggestion->setCuisine($cuisines);
         $suggestion->setSuggestedBy($user);
+        $suggestion->setLocale($request->getLocale());
         $suggestion->setStatus(RestaurantSuggestion::STATUS_PENDING);
         $this->applyOptionalData($suggestion, $payload);
 

@@ -262,6 +262,10 @@ verify:
 
 community:
     suggest:
+        measurements: 'Mesures (si vous les connaissez)'
+        measurements_hint: 'Deux chiffres qui en disent long : à partir de 90 cm, une porte est considérée comme accessible en fauteuil, de même que l’espace entre les tables (DIN 18040). Laissez les champs vides si vous n’avez pas mesuré.'
+        door_width_help: 'Largeur utile de la porte d’entrée en centimètres'
+        table_spacing_help: 'Passage le plus étroit entre deux tables, en centimètres'
         title: "Proposer un restaurant – Endlech.lu"
         heading: "Proposer un restaurant"
         text: "Vous connaissez un restaurant accessible au Luxembourg qui manque ? Proposez-le — nous le vérifierons et l'ajouterons !"
@@ -655,6 +659,7 @@ flash:
     upload_wrong_type: '« %file% » n’est pas une image. Formats autorisés : %types%.'
     upload_too_large: '« %file% » est trop volumineux. Taille maximale : %max% Mo.'
     upload_exceeds_server_limit: 'L’envoi était trop volumineux au total (limite du serveur : %limit%). Merci d’envoyer moins d’images à la fois.'
+    suggestion_rejected_mail_failed: "Le refus est enregistré, mais le message n’a pas pu être remis à l’auteur."
 
 email:
     verify_subject: "Confirmez votre adresse e-mail"
@@ -705,6 +710,12 @@ email:
     footer: "Made with love in Luxembourg"
     account_exists_subject: 'Vous avez déjà un compte chez Endlech.lu'
     account_exists_text: "Bonjour,\n\nune tentative d'inscription vient d'avoir lieu avec cette adresse e-mail. Vous avez déjà un compte chez Endlech.lu – il vous suffit de vous connecter.\n\nSi ce n'était pas vous, vous pouvez ignorer cet e-mail.\n\nVotre équipe Endlech.lu"
+    suggestion_rejected_subject: "À propos de votre proposition « %name% »"
+    suggestion_rejected_heading: "Merci — cette proposition n’a pas été retenue cette fois"
+    suggestion_rejected_intro: "Vous nous avez proposé %name% à %city%. Nous l’avons examinée et ne l’avons pas retenue cette fois."
+    suggestion_rejected_note_label: "La raison"
+    suggestion_rejected_outro: "Ce n’est pas un jugement sur votre travail — il nous manque souvent des informations que nous ne pouvons pas vérifier nous-mêmes. Si vous en savez plus, n’hésitez pas à soumettre à nouveau."
+    suggestion_rejected_cta: "Soumettre une nouvelle proposition"
 
 ordering_platform:
     uber_eats: "Uber Eats"

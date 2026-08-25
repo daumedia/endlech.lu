@@ -43,6 +43,8 @@ profile:
     new_password_min: "The new password must be at least {{ limit }} characters long."
 
 suggestion:
+    door_width_range: 'The door width must be between {{ min }} and {{ max }} cm.'
+    table_spacing_range: 'The table spacing must be between {{ min }} and {{ max }} cm.'
     name_blank: "Please enter the name."
     name_max: "The name must not exceed {{ limit }} characters."
     city_blank: "Please enter the city."

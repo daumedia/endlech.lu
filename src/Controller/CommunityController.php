@@ -62,6 +62,7 @@ final class CommunityController extends AbstractController
             $limiter->consume();
 
             $suggestion->setSuggestedBy($user);
+            $suggestion->setLocale($request->getLocale());
             $entityManager->persist($suggestion);
             $entityManager->flush();
 

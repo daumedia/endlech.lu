@@ -118,6 +118,34 @@ class RestaurantSuggestion
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $adminNote = null;
 
+    /**
+     * Türbreite in Zentimetern — optional, `null` heißt „nicht ausgemessen".
+     *
+     * ⚠ BF-56: Der Assistent erhob die beiden Maße nicht, und ein genehmigter
+     * Vorschlag startete deshalb mit zwei fehlenden von zehn Punkten der
+     * Barrierefreiheits-Wertung — ohne dass jemand nachgemessen hätte. Wer vor
+     * Ort steht und ein Maßband dabei hat, soll die Zahl eintragen können.
+     *
+     * Bewusst `?int` und nicht `TriState`: Hier gibt es eine echte Zahl oder
+     * nichts; ein „weiß nicht" ist dasselbe wie „nicht eingetragen".
+     */
+    #[ORM\Column(nullable: true)]
+    private ?int $doorWidthCm = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $tableSpacingCm = null;
+
+    /**
+     * Sprache, in der eingereicht wurde.
+     *
+     * ⚠ BF-55: Ohne dieses Feld ließe sich die Ablehnungsmail nicht in der Sprache
+     * schreiben, in der jemand den Assistenten ausgefüllt hat — `User` führt keine
+     * Sprache, und die des Admins wäre die falsche. Beide Wartelisten haben aus
+     * genau diesem Grund dasselbe Feld.
+     */
+    #[ORM\Column(length: 5, options: ['default' => 'de'])]
+    private string $locale = 'de';
+
     #[ORM\Column]
     private \DateTimeImmutable $createdAt;
 
@@ -493,6 +521,42 @@ class RestaurantSuggestion
     public function setAdminNote(?string $adminNote): static
     {
         $this->adminNote = $adminNote;
+
+        return $this;
+    }
+
+    public function getDoorWidthCm(): ?int
+    {
+        return $this->doorWidthCm;
+    }
+
+    public function setDoorWidthCm(?int $doorWidthCm): static
+    {
+        $this->doorWidthCm = $doorWidthCm;
+
+        return $this;
+    }
+
+    public function getTableSpacingCm(): ?int
+    {
+        return $this->tableSpacingCm;
+    }
+
+    public function setTableSpacingCm(?int $tableSpacingCm): static
+    {
+        $this->tableSpacingCm = $tableSpacingCm;
+
+        return $this;
+    }
+
+    public function getLocale(): string
+    {
+        return $this->locale;
+    }
+
+    public function setLocale(string $locale): static
+    {
+        $this->locale = $locale;
 
         return $this;
     }

@@ -121,9 +121,22 @@ final class CatalogueCompletenessTest extends TestCase
         }
 
         foreach (self::dateien($wurzel.'/src/Form', 'php') as $datei) {
+            $inhalt = (string) file_get_contents($datei);
+
+            // Constraint-Meldungen (`message:`, `maxMessage:` …).
             preg_match_all(
                 "/(?:message|maxMessage|minMessage|notInRangeMessage|invalidMessage):\s*'([a-z][a-z0-9_]*(?:\.[a-z0-9_]+)+)'/i",
-                (string) file_get_contents($datei),
+                $inhalt,
+                $m,
+            );
+            $treffer = array_merge($treffer, $m[1]);
+
+            // Beschriftungen und Hilfetexte (`'label' => '…'`, `'help' => '…'`).
+            // ⚠ Ohne diese Zeile fiel BF-56 durch: Zwei neue Felder trugen Labels,
+            // die in keinem Katalog standen, und der Test blieb grün.
+            preg_match_all(
+                "/'(?:label|help|placeholder)'\s*=>\s*'([a-z][a-z0-9_]*(?:\.[a-z0-9_]+)+)'/i",
+                $inhalt,
                 $m,
             );
             $treffer = array_merge($treffer, $m[1]);

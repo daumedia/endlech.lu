@@ -262,6 +262,10 @@ verify:
 
 community:
     suggest:
+        measurements: 'Moossen (wanns du se kenns)'
+        measurements_hint: 'Zwou Zuelen, déi vill soen: Vun 90 cm un gëllt eng Dier als rollstullgerecht, genee wéi den Ofstand tëscht den Dëscher (DIN 18040). Loosst d Felder eidel, wanns du net nogemooss hues.'
+        door_width_help: 'Lucht Breet vun der Agangsdier a Zentimeter'
+        table_spacing_help: 'Schmaalst Plaz tëscht zwee Dëscher a Zentimeter'
         title: "Restaurant virschloen – Endlech.lu"
         heading: "Restaurant virschloen"
         text: "Kenns du e barrierefrät Restaurant zu Lëtzebuerg, dat nach feelt? Schlo et vir — mir préifen et a huelen et op!"
@@ -655,6 +659,7 @@ flash:
     upload_wrong_type: '„%file%" ass kee Bild. Erlaabt sinn %types%.'
     upload_too_large: '„%file%" ass ze grouss. Erlaabt sinn bis zu %max% MB.'
     upload_exceeds_server_limit: 'Den Upload war am Ganze ze grouss (Serverobergrenz: %limit%). Lued w.e.g. manner Biller op eemol erop.'
+    suggestion_rejected_mail_failed: "D Oflehnung ass gespäichert, mee d Noriicht un den Areecher konnt net zougestallt ginn."
 
 email:
     verify_subject: "Bestäteg deng E-Mail-Adress"
@@ -705,6 +710,12 @@ email:
     footer: "Made with love in Luxembourg"
     account_exists_subject: 'Du hues schonn e Kont bei Endlech.lu'
     account_exists_text: "Moien,\n\nelo grad gouf et e Registréierungsversuch mat dëser E-Mail-Adress. Du hues schonn e Kont bei Endlech.lu – mell dech einfach un.\n\nWaars du dat net, kanns du dës E-Mail ignoréieren.\n\nDäin Endlech.lu-Team"
+    suggestion_rejected_subject: "Zu dengem Virschlag „%name%\""
+    suggestion_rejected_heading: "Merci — dëse Virschlag ass et dës Kéier net ginn"
+    suggestion_rejected_intro: "Du hues eis %name% zu %city% virgeschloen. Mir hunn hien ugekuckt an dës Kéier net opgeholl."
+    suggestion_rejected_note_label: "De Grond"
+    suggestion_rejected_outro: "Dat ass keng Bewäertung vun denger Aarbecht — dacks feelen eis nëmmen Uginn, déi mir net selwer nokucke kënnen. Wanns du méi weess, reech de Virschlag gär nach eng Kéier an."
+    suggestion_rejected_cta: "Neie Virschlag areechen"
 
 ordering_platform:
     uber_eats: "Uber Eats"

@@ -262,6 +262,10 @@ verify:
 
 community:
     suggest:
+        measurements: 'Measurements (if you know them)'
+        measurements_hint: 'Two numbers that say a lot: from 90 cm a door counts as wheelchair accessible, and so does the gap between tables (DIN 18040). Leave the fields empty if you did not measure — guessing helps no one.'
+        door_width_help: 'Clear width of the entrance door in centimetres'
+        table_spacing_help: 'Narrowest gap between two tables in centimetres'
         title: "Suggest a Restaurant – Endlech.lu"
         heading: "Suggest a Restaurant"
         text: "Know an accessible restaurant in Luxembourg that's missing? Suggest it — we'll review it and add it!"
@@ -655,6 +659,7 @@ flash:
     upload_wrong_type: '“%file%” is not an image. Allowed formats: %types%.'
     upload_too_large: '“%file%” is too large. Maximum size: %max% MB.'
     upload_exceeds_server_limit: 'The upload was too large overall (server limit: %limit%). Please upload fewer images at once.'
+    suggestion_rejected_mail_failed: "The rejection is saved, but the message to the submitter could not be delivered."
 
 email:
     verify_subject: "Confirm your email address"
@@ -705,6 +710,12 @@ email:
     footer: "Made with love in Luxembourg"
     account_exists_subject: 'You already have an Endlech.lu account'
     account_exists_text: "Hello,\n\nsomeone just tried to register with this email address. You already have an account at Endlech.lu – simply sign in.\n\nIf this was not you, you can ignore this email.\n\nYour Endlech.lu team"
+    suggestion_rejected_subject: "About your suggestion “%name%”"
+    suggestion_rejected_heading: "Thank you — this one did not make it this time"
+    suggestion_rejected_intro: "You suggested %name% in %city%. We looked at it and did not take it on this time."
+    suggestion_rejected_note_label: "The reason"
+    suggestion_rejected_outro: "This is not a judgement on your work — often we are simply missing details we cannot verify ourselves. If you know more, please submit it again."
+    suggestion_rejected_cta: "Submit a new suggestion"
 
 ordering_platform:
     uber_eats: "Uber Eats"

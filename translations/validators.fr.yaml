@@ -43,6 +43,8 @@ profile:
     new_password_min: "Le nouveau mot de passe doit comporter au moins {{ limit }} caractères."
 
 suggestion:
+    door_width_range: 'La largeur de porte doit être comprise entre {{ min }} et {{ max }} cm.'
+    table_spacing_range: 'L’espace entre les tables doit être compris entre {{ min }} et {{ max }} cm.'
     name_blank: "Veuillez saisir le nom."
     name_max: "Le nom ne doit pas dépasser {{ limit }} caractères."
     city_blank: "Veuillez saisir la ville."

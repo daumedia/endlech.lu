@@ -262,6 +262,10 @@ verify:
 
 community:
     suggest:
+        measurements: 'Maße (wenn du sie kennst)'
+        measurements_hint: 'Zwei Zahlen, die viel aussagen: Ab 90 cm gilt eine Tür als rollstuhlgerecht, ebenso der Abstand zwischen den Tischen (DIN 18040). Lass die Felder leer, wenn du nicht nachgemessen hast — geraten hilft niemandem.'
+        door_width_help: 'Lichte Breite der Eingangstür in Zentimetern'
+        table_spacing_help: 'Schmalste Stelle zwischen zwei Tischen in Zentimetern'
         title: "Restaurant vorschlagen – Endlech.lu"
         heading: "Restaurant vorschlagen"
         text: "Kennst du ein barrierefreies Restaurant in Luxemburg, das noch fehlt? Schlage es vor – wir prüfen es und nehmen es auf!"
@@ -655,6 +659,7 @@ flash:
     upload_wrong_type: '„%file%" ist kein Bild. Erlaubt sind %types%.'
     upload_too_large: '„%file%" ist zu groß. Erlaubt sind bis zu %max% MB.'
     upload_exceeds_server_limit: 'Der Upload war insgesamt zu groß (Serverobergrenze: %limit%). Bitte lade weniger Bilder auf einmal hoch.'
+    suggestion_rejected_mail_failed: "Die Ablehnung ist gespeichert, aber die Nachricht an den Einreicher konnte nicht zugestellt werden."
 
 email:
     verify_subject: "Bestätige deine E-Mail-Adresse"
@@ -705,6 +710,12 @@ email:
     footer: "Made with love in Luxembourg"
     account_exists_subject: 'Du hast bereits ein Konto bei Endlech.lu'
     account_exists_text: "Hallo,\n\nsoeben gab es einen Registrierungsversuch mit dieser E-Mail-Adresse. Du hast bereits ein Konto bei Endlech.lu – bitte melde dich einfach an.\n\nWarst du das nicht, kannst du diese E-Mail ignorieren.\n\nDein Endlech.lu-Team"
+    suggestion_rejected_subject: "Zu deinem Vorschlag „%name%\""
+    suggestion_rejected_heading: "Danke — dieser Vorschlag ist es diesmal nicht geworden"
+    suggestion_rejected_intro: "Du hast uns %name% in %city% vorgeschlagen. Wir haben ihn angesehen und diesmal nicht aufgenommen."
+    suggestion_rejected_note_label: "Der Grund"
+    suggestion_rejected_outro: "Das ist keine Bewertung deiner Arbeit — häufig fehlen uns nur Angaben, die wir nicht selbst prüfen können. Wenn du mehr weißt, reich den Vorschlag gerne noch einmal ein."
+    suggestion_rejected_cta: "Neuen Vorschlag einreichen"
 
 ordering_platform:
     uber_eats: "Uber Eats"

@@ -101,12 +101,12 @@ final class OpenDataController extends AbstractController
 
         foreach ($restaurants as $restaurant) {
             fputcsv($handle, array_map(
-                static fn ($value) => match (true) {
+                static fn ($value) => self::csvSafe(match (true) {
                     null === $value => '',
                     \is_bool($value) => $value ? 'true' : 'false',
                     \is_array($value) => implode('|', $value),
                     default => $value,
-                },
+                }),
                 $this->row($restaurant, $cantons),
             ), ',', '"', '');
         }
@@ -123,6 +123,31 @@ final class OpenDataController extends AbstractController
         $response->headers->set('X-Licence', self::LICENCE);
 
         return $this->cached($response);
+    }
+
+    /**
+     * Entschärft Werte, die eine Tabellenkalkulation als Formel liest.
+     *
+     * ⚠ BF-43: Ein Restaurantname mit führendem `=` stand unverändert im CSV und
+     * wurde von Excel, LibreOffice und Google Sheets beim Öffnen ausgeführt. Die
+     * CSV-Struktur selbst hielt — der Angriff zielt nicht auf den Parser, sondern
+     * auf das Programm dahinter.
+     *
+     * Die Zielgruppe des Datensatzes sind Ministerien und Forschende; die einzige
+     * Hürde davor war bisher die Moderation. Das ist zu wenig für eine Datei, die
+     * unter CC BY 4.0 zum Herunterladen einlädt.
+     *
+     * Ein vorangestelltes Apostroph ist die Empfehlung von OWASP: Der Wert bleibt
+     * lesbar, die Formel wird zu Text. Betroffen sind `= + - @` sowie Tab und
+     * Wagenrücklauf — letztere, weil manche Programme sie als Zeilenanfang werten.
+     */
+    private static function csvSafe(string $wert): string
+    {
+        if ('' === $wert) {
+            return $wert;
+        }
+
+        return \in_array($wert[0], ['=', '+', '-', '@', "\t", "\r"], true) ? "'".$wert : $wert;
     }
 
     /**

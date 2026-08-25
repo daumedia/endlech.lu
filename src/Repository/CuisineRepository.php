@@ -44,6 +44,22 @@ class CuisineRepository extends ServiceEntityRepository
     }
 
     /**
+     * Zählt die Restaurants, die diesen Küchen-Typ tragen.
+     *
+     * Über den QueryBuilder statt über eine Collection auf der Entity: Die
+     * ManyToMany ist einseitig von `Restaurant` aus deklariert, und eine
+     * inverse Seite nur zum Zählen anzulegen brächte eine Beziehung ins Mapping,
+     * die sonst niemand braucht.
+     */
+    public function countUsages(Cuisine $cuisine): int
+    {
+        return (int) $this->getEntityManager()
+            ->createQuery('SELECT COUNT(r.id) FROM App\Entity\Restaurant r JOIN r.cuisines c WHERE c = :cuisine')
+            ->setParameter('cuisine', $cuisine)
+            ->getSingleScalarResult();
+    }
+
+    /**
      * Spaltenbreiten aus dem Mapping — `name` VARCHAR(80), `slug` VARCHAR(100).
      */
     private const MAX_NAME_LENGTH = 80;

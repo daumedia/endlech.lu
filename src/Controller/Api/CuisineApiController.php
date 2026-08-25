@@ -59,4 +59,36 @@ final class CuisineApiController extends AbstractController
 
         return $this->json(['id' => $cuisine->getId(), 'name' => $cuisine->getName()], 201);
     }
+
+    /**
+     * Entfernt einen Küchen-Typ, der von keinem Restaurant benutzt wird.
+     *
+     * ⚠ BF-63: Die Liste konnte nur wachsen — es gab keinen Löschweg, weder als
+     * Oberfläche noch als Endpunkt. Seit BF-24 ist der schlimmste Zufluss zu (die
+     * öffentliche API schreibt nicht mehr hinein), aber zwei Wege bleiben: ein
+     * Admin, der sich vertippt, und ein genehmigter Vorschlag mit Tippfehler im
+     * Küchen-Freitext. Beides sind menschliche Fehler, und beide standen dauerhaft
+     * in der öffentlichen Filterauswahl der Restaurantliste.
+     *
+     * Verwendete Typen werden NICHT gelöscht: Das würde Restaurants stillschweigend
+     * ihre Zuordnung nehmen. Die Antwort nennt stattdessen die Zahl der
+     * Verwendungen — damit weiß der Admin, was er stattdessen tun muss.
+     */
+    #[Route('/{id}', name: 'api_cuisine_delete', requirements: ['id' => '\d+'], methods: ['DELETE'])]
+    public function delete(Cuisine $cuisine, CuisineRepository $cuisineRepository, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $verwendungen = $cuisineRepository->countUsages($cuisine);
+
+        if ($verwendungen > 0) {
+            return $this->json([
+                'error' => 'Cuisine is still in use.',
+                'usedBy' => $verwendungen,
+            ], 409);
+        }
+
+        $entityManager->remove($cuisine);
+        $entityManager->flush();
+
+        return new JsonResponse(null, 204);
+    }
 }
