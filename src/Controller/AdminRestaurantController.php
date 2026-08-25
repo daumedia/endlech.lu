@@ -7,6 +7,7 @@ use App\Form\RestaurantType;
 use App\Repository\RestaurantImageRepository;
 use App\Repository\RestaurantRepository;
 use App\Service\ImageUploadService;
+use App\Service\UploadRejectedException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -125,6 +126,18 @@ final class AdminRestaurantController extends AbstractController
     #[Route('/restaurants/{id}/fotos', name: 'admin_restaurant_image_upload', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function uploadImage(Restaurant $restaurant, Request $request, ImageUploadService $imageUploadService): Response
     {
+        // ⚠ BF-58: Überschreitet der Upload `post_max_size`, verwirft PHP den GESAMTEN
+        // Body — Dateien, Formularfelder und CSRF-Token. Ohne diese Abfrage sähe der
+        // Admin „Ungültiges CSRF-Token" und suchte an einer Stelle, an der nichts
+        // kaputt ist. `CONTENT_LENGTH` überlebt als Header.
+        if ([] === $request->request->all() && [] === $request->files->all() && $request->server->get('CONTENT_LENGTH') > 0) {
+            $this->addFlash('error', $this->translator->trans('flash.upload_exceeds_server_limit', [
+                '%limit%' => (string) \ini_get('post_max_size'),
+            ]));
+
+            return $this->redirectToRoute('admin_restaurant_edit', ['id' => $restaurant->getId()]);
+        }
+
         if (!$this->isCsrfTokenValid('upload-images-' . $restaurant->getId(), $request->request->getString('_token'))) {
             $this->addFlash('error', $this->translator->trans('flash.invalid_csrf'));
 
@@ -134,17 +147,35 @@ final class AdminRestaurantController extends AbstractController
         $files = $request->files->get('images', []);
         $altText = $request->request->getString('altText', '');
         $uploaded = 0;
+        $abgelehnt = [];
 
         foreach ($files as $file) {
-            if ($file instanceof UploadedFile && $file->isValid()) {
+            if (!$file instanceof UploadedFile || !$file->isValid()) {
+                continue;
+            }
+
+            try {
                 $imageUploadService->upload($file, $restaurant, $altText);
                 ++$uploaded;
+            } catch (UploadRejectedException $e) {
+                // ⚠ BF-57: Der Dienst lehnt alles ab, was kein Bild ist. Die Meldung
+                // nennt die betroffene Datei — bei einem Mehrfach-Upload wäre sonst
+                // unklar, welche gemeint ist.
+                $abgelehnt[] = $this->translator->trans($e->transKey, $e->parameters + [
+                    '%file%' => $file->getClientOriginalName(),
+                ]);
             }
         }
 
         if ($uploaded > 0) {
             $this->addFlash('success', $this->translator->trans('flash.photo_uploaded', ['%count%' => $uploaded]));
-        } else {
+        }
+
+        foreach ($abgelehnt as $meldung) {
+            $this->addFlash('error', $meldung);
+        }
+
+        if (0 === $uploaded && [] === $abgelehnt) {
             $this->addFlash('error', $this->translator->trans('flash.no_valid_files'));
         }
 

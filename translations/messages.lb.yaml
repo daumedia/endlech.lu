@@ -641,6 +641,9 @@ flash:
     passkey_name_empty: "Gëff w.e.g. en Numm fir de Passkey un."
     email_change_rate_limited: 'Ze vill Adressännerungen. Probéier w.e.g. an enger Stonn nach eng Kéier.'
     suggest_rate_limited: 'Du hues an der leschter Stonn vill Virschléi agereecht. Waart w.e.g. e bëssen — mir kucken eis all un.'
+    upload_wrong_type: '„%file%" ass kee Bild. Erlaabt sinn %types%.'
+    upload_too_large: '„%file%" ass ze grouss. Erlaabt sinn bis zu %max% MB.'
+    upload_exceeds_server_limit: 'Den Upload war am Ganze ze grouss (Serverobergrenz: %limit%). Lued w.e.g. manner Biller op eemol erop.'
 
 email:
     verify_subject: "Bestäteg deng E-Mail-Adress"

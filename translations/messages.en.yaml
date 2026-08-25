@@ -641,6 +641,9 @@ flash:
     passkey_name_empty: "Please enter a name for the passkey."
     email_change_rate_limited: 'Too many address changes. Please try again in an hour.'
     suggest_rate_limited: 'You have submitted a lot of suggestions in the past hour. Please wait a little — we look at every one.'
+    upload_wrong_type: '“%file%” is not an image. Allowed formats: %types%.'
+    upload_too_large: '“%file%” is too large. Maximum size: %max% MB.'
+    upload_exceeds_server_limit: 'The upload was too large overall (server limit: %limit%). Please upload fewer images at once.'
 
 email:
     verify_subject: "Confirm your email address"

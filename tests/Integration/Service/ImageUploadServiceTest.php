@@ -6,7 +6,9 @@ use App\Entity\Restaurant;
 use App\Entity\RestaurantImage;
 use App\Repository\RestaurantImageRepository;
 use App\Service\ImageUploadService;
+use App\Service\UploadRejectedException;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -105,5 +107,84 @@ final class ImageUploadServiceTest extends KernelTestCase
 
         self::assertCount(2, $remaining);
         self::assertSame([0, 1], array_map(static fn (RestaurantImage $i) => $i->getSortOrder(), $remaining));
+    }
+
+    /**
+     * BF-57: Was kein Bild ist, kommt nicht ins öffentliche Verzeichnis.
+     *
+     * Eine `.html` wurde vorher als `text/html` ausgeliefert und lief damit im
+     * Ursprung der Anwendung; eine `.svg` mit `<script>` ebenso. Der Upload-Weg
+     * geht nicht über ein Formular, deshalb griff kein `File`-Constraint — die
+     * Prüfung sitzt jetzt im Dienst und damit auf jedem Aufrufweg.
+     */
+    #[DataProvider('unerlaubteDateien')]
+    public function testNichtBilderWerdenAbgelehnt(string $inhalt, string $name, string $mime): void
+    {
+        $restaurant = $this->persistRestaurant();
+        $quelle = $this->uploadDir.'/angriff_'.uniqid();
+        file_put_contents($quelle, $inhalt);
+
+        $this->expectException(UploadRejectedException::class);
+
+        try {
+            $this->service->upload(new UploadedFile($quelle, $name, $mime, null, true), $restaurant);
+        } finally {
+            // Nichts darf im Zielverzeichnis gelandet sein — nur die Quelldatei.
+            $abgelegt = array_filter(
+                glob($this->uploadDir.'/*') ?: [],
+                static fn (string $pfad) => !str_contains(basename($pfad), 'angriff_'),
+            );
+            self::assertSame([], $abgelegt, 'Die abgelehnte Datei wurde trotzdem abgelegt.');
+        }
+    }
+
+    /**
+     * @return iterable<string, array{string, string, string}>
+     */
+    public static function unerlaubteDateien(): iterable
+    {
+        yield 'HTML mit Skript' => [
+            '<html><body><script>alert(document.domain)</script></body></html>',
+            'angriff.html',
+            'text/html',
+        ];
+        yield 'SVG mit Skript' => [
+            '<svg xmlns="http://www.w3.org/2000/svg"><script>alert(1)</script></svg>',
+            'angriff.svg',
+            'image/svg+xml',
+        ];
+        yield 'PHP-Quelltext' => ['<?php echo 1; ?>', 'angriff.php', 'application/x-php'];
+        yield 'Textdatei' => ['nur Text', 'notiz.txt', 'text/plain'];
+    }
+
+    /**
+     * Die Endung folgt dem ECHTEN Typ, nicht dem übermittelten Dateinamen.
+     */
+    public function testEndungKommtAusDemErkanntenTypNichtAusDemNamen(): void
+    {
+        $restaurant = $this->persistRestaurant();
+        $quelle = $this->uploadDir.'/source_'.uniqid();
+        file_put_contents($quelle, base64_decode(self::PNG_BASE64));
+
+        $image = $this->service->upload(
+            new UploadedFile($quelle, 'getarnt.jpg', 'image/jpeg', null, true),
+            $restaurant,
+        );
+
+        self::assertStringEndsWith('.png', $image->getFilename());
+    }
+
+    /**
+     * BF-58: Die Anwendung hat eine eigene Größengrenze.
+     */
+    public function testZuGrosseDateiWirdAbgelehnt(): void
+    {
+        $restaurant = $this->persistRestaurant();
+        $quelle = $this->uploadDir.'/gross_'.uniqid().'.png';
+        // Gültiger PNG-Kopf, danach Füllmaterial über die Grenze hinaus.
+        file_put_contents($quelle, base64_decode(self::PNG_BASE64).str_repeat("\0", 5 * 1024 * 1024));
+
+        $this->expectException(UploadRejectedException::class);
+        $this->service->upload(new UploadedFile($quelle, 'gross.png', 'image/png', null, true), $restaurant);
     }
 }
