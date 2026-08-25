@@ -26,11 +26,29 @@ final class AdminRestaurantController extends AbstractController
     {
     }
 
+    /** Zeilen je Seite in der Verwaltungsliste (BF-52). */
+    private const ADMIN_PAGE_SIZE = 25;
+
     #[Route('/restaurants', name: 'admin_restaurant_index')]
-    public function index(RestaurantRepository $restaurantRepository): Response
+    public function index(Request $request, RestaurantRepository $restaurantRepository): Response
     {
+        $page = max(1, $request->query->getInt('page', 1));
+        $suche = trim($request->query->getString('q', ''));
+
+        $paginator = $restaurantRepository->findForAdmin($page, self::ADMIN_PAGE_SIZE, $suche);
+        $total = \count($paginator);
+        $lastPage = max(1, (int) ceil($total / self::ADMIN_PAGE_SIZE));
+
+        if ($page > $lastPage && $page > 1) {
+            throw $this->createNotFoundException('Diese Seite gibt es nicht.');
+        }
+
         return $this->render('admin/restaurant/index.html.twig', [
-            'restaurants' => $restaurantRepository->findBy([], ['createdAt' => 'DESC']),
+            'restaurants' => $paginator,
+            'currentPage' => $page,
+            'lastPage' => $lastPage,
+            'total' => $total,
+            'suche' => $suche,
         ]);
     }
 

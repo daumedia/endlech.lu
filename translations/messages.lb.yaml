@@ -377,6 +377,8 @@ admin:
         total_income: "Recetten am Ganzen"
         last_snapshot: "Leschte Snapshot"
         capture_snapshot: "Elo festhalen"
+        snapshot_overwrite: 'virhandenen ersetzen'
+        snapshot_overwrite_confirm: 'E virhandene Snapshot gëtt duerch d Zuelen vun haut ersat. De bisherege Stand ass duerno net méi nozevollzéien. Weiderfueren?'
         last_updated: "Fir d'lescht gepflegt den %date%"
         updated_at: "Fir d'lescht geännert den %date%"
         field:
@@ -426,6 +428,11 @@ admin:
         no_recent_restaurants: "Nach keng Restauranten do."
         no_recent_users: "Nach keng Benotzer registréiert."
     restaurant:
+        search_label: 'Restauranten duerchsichen'
+        search_placeholder: 'Numm oder Stad …'
+        search_action: 'Sichen'
+        search_reset: 'Filter zrécksetzen'
+        pagination_label: 'Säitennavigatioun'
         manage: "Restauranten verwalten"
         new_title: "Neit Restaurant erstellen"
         edit_title: "%name% änneren"
@@ -535,6 +542,8 @@ admin:
         upload_button: "Eroplueden"
 
     waitlist:
+        restaurant_search: 'Restaurant sichen …'
+        restaurant_truncated: 'Et gi maximal %limit% Haiser gewisen. Benotz d''Sich, wann deng net derbäi ass.'
         title: "Waardelëschten"
         total: "%count% Andréi"
         empty: "Nach keng Umeldungen."
@@ -586,6 +595,8 @@ admin:
             confirmed: "Bestätegt"
 
 flash:
+    suggestion_already_handled: 'Dëse Virschlag gouf schonn bearbecht.'
+    snapshot_exists: 'Fir %month% gëtt et schonn e Snapshot. Hie gouf net geännert.'
     finance_created: "Finanzentrée ugeluecht."
     finance_updated: "Finanzentrée aktualiséiert."
     finance_deleted: "Finanzentrée geläscht."

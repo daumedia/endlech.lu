@@ -377,6 +377,8 @@ admin:
         total_income: "Einnahmen gesamt"
         last_snapshot: "Letzter Snapshot"
         capture_snapshot: "Jetzt festhalten"
+        snapshot_overwrite: 'vorhandenen ersetzen'
+        snapshot_overwrite_confirm: 'Ein vorhandener Snapshot wird durch die Zahlen von heute ersetzt. Der bisherige Stand ist danach nicht mehr nachvollziehbar. Fortfahren?'
         last_updated: "Zuletzt gepflegt am %date%"
         updated_at: "Zuletzt geändert am %date%"
         field:
@@ -426,6 +428,11 @@ admin:
         no_recent_restaurants: "Noch keine Restaurants vorhanden."
         no_recent_users: "Noch keine Benutzer registriert."
     restaurant:
+        search_label: 'Restaurants durchsuchen'
+        search_placeholder: 'Name oder Stadt …'
+        search_action: 'Suchen'
+        search_reset: 'Filter zurücksetzen'
+        pagination_label: 'Seitennavigation'
         manage: "Restaurants verwalten"
         new_title: "Neues Restaurant erstellen"
         edit_title: "%name% bearbeiten"
@@ -535,6 +542,8 @@ admin:
         upload_button: "Hochladen"
 
     waitlist:
+        restaurant_search: 'Restaurant suchen …'
+        restaurant_truncated: 'Es werden höchstens %limit% Häuser angezeigt. Nutze die Suche, wenn deines nicht dabei ist.'
         title: "Wartelisten"
         total: "%count% Einträge"
         empty: "Noch keine Anmeldungen."
@@ -586,6 +595,8 @@ admin:
             confirmed: "Bestätigt"
 
 flash:
+    suggestion_already_handled: 'Dieser Vorschlag wurde bereits bearbeitet.'
+    snapshot_exists: 'Für %month% gibt es bereits einen Snapshot. Er wurde nicht verändert.'
     finance_created: "Finanzeintrag erstellt."
     finance_updated: "Finanzeintrag aktualisiert."
     finance_deleted: "Finanzeintrag gelöscht."

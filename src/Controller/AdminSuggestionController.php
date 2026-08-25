@@ -48,6 +48,16 @@ final class AdminSuggestionController extends AbstractController
             return $this->redirectToRoute('admin_suggestion_index');
         }
 
+        // ⚠ BF-54: Zweimal abgeschickt erzeugte zwei Restaurants — beide mit
+        // Erfolgsmeldung, und die Dublette landete unbemerkt in der öffentlichen
+        // Liste. Ein Doppelklick auf einen Knopf ist keine Absicht, und die
+        // Zurück-Taste des Browsers macht daraus im Zweifel einen dritten.
+        if (RestaurantSuggestion::STATUS_PENDING !== $suggestion->getStatus()) {
+            $this->addFlash('warning', $this->translator->trans('flash.suggestion_already_handled'));
+
+            return $this->redirectToRoute('admin_suggestion_index');
+        }
+
         $restaurant = new Restaurant();
         $restaurant->setName($suggestion->getName());
         $restaurant->setCity($suggestion->getCity());

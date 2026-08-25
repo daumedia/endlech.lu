@@ -46,10 +46,23 @@
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                 <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">{{ 'admin.waitlist.link_restaurant'|trans }}</h3>
 
+                <form method="get" action="{{ path('admin_waitlist_partner_show', {id: entry.id}) }}" class="flex gap-2 mb-3">
+                    <label for="partner-restaurant-suche" class="sr-only">{{ 'admin.waitlist.restaurant_search'|trans }}</label>
+                    <input type="search" id="partner-restaurant-suche" name="rq" value="{{ restaurantSuche }}"
+                           placeholder="{{ 'admin.waitlist.restaurant_search'|trans }}"
+                           class="flex-1 bg-white border border-gray-400 rounded-lg px-3 py-2 text-sm focus:outline-2 focus:outline-offset-2 focus:outline-purple-700">
+                    <button type="submit" class="min-h-[44px] px-4 rounded-lg bg-gray-800 text-white text-sm font-semibold hover:bg-gray-900 transition">
+                        {{ 'admin.restaurant.search_action'|trans }}
+                    </button>
+                </form>
+
                 <form method="post" action="{{ path('admin_waitlist_partner_link', {id: entry.id}) }}" class="space-y-3">
                     <input type="hidden" name="_token" value="{{ csrf_token('waitlist-link-' ~ entry.id) }}">
 
                     <label for="partner-restaurant" class="block text-sm font-semibold text-gray-700">{{ 'admin.waitlist.restaurant_label'|trans }}</label>
+                    {# ⚠ BF-40: Die Liste ist auf {{ restaurantLimit }} Einträge
+                       begrenzt. Wer ein Haus sucht, das nicht dabei ist, filtert
+                       über das Feld darüber — serverseitig, ohne JavaScript. #}
                     <select id="partner-restaurant" name="restaurant"
                             class="w-full bg-white border border-gray-500 rounded-lg px-3 py-2.5 text-sm focus:outline-2 focus:outline-offset-2 focus:outline-purple-700">
                         <option value="0">{{ 'admin.waitlist.restaurant_none'|trans }}</option>
@@ -59,6 +72,12 @@
                             </option>
                         {% endfor %}
                     </select>
+
+                    {% if restaurantTotal >= restaurantLimit %}
+                        <p class="text-xs text-amber-700 mt-1">
+                            {{ 'admin.waitlist.restaurant_truncated'|trans({'%limit%': restaurantLimit}) }}
+                        </p>
+                    {% endif %}
 
                     <button type="submit"
                             class="w-full min-h-[44px] bg-cyan-700 hover:bg-cyan-800 text-white font-bold py-2.5 px-4 rounded-lg shadow transition focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700 cursor-pointer">

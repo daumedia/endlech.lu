@@ -58,6 +58,32 @@ class RestaurantRepository extends ServiceEntityRepository
         return str_replace(['!', '%', '_'], ['!!', '!%', '!_'], $wert);
     }
 
+    /**
+     * Verwaltungsliste: neueste zuerst, blätterbar, optional nach Name gefiltert.
+     *
+     * ⚠ BF-52: Vorher `findBy([], ['createdAt' => 'DESC'])` — der gesamte Bestand,
+     * mit allen Bildern und Beziehungen, bei jedem Aufruf. Die öffentliche Liste
+     * blättert seit jeher zu sechst, die API deckelt bei 50; ausgerechnet der
+     * Bereich, der jeden Datensatz mit Vorschaubild rendert, lud alles.
+     *
+     * @return Paginator<Restaurant>
+     */
+    public function findForAdmin(int $page, int $limit, string $suche = ''): Paginator
+    {
+        $qb = $this->createQueryBuilder('r')
+            ->orderBy('r.createdAt', 'DESC')
+            ->setFirstResult(($page - 1) * $limit)
+            ->setMaxResults($limit);
+
+        if ('' !== trim($suche)) {
+            // Dieselbe Maskierung wie im öffentlichen Ortsfilter (BF-59).
+            $qb->andWhere('r.name LIKE :suche ESCAPE \'!\' OR r.city LIKE :suche ESCAPE \'!\'')
+                ->setParameter('suche', '%'.self::escapeLike(trim($suche)).'%');
+        }
+
+        return new Paginator($qb->getQuery(), true);
+    }
+
     public function findPaginated(string $sort = 'rating', int $page = 1, int $limit = 6, array $filters = []): Paginator
     {
         $qb = $this->createQueryBuilder('r')

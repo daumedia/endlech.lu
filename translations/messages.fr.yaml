@@ -377,6 +377,8 @@ admin:
         total_income: "Total des recettes"
         last_snapshot: "Dernier instantané"
         capture_snapshot: "Enregistrer maintenant"
+        snapshot_overwrite: 'remplacer l’existant'
+        snapshot_overwrite_confirm: 'Un instantané existant sera remplacé par les chiffres d’aujourd’hui. L’état précédent ne sera plus vérifiable. Continuer ?'
         last_updated: "Dernière mise à jour le %date%"
         updated_at: "Dernière modification le %date%"
         field:
@@ -426,6 +428,11 @@ admin:
         no_recent_restaurants: "Aucun restaurant pour le moment."
         no_recent_users: "Aucun utilisateur inscrit pour le moment."
     restaurant:
+        search_label: 'Rechercher des restaurants'
+        search_placeholder: 'Nom ou ville …'
+        search_action: 'Rechercher'
+        search_reset: 'Réinitialiser'
+        pagination_label: 'Navigation par pages'
         manage: "Gérer les restaurants"
         new_title: "Créer un nouveau restaurant"
         edit_title: "Modifier %name%"
@@ -535,6 +542,8 @@ admin:
         upload_button: "Télécharger"
 
     waitlist:
+        restaurant_search: 'Rechercher un restaurant …'
+        restaurant_truncated: 'Au maximum %limit% établissements sont affichés. Utilisez la recherche si le vôtre n’apparaît pas.'
         title: "Listes d'attente"
         total: "%count% entrées"
         empty: "Aucune inscription pour le moment."
@@ -586,6 +595,8 @@ admin:
             confirmed: "Confirmée le"
 
 flash:
+    suggestion_already_handled: 'Cette proposition a déjà été traitée.'
+    snapshot_exists: 'Un instantané existe déjà pour %month%. Il n’a pas été modifié.'
     finance_created: "Écriture financière créée."
     finance_updated: "Écriture financière mise à jour."
     finance_deleted: "Écriture financière supprimée."
