@@ -25,6 +25,12 @@ final class WaitlistConfirmationService
     public const RESULT_ALREADY = 'already';
     public const RESULT_INVALID = 'invalid';
 
+    /** Der Link war gültig, ist aber zu alt (BF-36). */
+    public const RESULT_EXPIRED = 'expired';
+
+    /** Gültigkeitsdauer eines Bestätigungslinks in Tagen. */
+    public const TOKEN_LIFETIME_DAYS = 7;
+
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly MailerInterface $mailer,
@@ -65,9 +71,22 @@ final class WaitlistConfirmationService
             UrlGeneratorInterface::ABSOLUTE_URL,
         );
 
+        // ⚠ BF-10: `->locale()` ist Pflicht, sobald der Versand asynchron laufen
+        // kann. Der Worker hat keine Anfrage und damit keine Sprache — er nimmt
+        // `default_locale` (lb), und ein französischsprachiger Interessent bekäme
+        // seine Bestätigung auf Luxemburgisch. Auf Production fällt es heute nicht
+        // auf, weil dort synchron versendet wird (`sync://`); es kippt in dem
+        // Moment, in dem ein Messenger-Worker dazukommt — und genau der ist für die
+        // Monats-Snapshots vorgesehen (B18/AK-17).
+        //
+        // Der Betreff wird ebenfalls in der Sprache des Eintrags übersetzt, nicht
+        // in der der aktuellen Anfrage: Beides muss zusammenpassen.
+        $locale = $entry->getLocale();
+
         $email = (new TemplatedEmail())
             ->to($entry->getEmail())
-            ->subject($this->translator->trans($subjectKey, $subjectParams))
+            ->subject($this->translator->trans($subjectKey, $subjectParams, null, $locale))
+            ->locale($locale)
             ->htmlTemplate($emailTemplate)
             ->context([
                 'entry' => $entry,
@@ -92,6 +111,20 @@ final class WaitlistConfirmationService
      *
      * @return self::RESULT_* Zustand für die Bestätigungsseite
      */
+    /**
+     * ⚠ BF-36: Der Token hatte kein Ablaufdatum — anders als
+     * `User::generateVerificationToken()`, der nach 24 Stunden verfällt. Ein Link
+     * aus einer Mail, die vor einem Jahr verschickt wurde, bestätigte weiterhin
+     * eine Einwilligung, die inzwischen niemand mehr im Kopf hat.
+     *
+     * Gemessen wird an `createdAt` statt an einer neuen Spalte: Der Zeitpunkt steht
+     * bereits in beiden Entities, und eine Migration für eine Frist, die aus ihm
+     * folgt, wäre eine Spalte mehr ohne eigene Aussage.
+     *
+     * Sieben Tage, nicht 24 Stunden: Eine Wartelisten-Anmeldung ist kein
+     * Anmeldevorgang: Wer sie an einem Freitagabend abschickt, liest die Mail
+     * vielleicht erst am Montag.
+     */
     public function confirm(?WaitlistEntryInterface $entry): string
     {
         if (!$entry) {
@@ -100,6 +133,10 @@ final class WaitlistConfirmationService
 
         if ($entry->isConfirmed()) {
             return self::RESULT_ALREADY;
+        }
+
+        if ($this->isExpired($entry)) {
+            return self::RESULT_EXPIRED;
         }
 
         $entry->confirm();
@@ -117,6 +154,14 @@ final class WaitlistConfirmationService
      * @param array<string, mixed> $subjectParams
      * @param array<string, mixed> $context
      */
+    /**
+     * Ein Bestätigungslink verfällt nach dieser Frist.
+     */
+    public function isExpired(WaitlistEntryInterface $entry): bool
+    {
+        return $entry->getCreatedAt() < new \DateTimeImmutable('-'.self::TOKEN_LIFETIME_DAYS.' days');
+    }
+
     public function notifyTeam(
         WaitlistEntryInterface $entry,
         string $emailTemplate,

@@ -692,6 +692,8 @@ email:
     organisation_internal_intro: "Eng Organisatioun vum Typ %type% huet hir Ufro bestätegt."
     organisation_internal_button: "Am Admin opmaachen"
     footer: "Made with love in Luxembourg"
+    account_exists_subject: 'Du hues schonn e Kont bei Endlech.lu'
+    account_exists_text: "Moien,\n\nelo grad gouf et e Registréierungsversuch mat dëser E-Mail-Adress. Du hues schonn e Kont bei Endlech.lu – mell dech einfach un.\n\nWaars du dat net, kanns du dës E-Mail ignoréieren.\n\nDäin Endlech.lu-Team"
 
 ordering_platform:
     uber_eats: "Uber Eats"
@@ -957,6 +959,8 @@ partner:
         already_text: "Är Umeldung ass scho aktiv — Dir musst näischt weider maachen. Mir mellen eis, sobal et lassgeet."
         invalid_heading: "Dëse Link féiert an d'Eidel."
         invalid_text: "De Bestätegungslink ass onbekannt oder onvollstänneg. Méiglecherweis gouf en beim Kopéieren ofgeschnidden. Dréit Iech einfach nach eng Kéier an."
+        expired_heading: 'Dëse Link ass ofgelaf'
+        expired_text: 'Bestätegungslinken gëllen siwe Deeg. Mell dech einfach nach eng Kéier un — dat dauert eng Minutt, a mir schécken dir e frëschen Link.'
         back: "Op d'Partnersäit"
 
 waitlist_status:
@@ -985,7 +989,7 @@ organisation:
     type:
         commune: "Gemeng"
         company: "Betrib"
-        association: "Organisatioun"
+        association: 'Veräin'
     timeframe:
         asap: "Sou séier wéi méiglech"
         this_year: "Nach dëst Joer"
@@ -1118,6 +1122,8 @@ organisation:
         already_text: "Är Ufro ass scho aktiv — Dir musst näischt weider maachen."
         invalid_heading: "Dëse Link féiert an d'Eidel."
         invalid_text: "De Bestätegungslink ass onbekannt oder onvollstänneg. Méiglecherweis gouf en beim Kopéieren ofgeschnidden. Schéckt d'Ufro einfach nach eng Kéier."
+        expired_heading: 'Dëse Link ass ofgelaf'
+        expired_text: 'Bestätegungslinken gëllen siwe Deeg. Mell dech einfach nach eng Kéier un — dat dauert eng Minutt, a mir schécken dir e frëschen Link.'
         back: "Op d'Iwwersiicht"
 
 finance_type:
@@ -1225,3 +1231,4 @@ api:
     token_expired: "D’Token ass ofgelaf. Mell dech w.e.g. nach eng Kéier un."
     token_missing: "Authentifikatioun néideg."
     moderation_pending: "Merci! Däi Virschlag ass ukomm a gëtt gepréift, ier en ëffentlech erschéngt."
+    register_generic: 'Bal fäerdeg! Wann d''Uginn gëlteg sinn, hu mir dir eng E-Mail geschéckt. Bestäteg w.e.g. deng Adress.'

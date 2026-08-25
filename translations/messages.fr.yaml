@@ -692,6 +692,8 @@ email:
     organisation_internal_intro: "Une organisation de type %type% a confirmé sa demande."
     organisation_internal_button: "Ouvrir dans l'admin"
     footer: "Made with love in Luxembourg"
+    account_exists_subject: 'Vous avez déjà un compte chez Endlech.lu'
+    account_exists_text: "Bonjour,\n\nune tentative d'inscription vient d'avoir lieu avec cette adresse e-mail. Vous avez déjà un compte chez Endlech.lu – il vous suffit de vous connecter.\n\nSi ce n'était pas vous, vous pouvez ignorer cet e-mail.\n\nVotre équipe Endlech.lu"
 
 ordering_platform:
     uber_eats: "Uber Eats"
@@ -957,6 +959,8 @@ partner:
         already_text: "Votre inscription est déjà active — vous n'avez rien d'autre à faire. Nous vous contacterons dès le lancement."
         invalid_heading: "Ce lien ne mène nulle part."
         invalid_text: "Le lien de confirmation est inconnu ou incomplet. Il a peut-être été tronqué lors de la copie. Inscrivez-vous simplement à nouveau."
+        expired_heading: 'Ce lien a expiré'
+        expired_text: 'Les liens de confirmation sont valables sept jours. Inscrivez-vous simplement à nouveau — cela prend une minute et nous vous enverrons un nouveau lien.'
         back: "Vers la page partenaire"
 
 waitlist_status:
@@ -985,7 +989,7 @@ organisation:
     type:
         commune: "Commune"
         company: "Entreprise"
-        association: "Organisation"
+        association: 'Association'
     timeframe:
         asap: "Dès que possible"
         this_year: "Encore cette année"
@@ -1118,6 +1122,8 @@ organisation:
         already_text: "Votre demande est déjà active — vous n'avez rien d'autre à faire."
         invalid_heading: "Ce lien ne mène nulle part."
         invalid_text: "Le lien de confirmation est inconnu ou incomplet. Il a peut-être été tronqué lors de la copie. Renvoyez simplement la demande."
+        expired_heading: 'Ce lien a expiré'
+        expired_text: 'Les liens de confirmation sont valables sept jours. Inscrivez-vous simplement à nouveau — cela prend une minute et nous vous enverrons un nouveau lien.'
         back: "Vers la vue d'ensemble"
 
 finance_type:
@@ -1225,3 +1231,4 @@ api:
     token_expired: "Le jeton a expiré. Veuillez vous reconnecter."
     token_missing: "Authentification requise."
     moderation_pending: "Merci ! Votre suggestion a bien été reçue et sera vérifiée avant d’être publiée."
+    register_generic: 'Presque terminé ! Si les données sont valides, nous vous avons envoyé un e-mail. Merci de confirmer votre adresse.'

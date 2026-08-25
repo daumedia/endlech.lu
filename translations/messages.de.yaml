@@ -692,6 +692,8 @@ email:
     organisation_internal_intro: "Eine Organisation vom Typ %type% hat ihre Anfrage bestätigt."
     organisation_internal_button: "Im Admin öffnen"
     footer: "Made with love in Luxembourg"
+    account_exists_subject: 'Du hast bereits ein Konto bei Endlech.lu'
+    account_exists_text: "Hallo,\n\nsoeben gab es einen Registrierungsversuch mit dieser E-Mail-Adresse. Du hast bereits ein Konto bei Endlech.lu – bitte melde dich einfach an.\n\nWarst du das nicht, kannst du diese E-Mail ignorieren.\n\nDein Endlech.lu-Team"
 
 ordering_platform:
     uber_eats: "Uber Eats"
@@ -957,6 +959,8 @@ partner:
         already_text: "Ihre Anmeldung ist schon aktiv — Sie müssen nichts weiter tun. Wir melden uns, sobald es losgeht."
         invalid_heading: "Dieser Link führt ins Leere."
         invalid_text: "Der Bestätigungslink ist unbekannt oder unvollständig. Möglicherweise wurde er beim Kopieren abgeschnitten. Tragen Sie sich einfach erneut ein."
+        expired_heading: 'Dieser Link ist abgelaufen'
+        expired_text: 'Bestätigungslinks gelten sieben Tage. Melde dich einfach noch einmal an — es dauert eine Minute, und wir schicken dir einen frischen Link.'
         back: "Zur Partnerseite"
 
 waitlist_status:
@@ -985,7 +989,7 @@ organisation:
     type:
         commune: "Gemeinde"
         company: "Unternehmen"
-        association: "Organisation"
+        association: 'Verein'
     timeframe:
         asap: "So bald wie möglich"
         this_year: "Noch dieses Jahr"
@@ -1118,6 +1122,8 @@ organisation:
         already_text: "Ihre Anfrage ist schon aktiv – Sie müssen nichts weiter tun."
         invalid_heading: "Dieser Link führt ins Leere."
         invalid_text: "Der Bestätigungslink ist unbekannt oder unvollständig. Möglicherweise wurde er beim Kopieren abgeschnitten. Senden Sie die Anfrage einfach erneut."
+        expired_heading: 'Dieser Link ist abgelaufen'
+        expired_text: 'Bestätigungslinks gelten sieben Tage. Melde dich einfach noch einmal an — es dauert eine Minute, und wir schicken dir einen frischen Link.'
         back: "Zur Übersicht"
 
 finance_type:
@@ -1225,3 +1231,4 @@ api:
     token_expired: "Das Token ist abgelaufen. Bitte melde dich erneut an."
     token_missing: "Authentifizierung erforderlich."
     moderation_pending: "Danke! Dein Vorschlag ist eingegangen und wird geprüft, bevor er öffentlich erscheint."
+    register_generic: 'Fast geschafft! Wenn die Angaben gültig sind, haben wir dir eine E-Mail geschickt. Bitte bestätige deine Adresse.'

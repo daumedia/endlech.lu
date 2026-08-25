@@ -171,9 +171,14 @@ final class RestaurantApiController extends AbstractController
         // 202, nicht 201: Die Anfrage ist angenommen, aber die Ressource entsteht
         // erst mit der Freigabe durch einen Admin. Ein 201 mit Location-Header
         // behauptete etwas, das es noch nicht gibt.
+        // ⚠ BF-31: Das Feld heißt `submissionId`, nicht `id`. Ein `id` im Rumpf
+        // eines Restaurant-Endpunkts liest sich wie eine Restaurant-ID — ein Client,
+        // der damit `GET /restaurants/{id}` aufruft, bekommt bei überlappenden
+        // Zählern ein FREMDES Restaurant mit 200 zurück und zeigt es als das eigene
+        // an. Der Name sagt jetzt, worauf sich die Zahl bezieht.
         return new JsonResponse([
             'status' => 'pending',
-            'id' => $suggestion->getId(),
+            'submissionId' => $suggestion->getId(),
             'message' => $this->translator->trans('api.moderation_pending'),
         ], 202);
     }

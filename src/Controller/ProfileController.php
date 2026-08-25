@@ -120,6 +120,19 @@ final class ProfileController extends AbstractController
             return $this->redirectToRoute('app_profile');
         }
 
+        // ⚠ BF-22: Ein ungültiges Formular darf den Nutzer nicht abmelden.
+        // `handleRequest()` schreibt die eingegebene Adresse in die Entity, BEVOR
+        // validiert wird. Bleibt sie dort stehen, wandert der veränderte Nutzer
+        // beim Rendern in die Sitzung — und weil `EquatableInterface` die Adresse
+        // vergleicht, hält Symfony ihn beim nächsten Aufruf für einen anderen und
+        // meldet ihn ab. Man tippt sich also aus dem eigenen Konto.
+        //
+        // Dieselbe Zeile wie im Erfolgsfall, nur aus dem anderen Grund: Der Wert
+        // hat die Validierung gesehen, jetzt muss er wieder weg.
+        if ($profileForm->isSubmitted()) {
+            $user->setEmail($bisherigeAdresse);
+        }
+
         $passwordForm = $this->createForm(ChangePasswordType::class, null, [
             'action' => $this->generateUrl('app_profile_password'),
         ]);

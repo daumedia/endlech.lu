@@ -46,6 +46,18 @@ class RestaurantRepository extends ServiceEntityRepository
         return iterator_to_array(new Paginator($qb->getQuery(), true), false);
     }
 
+    /**
+     * Maskiert die LIKE-Platzhalter `%` und `_`.
+     *
+     * Das Ausrufezeichen als Maskierzeichen statt des Backslashes: In MySQL hängt
+     * die Bedeutung des Backslashes in Zeichenketten am `NO_BACKSLASH_ESCAPES`-Modus,
+     * das ESCAPE-Zeichen dagegen steht ausdrücklich in der Abfrage.
+     */
+    private static function escapeLike(string $wert): string
+    {
+        return str_replace(['!', '%', '_'], ['!!', '!%', '!_'], $wert);
+    }
+
     public function findPaginated(string $sort = 'rating', int $page = 1, int $limit = 6, array $filters = []): Paginator
     {
         $qb = $this->createQueryBuilder('r')
@@ -105,7 +117,12 @@ class RestaurantRepository extends ServiceEntityRepository
             $qb->andWhere('r.isHalal = true');
         }
         if (!empty($filters['city'])) {
-            $qb->andWhere('r.city LIKE :city')->setParameter('city', '%'.$filters['city'].'%');
+            // ⚠ BF-59: `%` und `_` sind LIKE-Platzhalter und müssen maskiert werden.
+            // `?city=%` lieferte sonst ALLE Restaurants statt keiner — der Filter
+            // fiel lautlos weg. Keine Injection (der Parameter ist gebunden), aber
+            // ein Filter, der bei bestimmten Eingaben das Gegenteil tut.
+            $qb->andWhere('r.city LIKE :city ESCAPE \'!\'')
+                ->setParameter('city', '%'.self::escapeLike($filters['city']).'%');
         }
         if (!empty($filters['cuisine'])) {
             $qb->innerJoin('r.cuisines', 'c_filter')

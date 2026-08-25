@@ -117,9 +117,14 @@ final class PartnerController extends AbstractController
         return $this->render('partner/confirmation.html.twig', [
             'state' => $state,
             'entry' => $entry,
-        ], WaitlistConfirmationService::RESULT_INVALID === $state
-            ? new Response(null, Response::HTTP_NOT_FOUND)
-            : null);
+        ], match ($state) {
+            // ⚠ BF-36: 410 statt 404 bei einem abgelaufenen Link. Der Unterschied
+            // ist nicht Kosmetik: 404 heißt „gab es nie", 410 heißt „gab es, ist
+            // weg" — und genau das ist hier der Fall.
+            WaitlistConfirmationService::RESULT_INVALID => new Response(null, Response::HTTP_NOT_FOUND),
+            WaitlistConfirmationService::RESULT_EXPIRED => new Response(null, Response::HTTP_GONE),
+            default => null,
+        });
     }
 
     /**
