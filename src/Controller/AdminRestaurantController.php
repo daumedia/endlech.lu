@@ -60,6 +60,11 @@ final class AdminRestaurantController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // ⚠ BF-49: Wer das Verwaltungsformular abschickt, hat alle Merkmale
+            // vor Augen gehabt — auch die, die er auf „nein" gelassen hat. Damit
+            // ist dieses Haus bewertet, und seine Punktzahl zählt.
+            $restaurant->setAssessedFeatures(Restaurant::assessableFeatures());
+
             $entityManager->persist($restaurant);
             $entityManager->flush();
 
@@ -81,6 +86,11 @@ final class AdminRestaurantController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // ⚠ BF-49: Wer das Verwaltungsformular abschickt, hat alle Merkmale
+            // vor Augen gehabt — auch die, die er auf „nein" gelassen hat. Damit
+            // ist dieses Haus bewertet, und seine Punktzahl zählt.
+            $restaurant->setAssessedFeatures(Restaurant::assessableFeatures());
+
             $isNowVerified = $restaurant->isVerified();
             if ($isNowVerified && !$wasVerified) {
                 $restaurant->setVerifiedAt(new \DateTimeImmutable());

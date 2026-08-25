@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Restaurant;
 use App\Entity\RestaurantSuggestion;
+use App\Enum\TriState;
 use App\Repository\CuisineRepository;
 use App\Repository\RestaurantSuggestionRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -72,6 +73,14 @@ final class AdminSuggestionController extends AbstractController
         // nachgemessen hätte.
         $restaurant->setDoorWidthCm($suggestion->getDoorWidthCm());
         $restaurant->setTableSpacingCm($suggestion->getTableSpacingCm());
+
+        // ⚠ BF-49: Festhalten, wonach der Einreicher tatsächlich gesehen hat.
+        // `Restaurant` kennt nur ja/nein — ohne diese Liste wäre „weiß nicht"
+        // hier endgültig zu „nein" geworden, und ein Haus, über das nichts
+        // bekannt ist, senkte die veröffentlichte Durchschnittspunktzahl
+        // (BF-67). Ein `UNKNOWN` zählt nicht als Erhebung, ein `NO` schon: Wer
+        // „nein" sagt, hat hingesehen.
+        $restaurant->setAssessedFeatures($this->erhobeneMerkmale($suggestion));
 
         $cuisineNames = array_map('trim', explode(',', $suggestion->getCuisine()));
         foreach ($cuisineNames as $cuisineName) {
@@ -145,6 +154,42 @@ final class AdminSuggestionController extends AbstractController
         $this->addFlash('info', $this->translator->trans('flash.suggestion_rejected', ['%name%' => $suggestion->getName()]));
 
         return $this->redirectToRoute('admin_suggestion_index');
+    }
+
+    /**
+     * Welche Merkmale hat der Einreicher beantwortet?
+     *
+     * `YES` und `NO` sind Auskünfte, `UNKNOWN` und `null` sind keine. Die Maße
+     * zählen als erhoben, sobald eine Zahl dasteht.
+     *
+     * @return list<string>
+     */
+    private function erhobeneMerkmale(RestaurantSuggestion $suggestion): array
+    {
+        $antworten = [
+            'wheelchair' => $suggestion->isWheelchairAccessible(),
+            'toilet' => $suggestion->hasAccessibleToilet(),
+            'dogs' => $suggestion->allowsAssistanceDogs(),
+            'lighting' => $suggestion->hasBrightLighting(),
+            'changing_table' => $suggestion->hasChangingTable(),
+            'disabled_parking' => $suggestion->hasDisabledParking(),
+        ];
+
+        $erhoben = [];
+        foreach ($antworten as $merkmal => $antwort) {
+            if (null !== $antwort && TriState::UNKNOWN !== $antwort) {
+                $erhoben[] = $merkmal;
+            }
+        }
+
+        if (null !== $suggestion->getDoorWidthCm()) {
+            $erhoben[] = 'door_width';
+        }
+        if (null !== $suggestion->getTableSpacingCm()) {
+            $erhoben[] = 'table_spacing';
+        }
+
+        return $erhoben;
     }
 
     /**

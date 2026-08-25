@@ -84,14 +84,32 @@
                 label: 'open.platform.score'|trans,
                 delta: deltas.averageScore|default(null),
                 deltaDecimals: 2,
-                hint: 'open.platform.score_hint'|trans
+                hint: 'open.platform.score_hint'|trans({'%scored%': platform.scoredRestaurants|format_number})
             }) }}
+            {# ⚠ BF-67: Häuser ohne jede Erhebung stehen nicht mehr im Durchschnitt.
+               Sie zogen ihn vorher nach unten, während sie zugleich die
+               Gemeindeabdeckung hoben — zwei Leitzahlen in gegenläufige Richtungen.
+               Jetzt sind sie eine eigene Zahl, und das ist ehrlicher als beides:
+               Es versteckt nichts und rechnet nichts schön. #}
+            {% if platform.unscoredRestaurants > 0 %}
+                {{ include('open/_metric.html.twig', {
+                    emoji: '📐',
+                    value: platform.unscoredRestaurants|format_number,
+                    label: 'open.platform.unscored'|trans,
+                    hint: 'open.platform.unscored_hint'|trans
+                }) }}
+            {% endif %}
         </div>
 
         {# --- Punkteverteilung --- #}
         <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm mb-6 break-inside-avoid">
             <h3 class="text-lg font-semibold text-gray-900 mb-1">{{ 'open.platform.distribution_heading'|trans }}</h3>
-            <p class="text-sm text-gray-600">{{ 'open.platform.distribution_intro'|trans }}</p>
+            <p class="text-sm text-gray-600">
+                {{ 'open.platform.distribution_intro'|trans }}
+                {% if platform.unscoredRestaurants > 0 %}
+                    {{ 'open.platform.distribution_unscored'|trans({'%count%': platform.unscoredRestaurants}) }}
+                {% endif %}
+            </p>
 
             {{ include('open/_histogram.html.twig', {
                 distribution: platform.scoreDistribution,

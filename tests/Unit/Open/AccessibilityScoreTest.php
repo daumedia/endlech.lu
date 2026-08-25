@@ -32,9 +32,30 @@ final class AccessibilityScoreTest extends TestCase
         yield 'alle' => [8, 10];
     }
 
-    public function testEmptyRestaurantScoresZero(): void
+    /**
+     * BF-67: Ein Haus, über das GAR NICHTS erhoben wurde, bekommt keine
+     * Punktzahl — `null`, nicht 0.
+     *
+     * Vorher zog eine glatte Null den veröffentlichten Durchschnitt nach unten,
+     * während dasselbe Haus die Gemeindeabdeckung hob. Gemessen auf `/open`:
+     * `communesCovered` 8 → 9 und `averageScore` 5,09 → 4,67 durch einen
+     * einzigen leeren Eintrag. Der Unterschied ist sprachlich: „0 von 10" heißt
+     * „nichts davon vorhanden", und das hat niemand behauptet.
+     */
+    public function testNichtBewertetesRestaurantBekommtKeinePunktzahl(): void
     {
-        self::assertSame(0, AccessibilityScore::forRestaurant(new Restaurant()));
+        self::assertNull(AccessibilityScore::forRestaurant(new Restaurant()));
+    }
+
+    /**
+     * Ein bewertetes Haus, bei dem nichts zutrifft, bekommt dagegen sehr wohl
+     * eine Null — dort hat jemand hingesehen.
+     */
+    public function testBewertetesRestaurantOhneMerkmaleBekommtNull(): void
+    {
+        $restaurant = (new Restaurant())->setAssessedFeatures(Restaurant::assessableFeatures());
+
+        self::assertSame(0, AccessibilityScore::forRestaurant($restaurant));
     }
 
     /**
@@ -45,6 +66,7 @@ final class AccessibilityScoreTest extends TestCase
     public function testUnmeasuredDimensionsDoNotCount(): void
     {
         $restaurant = (new Restaurant())
+            ->setAssessedFeatures(Restaurant::assessableFeatures())
             ->setIsWheelchairAccessible(true)
             ->setHasAccessibleToilet(true)
             ->setAllowsAssistanceDogs(true)
@@ -61,7 +83,9 @@ final class AccessibilityScoreTest extends TestCase
 
     public function testDoorNarrowerThanTheMinimumDoesNotCount(): void
     {
-        $restaurant = (new Restaurant())->setDoorWidthCm(Restaurant::MIN_DOOR_WIDTH_CM - 1);
+        $restaurant = (new Restaurant())
+            ->setAssessedFeatures(Restaurant::assessableFeatures())
+            ->setDoorWidthCm(Restaurant::MIN_DOOR_WIDTH_CM - 1);
 
         self::assertFalse($restaurant->hasWideDoors());
         self::assertSame(0, AccessibilityScore::forRestaurant($restaurant));

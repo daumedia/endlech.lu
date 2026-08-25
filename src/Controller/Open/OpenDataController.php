@@ -172,7 +172,12 @@ final class OpenDataController extends AbstractController
             'website' => $restaurant->getWebsite(),
             'isVerified' => $restaurant->isVerified(),
             'verifiedAt' => $restaurant->getVerifiedAt()?->format('Y-m-d'),
+            // ⚠ BF-67: `null` heißt „nicht bewertet" und ist etwas anderes als 0.
+            // Wer den Datensatz auswertet, darf beides nicht verwechseln — eine
+            // glatte Null las sich als „nichts davon vorhanden", und das hat
+            // niemand behauptet.
             'accessibilityScore' => AccessibilityScore::forRestaurant($restaurant),
+            'assessed' => $restaurant->isAssessed(),
             'stepFreeEntrance' => $restaurant->isWheelchairAccessible(),
             'accessibleRestroom' => $restaurant->hasAccessibleToilet(),
             'assistanceDogsWelcome' => $restaurant->allowsAssistanceDogs(),

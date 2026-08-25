@@ -256,6 +256,10 @@ class RestaurantRepository extends ServiceEntityRepository
                 'r.hasDisabledParking AS hasDisabledParking',
                 'r.doorWidthCm AS doorWidthCm',
                 'r.tableSpacingCm AS tableSpacingCm',
+                // BF-67: Ohne dieses Feld ließe sich „nicht bewertet" nicht von
+                // „nichts vorhanden" unterscheiden — und genau daran hing, dass ein
+                // leerer Eintrag die veröffentlichte Durchschnittspunktzahl senkte.
+                'r.assessedFeatures AS assessedFeatures',
             );
 
         if ($createdUntil) {
