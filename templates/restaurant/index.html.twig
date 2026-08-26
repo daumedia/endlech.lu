@@ -180,9 +180,11 @@
                     {% for langVal in filters.lang %}
                         {% set filterParams = filterParams|merge({('lang_' ~ langVal): 1}) %}
                     {% endfor %}
-                    <div class="flex justify-between items-center mb-4">
+                    {# flex-wrap: bei 320px bricht die Sortier-Leiste unter die Überschrift,
+                       statt die Seite waagerecht überlaufen zu lassen (BF-75, WCAG 1.4.10). #}
+                    <div class="flex flex-wrap justify-between items-center gap-2 mb-4">
                         <h2 class="text-xl font-bold text-gray-800">{{ 'restaurant.list.results'|trans({'%count%': total}) }}</h2>
-                        <div class="flex items-center gap-2">
+                        <div class="flex flex-wrap items-center gap-2">
                             <a href="{{ path('app_restaurant_index', {sort: 'rating', page: 1}|merge(filterParams)) }}"
                                class="px-3 py-1.5 text-sm rounded-lg border motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-purple-700 {{ sort == 'rating' ? 'bg-purple-600 text-white border-purple-600' : 'bg-white text-gray-700 border-gray-300 hover:border-purple-400' }}">
                                 {{ 'restaurant.list.sort_rating'|trans }}

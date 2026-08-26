@@ -1,6 +1,6 @@
 # 02 · Barrierefreiheit der Plattform — Aufgabenplan
 
-Status: `building` · Stand: 2026-08-26
+Status: `approved` · Stand: 2026-08-26 (QA⁵: kein Befund offen → /sdd-deploy)
 
 Ebenen laufen in Reihenfolge. `[P]` heißt: innerhalb dieser Ebene unabhängig von den
 anderen `[P]`-Aufgaben, darf parallel an einen Subagenten gehen.

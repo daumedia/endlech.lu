@@ -13,7 +13,9 @@ class OpeningHourType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $timeAttr = ['class' => 'bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-purple-500 focus:outline-none w-32'];
+        // Echte outline statt focus:ring/outline-none: bleibt im Windows-Kontrastmodus
+        // sichtbar (BF-76, AK-40). Kanon-Kette wie im übrigen Admin.
+        $timeAttr = ['class' => 'bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-2 focus:outline-offset-2 focus:outline-purple-700 w-32'];
 
         $builder
             ->add('dayOfWeek', HiddenType::class)

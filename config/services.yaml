@@ -33,10 +33,19 @@ parameters:
     # als freiwillige Selbstverpflichtung auf (AK-47) und nennt keine gesetzliche
     # Beschwerdestelle (AK-43). known_issues ist die Liste nicht zugänglicher
     # Inhalte (je Eintrag: criterion, reason, planned).
-    app.accessibility.conformance_level: 'none'      # none | partial | full
-    app.accessibility.tested_on: ''                  # 'JJJJ-MM-TT' nach der Prüfung, sonst leer
+    app.accessibility.conformance_level: 'partial'   # none | partial | full — teilweise konform (Prüfung 2026-08-26)
+    app.accessibility.tested_on: '2026-08-26'        # axe-core (WCAG 2.2 AA) über alle Seiten + Browser-Interaktion (Fokus, Kontrastmodus, Tastatur)
     app.accessibility.review_interval_months: 12     # Veralterungshinweis ab hier (AK-46)
-    app.accessibility.known_issues: []
+    # Nicht (vollständig) zugängliche Inhalte mit Begründung (AK-45). Kriterium/Grund/Datum.
+    app.accessibility.known_issues:
+        - criterion: 'Bildergalerie auf den Restaurantseiten'
+          reason: 'Die Galerie lässt sich mit der Tastatur öffnen und mit Escape schließen; die Rückgabe des Fokus an das auslösende Bild ist noch nicht abschließend bestätigt.'
+          planned: 'nächste Prüfrunde'
+        - criterion: 'Küchen-Auswahlfeld (Mehrfachauswahl)'
+          reason: 'Vorschläge und die getroffene Auswahl werden Screenreadern angesagt; das Entfernen eines bereits gewählten Eintrags wird noch nicht verbal gemeldet.'
+          planned: 'nächste Prüfrunde'
+        - criterion: 'Abschließende Screenreader-Prüfung'
+          reason: 'Die automatisierte Prüfung (axe-core, WCAG 2.2 AA) ist bestanden; eine vollständige Abnahme mit echtem Screenreader steht noch aus.'
 
 services:
     # default configuration for services in *this* file

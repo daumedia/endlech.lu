@@ -40,16 +40,20 @@ obwohl dort nichts mehr zu reparieren ist.
 
 ## Offen
 
-Keine. Alle 72 Befunde aus der Rückerfassung sind behoben — siehe unten.
+Keine. Alle vier Befunde der `02`-QA (BF-73/74/75/76) sind über fünf Durchläufe behoben und
+verifiziert — siehe unten. Die 72 Rückerfassungs-Befunde ebenfalls.
 
-> Der Stand ist eine Momentaufnahme vom 2026-08-25 und gilt für `dev`. Auf
-> `production` liegt nichts davon: Der Branch `fix/befunde-abarbeiten` ist noch
-> nicht ausgeliefert.
+> Nichts davon liegt auf `production`: Feature `02` auf
+> `feature/02-barrierefreiheit-plattform`, die Rückerfassung auf `dev`/`fix/befunde-abarbeiten`.
 
 ## Behoben
 
 | ID | Feature | Befund | Grad | Behoben am | Ausgeliefert |
 |---|---|---|---|---|---|
+| BF-74 | 02 | Cookie-Banner fing beim `connect()` den Fokus; `focus()` nur noch in `reopen()` (nutzergetriggert) — Skip-Link ist wieder erstes Tab-Ziel (playwright PASS) | hoch | 2026-08-26 | **noch nicht** — `feature/02-barrierefreiheit-plattform` |
+| BF-73 | 02 | Mailer fing nur `Mailer\TransportException`; catch um `Messenger\TransportException` erweitert (EC-04), Regressionstest ergänzt | niedrig | 2026-08-26 | **noch nicht** — `feature/02-barrierefreiheit-plattform` |
+| BF-75 | 02 | Sortier-Leiste auf `/de/restaurants` mit `flex-wrap` versehen; kein 320px-Overflow mehr über alle öffentlichen Routen (AK-14) | mittel | 2026-08-26 | **noch nicht** — `feature/02-barrierefreiheit-plattform` |
+| BF-76 | 02 | `focus:outline-none` durch echte `outline` ersetzt — `OpeningHourType`, `_passkey_manage`, 5 Profil-Felder; Fokus im Kontrastmodus sichtbar (AK-04/AK-40). Gefunden durch forced-colors + `AccessibilityInteractionTest` | mittel | 2026-08-26 | **noch nicht** — `feature/02-barrierefreiheit-plattform` |
 | BF-04 | **01** | Feature `01` gebaut — Konto löschen, Daten exportieren, Passwort zurücksetzen, Einwilligung widerrufen | hoch | 2026-08-25 | **noch nicht** — Branch `fix/befunde-abarbeiten` |
 | BF-09 | B01 | Anti-Enumeration im Registrierformular; `UniqueEntity` in Gruppe `strict`, Hash in beiden Zweigen (528 vs. 522 ms) | mittel | 2026-08-25 | **noch nicht** — Branch `fix/befunde-abarbeiten` |
 | BF-10 | B14, B15, B23 | `->locale()` in `WaitlistConfirmationService` und `Api\V1\AuthController` | mittel | 2026-08-25 | **noch nicht** — Branch `fix/befunde-abarbeiten` |

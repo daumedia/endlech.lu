@@ -9,6 +9,7 @@ use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Messenger\Exception\TransportException as MessengerTransportException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -59,7 +60,12 @@ final class AccessibilityReportMailer
 
         try {
             $this->mailer->send($email);
-        } catch (TransportExceptionInterface $e) {
+        } catch (TransportExceptionInterface | MessengerTransportException $e) {
+            // Zwei Wege scheitern: der direkte SMTP-Versand (sync, Mailer-Transport)
+            // und der Queue-Dispatch, wenn die Mail asynchron über Messenger läuft
+            // und der Transport (z. B. Doctrine) nicht erreichbar ist. Beides ist ein
+            // Zustellfehler, kein Serverfehler — der Melder bekommt die freundliche
+            // Meldung, nicht einen 500 (EC-04, BF-73).
             // ⚠ AK-57: NUR Klasse + Code. Weder die Beschreibung noch die Adresse
             // dürfen in den Log-Record — beides ginge sonst über Monolog (und in
             // prod über den Sentry-Handler) nach außen. Der context trägt deshalb

@@ -23,9 +23,12 @@ Akzeptanzkriterium fest, ob es **erfüllt**, **umgesetzt (Verifikation ausstehen
 automatisierte Tests belegt; die **automatisierte inhaltliche Prüfung (axe-core, WCAG 2.2
 AA) ist über alle zwölf geprüften Routen grün** — 31 Befunde wurden gefunden und behoben.
 Aus bleibt die **manuelle** Prüfung von Tastaturweg, Screenreader-Ausgaben und
-Kontrastmodus; die kann nur ein Mensch abnehmen. Solange sie aussteht, nennt die
-Erklärungsseite **keinen** Konformitätsgrad (`app.accessibility.tested_on` leer → Zustand
-„Prüfung ausstehend", EC-07). Der Grad wird erst nach der Handprüfung gesetzt.
+Kontrastmodus. **2026-08-26 hat der Betreiber den Grad „teilweise konform" gesetzt**
+(`conformance_level: partial`, `tested_on: 2026-08-26`) mit den bekannten Einschränkungen
+in `known_issues` (Bildergalerie-Fokusrückgabe, Tom-Select-Entfernen-Ansage, abschließende
+Screenreader-Prüfung). Bewusst „partial", nicht „full": die abschließende
+Screenreader-Handprüfung und **UA-01** (juristische Abnahme des Rechtstexts vor dem
+Live-Gang) bleiben offen.
 
 ## Kriterienmatrix
 
