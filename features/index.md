@@ -24,8 +24,15 @@ Abmelden verlangt ein Token. 16 von 17 Kriterien, nur *mittel*/*niedrig* offen.
 virtuellen WebAuthn-Authenticator (CDP) durchgespielt, inklusive Anmeldung ohne
 E-Mail-Eingabe. Ein Befund *mittel* (BF-18), drei Kriterien nicht prüfbar.
 
+**2026-08-26 · Feature `02` aufgenommen und spezifiziert.** Die Zugänglichkeit der Plattform
+selbst war nie erfasst — weder „RAWeb" noch „EN 301 549" kam im Projekt vor. Zugesagt wird
+WCAG 2.2 AA über den vollen Bestand einschließlich Verwaltung, App-Hülle und Mails.
+
 Nächster Schritt: `/sdd-erfassen B25`. Die Reparaturen von B01, B02, B04 und B23 warten auf
-`/sdd-deploy`; das neue Feature `01` beginnt mit `/sdd-spec 01`.
+`/sdd-deploy`; das neue Feature `01` beginnt mit `/sdd-spec 01`, `02` steht auf `tasked`
+und geht weiter mit `/sdd-build 02`.
+⚠ **Reihenfolge:** erst die offenen Reparaturen ausliefern, dann `02` bauen — es fasst breit in
+dieselben Templates.
 
 **Zwei Namensräume:** Einträge mit Präfix `B` sind **Bestand** — gebaut, bevor die
 SDD-Kette da war, und rückwirkend erfasst. Einträge **ohne** Präfix (`01`, `02`, …)
@@ -43,6 +50,7 @@ Eingang von `sdd-build`. Der Weg ist: `bestand` → `/sdd-erfassen BNN` →
 | ID | Feature | Prio | Status | Abhängig von | Zuletzt |
 |---|---|---|---|---|---|
 | 01 | Betroffenenrechte: Konto löschen, Daten exportieren, Passwort zurücksetzen | P0 | roadmap | B01, B04, B19 | 2026-08-23 · aus BF-04 herausgelöst |
+| 02 | Barrierefreiheit der Plattform (EN 301 549 / RAWeb) | P0 | **tasked** | B01–B26 | 2026-08-26 · Aufgabenplan, 21 Aufgaben in 5 Ebenen |
 | B01 | Registrierung & E-Mail-Bestätigung | P0 | **approved** | — | 2026-08-23 · QA³: 17/20, nur mittlere Befunde offen |
 | B02 | Anmeldung mit Passwort | P0 | **approved** | B01 | 2026-08-24 · QA²: 16/17, repariert |
 | B03 | Passkey-Anmeldung & -Verwaltung | P0 | **approved** | B01, B02 | 2026-08-24 · QA: 16/20, 3 nicht prüfbar |
@@ -74,6 +82,7 @@ Eingang von `sdd-build`. Der Weg ist: `bestand` → `/sdd-erfassen BNN` →
 
 | ID | Umfang | Wo es lebt |
 |---|---|---|
+| 02 | Tastatur und Fokus, Wahrnehmbarkeit, Formulare, Zielgrößen, Sprache und Struktur, Mobil und App-Hülle, Verwaltung, Barrierefreiheitserklärung, Rückmeldeweg | projektweit; neu: Erklärungsseite `/barrierefreiheit` samt Meldeformular |
 | B01 | Registrierformular, Token 24 h, Bestätigungsmail, erneutes Senden, Hinweisseite | `RegistrationController`, `EmailVerificationController`, `RegistrationType`, `templates/registration/`, `templates/email_verification/`, `email/verification.html.twig` |
 | B02 | `form_login`, `remember_me`, Abmelden, Zugriffsregeln der `main`-Firewall | `SecurityController`, `config/packages/security.yaml`, `templates/security/login.html.twig` |
 | B03 | WebAuthn-Anmeldung ohne E-Mail-Eingabe, Passkeys anlegen/umbenennen/entfernen | `Security/PasskeyAuthenticator`, `Security/WebauthnUserEntityRepository`, `PasskeyController`, `Entity/WebauthnCredential`, `partials/_passkey_*`, `passkey_ui_controller.ts` |
@@ -152,5 +161,5 @@ Features ohnehin mitgeprüft.
 | Fehler-Tracking (Sentry) | Betrieb, nicht Funktion — gehört zu `sdd-betrieb` |
 | Deployment (`cd.yml`, `deploy.sh`) | dito |
 | Testdaten (`DataFixtures/`) | Werkzeug der Entwicklung |
-| Barrierefreiheitsmerkmale als solche | kein eigener Ort im Code: sie sind Felder auf `Restaurant` und erscheinen in B05, B06, B11, B20 und B23. Die Bewertungsregel darüber (`AccessibilityScore`) gehört zu B16 |
+| Barrierefreiheitsmerkmale **der Restaurants** | kein eigener Ort im Code: sie sind Felder auf `Restaurant` und erscheinen in B05, B06, B11, B20 und B23. Die Bewertungsregel darüber (`AccessibilityScore`) gehört zu B16. **Nicht zu verwechseln mit Feature `02`** — das ist die Zugänglichkeit der Plattform selbst und sehr wohl ein Feature |
 | E-Mail-Versand | Infrastruktur, verteilt über B01, B14 und B15 |
