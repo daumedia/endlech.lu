@@ -29,8 +29,8 @@ selbst war nie erfasst — weder „RAWeb" noch „EN 301 549" kam im Projekt vo
 WCAG 2.2 AA über den vollen Bestand einschließlich Verwaltung, App-Hülle und Mails.
 
 Nächster Schritt: `/sdd-erfassen B25`. Die Reparaturen von B01, B02, B04 und B23 warten auf
-`/sdd-deploy`; das neue Feature `01` beginnt mit `/sdd-spec 01`, `02` steht auf `tasked`
-und geht weiter mit `/sdd-build 02`.
+`/sdd-deploy`; das neue Feature `01` beginnt mit `/sdd-spec 01`, `02` ist gebaut (`building`)
+und geht weiter mit `/sdd-qa 02`.
 ⚠ **Reihenfolge:** erst die offenen Reparaturen ausliefern, dann `02` bauen — es fasst breit in
 dieselben Templates.
 
@@ -50,7 +50,7 @@ Eingang von `sdd-build`. Der Weg ist: `bestand` → `/sdd-erfassen BNN` →
 | ID | Feature | Prio | Status | Abhängig von | Zuletzt |
 |---|---|---|---|---|---|
 | 01 | Betroffenenrechte: Konto löschen, Daten exportieren, Passwort zurücksetzen | P0 | roadmap | B01, B04, B19 | 2026-08-23 · aus BF-04 herausgelöst |
-| 02 | Barrierefreiheit der Plattform (EN 301 549 / RAWeb) | P0 | **tasked** | B01–B26 | 2026-08-26 · Aufgabenplan, 21 Aufgaben in 5 Ebenen |
+| 02 | Barrierefreiheit der Plattform (EN 301 549 / RAWeb) | P0 | **building** | B01–B26 | 2026-08-26 · gebaut, 502 Tests + axe grün (31 Befunde behoben); Handprüfung offen → /sdd-qa |
 | B01 | Registrierung & E-Mail-Bestätigung | P0 | **approved** | — | 2026-08-23 · QA³: 17/20, nur mittlere Befunde offen |
 | B02 | Anmeldung mit Passwort | P0 | **approved** | B01 | 2026-08-24 · QA²: 16/17, repariert |
 | B03 | Passkey-Anmeldung & -Verwaltung | P0 | **approved** | B01, B02 | 2026-08-24 · QA: 16/20, 3 nicht prüfbar |

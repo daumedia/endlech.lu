@@ -112,3 +112,8 @@ finance:
 # Nutzern der rohe Schlüssel angezeigt wurde.
 form:
     password_mismatch: "D'Passwierder stëmmen net iwwereneen."
+
+accessibility:
+    report:
+        description_required: "Beschreift w.e.g. den Hindernis."
+        email_invalid: "Gitt w.e.g. eng gülteg E-Mail-Adress an."

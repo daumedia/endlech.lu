@@ -112,3 +112,8 @@ finance:
 # Nutzern der rohe Schlüssel angezeigt wurde.
 form:
     password_mismatch: "The passwords do not match."
+
+accessibility:
+    report:
+        description_required: "Please describe the barrier."
+        email_invalid: "Please enter a valid email address."

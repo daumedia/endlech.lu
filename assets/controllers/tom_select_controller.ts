@@ -28,6 +28,18 @@ export default class extends Controller {
                 },
             },
         });
+
+        // AK-41: Auswahl für Screenreader ansagen.
+        // Die Vorschläge selbst trägt Tom Select bereits barrierefrei aus:
+        // role="combobox", aria-expanded, aria-controls sowie aria-activedescendant/
+        // aria-selected auf den Optionen im Listbox-Dropdown. Was fehlt, ist die
+        // Ansage der GETROFFENEN Auswahl. Dafür wird die Chip-Leiste (.ts-control)
+        // zu einer höflichen Live-Region: Ein neu hinzugefügter Küchen-Name wird
+        // vorgelesen. Der Chip-Text trägt die Aussage – kein neuer Übersetzungs-
+        // schlüssel nötig. Wird nach der Initialisierung gesetzt, damit die bereits
+        // vorhandenen Chips beim Laden nicht vorgelesen werden.
+        this.tomSelect.control.setAttribute('aria-live', 'polite');
+        this.tomSelect.control.setAttribute('aria-relevant', 'additions');
     }
 
     disconnect(): void {

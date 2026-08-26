@@ -4,11 +4,11 @@
         {# Rating-Badge (farbcodiert) #}
         {% if restaurant.rating is not null %}
             {% if restaurant.rating >= 7 %}
-                {% set ratingClass = 'bg-green-500 text-white' %}
+                {% set ratingClass = 'bg-green-700 text-white' %}
             {% elseif restaurant.rating >= 4 %}
-                {% set ratingClass = 'bg-amber-500 text-white' %}
+                {% set ratingClass = 'bg-amber-700 text-white' %}
             {% else %}
-                {% set ratingClass = 'bg-red-500 text-white' %}
+                {% set ratingClass = 'bg-red-700 text-white' %}
             {% endif %}
             <span class="inline-flex items-center gap-1 {{ ratingClass }} text-sm font-bold px-3 py-1 rounded-full shadow-sm"
                   title="{{ 'restaurant.detail.rating_badge_title'|trans({'%rating%': restaurant.rating}) }}">

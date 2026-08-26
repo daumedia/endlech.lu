@@ -111,6 +111,14 @@ framework:
             policy: 'sliding_window'
             limit: 3
             interval: '1 hour'
+        # Barriere-Meldeformular (Feature 02): jeder Absenden-Vorgang verschickt eine
+        # Mail an die feste Kontaktadresse. Gedeckelt an der IP – der Weg ist öffentlich
+        # und setzt keine Sitzung voraus. Dieselben Werte wie die übrigen
+        # Formular-Wege (partner_waitlist, registration).
+        accessibility_report:
+            policy: 'sliding_window'
+            limit: 5
+            interval: '1 hour'
 
 when@test:
     framework:
@@ -176,6 +184,10 @@ when@test:
                 limit: 10000
                 interval: '1 hour'
             account_export:
+                policy: 'sliding_window'
+                limit: 10000
+                interval: '1 hour'
+            accessibility_report:
                 policy: 'sliding_window'
                 limit: 10000
                 interval: '1 hour'

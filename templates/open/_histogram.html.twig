@@ -47,7 +47,7 @@
        abgesetzt – nie gestrichelt, das läse sich als Schwellenwert. #}
     <div class="border-t border-gray-200 pt-1.5 flex gap-0.5" aria-hidden="true">
         {% for score in distribution|keys %}
-            <span class="flex-1 text-center text-[11px] tabular-nums {{ score in peakScores ? 'font-semibold text-gray-700' : 'text-gray-400' }}">{{ score }}</span>
+            <span class="flex-1 text-center text-[11px] tabular-nums {{ score in peakScores ? 'font-semibold text-gray-700' : 'text-gray-500' }}">{{ score }}</span>
         {% endfor %}
     </div>
 

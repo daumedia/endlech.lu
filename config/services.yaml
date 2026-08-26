@@ -26,6 +26,18 @@ parameters:
     app.contact_email: '%env(string:default:app.contact_email_fallback:CONTACT_EMAIL)%'
     app.contact_email_fallback: 'info@endlech.lu'
 
+    # --- Barrierefreiheitserklärung (Feature 02) ---
+    # Die Werte stammen aus dem Prüflauf (Konformitäts-Prüfmatrix, docs/).
+    # Bis zur ersten Prüfung ist tested_on leer → die Seite weist den Stand als
+    # ausstehend aus (EC-07), statt einen Grad zu behaupten. Die Erklärung tritt
+    # als freiwillige Selbstverpflichtung auf (AK-47) und nennt keine gesetzliche
+    # Beschwerdestelle (AK-43). known_issues ist die Liste nicht zugänglicher
+    # Inhalte (je Eintrag: criterion, reason, planned).
+    app.accessibility.conformance_level: 'none'      # none | partial | full
+    app.accessibility.tested_on: ''                  # 'JJJJ-MM-TT' nach der Prüfung, sonst leer
+    app.accessibility.review_interval_months: 12     # Veralterungshinweis ab hier (AK-46)
+    app.accessibility.known_issues: []
+
 services:
     # default configuration for services in *this* file
     _defaults:
