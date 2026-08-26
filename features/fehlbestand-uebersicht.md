@@ -1,6 +1,6 @@
 # Fehlbestand — projektweite Muster
 
-Stand: 2026-08-23 · Quelle: die Abschnitte *Fehlbestand* und die ⚠-Kriterien aller
+Stand: 2026-08-25 · Quelle: die Abschnitte *Fehlbestand* und die ⚠-Kriterien aller
 26 rückerfassten Features.
 
 > **Das ist nicht `befunde.md`.** Jene Liste schreibt `sdd-qa` aus geprüften
@@ -19,6 +19,36 @@ Der Ertrag einer Vollerfassung liegt nicht in den Einzelbefunden, sondern hier: 
 acht Features gleichzeitig fehlt, fehlt in der Konvention, nicht in der Sorgfalt des
 Einzelfalls.
 
+## Stand nach dem Reparaturdurchgang (2026-08-25)
+
+Acht der zehn Muster sind geschlossen. Was bei jedem einzelnen zählt, ist nicht die
+Reparatur, sondern die Vorkehrung dagegen, dass es wiederkommt:
+
+| Muster | Stand | Vorkehrung |
+|---|---|---|
+| M-01 · Browser-Weg ungedrosselt | **zu** | `App\RateLimit\ActionLimiter` plus sechs neue Limiter; `LimiterCoverageTest` prüft, dass jeder konfigurierte Limiter verdrahtet ist und einen `when@test`-Override hat |
+| M-02 · Ungeprüfte Eingabe im Datensatz | **zu** | BF-24: Die API legt Vorschläge an, keine Restaurants. BF-43: CSV-Formeln entschärft |
+| M-03 · Betroffenenrechte | **zu** | Feature `01` — löschen, exportieren, Passwort zurücksetzen, widerrufen |
+| M-04 · Keine Aufzeichnung, wer was tat | offen | Ein Auditlog ist ein eigenes Feature, kein Befund |
+| M-05 · Vertrauen in den `Host`-Header | **entschärft** | `APP_API_BASE_URL`; `deploy.sh` warnt, wenn es fehlt. `trusted_hosts` geht nicht aus der Umgebung — der Grund steht in `.env` |
+| M-06 · Zwei Upload-Wege, zwei Maßstäbe | **zu** | BF-57: Die Prüfung sitzt im Dienst und damit auf jedem Aufrufweg |
+| M-07 · Code, der aussieht, als liefe er | **zu** | BF-48: `src/Schedule.php` sagt es selbst |
+| M-08 · Auf dem Telefon fehlt die Navigation | **teilweise** | BF-72: Der Sprachumschalter ist da. Der Rest ist B25/OF-01 |
+| M-09 · Wiederholbare Vorgänge | **zu** | BF-54 (Genehmigen), BF-47 (Snapshot) |
+| M-10 · Dieselbe Regel steht zweimal | offen | Redaktionell, kein Codebefund |
+
+Zwei Muster kamen im Durchgang dazu und sind ebenfalls zu:
+
+| Muster | Vorkommen | Vorkehrung |
+|---|---|---|
+| Fehlende Eingabeprüfung endet im 500er | BF-27, BF-51, BF-62 (zweimal) | `empty_data` an Pflichtfeldern, Längenprüfung am Endpunkt, Slug-Kürzung im Repository |
+| Übersetzungsschlüssel als Text auf der Seite | BF-69, BF-56 | `CatalogueCompletenessTest` scannt 736 Template-Schlüssel und 187 Formularangaben gegen alle vier Kataloge |
+
+⚠ **Der zweite fand sich mit dem eigenen Werkzeug — beim zweiten Anlauf.** Der Scanner
+aus dem ersten Block prüfte nur Constraint-Meldungen; zwei neu angelegte Formularfelder
+trugen Beschriftungen, die in keinem Katalog standen, und der Test blieb grün. Ein
+Werkzeug, das den eigenen Fehler nicht findet, gehört benannt.
+
 ---
 
 ## M-01 · Der Browser-Weg ist ungedrosselt, der API-Weg nicht
@@ -30,21 +60,46 @@ nimmt, und der ungeschützt, den ein Browser nimmt.
 | Endpunkt | Limit | Nachweis |
 |---|---|---|
 | `POST /api/v1/auth/login` | 5/min je IP | B23/AK-18 |
-| `POST /{locale}/login` | **keins** | B02/FB-01 — Symfony bringt `login_throttling` mit, es ist nicht gesetzt |
-| `POST /{locale}/register` | **keins** | B01/FB-01 |
-| `/{locale}/verify/resend` | **keins** | B01/FB-02 |
-| `POST /{locale}/profile/password` | **keins** | B04/FB-07 |
+| `POST /{locale}/login` | ~~keins~~ → 5 je 15 Min | B02/FB-01, behoben 2026-08-24 (BF-13) |
+| `POST /{locale}/register` | ~~keins~~ → 5/h | B01/FB-01, behoben 2026-08-23 (BF-02) |
+| `/{locale}/verify/resend` | ~~keins~~ → 3/h | B01/FB-02, behoben 2026-08-23 (BF-02) |
+| `POST /{locale}/profile/password` | ~~keins~~ → 5 je 15 Min | B04/FB-07, behoben 2026-08-24 (BF-20) |
+| `POST /{locale}/profile/edit` | **keins** | B04/BF-21 — verschickt seit der BF-19-Reparatur zwei Mails je Aufruf, an eine **frei wählbare** Adresse |
+| `POST /api/v1/auth/register` | ~~100/min~~ → 5/h | B23/FB-02, behoben 2026-08-24 (BF-25) |
+| `POST /api/v1/restaurants` | **keins** (100/min anonym) | B23/BF-30 — 40 Aufrufe, 40 Vorschläge in der Moderationsschlange |
 | `/passkey/login/options` | **keins** | B03/FB-01 |
-| `POST /{locale}/community/suggest` | **keins** | B11/FB-01 |
-| `/open/dataset.csv` | **keins** | B17/FB-02 |
-| alle Verwaltungs-POSTs | **keins** | B19/FB-05 |
+| `POST /{locale}/community/suggest` | **keins** | B11/BF-50 — gemessen 2026-08-24; gemildert durch Konto- und Bestätigungspflicht |
+| `/open/dataset.csv` | **keins** | B17/BF-42 — gemessen 2026-08-24: 12 Abrufe, zwölfmal 200; jeder lädt den gesamten Bestand |
+| alle Verwaltungs-POSTs | **keins** | B19/FB-05, gemessen 2026-08-24 (BF-35): acht in Folge, keine Sperre |
 
 **Schwerste Folge:** B02/FB-01. Unbegrenztes Passwortraten trifft ein
 Anwendungssystem, dessen Verwaltungszugang an genau einem Konto hängt (B19/FB-01) und
-das keine zweite Stufe kennt (B02/FB-03).
+das keine zweite Stufe kennt (B02/FB-03). **Behoben am 2026-08-24.**
 
 **Kleinster wirksamer Schritt:** `login_throttling: max_attempts: 5` in der
-`main`-Firewall. Eine Zeile.
+`main`-Firewall. Eine Zeile. — *erledigt.*
+
+**Stand 2026-08-24: vier der neun Zeilen sind zu, und trotzdem ist das Muster nicht
+weg.** `POST /profile/edit` kam neu dazu — als Nebenwirkung einer Reparatur, die diesem
+Weg erstmals einen Mailversand gab, ohne ihm einen Deckel mitzugeben. Genau das ist der
+Punkt, an dem eine Einzelbehebung zu wenig ist:
+
+> **Konvention, die dem Projekt fehlt:** Jeder Weg, der eine Mail auslöst, ein Geheimnis
+> prüft **oder bei jedem Aufruf den gesamten Bestand lädt**, bekommt einen Limiter —
+> unabhängig davon, ob eine App oder ein Browser ihn geht. Wer einen solchen Weg neu
+> anlegt oder einen bestehenden darum erweitert, legt den Limiter im selben Commit an.
+
+*Der dritte Fall kam am 2026-08-24 durch BF-42 dazu: `/open/dataset.csv` löst keine Mail
+aus und prüft kein Geheimnis — die erste Fassung des Satzes hätte ihn nicht erfasst.*
+
+Ohne diesen Satz irgendwo im Projekt wird die Liste weiter Zeilen bekommen, während oben
+welche verschwinden.
+
+**Stand 2026-08-24, abends: genau das ist eingetreten.** BF-30 (`POST /api/v1/restaurants`
+ohne Deckel) entstand am selben Tag, an dem der Satz oben geschrieben wurde — in einer
+Reparatur, die diesen Weg umbaute, ohne ihm einen Limiter mitzugeben. Die Konvention
+steht damit an der falschen Stelle: Sie wird beim **Prüfen** gelesen, nicht beim
+**Bauen**. Sie gehört nach `CLAUDE.md`, wo sie vor jedem Eingriff im Blick ist.
 
 ---
 

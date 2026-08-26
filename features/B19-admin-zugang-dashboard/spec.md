@@ -118,8 +118,9 @@ Umgekehrt hängen an B19: B20, B21, B22, B18.
 
 - **OF-01** · Soll es eine Nutzerverwaltung geben (FB-01)? Ohne sie ist auch das
   Löschen eines Kontos auf Nutzerwunsch (B04/FB-01) nicht durchführbar. — Betreiber
-- **OF-02** · Wirkt der Admin-Sprachumschalter tatsächlich (AK-10)? Ohne Leser ist der
-  Sitzungswert wirkungslos. — im Browser nachzuprüfen
+- ~~**OF-02** · Wirkt der Admin-Sprachumschalter tatsächlich (AK-10)?~~ **Beantwortet am
+  2026-08-24: nein.** Nach der Wahl `fr` liefert `/de/admin` unverändert Deutsch. Der
+  Sitzungswert hat keinen Leser (BF-34).
 
 ## Decision Log
 

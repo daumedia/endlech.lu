@@ -129,6 +129,12 @@ final class OpenStatsService
         $total = \count($rows);
         $verified = 0;
         $scoreSum = 0;
+        // ⚠ BF-67: Häuser ohne jede Erhebung stehen NICHT im Durchschnitt und nicht
+        // in der Verteilung. Sie bekamen vorher eine glatte Null und zogen damit
+        // die veröffentlichte Zahl nach unten, während sie zugleich die
+        // Gemeindeabdeckung hoben. Sie erscheinen jetzt als eigene Zahl.
+        $unscored = 0;
+        $scored = 0;
         $distribution = array_fill(0, AccessibilityScore::MAX + 1, 0);
         $communes = [];
         $cantons = [];
@@ -138,9 +144,14 @@ final class OpenStatsService
             $isVerified = (bool) $row['isVerified'];
             $verified += $isVerified ? 1 : 0;
 
-            $score = AccessibilityScore::fromFlags($this->flagsFromRow($row));
-            $scoreSum += $score;
-            ++$distribution[$score];
+            if ([] === ($row['assessedFeatures'] ?? [])) {
+                ++$unscored;
+            } else {
+                $score = AccessibilityScore::fromFlags($this->flagsFromRow($row));
+                $scoreSum += $score;
+                ++$scored;
+                ++$distribution[$score];
+            }
 
             $commune = $this->cantonResolver->resolveCommune((string) $row['city']);
 
@@ -175,7 +186,9 @@ final class OpenStatsService
             'communeCoverage' => $this->share(\count($communes), $totalCommunes),
             'cantonsCovered' => \count($cantons),
             'totalCantons' => \count(Canton::cases()),
-            'averageScore' => $total > 0 ? round($scoreSum / $total, 2) : 0.0,
+            'averageScore' => $scored > 0 ? round($scoreSum / $scored, 2) : 0.0,
+            'scoredRestaurants' => $scored,
+            'unscoredRestaurants' => $unscored,
             'maxScore' => AccessibilityScore::MAX,
             'scoreDistribution' => $distribution,
             'byCanton' => $this->cantonRows($cantons),

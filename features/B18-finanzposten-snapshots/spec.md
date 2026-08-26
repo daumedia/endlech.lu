@@ -44,8 +44,15 @@ Umgekehrt hängen B16 und B17 daran.
 - **AK-04** · Angenommen, eine Kategorie wird gewählt, wenn der Posten gespeichert wird,
   dann folgt die Richtung (`type`) automatisch aus der Kategorie — es gibt **keinen**
   `setType()`.
-- **AK-05** · Angenommen, eine Kategorie führt keine Stückzahl, wenn sie gewählt wird,
-  dann wird ein zuvor gesetztes `quantity` geleert.
+- **AK-05** · Angenommen, eine Kategorie führt keine Stückzahl, wenn trotzdem eine
+  übermittelt wird, dann antwortet der Server mit **422** und einem Feldfehler an
+  `quantity` (`finance.quantity_not_allowed`, `FinanceEntryType.php:110`). Unabhängig
+  davon räumt `setCategory()` ein gesetztes `quantity` weg (`FinanceEntry.php:128`) —
+  das greift, wenn die Kategorie programmatisch gewechselt wird.
+  *(**Berichtigt am 2026-08-24.** Die ursprüngliche Rekonstruktion nannte nur die
+  Entity-Hälfte: „dann wird ein zuvor gesetztes `quantity` geleert." Gemessen liefert
+  das Formular vorher einen 422 — die bessere Lösung, weil ein stilles Leeren den Admin
+  glauben ließe, die Stückzahl sei gespeichert.)*
 - **AK-06** · Angenommen, ein Betrag wird eingegeben, wenn er gespeichert ist, dann
   steht er mit **zwei** Nachkommastellen in der Datenbank — unabhängig davon, ob das
   Formular `42.5` oder `42.50` lieferte.
@@ -146,10 +153,13 @@ Umgekehrt hängen B16 und B17 daran.
 - **OF-01** · Soll der Snapshot-Knopf `force: false` verwenden und einen vorhandenen
   Monat unangetastet lassen (AK-16)? Dann bräuchte es einen zweiten, ausdrücklich
   benannten Weg zum Überschreiben. — Betreiber
+  **Entschieden 2026-08-25:** Ja, umgesetzt (BF-47, 2026-08-25). Der erste Knopf lässt einen vorhandenen Monat unangetastet; das Überschreiben ist ein zweiter Knopf mit Rückfrage.
+
 - **OF-02** · Ist der Cron-Eintrag auf Produktion tatsächlich eingerichtet (AK-17)? —
   Betreiber, vor dem nächsten Monatswechsel
 - **OF-03** · Soll `src/Schedule.php` bleiben, obwohl es nicht feuert? Ein Kommentar im
   Code wäre das Mindeste. — Betreiber
+  **Entschieden 2026-08-25:** Bleibt, mit Kommentar (BF-48, 2026-08-25). Die Klasse ist in dem Moment richtig, in dem ein Worker dazukommt; der Kommentar verhindert, dass jemand bei einer ausgefallenen Historie hier sucht.
 
 ## Decision Log
 

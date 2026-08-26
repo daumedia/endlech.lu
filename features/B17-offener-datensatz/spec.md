@@ -129,6 +129,8 @@ Drei sprachfreie Endpunkte geben die Daten der Plattform maschinenlesbar heraus:
 - **OF-01** · Soll der Datensatz auf verifizierte Einträge beschränkt werden (AK-13)?
   Das reduzierte ihn stark (3 von 11 in den Fixtures), machte ihn aber belastbar.
   Alternative: den API-Weg moderieren (B23/OF-01) und hier alles lassen. — Betreiber
+  **Entschieden 2026-08-25:** Nein (BF-41, 2026-08-25). Der Datensatz enthält weiterhin alle Einträge; was fehlte, war die Erklärung. Die Metadaten tragen jetzt `fieldNotes` zu `verified`, `assessed` und `accessibilityScore` — ohne sie wirkt jede Zeile wie eine geprüfte Angabe und ein `null`-Score wie ein Datenfehler.
+
 - **OF-02** · Steht auf Cloudways ein Cache vor der Anwendung (AK-14)? — Betreiber
 
 ## Decision Log

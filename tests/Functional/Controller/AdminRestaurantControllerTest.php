@@ -235,4 +235,66 @@ final class AdminRestaurantControllerTest extends AbstractWebTestCase
 
         self::assertResponseStatusCodeSame(400);
     }
+
+    /**
+     * AK-03 / BF-51: Ein leeres Pflichtfeld liefert 422 mit Meldung.
+     *
+     * Vorher endete es in einem 500er: `Restaurant::setName(string)` nimmt kein
+     * `null`, das Formular ist an die Entity gebunden, und `handleRequest()`
+     * schreibt **vor** der Validierung — der TypeError flog, bevor die
+     * `NotBlank`-Constraints je zum Zug kamen. Die Reparatur ist `empty_data => ''`
+     * am Feld: Dann kommt ein leerer String an, und die Meldung greift.
+     */
+    public function testAk03LeeresPflichtfeldLiefertMeldungStattServerfehler(): void
+    {
+        $client = static::createClient();
+        $this->loginAs($client, 'admin@endlech.lu');
+
+        $crawler = $client->request('GET', self::LOCALE.'/admin/restaurants/neu');
+        $form = $this->formWithField($crawler, 'restaurant[name]');
+        $form['restaurant[name]'] = '';
+        $form['restaurant[city]'] = '';
+
+        $crawler = $client->submit($form);
+
+        self::assertResponseStatusCodeSame(422);
+        self::assertStringContainsString('Bitte gib den Namen ein.', $crawler->filter('body')->text());
+    }
+
+    /**
+     * AK-06: Ein Speichern ohne Änderung am Verifizierungszustand darf `verifiedAt`
+     * und `verifiedBy` nicht anfassen — sonst wanderte das Prüfdatum bei jeder
+     * Textkorrektur auf heute.
+     */
+    public function testAk06UnveraenderteVerifizierungBleibtUnangetastet(): void
+    {
+        $client = static::createClient();
+        $this->loginAs($client, 'admin@endlech.lu');
+
+        $restaurant = $this->createRestaurant($client, 'AK06 '.uniqid());
+        $id = $restaurant->getId();
+
+        // erst verifizieren
+        $crawler = $client->request('GET', self::LOCALE.'/admin/restaurants/'.$id.'/bearbeiten');
+        $form = $this->formWithField($crawler, 'restaurant[name]');
+        $form['restaurant[isVerified]']->tick();
+        $client->submit($form);
+
+        $this->em($client)->clear();
+        $vorher = $this->restaurants($client)->find($id)->getVerifiedAt();
+        self::assertNotNull($vorher);
+
+        // dann nur den Namen ändern, Haken unberührt lassen
+        $crawler = $client->request('GET', self::LOCALE.'/admin/restaurants/'.$id.'/bearbeiten');
+        $form = $this->formWithField($crawler, 'restaurant[name]');
+        $form['restaurant[name]'] = 'AK06 umbenannt';
+        $client->submit($form);
+
+        $this->em($client)->clear();
+        $nachher = $this->restaurants($client)->find($id);
+
+        self::assertSame('AK06 umbenannt', $nachher->getName());
+        self::assertEquals($vorher, $nachher->getVerifiedAt(), 'Das Prüfdatum darf sich nicht verschieben.');
+        self::assertNotNull($nachher->getVerifiedBy());
+    }
 }

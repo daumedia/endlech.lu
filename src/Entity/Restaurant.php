@@ -144,6 +144,31 @@ class Restaurant
     #[ORM\Column(type: 'json')]
     private array $accessibilityNotes = [];
 
+    /**
+     * Merkmale, zu denen tatsächlich eine Auskunft vorliegt.
+     *
+     * ⚠ BF-49 + BF-67: `Restaurant` speichert die Barrierefreiheits-Merkmale als
+     * `bool` — dort ist `false` zweierlei zugleich: „gibt es nicht" und „wissen wir
+     * nicht". Der Vorschlags-Assistent unterscheidet das seit Langem (`TriState`),
+     * bei der Genehmigung ging die Unterscheidung verloren.
+     *
+     * Die Folge war auf `/open` messbar: Ein Haus, über das nichts bekannt war,
+     * hob die ausgewiesene Gemeindeabdeckung (8 → 9) und senkte zugleich die
+     * Durchschnittspunktzahl (5,09 → 4,67). Zwei Leitzahlen auf derselben Seite,
+     * die in gegenläufige Richtungen zeigten — wer die Kurven nebeneinander sah,
+     * las „wächst und wird schlechter". Tatsächlich hieß es: noch nicht gemessen.
+     *
+     * Diese Liste hält fest, wonach jemand gesehen hat. Ein leeres Feld heißt
+     * „nicht bewertet" und ergibt **keine** Punktzahl statt einer Null.
+     *
+     * Bewusst eine Liste und kein einzelnes `isAssessed`-Flag: Wer fünf Merkmale
+     * kennt und eines nicht, soll für das eine nicht bestraft werden.
+     *
+     * @var list<string>
+     */
+    #[ORM\Column(type: 'json')]
+    private array $assessedFeatures = [];
+
     #[ORM\Column]
     private \DateTimeImmutable $createdAt;
 
@@ -462,6 +487,45 @@ class Restaurant
     public function getAccessibilityNotes(): array
     {
         return $this->accessibilityNotes;
+    }
+
+    /**
+     * Alle bewertbaren Merkmale — zugleich die zulässigen Werte von
+     * `assessedFeatures` und der Nenner der Punktzahl.
+     *
+     * @return list<string>
+     */
+    public static function assessableFeatures(): array
+    {
+        return [
+            'wheelchair', 'toilet', 'dogs', 'lighting',
+            'changing_table', 'disabled_parking', 'door_width', 'table_spacing',
+        ];
+    }
+
+    /** @return list<string> */
+    public function getAssessedFeatures(): array
+    {
+        return $this->assessedFeatures;
+    }
+
+    /** @param list<string> $features */
+    public function setAssessedFeatures(array $features): static
+    {
+        $this->assessedFeatures = array_values(array_intersect(self::assessableFeatures(), $features));
+
+        return $this;
+    }
+
+    /**
+     * Wurde zu diesem Haus überhaupt etwas erhoben?
+     *
+     * Ist die Antwort nein, bekommt es keine Punktzahl — und fällt aus dem
+     * Durchschnitt heraus, statt ihn zu senken.
+     */
+    public function isAssessed(): bool
+    {
+        return [] !== $this->assessedFeatures;
     }
 
     /** @param list<string> $accessibilityNotes */

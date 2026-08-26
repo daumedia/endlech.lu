@@ -17,8 +17,23 @@ zwei Befunde mit Grad *mittel*. Die Reparatur liegt committet auf
 `fix/b01-registrierung-qa` und ist **noch nicht ausgeliefert** — für Nutzer ist die
 Sackgasse offen, bis das gemerged ist.
 
-Nächster Schritt: `/sdd-deploy B01`. Danach `/sdd-qa B02` für das nächste
-Bestandsfeature; das neue Feature beginnt mit `/sdd-spec 01`.
+**2026-08-24 · B02 abgenommen** nach Reparatur: Anmeldung sperrt nach fünf Fehlversuchen,
+Abmelden verlangt ein Token. 16 von 17 Kriterien, nur *mittel*/*niedrig* offen.
+
+**2026-08-24 · B03 abgenommen** — der Passkey-Ablauf wurde im echten Browser mit einem
+virtuellen WebAuthn-Authenticator (CDP) durchgespielt, inklusive Anmeldung ohne
+E-Mail-Eingabe. Ein Befund *mittel* (BF-18), drei Kriterien nicht prüfbar.
+
+**2026-08-26 · Feature `02` aufgenommen und spezifiziert.** Die Zugänglichkeit der Plattform
+selbst war nie erfasst — weder „RAWeb" noch „EN 301 549" kam im Projekt vor. Zugesagt wird
+WCAG 2.2 AA über den vollen Bestand einschließlich Verwaltung, App-Hülle und Mails.
+
+Nächster Schritt: `/sdd-erfassen B25`. Die Reparaturen von B01, B02, B04 und B23 warten auf
+`/sdd-deploy`; das neue Feature `01` beginnt mit `/sdd-spec 01`, `02` ist fünfmal geprüft und
+abgenommen (`approved`) — alle vier Befunde behoben, 53/60 belegt, weiter mit `/sdd-deploy 02`
+(UA-01 und die letzten Testdaten-/JS-/Mail-Prüfungen sind Vorbedingung für den Konformitätsgrad).
+⚠ **Reihenfolge:** erst die offenen Reparaturen ausliefern, dann `02` bauen — es fasst breit in
+dieselben Templates.
 
 **Zwei Namensräume:** Einträge mit Präfix `B` sind **Bestand** — gebaut, bevor die
 SDD-Kette da war, und rückwirkend erfasst. Einträge **ohne** Präfix (`01`, `02`, …)
@@ -36,30 +51,31 @@ Eingang von `sdd-build`. Der Weg ist: `bestand` → `/sdd-erfassen BNN` →
 | ID | Feature | Prio | Status | Abhängig von | Zuletzt |
 |---|---|---|---|---|---|
 | 01 | Betroffenenrechte: Konto löschen, Daten exportieren, Passwort zurücksetzen | P0 | roadmap | B01, B04, B19 | 2026-08-23 · aus BF-04 herausgelöst |
+| 02 | Barrierefreiheit der Plattform (EN 301 549 / RAWeb) | P0 | **approved** | B01–B26 | 2026-08-26 · QA⁵: alle Befunde (BF-73/74/75/76) behoben, 53/60 belegt, 6 Grenzen (Testdaten/JS/Mail/UA-01) → /sdd-deploy 02 |
 | B01 | Registrierung & E-Mail-Bestätigung | P0 | **approved** | — | 2026-08-23 · QA³: 17/20, nur mittlere Befunde offen |
-| B02 | Anmeldung mit Passwort | P0 | rekonstruiert | B01 | 2026-08-23 |
-| B03 | Passkey-Anmeldung & -Verwaltung | P0 | rekonstruiert | B01, B02 | 2026-08-23 |
-| B04 | Profil, Avatar & eigene Einreichungen | P0 | rekonstruiert | B01, B11 | 2026-08-23 |
-| B05 | Restaurantsuche, Filter & Sortierung | P0 | rekonstruiert | B07, B08 | 2026-08-23 |
-| B06 | Restaurant-Detailseite | P0 | rekonstruiert | B07, B08, B09, B10 | 2026-08-23 |
-| B07 | Öffnungszeiten | P1 | rekonstruiert | — | 2026-08-23 |
-| B08 | Küchen-Typen | P1 | rekonstruiert | — | 2026-08-23 |
-| B09 | Restaurantfotos & Galerie | P1 | rekonstruiert | B20 | 2026-08-23 |
-| B10 | Haltestellen in der Nähe | P2 | rekonstruiert | — | 2026-08-23 |
-| B11 | Restaurant vorschlagen (Wizard) | P0 | rekonstruiert | B01 | 2026-08-23 |
-| B12 | Startseite | P1 | rekonstruiert | B05 | 2026-08-23 |
-| B13 | Statische Inhaltsseiten | P2 | rekonstruiert | — | 2026-08-23 |
-| B14 | Partner-Warteliste | P0 | rekonstruiert | — | 2026-08-23 |
-| B15 | Organisations-Wartelisten | P0 | rekonstruiert | B14 | 2026-08-23 |
-| B16 | Transparenzseite `/open` | P1 | rekonstruiert | B18 | 2026-08-23 |
-| B17 | Offener Datensatz & Kennzahl-Endpunkte | P1 | rekonstruiert | B18 | 2026-08-23 |
-| B18 | Finanzposten & Kennzahl-Snapshots | P1 | rekonstruiert | B19 | 2026-08-23 |
-| B19 | Admin-Zugang & Dashboard | P0 | rekonstruiert | B02 | 2026-08-23 |
-| B20 | Restaurantverwaltung (Admin) | P0 | rekonstruiert | B19 | 2026-08-23 |
-| B21 | Vorschläge prüfen (Admin) | P0 | rekonstruiert | B19, B11 | 2026-08-23 |
-| B22 | Wartelisten-Verwaltung (Admin) | P1 | rekonstruiert | B19, B14, B15 | 2026-08-23 |
-| B23 | REST-API v1 (iOS-Backend) | P0 | rekonstruiert | B01, B05 | 2026-08-23 |
-| B24 | Mehrsprachigkeit | P1 | rekonstruiert | — | 2026-08-23 |
+| B02 | Anmeldung mit Passwort | P0 | **approved** | B01 | 2026-08-24 · QA²: 16/17, repariert |
+| B03 | Passkey-Anmeldung & -Verwaltung | P0 | **approved** | B01, B02 | 2026-08-24 · QA: 16/20, 3 nicht prüfbar |
+| B04 | Profil, Avatar & eigene Einreichungen | P0 | **approved** | B01, B11 | 2026-08-24 · QA 2. Durchlauf: 23/24, drei Befunde *mittel* |
+| B05 | Restaurantsuche, Filter & Sortierung | P0 | **approved** | B07, B08 | 2026-08-24 · QA: 24/24, zwei Befunde *niedrig* |
+| B06 | Restaurant-Detailseite | P0 | **approved** | B07, B08, B09, B10 | 2026-08-24 · QA: 23/23, **kein Befund** |
+| B07 | Öffnungszeiten | P1 | **approved** | — | 2026-08-24 · QA: 17/17, ein Befund *niedrig* |
+| B08 | Küchen-Typen | P1 | **approved** | — | 2026-08-24 · QA: 16/16, zwei Befunde *niedrig* |
+| B09 | Restaurantfotos & Galerie | P1 | **approved** | B20 | 2026-08-24 · QA: 18/18, ein Befund *mittel* |
+| B10 | Haltestellen in der Nähe | P2 | **approved** | — | 2026-08-24 · QA 2. Durchlauf: 24/24 |
+| B11 | Restaurant vorschlagen (Wizard) | P0 | **approved** | B01 | 2026-08-24 · QA: 18/19, ein Befund *mittel* |
+| B12 | Startseite | P1 | **approved** | B05 | 2026-08-24 · QA²: 15/15, BF-64 repariert |
+| B13 | Statische Inhaltsseiten | P2 | **approved** | — | 2026-08-24 · QA: 14/14, ein Befund *mittel* |
+| B14 | Partner-Warteliste | P0 | **approved** | — | 2026-08-24 · QA: 28/28, ein Befund *mittel* |
+| B15 | Organisations-Wartelisten | P0 | **approved** | B14 | 2026-08-24 · QA: 27/27, ein Befund *niedrig* |
+| B16 | Transparenzseite `/open` | P1 | **approved** | B18 | 2026-08-24 · QA: 29/29, ein Befund *mittel* |
+| B17 | Offener Datensatz & Kennzahl-Endpunkte | P1 | **approved** | B18 | 2026-08-24 · QA: 25/25, drei Befunde *niedrig* |
+| B18 | Finanzposten & Kennzahl-Snapshots | P1 | **approved** | B19 | 2026-08-24 · QA: 29/29, ein Befund *mittel* |
+| B19 | Admin-Zugang & Dashboard | P0 | **approved** | B02 | 2026-08-24 · QA: 17/17, ein Befund *mittel* |
+| B20 | Restaurantverwaltung (Admin) | P0 | **approved** | B19 | 2026-08-24 · QA: 19/20, ein Befund *mittel* |
+| B21 | Vorschläge prüfen (Admin) | P0 | **approved** | B19, B11 | 2026-08-24 · QA: 20/20, ein Befund *mittel* |
+| B22 | Wartelisten-Verwaltung (Admin) | P1 | **approved** | B19, B14, B15 | 2026-08-24 · QA: 30/30, ein Befund *niedrig* |
+| B23 | REST-API v1 (iOS-Backend) | P0 | **approved** | B01, B05 | 2026-08-24 · QA 2. Durchlauf: 34/35, drei Befunde *mittel/niedrig* |
+| B24 | Mehrsprachigkeit | P1 | **approved** | — | 2026-08-25 · QA 16/16, BF-68 bis BF-72 behoben |
 | B25 | PWA & mobile Navigation | P1 | rekonstruiert | — | 2026-08-23 |
 | B26 | Cookie-Banner | P2 | rekonstruiert | — | 2026-08-23 |
 
@@ -67,6 +83,7 @@ Eingang von `sdd-build`. Der Weg ist: `bestand` → `/sdd-erfassen BNN` →
 
 | ID | Umfang | Wo es lebt |
 |---|---|---|
+| 02 | Tastatur und Fokus, Wahrnehmbarkeit, Formulare, Zielgrößen, Sprache und Struktur, Mobil und App-Hülle, Verwaltung, Barrierefreiheitserklärung, Rückmeldeweg | projektweit; neu: Erklärungsseite `/barrierefreiheit` samt Meldeformular |
 | B01 | Registrierformular, Token 24 h, Bestätigungsmail, erneutes Senden, Hinweisseite | `RegistrationController`, `EmailVerificationController`, `RegistrationType`, `templates/registration/`, `templates/email_verification/`, `email/verification.html.twig` |
 | B02 | `form_login`, `remember_me`, Abmelden, Zugriffsregeln der `main`-Firewall | `SecurityController`, `config/packages/security.yaml`, `templates/security/login.html.twig` |
 | B03 | WebAuthn-Anmeldung ohne E-Mail-Eingabe, Passkeys anlegen/umbenennen/entfernen | `Security/PasskeyAuthenticator`, `Security/WebauthnUserEntityRepository`, `PasskeyController`, `Entity/WebauthnCredential`, `partials/_passkey_*`, `passkey_ui_controller.ts` |
@@ -145,5 +162,5 @@ Features ohnehin mitgeprüft.
 | Fehler-Tracking (Sentry) | Betrieb, nicht Funktion — gehört zu `sdd-betrieb` |
 | Deployment (`cd.yml`, `deploy.sh`) | dito |
 | Testdaten (`DataFixtures/`) | Werkzeug der Entwicklung |
-| Barrierefreiheitsmerkmale als solche | kein eigener Ort im Code: sie sind Felder auf `Restaurant` und erscheinen in B05, B06, B11, B20 und B23. Die Bewertungsregel darüber (`AccessibilityScore`) gehört zu B16 |
+| Barrierefreiheitsmerkmale **der Restaurants** | kein eigener Ort im Code: sie sind Felder auf `Restaurant` und erscheinen in B05, B06, B11, B20 und B23. Die Bewertungsregel darüber (`AccessibilityScore`) gehört zu B16. **Nicht zu verwechseln mit Feature `02`** — das ist die Zugänglichkeit der Plattform selbst und sehr wohl ein Feature |
 | E-Mail-Versand | Infrastruktur, verteilt über B01, B14 und B15 |

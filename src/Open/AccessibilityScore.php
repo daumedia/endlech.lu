@@ -12,10 +12,20 @@ use App\Entity\Restaurant;
  * aber auf einer Transparenzseite nicht mehr nachvollziehbar – Leser sollen
  * die Zahl selbst nachrechnen können.
  *
- * Nicht erfasste Türbreiten und Tischabstände zählen als nicht erfüllt. Der
- * Wert misst damit *dokumentierte* Barrierefreiheit, nicht vermutete. Das ist
- * die einzige Lesart, die nicht heimlich zugunsten schlecht gepflegter
- * Einträge rundet.
+ * Innerhalb eines bewerteten Hauses zählt ein nicht erfasstes Merkmal weiterhin
+ * als nicht erfüllt. Der Wert misst damit *dokumentierte* Barrierefreiheit, nicht
+ * vermutete — die einzige Lesart, die nicht heimlich zugunsten schlecht
+ * gepflegter Einträge rundet.
+ *
+ * ⚠ **Ein Haus, über das GAR NICHTS erhoben wurde, bekommt keine Punktzahl,
+ * sondern `null`** (BF-67). Vorher bekam es eine glatte Null und zog damit den
+ * veröffentlichten Durchschnitt nach unten, während es zugleich die
+ * Gemeindeabdeckung hob — zwei Leitzahlen auf derselben Seite, die in
+ * gegenläufige Richtungen zeigten. Gemessen: `communesCovered` 8 → 9 und
+ * `averageScore` 5,09 → 4,67 durch einen einzigen leeren Eintrag.
+ *
+ * Der Unterschied ist nicht rechnerisch, sondern sprachlich: „0 von 10" heißt
+ * „nichts davon vorhanden", und das hat niemand behauptet.
  */
 final class AccessibilityScore
 {
@@ -24,8 +34,15 @@ final class AccessibilityScore
 
     public const int MAX = 10;
 
-    public static function forRestaurant(Restaurant $restaurant): int
+    /**
+     * @return int|null `null`, wenn zu diesem Haus nichts erhoben wurde
+     */
+    public static function forRestaurant(Restaurant $restaurant): ?int
     {
+        if (!$restaurant->isAssessed()) {
+            return null;
+        }
+
         return self::fromFlags([
             $restaurant->isWheelchairAccessible(),
             $restaurant->hasAccessibleToilet(),

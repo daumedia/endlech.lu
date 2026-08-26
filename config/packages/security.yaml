@@ -45,12 +45,26 @@ security:
                 check_path: app_login
                 default_target_path: app_home
                 enable_csrf: true
+            # Ohne diese drei Zeilen nimmt die Anmeldung beliebig viele Fehlversuche
+            # entgegen – nachgestellt mit 20 Versuchen gegen das Admin-Konto, alle
+            # angenommen. Ausgerechnet die API war längst gedrosselt (api_login,
+            # 5/Minute): geschützt war der Weg, den eine App nimmt, nicht der, den ein
+            # Browser nimmt. Dahinter steht ein Verwaltungszugang an genau einem Konto,
+            # ohne zweite Stufe.
+            login_throttling:
+                max_attempts: 5          # je Kombination aus IP und Benutzername
+                interval: '15 minutes'
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 604800 # 1 week
             logout:
                 path: app_logout
                 target: app_home
+                # Ohne das genügte ein <img src="/de/logout"> auf einer fremden Seite,
+                # um einen angemeldeten Besucher abzumelden. Der Schaden ist gering,
+                # aber es ist kein Schutz. Verlangt einen POST mit Token – der
+                # Abmeldelink in base.html.twig ist deshalb ein Formular.
+                enable_csrf: true
 
     access_control:
         # API (/api/v1) – locale-frei, reihenfolgeabhängig: spezifisch vor allgemein.
@@ -63,13 +77,35 @@ security:
         - { path: '^/passkey/register', roles: IS_AUTHENTICATED_FULLY }
         # Web
         - { path: '^/[a-z]{2}/admin', roles: ROLE_ADMIN }
-        - { path: '^/[a-z]{2}/profile', roles: IS_AUTHENTICATED_FULLY }
+        # ⚠ BF-15: IS_AUTHENTICATED_REMEMBERED statt _FULLY. Vorher zeigte die
+        # Kopfzeile den Nutzer als angemeldet, und ein Klick auf sein eigenes
+        # Profil warf ihn auf die Anmeldeseite — „Angemeldet bleiben" hielt für
+        # alles außer der einen Seite, für die man es anhakt.
+        #
+        # Die empfindlichen Wege im Profil sind einzeln abgesichert und bleiben es:
+        # Passwortwechsel und Kontolöschung verlangen das aktuelle Passwort, die
+        # Adressänderung eine Bestätigung per Mail. Eine wiedererkannte Sitzung
+        # kommt damit an nichts heran, was sie nicht ohnehin sehen dürfte.
+        - { path: '^/[a-z]{2}/profile', roles: IS_AUTHENTICATED_REMEMBERED }
         - { path: '^/[a-z]{2}/register', roles: PUBLIC_ACCESS }
         - { path: '^/[a-z]{2}/login', roles: PUBLIC_ACCESS }
         - { path: '^/[a-z]{2}/verify', roles: PUBLIC_ACCESS }
+        # Feature 01: Wer sein Passwort vergessen hat, ist naturgemäß nicht
+        # angemeldet. Der Token IST der Nachweis — eine Anmeldepflicht machte den
+        # Weg unbenutzbar, ohne etwas zu sichern (dasselbe Muster wie bei
+        # `/verify/email-change`, BF-19).
+        - { path: '^/[a-z]{2}/passwort-vergessen', roles: PUBLIC_ACCESS }
+        - { path: '^/[a-z]{2}/passwort-zuruecksetzen', roles: PUBLIC_ACCESS }
 
 when@test:
     security:
+        # Ohne diesen Wert scheitert jeder Test, der mehr als fünf Anmeldungen
+        # durchspielt – dieselbe Vorsichtsmaßnahme wie bei den Limitern in
+        # framework.yaml.
+        firewalls:
+            main:
+                login_throttling:
+                    max_attempts: 10000
         password_hashers:
             Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
                 algorithm: auto

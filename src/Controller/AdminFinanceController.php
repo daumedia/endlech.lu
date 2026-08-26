@@ -130,7 +130,25 @@ final class AdminFinanceController extends AbstractController
             return $this->redirectToRoute('admin_finance_index');
         }
 
-        $result = $snapshots->capture(null, true);
+        // ⚠ BF-47: `force` war fest verdrahtet. Der Knopf ersetzte damit einen
+        // vorhandenen Snapshot durch die Zahlen von heute — ohne Rückfrage und mit
+        // Erfolgsmeldung. Ein Snapshot ist aber genau das, was ein zurückgerechneter
+        // Verlauf nicht ist: ein nachprüfbarer Stand. Wer ihn überschreibt,
+        // vernichtet den einzigen Beleg dafür, wie es damals aussah.
+        //
+        // Das Überschreiben bleibt möglich, aber es muss gewollt sein: Der zweite
+        // Klick trägt `overwrite=1` und kommt aus einem Formular, das den Monat
+        // nennt, den es trifft.
+        $ueberschreiben = $request->request->getBoolean('overwrite');
+        $result = $snapshots->capture(null, $ueberschreiben);
+
+        if (false === $result['created'] && !$ueberschreiben) {
+            $this->addFlash('warning', $this->translator->trans('flash.snapshot_exists', [
+                '%month%' => $result['snapshot']->getMonthKey(),
+            ]));
+
+            return $this->redirectToRoute('admin_finance_index');
+        }
 
         $this->addFlash('success', $this->translator->trans('flash.snapshot_captured', [
             '%month%' => $result['snapshot']->getMonthKey(),

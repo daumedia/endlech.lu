@@ -1,4 +1,9 @@
-{# Nahverkehr: Barrierefreie Haltestellen in der Nähe #}
+{# Nahverkehr: Haltestellen in der Nähe.
+
+   Bewusst NICHT „barrierefreie Haltestellen": Die HAFAS-Abfrage kennt kein
+   Barrierefreiheitsmerkmal (QA B10, BF-46). Der frühere Text behauptete eine
+   Aussage, die nirgends geprüft wurde — auf dieser Plattform der schwerste Fehler,
+   den ein Text machen kann. #}
 
 {% if nearbyStops is not empty or restaurant.nearbyStopsNote %}
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
@@ -38,7 +43,9 @@
                 {% endfor %}
             </div>
         {% elseif restaurant.hasCoordinates %}
-            <p class="text-sm text-gray-400">{{ 'nearby_stops.no_stops'|trans }}</p>
+            <p class="text-sm text-gray-500">{{ 'nearby_stops.no_stops'|trans({'%meters%': nearbyStopsRadius}) }}</p>
         {% endif %}
+
+        <p class="mt-4 text-xs text-gray-500">{{ 'nearby_stops.source'|trans }}</p>
     </div>
 {% endif %}

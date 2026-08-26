@@ -119,4 +119,47 @@ class OpeningHoursServiceTest extends TestCase
         // 2026-06-18 ist Donnerstag.
         self::assertFalse($service->isOpenAt($restaurant, $this->at('2026-06-18 13:00')));
     }
+
+    /**
+     * BF-61: Ein Haus, das nur an einem Wochentag öffnet, behält seinen Status.
+     *
+     * Die Folgetagsschleife lief nur sechs Tage weit. Der siebte wäre wieder der
+     * heutige Wochentag — eine Woche später —, und dessen Slots waren im Schritt
+     * davor als „schon vorbei" verworfen worden. Auf der Detailseite stand dann
+     * weder „geöffnet" noch eine nächste Öffnung, und die Seite sah dabei nicht
+     * kaputt aus.
+     *
+     * Der Fall ist ungewöhnlich, aber nicht erfunden: Sonntagsbrunch,
+     * Wochenmarkt-Stände, Vereinslokale mit einem Öffnungstag.
+     */
+    public function testHausMitEinemOeffnungstagFindetDenNaechstenTermin(): void
+    {
+        // Montag, 2026-08-24, 18:41 — das einzige Fenster (08:00–10:00) ist vorbei.
+        $restaurant = new Restaurant();
+        $restaurant->addOpeningHour($this->slot(1, '08:00', '10:00'));
+
+        $naechste = (new OpeningHoursService())
+            ->getNextOpeningTime($restaurant, $this->at('2026-08-24 18:41'));
+
+        self::assertNotNull($naechste, 'Ohne Ergebnis zeigt die Seite weder Status noch nächste Öffnung.');
+        self::assertSame(1, $naechste['dayOfWeek'], 'Der nächste Termin ist wieder ein Montag.');
+        self::assertSame('08:00', $naechste['time']->format('H:i'));
+    }
+
+    /**
+     * Und bei mehreren Fenstern an diesem einen Tag das früheste — eine Woche
+     * später ist alles künftig.
+     */
+    public function testEinTagMitZweiFensternLiefertDasFruehere(): void
+    {
+        $restaurant = new Restaurant();
+        $restaurant->addOpeningHour($this->slot(1, '18:00', '22:00'));
+        $restaurant->addOpeningHour($this->slot(1, '11:00', '14:00'));
+
+        $naechste = (new OpeningHoursService())
+            ->getNextOpeningTime($restaurant, $this->at('2026-08-24 23:30'));
+
+        self::assertNotNull($naechste);
+        self::assertSame('11:00', $naechste['time']->format('H:i'));
+    }
 }

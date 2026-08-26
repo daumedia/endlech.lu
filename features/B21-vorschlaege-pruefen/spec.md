@@ -122,8 +122,11 @@ Eintrag.
 ## Offene Fragen
 
 - **OF-01** · Soll `approve()` auf `STATUS_PENDING` prüfen (AK-10)? — Betreiber
+  **Entschieden 2026-08-25:** Ja, umgesetzt (BF-54, 2026-08-25) — beim Genehmigen und beim Ablehnen. Dreimal abgeschickt ergibt ein Restaurant; ohne die Prüfung waren es drei.
+
 - **OF-02** · Soll der Einreicher benachrichtigt werden (AK-12)? Die Mailinfrastruktur
   steht bereits (B01, B14). — Betreiber
+  **Entschieden 2026-08-25:** Ja, umgesetzt (BF-55, 2026-08-25).
 
 ## Decision Log
 

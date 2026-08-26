@@ -29,4 +29,13 @@
         {{ 'email.partner_confirm_fallback'|trans }}<br>
         <a href="{{ confirmUrl }}" style="color: #7c3aed; word-break: break-all;">{{ confirmUrl }}</a>
     </p>
+
+    {# BF-37: Der Rückweg gehört in jede Mail. Art. 7 Abs. 3 verlangt, dass ein
+       Widerruf „ebenso einfach" ist wie die Einwilligung — und die war ein Klick. #}
+    {% if revokeUrl %}
+        <p style="margin: 24px 0 0; color: #9ca3af; font-size: 12px; line-height: 1.6;">
+            {{ 'email.waitlist_revoke_hint'|trans }}
+            <a href="{{ revokeUrl }}" style="color: #6b7280; text-decoration: underline;">{{ 'email.waitlist_revoke_link'|trans }}</a>
+        </p>
+    {% endif %}
 {% endblock %}

@@ -37,6 +37,12 @@ class RestaurantType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
+                // ⚠ BF-51: `empty_data` ist Pflicht, sobald der Setter der Entity ein
+                // striktes `string` verlangt. Ohne die Zeile übergibt Symfony `null`,
+                // und `setName(string)` wirft — der Nutzer bekommt einen 500er statt
+                // der Meldung, die direkt daneben konfiguriert ist. Der Fehler steckte
+                // im Admin-Formular UND im Vorschlags-Assistenten.
+                'empty_data' => '',
                 'label' => 'form.restaurant_name',
                 'attr' => ['placeholder' => 'form.restaurant_name_placeholder'],
                 'constraints' => [
@@ -45,6 +51,7 @@ class RestaurantType extends AbstractType
                 ],
             ])
             ->add('city', TextType::class, [
+                'empty_data' => '',
                 'label' => 'form.city',
                 'attr' => ['placeholder' => 'form.city_placeholder'],
                 'constraints' => [
@@ -66,6 +73,7 @@ class RestaurantType extends AbstractType
                 ],
             ])
             ->add('emoji', TextType::class, [
+                'empty_data' => '',
                 'label' => 'form.emoji',
                 'attr' => ['placeholder' => 'form.emoji_placeholder'],
                 'constraints' => [

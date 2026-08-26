@@ -18,6 +18,7 @@ nav:
     login: "Login"
     join: "Join Us"
     profile: "My Profile"
+    skip_to_content: "Skip to content"
 
 footer:
     tagline: "The platform for accessible dining in Luxembourg. Together for more inclusion."
@@ -32,6 +33,7 @@ footer:
     contact_title: "Contact"
     help_improve: "Help us improve."
     copyright: "Made with ❤️ in Luxembourg."
+    accessibility_statement: "Accessibility"
 
 cookie:
     title: "We use cookies"
@@ -121,6 +123,7 @@ accessibility:
     notes_title: "Accessibility Notes"
     yes: "Yes"
     no_unknown: "No / unknown"
+    notes_language_hint: 'These notes come from the on-site survey and are only available in German.'
 
 dietary:
     title: "Dietary Options"
@@ -154,7 +157,8 @@ contact:
 nearby_stops:
     title: "Public Transport Nearby"
     walking: "%meters% m"
-    no_stops: "No accessible stops found nearby."
+    no_stops: "No stop found within %meters% metres."
+    source: "Public transport data from the Verkéiersverbond; it says nothing about the accessibility of the stops."
 
 ordering:
     title: "Order Online"
@@ -260,6 +264,10 @@ verify:
 
 community:
     suggest:
+        measurements: 'Measurements (if you know them)'
+        measurements_hint: 'Two numbers that say a lot: from 90 cm a door counts as wheelchair accessible, and so does the gap between tables (DIN 18040). Leave the fields empty if you did not measure — guessing helps no one.'
+        door_width_help: 'Clear width of the entrance door in centimetres'
+        table_spacing_help: 'Narrowest gap between two tables in centimetres'
         title: "Suggest a Restaurant – Endlech.lu"
         heading: "Suggest a Restaurant"
         text: "Know an accessible restaurant in Luxembourg that's missing? Suggest it — we'll review it and add it!"
@@ -290,6 +298,7 @@ community:
         submit: "Submit Suggestion"
         cancel: "Cancel"
         step_incomplete: "Please answer all questions in this step."
+        step_announce: "Step %current% of %total%: %title%"
     thanks:
         title: "Thank You – Endlech.lu"
         heading: "Thank you for your suggestion!"
@@ -337,11 +346,39 @@ legal:
     links_title: "Liability for Links"
     links_text: "Our website contains links to external third-party websites over whose content we have no influence. Therefore, we cannot accept any liability for this external content. The respective provider or operator of the pages is always responsible for the content of the linked pages."
     privacy_title: "Privacy"
-    privacy_text: "The use of our website is generally possible without providing personal data. Insofar as personal data (e.g., name, address, or email addresses) is collected on our pages, this is always done on a voluntary basis as far as possible."
+    privacy_text: "The restaurant list, the detail pages and the open dataset can be used without an account and without providing personal data. Anyone who creates an account, suggests a restaurant or joins a waiting list deliberately provides data — which data and where it goes is set out in the sections below."
     error_tracking_title: "Error tracking (Sentry)"
     error_tracking_text: "To detect and fix technical errors, we use Sentry (Functional Software, Inc.). If an error occurs on our website, technical details such as the time, the page requested and the error message are transmitted to servers in the European Union (Frankfurt am Main). IP addresses and user data are not transmitted. The legal basis is our legitimate interest in the stable and secure operation of the website pursuant to Art. 6(1)(f) GDPR."
+    mail_title: "Email delivery (Brevo)"
+    mail_text: "We use Brevo (Sendinblue GmbH, Cologne) to send emails — confirmations, notifications, waiting lists. Transmitted are the recipient’s email address and name as well as the content of the message. The legal basis is Art. 6(1)(b) GDPR, or (a) for waiting list sign-ups. A data processing agreement is in place."
+    transit_title: "Nearby stops (Verkéiersverbond)"
+    transit_text: "On restaurant detail pages we show public transport stops. For this we query the Verkéiersverbond interface — only the restaurant’s coordinates are transmitted. No visitor data: neither IP address nor identifier. We cache the response for 24 hours."
+    rights_title: "Your rights"
+    rights_intro: "You have the right at any time to:"
+    rights_access: "access the data stored about you (Art. 15 GDPR)"
+    rights_erasure: "erasure of your account and the associated data (Art. 17 GDPR)"
+    rights_portability: "portability — a machine-readable copy of your data (Art. 20 GDPR)"
+    rights_withdraw: "withdraw your consent, for example to a waiting list sign-up (Art. 7(3) GDPR)"
+    rights_complaint: "lodge a complaint with the Commission nationale pour la protection des données (CNPD), Luxembourg"
+    rights_how: "Access, export and erasure you do yourself in your profile — immediately and without a request:"
+    rights_profile_link: "go to my profile"
+    retention_title: "Retention"
+    retention_text: "Account data is kept while the account exists; after deletion it disappears immediately. Waiting list sign-ups remain until withdrawn or until the programme starts. Restaurant information stays permanently — it is factual data and is separated from the person after an account deletion."
 
 criteria:
+    score_title: "How the score is calculated"
+    score_intro: "On the transparency page and in the open dataset, each restaurant carries a score from 0 to 10. It comes from eight equally weighted criteria:"
+    score_wheelchair: "Step-free access"
+    score_toilet: "Accessible toilet"
+    score_dogs: "Assistance dogs welcome"
+    score_lighting: "Good lighting"
+    score_changing_table: "Changing table"
+    score_parking: "Disabled parking space"
+    score_door_width: "Door width at least 90 cm (DIN 18040)"
+    score_table_spacing: "Table spacing at least 90 cm (DIN 18040)"
+    score_unmeasured: "Important: what we have not recorded counts as not met. The score therefore measures documented accessibility — not actual accessibility. A restaurant we know nothing about gets 0 out of 10, even if everything is fine on site."
+    score_where: "The current figures are on the transparency page:"
+    score_open_link: "go to /open"
     title: "Accessibility Criteria – Endlech.lu"
     heading: "Accessibility Criteria"
     intro: "These criteria help us objectively assess restaurants for their accessibility. Each restaurant is evaluated based on the following points."
@@ -375,6 +412,8 @@ admin:
         total_income: "Total income"
         last_snapshot: "Last snapshot"
         capture_snapshot: "Capture now"
+        snapshot_overwrite: 'replace existing'
+        snapshot_overwrite_confirm: 'An existing snapshot will be replaced with today’s figures. The previous state will no longer be verifiable. Continue?'
         last_updated: "Last maintained on %date%"
         updated_at: "Last changed on %date%"
         field:
@@ -424,6 +463,11 @@ admin:
         no_recent_restaurants: "No restaurants yet."
         no_recent_users: "No users registered yet."
     restaurant:
+        search_label: 'Search restaurants'
+        search_placeholder: 'Name or city …'
+        search_action: 'Search'
+        search_reset: 'Reset filter'
+        pagination_label: 'Pagination'
         manage: "Manage Restaurants"
         new_title: "Create New Restaurant"
         edit_title: "Edit %name%"
@@ -482,7 +526,7 @@ admin:
         notes_hint: "Format: ok:Text or warn:Text"
         add_note: "+ Add note"
         location: "Location & Public Transport"
-        location_hint: "GPS coordinates enable automatic search for accessible stops nearby."
+        location_hint: "GPS coordinates enable the automatic search for nearby stops."
         opening_hours: "Opening Hours"
         opening_hours_hint: "Add as many time slots per day as needed (e.g. lunch and dinner). A day without any slot counts as closed."
         add_opening_slot: "＋ Add time slot"
@@ -527,12 +571,16 @@ admin:
         delete_confirm: "Delete photo?"
         delete_button: "Delete"
         no_photos: "No photos yet."
+        move_up: "Move up"
+        move_down: "Move down"
         alt_text_label: "Alt text (image description)"
         alt_text_placeholder: "e.g. Restaurant entrance"
         upload_label: "Upload photos (jpg, png, webp · max. 5 MB)"
         upload_button: "Upload"
 
     waitlist:
+        restaurant_search: 'Search restaurant …'
+        restaurant_truncated: 'At most %limit% venues are shown. Use the search if yours is missing.'
         title: "Waiting lists"
         total: "%count% entries"
         empty: "No registrations yet."
@@ -584,6 +632,8 @@ admin:
             confirmed: "Confirmed"
 
 flash:
+    suggestion_already_handled: 'This suggestion has already been handled.'
+    snapshot_exists: 'A snapshot already exists for %month%. It was left unchanged.'
     finance_created: "Finance entry created."
     finance_updated: "Finance entry updated."
     finance_deleted: "Finance entry deleted."
@@ -616,6 +666,13 @@ flash:
     profile_password_changed: "Password changed successfully."
     profile_wrong_password: "The current password is incorrect."
     profile_avatar_deleted: "Profile picture removed successfully."
+    profile_email_pending: "Almost done: we sent a confirmation link to %email%. Your current address stays valid until you click it."
+    profile_email_mail_failed: "The confirmation email could not be sent. Please try again later."
+    profile_email_cancelled: "The email address change was cancelled."
+    profile_email_expired: "The confirmation link has expired. Please enter the new address again."
+    profile_email_taken: "This email address is already in use."
+    profile_email_changed: "Your email address has been changed. Please sign in with the new address."
+    profile_password_rate_limited: "Too many attempts. Please wait 15 minutes before changing your password again."
     partner_waitlist_submitted: "Almost done! Please confirm the link in your email."
     partner_email_failed: "Your registration is saved, but the confirmation email could not be sent. Please get in touch with us."
     partner_rate_limited: "You have submitted several registrations in a short time. Please try again in an hour."
@@ -630,8 +687,22 @@ flash:
     passkey_renamed: "Passkey renamed."
     passkey_deleted: "Passkey removed."
     passkey_name_empty: "Please enter a name for the passkey."
+    email_change_rate_limited: 'Too many address changes. Please try again in an hour.'
+    suggest_rate_limited: 'You have submitted a lot of suggestions in the past hour. Please wait a little — we look at every one.'
+    upload_wrong_type: '“%file%” is not an image. Allowed formats: %types%.'
+    upload_too_large: '“%file%” is too large. Maximum size: %max% MB.'
+    upload_exceeds_server_limit: 'The upload was too large overall (server limit: %limit%). Please upload fewer images at once.'
+    suggestion_rejected_mail_failed: "The rejection is saved, but the message to the submitter could not be delivered."
+    password_reset_sent: "If we have an account for this address, the link is on its way."
+    password_reset_done: "Your password is set. You can sign in now."
+    password_reset_rate_limited: "Too many requests. Please try again in an hour."
+    account_deleted: "Your account was deleted."
+    delete_last_admin: "You are the only account with admin rights. Create a second one first."
+    export_rate_limited: "Too many downloads. Please try again later."
 
 email:
+    waitlist_revoke_hint: 'Not interested after all?'
+    waitlist_revoke_link: 'Unsubscribe here'
     verify_subject: "Confirm your email address"
     verify_title: "Confirm Email"
     verify_greeting: "Hello %name%!"
@@ -639,6 +710,14 @@ email:
     verify_button: "Confirm Email"
     verify_expiry: "This link is valid for 24 hours. If you did not register at Endlech.lu, you can ignore this email."
     verify_fallback: "If the button doesn't work, copy this link into your browser:"
+    email_change_subject: "Confirm your new email address"
+    email_change_title: "Confirm new email address"
+    email_change_text: "You asked to change the email address of your Endlech.lu account from %old% to %new%. Please confirm the new address:"
+    email_change_button: "Confirm new address"
+    email_change_notice_subject: "Email address change requested"
+    email_change_notice_title: "Change requested"
+    email_change_notice_text: "A change to the new email address %new% was requested for your Endlech.lu account. Until it is confirmed, this address stays valid."
+    email_change_notice_warning: "Was this not you? Change your password immediately — someone has access to your account. Nothing changes until the new address is confirmed."
     partner_confirm_subject: "Confirm your waiting list registration"
     partner_confirm_title: "Confirm registration"
     partner_confirm_greeting: "Hello %name%!"
@@ -670,6 +749,26 @@ email:
     organisation_internal_intro: "An organisation of type %type% has confirmed its enquiry."
     organisation_internal_button: "Open in admin"
     footer: "Made with love in Luxembourg"
+    account_exists_subject: 'You already have an Endlech.lu account'
+    account_exists_text: "Hello,\n\nsomeone just tried to register with this email address. You already have an account at Endlech.lu – simply sign in. If you forgot your password, you can reset it via “Forgot your password” on the sign-in page.\n\nIf this was not you, you can ignore this email.\n\nYour Endlech.lu team"
+    suggestion_rejected_subject: "About your suggestion “%name%”"
+    suggestion_rejected_heading: "Thank you — this one did not make it this time"
+    suggestion_rejected_intro: "You suggested %name% in %city%. We looked at it and did not take it on this time."
+    suggestion_rejected_note_label: "The reason"
+    suggestion_rejected_outro: "This is not a judgement on your work — often we are simply missing details we cannot verify ourselves. If you know more, please submit it again."
+    suggestion_rejected_cta: "Submit a new suggestion"
+    password_reset_subject: "Your password reset link"
+    password_reset_title: "Reset password"
+    password_reset_greeting: "Hello %name%,"
+    password_reset_text: "You requested a new password. Click the button to set one."
+    password_reset_cta: "Set a new password"
+    password_reset_expiry: "The link is valid for one hour."
+    password_reset_ignore: "If this was not you, you can ignore this email. Your password stays unchanged."
+    account_deleted_subject: "Your Endlech.lu account was deleted"
+    account_deleted_title: "Account deleted"
+    account_deleted_greeting: "Hello %name%,"
+    account_deleted_text: "Your account is deleted. Your details, your profile picture and your passkeys are gone."
+    account_deleted_kept: "Restaurants you submitted stay in the database — with no link to you. Thank you for contributing them."
 
 ordering_platform:
     uber_eats: "Uber Eats"
@@ -778,6 +877,9 @@ form:
     suggestion_notes_placeholder: "e.g. Step-free entrance, wheelchair parking available ..."
 
 profile:
+    email_pending_title: "Confirmation pending"
+    email_pending_text: "A confirmation link for %email% is in your inbox. Until you click it, your current address stays valid."
+    email_pending_cancel: "Cancel change"
     title: "My Profile – Endlech.lu"
     heading: "My Profile"
     subtitle: "Manage your personal information"
@@ -798,6 +900,14 @@ profile:
         change_password: "Change Password"
         delete_avatar: "Remove Profile Picture"
         delete_avatar_confirm: "Really remove profile picture?"
+    export_title: "My data"
+    export_text: "Download everything we have stored about you — as a JSON file."
+    export_action: "Download my data"
+    delete_title: "Delete account"
+    delete_text: "Your account, your profile picture and your passkeys disappear for good. Restaurants you submitted stay — without your name on them. Information about whether a venue has a ramp belongs to the people who need it."
+    delete_password_label: "To confirm: your password"
+    delete_action: "Delete account permanently"
+    delete_confirm: "Your account will be permanently deleted. This cannot be undone. Continue?"
 
 passkey:
     login: "Sign in with a passkey"
@@ -925,6 +1035,8 @@ partner:
         success_text_with_email: "We have sent an email to %email%. Please click the link in it to confirm your registration."
         success_hint: "No email received? Please check your spam folder."
     confirm:
+        revoked_heading: 'You are off the list'
+        revoked_text: 'Your sign-up has been deleted — along with everything attached to it. If you change your mind, just sign up again.'
         title: "Confirm registration"
         success_heading: "You are on the waiting list."
         success_text: "Thank you for confirming. We will be in touch as soon as we hand out the first appointments."
@@ -932,6 +1044,8 @@ partner:
         already_text: "Your registration is already active — there is nothing more you need to do. We will be in touch once we start."
         invalid_heading: "This link leads nowhere."
         invalid_text: "The confirmation link is unknown or incomplete. It may have been cut off when copying. Just sign up again."
+        expired_heading: 'This link has expired'
+        expired_text: 'Confirmation links are valid for seven days. Just sign up again — it takes a minute, and we will send you a fresh link.'
         back: "To the partner page"
 
 waitlist_status:
@@ -960,7 +1074,7 @@ organisation:
     type:
         commune: "Municipality"
         company: "Company"
-        association: "Organisation"
+        association: 'Association'
     timeframe:
         asap: "As soon as possible"
         this_year: "Still this year"
@@ -1086,6 +1200,8 @@ organisation:
         default_text: "We have sent you an email. Please click the link in it to confirm your enquiry."
         hint: "No email received? Please check your spam folder."
     confirm:
+        revoked_heading: 'You are off the list'
+        revoked_text: 'Your sign-up has been deleted — along with everything attached to it. If you change your mind, just sign up again.'
         title: "Confirm enquiry"
         success_heading: "Your enquiry is confirmed."
         success_text: "Thank you. We have received your enquiry and will be in touch."
@@ -1093,6 +1209,8 @@ organisation:
         already_text: "Your enquiry is already active — there is nothing more you need to do."
         invalid_heading: "This link leads nowhere."
         invalid_text: "The confirmation link is unknown or incomplete. It may have been cut off when copying. Just send the enquiry again."
+        expired_heading: 'This link has expired'
+        expired_text: 'Confirmation links are valid for seven days. Just sign up again — it takes a minute, and we will send you a fresh link.'
         back: "To the overview"
 
 finance_type:
@@ -1126,6 +1244,9 @@ open:
         since: "since %month%"
         unchanged: "unchanged since %month%"
     platform:
+        unscored: "not yet assessed"
+        unscored_hint: "Venues we have no information about at all. They get no score — a zero would mean “none of this is there”, and nobody claimed that."
+        distribution_unscored: "%count% venues without information are not included."
         heading: "The platform"
         intro: "All figures are computed live from the database and refreshed hourly."
         restaurants: "Restaurants"
@@ -1136,7 +1257,7 @@ open:
         canton: "Canton"
         canton_communes: "Communes"
         score: "Avg. score"
-        score_hint: "Eight criteria, equally weighted"
+        score_hint: "Average across %scored% assessed venues. Eight equally weighted criteria; what is not recorded counts as not met."
         distribution_heading: "Score distribution"
         distribution_intro: "How many restaurants meet how many of the eight accessibility criteria. Measurements that were never taken count as not met – the figure measures documented accessibility, not assumed accessibility."
         distribution_row: "%score% of %max%"
@@ -1194,3 +1315,65 @@ open:
         metrics_json: "Figures as JSON"
         licence: "The dataset is published under"
         privacy_note: "Email addresses and phone numbers are deliberately excluded: a bulk export of those would be a mailing list, not an accessibility dataset."
+
+api:
+    token_invalid: "The token is invalid. Please sign in again."
+    token_expired: "The token has expired. Please sign in again."
+    token_missing: "Authentication required."
+    moderation_pending: "Thank you! Your suggestion has been received and will be reviewed before it appears publicly."
+    register_generic: 'Almost there! If the details are valid, we have sent you an email. Please confirm your address.'
+
+password_reset:
+    request_title: "Forgot your password"
+    request_intro: "Enter your email address. If we have an account for it, we will send you a reset link."
+    request_action: "Request link"
+    back_to_login: "Back to sign in"
+    email_label: "Email address"
+    title: "Set a new password"
+    intro: "Choose a password with at least eight characters."
+    new_label: "New password"
+    repeat_label: "Repeat new password"
+    action: "Save password"
+    expired_heading: "This link has expired"
+    expired_text: "Reset links are valid for one hour. Just request a new one."
+    invalid_heading: "This link leads nowhere"
+    invalid_text: "The link is invalid or has already been used. Request a new one."
+    request_new: "Request a new link"
+    forgot_link: "Forgot your password?"
+
+accessibility_statement:
+    meta_title: "Accessibility – Endlech.lu"
+    hero_heading: "Accessibility on Endlech.lu"
+    hero_lead: "We want everyone to be able to use this platform. Here you can read how far along we are – and how you can point us to barriers."
+    conformance_heading: "Conformance"
+    standard: "WCAG 2.2 level AA (EN 301 549)"
+    conformance_none: "A first full audit of this website is still pending."
+    conformance_partial: "This website is partially conformant with %standard%."
+    conformance_full: "This website is fully conformant with %standard%."
+    tested_on_label: "Tested on"
+    not_yet_tested: "A first full audit is still pending – once it is available, the result will appear here."
+    outdated_notice: "The last audit is older than %months% months and may be outdated."
+    procedure_heading: "Testing procedure"
+    procedure_text: "Testing is carried out with an automated tool (axe-core, WCAG 2.2 AA) and through a manual review of keyboard operation and screen reader output."
+    scope_heading: "Scope"
+    scope_text: "This statement applies to the entire website including the admin area, the installable app and the emails. The embedded developer documentation at /api/docs is excluded."
+    issues_heading: "Non-accessible content"
+    issues_none: "There is currently no known non-accessible content."
+    issue_criterion: "Criterion"
+    issue_reason: "Reason"
+    issue_planned: "Fix planned"
+    legal_heading: "Legal situation"
+    legal_text: "This accessibility statement is a voluntary commitment. As a micro provider, Endlech.lu is not subject to the legal obligation for public bodies."
+    feedback_heading: "Report a barrier"
+    feedback_intro: "Did you come across an obstacle? Let us know – you don't need to create an account or disclose your disability to do so."
+    contact_label: "Or write to us directly:"
+    report_description_label: "What did you notice?"
+    report_description_help: "Describe the obstacle. This information is not stored, it is only sent to our mailbox."
+    report_email_label: "Your email address (optional)"
+    report_email_help: "Only needed if you would like a reply."
+    report_submit: "Send report"
+    report_success_heading: "Thank you for your report."
+    report_success_text: "We have received your message and will take care of it."
+    report_error: "The report could not be sent. Please try again later."
+    report_rate_limited: "Too many reports. Please try again in %minutes% minutes."
+    email_subject: "New barrier report on Endlech.lu"

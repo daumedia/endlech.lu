@@ -5,8 +5,13 @@
     Hauptinhalt der eigenen Unterseite (/organisationen/{slug}). Deshalb steht
     hier kein <section>-Rahmen – Hintergrund und Abstände bestimmt die
     einbettende Seite.
+
+    Die Überschriftenebene kommt von der einbettenden Seite (heading_level): Auf
+    der eigenen Unterseite steht die Sektion direkt unter dem <h1> und braucht
+    dort <h2>, sonst übersprünge die Seite eine Ebene.
 #}
-    <h3 class="text-lg font-bold text-gray-900 mb-4">{{ 'organisation.company.formats_title'|trans }}</h3>
+{% set hl = heading_level|default('h2') %}
+    <{{ hl }} class="text-lg font-bold text-gray-900 mb-4">{{ 'organisation.company.formats_title'|trans }}</{{ hl }}>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
         {% for i in 1..4 %}
             <div class="rounded-xl border border-gray-300 bg-gray-50 p-4">
@@ -18,7 +23,7 @@
 
     {# Ausschlussregel steht öffentlich auf der Seite, nicht nur intern. #}
     <div class="rounded-xl border-2 border-red-700 bg-red-50 p-5 mb-6">
-        <h3 class="text-lg font-bold text-red-900 mb-2">{{ 'organisation.company.exclusion_title'|trans }}</h3>
+        <{{ hl }} class="text-lg font-bold text-red-900 mb-2">{{ 'organisation.company.exclusion_title'|trans }}</{{ hl }}>
         <p class="text-red-950 leading-relaxed mb-3">{{ 'organisation.company.exclusion_text'|trans }}</p>
         <ul class="space-y-1.5">
             {% for i in 1..3 %}

@@ -51,12 +51,16 @@ export default class extends Controller {
     reopen(): void {
         if (this.hasBannerTarget) {
             this.#show();
+            // Nutzergetriggert (Klick auf "Cookie-Einstellungen"): der Fokus soll in
+            // den Banner. Beim automatischen Erscheinen (connect) NICHT – dort zöge
+            // der Fokus-Fang den ersten Tab in den Banner, und der Skip-Link wäre
+            // nicht mehr das erste Tab-Ziel (BF-74, WCAG 2.4.1).
+            this.bannerTarget.focus();
         }
     }
 
     #show(): void {
         this.bannerTarget.classList.remove('hidden');
-        this.bannerTarget.focus();
     }
 
     #hide(): void {

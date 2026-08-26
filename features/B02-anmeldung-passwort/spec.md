@@ -1,7 +1,10 @@
 # B02 · Anmeldung mit Passwort — Spezifikation
 
-Status: `rekonstruiert` · Stand: 2026-08-23 · **Rückerfassung aus dem Bestand**
+Status: `approved` · Stand: 2026-08-23 · **Rückerfassung aus dem Bestand**
 
+> QA vom 2026-08-24: 14 von 17 Kriterien, BF-13 *hoch*. **EC-04 ist widerlegt** —
+> siehe `qa-report.md`. Die dortige Annahme über Passwortänderungen war falsch.
+>
 > Beschreibt, **was der Code heute tut**. ⚠ markiert fragwürdiges Verhalten, das so im
 > Bestand steht. [Fehlbestand](#fehlbestand) ist kein Kriterium, sondern Suchliste.
 
@@ -126,6 +129,8 @@ und — bei entsprechender Rolle — zur Verwaltung.
 
 - **OF-01** · `login_throttling` ist eine Konfigurationszeile und behebt FB-01
   vollständig. Warum fehlt sie? — Betreiber
+  **Entschieden 2026-08-25:** Ergänzt (BF-14, 2026-08-24): `login_throttling` mit fünf Versuchen, im Test auf 10000 gelockert.
+
 - **OF-02** · Soll `ROLE_ADMIN` eine zweite Stufe bekommen (FB-03)? Der Bestand hat
   genau ein Admin-Konto; das Risiko konzentriert sich dort. — Betreiber
 

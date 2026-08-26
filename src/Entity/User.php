@@ -12,7 +12,17 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-#[UniqueEntity(fields: ['email'], message: 'user.email_unique')]
+/**
+ * ⚠ BF-09: Die Eindeutigkeitsprüfung läuft in der Gruppe `strict` und NICHT in
+ * `Default`. Grund ist die Anti-Enumeration des Registrierformulars: Eine Meldung
+ * „Diese Adresse wird bereits verwendet" verrät, wer hier ein Konto hat — bei
+ * einer Barrierefreiheitsplattform eine Angabe, die niemanden etwas angeht. Die
+ * API macht es seit jeher richtig; der Browser-Weg zog erst jetzt nach.
+ *
+ * Wo die Auskunft unbedenklich ist — im Profil, wo der Nutzer sein eigenes Konto
+ * bearbeitet —, wird die Gruppe ausdrücklich angefordert.
+ */
+#[UniqueEntity(fields: ['email'], message: 'user.email_unique', groups: ['strict'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -42,8 +52,39 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $verificationTokenExpiresAt = null;
 
+    /**
+     * Eine gewünschte, noch nicht bestätigte E-Mail-Adresse.
+     *
+     * Bewusst getrennt von $email: Wäre die Änderung sofort wirksam, genügte eine
+     * gekaperte Sitzung, um ein Konto dauerhaft zu übernehmen – der rechtmäßige
+     * Inhaber käme nicht zurück, weil es kein Passwort-Zurücksetzen gibt. Die neue
+     * Adresse wandert deshalb erst hierher und wird bei der Bestätigung getauscht.
+     */
+    #[ORM\Column(length: 180, nullable: true)]
+    private ?string $pendingEmail = null;
+
+    #[ORM\Column(length: 64, nullable: true)]
+    private ?string $pendingEmailToken = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $pendingEmailTokenExpiresAt = null;
+
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $avatarFilename = null;
+
+    /**
+     * Token zum Zurücksetzen des Passworts (Feature 01).
+     *
+     * ⚠ Kürzere Frist als bei der Registrierung (eine Stunde statt 24): Wer sein
+     * Passwort zurücksetzt, sitzt vor dem Postfach. Und der Token ist mächtiger —
+     * er öffnet ein bestehendes Konto, während der Registrierungstoken nur eines
+     * bestätigt, das ohnehin dem Aufrufer gehört.
+     */
+    #[ORM\Column(length: 64, nullable: true)]
+    private ?string $passwordResetToken = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $passwordResetTokenExpiresAt = null;
 
     /**
      * Kennung, unter der dieses Konto gegenüber Passkeys auftritt (WebAuthn user handle).
@@ -191,6 +232,92 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->verificationTokenExpiresAt = new \DateTimeImmutable('+24 hours');
 
         return $this->verificationToken;
+    }
+
+    /**
+     * Erzeugt einen Token zum Zurücksetzen und gibt ihn zurück.
+     */
+    public function generatePasswordResetToken(): string
+    {
+        $this->passwordResetToken = bin2hex(random_bytes(32));
+        $this->passwordResetTokenExpiresAt = new \DateTimeImmutable('+1 hour');
+
+        return $this->passwordResetToken;
+    }
+
+    public function getPasswordResetToken(): ?string
+    {
+        return $this->passwordResetToken;
+    }
+
+    public function isPasswordResetTokenExpired(): bool
+    {
+        return null === $this->passwordResetTokenExpiresAt
+            || $this->passwordResetTokenExpiresAt < new \DateTimeImmutable();
+    }
+
+    /**
+     * Verbraucht den Token — ein zweiter Aufruf desselben Links läuft ins Leere.
+     */
+    public function clearPasswordResetToken(): static
+    {
+        $this->passwordResetToken = null;
+        $this->passwordResetTokenExpiresAt = null;
+
+        return $this;
+    }
+
+    public function getPendingEmail(): ?string
+    {
+        return $this->pendingEmail;
+    }
+
+    /**
+     * Merkt eine gewünschte Adresse vor und gibt den Bestätigungstoken zurück.
+     *
+     * Dieselbe Frist wie bei der Registrierung (24 Stunden) und dieselbe
+     * Token-Länge – ein zweites Verfahren daneben wäre eine zweite Fehlerquelle.
+     */
+    public function requestEmailChange(string $email): string
+    {
+        $this->pendingEmail = $email;
+        $this->pendingEmailToken = bin2hex(random_bytes(32));
+        $this->pendingEmailTokenExpiresAt = new \DateTimeImmutable('+24 hours');
+
+        return $this->pendingEmailToken;
+    }
+
+    public function getPendingEmailToken(): ?string
+    {
+        return $this->pendingEmailToken;
+    }
+
+    public function isPendingEmailTokenExpired(): bool
+    {
+        if ($this->pendingEmailTokenExpiresAt === null) {
+            return true;
+        }
+
+        return $this->pendingEmailTokenExpiresAt < new \DateTimeImmutable();
+    }
+
+    /**
+     * Übernimmt die vorgemerkte Adresse und räumt den Vorgang ab.
+     */
+    public function confirmEmailChange(): void
+    {
+        if ($this->pendingEmail !== null) {
+            $this->email = $this->pendingEmail;
+        }
+
+        $this->clearPendingEmail();
+    }
+
+    public function clearPendingEmail(): void
+    {
+        $this->pendingEmail = null;
+        $this->pendingEmailToken = null;
+        $this->pendingEmailTokenExpiresAt = null;
     }
 
     public function getAvatarFilename(): ?string

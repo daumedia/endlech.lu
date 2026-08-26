@@ -17,6 +17,9 @@ restaurant:
     url_max: "D'URL dierf maximal {{ limit }} Zeechen laang sinn."
     note_blank: "Den Hiweis dierf net eidel sinn."
     note_format: "Format: \"ok:Text\" oder \"warn:Text\""
+    latitude_range: 'De Breedegrad muss tëscht {{ min }} an {{ max }} leien.'
+    longitude_range: 'De Längegrad muss tëscht {{ min }} an {{ max }} leien.'
+    nearby_stops_note_max: 'Den Hiweis zum ëffentlechen Transport dierf maximal {{ limit }} Zeechen laang sinn.'
 
 user:
     email_unique: "Dës E-Mail-Adress gëtt scho benotzt."
@@ -40,6 +43,8 @@ profile:
     new_password_min: "Dat neit Passwuert muss mindestens {{ limit }} Zeechen laang sinn."
 
 suggestion:
+    door_width_range: 'D Dierbreet muss tëscht {{ min }} an {{ max }} cm leien.'
+    table_spacing_range: 'Den Dëschofstand muss tëscht {{ min }} an {{ max }} cm leien.'
     name_blank: "Gëff w.e.g. den Numm an."
     name_max: "Den Numm dierf maximal {{ limit }} Zeechen laang sinn."
     city_blank: "Gëff w.e.g. d'Stad an."
@@ -49,6 +54,11 @@ suggestion:
     emoji_max: "Den Emoji dierf maximal {{ limit }} Zeechen laang sinn."
     notes_max: "D'Hiweiser dierfen maximal {{ limit }} Zeechen laang sinn."
     answer_required: "Wiel w.e.g. Jo, Nee oder Weess net."
+    phone_max: 'D''Telefonsnummer dierf maximal {{ limit }} Zeechen laang sinn.'
+    email_invalid: 'Gëff w.e.g. eng gëlteg E-Mail-Adress an.'
+    email_max: 'D''E-Mail-Adress dierf maximal {{ limit }} Zeechen laang sinn.'
+    url_invalid: 'Gëff w.e.g. eng gëlteg Adress an — mat https:// virdrun.'
+    url_max: 'D''Adress dierf maximal {{ limit }} Zeechen laang sinn.'
 # Die Partner-Seite richtet sich an Restaurantbetreiber (B2B) und siezt deshalb
 # bewusst – abweichend von den übrigen Meldungen hier, die durchgängig duzen.
 partner_waitlist:
@@ -102,3 +112,8 @@ finance:
 # Nutzern der rohe Schlüssel angezeigt wurde.
 form:
     password_mismatch: "D'Passwierder stëmmen net iwwereneen."
+
+accessibility:
+    report:
+        description_required: "Beschreift w.e.g. den Hindernis."
+        email_invalid: "Gitt w.e.g. eng gülteg E-Mail-Adress an."

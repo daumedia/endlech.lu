@@ -7,11 +7,114 @@ Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
 ## [Unreleased]
 
+### Alle 72 Befunde der SDD-Rückerfassung sind behoben (2026-08-25)
+
+Zehn Blöcke, nach Schweregrad statt nach Feature-Nummer. Was dabei zählt, ist
+nicht die Zahl, sondern dass vier **Muster** geschlossen wurden — jedes mit einer
+Vorkehrung dagegen, dass es wiederkommt.
+
+**Sicherheit**
+- **Der Sprachumschalter führte auf fremde Seiten.** `?_locale=//fremd.example/de`
+  erzeugte `href="///fremd.example/…"`, und der Browser navigierte auf den fremden
+  Host — ein Open Redirect von der echten Domain aus, auf jeder öffentlichen Seite.
+  Andere Werte desselben Parameters kippten zehn von zehn Seiten in einen 500er,
+  und `sentry.yaml` filtert keine 500er. (BF-68)
+- `admin_set_locale` übernahm den Referer ungeprüft als Weiterleitungsziel — mit
+  ausgerechnet dem Zugang, der ohne zweite Stufe auskommt. (BF-33)
+- Eine hochgeladene `.html` wurde als `text/html` ausgeliefert und lief damit im
+  Ursprung der Anwendung; dasselbe galt für eine `.svg` mit `<script>`. (BF-57)
+- Der Bestätigungstoken stand im `request`-Kanal des Produktionslogs: 31 Zeilen für
+  `app_email_change_confirm`. Wer das Hoster-Log lesen konnte, konnte eine
+  E-Mail-Änderung fremd bestätigen. (BF-23)
+- Das Registrierformular verriet, wer hier ein Konto hat. Auf einer
+  Barrierefreiheitsplattform erfährt man damit nicht, dass jemand hier isst,
+  sondern dass jemand nach barrierefreien Lokalen sucht. (BF-09)
+- Ein Restaurantname mit führendem `=` wurde von Excel beim Öffnen des
+  CC-BY-Datensatzes ausgeführt. (BF-43)
+
+**Betroffenenrechte — Feature `01`**
+- Konto löschen (Art. 17), Daten als JSON mitnehmen (Art. 20), Passwort
+  zurücksetzen, Einwilligung widerrufen (Art. 7 Abs. 3). Nichts davon existierte.
+- Die Sackgasse war real: Seit die E-Mail-Änderung eine Bestätigung verlangt, war
+  ein vergessenes Passwort der Verlust des Kontos.
+- Restaurants bleiben bei einer Kontolöschung bestehen — eine Angabe darüber, ob
+  ein Lokal eine Rampe hat, gehört den Menschen, die sie brauchen.
+
+**Drosselung — sieben ungedeckelte Wege**
+- Passkey-Challenge, Adressänderung, API- und Web-Vorschläge, Verwaltungsvorgänge,
+  Organisations-Warteliste, offene Datenendpunkte.
+- `ActionLimiter` verbraucht Kontingent erst, wenn die Handlung stattfindet: Fünf
+  Tippfehler sperrten vorher eine Stunde lang aus. **Der naheliegende Umbau war
+  falsch** — `consume(0)` prüft nicht, acht gültige Anmeldungen liefen durch.
+
+**Datenqualität**
+- Ein Haus ohne jede Erhebung senkte die veröffentlichte Durchschnittspunktzahl
+  (5,09 → 4,67) und hob zugleich die Gemeindeabdeckung (8 → 9). Zwei Leitzahlen auf
+  derselben Seite in gegenläufige Richtungen. Solche Häuser bekommen jetzt keine
+  Punktzahl, sondern erscheinen als eigene Zahl. (BF-67, BF-49)
+- Zweimal genehmigen erzeugte zwei Restaurants; der Snapshot-Knopf überschrieb
+  Geschichte ohne Rückfrage. (BF-54, BF-47)
+- Bilddateien überlebten das Löschen ihres Restaurants — fünf Waisen aus Februar
+  und Juni lagen noch im Verzeichnis, öffentlich abrufbar. (BF-53)
+
+**Verständlichkeit**
+- Ein leeres Pflichtfeld endete in einem 500er, ein zu langer Küchenname ebenfalls
+  — und die naheliegende Längenprüfung reichte nicht: `AsciiSlugger` macht aus 80 ×
+  „ß" 160 Zeichen. (BF-51, BF-62)
+- Elf Übersetzungsschlüssel standen als roher Text auf der Seite. (BF-69)
+- Die Datenschutzerklärung nannte einen von drei Empfängern — Brevo, das jede
+  gespeicherte E-Mail-Adresse empfängt, fehlte. (BF-65)
+- Die Kriterienseite erklärte die Punktzahl nicht, während `/open` sie
+  veröffentlicht. (BF-66)
+- Die Ablehnungsnotiz erreichte den Einreicher nie. (BF-55)
+
+**Bedienbarkeit**
+- Der Sprachumschalter war auf Mobil unerreichbar — auf genau dem Gerät, für das
+  diese Anwendung als PWA gebaut ist. (BF-72, BF-71)
+- „Angemeldet bleiben" hielt für alles außer dem Profil. (BF-15)
+- Verwaltungslisten luden den gesamten Bestand. (BF-40, BF-52)
+
+### Hinzugefügt
+- `App\RateLimit\ActionLimiter` und sechs neue Limiter
+- `app:uploads:prune` — findet hochgeladene Dateien ohne Datenbankzeile
+- `CatalogueCompletenessTest` — prüft 923 verwendete Schlüssel gegen vier Kataloge
+- `LimiterCoverageTest` — prüft die Limiter-Konvention aus `CLAUDE.md`
+- Vier Migrationen: `restaurant_suggestion.locale`, die beiden Maßspalten,
+  `user.password_reset_token`, `restaurant.assessed_features`
+
+### Geändert
+- `POST /api/v1/restaurants` antwortet mit `submissionId` statt `id` (BF-31)
+- `/api/v1/me/submissions` zeigt auch wartende Vorschläge, mit `state` (BF-32)
+- Der offene Datensatz führt 22 statt 21 Spalten und erklärt sie in `fieldNotes`
+
+**Testsuite: 474 Tests** (vorher 365).
+
+---
+
+
 ### Security
+- **Die Anmeldung sperrt nach fünf Fehlversuchen.** Bis dahin nahm sie beliebig viele entgegen – nachgestellt mit zwanzig Versuchen gegen das Admin-Konto: alle angenommen, danach griff das richtige Passwort sofort. Dieselben Zugangsdaten gegen `/api/v1/auth/login` waren längst ab dem sechsten Versuch mit 429 abgewiesen worden. Geschützt war also der Weg, den eine App nimmt, nicht der, den ein Browser nimmt – und dahinter steht ein Verwaltungszugang an genau einem Konto, ohne zweite Stufe und ohne Benachrichtigung bei fremder Anmeldung. Jetzt `login_throttling` mit fünf Versuchen je Kombination aus IP und Benutzername in 15 Minuten. Ein anderes Konto von derselben Adresse bleibt unberührt; in `when@test` ist der Wert bewusst ausgehebelt, weil sich Fehlversuche sonst über die Suite summieren.
+- **Das Abmelden verlangt einen POST mit CSRF-Token.** Vorher genügte ein `<img src="/de/logout">` auf einer fremden Seite, um einen angemeldeten Besucher abzumelden. Der Schaden war gering, aber es war kein Schutz. Der Abmeldelink in der Kopfzeile ist deshalb jetzt ein Formular statt eines `<a href>`.
 - **Die Registrierung ist gedrosselt.** Bis dahin liessen sich beliebig viele Konten in Folge anlegen – nachgestellt: zwölf Versuche, zwölf Konten, zwölf Bestätigungsmails, keine Sperre. Jede Anlage verbraucht Kontingent der Brevo-Quota, die Rechnung des Angreifers zahlt also der Betreiber. Neuer Limiter `registration` (5 je IP und Stunde) und `verify_resend` (3), Muster wie bei der Partner-Warteliste. Bemerkenswert an dem Fund: Die **API**-Anmeldung war längst limitiert (5/Minute, ab dem sechsten Versuch 429) – ausgerechnet der Weg, den ein Browser nimmt, war es nicht.
+- **Die Haltestellen-Anzeige behauptet keine Barrierefreiheit mehr, die sie nie geprüft hat.** Auf der Restaurant-Detailseite stand „Keine barrierefreien Haltestellen in der Nähe gefunden" und im Admin-Formular „automatische Suche nach barrierefreien Haltestellen" – die HAFAS-Abfrage kennt jedoch **kein einziges** Barrierefreiheitsmerkmal, sie fragt nach Haltestellen im Umkreis. Für eine Plattform, deren Zweck verlässliche Barrierefreiheitsangaben sind, ist eine erfundene Barrierefreiheitsaussage der schwerste Fehler, den ein Text machen kann: Wer im Rollstuhl sitzt und das liest, plant nicht hin. Die Texte sagen jetzt in allen vier Sprachen, was tatsächlich geprüft wurde („Keine Haltestelle im Umkreis von 1000 Metern gefunden"), und der Block nennt seine Quelle samt dem Hinweis, dass sie nichts über die Barrierefreiheit der Haltestellen sagt.
+- **Der Suchradius steht auf 1000 statt 500 Metern.** Bei 500 m lieferte die Schnittstelle für 8 von 11 Restaurants null Haltestellen – an denselben Koordinaten sind es bei 2000 m sieben; die Schnittstelle funktionierte also einwandfrei, der Radius war zu klein. Nach der Umstellung zeigen 8 von 11 Restaurants Haltestellen. 1000 m entsprechen etwa zwölf Minuten Fußweg.
+
+- **Ein hängender Nahverkehrs-Dienst blockiert die Detailseite nicht mehr.** Der Aufruf trug keine Zeitvorgabe, also griff der PHP-Standard `default_socket_timeout` – gemessen 60 Sekunden. Nachgestellt gegen einen Server, der schweigt: ohne Vorgabe nach 30 Sekunden noch immer keine Antwort, mit `'timeout' => 3` Abbruch nach exakt 3,0 Sekunden. Der `catch` fing bisher den Ausfall, nicht die Verzögerung.
+- **Der API-Schlüssel des Nahverkehrs steht nicht mehr im eigenen Protokoll.** HAFAS sieht die Übergabe als Query-Parameter `accessId` vor, und Symfonys Exception-Meldung enthält die vollständige URL – der Service reichte sie unverändert ins Log weiter. In `var/log/dev.log` standen 30 Zeilen mit dem Schlüssel im Klartext (`http_client`-Kanal) und 7 weitere aus dem Anwendungscode. Der Service protokolliert jetzt Klasse und Statuscode; für den zweiten Weg, den kein Anwendungscode in der Hand hat, gibt es `SecretMaskingProcessor`. Er maskiert `accessId`, `token`, `apikey` und Verwandte in allen Kanälen und nimmt damit auch den Bestätigungstoken aus den `Matched route`-Zeilen mit.
+
+- **Die REST-API umgeht die Moderation nicht mehr.** `POST /api/v1/restaurants` legte bisher sofort ein öffentliches Restaurant an – nachgestellt: Der Eintrag stand augenblicklich in der Restaurantliste, auf einer Detailseite, in der öffentlichen API-Liste und im Datensatz unter CC BY 4.0. Zwei Aufrufe drückten die auf `/open` veröffentlichte Verifizierungsquote von 27,3 auf 23,1 Prozent und die Durchschnittspunktzahl von 5,09 auf 4,31. Ein Datensatz, den jeder mit einem Konto beschreiben kann, ist als Beleg gegenüber Fördergebern wertlos – und man sieht ihm das nicht an; die Snapshot-Historie friert den verfälschten Stand zusätzlich dauerhaft ein. Der Endpunkt legt jetzt einen **Vorschlag** an, denselben, den auch der Web-Wizard erzeugt, und antwortet mit **202** statt 201: Die Anfrage ist angenommen, die Ressource entsteht mit der Freigabe. Der Antwortvertrag durfte sich ändern, weil es die iOS-App noch nicht gibt (`docs/prd.md`: „belegt, dass die iOS-App bereits Geld kostet, bevor sie existiert").
+- **Die Küchen-Auswahl der Website lässt sich nicht mehr von außen beschreiben.** `cuisines` rief bisher `findOrCreateByName()` – jeder Tippfehler legte dauerhaft einen neuen Typ an, und der erschien im öffentlichen Filter. Nachgestellt mit „Pizzza" und „JETZT BEI UNS BESTELLEN 0900-123456", 50 Stück in einer einzigen Anfrage. Die Namen sind jetzt Freitext am Vorschlag; welcher echte Typ gemeint ist, entscheidet der Admin bei der Freigabe. Über 80 Zeichen antwortet der Server mit 422 statt mit einem 500er aus der Datenbankschicht – jeder davon erzeugte in Produktion einen Sentry-Bericht.
+- **Die API-Registrierung ist gedrosselt.** Sie fiel unter das anonyme Limit von 100 Anfragen je Minute – nachgestellt: elf Hinweis-Mails an eine **fremde** Adresse in wenigen Sekunden, anonym, ohne Konto. Das ist ein Mail-Versender auf beliebige Postfächer, gedeckt von der eigenen Absenderdomäne. Bitter daran: Die Anti-Enumeration ist sauber gebaut (wortgleiche Antwort, kein Timing-Unterschied) – und sie ist der Grund, warum überhaupt eine Mail an eine fremde Adresse geht. Ohne Deckel hat der Schutz den Vektor erst geschaffen. Neuer Limiter `api_register` mit 5 je Stunde, denselben Werten wie der Web-Weg seit gestern.
+- **Nicht beantwortete Merkmale gelten in der API nicht mehr als „nein".** Ein nicht übermitteltes Barrierefreiheitsmerkmal wurde auf `false` gesetzt – daraus wurde eine Aussage, die niemand getroffen hatte. Der Vorschlag kennt „ja", „nein" und „weiß nicht"; die API ordnet jetzt entsprechend zu.
+
+- **Eine geänderte E-Mail-Adresse wird erst nach Bestätigung wirksam.** Bisher wechselte sie im selben Request – nachgestellt: Adresse auf eine fremde umgeschrieben, 302, und in der Datenbank stand die neue Adresse mit `is_verified = 1` und ohne Token. Der Bestätigungsstatus galt damit für eine Adresse, die nie bestätigt wurde. Wer eine Sitzung kaperte, schrieb das Konto in einem Schritt dauerhaft auf sich um, und der rechtmässige Inhaber hatte **keinen Rückweg** – ein Passwort-Zurücksetzen gibt es im Projekt bis heute nicht. Jetzt wandert die neue Adresse in `pending_email` mit eigenem Token und 24-Stunden-Frist; erst der Klick auf den Bestätigungslink tauscht sie. Es gehen **zwei** Mails raus, und die wichtigere ist die an die **bisherige** Adresse: Wer übernimmt, sitzt im neuen Postfach und liest die Bestätigung ohnehin mit – nur die Warnung erreicht den Inhaber. Der offene Vorgang steht sichtbar im Profil und lässt sich dort abbrechen.
+- **Die Passwortänderung im Profil ist gedrosselt.** Acht Versuche mit falschem aktuellem Passwort wurden zuvor alle angenommen. Neuer Limiter `password_change`, fünf Versuche je 15 Minuten – gezählt **am Konto**, nicht an der IP: Der Angriff setzt eine gekaperte Sitzung voraus, und dort wechselt die IP mühelos, das Konto nicht.
 - **Der Bestätigungstoken landet auf Production nicht mehr im Fehlerprotokoll.** In `prod` schreibt der `fingers_crossed`-Handler bei jedem Fehler seinen gesamten Puffer nach `php://stderr` – darunter die `doctrine`-DEBUG-Zeilen mit allen gebundenen Parametern, also auch Token und Passwort-Hashes. Der Kanal ist jetzt ausgeschlossen (`channels: ["!deprecation", "!doctrine"]`). Der Preis ist, dass im Fehlerfall die SQL-Historie fehlt; das wiegt leichter als ein Anmelde-Äquivalent im Hoster-Log. Der `dev`-Handler bleibt bewusst unverändert – ein Entwicklungslog ohne SQL wäre für die Fehlersuche wertlos, und es verlässt den Rechner nicht.
 
 ### Fixed
+- **Die Startseite zeigt wieder sechs Restaurants statt einem.** `findTopRated(6)` lieferte genau **ein** Haus – nachgemessen: `(20)` ergab 2, `(100)` ergab 7. Die Ursache ist ein bekanntes Doctrine-Muster: Die beiden `addSelect()`-Joins holen Öffnungszeiten und Küchen mit (gegen N+1), und dadurch erzeugt jedes Restaurant so viele SQL-Zeilen, wie es Kombinationen aus beidem hat – beim bestbewerteten Haus 14. `setMaxResults()` begrenzt aber die Zeilen, nicht die Entities, und das `LIMIT 6` war innerhalb des ersten Datensatzes verbraucht. Behoben mit `new Paginator($qb->getQuery(), true)`, wie es `findPaginated()` acht Zeilen tiefer schon immer tat. Aufgefallen war es niemandem, weil ein Raster mit einer Karte wie eine Gestaltungsentscheidung aussieht – und weil der vorhandene Test `assertLessThanOrEqual(6, …)` prüfte, was auch bei einem Ergebnis erfüllt ist. Er prüft jetzt `assertCount`.
+- **Die Fehlerantworten des JWT-Bundles folgen dem Format der übrigen API.** Bei falschem Passwort und bei abgelaufenem Token kam ein flaches `{"code":401,"message":…}` statt `{"error":{"code","message"}}` – ausgerechnet in den beiden häufigsten Fehlerfällen eines Mobil-Clients. Ein Client, der einheitlich `error.code` liest, bekam dort `undefined`. Ursache: Das Bundle wirft keine Exception, sondern schreibt die Antwort selbst; `ApiExceptionSubscriber` kam nie zum Zug. Neuer `ApiAuthenticationFailureSubscriber` für die vier Fälle des Bundles, Meldungen übersetzt statt englisch.
+- **404-Antworten der API verraten keine internen Klassennamen mehr.** Dort stand wörtlich `"App\Entity\Restaurant" object not found by "Symfony\Bridge\Doctrine\ArgumentResolver\EntityValueResolver".` – und zwar nicht als Debug-Zugabe, sondern auch in Produktion. Das nennt ORM, Entity und Framework-Aufbau, und einem Client ist damit nicht geholfen. Jetzt „Nicht gefunden."; die Meldungen anderer Ausnahmen bleiben erhalten, weil sie meist aus eigenem Code stammen.
 - **Der Asset-Build hängt nicht mehr davon ab, worüber jemand schreibt.** Tailwind v4 scannt ohne `source(none)` das gesamte Projekt und kann eine als Prosa zitierte Klassenkette nicht von einer verwendeten unterscheiden. `assets/styles/app.css` schloss bisher nur `public/` aus; damit veränderte jede Dokumentation den CSS-Hash und blockte `verify-assets` im Deploy, ohne dass eine Zeile Oberfläche angefasst wurde. Bestand seit dem Merge von `docs/` am 21. August unbemerkt. Einzelne Verzeichnisse auszuschließen greift zu kurz – auch CHANGELOG, README und CLAUDE.md nennen Klassennamen. Stattdessen jetzt eine **Positivliste**: `source(none)` plus die drei Orte, an denen Klassen wirklich entstehen – `templates/` (Twig), `assets/` (Stimulus setzt sie zur Laufzeit über `classList`) und `src/` (FormTypes tragen sie im `attr`-Array, etwa `OpeningHourType`). Das CSS schrumpft dadurch um 1.321 Bytes; geprüft wurde, dass alle sechs entfallenen Utilities in keiner echten Quelle vorkommen. Nebeneffekt mit Wert: Über die Oberfläche lässt sich ab jetzt schreiben, ohne den Build zu verändern.
 - **„Bestätigungsmail erneut senden" funktioniert wieder.** Die Route `/verify/resend` war seit ihrer Einführung unerreichbar: `/verify/{token}` steht in derselben Klasse davor und fängt ohne Requirement jeden Ein-Segment-Pfad ab – auch den mit `token = "resend"`. Wer auf den Link klickte, bekam „Ungültiger Bestätigungslink." und landete auf der Startseite. Das war eine **Sackgasse**: Bei abgelaufenem Token lautet die Meldung „Bitte fordere einen neuen an", und genau dieser Weg war der kaputte – ohne Passwort-Zurücksetzen und ohne Kontolöschung blieb das Konto unrettbar. Behoben durch `requirements: ['token' => '[a-f0-9]{64}']`, was unabhängig von der Deklarationsreihenfolge wirkt. Nachweis: `php bin/console router:match /de/verify/resend`.
 - **Bei ungleichen Passwörtern erscheint eine Meldung statt eines rohen Übersetzungsschlüssels.** Im Formular stand wörtlich `form.password_mismatch`. Ursache: `RepeatedType::invalid_message` wird in der Domäne **`validators`** aufgelöst, der Schlüssel lag aber nur in `messages.*.yaml`. Jetzt in allen vier `validators.*.yaml`. Betraf zwei Stellen – Registrierung **und** Passwortwechsel im Profil.

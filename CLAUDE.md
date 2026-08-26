@@ -55,6 +55,90 @@ markieren fragwürdiges Verhalten, das bewusst als Kriterium aufgenommen wurde. 
 sie wie eine Vorgabe liest, sucht Fehler an der falschen Stelle. Es läuft **nie** durch `sdd-tasks` und nie durch den regulären
 Eingang von `sdd-build` — es ist gebaut.
 
+## Konvention: `ActionLimiter` statt `consume(1)` von Hand
+
+⚠ **`consume(0)` ist keine Prüfung.** Der naheliegende Umbau — abfragen mit
+`consume(0)`, verbrauchen mit `consume(1)` — sieht richtig aus und ist es nicht:
+`SlidingWindowLimiter` vergleicht `verfügbar >= angefordert`, und `0 >= 0` gilt auch
+bei erschöpftem Kontingent. Nachgestellt: **acht gültige Anmeldungen liefen durch**, wo
+die sechste hätte scheitern müssen — der Deckel war weg, nicht repariert. Maßgeblich ist
+`getRemainingTokens()`.
+
+Deshalb gibt es `App\RateLimit\ActionLimiter`:
+
+```php
+$limiter = ActionLimiter::for($this->registrationLimiter, $request->getClientIp());
+if (!$limiter->isAllowed()) { /* 429 */ }
+// … Formular prüfen, Honeypot, alles was fehlschlagen darf …
+$limiter->consume();   // erst hier: die Handlung findet statt
+```
+
+⚠ **Erst verbrauchen, wenn die Handlung stattfindet** (BF-11). Fünf Tippfehler sperrten
+vorher eine Stunde lang aus, ohne dass ein Konto oder eine Mail entstanden wäre. Der
+Deckel soll den Angreifer treffen, nicht den, der sich vertippt.
+
+⚠ **Eine Ausnahme, und sie steht im Code:** Der Passwortwechsel verbraucht **vor** der
+Prüfung. Dort ist der Fehlversuch kein Tippfehler, sondern der Angriff — genau ihn soll
+der Deckel zählen. Nicht „vereinheitlichen".
+
+`LimiterCoverageTest` prüft, dass jeder konfigurierte Limiter irgendwo verdrahtet ist
+und einen `when@test`-Override hat. Ein Limiter, den niemand ruft, ist eine Zeile
+Konfiguration und kein Schutz.
+
+## Konvention: Jeder Weg, der eine Mail auslöst oder ein Geheimnis prüft, braucht einen Limiter
+
+— und ebenso jeder Weg, der **bei jedem Aufruf den gesamten Bestand lädt**.
+
+Unabhängig davon, ob eine App oder ein Browser ihn geht. Wer einen solchen Weg **neu
+anlegt oder einen bestehenden darum erweitert, legt den Limiter im selben Commit an.**
+
+Der Satz steht hier und nicht nur in `features/fehlbestand-uebersicht.md`, weil er dort
+beim *Prüfen* gelesen wurde und nicht beim *Bauen* — mit dem Ergebnis, dass BF-30 am
+selben Tag entstand, an dem er formuliert wurde.
+
+Fünfmal gefunden, jedes Mal an einer anderen Stelle: Registrierung (BF-02), Anmeldung
+(BF-13), Passkey-Challenge (BF-18), Adressänderung (BF-21), API-Einreichung (BF-30).
+Gemeinsam ist allen, dass der **API**-Weg gedeckelt war und der Browser-Weg nicht — oder
+dass eine Reparatur einem Weg erstmals einen Mailversand gab, ohne den Deckel mitzunehmen.
+
+Vorhandene Limiter stehen in `config/packages/framework.yaml`; **der `when@test`-Override
+auf 10000 ist Pflicht**, sonst summieren sich die Aufrufe über die Testsuite.
+
+⚠️ **Am Konto zählen, nicht an der IP**, wenn der Angriff eine bestehende Sitzung oder
+ein bestehendes Konto voraussetzt — dort wechselt die IP mühelos, das Konto nicht
+(siehe `password_change`).
+
+## Konvention: Die Prüfung gehört dorthin, wo der Wert hereinkommt
+
+Viermal derselbe Fehler, jedes Mal an einer anderen Stelle (BF-27, BF-51, BF-62 zweimal):
+Ein Wert, den niemand geprüft hat, fällt in die nächste Schicht und kommt dort als
+**HTTP 500** heraus statt als Meldung.
+
+- ⚠ **`'empty_data' => ''` ist Pflicht**, sobald der Setter der Entity ein striktes
+  `string` verlangt. Ohne die Zeile übergibt Symfony `null`, `setName(string)` wirft, und
+  der Nutzer bekommt einen Serverfehler statt der `NotBlank`-Meldung, die direkt daneben
+  konfiguriert ist.
+- ⚠ **Eine Längenprüfung am Endpunkt reicht nicht, wenn daraus ein Slug wird.**
+  `AsciiSlugger` macht aus „ß" ein „ss", aus einem japanischen Zeichen bis zu drei
+  Buchstaben: 80 × „ß" ergeben 160 Zeichen, 80 × „日" ergeben 239. Der `SQLSTATE[22001]`
+  wandert dann von `name` auf `slug`.
+
+## Konvention: Übersetzungsschlüssel werden getestet, nicht gehofft
+
+`tests/Unit/Translation/CatalogueCompletenessTest.php` prüft dreierlei:
+
+1. Alle vier Kataloge tragen **dieselbe Schlüsselmenge** (`messages` 1084+, `validators` 82+).
+2. Kein Wert ist leer.
+3. **Jeder im Code verwendete Schlüssel ist definiert** — 736 aus `|trans` in Templates,
+   187 aus `src/Form/` (Constraint-Meldungen, `label`, `help`, `placeholder`).
+
+⚠ **Punkt 3 fand seinen eigenen blinden Fleck erst im zweiten Anlauf.** Die erste Fassung
+prüfte nur Constraint-Meldungen; zwei neue Formularfelder trugen Beschriftungen, die in
+keinem Katalog standen, und der Test blieb grün. Wer den Scanner erweitert, prüft mit
+einem absichtlich falschen Schlüssel gegen, ob er rot wird.
+
+`debug:translation <locale> --only-missing` ist der manuelle Weg dazu.
+
 ## Tech Stack
 
 - **Backend:** PHP 8.4+, Symfony 8.0.*
@@ -240,6 +324,8 @@ Autowiring and autoconfiguration are enabled by default in `config/services.yaml
 | `app_profile_edit`      | `/profile/edit` | `ProfileController::edit()`        |
 | `app_profile_password`  | `/profile/password` | `ProfileController::changePassword()` |
 | `app_profile_avatar_delete` | `/profile/avatar/delete` | `ProfileController::deleteAvatar()` |
+| `app_profile_email_cancel` | `/profile/email/abbrechen` (POST) | `ProfileController::cancelEmailChange()` |
+| `app_email_change_confirm` | `/verify/email-change/{token}` | `EmailVerificationController::confirmEmailChange()` |
 | `app_passkey_rename`    | `/profile/passkeys/{id}/umbenennen` | `PasskeyController::rename()` |
 | `app_passkey_delete`    | `/profile/passkeys/{id}/loeschen` | `PasskeyController::delete()` |
 | `webauthn.controller.request.request.login` | `/passkey/login/options` (locale-frei) | Bundle-Controller (Challenge zum Anmelden) |
@@ -359,10 +445,39 @@ Migrationen: `Version20260321000000` (erstellt Tabelle), `Version20260619000000`
 Versionierte, **locale-freie** REST/JSON-API unter `/api/v1/` als Backend für eine native iOS-App. Bestehende Web-App unverändert. Ansatz: **Plain Controller + explizite Transformer** (kein API Platform, keine Serializer-Groups).
 **Bundles:** `lexik/jwt-authentication-bundle` (JWT), `nelmio/cors-bundle` (CORS), `nelmio/api-doc-bundle` (Swagger), `symfony/rate-limiter`. JWT-Keypair in `config/jwt/*.pem` (gitignored) via `php bin/console lexik:jwt:generate-keypair`; env: `JWT_SECRET_KEY`, `JWT_PUBLIC_KEY`, `JWT_PASSPHRASE`, `CORS_ALLOW_ORIGIN`.
 **Routing:** `config/routes.yaml` — eigener `api_v1`-Block (prefix `/api/v1`, kein `_locale`) + `exclude: '../src/Controller/Api/V1/'` am `controllers`-Loader (sonst landete die API unter `/{_locale}/api/v1`).
+⚠️ **`POST /api/v1/restaurants` legt einen `RestaurantSuggestion` an, kein `Restaurant`** —
+und antwortet mit **202**, nicht 201 (QA B23, BF-24). Vorher entstand hier sofort ein
+öffentlicher Eintrag: Er stand augenblicklich in der Restaurantliste, auf einer
+Detailseite, in den veröffentlichten Kennzahlen von `/open` und im Datensatz unter
+CC BY 4.0 — ohne dass jemand ihn gesehen hatte. Gemessen: zwei Aufrufe drückten
+`verifiedShare` von 27,3 auf 23,1 %. Der Web-Weg (B11) läuft seit jeher über einen
+Vorschlag mit Admin-Freigabe (B21); die API umging genau das.
+
+⚠️ **`cuisines` ruft NICHT mehr `findOrCreateByName()`.** Die Namen landen als Freitext
+in `RestaurantSuggestion::$cuisine` (max. 80 Zeichen, sonst 422 statt eines 500ers aus
+der Datenbankschicht). Vorher schrieb jeder Aufruf dauerhaft in die **öffentliche
+Filterauswahl der Website** — gemessen wurden dort „Pizzza" und „JETZT BEI UNS
+BESTELLEN 0900-123456", 50 Stück je Anfrage. Welcher echte Küchen-Typ gemeint ist,
+entscheidet der Admin bei der Freigabe.
+
+⚠️ **Nicht übermittelte Merkmale sind `TriState::UNKNOWN`, nicht `false`.** Der Vorschlag
+unterscheidet „nein" von „weiß nicht"; die alte Fassung machte aus jedem nicht gefragten
+Merkmal ein „nein", das niemand behauptet hatte.
+
+**`ApiAuthenticationFailureSubscriber`** bringt die Antworten des JWT-Bundles auf dieselbe
+Form wie alle anderen (`{error:{code,message}}`). Das Bundle wirft keine Exception,
+sondern schreibt die Antwort selbst — `ApiExceptionSubscriber` kommt dort nicht zum Zug.
+Betroffen waren die beiden häufigsten Fälle eines Mobil-Clients: falsches Passwort und
+abgelaufenes Token (BF-26).
+
+⚠️ **Ohne `Accept-Language` antwortet die API luxemburgisch** (`translation.yaml`:
+`default_locale: lb`). Bewusst nicht geändert — das wäre ein Eingriff in die gesamte
+Website.
+
 **Controller** (`src/Controller/Api/V1/`): `AuthController` (`login` = json_login-Stub, Rumpf nie erreicht; `register` repliziert den Web-Flow inkl. E-Mail-Verifikation, gibt KEIN Token zurück; **Anti-User-Enumeration**: identische generische 201-Antwort, egal ob die E-Mail existiert – bestehende Adressen erhalten einen Hinweis-Mail statt einer Bestätigung, Passwort wird in beiden Zweigen gehasht (Timing)), `RestaurantApiController` (`index` mit Envelope `{data, meta:{page,limit,total,totalPages,sort}}` + Filter-Mapping auf `RestaurantRepository::findPaginated`; `show`; `images`; `create` mit `submittedBy`=current user, `isVerified=false`), `MeController` (`me`, `submissions` via `findBySubmitter`; `#[IsGranted('IS_AUTHENTICATED_FULLY')]`).
 **Transformer** (`src/Api/`): `RestaurantTransformer` (`list()`/`detail()`/`image()`, injiziert `OpeningHoursService` für `isOpenNow` + `nextOpeningTime`, Öffnungszeiten gruppiert nach Tag 1–7) und `UserTransformer` (`profile()`). Bild-/Avatar-URLs sind **absolut** (für native iOS-Clients) via `AssetUrlBuilder` (`src/Api/`): nutzt Scheme+Host des aktuellen Requests, optionaler Env-Override `APP_API_BASE_URL` (Proxy/CDN). Koordinaten im `create`-Endpoint werden auf Dezimalformat + Bereich ±90/±180 geprüft (422 statt DBAL-500). Bewusst explizit statt Serializer-Groups, weil die Entity untypische Getter hat (`acceptsCash()`, `isWheelchairAccessible()`, `hasAccessibleToilet()`), die der ObjectNormalizer nicht zuverlässig erkennt. `password`/Token werden strukturell NIE ausgegeben.
 **Security** (`config/packages/security.yaml`): zwei stateless Firewalls VOR `main`: `api_login` (`^/api/v1/auth/login$`, json_login mit `username_path: email`, Lexik success/failure-Handler) und `api` (`^/api/v1`, `jwt: ~`). `access_control`: `auth` + `GET restaurants` = PUBLIC; `me` + `POST restaurants` = IS_AUTHENTICATED_FULLY. Web-Regeln (`^/[a-z]{2}/...`) bleiben kollisionsfrei.
-**Fehler/CORS/Rate-Limit** (`src/EventSubscriber/`): `ApiExceptionSubscriber` (nur `^/api/v1`, JSON `{error:{code,message}}`; **anonyme** AccessDenied → 401, sonst 403; übernimmt Header der HTTP-Exception, z. B. `Retry-After`/`WWW-Authenticate`; im Debug-Modus Exception-Detail bei 500). `ApiRateLimitSubscriber` (IP-basiert, Login strenger; bei Limit `TooManyRequestsHttpException` → 429 inkl. `Retry-After`-Sekunden aus `RateLimit::getRetryAfter()`). Limiter in `config/packages/framework.yaml` (`api_anonymous` sliding_window 100/min, `api_login` fixed_window 5/min; in `when@test` auf 10000 gelockert). CORS in `config/packages/nelmio_cors.yaml` nur `^/api/v1/`. `bool $debug`-Bind in `config/services.yaml`.
+**Fehler/CORS/Rate-Limit** (`src/EventSubscriber/`): `ApiExceptionSubscriber` (nur `^/api/v1`, JSON `{error:{code,message}}`; **anonyme** AccessDenied → 401, sonst 403; übernimmt Header der HTTP-Exception, z. B. `Retry-After`/`WWW-Authenticate`; im Debug-Modus Exception-Detail bei 500). `ApiRateLimitSubscriber` (IP-basiert, Login **und Registrierung** strenger — letztere seit BF-25 unter `api_register` mit 5/Stunde statt 100/Minute; ohne den Deckel waren das bis zu 100 Mails je Minute an eine frei wählbare **fremde** Adresse, weil die Anti-Enumeration bewusst auch an bestehende Adressen schreibt; bei Limit `TooManyRequestsHttpException` → 429 inkl. `Retry-After`-Sekunden aus `RateLimit::getRetryAfter()`). Limiter in `config/packages/framework.yaml` (`api_anonymous` sliding_window 100/min, `api_login` fixed_window 5/min, `api_register` sliding_window 5/h; in `when@test` alle auf 10000 gelockert). CORS in `config/packages/nelmio_cors.yaml` nur `^/api/v1/`. `bool $debug`-Bind in `config/services.yaml`.
 **Swagger:** `config/packages/nelmio_api_doc.yaml` (`areas.default.path_patterns: ^/api/v1`, Bearer-securityScheme), Routen `app.swagger_ui` (`/api/docs`) + `app.swagger` (`/api/docs.json`) in `config/routes/nelmio_api_doc.yaml`. OA-Tags + `#[Security(name:'Bearer')]` auf geschützten Endpunkten.
 **Tests** (`tests/Functional/Controller/Api/V1/`): `RestaurantApiControllerTest`, `AuthControllerTest`, `MeControllerTest` (WebTestCase, inkl. `password`-Regression und `sort`-Reihenfolge/`meta.sort`). Token im Test via `JWTTokenManagerInterface::create()`. **Test-DB:** `DATABASE_URL` musste in `.env.test` ergänzt werden (`.env.local` wird im Test-Env nicht geladen). `when@test` in `messenger.yaml` routet `async` → `in-memory://` (kein `messenger_messages`-Table, E-Mails nicht real versendet).
 
@@ -424,6 +539,51 @@ Daneben `assets/controllers/passkey_ui_controller.ts`: Feature-Detection (Knopf 
 
 **Bewusst nicht enthalten:** Conditional UI / Autofill (`conditionalUi: true` kann das Paket), Passkey-Registrierung neuer Konten, Passkeys in `/api/v1`, Attestation-Prüfung (`attestation_conveyance` bleibt `none` – ein Attestation-Zwang sperrte Authenticator aus, ohne dass jemand die Herstellerdaten auswertet).
 
+## E-Mail-Änderung mit Bestätigung (QA B04, BF-19)
+
+Eine im Profil eingegebene neue Adresse wird **vorgemerkt, nicht übernommen**. Vorher
+wechselte `User::$email` im selben Request und `is_verified` blieb auf `true` — der
+Bestätigungsstatus galt damit für eine nie bestätigte Adresse, und wer eine Sitzung
+kaperte, schrieb das Konto dauerhaft auf sich um. Einen Rückweg gäbe es nicht: Ein
+Passwort-Zurücksetzen existiert im Projekt bis heute nicht (Feature `01`).
+
+**Felder:** `pendingEmail`, `pendingEmailToken`, `pendingEmailTokenExpiresAt`
+(Migration `Version20260824120000`, reine `ADD COLUMN` — MariaDB-10.5-tauglich).
+Methoden auf `User`: `requestEmailChange()`, `confirmEmailChange()`,
+`clearPendingEmail()`, `isPendingEmailTokenExpired()`.
+
+⚠️ **`ProfileController::edit()` merkt sich die bisherige Adresse VOR `handleRequest()`
+und setzt sie danach zurück.** `ProfileType` ist an die Entity gebunden; nach
+`handleRequest()` steht dort bereits der eingegebene Wert. Genau der soll nicht wirksam
+werden — die Validierung muss ihn aber sehen, sonst prüfte `UniqueEntity` auf dem alten
+Wert und eine bereits vergebene Adresse ginge durch.
+
+⚠️ **Zwei Mails, und die wichtigere geht an die ALTE Adresse.** Wer ein Konto übernehmen
+will, sitzt im neuen Postfach und liest die Bestätigung ohnehin mit; nur die Warnung an
+die bisherige Adresse erreicht den rechtmäßigen Inhaber. Vorlagen:
+`email/email_change.html.twig` (Knopf) und `email/email_change_notice.html.twig`
+(Warnung, kein Knopf).
+
+⚠️ **`pending_email` hat keinen Unique-Index** — siehe `docs/data-model.md`. Beim
+Einlösen prüft der Controller gegen `email` und räumt den Vorgang ab; ohne das liefe
+der `flush()` in eine Unique-Verletzung und der Nutzer sähe einen 500er.
+
+**Die Bestätigungsroute liegt unter `/verify/…`, nicht unter `/profile/…`** — dort
+greift `IsGranted('IS_AUTHENTICATED_FULLY')` auf Klassenebene. Der Token *ist* der
+Nachweis (Zugriff auf das neue Postfach); eine Anmeldepflicht machte den Klick aus dem
+Postfach heraus unbenutzbar, ohne etwas zu sichern. `access_control` deckt
+`^/[a-z]{2}/verify` bereits als `PUBLIC_ACCESS` ab. Zwei Pfadsegmente, deshalb kein
+Konflikt mit `/verify/{token}`.
+
+⚠️ **Der Hinweis auf den offenen Vorgang steht AUSSERHALB des Profilformulars.** Ein
+`<form>` im `<form>` ist ungültiges HTML — der Browser verwirft das innere, und der
+Abbrechen-Knopf wäre wirkungslos. Im Test fiel das als „Kein Formular mit action
+/profile/email/abbrechen" auf.
+
+**Limiter `password_change`** (5 je 15 Minuten, BF-20) zählt **am Konto**, nicht an der
+IP: Der Angriff ist das Raten des aktuellen Passworts aus einer gekaperten Sitzung
+heraus, und dort wechselt die IP mühelos.
+
 ## Cookie-Consent-Banner (Issue #82)
 DSGVO-Banner, das beim ersten Besuch unten erscheint und die Wahl (`accepted`/`declined`) 365 Tage im Cookie `cookie_consent` speichert. Keine Entity/Migration/Backend-Änderung — rein clientseitig.
 Stimulus: `assets/controllers/cookie_consent_controller.ts` — `connect()` zeigt das Banner, wenn kein `cookie_consent`-Cookie existiert; `accept()`/`decline()` setzen den Cookie (`path=/; max-age=365d; samesite=lax`, `secure` nur bei HTTPS — Muster aus `csrf_protection_controller.ts`) und blenden aus. Values: `cookieName` (default `cookie_consent`), `lifetime` (default 365). Cross-Element-Kommunikation idiomatisch über Fenster-Event: der Footer-Link ist eine eigene Controller-Instanz (`<li data-controller="cookie-consent">`), sein `openSettings()` stößt `this.dispatch('open')` an; die Banner-Instanz fängt es über den `@window`-Descriptor (`data-action="cookie-consent:open@window->cookie-consent#reopen"`) ab und zeigt das Banner (`reopen()`). Beide `reopen()`/`connect()` sind via `hasBannerTarget` abgesichert.
@@ -438,11 +598,53 @@ Helper: `hasCoordinates(): bool` — prüft ob lat+lng gesetzt.
 DTO: `App\DTO\NearbyStop` (readonly) — name, distance (Meter), lines (string[]), type (bus/tram/mixed).
 Service: `App\Service\PublicTransportService` — `findNearbyStops(string $lat, string $lng): NearbyStop[]`. Nutzt HAFAS API (`cdt.hafas.de`), Cache 24h, Graceful Degradation (leerer API-Key → `[]`). Parameter: `app.mobiliteit_api_key`, `app.mobiliteit_radius` (500), `app.mobiliteit_max_stops` (5).
 Env: `MOBILITEIT_API_KEY` in `.env` (leer = deaktiviert).
+
+⚠️ **Der Block heißt „Nahverkehr", nicht „barrierefreie Haltestellen".** Die
+HAFAS-Abfrage kennt **kein** Barrierefreiheitsmerkmal — `grep` nach
+`accessib|barrier|wheelchair` in `PublicTransportService` und `NearbyStop` findet
+nichts. Bis 2026-08-24 stand auf der Detailseite trotzdem „Keine barrierefreien
+Haltestellen in der Nähe gefunden" und im Admin-Formular „automatische Suche nach
+barrierefreien Haltestellen" (QA B10, BF-46). Auf dieser Plattform ist eine erfundene
+Barrierefreiheitsaussage der schwerste Fehler, den ein Text machen kann. Die Texte
+sagen jetzt, was tatsächlich geprüft wurde, und der Block trägt einen Herkunftshinweis.
+
+⚠️ **Radius 1000, nicht 500.** Bei 500 m lieferte die Schnittstelle für **8 von 11**
+Restaurants null Haltestellen; an denselben Koordinaten sind es bei 2000 m sieben. Nach
+der Umstellung: 8 von 11 mit Treffern.
+
+⚠️ **`'timeout' => 3` ist Pflicht.** Ohne eigene Vorgabe greift `default_socket_timeout`
+— gemessen 60 s, so lange wartete der Besucher der Detailseite bei hängender
+Schnittstelle. Der `catch (\Throwable)` fängt den **Ausfall**, nicht die **Verzögerung**.
+
+⚠️ **Die Exception-Meldung nicht ins Log durchreichen.** Sie enthält die vollständige
+URL samt `accessId` — HAFAS sieht die Übergabe des Schlüssels als Query-Parameter vor.
+Protokolliert werden Klasse und Statuscode. Den zweiten Weg (Symfonys eigener
+`http_client`-Kanal, der in `prod` **nicht** ausgeschlossen ist) deckt
+`App\Monolog\SecretMaskingProcessor` ab.
 Template: `templates/partials/_nearby_stops.html.twig` — Haltestellen-Karten mit Bus/Tram-Icons, Linien-Badges, Distanz.
 Form: `latitude` (NumberType, Range -90/90), `longitude` (NumberType, Range -180/180), `nearbyStopsNote` (TextType, max 1000).
 Admin-Fieldset: "Standort & Nahverkehr" in `_form.html.twig`.
 Migration: `Version20260322000000`.
 Fixtures: Alle 11 Restaurants mit echten Luxemburg-Koordinaten. Brasserie du Grund mit Beispiel-`nearbyStopsNote`.
+
+## ⚠️ `setMaxResults()` mit `addSelect()`-Joins braucht `Paginator`
+
+Ein `leftJoin` mit `addSelect` holt eine Collection mit (gegen N+1) — und vervielfacht
+dabei die SQL-Zeilen je Entity. `setMaxResults()` begrenzt aber die **Zeilen**, nicht
+die Objekte. `RestaurantRepository::findTopRated(6)` lieferte dadurch **ein** Restaurant
+statt sechs: Das bestbewertete Haus brachte allein 14 Zeilen mit (7 Öffnungszeiten × 2
+Küchen), und das `LIMIT 6` war innerhalb des ersten Datensatzes verbraucht (QA B12,
+BF-64).
+
+Gemessen vor der Reparatur: `findTopRated(6)` → 1, `(20)` → 2, `(100)` → 7.
+
+**Die Lösung ist `new Paginator($qb->getQuery(), true)`** — der zweite Parameter
+`$fetchJoinCollection` ist genau dafür da. `findPaginated()` im selben Repository macht
+es seit jeher so; nur `findTopRated()` tat es nicht.
+
+⚠️ **Ein Test mit `assertLessThanOrEqual($limit, count(...))` fängt das nicht.** Genau so
+stand er in `RestaurantRepositoryTest` und war grün, während die Startseite eine Karte
+zeigte. Bei einer Begrenzung gehört `assertCount(min($limit, $bestand), …)` geprüft.
 
 ## Entity: OrderingOption (Issue #43)
 Felder: id (int, PK), platform (VARCHAR 20 – Werte aus `App\Enum\OrderingPlatform`), url (VARCHAR 500), restaurant (ManyToOne Restaurant, CASCADE DELETE).

@@ -233,11 +233,20 @@ final class RestaurantRepositoryTest extends KernelTestCase
         }
     }
 
+    /**
+     * BF-64: Die Zählprüfung stand hier vorher als `assertLessThanOrEqual(6, …)` —
+     * und war damit auch erfüllt, als `findTopRated(6)` **ein** Restaurant lieferte.
+     * Der Test war grün, während die Startseite eine Karte statt sechs zeigte.
+     *
+     * `assertCount` prüft, was das Kriterium verlangt: genau so viele, wie
+     * angefordert (sofern der Bestand reicht).
+     */
     public function testFindTopRatedIsLimitedAndDescending(): void
     {
+        $vorhanden = \count($this->repo->findAll());
         $top = $this->repo->findTopRated(6);
 
-        self::assertLessThanOrEqual(6, \count($top));
+        self::assertCount(min(6, $vorhanden), $top, 'Die Begrenzung muss Entities zählen, nicht SQL-Zeilen.');
 
         $previous = null;
         foreach ($top as $restaurant) {
@@ -249,6 +258,27 @@ final class RestaurantRepositoryTest extends KernelTestCase
                 $previous = $rating;
             }
         }
+    }
+
+    /**
+     * BF-64 im Kern: `setMaxResults()` begrenzt zusammen mit `addSelect()`-Joins die
+     * SQL-Zeilen, nicht die Entities. Vor der Reparatur lieferte `findTopRated(3)`
+     * ein Restaurant, weil das erste allein 14 Zeilen mitbrachte.
+     */
+    public function testBf64BegrenzungZaehltEntitiesNichtSqlZeilen(): void
+    {
+        $vorhanden = \count($this->repo->findAll());
+
+        foreach ([1, 3, 6] as $limit) {
+            self::assertCount(
+                min($limit, $vorhanden),
+                $this->repo->findTopRated($limit),
+                sprintf('findTopRated(%d) liefert nicht %d Entities.', $limit, min($limit, $vorhanden)),
+            );
+        }
+
+        // Über dem Bestand: alle, nicht weniger.
+        self::assertCount($vorhanden, $this->repo->findTopRated(1000));
     }
 
     public function testFindBySubmitterReturnsOnlyOwnRestaurants(): void

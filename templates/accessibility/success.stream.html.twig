@@ -1,0 +1,8 @@
+{# Ersetzt nur das Formular durch die Bestätigung – kein <turbo-frame>, "replace"
+   adressiert die gewöhnliche DOM-id. Ohne Turbo greift stattdessen der Redirect
+   samt Flash aus dem Controller. #}
+<turbo-stream action="replace" target="accessibility-report-form">
+    <template>
+        {% include 'accessibility/_success.html.twig' %}
+    </template>
+</turbo-stream>
