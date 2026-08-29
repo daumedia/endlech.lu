@@ -504,6 +504,16 @@ Anmeldung per Face ID, Touch ID oder Geräte-PIN – **zusätzlich** zum Passwor
 
 ⚠️ **`entry_point: form_login` ist Pflicht**, sobald eine Firewall zwei Authenticator führt – sonst bricht der Container-Build mit `RegisterEntryPointPass`. Nur `form_login` kennt den `login_path`.
 
+⚠️ **`supports()` prüft mit `has('_assertion')`, nicht auf einen gefüllten Wert** (ENDLECH-6).
+Das Passkey-Formular führt kein `_username`. Prüft man auf einen **gefüllten** Wert, fällt
+ein Submit mit leerer Assertion an den `FormLoginAuthenticator` durch — und der wirft dort
+`BadRequestHttpException: The key "_username" must be a string, "NULL" given.` Statt der
+Meldung „Passkey-Anmeldung fehlgeschlagen" sah der Nutzer eine nackte Fehlerseite. Mit
+`has()` beansprucht der Passkey-Weg jeden Submit aus seinem Formular; eine unbrauchbare
+Assertion scheitert regulär und wird zur Flash-Nachricht. Der Passwort-Weg ist unberührt,
+sein Formular sendet kein `_assertion`. Abgesichert durch
+`SecurityControllerTest::testEndlech6…` mit vier Assertion-Formen.
+
 ⚠️ **Der Passkey-Knopf hat ein eigenes `<form>`.** Der `AuthenticationController` aus dem npm-Paket ruft vor dem Start `form.checkValidity()`; im Passwort-Formular sind beide Felder `required`, ein Klick liefe dort gegen die Browser-Validierung. Das Passkey-Formular steht **zuerst im Markup**, weil die Tab-Reihenfolge der sichtbaren folgen muss. Deshalb nutzt `SecurityControllerTest` `formWithField()` statt `filter('form')` – wer dort auf `filter('form')` zurückfällt, greift das Passkey-Formular und bekommt „Unreachable field \"_username\"".
 
 **Entity `WebauthnCredential`** erbt von `Webauthn\CredentialRecord`. Das Bundle registriert dafür selbst eine mapped-superclass (`WebauthnBundle::registerMappings()`) und trägt fünf DBAL-Typen (`base64`, `aaguid`, `trust_path`, …) über `WebauthnExtension::prepend()` ein – für die geerbten Felder braucht es also **keine** ORM-Attribute und keine Konfigurationszeile. Eigene Felder: `id`, `user` (ManyToOne, `ON DELETE CASCADE`), `name`, `createdAt`, `lastUsedAt`.
@@ -915,7 +925,67 @@ Das `.github/`-Verzeichnis enthält außerdem Issue-Templates (Bug Reports, Feat
 
 **Production-Umgebung (verifiziert am 2026-08-06):** Cloudways, SSH-Login `endlech` → Systembenutzer `nrzwptqsvx` (Application-User, dem auch `public_html` gehört – der richtige, nicht der Master-Login). Deploy-Pfad `$HOME/public_html`, Webroot zeigt auf dessen `public/`. PHP 8.4.22, Composer 2.10.1, git 2.30.2. `~/.ssh/` gehört **root** – deshalb liegt der Deploy-Key in `.git/deploy_key` (dort greift auch `git clean` nicht hin) und `known_hosts` wird per `ssh-keyscan` daneben geschrieben; der CI-Key des Runners liegt in `~/.openssh/authorized_keys` (Cloudways-Pfad, gehört dem App-User). `COMPOSER_CACHE_DIR` wird im Skript auf `$HOME/tmp/composer-cache` gesetzt, weil Composers Default `~/.cache` hier nicht beschreibbar ist – sonst läuft jeder Deploy cache-los.
 
-**Kein Messenger-Worker:** Production läuft mit `MESSENGER_TRANSPORT_DSN=sync://` (in `.env.local`, überschreibt das `doctrine://` aus `.env`) – E-Mails werden synchron im Request versendet, es gibt weder Queue noch Worker. `deploy.sh` enthält deshalb **kein** `pkill`. Auf derselben Maschine läuft ein `messenger:consume` einer fremden Application unter anderem Systembenutzer; ein pkill-Muster ohne `-u`-Filter wäre dort eine Fußangel.
+### Messenger-Worker (Umstellung von `sync://` auf die Queue)
+
+**Stand 2026-08-29: `deploy.sh` ist vorbereitet, die Umstellung selbst steht noch aus.**
+Solange in der `.env.local` auf dem Server `MESSENGER_TRANSPORT_DSN=sync://` steht,
+werden E-Mails weiterhin im Request versendet und die Sperre unten läuft ins Leere.
+
+⚠️ **`sync://` NICHT einfach entfernen.** Ohne laufenden Worker greift der Default
+`doctrine://default?auto_setup=0` aus `.env`, und dann stapeln sich die Nachrichten
+in `messenger_messages`, während die App weiter „erfolgreich" meldet – niemand
+bekommt mehr eine Bestätigungsmail, und es fällt erst bei einer Beschwerde auf.
+Die Reihenfolge ist: **erst Cron einrichten, dann deployen, dann die Zeile ziehen**
+(und `cache:clear --env=prod`, sonst hält der kompilierte Container den alten DSN).
+
+Die Tabelle ist bereits da: `Version20260113160019` legt `messenger_messages` an,
+und ihr Schema deckt sich mit dem, was `symfony/doctrine-messenger` erwartet
+(Kombi-Index `(queue_name, available_at, delivered_at, id)`). `auto_setup=0` ist
+deshalb unkritisch.
+
+**Der Worker läuft als Cron, nicht unter Supervisor** – jede Minute, mit
+`--time-limit=55`. Das ist hier die bessere Wahl, weil sich der Worker damit selbst
+ablöst und nach jedem Deploy von allein mit neuem Code und frischem Container
+startet. Ein `pkill` im Deploy entfällt dadurch, und das ist ein Gewinn: Auf
+derselben Maschine läuft ein `messenger:consume` einer **fremden** Application unter
+anderem Systembenutzer, ein Muster ohne `-u`-Filter wäre dort eine Fußangel.
+
+⚠️ **Der Cron muss unter demselben Systembenutzer laufen wie PHP-FPM**
+(`nrzwptqsvx`, nicht der Master-Login, unter dem das Cloudways-Panel seine Cron-Jobs
+anlegt). Ein Worker als Master schreibt `var/log` und `var/cache` mit fremdem
+Eigentümer voll, bis der Webserver dort auf „Permission denied" läuft — ein 500er,
+dessen Ursache man an der falschen Stelle sucht. Vor dem Einrichten prüfen, als wer
+das Panel den Job startet:
+
+```
+* * * * * id > /home/master/applications/nrzwptqsvx/public_html/var/cron-whoami.txt 2>&1
+```
+
+Steht dort `master`, gehört der Job stattdessen per `crontab -e` in die SSH-Sitzung
+des App-Users. Der bestehende `app:metrics:snapshot`-Cron hat dasselbe Thema, fällt
+dort aber kaum auf, weil er einmal im Monat läuft.
+
+Die **Sperrdatei** ist davon bewusst unabhängig: `deploy.sh` öffnet sie lesend
+(`exec 9<`), weil `flock` unabhängig vom Zugriffsmodus sperrt. Ein abweichender
+Eigentümer blockiert damit nicht den Deploy.
+
+**Die Sperre in `deploy.sh`:** Das Skript nimmt sich `var/worker.lock` per `flock`,
+bevor `git reset` läuft, und hält den Deskriptor bis zum Ende. Ein laufender Worker
+wird abgewartet (bis 90 s), jeder Cron-Start während des Deploys springt per
+`flock -n` ab. Ohne das trifft der Worker mitten im `git reset` auf halb neue
+Dateien – derselbe gemischte Zustand wie bei ENDLECH-5, nur im Hintergrund und ohne
+Wartungsseite davor. Die Datei liegt aus demselben Grund unter `var/` wie das
+Wartungsflag: gitignoriert, `git clean -fd` fasst sie nicht an.
+
+**Was die Umstellung mitbringt:** Retry (`max_retries: 3`) und den `failed`-Transport,
+also `messenger:failed:show`/`:retry` statt endgültig verlorener Mails. Und
+Sichtbarkeit – ein im Worker gescheiterter Versand landet als `error` im Monolog-Kanal
+`messenger` und damit über `sentry_logs` in Sentry. Bei `sync://` fangen zwölf
+`catch (TransportExceptionInterface)`-Blöcke in acht Dateien den Fehler ab, **ohne ihn
+zu loggen**: Der Nutzer sieht eine Warnung, der Betreiber erfährt nichts. Nach der
+Umstellung sind diese Blöcke toter Code (ein Dispatch-Fehler ist eine
+Messenger-Exception, keine Mailer-`TransportExceptionInterface`) – sie schaden nicht,
+können aber aufgeräumt werden.
 
 **Production-DB ist MariaDB 10.5**, lokal und in der CI läuft dagegen MySQL 8.0. Da `deploy.sh` bei jedem Lauf `doctrine:migrations:migrate` ausführt, müssen neue Migrationen gegen MariaDB 10.5 lauffähig sein – MySQL-8-only-Syntax (z. B. `CHECK`-Constraints mit JSON-Funktionen, Window-Functions in DDL) schlägt sonst erst auf Production fehl.
 
@@ -923,11 +993,47 @@ Das `.github/`-Verzeichnis enthält außerdem Issue-Templates (Bug Reports, Feat
 - **Änderung unter `assets/` → `npm run build` ausführen und `public/build` mitcommitten**, sonst blockt `verify-assets` den Deploy. Der Build ist deterministisch (verifiziert), ein Neubau ohne Quelltextänderung erzeugt keine Diffs.
 - **`.nvmrc` ist die gemeinsame Node-Version** für lokale Entwicklung, `ci.yml` und `cd.yml` (beide Workflows nutzen `node-version-file: '.nvmrc'`). Da der committete `public/build` aus der lokalen Node-Version stammt, würde eine abweichende Runner-Version den Vergleich potenziell grundlos rot färben. Wer lokal die Node-Version wechselt, aktualisiert `.nvmrc` mit.
 - `git clean -fd` läuft **ohne** `-x`: alles Gitignorierte überlebt (`.env.local`, `config/jwt/*.pem`, `public/uploads/{avatars,restaurants}`, `var/`, `vendor/`, `public/bundles/`). ⚠️ **`public/uploads/team/` ist per `!`-Regel aus `.gitignore` ausgenommen** – Dateien dort, die nicht committet sind, löscht der Deploy.
-- Kein Null-Downtime: zwischen `git reset` und dem Ende von `composer install` läuft die App für Sekunden gemischt.
+- Kein Null-Downtime, aber auch keine 500er: Zwischen `git reset` und `cache:clear` läuft die App gemischt (neue Dateien, alter Container) — **dieses Fenster deckt seit ENDLECH-5 eine Wartungsseite ab**, siehe unten.
 - Rollback = Revert-Commit auf `production`; der nächste Lauf bringt die passenden Assets automatisch mit, weil sie im selben Commit stecken.
 - PHPUnit ist **kein** Deploy-Gate (passend zur manuellen CI); zuschaltbar über `needs: [verify-assets, tests]`.
 
 Server-Setup (einmalig) und die Waisen-Inventur vor dem ersten Lauf: siehe README → „🚢 Deployment".
+
+### Wartungsfenster während des Deploys (ENDLECH-5)
+
+⚠️ **Ab `git reset` liegen neue PHP-Dateien neben dem kompilierten Container des
+Vorgänger-Releases.** Ruft der alte Container einen geänderten Konstruktor auf, endet
+**jede** Anfrage in einem 500er — nicht nur die betroffene Route, wenn die Klasse an
+`kernel.request` hängt. Am 29.08.2026 traf es `ApiRateLimitSubscriber`: Der Container
+von v2026.08.09 übergab zwei Argumente, die neue Datei verlangte seit BF-25 drei
+(`api_register`). Der gemischte Zustand endet erst mit `cache:clear`, gemessen rund
+35 Sekunden später.
+
+Der Beleg im Sentry-Event ist das Feld `release`. Es kommt aus `%app.version%` und
+damit **aus dem kompilierten Container** — steht dort eine ältere Version als die im
+Repo, ist genau dieses Fenster die Ursache und nicht der Code.
+
+**Deshalb:**
+- `deploy.sh` legt `var/maintenance` an, **bevor** `git reset` läuft, und entfernt die
+  Datei im `EXIT`-Trap. `git fetch` steht davor — es ändert den Arbeitsbaum noch nicht.
+- ⚠️ **Die Flag-Datei liegt unter `var/`, weil das gitignoriert ist.** `git clean -fd`
+  läuft ohne `-x` und fasst sie deshalb nicht an; `cache:clear` räumt nur `var/cache`.
+  Unter `public/` läge sie im Repo-Bereich und wäre nach dem `clean` weg.
+- ⚠️ **Die Prüfung in `public/index.php` steht VOR `require vendor/autoload_runtime.php`.**
+  Sie darf weder Container noch Autoloader brauchen — genau die können während des
+  Deploys unvollständig sein. Antwort: 503 + `Retry-After` + `Cache-Control: no-store`
+  (sonst hält der Varnish des Hostings die Wartungsseite über den Deploy hinaus fest).
+- ⚠️ **Bei einem Abbruch bleibt die Wartungsseite bewusst stehen.** Der Arbeitsbaum ist
+  dann neu, der Container alt oder die Migration halb durch — eine 503 ist dort besser
+  als der 500er, den dieser Zustand liefert. Das Signal ist der rote Actions-Lauf
+  (`::error::`-Annotation); danach von Hand
+  `ssh <user>@<host> 'rm -f ~/public_html/var/maintenance'`.
+- `public/maintenance.html` ist eigenständiges HTML mit Inline-CSS wie `offline.html` —
+  Encore-Assets sind an dieser Stelle nicht verlässlich erreichbar.
+
+Der Service Worker braucht dafür **nichts**: Navigationen laufen network-first ohne
+Cache-Schreiben, alle anderen Wege cachen nur bei `response.ok`. Eine 503 landet
+strukturell in keinem Cache.
 
 ## Fehler-Tracking (Sentry)
 
@@ -941,7 +1047,7 @@ Server-Setup (einmalig) und die Waisen-Inventur vor dem ersten Lauf: siehe READM
 - `release: 'endlech@%app.version%'` – hängt am CalVer-Parameter aus `config/services.yaml` und zieht bei jedem Release automatisch mit (kein fünfter Handgriff in der Release-Checkliste).
 - `send_default_pii: false` – keine IP-Adressen, Cookies, Request-Header oder Nutzerdaten.
 - `enable_logs: true` – **reicht allein nicht**; der Handler muss zusätzlich in `monolog.yaml` registriert sein (das Sentry-Onboarding-Snippet verschweigt das).
-- `ignore_exceptions` filtert 404/405/403/429 – ohne das hätte Bot-Traffic die Quota geflutet. Matching läuft über `is_a($class, $pattern, true)`, greift also auch auf Subklassen und Interfaces.
+- `ignore_exceptions` filtert 404/405/403/429 **und seit ENDLECH-6 auch 400** (`BadRequestHttpException`) – ohne das hätte Bot-Traffic die Quota geflutet. Der 400er kam von einem Scanner, der `/login` per POST ohne Felder anpokte; Symfonys `FormLoginAuthenticator` wirft dort korrekt, aber das ist ein kaputter Client und kein Anwendungsfehler. ⚠️ **Vor dem Aufnehmen einer Exception hier prüfen, ob das Projekt sie selbst wirft** – `BadRequestHttpException` tut es nirgends (die eigenen 400er sind `JsonResponse`-Rückgaben in Admin- und API-Controllern und erreichen Sentry nie). Matching läuft über `is_a($class, $pattern, true)`, greift also auch auf Subklassen und Interfaces.
 
 **Monolog.** `config/packages/monolog.yaml` hat im `when@prod`-Block den Handler `sentry_logs` (`type: service`, `id: Sentry\SentryBundle\Monolog\LogsHandler`) neben `main`/`console`/`deprecation`. Der Service wird in `sentry.yaml` mit `Monolog\Level::Warning` definiert (Monolog 3 – nicht die deprecatete Konstante `Monolog\Logger::WARNING`). Bewusst `LogsHandler` (schickt Sentry-*Logs*) statt `Sentry\Monolog\Handler` (schickt *Issues*) – deshalb bleibt `register_error_listener` aktiv, ohne dass Exceptions doppelt gemeldet werden.
 

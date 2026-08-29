@@ -3,6 +3,7 @@
 namespace App\Tests\Functional\Controller;
 
 use App\Tests\AbstractWebTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 final class SecurityControllerTest extends AbstractWebTestCase
 {
@@ -248,5 +249,35 @@ final class SecurityControllerTest extends AbstractWebTestCase
 
         $client->request('GET', self::LOCALE.'/profile');
         self::assertResponseRedirects();
+    }
+
+    /**
+     * ENDLECH-6 · Ein Submit aus dem Passkey-Formular endet nie in einem 400.
+     *
+     * Das Passkey-Formular führt kein `_username`. Solange der
+     * PasskeyAuthenticator auf einen GEFÜLLTEN `_assertion`-Wert prüfte, fiel
+     * ein Submit mit leerer Assertion an den form_login-Authenticator durch –
+     * und der wirft dort eine BadRequestHttpException. Statt der Meldung
+     * „Passkey-Anmeldung fehlgeschlagen" sah der Nutzer eine nackte
+     * Fehlerseite, und Sentry bekam ein Issue je Versuch.
+     */
+    #[DataProvider('unbrauchbareAssertionen')]
+    public function testEndlech6PasskeySubmitOhneBrauchbareAssertionErzeugtKeinen400(string $assertion): void
+    {
+        $client = static::createClient();
+        $client->request('POST', self::LOCALE.'/login', ['_assertion' => $assertion]);
+
+        self::assertResponseRedirects();
+    }
+
+    /**
+     * @return iterable<string, array{string}>
+     */
+    public static function unbrauchbareAssertionen(): iterable
+    {
+        yield 'leer (Ceremony ohne Ergebnis)' => [''];
+        yield 'kein JSON' => ['muell'];
+        yield 'leeres Objekt' => ['{}'];
+        yield 'JSON ohne die nötigen Felder' => ['{"id":"x"}'];
     }
 }

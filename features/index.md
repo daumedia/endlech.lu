@@ -55,6 +55,25 @@ erklärenden Halbsätzen 525 px breit, wo die Bestandstabelle auf `/partner` mit
 noch passt. Dazu zwei mittlere Befunde (BF-78: Gruppen- und Bewertungsnamen fallen durch
 jeden Prüflauf; BF-79: zwei gleichnamige Landmarks). Weiter mit `/sdd-build 03`.
 
+**2026-08-29 · Release v2026.08.29 ist live.** Der erste Deploy seit dem 9. August — er
+brachte sieben Wochen Arbeit auf einmal: Feature `03`, Feature `02`, Feature `01` und alle
+72 Befunde der Rückerfassung. **Zehn Migrationen** liefen mit, darunter fünf neue Tabellen
+(`partner_waitlist_entry`, `organisation_waitlist_entry`, `finance_entry`,
+`metric_snapshot`, `webauthn_credential`).
+
+Auf Produktion nachgeprüft: alle fünf neuen Adressen antworten mit 200, die Fußzeile führt
+den Bereich „Vergleiche", die Abdeckungszeile zeigt **3 Lokale** — die echte Zahl, identisch
+mit `/open.json` —, `/de/open`, `/de/partner` und `/de/organisationen` laufen (Beleg dafür,
+dass die Migrationen durch sind), unbekannte Slugs ergeben 404 ohne Stacktrace, keine
+Fixture-Namen in der Restaurantliste, das Anmelde-Rate-Limit greift („Zu viele
+fehlgeschlagene Anmeldeversuche"), 0 Konsolenfehler, keine waagerechte Scrollleiste bei
+375 px.
+
+⚠ **Das Inventar ist an einer Stelle überholt:** Feature `01` steht auf `roadmap`, sein
+Code ist aber seit diesem Release live (Commit „Feature 01: Betroffenenrechte — die
+Sackgasse ist zu"). Das gehört über `/sdd-erfassen` oder eine QA nachgezogen — hier nicht
+selbst geändert, weil unklar ist, ob der Umfang der Spec entspricht.
+
 Nächster Schritt: `/sdd-erfassen B25`. Die Reparaturen von B01, B02, B04 und B23 warten auf
 `/sdd-deploy`; das neue Feature `01` beginnt mit `/sdd-spec 01`, `02` ist fünfmal geprüft und
 abgenommen (`approved`) — alle vier Befunde behoben, 53/60 belegt, weiter mit `/sdd-deploy 02`
@@ -78,8 +97,8 @@ Eingang von `sdd-build`. Der Weg ist: `bestand` → `/sdd-erfassen BNN` →
 | ID | Feature | Prio | Status | Abhängig von | Zuletzt |
 |---|---|---|---|---|---|
 | 01 | Betroffenenrechte: Konto löschen, Daten exportieren, Passwort zurücksetzen | P0 | roadmap | B01, B04, B19 | 2026-08-23 · aus BF-04 herausgelöst |
-| 02 | Barrierefreiheit der Plattform (EN 301 549 / RAWeb) | P0 | **approved** | B01–B26 | 2026-08-26 · QA⁵: alle Befunde (BF-73/74/75/76) behoben, 53/60 belegt, 6 Grenzen (Testdaten/JS/Mail/UA-01) → /sdd-deploy 02 |
-| 03 | Vergleichsseiten (vs. Google Maps, Wheelmap, TripAdvisor) | P1 | **approved** | B05, B13, B24, B16, 02 | 2026-08-29 · QA²: 32/32 AK, 7/7 EC, kein blockierender Befund, 610 Tests grün → /sdd-deploy 03 |
+| 02 | Barrierefreiheit der Plattform (EN 301 549 / RAWeb) | P0 | **deployed** | B01–B26 | 2026-08-29 · live in v2026.08.29 |
+| 03 | Vergleichsseiten (vs. Google Maps, Wheelmap, TripAdvisor) | P1 | **deployed** | B05, B13, B24, B16, 02 | 2026-08-29 · live in v2026.08.29, auf Produktion nachgeprüft |
 | B01 | Registrierung & E-Mail-Bestätigung | P0 | **approved** | — | 2026-08-23 · QA³: 17/20, nur mittlere Befunde offen |
 | B02 | Anmeldung mit Passwort | P0 | **approved** | B01 | 2026-08-24 · QA²: 16/17, repariert |
 | B03 | Passkey-Anmeldung & -Verwaltung | P0 | **approved** | B01, B02 | 2026-08-24 · QA: 16/20, 3 nicht prüfbar |

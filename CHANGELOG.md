@@ -2,8 +2,103 @@
 
 Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
-![Version](https://img.shields.io/badge/version-2026.08.29-blue)
+![Version](https://img.shields.io/badge/version-2026.08.29a-blue)
 ![Status](https://img.shields.io/badge/status-beta-green)
+
+## [Unreleased]
+
+## [2026.08.29a] – Deploy-Fenster, Passkey-Fehlerseite und Worker-Sperre
+
+Drei Nachträge zum Release desselben Tages, alle am Rand des Deploys: Das
+Auslieferungsfenster liefert keine 500er mehr, ein Passkey-Submit ohne Assertion
+endet nicht mehr in einer nackten Fehlerseite, und der künftige Messenger-Worker
+kann den Arbeitsbaum nicht mehr mitten im Wechsel erwischen.
+
+### Deploy hält den Messenger-Worker an, bevor der Arbeitsbaum wechselt (2026-08-29)
+
+Vorbereitung für die Umstellung von `MESSENGER_TRANSPORT_DSN=sync://` auf die
+Doctrine-Queue. **Die Umstellung selbst ist nicht Teil dieser Änderung** — solange
+die Zeile in der `.env.local` auf dem Server steht, ändert sich am Verhalten nichts.
+
+Ein Worker, der während `git reset` läuft, trifft auf halb neue Dateien: derselbe
+gemischte Zustand aus ENDLECH-5, nur im Hintergrund und ohne Wartungsseite davor.
+`deploy.sh` nimmt sich deshalb vor dem Reset `var/worker.lock` per `flock` und hält
+die Sperre bis zum Skriptende — ein laufender Worker wird abgewartet (bis 90 s),
+jeder Cron-Start während des Deploys springt per `flock -n` ab.
+
+Der Worker läuft künftig als Cron mit `--time-limit=55` statt unter Supervisor. Damit
+löst er sich jede Minute selbst ab und startet nach einem Deploy von allein mit neuem
+Code — der `pkill`-Kommentarblock in `deploy.sh` entfällt ersatzlos, und mit ihm die
+Fußangel, dass auf derselben Maschine ein `messenger:consume` einer fremden
+Application unter anderem Systembenutzer läuft.
+
+Die Sperrdatei wird **lesend** geöffnet (`exec 9<`), weil `flock` unabhängig vom
+Zugriffsmodus sperrt: Cloudways legt Panel-Cronjobs unter dem Master-Benutzer an,
+der Deploy läuft als Application-User, und die Datei gehört damit einem von beiden.
+Mit `9>` scheiterte der Deploy an genau dem. Existiert die Datei nicht, überspringt
+das Skript den Block — der aktuelle Zustand bleibt unberührt.
+
+Nicht gelöst und in `CLAUDE.md` vermerkt: Läuft der Cron als Master, schreibt er
+`var/log` und `var/cache` mit fremdem Eigentümer voll, bis PHP-FPM dort auf
+„Permission denied" läuft. Der Job gehört unter denselben Benutzer wie PHP-FPM.
+
+### Ein Passkey-Submit ohne Assertion endet nicht mehr in einer Fehlerseite (2026-08-29)
+
+Sentry `ENDLECH-6`: `BadRequestHttpException: The key "_username" must be a string,
+"NULL" given.` bei einem POST auf `/de/login`.
+
+Die Login-Seite führt zwei Formulare — das Passkey-Formular kennt weder `_username`
+noch `_password`. `PasskeyAuthenticator::supports()` prüfte auf einen **gefüllten**
+`_assertion`-Wert. War er leer (Ceremony ohne Ergebnis), beanspruchte der Passkey-Weg
+den Submit nicht, und Symfonys `FormLoginAuthenticator` übernahm — der bei fehlendem
+`_username` eine `BadRequestHttpException` wirft. Der Nutzer sah statt
+„Passkey-Anmeldung fehlgeschlagen" eine nackte Fehlerseite.
+
+`supports()` prüft jetzt mit `has()`, ob das Feld **vorhanden** ist. Damit beansprucht
+der Passkey-Authenticator jeden Submit aus seinem Formular; eine unbrauchbare Assertion
+scheitert regulär und landet über `onAuthenticationFailure` als Flash-Nachricht.
+Gemessen: 302 statt 400, für leer, Nicht-JSON, `{}` und unvollständiges JSON. Der
+Passwort-Weg ist unberührt — sein Formular sendet kein `_assertion`.
+
+Der konkrete Auslöser in Sentry war allerdings kein Nutzer, sondern ein Scanner
+(`curl 8.7.1`) mit einem POST ganz ohne Felder. Dieser Fall bleibt korrekterweise ein
+400 — er ist jetzt aber kein Sentry-Issue mehr: `BadRequestHttpException` steht in
+`ignore_exceptions` neben 404/405/403/429. Ungefährlich, weil das Projekt die Klasse
+selbst nirgends wirft; die eigenen 400er sind `JsonResponse`-Rückgaben und erreichten
+Sentry ohnehin nie.
+
+Nebenbei berichtigt: Der Klassen-Docblock des Authenticators behauptete, die
+Login-Seite trage „nur EIN Formular". Sie trägt zwei, seit es Passkeys gibt — der
+Docblock von `SecurityControllerTest` sagt das seit jeher richtig.
+### Der Deploy zeigt eine Wartungsseite statt 500er (2026-08-29)
+
+Der Deploy von v2026.08.29 hat einen Besucher in einen Serverfehler laufen lassen
+(Sentry `ENDLECH-5`, 10:48:14 UTC — mitten im Lauf von 10:47:41 bis 10:48:46).
+
+**Die Ursache ist kein Code-Fehler, sondern die Reihenfolge im Deploy.** Ab
+`git reset --hard` liegen die neuen PHP-Dateien neben dem kompilierten Container des
+Vorgänger-Releases. Der rief `new ApiRateLimitSubscriber($anonymous, $login)` mit zwei
+Argumenten auf, während die Datei auf der Platte seit BF-25 drei verlangt
+(`api_register`). Weil die Klasse an `kernel.request` hängt, traf das **jede** Route,
+nicht nur `/api/v1` — und beim Rendern der Fehlerseite noch einmal.
+
+Der Beleg steht im Event selbst: `release: endlech@2026.08.09`. Die Angabe kommt aus
+`%app.version%` und damit aus dem Container — der war noch der alte, während Sentry
+bereits die neue Datei zeigte.
+
+`deploy.sh` legt jetzt vor dem Reset `var/maintenance` an und entfernt die Datei im
+`EXIT`-Trap nach `cache:clear`. `public/index.php` prüft sie **vor**
+`vendor/autoload_runtime.php` — die Prüfung darf weder Container noch Autoloader
+brauchen, weil genau die in diesem Moment unvollständig sein können. Besucher sehen
+für rund 35 Sekunden eine 503 mit `Retry-After` und `public/maintenance.html`.
+
+**Bei einem gescheiterten Deploy bleibt die Wartungsseite bewusst stehen.** Der
+Arbeitsbaum ist dann neu, der Container alt oder die Migration halb durch — eine 503
+ist dort besser als der 500er, den dieser Zustand sonst liefert. Das Signal zum
+Eingreifen ist der rote Actions-Lauf.
+
+Die Flag-Datei liegt unter `var/`, weil `git clean -fd` ohne `-x` läuft und
+Gitignoriertes unangetastet lässt. Unter `public/` wäre sie nach dem `clean` weg.
 
 ## [2026.08.29] – Vergleichsseiten, Barrierefreiheit und die Rückerfassung
 
