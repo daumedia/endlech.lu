@@ -2,10 +2,42 @@
 
 Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
-![Version](https://img.shields.io/badge/version-2026.08.09-blue)
+![Version](https://img.shields.io/badge/version-2026.08.29-blue)
 ![Status](https://img.shields.io/badge/status-beta-green)
 
-## [Unreleased]
+## [2026.08.29] – Vergleichsseiten, Barrierefreiheit und die Rückerfassung
+
+### Vergleichsseiten: Endlech.lu neben Google Maps, Wheelmap und TripAdvisor (2026-08-29)
+
+Ein Fußzeilenbereich „Vergleiche", eine Übersichtsseite unter `/vergleich` und drei
+Vergleichsseiten in allen vier Sprachen. 54 Merkmalszeilen, 18 Primärquellen — jede
+mit Adresse und Prüfdatum.
+
+Der Ton folgt den öffentlich zugesagten Produktprinzipien statt der Werbewirkung:
+
+- **Die Abdeckungszeile nennt die eigene, kleinere Zahl.** „11 Lokale" steht dort gegen
+  „250 Millionen Orte weltweit", live aus derselben Quelle wie `/open`.
+- **Jede Seite räumt ein, worin der andere besser ist** — ein Prüflauf erzwingt das. Bei
+  Wheelmap steht in der Gruppe „Offenheit" dreimal Ja gegen Ja; die Seite empfiehlt
+  Wheelmap ausdrücklich.
+- **Was sich nicht belegen ließ, steht nicht in der Tabelle.** Deshalb tragen die drei
+  Seiten nicht dieselbe Zeilenmenge.
+
+Zwei Falschbehauptungen hat die Recherche verhindert: „TripAdvisor hat keinen
+Barrierefreiheitsfilter" (es gibt ihn — er erscheint nur dort in der Filtervorschau, wo
+das Merkmal örtlich häufig ist) und **Jaccede als lebender Wettbewerber**. Die
+französische Plattform ist seit dem 2. Juli 2026 nur noch ein statischer Abzug: Suche,
+Anmeldung und das Anlegen von Orten antworten mit 404, beide Apps sind aus den Stores.
+Der Vergleich wurde gestrichen. Die Lehre steht als Warnung im Quelltext — HTTP 200 und
+sichtbarer Inhalt sind kein Betriebsnachweis.
+
+Kein Datenmodell, keine Migration: Die Struktur liegt als Aufzählungen und Wertobjekte
+in `src/Comparison/`, die Texte in der neuen Übersetzungsdomain `comparison`.
+
+**Bei 320 px ersetzt eine Kartenliste die Tabelle.** Mit erklärenden Halbsätzen in
+beiden Wertspalten wird die Tabelle 525 px breit, und die Seite scrollte waagerecht. Der
+naheliegende erzwungene Umbruch wurde verworfen — er zerlegt Wörter mitten im Wort. Je
+Breite ist genau eine Darstellung im Accessibility-Tree.
 
 ### Alle 72 Befunde der SDD-Rückerfassung sind behoben (2026-08-25)
 
