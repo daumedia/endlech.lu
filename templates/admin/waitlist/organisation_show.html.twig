@@ -91,6 +91,10 @@
             {{ include('admin/waitlist/_status_form.html.twig', {
                 entry: entry, route: 'admin_waitlist_organisation_status', statuses: statuses
             }) }}
+
+            {{ include('admin/waitlist/_marketing.html.twig', {
+                entry: entry, marketingContact: marketingContact
+            }) }}
         </div>
     </div>
 {% endblock %}

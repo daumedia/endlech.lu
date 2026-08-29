@@ -45,6 +45,12 @@ final readonly class AccountDataExporter
                 'registeredAt' => $user->getCreatedAt()->format(\DateTimeInterface::ATOM),
                 'avatar' => $user->getAvatarUrl(),
                 'pendingEmail' => $user->getPendingEmail(),
+                // Feature 04 / AK-44: Der Export sagt, ob der Werbung zugestimmt
+                // wurde und wann. Art. 7 Abs. 1 DSGVO verlangt, die Einwilligung
+                // nachweisen zu können – dann muss auch der Betroffene sie
+                // einsehen können, sonst ist der Nachweis einseitig.
+                'marketingConsent' => $user->hasMarketingConsent(),
+                'marketingConsentAt' => $user->getMarketingConsentAt()?->format(\DateTimeInterface::ATOM),
             ],
             'passkeys' => array_map(
                 static fn ($passkey) => [

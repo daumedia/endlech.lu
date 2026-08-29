@@ -21,9 +21,28 @@
 
     <div class="flex items-center justify-between mb-6">
         <h2 class="text-2xl font-bold text-gray-800">{{ 'admin.waitlist.title'|trans }}</h2>
-        <span class="bg-cyan-100 text-cyan-800 text-xs font-bold px-3 py-1 rounded-full">
-            {{ 'admin.waitlist.total'|trans({'%count%': rows|length}) }}
-        </span>
+        <div class="flex items-center gap-2">
+            {#
+                AK-27: die Gegenprobe zur Kontaktzahl in Brevo. Die beiden Zahlen
+                müssen übereinstimmen — und nach einem Widerruf zugleich sinken.
+                Steht sie hier, fällt eine Lücke beim Draufschauen auf; sonst
+                erst dann, wenn eine Kampagne jemanden nicht erreicht.
+
+                Nur sichtbar, sobald es überhaupt Einwilligungen gibt: eine
+                dauerhafte „0 eingewilligt"-Kachel wäre Rauschen.
+            #}
+            {% if marketingConsented > 0 %}
+                <span class="bg-purple-100 text-purple-800 text-xs font-bold px-3 py-1 rounded-full">
+                    {{ 'marketing.admin.summary'|trans({
+                        '%consented%': marketingConsented,
+                        '%synced%': marketingCounts['synced']|default(0),
+                    }) }}
+                </span>
+            {% endif %}
+            <span class="bg-cyan-100 text-cyan-800 text-xs font-bold px-3 py-1 rounded-full">
+                {{ 'admin.waitlist.total'|trans({'%count%': rows|length}) }}
+            </span>
+        </div>
     </div>
 
     {# Filter als Links: teilbar, lesezeichenfähig, ohne JavaScript. #}
@@ -76,6 +95,7 @@
                         <th scope="col" class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">{{ 'admin.waitlist.table.name'|trans }}</th>
                         <th scope="col" class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden md:table-cell">{{ 'admin.waitlist.table.contact'|trans }}</th>
                         <th scope="col" class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">{{ 'admin.waitlist.table.status'|trans }}</th>
+                        <th scope="col" class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden lg:table-cell">{{ 'marketing.admin.column'|trans }}</th>
                         <th scope="col" class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">{{ 'admin.waitlist.table.actions'|trans }}</th>
                     </tr>
                 </thead>
@@ -105,6 +125,39 @@
                                 <span class="{{ row.status.badgeClasses }} text-xs font-bold px-2 py-0.5 rounded-full whitespace-nowrap">
                                     {{ row.status.emoji }} {{ row.status.transKey|trans }}
                                 </span>
+                            </td>
+                            {#
+                                Sync-Zustand (Feature 04, AK-26). Vier Zustände,
+                                und der häufigste ist der leere: Die meisten
+                                Zeilen tragen keine Werbe-Einwilligung.
+
+                                Das Abzeichen trägt Farbe UND Text — Farbe trägt
+                                hier nie allein (docs/design-system.md). Ein
+                                festgefahrener Auftrag bekommt zusätzlich ein
+                                Warnzeichen, damit er sich beim Überfliegen der
+                                Liste von einem frisch fehlgeschlagenen abhebt.
+                            #}
+                            <td class="px-4 py-3 hidden lg:table-cell">
+                                {%- if row.marketing -%}
+                                    <span class="{{ row.marketing.syncState.badgeClasses }} text-xs font-bold px-2 py-0.5 rounded-full whitespace-nowrap">
+                                        {%- if row.marketing.isStuck %}⚠ {% endif -%}
+                                        {{ row.marketing.syncState.transKey|trans }}
+                                        {%- if row.marketing.syncState.value == 'synced' and row.marketing.syncedAt %}
+                                            <span class="font-normal">· {{ row.marketing.syncedAt|date('d.m.Y') }}</span>
+                                        {% endif -%}
+                                    </span>
+                                {%- elseif row.marketingConsentAt -%}
+                                    {# Eingewilligt, aber noch keine Zeile im
+                                       Auftragsbuch: Die Bestätigung steht aus. #}
+                                    <span class="text-xs text-gray-500">{{ 'marketing_sync_state.pending'|trans }}</span>
+                                {%- else -%}
+                                    {# `aria-label` auf einem nicht-interaktiven <span> wird nicht
+                                       von jedem Screenreader vorgelesen; ein sr-only-Text schon.
+                                       Der Gedankenstrich bleibt für Sehende, aria-hidden hält ihn
+                                       aus der Vorlesereihenfolge. #}
+                                    <span class="text-gray-400" aria-hidden="true">{{ 'marketing.admin.not_applicable'|trans }}</span>
+                                    <span class="sr-only">{{ 'marketing.admin.consent_none'|trans }}</span>
+                                {%- endif -%}
                             </td>
                             <td class="px-4 py-3 text-right">
                                 <a href="{{ path(row.route, {id: row.id}) }}"

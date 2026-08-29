@@ -119,6 +119,17 @@ framework:
             policy: 'sliding_window'
             limit: 5
             interval: '1 hour'
+        # Brevo-Webhook (Feature 04): `POST /marketing/brevo/webhook` ist öffentlich
+        # erreichbar und prüft ein Bearer-Geheimnis — damit fällt er unter die
+        # Konvention „jeder Weg, der ein Geheimnis prüft, braucht einen Limiter".
+        # Ohne Deckel wäre der Endpunkt ein kostenloser Rateversuch-Automat.
+        # Großzügiger als die Formular-Wege, weil Brevo Ereignisse in Schüben
+        # zustellt (eine Bounce-Welle nach einem Versand sind viele Aufrufe in
+        # kurzer Zeit) und ein verworfenes Ereignis dauerhaft fehlt.
+        marketing_webhook:
+            policy: 'sliding_window'
+            limit: 120
+            interval: '5 minutes'
 
 when@test:
     framework:
@@ -191,3 +202,7 @@ when@test:
                 policy: 'sliding_window'
                 limit: 10000
                 interval: '1 hour'
+            marketing_webhook:
+                policy: 'sliding_window'
+                limit: 10000
+                interval: '5 minutes'

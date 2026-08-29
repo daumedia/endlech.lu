@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -55,6 +56,24 @@ class RegistrationType extends AbstractType
                         minMessage: 'user.password_min',
                     ),
                 ],
+            ])
+            // Werbe-Einwilligung (Feature 04) – wie `plainPassword` nicht gemappt:
+            // Die Entity speichert den Zeitpunkt (marketingConsentAt), nicht das
+            // Häkchen selbst. Den Zeitpunkt setzt der Controller.
+            //
+            // ⚠ AK-03, Koppelungsverbot (Art. 7 Abs. 4 DSGVO): bewusst OHNE
+            // IsTrue-Constraint und mit required: false. Die Einwilligung darf
+            // keine Bedingung für die Registrierung sein – bleibt das Feld leer,
+            // läuft die Anmeldung unverändert durch. Ein Zwang machte jede
+            // Einwilligung in dieser Liste unwirksam.
+            //
+            // ⚠ AK-02: keine Vorbelegung. Kein 'data' => true – ein
+            // vorangehaktes Kästchen ist keine Einwilligung.
+            ->add('marketingConsent', CheckboxType::class, [
+                'label' => 'marketing.consent.label',
+                'help' => 'marketing.consent.help',
+                'mapped' => false,
+                'required' => false,
             ]);
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Marketing\MarketingContactRegistry;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -42,6 +43,7 @@ final class EmailVerificationController extends AbstractController
         string $token,
         UserRepository $userRepository,
         EntityManagerInterface $entityManager,
+        MarketingContactRegistry $marketingContacts,
     ): Response {
         $user = $userRepository->findByVerificationToken($token);
 
@@ -60,6 +62,16 @@ final class EmailVerificationController extends AbstractController
         $user->setIsVerified(true);
         $user->setVerificationToken(null);
         $user->setVerificationTokenExpiresAt(null);
+
+        // Feature 04 / AK-05: Erst hier ist belegt, dass die Adresse dem Konto
+        // gehört – vorher geht sie nicht nach Brevo (EC-03). Der Aufruf steht
+        // deshalb NACH setIsVerified(true): Die Registry prüft die Bedingung
+        // selbst, und davor liefe die Prüfung ins Leere.
+        //
+        // Sie schreibt nur ins Auftragsbuch und persist()et; der flush() unten
+        // nimmt die neue Zeile mit. Ein fremder Dienst wird hier nicht gerufen
+        // (AK-17).
+        $marketingContacts->recordUser($user);
 
         $entityManager->flush();
 
@@ -83,6 +95,7 @@ final class EmailVerificationController extends AbstractController
         string $token,
         UserRepository $userRepository,
         EntityManagerInterface $entityManager,
+        MarketingContactRegistry $marketingContacts,
     ): Response {
         $user = $userRepository->findByPendingEmailToken($token);
 
@@ -114,7 +127,23 @@ final class EmailVerificationController extends AbstractController
             return $this->redirectToRoute('app_profile');
         }
 
+        // Feature 04 / EC-02: Das Auftragsbuch findet seine Zeile über die
+        // E-Mail-Adresse – und genau die ändert sich hier. Nach
+        // confirmEmailChange() steht am Konto bereits die neue; wer erst dann
+        // nachschlägt, legt eine zweite Zeile an, während die alte mit der
+        // aufgegebenen Adresse stehenbleibt und weiter bespielt wird.
+        $previousEmail = $user->getEmail();
+
         $user->confirmEmailChange();
+
+        // Fortgeschrieben wird ohne Rücksicht auf die Werbe-Einwilligung: Ob
+        // eine Zeile existiert, entscheidet die Registry. Gibt es keine, läuft
+        // der Aufruf folgenlos durch; gibt es eine, gehört sie zu dieser
+        // Adresse und muss mitziehen – auch wenn sie aus einer Warteliste
+        // stammt. Eine neue Einwilligung ist das nicht: consent_at bleibt
+        // unberührt.
+        $marketingContacts->changeEmail($previousEmail, $user->getEmail());
+
         $entityManager->flush();
 
         // Die Adresse ist der Anmeldename (User::getUserIdentifier()). Nach dem

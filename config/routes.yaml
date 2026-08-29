@@ -43,6 +43,7 @@ controllers:
         exclude:
             - '../src/Controller/Api/V1/'
             - '../src/Controller/Open/'
+            - '../src/Controller/Marketing/'
     type: attribute
     prefix: /{_locale}
     requirements:
@@ -64,4 +65,14 @@ open_data:
     resource:
         path: ../src/Controller/Open/
         namespace: App\Controller\Open
+    type: attribute
+
+# Brevo-Webhook (Feature 04) – sprachfrei, weil Brevo ohne Sprachpräfix ruft.
+# Ein Locale-Prefix machte die eine URL, die in Brevos Konfiguration steht,
+# von einer Sprachwahl abhängig. Die zugehörige access_control-Zeile steht in
+# security.yaml VOR den Web-Regeln (BF-18).
+marketing_webhook:
+    resource:
+        path: ../src/Controller/Marketing/
+        namespace: App\Controller\Marketing
     type: attribute

@@ -123,6 +123,33 @@ class OrganisationWaitlistType extends AbstractType
                     new IsTrue(message: 'organisation_waitlist.consent_required'),
                 ],
             ])
+            // Werbe-Einwilligung (Feature 04) – wie `consent` nicht gemappt, weil
+            // die Entity den Zeitpunkt speichert (marketingConsentAt) und nicht
+            // das Häkchen selbst.
+            //
+            // ⚠ Das Feld steht hier im typunabhängigen Teil, NICHT in
+            // addTypeSpecificFields(). Die Einwilligung gilt für Gemeinde,
+            // Unternehmen und Verein gleichermaßen, und nur an dieser Stelle ist
+            // sie in beiden Feldaufbauten vorhanden: beim Rendern (PRE_SET_DATA)
+            // und beim Absenden (PRE_SUBMIT). Läge sie in einem der Typblöcke,
+            // wäre sie für die anderen beiden ein unerlaubtes Zusatzfeld und
+            // jeder Submit mit gesetztem Häkchen endete in einem 422 – genau der
+            // Mechanismus, den testCrossTypeFieldsAreRejected nachweist.
+            //
+            // ⚠ AK-03, Koppelungsverbot (Art. 7 Abs. 4 DSGVO): bewusst OHNE
+            // IsTrue-Constraint und mit required: false. Die Einwilligung darf
+            // keine Bedingung für die Anmeldung sein – bleibt das Feld leer,
+            // läuft der Vorgang unverändert durch. Ein Zwang machte jede
+            // Einwilligung in dieser Liste unwirksam.
+            //
+            // ⚠ AK-02: keine Vorbelegung. Kein 'data' => true – ein
+            // vorangehaktes Kästchen ist keine Einwilligung.
+            ->add('marketingConsent', CheckboxType::class, [
+                'label' => 'marketing.consent.label',
+                'help' => 'marketing.consent.help',
+                'mapped' => false,
+                'required' => false,
+            ])
             // Honeypot ohne Constraint – der Controller prüft ihn und antwortet
             // wie bei einem echten Erfolg, damit die Falle nicht auffliegt.
             ->add('companyWebsite', TextType::class, [

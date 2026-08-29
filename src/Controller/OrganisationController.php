@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\OrganisationWaitlistEntry;
 use App\Enum\OrganisationType;
+use App\Enum\WaitlistStatus;
 use App\Form\OrganisationWaitlistType;
 use App\RateLimit\ActionLimiter;
 use App\Repository\OrganisationWaitlistEntryRepository;
@@ -110,6 +111,19 @@ final class OrganisationController extends AbstractController
         $entry->setLocale($request->getLocale());
         $entry->setSource(WaitlistRequestHelper::resolveSource($request));
 
+        // Werbe-Einwilligung (Feature 04): nur der Zeitpunkt wird festgehalten.
+        // Ohne Häkchen bleibt das Feld null – bewusst kein else-Zweig, denn
+        // „nicht eingewilligt" ist der Ausgangszustand und kein Vorgang.
+        //
+        // ⚠ Hier geht nichts an Brevo. Übertragen wird erst die BESTÄTIGTE
+        // Adresse (AK-05), und das tut der Bestätigungs-Ablauf, nicht dieses
+        // Formular. Diese eine Stelle deckt alle vier Einstiege ab: Übersicht
+        // und die drei Zielgruppenseiten senden an dieselbe Route
+        // (app_organisations_submit, POST /organisationen).
+        if (true === $form->get('marketingConsent')->getData()) {
+            $entry->setMarketingConsentAt(new \DateTimeImmutable());
+        }
+
         $type = $entry->getType() ?? OrganisationType::COMMUNE;
 
         $sent = $this->confirmationService->register(
@@ -133,9 +147,15 @@ final class OrganisationController extends AbstractController
     public function confirm(string $token, OrganisationWaitlistEntryRepository $repository): Response
     {
         $entry = $repository->findOneByConfirmationToken($token);
+
+        // ⚠ BF-91: siehe `PartnerController::confirm()` — eine späte
+        // Bestätigung darf keine „Neue Anmeldung"-Meldung für einen Vorgang
+        // auslösen, den das Team längst bearbeitet hat.
+        $warNeu = null !== $entry && WaitlistStatus::PENDING === $entry->getStatus();
+
         $state = $this->confirmationService->confirm($entry);
 
-        if (WaitlistConfirmationService::RESULT_CONFIRMED === $state && $entry) {
+        if (WaitlistConfirmationService::RESULT_CONFIRMED === $state && $entry && $warNeu) {
             // Typ steht im Betreff, damit sich die Meldungen filtern lassen.
             $this->confirmationService->notifyTeam(
                 $entry,
