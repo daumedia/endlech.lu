@@ -27,9 +27,12 @@ use Webauthn\Bundle\Security\Authentication\WebauthnPassport;
  * Passkey-Login durch dieselbe Mechanik wie der Passwort-Login: derselbe
  * check_path, dieselbe Weiterleitung, dasselbe „Angemeldet bleiben".
  *
- * Auf der Login-Seite steht deshalb auch nur EIN Formular. Welcher Weg gemeint
- * ist, entscheidet allein das Feld `_assertion`: Ist es gefüllt, greift dieser
- * Authenticator (Priorität 0), sonst der form_login-Authenticator (-30).
+ * Die Login-Seite führt zwei Formulare (siehe `partials/_passkey_login.html.twig`:
+ * der AuthenticationController des Fremdpakets ruft `form.checkValidity()`, und
+ * im Passwort-Formular sind beide Felder `required`). Beide schicken an
+ * denselben check_path. Welcher Weg gemeint ist, entscheidet allein das Feld
+ * `_assertion`: Ist es VORHANDEN, greift dieser Authenticator (Priorität 0),
+ * sonst der form_login-Authenticator (-30).
  */
 final class PasskeyAuthenticator extends WebauthnAuthenticator
 {
@@ -41,11 +44,26 @@ final class PasskeyAuthenticator extends WebauthnAuthenticator
     ) {
     }
 
+    /**
+     * ⚠ `has()`, nicht `getString(...) !== ''` (ENDLECH-6).
+     *
+     * Das Passkey-Formular führt kein `_username`. Wurde hier auf einen
+     * GEFÜLLTEN Wert geprüft, fiel ein Submit mit leerer Assertion an den
+     * form_login-Authenticator durch — und der wirft bei fehlendem `_username`
+     * eine BadRequestHttpException. Der Nutzer sah statt der Meldung
+     * „Passkey-Anmeldung fehlgeschlagen" eine nackte Fehlerseite.
+     *
+     * Mit `has()` beansprucht dieser Authenticator jeden Submit, der aus dem
+     * Passkey-Formular stammt. Eine leere oder unbrauchbare Assertion scheitert
+     * dann regulär in `authenticate()` und landet über `onAuthenticationFailure`
+     * als Flash-Nachricht auf der Login-Seite (gemessen: 302 statt 400, für
+     * leer, Nicht-JSON, `{}` und unvollständiges JSON gleichermaßen).
+     */
     public function supports(Request $request): bool
     {
         return $request->isMethod('POST')
             && $request->attributes->get('_route') === 'app_login'
-            && $request->request->getString('_assertion') !== '';
+            && $request->request->has('_assertion');
     }
 
     public function authenticate(Request $request): Passport
