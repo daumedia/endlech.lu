@@ -210,8 +210,9 @@ On the server, `deploy.sh` runs `git reset --hard origin/production` followed by
 `git clean -fd`, then `composer install --no-dev`, the Doctrine migrations and
 `cache:clear`. `git clean` runs **without** `-x`, so everything gitignored
 survives: `.env.local`, `config/jwt/*.pem`, `public/uploads/`, `var/`,
-`vendor/`. There is no worker to recycle — production runs with
-`MESSENGER_TRANSPORT_DSN=sync://`, so mail is sent inside the request.
+`vendor/`. Production still runs with `MESSENGER_TRANSPORT_DSN=sync://`, so mail
+is sent inside the request — see *Messenger worker* below for the prepared switch
+to the queue.
 
 **The deploy shows a maintenance page while it runs.** Between `git reset` and
 `cache:clear` the new PHP files sit next to the compiled container of the previous
@@ -233,6 +234,44 @@ ssh <user>@<host> 'rm -f ~/public_html/var/maintenance'
 
 Rollback: push a revert commit to `production`. The next run restores the previous
 state including matching assets, because they live in the same commit.
+
+### Messenger worker
+
+Production still sends mail inside the request (`MESSENGER_TRANSPORT_DSN=sync://`
+in `.env.local`). `deploy.sh` is already prepared for the switch to the Doctrine
+queue; the switch itself is not done yet.
+
+**Do not just delete that line.** Without a running worker the `.env` default
+`doctrine://default?auto_setup=0` takes over, messages pile up in
+`messenger_messages` and the app keeps reporting success — nobody receives a
+confirmation mail and nothing warns you. The order is: cron first, then deploy,
+then drop the line and run `cache:clear --env=prod` (the compiled container holds
+the old DSN otherwise).
+
+The table already exists — `Version20260113160019` creates it and its schema
+matches what `symfony/doctrine-messenger` expects.
+
+The worker runs as a **cron job, not under supervisor**: with `--time-limit=55` it
+replaces itself every minute, so it picks up new code after a deploy on its own and
+`deploy.sh` needs no `pkill` (a foreign application's `messenger:consume` runs on
+the same machine under a different system user). Add it once:
+
+```
+* * * * * /usr/bin/flock -n /home/master/applications/nrzwptqsvx/public_html/var/worker.lock /usr/bin/php /home/master/applications/nrzwptqsvx/public_html/bin/console messenger:consume async --time-limit=55 --memory-limit=128M --env=prod -q
+```
+
+`flock -n` keeps the runs from overlapping and is the same lock `deploy.sh` takes
+before `git reset`, so no worker touches a half-updated tree. `-q` keeps the log
+quiet — real failures go to Monolog and on to Sentry. Do **not** consume the
+`failed` transport here; it exists for `messenger:failed:show`/`:retry` by hand.
+
+⚠️ The cron must run as the **same system user as PHP-FPM** (`nrzwptqsvx`), not the
+master user the Cloudways panel uses by default — otherwise it fills `var/log` and
+`var/cache` with files the web server cannot overwrite. Verify with a throwaway
+`* * * * * id > …/var/cron-whoami.txt` before relying on it.
+
+Check afterwards with `php bin/console messenger:stats`: a growing number means
+nothing is consuming.
 
 ### Monthly metrics snapshot
 

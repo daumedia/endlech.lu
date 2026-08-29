@@ -60,6 +60,48 @@ trap release_maintenance EXIT
 
 touch "$MAINTENANCE_FLAG"
 
+# --- Worker anhalten ------------------------------------------------------
+# Der Messenger-Worker läuft als Cron-Job (jede Minute, `--time-limit=55`) und
+# nimmt sich dieselbe Sperre per `flock -n`. Solange dieses Skript den
+# Deskriptor hält, springt jeder Cron-Start ab; ein bereits laufender Worker
+# wird abgewartet. Ohne das trifft er mitten in `git reset` auf halb neue
+# Dateien – derselbe gemischte Zustand wie bei ENDLECH-5, nur im Hintergrund
+# und ohne Wartungsseite davor.
+#
+# Kein `pkill`: Auf derselben Maschine läuft ein Worker einer FREMDEN
+# Application unter einem anderen Systembenutzer, ein Muster ohne
+# Benutzerfilter wäre dort eine Fußangel. Das Zeitlimit macht das Töten
+# ohnehin überflüssig – der Worker löst sich jede Minute selbst ab und startet
+# dabei mit dem neuen Code und frischem Container.
+#
+# ⚠ Geöffnet wird LESEND (`9<`), nicht schreibend. `flock` sperrt unabhängig vom
+# Zugriffsmodus, und Cloudways legt Cron-Jobs im Panel unter dem Master-Benutzer
+# an, während dieser Deploy als Application-User läuft – die Sperrdatei gehört
+# dann dem anderen von beiden. Mit `9>` scheiterte der Deploy an genau dem.
+#
+# Das löst nur die Sperre. Läuft der Worker unter einem anderen Benutzer,
+# schreibt er weiterhin var/log und var/cache mit fremdem Eigentümer voll, bis
+# PHP-FPM dort auf Permission denied läuft. Beide gehören unter denselben
+# Benutzer – siehe CLAUDE.md → Messenger-Worker.
+WORKER_LOCK="$DEPLOY_DIR/var/worker.lock"
+
+# Solange der Transport auf sync:// steht, hat noch nie ein Worker gelaufen und
+# die Datei existiert nicht – dann gibt es auch nichts abzuwarten. Der Zweig
+# greift von selbst, sobald der Cron eingerichtet ist.
+if [ -r "$WORKER_LOCK" ]; then
+    exec 9<"$WORKER_LOCK"
+
+    # 90s: Zeitlimit des Workers (55s) plus Anlauf und Puffer. Der Deskriptor
+    # bleibt bis zum Skriptende offen; das OS gibt die Sperre danach von selbst
+    # frei, und der naechste Minutentakt startet den Worker neu.
+    if ! flock -w 90 9; then
+        echo "::error::Worker-Sperre nach 90s nicht erhalten – haengt ein messenger:consume ohne Zeitlimit?"
+        exit 1
+    fi
+else
+    echo "Keine Worker-Sperre gefunden (${WORKER_LOCK}) – Transport vermutlich noch sync://."
+fi
+
 git reset --hard "origin/${DEPLOY_BRANCH}"
 
 # Entfernt, was nicht mehr im Repo steht (alte Klassen, Templates, Asset-Hashes).
@@ -81,15 +123,6 @@ composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
 
 php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
 php bin/console cache:clear
-
-# BEWUSST KEIN `pkill -f messenger:consume`:
-# Production läuft mit MESSENGER_TRANSPORT_DSN=sync:// (.env.local), es gibt
-# also keinen Worker und keine Queue – Nachrichten werden im Request erledigt.
-# Auf derselben Maschine läuft aber ein Worker einer FREMDEN Application unter
-# einem anderen Systembenutzer; ein pkill-Muster ohne Benutzerfilter wäre dort
-# eine Fußangel. Wird der Transport hier je auf doctrine:// umgestellt, gehört
-# an diese Stelle: pkill -u "$(id -un)" -f 'messenger:cons[u]me' || true
-# (Bracket-Pattern, damit pkill nicht die eigene SSH-Shell trifft.)
 
 # --- Wartungsfenster aus --------------------------------------------------
 # Ab hier passen Dateien und kompilierter Container wieder zusammen. Das

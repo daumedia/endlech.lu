@@ -7,6 +7,34 @@ Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
 ## [Unreleased]
 
+### Deploy hält den Messenger-Worker an, bevor der Arbeitsbaum wechselt (2026-08-29)
+
+Vorbereitung für die Umstellung von `MESSENGER_TRANSPORT_DSN=sync://` auf die
+Doctrine-Queue. **Die Umstellung selbst ist nicht Teil dieser Änderung** — solange
+die Zeile in der `.env.local` auf dem Server steht, ändert sich am Verhalten nichts.
+
+Ein Worker, der während `git reset` läuft, trifft auf halb neue Dateien: derselbe
+gemischte Zustand aus ENDLECH-5, nur im Hintergrund und ohne Wartungsseite davor.
+`deploy.sh` nimmt sich deshalb vor dem Reset `var/worker.lock` per `flock` und hält
+die Sperre bis zum Skriptende — ein laufender Worker wird abgewartet (bis 90 s),
+jeder Cron-Start während des Deploys springt per `flock -n` ab.
+
+Der Worker läuft künftig als Cron mit `--time-limit=55` statt unter Supervisor. Damit
+löst er sich jede Minute selbst ab und startet nach einem Deploy von allein mit neuem
+Code — der `pkill`-Kommentarblock in `deploy.sh` entfällt ersatzlos, und mit ihm die
+Fußangel, dass auf derselben Maschine ein `messenger:consume` einer fremden
+Application unter anderem Systembenutzer läuft.
+
+Die Sperrdatei wird **lesend** geöffnet (`exec 9<`), weil `flock` unabhängig vom
+Zugriffsmodus sperrt: Cloudways legt Panel-Cronjobs unter dem Master-Benutzer an,
+der Deploy läuft als Application-User, und die Datei gehört damit einem von beiden.
+Mit `9>` scheiterte der Deploy an genau dem. Existiert die Datei nicht, überspringt
+das Skript den Block — der aktuelle Zustand bleibt unberührt.
+
+Nicht gelöst und in `CLAUDE.md` vermerkt: Läuft der Cron als Master, schreibt er
+`var/log` und `var/cache` mit fremdem Eigentümer voll, bis PHP-FPM dort auf
+„Permission denied" läuft. Der Job gehört unter denselben Benutzer wie PHP-FPM.
+
 ### Ein Passkey-Submit ohne Assertion endet nicht mehr in einer Fehlerseite (2026-08-29)
 
 Sentry `ENDLECH-6`: `BadRequestHttpException: The key "_username" must be a string,
