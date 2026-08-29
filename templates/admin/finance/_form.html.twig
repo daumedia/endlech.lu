@@ -1,0 +1,42 @@
+{{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div>
+            {{ form_label(form.date, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
+            {{ form_widget(form.date, {'attr': {'class': 'w-full rounded-lg border-gray-300 focus:border-purple-500 focus:outline-2 focus:outline-offset-2 focus:outline-purple-700'}}) }}
+            {{ form_errors(form.date) }}
+        </div>
+        <div>
+            {{ form_label(form.category, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
+            {{ form_widget(form.category, {'attr': {'class': 'w-full rounded-lg border-gray-300 focus:border-purple-500 focus:outline-2 focus:outline-offset-2 focus:outline-purple-700'}}) }}
+            <p class="text-xs text-gray-500 mt-1">{{ 'admin.finance.field.category_help'|trans }}</p>
+            {{ form_errors(form.category) }}
+        </div>
+        <div>
+            {{ form_label(form.amount, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
+            {{ form_widget(form.amount, {'attr': {'class': 'w-full rounded-lg border-gray-300 focus:border-purple-500 focus:outline-2 focus:outline-offset-2 focus:outline-purple-700'}}) }}
+            {{ form_errors(form.amount) }}
+        </div>
+        <div>
+            {{ form_label(form.quantity, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
+            {{ form_widget(form.quantity, {'attr': {'class': 'w-full rounded-lg border-gray-300 focus:border-purple-500 focus:outline-2 focus:outline-offset-2 focus:outline-purple-700'}}) }}
+            <p class="text-xs text-gray-500 mt-1">{{ 'admin.finance.field.quantity_help'|trans }}</p>
+            {{ form_errors(form.quantity) }}
+        </div>
+    </div>
+
+    <div>
+        {{ form_label(form.note, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
+        {{ form_widget(form.note, {'attr': {'class': 'w-full rounded-lg border-gray-300 focus:border-purple-500 focus:outline-2 focus:outline-offset-2 focus:outline-purple-700'}}) }}
+        <p class="text-xs text-gray-500 mt-1">{{ 'admin.finance.field.note_help'|trans }}</p>
+        {{ form_errors(form.note) }}
+    </div>
+
+    <div class="flex items-center gap-3 pt-4 border-t border-gray-200">
+        <button type="submit" class="inline-flex items-center justify-center min-h-[44px] bg-purple-600 hover:bg-purple-700 text-white font-bold px-6 py-2.5 rounded-full shadow-md transition focus:outline-2 focus:outline-offset-2 focus:outline-purple-700">
+            {{ button_label|default('admin.finance.save'|trans) }}
+        </button>
+        <a href="{{ path('admin_finance_index') }}" class="text-gray-500 hover:text-gray-700 font-medium">
+            {{ 'admin.form.cancel'|trans }}
+        </a>
+    </div>
+{{ form_end(form) }}

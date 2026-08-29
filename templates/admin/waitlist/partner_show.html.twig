@@ -1,0 +1,90 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block admin_title %}{{ entry.restaurantName }}{% endblock %}
+
+{% block admin_body %}
+    <a href="{{ path('admin_waitlist_index') }}"
+       class="inline-block mb-4 text-sm text-gray-500 hover:text-purple-700 focus:outline-2 focus:outline-offset-2 focus:outline-purple-700">
+        ← {{ 'admin.waitlist.back'|trans }}
+    </a>
+
+    <div class="flex items-center justify-between mb-6 gap-4 flex-wrap">
+        <h2 class="text-2xl font-bold text-gray-800">🍽️ {{ entry.restaurantName }}</h2>
+        <span class="{{ entry.status.badgeClasses }} text-xs font-bold px-3 py-1 rounded-full">
+            {{ entry.status.emoji }} {{ entry.status.transKey|trans }}
+        </span>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">{{ 'admin.waitlist.details'|trans }}</h3>
+
+            <dl class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                {{ include('admin/waitlist/_field.html.twig', {label: 'admin.waitlist.field.contact'|trans, value: entry.contactName}) }}
+                {{ include('admin/waitlist/_field.html.twig', {label: 'admin.waitlist.field.locality'|trans, value: entry.locality}) }}
+                {{ include('admin/waitlist/_field.html.twig', {label: 'admin.waitlist.field.email'|trans, value: entry.email, mailto: true}) }}
+                {{ include('admin/waitlist/_field.html.twig', {label: 'admin.waitlist.field.phone'|trans, value: entry.phone, tel: true}) }}
+                {{ include('admin/waitlist/_field.html.twig', {label: 'admin.waitlist.field.language'|trans, value: entry.locale}) }}
+                {{ include('admin/waitlist/_field.html.twig', {label: 'admin.waitlist.field.source'|trans, value: entry.source}) }}
+            </dl>
+
+            {% if entry.message %}
+                <div class="mt-6 pt-6 border-t border-gray-200">
+                    <h4 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-2">{{ 'admin.waitlist.field.message'|trans }}</h4>
+                    <p class="text-sm text-gray-700 leading-relaxed whitespace-pre-line">{{ entry.message }}</p>
+                </div>
+            {% endif %}
+
+            {{ include('admin/waitlist/_timestamps.html.twig', {entry: entry}) }}
+        </div>
+
+        <div class="space-y-6">
+            {{ include('admin/waitlist/_status_form.html.twig', {
+                entry: entry, route: 'admin_waitlist_partner_status', statuses: statuses
+            }) }}
+
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">{{ 'admin.waitlist.link_restaurant'|trans }}</h3>
+
+                <form method="get" action="{{ path('admin_waitlist_partner_show', {id: entry.id}) }}" class="flex gap-2 mb-3">
+                    <label for="partner-restaurant-suche" class="sr-only">{{ 'admin.waitlist.restaurant_search'|trans }}</label>
+                    <input type="search" id="partner-restaurant-suche" name="rq" value="{{ restaurantSuche }}"
+                           placeholder="{{ 'admin.waitlist.restaurant_search'|trans }}"
+                           class="flex-1 bg-white border border-gray-400 rounded-lg px-3 py-2 text-sm focus:outline-2 focus:outline-offset-2 focus:outline-purple-700">
+                    <button type="submit" class="min-h-[44px] px-4 rounded-lg bg-gray-800 text-white text-sm font-semibold hover:bg-gray-900 transition">
+                        {{ 'admin.restaurant.search_action'|trans }}
+                    </button>
+                </form>
+
+                <form method="post" action="{{ path('admin_waitlist_partner_link', {id: entry.id}) }}" class="space-y-3">
+                    <input type="hidden" name="_token" value="{{ csrf_token('waitlist-link-' ~ entry.id) }}">
+
+                    <label for="partner-restaurant" class="block text-sm font-semibold text-gray-700">{{ 'admin.waitlist.restaurant_label'|trans }}</label>
+                    {# ⚠ BF-40: Die Liste ist auf {{ restaurantLimit }} Einträge
+                       begrenzt. Wer ein Haus sucht, das nicht dabei ist, filtert
+                       über das Feld darüber — serverseitig, ohne JavaScript. #}
+                    <select id="partner-restaurant" name="restaurant"
+                            class="w-full bg-white border border-gray-500 rounded-lg px-3 py-2.5 text-sm focus:outline-2 focus:outline-offset-2 focus:outline-purple-700">
+                        <option value="0">{{ 'admin.waitlist.restaurant_none'|trans }}</option>
+                        {% for restaurant in restaurants %}
+                            <option value="{{ restaurant.id }}" {{ entry.restaurant and entry.restaurant.id == restaurant.id ? 'selected' : '' }}>
+                                {{ restaurant.emoji }} {{ restaurant.name }} · {{ restaurant.city }}
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                    {% if restaurantTotal >= restaurantLimit %}
+                        <p class="text-xs text-amber-700 mt-1">
+                            {{ 'admin.waitlist.restaurant_truncated'|trans({'%limit%': restaurantLimit}) }}
+                        </p>
+                    {% endif %}
+
+                    <button type="submit"
+                            class="w-full min-h-[44px] bg-cyan-700 hover:bg-cyan-800 text-white font-bold py-2.5 px-4 rounded-lg shadow transition focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700 cursor-pointer">
+                        {{ 'admin.waitlist.save_restaurant'|trans }}
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

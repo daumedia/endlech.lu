@@ -1,0 +1,17 @@
+{# Querverweise auf die übrigen Vergleiche.
+   Der Linktext trägt die Wortmarke — kein „hier", kein „mehr" (Feature 02, AK-33). #}
+{% if others is not empty %}
+    <nav aria-labelledby="weitere-vergleiche" class="mt-12">
+        <h2 id="weitere-vergleiche" class="text-2xl font-bold text-gray-900 mb-4">{{ 'cross.title'|trans({}, 'comparison') }}</h2>
+        <ul class="grid gap-3 sm:grid-cols-2">
+            {% for other in others %}
+                <li>
+                    <a href="{{ path('app_comparison_show', {'slug': other.slug}) }}"
+                       class="flex min-h-[48px] items-center rounded-xl border border-gray-300 bg-white px-4 py-3 font-semibold text-gray-900 motion-safe:transition hover:border-cyan-700 hover:shadow-md focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700">
+                        {{ 'footer.vs'|trans({'%brand%': other.brand}) }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </nav>
+{% endif %}

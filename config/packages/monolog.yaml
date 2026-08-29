@@ -37,7 +37,25 @@ when@prod:
                 action_level: error
                 handler: nested
                 excluded_http_codes: [404, 405]
-                channels: ["!deprecation"]
+                # "!doctrine": Der Puffer wird bei jedem Fehler vollständig
+                # ausgeschrieben – samt der DEBUG-Zeilen, die Doctrine für jede
+                # Abfrage erzeugt. Dort stehen die gebundenen Parameter, also unter
+                # anderem Bestätigungstoken und Passwort-Hashes. Der Preis ist, dass
+                # im Fehlerfall die SQL-Historie fehlt; das wiegt leichter als ein
+                # Anmelde-Äquivalent im Hoster-Log.
+                #
+                # ⚠ BF-23: "!request" aus demselben Grund. Symfonys `request`-Kanal
+                # schreibt bei jedem Aufruf `Matched route` samt aller
+                # Routenparameter — und dort steht der Bestätigungstoken im Klartext.
+                # Gemessen: 31 Zeilen für `app_email_change_confirm`, 22 für
+                # `app_verify_email`. Wer das Hoster-Log lesen kann, kann damit eine
+                # E-Mail-Änderung fremd bestätigen.
+                #
+                # `SecretMaskingProcessor` entschärft den Fall bereits (er maskiert
+                # `token=` in allen Kanälen), aber der Token steht hier als
+                # Routen-PARAMETER und nicht als Query — der Ausschluss ist die
+                # Absicherung, die nicht von einer Formulierung abhängt.
+                channels: ["!deprecation", "!doctrine", "!request"]
                 buffer_size: 50 # How many messages should be saved? Prevent memory leaks
             nested:
                 type: stream

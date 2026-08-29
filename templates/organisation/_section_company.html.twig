@@ -1,0 +1,42 @@
+{#
+    Inhalt der Sektion „Unternehmen".
+
+    Wird an zwei Stellen eingebunden: als Block auf der Übersichtsseite und als
+    Hauptinhalt der eigenen Unterseite (/organisationen/{slug}). Deshalb steht
+    hier kein <section>-Rahmen – Hintergrund und Abstände bestimmt die
+    einbettende Seite.
+
+    Die Überschriftenebene kommt von der einbettenden Seite (heading_level): Auf
+    der eigenen Unterseite steht die Sektion direkt unter dem <h1> und braucht
+    dort <h2>, sonst übersprünge die Seite eine Ebene.
+#}
+{% set hl = heading_level|default('h2') %}
+    <{{ hl }} class="text-lg font-bold text-gray-900 mb-4">{{ 'organisation.company.formats_title'|trans }}</{{ hl }}>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+        {% for i in 1..4 %}
+            <div class="rounded-xl border border-gray-300 bg-gray-50 p-4">
+                <p class="font-semibold text-gray-900 mb-1">{{ ('organisation.company.format_' ~ i ~ '_title')|trans }}</p>
+                <p class="text-sm text-gray-700 leading-relaxed">{{ ('organisation.company.format_' ~ i ~ '_text')|trans }}</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    {# Ausschlussregel steht öffentlich auf der Seite, nicht nur intern. #}
+    <div class="rounded-xl border-2 border-red-700 bg-red-50 p-5 mb-6">
+        <{{ hl }} class="text-lg font-bold text-red-900 mb-2">{{ 'organisation.company.exclusion_title'|trans }}</{{ hl }}>
+        <p class="text-red-950 leading-relaxed mb-3">{{ 'organisation.company.exclusion_text'|trans }}</p>
+        <ul class="space-y-1.5">
+            {% for i in 1..3 %}
+                <li class="flex items-start gap-2 text-sm text-red-950">
+                    <span aria-hidden="true">✕</span>
+                    <span>{{ ('organisation.company.exclusion_' ~ i)|trans }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+        <p class="mt-3 text-sm text-red-950">{{ 'organisation.company.exclusion_reason'|trans }}</p>
+    </div>
+
+    <a href="#anfrage"
+       class="inline-block min-h-[48px] bg-purple-700 hover:bg-purple-800 text-white font-bold px-8 py-3 rounded-full shadow-md hover:shadow-lg motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-purple-700">
+        {{ 'organisation.company.cta'|trans }}
+    </a>

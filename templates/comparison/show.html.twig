@@ -1,0 +1,137 @@
+{% extends 'base.html.twig' %}
+
+{# Eine Vergleichsseite (Feature 03).
+
+   Überschriftenhierarchie (Feature 02, AK-15): genau ein <h1> im Kopfband, jede
+   Sektion <h2>, Karten und Fragen <h3>. Keine übersprungene Ebene.
+
+   ⚠ Das Kopfband ist ein <section>, kein <div>. Der @media-print-Block in
+   assets/styles/app.css greift auf den Selektor `section.bg-linear-to-r`; als
+   <div> druckte es weiß auf weiß (EC-04). #}
+
+{% set p = page.competitor.transPrefix %}
+
+{% block title %}{{ (p ~ 'meta_title')|trans({}, 'comparison') }} – Endlech.lu{% endblock %}
+
+{% block meta_description %}
+    <meta name="description" content="{{ (p ~ 'meta_description')|trans({}, 'comparison') }}">
+{% endblock %}
+
+{% block canonical %}
+    <link rel="canonical" href="{{ url('app_comparison_show', {'slug': page.competitor.slug}) }}">
+{% endblock %}
+
+{% block body %}
+    {# === 1 · KOPFBAND ===================================================== #}
+    <section class="bg-linear-to-r from-cyan-700 to-purple-800 text-white py-20">
+        <div class="container mx-auto px-4 max-w-3xl">
+            {# ⚠ BF-79: Eigener Schlüssel, nicht `cross.title`. Der trägt unten die
+               Überschrift der Querverweisliste; beide `<nav>` hießen dadurch
+               „Weitere Vergleiche", und wer per Landmark navigiert, landete im
+               Brotkrümelpfad statt bei den Verweisen. #}
+            <nav aria-label="{{ 'breadcrumb.label'|trans({}, 'comparison') }}" class="mb-6 text-sm text-cyan-50">
+                <a href="{{ path('app_comparison_index') }}"
+                   class="underline underline-offset-2 hover:text-white motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-white">
+                    {{ 'index.heading'|trans({}, 'comparison') }}
+                </a>
+                <span aria-hidden="true" class="mx-2">›</span>
+                <span>{{ page.competitor.brand }}</span>
+            </nav>
+            <h1 class="text-3xl md:text-5xl font-bold mb-5 leading-tight">{{ (p ~ 'heading')|trans({}, 'comparison') }}</h1>
+            <p class="text-lg text-cyan-50 leading-relaxed">{{ (p ~ 'subheading')|trans({}, 'comparison') }}</p>
+        </div>
+    </section>
+
+    {# === 2 · KURZFAZIT ==================================================== #}
+    <section class="bg-white py-16">
+        <div class="container mx-auto px-4 max-w-4xl">
+            <div class="grid gap-6 md:grid-cols-2">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h2 class="text-lg font-bold text-gray-900 mb-2">{{ 'fit.own_title'|trans({}, 'comparison') }}</h2>
+                    <p class="text-gray-800 leading-relaxed">{{ (p ~ 'fit_own')|trans({}, 'comparison') }}</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h2 class="text-lg font-bold text-gray-900 mb-2">{{ 'fit.theirs_title'|trans({'%brand%': page.competitor.brand}, 'comparison') }}</h2>
+                    <p class="text-gray-800 leading-relaxed">{{ (p ~ 'fit_theirs')|trans({}, 'comparison') }}</p>
+                </div>
+            </div>
+            <p class="mt-6 text-center text-gray-700">{{ 'fit.coexist'|trans({}, 'comparison') }}</p>
+        </div>
+    </section>
+
+    {# === 3 · MERKMALSTABELLE ============================================== #}
+    <section class="bg-gray-50 py-16">
+        <div class="container mx-auto px-4 max-w-4xl">
+            {# Eigener Text, nicht derselbe wie die Tabellenbeschriftung: Sonst
+               läse ein Screenreader „Merkmalsvergleich zwischen …" zweimal
+               hintereinander — einmal als Überschrift, einmal als <caption>. #}
+            <h2 class="text-2xl md:text-3xl font-bold text-center text-gray-900 mb-10">
+                {{ 'table.section_title'|trans({}, 'comparison') }}
+            </h2>
+            {% include 'comparison/_table.html.twig' %}
+            {% include 'comparison/_cards.html.twig' %}
+            {% include 'comparison/_sources.html.twig' %}
+        </div>
+    </section>
+
+    {# === 4 · WANN DIE ANDERE SEITE BESSER IST =============================
+       Der Abschnitt, der die Seite glaubwürdig macht. Ohne ihn ist sie Werbung. #}
+    <section class="bg-white py-16">
+        <div class="container mx-auto px-4 max-w-3xl">
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-8">
+                {{ 'advantages.title'|trans({'%brand%': page.competitor.brand}, 'comparison') }}
+            </h2>
+            <ul class="space-y-4">
+                {% for key in page.advantageKeys %}
+                    <li class="flex gap-3 bg-gray-50 border border-gray-100 rounded-xl p-5">
+                        <span aria-hidden="true" class="text-cyan-700 font-bold">✓</span>
+                        <span class="text-gray-800 leading-relaxed">{{ key|trans({}, 'comparison') }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </section>
+
+    {# === 5 · HÄUFIGE FRAGEN ==============================================
+       <details>/<summary> meldet seinen Zustand selbst an Screenreader; ein
+       handgeschriebenes aria-expanded ließe sich ohne JavaScript nicht
+       aktualisieren und wäre nach dem ersten Klick falsch. #}
+    <section class="bg-gray-50 py-16">
+        <div class="container mx-auto px-4 max-w-3xl">
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-8">{{ 'faq.title'|trans({}, 'comparison') }}</h2>
+            <div class="space-y-3">
+                {% for key in page.faqKeys %}
+                    <details class="bg-white rounded-xl border border-gray-200 p-5 group">
+                        <summary class="min-h-[48px] flex items-center cursor-pointer font-semibold text-gray-900 focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700">
+                            <h3 class="text-base font-semibold">{{ (key ~ '.q')|trans({}, 'comparison') }}</h3>
+                        </summary>
+                        <p class="mt-3 text-gray-800 leading-relaxed">{{ (key ~ '.a')|trans({}, 'comparison') }}</p>
+                    </details>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    {# === 6 · HANDLUNGSAUFRUF, QUERVERWEISE, RECHTLICHER FUSS ============== #}
+    <section class="bg-white py-16">
+        <div class="container mx-auto px-4 max-w-3xl">
+            <div class="bg-linear-to-r from-cyan-700 to-purple-800 text-white rounded-2xl p-8 text-center">
+                <h2 class="text-2xl font-bold mb-2">{{ 'cta.title'|trans({}, 'comparison') }}</h2>
+                <p class="text-cyan-50 mb-6">{{ 'cta.body'|trans({}, 'comparison') }}</p>
+                <a href="{{ path('app_restaurant_index') }}"
+                   class="inline-block min-h-[48px] bg-white text-cyan-900 font-bold px-8 py-3 rounded-full shadow-lg hover:shadow-xl hover:bg-cyan-50 motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-white">
+                    {{ 'cta.button'|trans({}, 'comparison') }}
+                </a>
+            </div>
+
+            {% include 'comparison/_cross_links.html.twig' %}
+
+            <p class="mt-12 text-sm text-gray-600 leading-relaxed">
+                {{ 'legal.trademarks'|trans({}, 'comparison') }}
+                {{ 'legal.correction'|trans({}, 'comparison') }}
+                <a href="{{ path('app_impressum') }}"
+                   class="text-cyan-800 underline underline-offset-2 focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700">{{ 'legal.correction_link'|trans({}, 'comparison') }}</a>
+            </p>
+        </div>
+    </section>
+{% endblock %}

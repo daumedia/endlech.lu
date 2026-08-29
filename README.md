@@ -2,7 +2,7 @@
 
 An open platform to find and rate accessible restaurants in Luxembourg. Built for inclusion, community, and simplicity.
 
-![Version](https://img.shields.io/badge/version-v2026.08.09-blue)
+![Version](https://img.shields.io/badge/version-v2026.08.29-blue)
 ![Status](https://img.shields.io/badge/status-beta-green)
 
 <div align="center">
@@ -174,6 +174,23 @@ npm run build
 php bin/console cache:clear
 ```
 
+### 🔑 Passkeys (WebAuthn)
+
+`WEBAUTHN_RP_ID` is the bare domain passkeys are bound to — no scheme, no port,
+no path, no IP address. It also covers every subdomain, but never the other way
+round, so production must use `endlech.lu` and **not** `www.endlech.lu`.
+
+Set it in the server's `~/public_html/.env.local` **before** merging into
+`production`. A wrong value deploys green and only shows up when someone tries
+to sign in — the browser rejects the ceremony with a `SecurityError`.
+
+Locally the default `localhost` applies. Browsers treat `localhost` as a secure
+context, but the server-side check does not: with an empty `allowed_origins`
+list, `CheckAllowedOrigins` insists on HTTPS. `config/packages/webauthn.yaml`
+therefore whitelists `http://localhost:8000` in a `when@dev` block — adjust the
+port there if `symfony server:start` picks a different one. On production the
+list stays empty on purpose, so the spec's own rule applies.
+
 ## 🚢 Deployment
 
 A merge into `production` **is** the deploy. GitHub Actions opens an SSH session and
@@ -198,6 +215,29 @@ survives: `.env.local`, `config/jwt/*.pem`, `public/uploads/`, `var/`,
 
 Rollback: push a revert commit to `production`. The next run restores the previous
 state including matching assets, because they live in the same commit.
+
+### Monthly metrics snapshot
+
+The `/open` page shows a trend built from stored monthly snapshots, not from
+recalculated history. Those snapshots are written by `app:metrics:snapshot`.
+
+`App\Schedule` declares the recurring task (1st of each month, 03:15
+Europe/Luxembourg), but Symfony Scheduler needs a running
+`messenger:consume scheduler_default` — and production has no worker. **The cron
+entry is what actually runs it there.** Add it once in the hosting panel:
+
+```
+15 3 1 * * /usr/bin/php ~/public_html/bin/console app:metrics:snapshot --env=prod --no-interaction
+```
+
+The command is idempotent: a month that already has a snapshot is left alone
+(`--force` overwrites, `--month=YYYY-MM` fills a gap). If the cron is missing or
+fails, nothing breaks and nothing warns you — the trend simply stays empty. The
+admin page at `/admin/finanzen` shows the month of the latest snapshot and has a
+button to capture one by hand, which is the fastest way to notice the gap.
+
+A snapshot can only record what is in the database when it runs. Filling in past
+months later gives them today's numbers, not the ones they had.
 
 Error tracking is active on production only. `SENTRY_DSN` must be present in the
 server's `~/public_html/.env.local` **before** the merge — otherwise the deploy
@@ -254,6 +294,19 @@ Three repository secrets are required — `SSH_PRIVATE_KEY`, `APP_USER`,
 * `/templates` — Twig templates (including `admin/` for the admin panel).
 * `/assets` — Stimulus controllers and CSS.
 * `/migrations` — Doctrine database migrations.
+* `/docs` — In-depth documentation (see below).
+
+## 📚 Documentation
+
+Detailed documentation lives in [`docs/`](docs/). These documents are written in
+German, matching `CHANGELOG.md` and the codebase comments.
+
+* [`docs/prd.md`](docs/prd.md) — Product requirements: vision, target groups,
+  product principles, feature scope, metrics, business model, roadmap, risks.
+* [`docs/data-model.md`](docs/data-model.md) — Complete reference of all Doctrine
+  entities, enums, repositories and migrations, including an ER diagram.
+* [`docs/design-system.md`](docs/design-system.md) — Colours, typography,
+  components, accessibility rules, charts and print styles.
 
 ---
 *Built with love in Luxembourg.*

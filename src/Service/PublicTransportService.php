@@ -40,6 +40,14 @@ class PublicTransportService
                 $item->expiresAfter(86400);
 
                 $response = $this->httpClient->request('GET', 'https://cdt.hafas.de/opendata/apiserver/location.nearbystops', [
+                    // Ohne diese Zeilen greift der PHP-Standard `default_socket_timeout`
+                    // — auf dem Messsystem 60 Sekunden. Genau so lange wartete der
+                    // Besucher der Detailseite, wenn die Schnittstelle hängt statt zu
+                    // antworten (QA B10, BF-44; gemessen: ohne Vorgabe nach 30 s keine
+                    // Antwort, mit 3 s Abbruch nach 3,0 s). Der catch unten fängt den
+                    // Ausfall, nicht die Verzögerung.
+                    'timeout' => 3,
+                    'max_duration' => 5,
                     'query' => [
                         'accessId' => $this->apiKey,
                         'originCoordLat' => $lat,
@@ -55,7 +63,16 @@ class PublicTransportService
                 return $this->parseResponse($data);
             });
         } catch (\Throwable $e) {
-            $this->logger->error('HAFAS API error: {message}', ['message' => $e->getMessage()]);
+            // NICHT $e->getMessage() durchreichen: Die Meldung von Symfonys HttpClient
+            // enthält die vollständige URL, und die trägt den API-Schlüssel als
+            // Query-Parameter `accessId` (so sieht HAFAS die Übergabe vor). Im Log
+            // standen dadurch Zeilen wie
+            //   app.ERROR: HAFAS API error: HTTP/2 401 returned for "…?accessId=…"
+            // (QA B10, BF-45). Klasse und Code sagen für die Fehlersuche genug.
+            $this->logger->error('HAFAS API error: {class} ({code})', [
+                'class' => $e::class,
+                'code' => $e->getCode(),
+            ]);
 
             return [];
         }

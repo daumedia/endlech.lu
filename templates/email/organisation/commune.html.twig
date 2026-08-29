@@ -1,0 +1,41 @@
+{% extends 'email/base.html.twig' %}
+
+{% block title %}{{ 'email.organisation_commune_title'|trans }}{% endblock %}
+
+{% block body %}
+    <h2 style="margin: 0 0 16px; color: #111827; font-size: 20px; font-weight: 700;">
+        {{ 'email.organisation_greeting'|trans({'%name%': entry.contactName}) }}
+    </h2>
+
+    <p style="margin: 0 0 24px; color: #6b7280; font-size: 14px; line-height: 1.6;">
+        {{ 'email.organisation_commune_text'|trans({'%organisation%': entry.organisationName}) }}
+    </p>
+
+    <table role="presentation" style="width: 100%; border: 0;">
+        <tr>
+            <td style="text-align: center; padding: 8px 0 24px;">
+                <a href="{{ confirmUrl }}" style="display: inline-block; background-color: #7c3aed; color: #ffffff; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 14px;">
+                    {{ 'email.organisation_button'|trans }}
+                </a>
+            </td>
+        </tr>
+    </table>
+
+    <p style="margin: 0 0 8px; color: #9ca3af; font-size: 12px;">
+        {{ 'email.organisation_commune_note'|trans }}
+    </p>
+
+    <p style="margin: 0; color: #9ca3af; font-size: 12px;">
+        {{ 'email.organisation_fallback'|trans }}<br>
+        <a href="{{ confirmUrl }}" style="color: #7c3aed; word-break: break-all;">{{ confirmUrl }}</a>
+    </p>
+
+    {# BF-37: Der Rückweg gehört in jede Mail. Art. 7 Abs. 3 verlangt, dass ein
+       Widerruf „ebenso einfach" ist wie die Einwilligung — und die war ein Klick. #}
+    {% if revokeUrl %}
+        <p style="margin: 24px 0 0; color: #9ca3af; font-size: 12px; line-height: 1.6;">
+            {{ 'email.waitlist_revoke_hint'|trans }}
+            <a href="{{ revokeUrl }}" style="color: #6b7280; text-decoration: underline;">{{ 'email.waitlist_revoke_link'|trans }}</a>
+        </p>
+    {% endif %}
+{% endblock %}

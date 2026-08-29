@@ -1,0 +1,16 @@
+{% extends 'email/base.html.twig' %}
+
+{# Interne Team-Mail, fest auf Deutsch (die Sprache des Melders spielt hier keine
+   Rolle). Der Meldetext steht NUR in dieser Mail – er wird nirgends gespeichert. #}
+{% block body %}
+    <h1 style="font-size: 20px; color: #111827; margin: 0 0 16px;">Neue Barriere-Meldung</h1>
+
+    <p style="color: #374151; margin: 0 0 8px;">Beschreibung:</p>
+    <p style="color: #111827; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px; margin: 0 0 16px; white-space: pre-wrap;">{{ description }}</p>
+
+    {% if senderEmail %}
+        <p style="color: #374151; margin: 0;">Antwort erwünscht an: <a href="mailto:{{ senderEmail }}" style="color: #0e7490;">{{ senderEmail }}</a></p>
+    {% else %}
+        <p style="color: #6b7280; margin: 0;">Es wurde keine Kontaktadresse angegeben.</p>
+    {% endif %}
+{% endblock %}

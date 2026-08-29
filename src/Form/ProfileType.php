@@ -54,6 +54,9 @@ class ProfileType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            // Hier IST die Auskunft unbedenklich: Der Nutzer bearbeitet sein
+            // eigenes Konto und weiß, dass es existiert (BF-09).
+            'validation_groups' => ['Default', 'strict'],
         ]);
     }
 }

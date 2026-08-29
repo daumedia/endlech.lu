@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'partner.confirm.title'|trans }} – Endlech.lu{% endblock %}
+
+{% block body %}
+    {{ include('partials/_waitlist_confirmation.html.twig', {
+        state: state,
+        prefix: 'partner.confirm',
+        back_route: 'app_partner'
+    }) }}
+{% endblock %}

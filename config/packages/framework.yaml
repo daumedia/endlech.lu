@@ -18,6 +18,107 @@ framework:
             policy: 'fixed_window'
             limit: 5
             interval: '1 minute'
+        # API-Registrierung: dieselben Werte wie der Web-Weg (`registration`).
+        # Vorher fiel sie unter `api_anonymous` mit 100/Minute — nachgestellt:
+        # elf Hinweis-Mails an eine FREMDE Adresse in wenigen Sekunden, anonym.
+        # Die Anti-Enumeration schickt bewusst auch an bestehende Adressen eine
+        # Mail; ohne Deckel ist genau das ein Versandweg gegen Dritte.
+        api_register:
+            policy: 'sliding_window'
+            limit: 5
+            interval: '1 hour'
+        # Wartelisten-Anmeldung Partnerprogramm: pro IP 5 Versuche je Stunde.
+        partner_waitlist:
+            policy: 'sliding_window'
+            limit: 5
+            interval: '1 hour'
+        # Registrierung: pro IP 5 Versuche je Stunde. Jede Anlage verschickt eine
+        # Bestätigungsmail über die Brevo-Quota – ohne Deckel zahlt der Betreiber
+        # die Rechnung des Angreifers. Dieselben Werte wie partner_waitlist, weil
+        # beides seltene, bewusste Handlungen sind.
+        registration:
+            policy: 'sliding_window'
+            limit: 5
+            interval: '1 hour'
+        # Passwortänderung im Profil: gedeckelt am KONTO, nicht an der IP – der
+        # Angriff ist das Raten des aktuellen Passworts aus einer gekaperten
+        # Sitzung heraus, und dort wechselt die IP mühelos.
+        password_change:
+            policy: 'sliding_window'
+            limit: 5
+            interval: '15 minutes'
+        # Passkey-Challenge (BF-18): Die Endpunkte des Bundles liegen sprachfrei und
+        # fielen dadurch weder unter die Web- noch unter die API-Regeln. Jede Anfrage
+        # legt eine Challenge in der Sitzung ab und prüft ein Geheimnis — beides
+        # Gründe aus der Konvention. Großzügiger als `api_login`, weil ein Nutzer
+        # beim Anmelden mehrere Anläufe braucht (Gerät wählen, abbrechen, neu).
+        passkey_challenge:
+            policy: 'sliding_window'
+            limit: 30
+            interval: '15 minutes'
+        # Adressänderung im Profil (BF-21): verschickt seit der BF-19-Reparatur zwei
+        # Mails je Durchlauf, eine davon an eine FREI GEWÄHLTE fremde Adresse.
+        # Am KONTO gezählt, nicht an der IP — der Angriff setzt eine Sitzung voraus,
+        # und dort wechselt die IP mühelos (dasselbe Muster wie `password_change`).
+        email_change:
+            policy: 'sliding_window'
+            limit: 3
+            interval: '1 hour'
+        # Vorschläge über die API (BF-30) und über den Assistenten (BF-50): beide
+        # füllen dieselbe Moderationsschlange, und die abzuarbeiten ist Handarbeit.
+        # Am Konto gezählt — beide Wege setzen eine Anmeldung voraus.
+        suggestion_submit:
+            policy: 'sliding_window'
+            limit: 10
+            interval: '1 hour'
+        # Wartelisten-Anmeldung für Organisationen (BF-38): eigener Zähler statt des
+        # geteilten `partner_waitlist`. Vorher sperrten fünf Partner-Anmeldungen das
+        # Organisationsformular mit — zwei getrennte Formulare, ein Kontingent.
+        organisation_waitlist:
+            policy: 'sliding_window'
+            limit: 5
+            interval: '1 hour'
+        # Offene Datenendpunkte (BF-42): jeder Abruf lädt den GESAMTEN Bestand. Der
+        # Datensatz soll abrufbar bleiben — gedeckelt wird der Dauerabruf, nicht die
+        # Nutzung. 60 je Stunde reichen für jeden Zweck, den CC BY 4.0 vorsieht.
+        open_dataset:
+            policy: 'sliding_window'
+            limit: 60
+            interval: '1 hour'
+        # Schreibvorgänge im Verwaltungsbereich (BF-35): großzügig, weil ein Admin
+        # legitim viel ändert. Der Deckel fängt die Schleife ab, nicht die Arbeit.
+        admin_write:
+            policy: 'sliding_window'
+            limit: 120
+            interval: '5 minutes'
+        # Passwort zurücksetzen (Feature 01): Jeder Aufruf verschickt eine Mail an
+        # eine FREI WÄHLBARE Adresse — dieselbe Lage wie bei der Registrierung,
+        # deshalb dieselben Werte. Ohne Deckel wäre das Formular ein Versandweg
+        # gegen Dritte.
+        password_reset:
+            policy: 'sliding_window'
+            limit: 5
+            interval: '1 hour'
+        # Datenexport (Feature 01, AK-11): liest den halben Bestand eines Kontos
+        # zusammen. Am Konto gezählt — der Weg setzt eine Anmeldung voraus.
+        account_export:
+            policy: 'sliding_window'
+            limit: 10
+            interval: '1 hour'
+        # Erneutes Senden der Bestätigungsmail: strenger, weil das Ziel ein fremdes
+        # Postfach sein kann und der Absender bereits angemeldet ist.
+        verify_resend:
+            policy: 'sliding_window'
+            limit: 3
+            interval: '1 hour'
+        # Barriere-Meldeformular (Feature 02): jeder Absenden-Vorgang verschickt eine
+        # Mail an die feste Kontaktadresse. Gedeckelt an der IP – der Weg ist öffentlich
+        # und setzt keine Sitzung voraus. Dieselben Werte wie die übrigen
+        # Formular-Wege (partner_waitlist, registration).
+        accessibility_report:
+            policy: 'sliding_window'
+            limit: 5
+            interval: '1 hour'
 
 when@test:
     framework:
@@ -34,3 +135,59 @@ when@test:
                 policy: 'fixed_window'
                 limit: 10000
                 interval: '1 minute'
+            api_register:
+                policy: 'sliding_window'
+                limit: 10000
+                interval: '1 hour'
+            partner_waitlist:
+                policy: 'sliding_window'
+                limit: 10000
+                interval: '1 hour'
+            registration:
+                policy: 'sliding_window'
+                limit: 10000
+                interval: '1 hour'
+            verify_resend:
+                policy: 'sliding_window'
+                limit: 10000
+                interval: '1 hour'
+            password_change:
+                policy: 'sliding_window'
+                limit: 10000
+                interval: '15 minutes'
+            passkey_challenge:
+                policy: 'sliding_window'
+                limit: 10000
+                interval: '15 minutes'
+            email_change:
+                policy: 'sliding_window'
+                limit: 10000
+                interval: '1 hour'
+            suggestion_submit:
+                policy: 'sliding_window'
+                limit: 10000
+                interval: '1 hour'
+            organisation_waitlist:
+                policy: 'sliding_window'
+                limit: 10000
+                interval: '1 hour'
+            open_dataset:
+                policy: 'sliding_window'
+                limit: 10000
+                interval: '1 hour'
+            admin_write:
+                policy: 'sliding_window'
+                limit: 10000
+                interval: '5 minutes'
+            password_reset:
+                policy: 'sliding_window'
+                limit: 10000
+                interval: '1 hour'
+            account_export:
+                policy: 'sliding_window'
+                limit: 10000
+                interval: '1 hour'
+            accessibility_report:
+                policy: 'sliding_window'
+                limit: 10000
+                interval: '1 hour'

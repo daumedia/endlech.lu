@@ -1,4 +1,6 @@
 restaurant:
+    door_width_range: "The door width must be between {{ min }} and {{ max }} cm."
+    table_spacing_range: "The table spacing must be between {{ min }} and {{ max }} cm."
     name_blank: "Please enter the name."
     name_max: "The name must not exceed {{ limit }} characters."
     city_blank: "Please enter the city."
@@ -15,6 +17,9 @@ restaurant:
     url_max: "The URL must not exceed {{ limit }} characters."
     note_blank: "The note must not be empty."
     note_format: "Format: \"ok:Text\" or \"warn:Text\""
+    latitude_range: 'The latitude must be between {{ min }} and {{ max }}.'
+    longitude_range: 'The longitude must be between {{ min }} and {{ max }}.'
+    nearby_stops_note_max: 'The public transport note must not exceed {{ limit }} characters.'
 
 user:
     email_unique: "This email address is already in use."
@@ -38,6 +43,8 @@ profile:
     new_password_min: "The new password must be at least {{ limit }} characters long."
 
 suggestion:
+    door_width_range: 'The door width must be between {{ min }} and {{ max }} cm.'
+    table_spacing_range: 'The table spacing must be between {{ min }} and {{ max }} cm.'
     name_blank: "Please enter the name."
     name_max: "The name must not exceed {{ limit }} characters."
     city_blank: "Please enter the city."
@@ -47,3 +54,66 @@ suggestion:
     emoji_max: "The emoji must not exceed {{ limit }} characters."
     notes_max: "The notes must not exceed {{ limit }} characters."
     answer_required: "Please choose Yes, No or Don't know."
+    phone_max: 'The phone number must not exceed {{ limit }} characters.'
+    email_invalid: 'Please enter a valid email address.'
+    email_max: 'The email address must not exceed {{ limit }} characters.'
+    url_invalid: 'Please enter a valid address — including https:// at the front.'
+    url_max: 'The address must not exceed {{ limit }} characters.'
+# Die Partner-Seite richtet sich an Restaurantbetreiber (B2B) und siezt deshalb
+# bewusst – abweichend von den übrigen Meldungen hier, die durchgängig duzen.
+partner_waitlist:
+    restaurant_name_blank: "Please enter the name of the restaurant."
+    restaurant_name_max: "The name may be at most {{ limit }} characters long."
+    contact_name_blank: "Please enter your name."
+    contact_name_max: "Your name may be at most {{ limit }} characters long."
+    email_blank: "Please enter your email address."
+    email_invalid: "Please enter a valid email address."
+    email_max: "The email address may be at most {{ limit }} characters long."
+    phone_max: "The phone number may be at most {{ limit }} characters long."
+    locality_blank: "Please enter the municipality."
+    locality_max: "The municipality may be at most {{ limit }} characters long."
+    message_max: "Your message may be at most {{ limit }} characters long."
+    consent_required: "Please agree to the processing of your details."
+organisation_waitlist:
+    type_required: "Please select who this is about."
+    organisation_name_blank: "Please enter the name of the organisation."
+    organisation_name_max: "The name may be at most {{ limit }} characters long."
+    contact_name_blank: "Please enter your name."
+    contact_name_max: "Your name may be at most {{ limit }} characters long."
+    contact_role_max: "The role may be at most {{ limit }} characters long."
+    email_blank: "Please enter your email address."
+    email_invalid: "Please enter a valid email address."
+    email_max: "The email address may be at most {{ limit }} characters long."
+    phone_max: "The phone number may be at most {{ limit }} characters long."
+    website_invalid: "Please enter a valid web address."
+    website_max: "The web address may be at most {{ limit }} characters long."
+    message_max: "Your message may be at most {{ limit }} characters long."
+    consent_required: "Please agree to the processing of your details."
+    commune_name_max: "The municipality name may be at most {{ limit }} characters long."
+    venues_range: "Please enter a number between {{ min }} and {{ max }}."
+    invalid_choice: "This selection is not permitted."
+    # Greifen nur bei manipulierten Anfragen: Das Formular baut die Felder eines
+    # fremden Typs gar nicht erst auf (PRE_SUBMIT).
+    commune_only: "This field is intended for municipalities only."
+    company_only: "This selection is intended for companies only."
+    association_only: "This selection is intended for organisations only."
+
+finance:
+    date_required: "Please provide a date."
+    category_required: "Please choose a category."
+    amount_required: "Please provide an amount."
+    amount_positive: "The amount must be greater than zero. Whether it counts as income or expense follows from the category."
+    quantity_positive: "The quantity must be at least 1."
+    quantity_not_allowed: "A quantity is only intended for Inclusion Box materials."
+    note_max: "The note may be at most {{ limit }} characters long."
+
+# RepeatedType::invalid_message wird in der Domäne "validators" aufgelöst,
+# nicht in "messages" – dort stand der Schlüssel bisher allein, weshalb
+# Nutzern der rohe Schlüssel angezeigt wurde.
+form:
+    password_mismatch: "The passwords do not match."
+
+accessibility:
+    report:
+        description_required: "Please describe the barrier."
+        email_invalid: "Please enter a valid email address."

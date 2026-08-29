@@ -1,0 +1,30 @@
+{#
+    Statuswechsel – identisch für beide Eintragstypen.
+
+    Parameter:
+      entry  – der Eintrag (beliebiger WaitlistEntryInterface)
+      route  – Route der POST-Action
+      statuses – WaitlistStatus::cases()
+#}
+<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+    <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">{{ 'admin.waitlist.change_status'|trans }}</h3>
+
+    <form method="post" action="{{ path(route, {id: entry.id}) }}" class="space-y-3">
+        <input type="hidden" name="_token" value="{{ csrf_token('waitlist-status-' ~ entry.id) }}">
+
+        <label for="waitlist-status" class="block text-sm font-semibold text-gray-700">{{ 'admin.waitlist.status_label'|trans }}</label>
+        <select id="waitlist-status" name="status"
+                class="w-full bg-white border border-gray-500 rounded-lg px-3 py-2.5 text-sm focus:outline-2 focus:outline-offset-2 focus:outline-purple-700">
+            {% for status in statuses %}
+                <option value="{{ status.value }}" {{ status == entry.status ? 'selected' : '' }}>
+                    {{ status.emoji }} {{ status.transKey|trans }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <button type="submit"
+                class="w-full min-h-[44px] bg-purple-700 hover:bg-purple-800 text-white font-bold py-2.5 px-4 rounded-lg shadow transition focus:outline-2 focus:outline-offset-2 focus:outline-purple-700 cursor-pointer">
+            {{ 'admin.waitlist.save_status'|trans }}
+        </button>
+    </form>
+</div>

@@ -1,0 +1,121 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block admin_title %}{{ 'admin.nav.finance'|trans }}{% endblock %}
+
+{% block admin_body %}
+<div class="flex flex-wrap justify-between items-center gap-4 mb-6">
+    <h2 class="text-2xl font-bold text-gray-800">{{ 'admin.finance.manage'|trans }}</h2>
+    <a href="{{ path('admin_finance_new') }}"
+       class="bg-purple-600 hover:bg-purple-700 text-white font-bold px-5 py-2.5 rounded-full shadow-md hover:shadow-lg transition transform hover:-translate-y-0.5">
+        {{ 'admin.finance.new_button'|trans }}
+    </a>
+</div>
+
+{# --- Summen + Snapshot-Status --- #}
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+        <p class="text-xs uppercase tracking-wider text-gray-400 font-semibold">{{ 'admin.finance.total_expenses'|trans }}</p>
+        <p class="text-2xl font-bold text-amber-700 mt-1">{{ totalExpenses|format_currency('EUR') }}</p>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+        <p class="text-xs uppercase tracking-wider text-gray-400 font-semibold">{{ 'admin.finance.total_income'|trans }}</p>
+        <p class="text-2xl font-bold text-green-700 mt-1">{{ totalIncome|format_currency('EUR') }}</p>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+        <p class="text-xs uppercase tracking-wider text-gray-400 font-semibold">{{ 'admin.finance.last_snapshot'|trans }}</p>
+        <p class="text-2xl font-bold text-gray-800 mt-1">{{ latestSnapshot ? latestSnapshot.monthKey : '—' }}</p>
+        {# Der Zeitplan braucht einen Messenger-Worker, den Production nicht
+           hat. Ohne diesen Knopf bliebe eine ausgefallene Historie unbemerkt –
+           und ein Verlauf lässt sich nicht rückwirkend erzeugen. #}
+        <form method="post" action="{{ path('admin_finance_snapshot') }}" class="mt-2 flex flex-wrap items-center gap-3">
+            <input type="hidden" name="_token" value="{{ csrf_token('metric-snapshot') }}">
+            <button type="submit" class="text-xs font-semibold text-purple-600 hover:text-purple-800 underline">
+                {{ 'admin.finance.capture_snapshot'|trans }}
+            </button>
+            {# ⚠ BF-47: Das Überschreiben ist ein eigener Knopf mit eigener Rückfrage.
+               Vorher ersetzte der einzige Knopf einen vorhandenen Snapshot durch die
+               Zahlen von heute – ohne Rückfrage und mit Erfolgsmeldung. Ein Snapshot
+               ist der einzige nachprüfbare Stand eines Monats; ist er überschrieben,
+               ist er weg. #}
+            <button type="submit" name="overwrite" value="1"
+                    onsubmit="return true"
+                    onclick="return confirm('{{ 'admin.finance.snapshot_overwrite_confirm'|trans|e('js') }}');"
+                    class="text-xs font-medium text-gray-500 hover:text-red-700 underline">
+                {{ 'admin.finance.snapshot_overwrite'|trans }}
+            </button>
+        </form>
+    </div>
+</div>
+
+{# --- Filter --- #}
+<div class="flex flex-wrap gap-2 mb-4">
+    <a href="{{ path('admin_finance_index') }}"
+       class="px-3 py-1.5 rounded-full text-sm font-medium border transition
+              {{ activeType is null ? 'bg-purple-600 text-white border-purple-600' : 'bg-white text-gray-600 border-gray-200 hover:border-purple-300' }}">
+        {{ 'admin.finance.filter_all'|trans }}
+    </a>
+    {% for type in types %}
+        <a href="{{ path('admin_finance_index', {type: type.value}) }}"
+           class="px-3 py-1.5 rounded-full text-sm font-medium border transition
+                  {{ activeType == type ? 'bg-purple-600 text-white border-purple-600' : 'bg-white text-gray-600 border-gray-200 hover:border-purple-300' }}">
+            {{ type.emoji }} {{ type.transKey|trans }}
+        </a>
+    {% endfor %}
+</div>
+
+<div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="w-full text-sm text-left">
+            <thead class="bg-gray-50 border-b border-gray-200">
+                <tr>
+                    <th class="px-4 py-3 font-semibold text-gray-600">{{ 'admin.finance.field.date'|trans }}</th>
+                    <th class="px-4 py-3 font-semibold text-gray-600">{{ 'admin.finance.field.category'|trans }}</th>
+                    <th class="px-4 py-3 font-semibold text-gray-600 text-right">{{ 'admin.finance.field.amount'|trans }}</th>
+                    <th class="px-4 py-3 font-semibold text-gray-600 text-right">{{ 'admin.finance.field.quantity'|trans }}</th>
+                    <th class="px-4 py-3 font-semibold text-gray-600">{{ 'admin.finance.field.note'|trans }}</th>
+                    <th class="px-4 py-3 font-semibold text-gray-600 text-right">{{ 'admin.restaurant.table.actions'|trans }}</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+                {% for entry in entries %}
+                    <tr class="hover:bg-gray-50 transition">
+                        <td class="px-4 py-3 text-gray-600 whitespace-nowrap">{{ entry.date|date('d.m.Y') }}</td>
+                        <td class="px-4 py-3">
+                            <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-semibold {{ entry.type.badgeClasses }}">
+                                {{ entry.category.emoji }} {{ entry.category.transKey|trans }}
+                            </span>
+                        </td>
+                        <td class="px-4 py-3 text-right font-semibold tabular-nums {{ entry.type.value == 'income' ? 'text-green-700' : 'text-amber-700' }}">
+                            {{ entry.amountAsFloat|format_currency('EUR') }}
+                        </td>
+                        <td class="px-4 py-3 text-right tabular-nums text-gray-600">{{ entry.quantity ?? '—' }}</td>
+                        <td class="px-4 py-3 text-gray-500 max-w-xs truncate">{{ entry.note ?: '—' }}</td>
+                        <td class="px-4 py-3 text-right whitespace-nowrap">
+                            <a href="{{ path('admin_finance_edit', {id: entry.id}) }}" class="text-purple-600 hover:text-purple-800 font-medium">
+                                {{ 'admin.restaurant.edit_action'|trans }}
+                            </a>
+                            <form method="post" action="{{ path('admin_finance_delete', {id: entry.id}) }}" class="inline ml-3"
+                                  onsubmit="return confirm('{{ 'admin.finance.delete_confirm'|trans|e('js') }}')">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete-finance-' ~ entry.id) }}">
+                                <button type="submit" class="text-red-500 hover:text-red-700 font-medium">
+                                    {{ 'admin.restaurant.delete_action'|trans }}
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="px-4 py-8 text-center text-gray-400">{{ 'admin.finance.empty'|trans }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% if lastUpdatedAt %}
+    <p class="mt-4 text-xs text-gray-500">
+        {{ 'admin.finance.last_updated'|trans({'%date%': lastUpdatedAt|date('d.m.Y H:i')}) }}
+    </p>
+{% endif %}
+{% endblock %}

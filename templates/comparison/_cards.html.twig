@@ -1,0 +1,59 @@
+{# Merkmalsvergleich als Kartenliste — die Darstellung unter `md:` (BF-77).
+
+   ⚠ **Warum überhaupt zwei Darstellungen.** Die Tabelle trägt in beiden
+   Wertspalten einen erklärenden Halbsatz (AK-09). Damit wird sie 525 px breit;
+   bei 320 px scrollte die ganze Seite waagerecht — gemessen `scrollX=212` — und
+   AK-25 war verletzt. Ein erzwungener Umbruch (`overflow-wrap: anywhere`) behebt
+   das Scrollen, zerlegt aber Wörter mitten im Wort („Stuf-enlo-ser Eing-ang") und
+   macht die Seite unlesbar. Deshalb hier je Merkmal ein Block.
+
+   ⚠ Genau **eine** der beiden Darstellungen ist je Breite im Dokument aktiv:
+   `hidden`/`md:hidden` setzen `display: none`, und das entfernt den Zweig auch aus
+   dem Accessibility-Tree. Ein Screenreader liest die Merkmale also nicht doppelt.
+
+   ⚠ Die Gruppen sind hier `<h3>` unter der `<h2>` des Abschnitts — keine
+   übersprungene Ebene (AK-27). In der Tabelle übernimmt das `<th scope="colgroup">`. #}
+<div class="md:hidden space-y-8">
+    {% for group in comparison_groups() %}
+        {% set rows = page.rowsIn(group) %}
+        {% if rows is not empty %}
+            <section aria-labelledby="gruppe-{{ page.competitor.value }}-{{ group.value }}">
+                <h3 id="gruppe-{{ page.competitor.value }}-{{ group.value }}"
+                    class="text-xs font-bold uppercase tracking-wide text-gray-900 mb-3">
+                    {{ group.transKey|trans({}, 'comparison') }}
+                </h3>
+                <ul class="space-y-3">
+                    {% for row in rows %}
+                        <li class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+                            <p class="font-semibold text-gray-900 mb-2">{{ row.labelKey|trans({}, 'comparison') }}</p>
+                            <dl class="space-y-2 text-sm">
+                                <div>
+                                    <dt class="font-medium text-gray-600">{{ 'table.col_own'|trans({}, 'comparison') }}</dt>
+                                    <dd class="text-gray-800">
+                                        {% include 'comparison/_verdict_body.html.twig' with {
+                                            verdict: row.own,
+                                            note: row.figure
+                                                ? row.ownNoteKey|trans({'%figure%': figures[row.figure]|default(0)|format_number}, 'comparison')
+                                                : row.ownNoteKey|trans({}, 'comparison'),
+                                            source: null
+                                        } only %}
+                                    </dd>
+                                </div>
+                                <div>
+                                    <dt class="font-medium text-gray-600">{{ 'table.col_theirs'|trans({'%brand%': page.competitor.brand}, 'comparison') }}</dt>
+                                    <dd class="text-gray-800">
+                                        {% include 'comparison/_verdict_body.html.twig' with {
+                                            verdict: row.theirs,
+                                            note: row.theirNoteKey|trans({}, 'comparison'),
+                                            source: row.sourceRef
+                                        } only %}
+                                    </dd>
+                                </div>
+                            </dl>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </section>
+        {% endif %}
+    {% endfor %}
+</div>

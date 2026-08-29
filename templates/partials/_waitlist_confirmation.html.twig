@@ -1,0 +1,41 @@
+{#
+    Bestätigungsseite des Double-Opt-In – geteilt von Partner und Organisationen.
+
+    Vier Zustände in einer Vorlage, damit ein unbekannter, erneut geöffneter oder
+    abgelaufener Link nie in einem Fehler endet (siehe
+    WaitlistConfirmationService::confirm).
+
+    ⚠ BF-36: 'expired' ist von 'invalid' getrennt. Ein abgelaufener Link ist eine
+    andere Lage als ein falscher: Der eine sagt „melde dich neu an", der andere
+    „prüf die Adresse". Ohne die Unterscheidung stünde bei beiden dasselbe.
+
+    Parameter:
+      state       – 'confirmed' | 'already' | 'expired' | 'revoked' | 'invalid'
+      prefix      – Übersetzungs-Präfix, z. B. 'partner.confirm'
+      back_route  – Route des Zurück-Links
+#}
+<div class="container mx-auto px-4 py-16 max-w-xl">
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 text-center">
+
+        {% if state == 'confirmed' %}
+            {% set emoji, key = '🎉', 'success' %}
+        {% elseif state == 'already' %}
+            {% set emoji, key = '✅', 'already' %}
+        {% elseif state == 'expired' %}
+            {% set emoji, key = '⌛', 'expired' %}
+        {% elseif state == 'revoked' %}
+            {% set emoji, key = '👋', 'revoked' %}
+        {% else %}
+            {% set emoji, key = '🔗', 'invalid' %}
+        {% endif %}
+
+        <p class="text-5xl mb-4" aria-hidden="true">{{ emoji }}</p>
+        <h1 class="text-2xl font-bold text-gray-900 mb-3">{{ (prefix ~ '.' ~ key ~ '_heading')|trans }}</h1>
+        <p class="text-gray-800 leading-relaxed">{{ (prefix ~ '.' ~ key ~ '_text')|trans }}</p>
+
+        <a href="{{ path(back_route) }}"
+           class="inline-block mt-6 min-h-[48px] bg-cyan-700 hover:bg-cyan-800 text-white font-bold px-8 py-3 rounded-full shadow-md hover:shadow-lg motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700">
+            {{ (prefix ~ '.back')|trans }}
+        </a>
+    </div>
+</div>

@@ -45,7 +45,7 @@ final class ApiExceptionSubscriber implements EventSubscriberInterface
         [$status, $message] = match (true) {
             $throwable instanceof HttpExceptionInterface => [
                 $throwable->getStatusCode(),
-                $throwable->getMessage(),
+                $this->messageFor($throwable),
             ],
             // Anonyme Anfrage auf geschützte Route → 401, sonst (Rolle fehlt) → 403.
             $throwable instanceof AccessDeniedException => $this->security->getUser() === null
@@ -72,5 +72,25 @@ final class ApiExceptionSubscriber implements EventSubscriberInterface
         }
 
         $event->setResponse($response);
+    }
+
+    /**
+     * Die Meldung einer HttpException wird grundsätzlich durchgereicht — sie kommt
+     * meist aus unserem eigenen Code und sagt etwas Nützliches.
+     *
+     * Zwei Ausnahmen: 404 und 403 entstehen im Framework, und deren Text verrät
+     * Interna. Der EntityValueResolver schreibt dort etwa
+     * `"App\Entity\Restaurant" object not found by "…\EntityValueResolver".` —
+     * das nennt ORM, Entity und Framework-Aufbau, und einem Client ist damit nicht
+     * geholfen. Es ist **kein** Debug-Zusatz: Der Text stand auch in Produktion in
+     * der Antwort.
+     */
+    private function messageFor(HttpExceptionInterface $exception): string
+    {
+        return match ($exception->getStatusCode()) {
+            404 => 'Nicht gefunden.',
+            403 => 'Zugriff verweigert.',
+            default => $exception->getMessage(),
+        };
     }
 }

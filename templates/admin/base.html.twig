@@ -49,6 +49,20 @@
                                 💡 {{ 'admin.nav.suggestions'|trans }}
                             </a>
                         </li>
+                        <li>
+                            <a href="{{ path('admin_waitlist_index') }}"
+                               class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition
+                                      {{ app.request.attributes.get('_route') starts with 'admin_waitlist' ? 'bg-purple-50 text-purple-700' : 'text-gray-600 hover:bg-gray-50 hover:text-purple-600' }}">
+                                🤝 {{ 'admin.nav.waitlist'|trans }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('admin_finance_index') }}"
+                               class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition
+                                      {{ app.request.attributes.get('_route') starts with 'admin_finance' ? 'bg-purple-50 text-purple-700' : 'text-gray-600 hover:bg-gray-50 hover:text-purple-600' }}">
+                                💶 {{ 'admin.nav.finance'|trans }}
+                            </a>
+                        </li>
                     </ul>
                 </nav>
             </aside>

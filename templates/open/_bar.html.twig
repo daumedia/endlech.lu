@@ -1,0 +1,22 @@
+{# Anteilsbalken mit Beschriftung.
+
+   Der Balken ist aria-hidden – die Zahl daneben trägt die Aussage, der Balken
+   zeigt sie nur zusätzlich. Sonst läse ein Screenreader eine Grafik vor, die
+   keinen eigenen Inhalt hat.
+
+   Die Datenkante ist 4 px gerundet, der Ansatz an der Grundlinie eckig: Der
+   Balken wächst aus der Achse, er schwebt nicht. Die Spur ist eine hellere
+   Stufe derselben Farbe statt neutralem Grau, damit gefüllt und ungefüllt als
+   ein Maß zusammengehören.
+
+   label, value (formatiert), percent (0–100) · optional: colour, track #}
+<div>
+    <div class="flex items-baseline justify-between gap-3 text-sm">
+        <span class="text-gray-700">{{ label }}</span>
+        <span class="font-semibold text-gray-900 tabular-nums">{{ value }}</span>
+    </div>
+    <div class="mt-1 h-2 w-full rounded-[2px] {{ track|default('bg-cyan-50') }} overflow-hidden" aria-hidden="true">
+        <div class="h-full rounded-r-[4px] {{ colour|default('bg-cyan-600') }}"
+             style="width: {{ percent < 1 and percent > 0 ? 1 : percent|round }}%"></div>
+    </div>
+</div>

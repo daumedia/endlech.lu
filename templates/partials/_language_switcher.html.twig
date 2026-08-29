@@ -2,7 +2,13 @@
 {% set current_locale = app.request.locale %}
 {% set current_route = app.request.attributes.get('_route') %}
 {% set current_params = app.request.attributes.get('_route_params', {}) %}
-{% set query_params = app.request.query.all() %}
+{# BF-68: `_locale` aus dem Query fernhalten UND die Sprache zuletzt mergen.
+   Beides ist nötig. Nur die Reihenfolge zu tauschen repariert den Umschalter,
+   ließe aber `?_locale=` als Query-Parameter stehen — die nächste Stelle, die
+   Query-Parameter durchreicht, hätte dasselbe Problem.
+   Vorher erzeugte `?_locale=//fremd.example/de` ein `href="///fremd.example/…"`,
+   und der Browser navigierte auf den fremden Host. #}
+{% set query_params = app.request.query.all()|filter((wert, schluessel) => schluessel != '_locale') %}
 
 {% set locales = {
     'lb': 'LB',
@@ -11,7 +17,8 @@
     'en': 'EN'
 } %}
 
-<div class="relative" data-controller="language-switcher">
+<div class="relative" data-controller="language-switcher"
+     data-action="keydown.esc->language-switcher#closeOnEscape">
     <button
         type="button"
         class="flex items-center gap-1.5 text-sm font-medium text-gray-600 hover:text-cyan-600 transition px-2 py-1 rounded-md hover:bg-gray-100"
@@ -34,7 +41,7 @@
         {% for locale, label in locales %}
             {% if locale != current_locale %}
                 <a
-                    href="{{ path(current_route, current_params|merge({'_locale': locale})|merge(query_params)) }}"
+                    href="{{ path(current_route, current_params|merge(query_params)|merge({'_locale': locale})) }}"
                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-cyan-600 transition"
                 >
                     {{ label }}

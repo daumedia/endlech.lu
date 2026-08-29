@@ -15,38 +15,52 @@
 
             {% include 'partials/_flash_messages.html.twig' %}
 
+            {#
+                Barrierefreie Felder über das kanonische Partial (_form_field.html.twig):
+                Label mit for/id, Pflicht-Hinweis, Fehlertext am Feld über
+                aria-describedby/aria-invalid, echter Fokus-outline (kein outline-none).
+                autocomplete-Tokens kommen aus RegistrationType (name/email/new-password).
+
+                Das erste fehlerhafte Feld bekommt autofocus — serverseitig, ohne JS
+                (Muster wie partner/_form.html.twig). Ohne Fehler liegt der Fokus auf
+                dem ersten Feld.
+            #}
+            {% set focus_field = null %}
+            {% if registrationForm.name.vars.errors|length > 0 %}
+                {% set focus_field = 'name' %}
+            {% elseif registrationForm.email.vars.errors|length > 0 %}
+                {% set focus_field = 'email' %}
+            {% elseif registrationForm.plainPassword.first.vars.errors|length > 0 %}
+                {% set focus_field = 'pw1' %}
+            {% elseif registrationForm.plainPassword.second.vars.errors|length > 0 %}
+                {% set focus_field = 'pw2' %}
+            {% endif %}
+            {% set focus_field = focus_field ?? 'name' %}
+
             {{ form_start(registrationForm, {'attr': {'class': 'space-y-5', 'novalidate': 'novalidate'}}) }}
 
-                {# Name #}
-                <div>
-                    {{ form_label(registrationForm.name, null, {'label_attr': {'class': 'block text-sm font-semibold text-gray-700 mb-1'}}) }}
-                    {{ form_widget(registrationForm.name, {'attr': {'class': 'w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:outline-none transition'}}) }}
-                    {{ form_errors(registrationForm.name, {'attr': {'class': 'text-red-600 text-xs mt-1'}}) }}
-                </div>
+                {{ include('partials/_form_field.html.twig', {
+                    field: registrationForm.name,
+                    autofocus: focus_field == 'name'
+                }) }}
 
-                {# E-Mail #}
-                <div>
-                    {{ form_label(registrationForm.email, null, {'label_attr': {'class': 'block text-sm font-semibold text-gray-700 mb-1'}}) }}
-                    {{ form_widget(registrationForm.email, {'attr': {'class': 'w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:outline-none transition'}}) }}
-                    {{ form_errors(registrationForm.email, {'attr': {'class': 'text-red-600 text-xs mt-1'}}) }}
-                </div>
+                {{ include('partials/_form_field.html.twig', {
+                    field: registrationForm.email,
+                    autofocus: focus_field == 'email'
+                }) }}
 
-                {# Passwort #}
-                <div>
-                    {{ form_label(registrationForm.plainPassword.first, null, {'label_attr': {'class': 'block text-sm font-semibold text-gray-700 mb-1'}}) }}
-                    {{ form_widget(registrationForm.plainPassword.first, {'attr': {'class': 'w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:outline-none transition'}}) }}
-                    {{ form_errors(registrationForm.plainPassword.first, {'attr': {'class': 'text-red-600 text-xs mt-1'}}) }}
-                </div>
+                {{ include('partials/_form_field.html.twig', {
+                    field: registrationForm.plainPassword.first,
+                    autofocus: focus_field == 'pw1'
+                }) }}
 
-                {# Passwort bestätigen #}
-                <div>
-                    {{ form_label(registrationForm.plainPassword.second, null, {'label_attr': {'class': 'block text-sm font-semibold text-gray-700 mb-1'}}) }}
-                    {{ form_widget(registrationForm.plainPassword.second, {'attr': {'class': 'w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:outline-none transition'}}) }}
-                    {{ form_errors(registrationForm.plainPassword.second, {'attr': {'class': 'text-red-600 text-xs mt-1'}}) }}
-                </div>
+                {{ include('partials/_form_field.html.twig', {
+                    field: registrationForm.plainPassword.second,
+                    autofocus: focus_field == 'pw2'
+                }) }}
 
                 {# Absenden #}
-                <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-lg shadow-md hover:shadow-lg transition transform hover:-translate-y-0.5">
+                <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-lg shadow-md hover:shadow-lg transition transform hover:-translate-y-0.5 focus:outline-2 focus:outline-offset-2 focus:outline-purple-700">
                     {{ 'register.submit'|trans }}
                 </button>
 

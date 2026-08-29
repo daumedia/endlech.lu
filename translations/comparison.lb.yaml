@@ -1,0 +1,272 @@
+# Verglachssäiten (Feature 03). Kuck comparison.de.yaml fir d'Wiel vun der Domain.
+index:
+    meta_title: "Endlech.lu am Verglach"
+    meta_description: "Wéi sech Endlech.lu vu Google Maps, Wheelmap an TripAdvisor ënnerscheet — mat Quell an Datum vun der Iwwerpréifung bei all Ausso."
+    eyebrow: "Verglachër"
+    heading: "Endlech.lu am Verglach"
+    intro: "Fir barrierefrä Gastronomie zu Lëtzebuerg gëtt et méi wéi eng Ulafstell. Dës Säite stelle se niewenteneen — och do, wou Endlech.lu méi schlecht ofschneit."
+    card_cta: "Verglach kucken"
+    method_title: "Wéi dës Verglachër entstinn"
+    method_body: "All Ausso iwwer en anert Ugebot kënnt aus senger eegener Dokumentatioun a dréit d'Datum, un deem mir se gepréift hunn. Wou sech eppes net beleeë léisst, steet keng Zeil an der Tabell. Eis eege Zuele kommen aus der selwechter Quell wéi d'Transparenzsäit."
+    method_criteria: "Eis Critèren"
+    method_open: "Eis Zuelen"
+table:
+    section_title: "Merkmal fir Merkmal"
+    caption: "Verglach vun de Merkmaler tëschent Endlech.lu a %brand%"
+    col_feature: "Merkmal"
+    col_own: "Endlech.lu"
+    col_theirs: "%brand%"
+verdict:
+    "yes": "Jo"
+    "no": "Nee"
+    partial: "Deelweis"
+group:
+    accessibility_data: "Donnéeën zur Barrierefreiheet"
+    provenance: "Hierkonft a Kontroll vun den Donnéeën"
+    coverage: "Ofdeckung an Aktualitéit"
+    openness: "Offenheet a Geschäftsmodell"
+sources:
+    ref: "Quell %ref%"
+    title: "Quellen"
+    intro: "All Uginne zu %brand% kommen aus senger eegener Dokumentatioun."
+    checked_on: "gepréift den %date%"
+fit:
+    own_title: "Endlech.lu passt, wann …"
+    theirs_title: "%brand% passt, wann …"
+    coexist: "Dat eent schléisst dat anert net aus — déi meescht Leit benotzen souwisou méi wéi ee Wierkzeug."
+advantages:
+    title: "Wéini %brand% déi besser Wiel ass"
+faq:
+    title: "Dacks gestallte Froen"
+cta:
+    title: "Selwer nokucken"
+    body: "Véierzéng Filteren, zwielef Kantonen, all Uginn eenzel nozeliesen."
+    button: "Restauranten sichen"
+breadcrumb:
+    label: "Dir sidd hei"
+cross:
+    title: "Weider Verglachër"
+legal:
+    trademarks: "All genannte Marke gehéieren hiren jeeweilegen Inhaber. Endlech.lu steet a keng Verbindung mat hinnen."
+    correction: "Stëmmt eng Uginn net méi? Schreift eis — d'Kontaktdaten stinn am Impressum."
+    correction_link: "Zum Impressum"
+
+row:
+    step_free_entrance:
+        label: "Trëppelfräien Agank"
+        own: "als Merkmal erfaasst, eenzel filterbar"
+    accessible_toilet:
+        label: "Barrierefräi Toilette"
+        own: "als Merkmal erfaasst, eenzel filterbar"
+    disabled_parking:
+        label: "Behënnerteparkplaz"
+        own: "als Merkmal erfaasst, eenzel filterbar"
+    door_width_cm:
+        label: "Diirbreet a Zentimeter"
+        own: "als Zuel erfaasst, wou gemooss — Richtwert 90 cm"
+    table_spacing_cm:
+        label: "Ofstand tëschent den Dëscher a Zentimeter"
+        own: "als Zuel erfaasst, wou gemooss — Richtwert 90 cm"
+    assistance_dogs:
+        label: "Assistenzhënn wëllkomm"
+        own: "als Merkmal erfaasst, eenzel filterbar"
+    bright_lighting:
+        label: "Hell Beliichtung"
+        own: "als Merkmal erfaasst, eenzel filterbar"
+    changing_table:
+        label: "Wéckeldësch"
+        own: "als Merkmal erfaasst, eenzel filterbar"
+    filterable:
+        label: "No eenzelne Merkmaler filterbar"
+        own: "véierzéng Filteren, fräi kombinéierbar"
+    criteria_published:
+        label: "Critère ëffentlech dokumentéiert"
+        own: "op der Critèren-Säit, mat der Punkteformel"
+    editorial_review:
+        label: "Fräigab virun der Verëffentlechung"
+        own: "all Virschlag gëtt gepréift, ier en erschéngt"
+    onsite_check:
+        label: "Kontroll op der Plaz"
+        own: "gepréifte Lokaler droen e Verifizéierungszeechen"
+    venues_luxembourg:
+        label: "Erfaasste Lokaler zu Lëtzebuerg"
+        own: "%figure% Lokaler, ausschliisslech Lëtzebuerg"
+    worldwide:
+        label: "Weltwäit verfügbar"
+        own: "nëmme Lëtzebuerg, a mat Absicht"
+    opening_hours:
+        label: "Ouverturen"
+        own: "méi Zäitfënstere pro Dag, Filter fir „elo op“"
+    route_planning:
+        label: "Routeplanung bis bei d’Lokal"
+        own: "nëmmen d’Arrêten an der Noperschaft"
+    open_dataset:
+        label: "Datesaz fräi erofzelueden"
+        own: "CSV a JSON ënner CC BY 4.0, ouni Umeldung"
+    open_source:
+        label: "Quelltext op"
+        own: "komplett op GitHub, MIT-Lizenz"
+    paid_placement:
+        label: "Bezuelte Placement méiglech"
+        own: "Sichtbarkeet ass net ze kafen"
+    own_figures_public:
+        label: "Eege Zuele verëffentlecht"
+        own: "Bestand, Ofdeckung a Finanzen op der Transparenzsäit"
+    luxembourgish:
+        label: "Op Lëtzebuergesch verfügbar"
+        own: "jo — Lëtzebuergesch ass d’Virgabsprooch"
+
+page:
+    google_maps:
+        meta_title: "Endlech.lu vs. Google Maps — wat den Ënnerscheed ass"
+        meta_description: "Google Maps féiert fënnef Rollstull-Uginne mat Jo oder Nee. Endlech.lu erfaasst Diirbreet an Dëschofstand a Zentimeter. All Ausso mat Quell an Datum."
+        heading: "Endlech.lu vs. Google Maps"
+        subheading: "Fënnef Jo-Nee-Uginne géint gemoossen Zentimeter"
+        fit_own: "Dir wësse musst, wéi breet d’Dier wierklech ass, ob tëschent den Dëscher genuch Plaz bleift an ob en Assistenzhond wëllkomm ass — an Dir zu Lëtzebuerg sicht."
+        fit_theirs: "Dir de Wee dohin braucht, déi aktuell Ouverturen, Bewäertungen a Fotoen — oder wann Dir soss iergendwou op der Welt sicht."
+        note:
+            step_free_entrance: "Attribut „rollstullgerechten Agank“, Jo oder Nee"
+            accessible_toilet: "Attribut „rollstullgerecht Toilette“, Jo oder Nee"
+            disabled_parking: "Attribut „rollstullgerecht Parkplaz“, Jo oder Nee"
+            door_width_cm: "ee Meter ass d’Schwell fir d’Jo — de gemoossene Wäert gëtt net gespäichert"
+            table_spacing_cm: "Attribut „rollstullgerecht Sëtzplazen“, ouni Mooss"
+            assistance_dogs: "déi fënnef Attributer betreffen ausschliisslech de Rollstull"
+            bright_lighting: "steet net ënnert den Attributer zur Barrierefreiheet"
+            changing_table: "steet net ënnert den Attributer zur Barrierefreiheet"
+            filterable: "d’Astellung „Barrierefreiheet ervirhiewen“ markéiert Plazen, filtert d’Resultater awer net — a gëllt nëmmen a bestëmmte Länner"
+            criteria_published: "d’Critère pro Attribut stinn an der Hëllef, mat Moossangab"
+            editorial_review: "Ännerunge ginn automatesch gepréift, meeschtens an ongeféier zéng Minutten"
+            onsite_check: "keng Kontroll op der Plaz virgesinn"
+            venues_luxembourg: "250 Millioune Plazen weltwäit; eng Zuel fir Lëtzebuerg nennt Google net"
+            worldwide: "220 Länner a Gebidder"
+            opening_hours: "aus Uginne vun de Betriber, Meldunge vun Notzer a lizenzéierten Inhalter"
+            route_planning: "zu Fouss, mam Auto a mam ëffentlechen Transport"
+            open_dataset: "d’Richtlinn vun der Places API verbitt et, d’Inhalter dauerhaft ze späicheren"
+            paid_placement: "Annoncen erschénge wéi Markéierungen op der Kaart an an de Sichresultater"
+        advantage:
+            "1": "Dir kommt dohin. Endlech.lu weist Arrêten an der Noperschaft, awer keng Route — Google Maps bréngt Iech vun der Hausdier bis virun d’Lokal, zu Fouss, mam Auto oder mam Bus an der Bunn."
+            "2": "Google Maps gëtt et iwwerall. 220 Länner a Gebidder, 250 Millioune Plazen. Endlech.lu hält un der Landesgrenz op, an dat bleift esou."
+            "3": "Bewäertungen, Fotoen a Stousszäiten. Wat aner Gäscht geschriwwen a fotograféiert hunn, steet do — bei eis net."
+            "4": "Ouverturen a Beweegung. Google zitt se aus méi Quellen no; eleng 2025 koumen 80 Milliounen Korrekturvirschléi aus der Communautéit."
+        faq:
+            "1":
+                q: "Ersetzt Endlech.lu Google Maps?"
+                a: "Nee, an dat ass och net d’Zil. Sicht Dir de Wee, huelt Google Maps. Wëllt Dir virdru wëssen, ob Dir eran kommt, huelt eis. Déi meescht Leit benotze souwisou béides."
+            "2":
+                q: "Firwat duere d’Uginne vu Google Maps net?"
+                a: "Well „rollstullgerechten Agank: jo“ net seet, wéi breet d’Dier ass. Fir en Handrollstull duergeet ee Meter vläicht, fir en elektresche Rollstull mat Kappstäip net. Mir schreiwen d’Zentimeter hin, wou mir se gemooss hunn — a loossen d’Feld eidel, wou mir et net gemaach hunn."
+            "3":
+                q: "Vu wou kommen är Donnéeën?"
+                a: "Aus Virschléi aus der Communautéit, déi virun der Verëffentlechung gepréift ginn, an aus eegenen Erhiewungen op der Plaz. Wat mir selwer gesinn hunn, dréit e Verifizéierungszeechen. Wat net erhuewe gouf, zielt bei eis als net erfëllt — net als virhanden."
+            "4":
+                q: "Firwat steet mäi Lokal net dran?"
+                a: "Well mir grad eréischt ufänken. Google huet zwanzeg Joer Virsprong an 250 Millioune Plazen; mir hu Lëtzebuerg. Dir kënnt Äert Lokal an zwou Minutte virschloen — mir kucken den Androen no, ier en erschéngt."
+        source:
+            "1": "Google Maps Hëllef: barrierefräi Plaze fannen"
+            "2": "Google Betribsprofil Hëllef: Attributer verwalten"
+            "3": "Google Blog: 20 Joer Google Maps"
+            "4": "Google Betribsprofil Hëllef: Ouverturen änneren"
+            "5": "Google Maps Platform: Richtlinne vun der Places API"
+            "6": "Google Ads Hëllef: lokal Sichannoncen"
+    wheelmap:
+        meta_title: "Endlech.lu vs. Wheelmap — wat den Ënnerscheed ass"
+        meta_description: "Wheelmap bewäert weltwäit mat enger Ampel an engem WC-Status. Endlech.lu erfaasst aacht Merkmaler a Zentimeter, nëmme fir Lëtzebuerg. Béid Datesätz sinn op."
+        heading: "Endlech.lu vs. Wheelmap"
+        subheading: "Eng Ampel fir d’Welt géint aacht Merkmaler fir ee Land"
+        fit_own: "Dir méi wësse wëllt wéi „kommen ech eran“ — Diirbreet, Dëschofstand, Assistenzhond, Beliichtung, Ouverturen — an Dir zu Lëtzebuerg sicht."
+        fit_theirs: "Dir ënnerwee sidd, ausserhalb vu Lëtzebuerg, oder eppes anescht wéi e Restaurant sicht: Gare, Apdikt, Kino, Musée."
+        note:
+            step_free_entrance: "d’Ampel: Gréng heescht Agank an all Raim trëppelfräi, Orange héchstens eng Stuf bis 7 cm"
+            accessible_toilet: "en eegene WC-Status, onofhängeg vun der Ampel"
+            assistance_dogs: "gëtt gefrot, wann eng nei Plaz ugeluecht gëtt"
+            disabled_parking: "ginn ausdrécklech net ugewisen — onkloer, ob se privat oder ëffentlech sinn"
+            door_width_cm: "90 cm ass e Critère fir de WC-Status, keen Agabfeld; Diirbreete kommen als fräien Text eran"
+            table_spacing_cm: "am Bannenraum gëtt nëmmen d’Trëppelfräiheet bewäert"
+            bright_lighting: "steet am oppene Datestandard A11yJSON, awer net op der Kaart"
+            changing_table: "steet am oppene Datestandard A11yJSON, awer net op der Kaart"
+            filterable: "no Ampelstuf an Zort vu Plaz; eng Lëschtenusiicht feelt a gëtt selwer als oppene Punkt genannt"
+            criteria_published: "d’Critère vun der Ampel mat der 7-cm-Grenz stinn an der FAQ"
+            onsite_check: "d’Persoun, déi androit, kontrolléiert op der Plaz — eng Kontroll duerch d’Ekipp ass net virgesinn"
+            editorial_review: "kee Fräigabschrëtt; moderéiert gi just d’Fotoen"
+            venues_luxembourg: "iwwer eng Millioun bewäert Plazen weltwäit; eng Zuel fir Lëtzebuerg nennt Wheelmap net"
+            worldwide: "weltwäit, ongeféier een Drëttel vun de bewäerte Plazen ausserhalb vun Däitschland"
+            opening_hours: "net erfaasst — pro Plaz gëtt et d’Ampel an de WC-Status"
+            luxembourgish: "32 bis 33 Sproochen, dorënner Franséisch; Lëtzebuergesch ass net dobäi"
+            open_dataset: "ënner ODbL iwwer OpenStreetMap, dozou eng oppe Schnëttstell"
+            open_source: "Frontend ënner MIT-Lizenz op GitHub"
+            own_figures_public: "Joreszuelen op der Transparenzsäit vun de Sozialhelden"
+        advantage:
+            "1": "Wheelmap gëllt weltwäit a fir alles. 180 Zorte vu Plazen an zwielef Kategorien — Gare, Apdikt, Kino, Musée. Endlech.lu kennt Restauranten zu Lëtzebuerg, soss näischt."
+            "2": "All Bewäertung fléisst zréck an d’OpenStreetMap a steet do jidderengem zur Verfügung. Dat ass méi Offenheet, wéi en eegene Datesaz leeschte kann."
+            "3": "Matmaachen geet ouni Kont. Keng Umeldung, kee Waarden op eng Fräigab — Dir steet virun der Dier, tippt d’Faarf un, fäerdeg."
+            "4": "Iwwer eng Millioun bewäert Plazen an eng Communautéit zënter 2010, dozou Appen fir iPhone an Android. Mir fänke grad eréischt un."
+        faq:
+            "1":
+                q: "Ass Wheelmap net datselwecht wéi Endlech.lu?"
+                a: "Nee. Wheelmap beäntwert „kommen ech eran?“ — weltwäit, fir all Zort vu Plaz, mat enger Ampel. Mir beäntweren „wéi ass et bannen?“ — fir Restauranten zu Lëtzebuerg, mat aacht Merkmaler a Zentimeter. D’Ampel ass genau dat richtegt Wierkzeug fir de weltwäiten Iwwerbléck; si ass just ze grof fir d’Entscheedung, ob Dir dësen Owend an dëst Lokal kënnt."
+            "2":
+                q: "Firwat baut Dir net einfach op Wheelmap op?"
+                a: "Deelweis maache mir dat: Eis Donnéeë sinn op, wéi hir. Mä d’Ampel kennt dräi Stufen an d’7-cm-Grenz; mir brauchen aacht eenzel filterbar Merkmaler, Ouverturen a Mooss. Dës Felder gëtt et do net — bei Wheelmap stinn d’Diirbreeden am fräie Kommentar."
+            "3":
+                q: "Wheelmap ass och gemeinnëtzeg an op — wou ass dann den Ënnerscheed?"
+                a: "An der Déift pro Plaz an an der Kontroll. Wheelmap verëffentlecht direkt, wat een androit; bei eis gëtt all Virschlag ugekuckt, ier en erschéngt, a wat mir selwer gepréift hunn, dréit e Zeechen. Dat ass méi lues an deckt manner of. Béides ass eng Entscheedung, keng Iwwerleeënheet."
+            "4":
+                q: "Wéi eng vun deenen zwou soll ech benotzen?"
+                a: "Béid. Wheelmap fir den Iwwerbléck a fir alles ausserhalb vu Lëtzebuerg, eis fir d’Eenzelheeten virdrun. Mir empfeelen Wheelmap ausdrécklech — d’Sozialhelden maachen dat zënter 2010, a si maachen et gutt."
+        source:
+            "1": "Wheelmap: dacks gestallte Froen"
+            "2": "A11yJSON: oppene Datestandard vun de Sozialhelden"
+            "3": "Wheelmap: Presse-Informatioun (Stand Oktober 2024)"
+            "4": "Iwwer Wheelmap"
+            "5": "Wheelmap-Frontend op GitHub"
+            "6": "Sozialhelden: Transparenz"
+    tripadvisor:
+        meta_title: "Endlech.lu vs. TripAdvisor — wat den Ënnerscheed ass"
+        meta_description: "TripAdvisor féiert Barrierefreiheet als ee Krock tëschent „Fernseh“ an „Wäin a Béier“. Endlech.lu erfaasst aacht Merkmaler a Zentimeter. All Ausso mat Quell."
+        heading: "Endlech.lu vs. TripAdvisor"
+        subheading: "Ee Krock an enger Lëscht vun Ausstattunge géint aacht gepréifte Merkmaler"
+        fit_own: "Dir virum Lassfueren wësse musst, ob Dir eran kommt, ob d’WC z’erreeche ass an ob en Assistenzhond wëllkomm ass — an Dir zu Lëtzebuerg sicht."
+        fit_theirs: "Dir wësse wëllt, ob d’Iesse schmaacht: Bewäertungen, Fotoen, Präisniveau, wat aner Gäscht erlieft hunn."
+        note:
+            step_free_entrance: "ee Krock „rollstullgerecht“ an der Lëscht vun den Ausstattungen, ouni ze soen, worop e sech bezitt"
+            accessible_toilet: "Hoteler hunn d’Rubrik „Barrierefreiheet“, Restauranten nëmmen „Kichen an Ausstattungen“"
+            disabled_parking: "net ënnert den Ausstattunge vu Restauranten"
+            door_width_cm: "kee Mooss, néierens — d’Merkmal ass binär"
+            table_spacing_cm: "kee Mooss, néierens — d’Merkmal ass binär"
+            assistance_dogs: "net ënnert den Ausstattunge vu Restauranten"
+            bright_lighting: "net ënnert den Ausstattunge vu Restauranten"
+            changing_table: "net ënnert den Ausstattunge vu Restauranten"
+            filterable: "e Filter gëtt et, mä en erschéngt nëmmen do, wou d’Merkmal lokal dacks ass, a léisst sech net als Adress deelen"
+            criteria_published: "wat de Krock bedeit, steet a kengem Hëllefsartikel"
+            editorial_review: "de Krock setzt de Betrib selwer"
+            onsite_check: "gepréift gëtt eréischt, wa Gäscht widderspriechen — dann duergeet et, de Krock nei ze setzen"
+            venues_luxembourg: "iwwer néng Milliounen Plazen a méi wéi eng Milliard Bewäertunge weltwäit"
+            worldwide: "iwwer 40 Länner, méi wéi 20 Sproochen"
+            luxembourgish: "d’Hëllef gëtt et an 22 Sproochfaassungen; Lëtzebuergesch ass net dobäi"
+            open_dataset: "Späicheren, Kopéieren an Indexéiere vun den Inhalter sinn vertraglech verbueden; den Zougang gëtt pro Datesaz ofgerechent"
+            paid_placement: "„Tripadvisor Ads“ sinn en eegent Reklammprodukt fir Restauranten, pro Klick ofgerechent"
+        advantage:
+            "1": "Méi wéi eng Milliard Bewäertungen. Wann Dir wësse wëllt, wéi d’Iesse an de Service sinn, ass TripAdvisor onschloen — mir hunn dozou guer näischt."
+            "2": "Fotoe vu Gäscht, net vum Haus. Dausende Biller, déi weisen, wéi et wierklech ausgesäit."
+            "3": "Iwwer 40 Länner a méi wéi 20 Sproochen. Fir d’Vakanzeplanung ass dat déi richteg Plaz; mir héieren un der Lëtzebuerger Grenz op."
+            "4": "E Restaurant fannen, deen et nach net op eis Lëscht gepackt huet: bei iwwer néng Milliounen erfaasste Plaze stinn d’Chancen do wesentlech besser."
+        faq:
+            "1":
+                q: "Ersetzt Endlech.lu den TripAdvisor?"
+                a: "Nee. Déi zwee beäntwerte verschidde Froen. TripAdvisor seet Iech, ob d’Iesse gutt ass. Mir soen Iech, ob Dir bis un den Dësch kommt. Wien déi zwou Saache wësse wëll, brauch béides."
+            "2":
+                q: "Den TripAdvisor huet dach och „rollstullgerecht“ — duergeet dat net?"
+                a: "Et ass genau ee Krock, an en steet an der selwechter Lëscht wéi „Fernseh“ an „Wäin a Béier“. En seet net, ob d’Dier breet genuch ass, ob d’WC z’erreeche ass, ob et eng Stuf gëtt. An en kennt kee „Nee“ a kee „Weess net“ — nëmme gesat oder net gesat."
+            "3":
+                q: "Wie préift déi Uginnen do?"
+                a: "De Betrib setzt de Krock selwer. Widderspriechen d’Gäscht an hire Bewäertungen, hëlt den TripAdvisor d’Merkmal ewech — de Betrib kann et duerno nees setzen. Eng Begeeung oder e Beweis ass net virgesinn."
+            "4":
+                q: "Firwat iwwerhuelt Dir d’Donnéeën net einfach vun do?"
+                a: "Well mir et net dierften. D’Notzungsbedingungen verbidden ausdrécklech d’Späicheren, Kopéieren an Indexéiere vun den Inhalter, an den Zougang gëtt pro Datesaz ofgerechent. Eise Datesaz steet dogéint ënner CC BY 4.0 zum Erofluede prett."
+        source:
+            "1": "TripAdvisor Hëllef: Ausstattungen a Servicer aktualiséieren"
+            "2": "TripAdvisor Restaurantsich, Filtergrupp „Ausstattung“"
+            "3": "TripAdvisor Joresbericht (Form 10-K, Geschäftsjoer 2025)"
+            "4": "TripAdvisor Hëllef-Center: Sproochfaassungen"
+            "5": "Tripadvisor Content API: Richtlinn zur Zwëschespäicherung"
+            "6": "TripAdvisor Hëllef: Tripadvisor Ads fir Restauranten"

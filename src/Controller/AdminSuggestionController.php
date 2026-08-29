@@ -4,13 +4,18 @@ namespace App\Controller;
 
 use App\Entity\Restaurant;
 use App\Entity\RestaurantSuggestion;
+use App\Enum\TriState;
 use App\Repository\CuisineRepository;
 use App\Repository\RestaurantSuggestionRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -48,10 +53,34 @@ final class AdminSuggestionController extends AbstractController
             return $this->redirectToRoute('admin_suggestion_index');
         }
 
+        // ⚠ BF-54: Zweimal abgeschickt erzeugte zwei Restaurants — beide mit
+        // Erfolgsmeldung, und die Dublette landete unbemerkt in der öffentlichen
+        // Liste. Ein Doppelklick auf einen Knopf ist keine Absicht, und die
+        // Zurück-Taste des Browsers macht daraus im Zweifel einen dritten.
+        if (RestaurantSuggestion::STATUS_PENDING !== $suggestion->getStatus()) {
+            $this->addFlash('warning', $this->translator->trans('flash.suggestion_already_handled'));
+
+            return $this->redirectToRoute('admin_suggestion_index');
+        }
+
         $restaurant = new Restaurant();
         $restaurant->setName($suggestion->getName());
         $restaurant->setCity($suggestion->getCity());
         $restaurant->setEmoji($suggestion->getEmoji());
+
+        // ⚠ BF-56: Die Maße wandern mit. Vorher startete jedes genehmigte Haus
+        // ohne sie und verlor damit zwei von zehn Punkten, ohne dass jemand
+        // nachgemessen hätte.
+        $restaurant->setDoorWidthCm($suggestion->getDoorWidthCm());
+        $restaurant->setTableSpacingCm($suggestion->getTableSpacingCm());
+
+        // ⚠ BF-49: Festhalten, wonach der Einreicher tatsächlich gesehen hat.
+        // `Restaurant` kennt nur ja/nein — ohne diese Liste wäre „weiß nicht"
+        // hier endgültig zu „nein" geworden, und ein Haus, über das nichts
+        // bekannt ist, senkte die veröffentlichte Durchschnittspunktzahl
+        // (BF-67). Ein `UNKNOWN` zählt nicht als Erhebung, ein `NO` schon: Wer
+        // „nein" sagt, hat hingesehen.
+        $restaurant->setAssessedFeatures($this->erhobeneMerkmale($suggestion));
 
         $cuisineNames = array_map('trim', explode(',', $suggestion->getCuisine()));
         foreach ($cuisineNames as $cuisineName) {
@@ -81,6 +110,12 @@ final class AdminSuggestionController extends AbstractController
         $restaurant->setInstagramUrl($suggestion->getInstagramUrl());
         $restaurant->setFacebookUrl($suggestion->getFacebookUrl());
         $restaurant->setTiktokUrl($suggestion->getTiktokUrl());
+        // Standort, sofern der Vorschlag ihn trägt (kommt über die REST-API; der
+        // Web-Wizard fragt ihn nicht ab). Ohne diese drei Zeilen ginge die Angabe
+        // bei der Freigabe verloren.
+        $restaurant->setLatitude($suggestion->getLatitude());
+        $restaurant->setLongitude($suggestion->getLongitude());
+        $restaurant->setNearbyStopsNote($suggestion->getNearbyStopsNote());
         $restaurant->setSubmittedBy($suggestion->getSuggestedBy());
 
         $suggestion->setStatus(RestaurantSuggestion::STATUS_APPROVED);
@@ -94,10 +129,17 @@ final class AdminSuggestionController extends AbstractController
     }
 
     #[Route('/{id}/ablehnen', name: 'admin_suggestion_reject', requirements: ['id' => '\d+'], methods: ['POST'])]
-    public function reject(RestaurantSuggestion $suggestion, Request $request, EntityManagerInterface $entityManager): Response
+    public function reject(RestaurantSuggestion $suggestion, Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
     {
         if (!$this->isCsrfTokenValid('reject-suggestion-' . $suggestion->getId(), $request->request->getString('_token'))) {
             $this->addFlash('error', $this->translator->trans('flash.invalid_csrf'));
+
+            return $this->redirectToRoute('admin_suggestion_index');
+        }
+
+        // ⚠ BF-54: auch hier — ein zweites Ablehnen soll keine zweite Mail auslösen.
+        if (RestaurantSuggestion::STATUS_PENDING !== $suggestion->getStatus()) {
+            $this->addFlash('warning', $this->translator->trans('flash.suggestion_already_handled'));
 
             return $this->redirectToRoute('admin_suggestion_index');
         }
@@ -107,8 +149,92 @@ final class AdminSuggestionController extends AbstractController
 
         $entityManager->flush();
 
+        $this->benachrichtigeEinreicher($mailer, $suggestion);
+
         $this->addFlash('info', $this->translator->trans('flash.suggestion_rejected', ['%name%' => $suggestion->getName()]));
 
         return $this->redirectToRoute('admin_suggestion_index');
+    }
+
+    /**
+     * Welche Merkmale hat der Einreicher beantwortet?
+     *
+     * `YES` und `NO` sind Auskünfte, `UNKNOWN` und `null` sind keine. Die Maße
+     * zählen als erhoben, sobald eine Zahl dasteht.
+     *
+     * @return list<string>
+     */
+    private function erhobeneMerkmale(RestaurantSuggestion $suggestion): array
+    {
+        $antworten = [
+            'wheelchair' => $suggestion->isWheelchairAccessible(),
+            'toilet' => $suggestion->hasAccessibleToilet(),
+            'dogs' => $suggestion->allowsAssistanceDogs(),
+            'lighting' => $suggestion->hasBrightLighting(),
+            'changing_table' => $suggestion->hasChangingTable(),
+            'disabled_parking' => $suggestion->hasDisabledParking(),
+        ];
+
+        $erhoben = [];
+        foreach ($antworten as $merkmal => $antwort) {
+            if (null !== $antwort && TriState::UNKNOWN !== $antwort) {
+                $erhoben[] = $merkmal;
+            }
+        }
+
+        if (null !== $suggestion->getDoorWidthCm()) {
+            $erhoben[] = 'door_width';
+        }
+        if (null !== $suggestion->getTableSpacingCm()) {
+            $erhoben[] = 'table_spacing';
+        }
+
+        return $erhoben;
+    }
+
+    /**
+     * Sagt dem Einreicher Bescheid, dass sein Vorschlag nicht übernommen wurde.
+     *
+     * ⚠ BF-55: Die Ablehnungsnotiz wurde gespeichert und erreichte niemanden — es
+     * gab keine Route, keine Mail und keinen Platz im Profil. Zusammen mit dem
+     * fehlenden Rückkanal in B11 sah der Einreicher seinen Vorschlag zu keinem
+     * Zeitpunkt wieder. Wer sich die Mühe macht, ein Haus zu erfassen, hat eine
+     * Antwort verdient, und sei es eine absagende.
+     *
+     * Ein Vorschlag ohne Konto (`suggestedBy === null`) kann naturgemäß keine
+     * bekommen — der Weg über den Assistenten setzt eine Anmeldung voraus, über
+     * die API ebenfalls; die Prüfung deckt Altbestand ab.
+     */
+    private function benachrichtigeEinreicher(MailerInterface $mailer, RestaurantSuggestion $suggestion): void
+    {
+        $einreicher = $suggestion->getSuggestedBy();
+        if (null === $einreicher || null === $einreicher->getEmail()) {
+            return;
+        }
+
+        $locale = $suggestion->getLocale();
+
+        $mail = (new TemplatedEmail())
+            ->to($einreicher->getEmail())
+            ->subject($this->translator->trans('email.suggestion_rejected_subject', [
+                '%name%' => $suggestion->getName(),
+            ], null, $locale))
+            ->locale($locale)
+            ->htmlTemplate('email/suggestion_rejected.html.twig')
+            ->context([
+                'suggestion' => $suggestion,
+                'suggestUrl' => $this->generateUrl(
+                    'community_vorschlagen',
+                    ['_locale' => $locale],
+                    UrlGeneratorInterface::ABSOLUTE_URL,
+                ),
+            ]);
+
+        try {
+            $mailer->send($mail);
+        } catch (TransportExceptionInterface) {
+            // Die Ablehnung steht; ein Zustellproblem darf sie nicht zurückdrehen.
+            $this->addFlash('warning', $this->translator->trans('flash.suggestion_rejected_mail_failed'));
+        }
     }
 }

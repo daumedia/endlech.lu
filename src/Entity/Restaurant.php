@@ -11,6 +11,14 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: RestaurantRepository::class)]
 class Restaurant
 {
+    /**
+     * Schwellwerte nach DIN 18040-1 – 90 cm lichte Breite für Türen und
+     * Durchgänge. Als Konstanten, damit Entity, Repository-Filter und die
+     * Open-Startup-Auswertung nicht drei eigene Zahlen pflegen.
+     */
+    public const int MIN_DOOR_WIDTH_CM = 90;
+    public const int MIN_TABLE_SPACING_CM = 90;
+
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\Column]
@@ -33,6 +41,21 @@ class Restaurant
     #[ORM\Column(nullable: true)]
     private ?float $rating = null;
 
+    /**
+     * Stufenloser Zugang zum Gastraum.
+     *
+     * ⚠ **Der Property-Name ist weiter gefasst als das Merkmal.** Erhoben und
+     * angezeigt wird durchgehend „stufenloser Zugang", nicht Rollstuhleignung im
+     * Ganzen: `accessibility.wheelchair_desc` („Stufenloser Zugang"),
+     * `filter.wheelchair` („Rollstuhl (stufenlos)") und `open.score_wheelchair`
+     * sagen dasselbe in allen vier Katalogen. Deshalb zählt
+     * `OpenStatsService::computeImpact()` dieses Feld als `stepFreeEntrances`
+     * aus — das ist korrekt und kein Namensfehler.
+     *
+     * Wer Rampe, Lift oder Stufenhöhe getrennt erfassen will, braucht ein
+     * **eigenes Feld**; dieses hier umzudeuten würde jede bereits erhobene
+     * Angabe rückwirkend verfälschen.
+     */
     #[ORM\Column]
     private bool $isWheelchairAccessible = false;
 
@@ -50,6 +73,24 @@ class Restaurant
 
     #[ORM\Column]
     private bool $hasDisabledParking = false;
+
+    /**
+     * Lichte Durchgangsbreite der schmalsten Tür auf dem Weg von der Straße
+     * zum Tisch, in Zentimetern.
+     *
+     * Nullable und ohne Default: null heißt "nicht ausgemessen", nicht
+     * "zu schmal". Auf der Open-Startup-Seite zählen nur dokumentierte Maße –
+     * ein 0-Default würde jedes nie erfasste Haus als Negativbefund ausweisen.
+     */
+    #[ORM\Column(nullable: true)]
+    private ?int $doorWidthCm = null;
+
+    /**
+     * Schmalste Durchgangsbreite zwischen den Tischen, in Zentimetern.
+     * Gleiche Semantik für null wie bei $doorWidthCm.
+     */
+    #[ORM\Column(nullable: true)]
+    private ?int $tableSpacingCm = null;
 
     #[ORM\Column]
     private bool $acceptsCash = false;
@@ -117,6 +158,31 @@ class Restaurant
     /** @var list<string> */
     #[ORM\Column(type: 'json')]
     private array $accessibilityNotes = [];
+
+    /**
+     * Merkmale, zu denen tatsächlich eine Auskunft vorliegt.
+     *
+     * ⚠ BF-49 + BF-67: `Restaurant` speichert die Barrierefreiheits-Merkmale als
+     * `bool` — dort ist `false` zweierlei zugleich: „gibt es nicht" und „wissen wir
+     * nicht". Der Vorschlags-Assistent unterscheidet das seit Langem (`TriState`),
+     * bei der Genehmigung ging die Unterscheidung verloren.
+     *
+     * Die Folge war auf `/open` messbar: Ein Haus, über das nichts bekannt war,
+     * hob die ausgewiesene Gemeindeabdeckung (8 → 9) und senkte zugleich die
+     * Durchschnittspunktzahl (5,09 → 4,67). Zwei Leitzahlen auf derselben Seite,
+     * die in gegenläufige Richtungen zeigten — wer die Kurven nebeneinander sah,
+     * las „wächst und wird schlechter". Tatsächlich hieß es: noch nicht gemessen.
+     *
+     * Diese Liste hält fest, wonach jemand gesehen hat. Ein leeres Feld heißt
+     * „nicht bewertet" und ergibt **keine** Punktzahl statt einer Null.
+     *
+     * Bewusst eine Liste und kein einzelnes `isAssessed`-Flag: Wer fünf Merkmale
+     * kennt und eines nicht, soll für das eine nicht bestraft werden.
+     *
+     * @var list<string>
+     */
+    #[ORM\Column(type: 'json')]
+    private array $assessedFeatures = [];
 
     #[ORM\Column]
     private \DateTimeImmutable $createdAt;
@@ -295,6 +361,49 @@ class Restaurant
         return $this;
     }
 
+    public function getDoorWidthCm(): ?int
+    {
+        return $this->doorWidthCm;
+    }
+
+    public function setDoorWidthCm(?int $doorWidthCm): static
+    {
+        $this->doorWidthCm = $doorWidthCm;
+
+        return $this;
+    }
+
+    public function getTableSpacingCm(): ?int
+    {
+        return $this->tableSpacingCm;
+    }
+
+    public function setTableSpacingCm(?int $tableSpacingCm): static
+    {
+        $this->tableSpacingCm = $tableSpacingCm;
+
+        return $this;
+    }
+
+    /**
+     * Tür breit genug für einen Rollstuhl (DIN 18040: 90 cm lichte Breite).
+     * Gibt null zurück, solange kein Maß erfasst ist – Twig und die API
+     * unterscheiden damit "zu schmal" von "unbekannt".
+     */
+    public function hasWideDoors(): ?bool
+    {
+        return null === $this->doorWidthCm
+            ? null
+            : $this->doorWidthCm >= self::MIN_DOOR_WIDTH_CM;
+    }
+
+    public function hasWheelchairTableSpacing(): ?bool
+    {
+        return null === $this->tableSpacingCm
+            ? null
+            : $this->tableSpacingCm >= self::MIN_TABLE_SPACING_CM;
+    }
+
     public function acceptsCash(): bool
     {
         return $this->acceptsCash;
@@ -393,6 +502,45 @@ class Restaurant
     public function getAccessibilityNotes(): array
     {
         return $this->accessibilityNotes;
+    }
+
+    /**
+     * Alle bewertbaren Merkmale — zugleich die zulässigen Werte von
+     * `assessedFeatures` und der Nenner der Punktzahl.
+     *
+     * @return list<string>
+     */
+    public static function assessableFeatures(): array
+    {
+        return [
+            'wheelchair', 'toilet', 'dogs', 'lighting',
+            'changing_table', 'disabled_parking', 'door_width', 'table_spacing',
+        ];
+    }
+
+    /** @return list<string> */
+    public function getAssessedFeatures(): array
+    {
+        return $this->assessedFeatures;
+    }
+
+    /** @param list<string> $features */
+    public function setAssessedFeatures(array $features): static
+    {
+        $this->assessedFeatures = array_values(array_intersect(self::assessableFeatures(), $features));
+
+        return $this;
+    }
+
+    /**
+     * Wurde zu diesem Haus überhaupt etwas erhoben?
+     *
+     * Ist die Antwort nein, bekommt es keine Punktzahl — und fällt aus dem
+     * Durchschnitt heraus, statt ihn zu senken.
+     */
+    public function isAssessed(): bool
+    {
+        return [] !== $this->assessedFeatures;
     }
 
     /** @param list<string> $accessibilityNotes */

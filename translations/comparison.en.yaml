@@ -1,0 +1,272 @@
+# Comparison pages (feature 03). See comparison.de.yaml for why this is its own domain.
+index:
+    meta_title: "How Endlech.lu compares"
+    meta_description: "How Endlech.lu differs from Google Maps, Wheelmap and TripAdvisor — every claim with a source and a date it was checked."
+    eyebrow: "Comparisons"
+    heading: "How Endlech.lu compares"
+    intro: "There is more than one place to look for accessible dining in Luxembourg. These pages put them side by side — including where Endlech.lu comes off worse."
+    card_cta: "Read the comparison"
+    method_title: "How these comparisons are made"
+    method_body: "Every claim about another service comes from that service's own documentation and carries the date we checked it. Where something cannot be evidenced, there is no row in the table. Our own figures come from the same source as the transparency page."
+    method_criteria: "Our criteria"
+    method_open: "Our figures"
+table:
+    section_title: "Feature by feature"
+    caption: "Feature comparison between Endlech.lu and %brand%"
+    col_feature: "Feature"
+    col_own: "Endlech.lu"
+    col_theirs: "%brand%"
+verdict:
+    "yes": "Yes"
+    "no": "No"
+    partial: "Partly"
+group:
+    accessibility_data: "Accessibility data"
+    provenance: "Where the data comes from"
+    coverage: "Coverage and currency"
+    openness: "Openness and business model"
+sources:
+    ref: "Source %ref%"
+    title: "Sources"
+    intro: "All statements about %brand% come from its own documentation."
+    checked_on: "checked on %date%"
+fit:
+    own_title: "Endlech.lu fits if …"
+    theirs_title: "%brand% fits if …"
+    coexist: "The two do not rule each other out — most people use more than one tool anyway."
+advantages:
+    title: "When %brand% is the better choice"
+faq:
+    title: "Common questions"
+cta:
+    title: "See for yourself"
+    body: "Fourteen filters, twelve cantons, every detail there to read."
+    button: "Search restaurants"
+breadcrumb:
+    label: "You are here"
+cross:
+    title: "More comparisons"
+legal:
+    trademarks: "All trademarks named belong to their respective owners. Endlech.lu is not affiliated with any of them."
+    correction: "Something no longer accurate? Write to us — the contact details are in the legal notice."
+    correction_link: "To the legal notice"
+
+row:
+    step_free_entrance:
+        label: "Step-free entrance"
+        own: "recorded as a feature, filterable on its own"
+    accessible_toilet:
+        label: "Accessible toilet"
+        own: "recorded as a feature, filterable on its own"
+    disabled_parking:
+        label: "Accessible parking space"
+        own: "recorded as a feature, filterable on its own"
+    door_width_cm:
+        label: "Door width in centimetres"
+        own: "recorded as a number where measured — 90 cm is the benchmark"
+    table_spacing_cm:
+        label: "Space between tables in centimetres"
+        own: "recorded as a number where measured — 90 cm is the benchmark"
+    assistance_dogs:
+        label: "Assistance dogs welcome"
+        own: "recorded as a feature, filterable on its own"
+    bright_lighting:
+        label: "Bright lighting"
+        own: "recorded as a feature, filterable on its own"
+    changing_table:
+        label: "Baby changing table"
+        own: "recorded as a feature, filterable on its own"
+    filterable:
+        label: "Filterable by individual feature"
+        own: "fourteen filters, combined freely"
+    criteria_published:
+        label: "Criteria publicly documented"
+        own: "on the criteria page, scoring formula included"
+    editorial_review:
+        label: "Reviewed before publication"
+        own: "every submission is checked before it appears"
+    onsite_check:
+        label: "Checked on site"
+        own: "venues we visited carry a verification mark"
+    venues_luxembourg:
+        label: "Venues listed in Luxembourg"
+        own: "%figure% venues, Luxembourg only"
+    worldwide:
+        label: "Available worldwide"
+        own: "Luxembourg only, deliberately"
+    opening_hours:
+        label: "Opening hours"
+        own: "several time slots per day, an “open now” filter"
+    route_planning:
+        label: "Directions to the venue"
+        own: "only nearby public transport stops"
+    open_dataset:
+        label: "Dataset free to download"
+        own: "CSV and JSON under CC BY 4.0, no sign-up"
+    open_source:
+        label: "Source code open"
+        own: "all of it on GitHub, MIT licence"
+    paid_placement:
+        label: "Paid placement available"
+        own: "visibility is not for sale"
+    own_figures_public:
+        label: "Own figures published"
+        own: "listings, coverage and finances on the transparency page"
+    luxembourgish:
+        label: "Available in Luxembourgish"
+        own: "yes — Luxembourgish is the default language"
+
+page:
+    google_maps:
+        meta_title: "Endlech.lu vs Google Maps — what the difference is"
+        meta_description: "Google Maps carries five wheelchair attributes as yes or no. Endlech.lu records door width and table spacing in centimetres. Every claim with a source and a date."
+        heading: "Endlech.lu vs Google Maps"
+        subheading: "Five yes-or-no attributes against measured centimetres"
+        fit_own: "you need to know how wide the door actually is, whether there is room between the tables and whether an assistance dog is welcome — and you are looking in Luxembourg."
+        fit_theirs: "you need directions, current opening hours, reviews and photos — or if you are looking anywhere else in the world."
+        note:
+            step_free_entrance: "attribute “wheelchair-accessible entrance”, yes or no"
+            accessible_toilet: "attribute “wheelchair-accessible restroom”, yes or no"
+            disabled_parking: "attribute “wheelchair-accessible parking”, yes or no"
+            door_width_cm: "one metre is the threshold for a yes — the measured value is not stored"
+            table_spacing_cm: "attribute “wheelchair-accessible seating”, without a measurement"
+            assistance_dogs: "the five attributes cover wheelchair access only"
+            bright_lighting: "not among the accessibility attributes"
+            changing_table: "not among the accessibility attributes"
+            filterable: "the “emphasize accessibility info” setting marks places but does not filter the results — and it works in certain countries only"
+            criteria_published: "the criteria for each attribute are in the help pages, measurement included"
+            editorial_review: "edits are reviewed automatically, usually in about ten minutes"
+            onsite_check: "no on-site check is provided for"
+            venues_luxembourg: "250 million places worldwide; Google gives no figure for Luxembourg"
+            worldwide: "220 countries and territories"
+            opening_hours: "from owner input, user reports and licensed content"
+            route_planning: "on foot, by car and by public transport"
+            open_dataset: "the Places API policy forbids storing the content permanently"
+            paid_placement: "ads appear as pins on the map and within search results"
+        advantage:
+            "1": "It gets you there. Endlech.lu shows nearby stops but no route — Google Maps takes you from your front door to the restaurant door, on foot, by car or by public transport."
+            "2": "Google Maps is everywhere. 220 countries and territories, 250 million places. Endlech.lu stops at the border, and it will stay that way."
+            "3": "Reviews, photos and busy times. What other guests wrote and photographed is there — with us it is not."
+            "4": "Opening hours that move. Google pulls them from several sources; in 2025 alone the community suggested 80 million corrections."
+        faq:
+            "1":
+                q: "Does Endlech.lu replace Google Maps?"
+                a: "No, and that is not the aim. Need directions? Use Google Maps. Want to know beforehand whether you can get in? Use us. Most people use both anyway."
+            "2":
+                q: "Why are the Google Maps attributes not enough?"
+                a: "Because “wheelchair-accessible entrance: yes” does not say how wide the door is. One metre may do for a manual chair and not for a powered chair with a headrest. We write down the centimetres where we measured them — and leave the field empty where we did not."
+            "3":
+                q: "Where does your data come from?"
+                a: "From community submissions that are checked before publication, and from our own surveys on site. What we saw ourselves carries a verification mark. What has not been surveyed counts with us as not met — not as present."
+            "4":
+                q: "Why is my restaurant not listed?"
+                a: "Because we are only starting. Google has a twenty-year head start and 250 million places; we have Luxembourg. You can suggest your venue in two minutes — we check the entry before it appears."
+        source:
+            "1": "Google Maps Help: Find wheelchair-accessible places"
+            "2": "Google Business Profile Help: Manage your business attributes"
+            "3": "Google Blog: 20 years of Google Maps"
+            "4": "Google Business Profile Help: Edit your opening hours"
+            "5": "Google Maps Platform: Places API policies"
+            "6": "Google Ads Help: About local search ads"
+    wheelmap:
+        meta_title: "Endlech.lu vs Wheelmap — what the difference is"
+        meta_description: "Wheelmap rates the world with a traffic light and a toilet status. Endlech.lu records eight features and centimetres, for Luxembourg only. Both datasets are open."
+        heading: "Endlech.lu vs Wheelmap"
+        subheading: "One traffic light for the world against eight features for one country"
+        fit_own: "you want to know more than “can I get in” — door width, table spacing, assistance dogs, lighting, opening hours — and you are looking in Luxembourg."
+        fit_theirs: "you are travelling, outside Luxembourg, or looking for something other than a restaurant: a station, a pharmacy, a cinema, a museum."
+        note:
+            step_free_entrance: "the traffic light: green means entrance and all rooms step-free, yellow at most one step up to 7 cm"
+            accessible_toilet: "a separate toilet status, set independently of the traffic light"
+            assistance_dogs: "asked when a new place is added"
+            disabled_parking: "deliberately not shown — it is unclear whether they are private or public"
+            door_width_cm: "90 cm is a criterion for the toilet status, not an input field; door widths end up as free text"
+            table_spacing_cm: "indoors, only step-free access is rated"
+            bright_lighting: "part of the open A11yJSON standard, but not of the map"
+            changing_table: "part of the open A11yJSON standard, but not of the map"
+            filterable: "by traffic-light level and place type; a list view is missing and named as an open item"
+            criteria_published: "the traffic-light criteria including the 7 cm limit are in the FAQ"
+            onsite_check: "the person adding the entry checks on site — a check by the team is not provided for"
+            editorial_review: "no approval step; only the photos are moderated"
+            venues_luxembourg: "over one million rated places worldwide; Wheelmap gives no figure for Luxembourg"
+            worldwide: "worldwide, about a third of rated places outside Germany"
+            opening_hours: "not recorded — each place has the traffic light and the toilet status"
+            luxembourgish: "32 to 33 languages including French; Luxembourgish is not among them"
+            open_dataset: "under ODbL via OpenStreetMap, plus an open interface"
+            open_source: "front end under the MIT licence on GitHub"
+            own_figures_public: "annual figures on the Sozialhelden transparency page"
+        advantage:
+            "1": "Wheelmap works worldwide and for everything. 180 place types in twelve categories — station, pharmacy, cinema, museum. Endlech.lu knows restaurants in Luxembourg and nothing else."
+            "2": "Every rating flows back into OpenStreetMap and is available to everyone there. That is more openness than a dataset of our own can offer."
+            "3": "Contributing needs no account. No sign-up, no waiting for approval — you stand at the door, tap the colour, done."
+            "4": "Over a million rated places and a community going back to 2010, plus apps for iPhone and Android. We are only starting."
+        faq:
+            "1":
+                q: "Is Wheelmap not the same thing as Endlech.lu?"
+                a: "No. Wheelmap answers “can I get in?” — worldwide, for any kind of place, with a traffic light. We answer “what is it like inside?” — for restaurants in Luxembourg, with eight features and centimetres. The traffic light is exactly the right tool for a worldwide overview; it is only too coarse for deciding whether you can go to this restaurant tonight."
+            "2":
+                q: "Why not simply build on Wheelmap?"
+                a: "In part we do: our data is open, as theirs is. But the traffic light has three levels and the 7 cm limit; we need eight individually filterable features, opening hours and measurements. Those fields do not exist there — on Wheelmap, door widths sit in a free-text comment."
+            "3":
+                q: "Wheelmap is non-profit and open too — so where is the difference?"
+                a: "In the depth per place and in the checking. Wheelmap publishes immediately what someone enters; with us every submission is looked at before it appears, and what we checked ourselves carries a mark. That is slower and covers less. Both are a choice, not a superiority."
+            "4":
+                q: "Which of the two should I use?"
+                a: "Both. Wheelmap for the overview and for everything outside Luxembourg, us for the detail beforehand. We recommend Wheelmap without reservation — the Sozialhelden have been doing this since 2010, and they do it well."
+        source:
+            "1": "Wheelmap: frequently asked questions"
+            "2": "A11yJSON: the Sozialhelden open data standard"
+            "3": "Wheelmap: press information (as of October 2024)"
+            "4": "About Wheelmap"
+            "5": "Wheelmap front end on GitHub"
+            "6": "Sozialhelden: transparency"
+    tripadvisor:
+        meta_title: "Endlech.lu vs TripAdvisor — what the difference is"
+        meta_description: "TripAdvisor carries accessibility as one tick between “Television” and “Wine and Beer”. Endlech.lu records eight features and centimetres. Every claim sourced."
+        heading: "Endlech.lu vs TripAdvisor"
+        subheading: "One tick in an amenities list against eight checked features"
+        fit_own: "you need to know before setting off whether you can get in, whether the toilet is reachable and whether an assistance dog is welcome — and you are looking in Luxembourg."
+        fit_theirs: "you want to know whether the food is any good: reviews, photos, price level, what other guests experienced."
+        note:
+            step_free_entrance: "one tick “wheelchair accessible” in the amenities list, with no indication of what it refers to"
+            accessible_toilet: "accommodation gets an “Accessibility” category; restaurants only get “Cuisines & Amenities”"
+            disabled_parking: "not among the restaurant amenities"
+            door_width_cm: "no measurement anywhere — the attribute is binary"
+            table_spacing_cm: "no measurement anywhere — the attribute is binary"
+            assistance_dogs: "not among the restaurant amenities"
+            bright_lighting: "not among the restaurant amenities"
+            changing_table: "not among the restaurant amenities"
+            filterable: "a filter exists but appears only where the attribute is locally common, and cannot be shared as a link"
+            criteria_published: "no help article explains what the tick means"
+            editorial_review: "the business sets the tick itself"
+            onsite_check: "checked only once guests object — then ticking the box again suffices"
+            venues_luxembourg: "over nine million places and more than a billion reviews worldwide"
+            worldwide: "more than 40 countries, over 20 languages"
+            luxembourgish: "the help centre comes in 22 language versions; Luxembourgish is not one of them"
+            open_dataset: "storing, copying and indexing the content are contractually forbidden; access is billed per record"
+            paid_placement: "“Tripadvisor Ads” are a separate advertising product for restaurants, billed per click"
+        advantage:
+            "1": "Over a billion reviews. If you want to know how the food and the service are, TripAdvisor is unbeatable — we have nothing at all on that."
+            "2": "Photos from guests, not from the house. Thousands of shots showing what it really looks like."
+            "3": "More than 40 countries and over 20 languages. For planning a holiday it is the right place; we stop at the Luxembourg border."
+            "4": "Finding a restaurant that has not made it onto our list yet: with over nine million places recorded, the odds are far better there."
+        faq:
+            "1":
+                q: "Does Endlech.lu replace TripAdvisor?"
+                a: "No. The two answer different questions. TripAdvisor tells you whether the food is good. We tell you whether you can get to the table. Anyone who wants both needs both."
+            "2":
+                q: "TripAdvisor has “wheelchair accessible” too — is that not enough?"
+                a: "It is exactly one tick, and it sits in the same list as “Television” and “Wine and Beer”. It does not say whether the door is wide enough, whether the toilet is reachable, whether there is a step. And it knows no “no” and no “don’t know” — only set or not set."
+            "3":
+                q: "Who checks the information there?"
+                a: "The business sets the tick itself. If guests object in their reviews, TripAdvisor removes the amenity — and the business can set it again afterwards. A site visit or any evidence is not provided for."
+            "4":
+                q: "Why not simply take the data from there?"
+                a: "Because we would not be allowed to. The terms expressly forbid storing, copying and indexing the content, and access is billed per record. Our dataset, by contrast, is there to download under CC BY 4.0."
+        source:
+            "1": "TripAdvisor Help: Updating my business amenities"
+            "2": "TripAdvisor restaurant search, “Features” filter group"
+            "3": "TripAdvisor Annual Report (Form 10-K, financial year 2025)"
+            "4": "TripAdvisor Help Centre: language versions"
+            "5": "Tripadvisor Content API: caching policy"
+            "6": "TripAdvisor Help: Tripadvisor Ads for Restaurants"

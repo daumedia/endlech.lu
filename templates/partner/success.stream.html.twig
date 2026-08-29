@@ -1,0 +1,13 @@
+{#
+    Turbo-Stream: ersetzt nur das Formular, statt die ganze Seite neu zu laden.
+    Kein <turbo-frame> – "replace" adressiert eine gewöhnliche DOM-id; ein Frame
+    würde die Navigations-Semantik für alles darin ändern, ohne Nutzen.
+
+    Ohne JavaScript wird dieser Zweig nie erreicht: Der Controller liefert dann
+    einen Redirect mit Flash.
+#}
+<turbo-stream action="replace" target="partner-waitlist-form">
+    <template>
+        {{ include('partner/_success.html.twig', {entry: entry}) }}
+    </template>
+</turbo-stream>

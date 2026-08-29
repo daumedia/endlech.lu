@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -10,7 +12,17 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-#[UniqueEntity(fields: ['email'], message: 'Diese E-Mail-Adresse ist bereits registriert.')]
+/**
+ * ⚠ BF-09: Die Eindeutigkeitsprüfung läuft in der Gruppe `strict` und NICHT in
+ * `Default`. Grund ist die Anti-Enumeration des Registrierformulars: Eine Meldung
+ * „Diese Adresse wird bereits verwendet" verrät, wer hier ein Konto hat — bei
+ * einer Barrierefreiheitsplattform eine Angabe, die niemanden etwas angeht. Die
+ * API macht es seit jeher richtig; der Browser-Weg zog erst jetzt nach.
+ *
+ * Wo die Auskunft unbedenklich ist — im Profil, wo der Nutzer sein eigenes Konto
+ * bearbeitet —, wird die Gruppe ausdrücklich angefordert.
+ */
+#[UniqueEntity(fields: ['email'], message: 'user.email_unique', groups: ['strict'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -40,8 +52,58 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $verificationTokenExpiresAt = null;
 
+    /**
+     * Eine gewünschte, noch nicht bestätigte E-Mail-Adresse.
+     *
+     * Bewusst getrennt von $email: Wäre die Änderung sofort wirksam, genügte eine
+     * gekaperte Sitzung, um ein Konto dauerhaft zu übernehmen – der rechtmäßige
+     * Inhaber käme nicht zurück, weil es kein Passwort-Zurücksetzen gibt. Die neue
+     * Adresse wandert deshalb erst hierher und wird bei der Bestätigung getauscht.
+     */
+    #[ORM\Column(length: 180, nullable: true)]
+    private ?string $pendingEmail = null;
+
+    #[ORM\Column(length: 64, nullable: true)]
+    private ?string $pendingEmailToken = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $pendingEmailTokenExpiresAt = null;
+
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $avatarFilename = null;
+
+    /**
+     * Token zum Zurücksetzen des Passworts (Feature 01).
+     *
+     * ⚠ Kürzere Frist als bei der Registrierung (eine Stunde statt 24): Wer sein
+     * Passwort zurücksetzt, sitzt vor dem Postfach. Und der Token ist mächtiger —
+     * er öffnet ein bestehendes Konto, während der Registrierungstoken nur eines
+     * bestätigt, das ohnehin dem Aufrufer gehört.
+     */
+    #[ORM\Column(length: 64, nullable: true)]
+    private ?string $passwordResetToken = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $passwordResetTokenExpiresAt = null;
+
+    /**
+     * Kennung, unter der dieses Konto gegenüber Passkeys auftritt (WebAuthn user handle).
+     *
+     * Bewusst nicht die Datenbank-ID: Der Wert liegt dauerhaft auf dem Gerät des
+     * Nutzers und wandert bei jeder Anmeldung mit. Eine fortlaufende Zahl gäbe
+     * dort die Nutzerzahl preis und verknüpfte ein fremdverwahrtes Datum fest
+     * mit der internen Identität.
+     *
+     * Nullable, damit Bestandskonten ohne Datenmigration auskommen – der Wert
+     * entsteht erst beim ersten Passkey.
+     */
+    #[ORM\Column(length: 64, nullable: true, unique: true)]
+    private ?string $webauthnHandle = null;
+
+    /** @var Collection<int, WebauthnCredential> */
+    #[ORM\OneToMany(targetEntity: WebauthnCredential::class, mappedBy: 'user', orphanRemoval: true)]
+    #[ORM\OrderBy(['createdAt' => 'DESC'])]
+    private Collection $passkeys;
 
     #[ORM\Column]
     private \DateTimeImmutable $createdAt;
@@ -49,6 +111,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
+        $this->passkeys = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -171,6 +234,92 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->verificationToken;
     }
 
+    /**
+     * Erzeugt einen Token zum Zurücksetzen und gibt ihn zurück.
+     */
+    public function generatePasswordResetToken(): string
+    {
+        $this->passwordResetToken = bin2hex(random_bytes(32));
+        $this->passwordResetTokenExpiresAt = new \DateTimeImmutable('+1 hour');
+
+        return $this->passwordResetToken;
+    }
+
+    public function getPasswordResetToken(): ?string
+    {
+        return $this->passwordResetToken;
+    }
+
+    public function isPasswordResetTokenExpired(): bool
+    {
+        return null === $this->passwordResetTokenExpiresAt
+            || $this->passwordResetTokenExpiresAt < new \DateTimeImmutable();
+    }
+
+    /**
+     * Verbraucht den Token — ein zweiter Aufruf desselben Links läuft ins Leere.
+     */
+    public function clearPasswordResetToken(): static
+    {
+        $this->passwordResetToken = null;
+        $this->passwordResetTokenExpiresAt = null;
+
+        return $this;
+    }
+
+    public function getPendingEmail(): ?string
+    {
+        return $this->pendingEmail;
+    }
+
+    /**
+     * Merkt eine gewünschte Adresse vor und gibt den Bestätigungstoken zurück.
+     *
+     * Dieselbe Frist wie bei der Registrierung (24 Stunden) und dieselbe
+     * Token-Länge – ein zweites Verfahren daneben wäre eine zweite Fehlerquelle.
+     */
+    public function requestEmailChange(string $email): string
+    {
+        $this->pendingEmail = $email;
+        $this->pendingEmailToken = bin2hex(random_bytes(32));
+        $this->pendingEmailTokenExpiresAt = new \DateTimeImmutable('+24 hours');
+
+        return $this->pendingEmailToken;
+    }
+
+    public function getPendingEmailToken(): ?string
+    {
+        return $this->pendingEmailToken;
+    }
+
+    public function isPendingEmailTokenExpired(): bool
+    {
+        if ($this->pendingEmailTokenExpiresAt === null) {
+            return true;
+        }
+
+        return $this->pendingEmailTokenExpiresAt < new \DateTimeImmutable();
+    }
+
+    /**
+     * Übernimmt die vorgemerkte Adresse und räumt den Vorgang ab.
+     */
+    public function confirmEmailChange(): void
+    {
+        if ($this->pendingEmail !== null) {
+            $this->email = $this->pendingEmail;
+        }
+
+        $this->clearPendingEmail();
+    }
+
+    public function clearPendingEmail(): void
+    {
+        $this->pendingEmail = null;
+        $this->pendingEmailToken = null;
+        $this->pendingEmailTokenExpiresAt = null;
+    }
+
     public function getAvatarFilename(): ?string
     {
         return $this->avatarFilename;
@@ -191,5 +340,53 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getCreatedAt(): \DateTimeImmutable
     {
         return $this->createdAt;
+    }
+
+    public function getWebauthnHandle(): ?string
+    {
+        return $this->webauthnHandle;
+    }
+
+    /**
+     * Erzeugt den WebAuthn-Handle beim ersten Passkey und gibt ihn danach unverändert zurück.
+     *
+     * 16 Zufallsbytes, nicht 32 wie bei generateVerificationToken(): Als Hex sind
+     * das 32 Zeichen, und PublicKeyCredentialUserEntity lässt für die Kennung
+     * höchstens 64 Byte zu. Ein 64-Zeichen-Handle läge exakt auf der Grenze.
+     */
+    public function obtainWebauthnHandle(): string
+    {
+        if ($this->webauthnHandle === null) {
+            $this->webauthnHandle = bin2hex(random_bytes(16));
+        }
+
+        return $this->webauthnHandle;
+    }
+
+    /**
+     * @return Collection<int, WebauthnCredential>
+     */
+    public function getPasskeys(): Collection
+    {
+        return $this->passkeys;
+    }
+
+    public function addPasskey(WebauthnCredential $passkey): static
+    {
+        if (!$this->passkeys->contains($passkey)) {
+            $this->passkeys->add($passkey);
+            $passkey->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePasskey(WebauthnCredential $passkey): static
+    {
+        if ($this->passkeys->removeElement($passkey) && $passkey->getUser() === $this) {
+            $passkey->setUser(null);
+        }
+
+        return $this;
     }
 }

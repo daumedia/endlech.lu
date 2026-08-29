@@ -1,0 +1,17 @@
+{% extends 'email/base.html.twig' %}
+
+{% block title %}{{ 'email.account_deleted_title'|trans }}{% endblock %}
+
+{% block body %}
+    <h2 style="margin: 0 0 16px; color: #111827; font-size: 20px; font-weight: 700;">
+        {{ 'email.account_deleted_greeting'|trans({'%name%': name}) }}
+    </h2>
+
+    <p style="margin: 0 0 16px; color: #6b7280; font-size: 14px; line-height: 1.6;">
+        {{ 'email.account_deleted_text'|trans }}
+    </p>
+
+    <p style="margin: 0; color: #6b7280; font-size: 13px; line-height: 1.6;">
+        {{ 'email.account_deleted_kept'|trans }}
+    </p>
+{% endblock %}

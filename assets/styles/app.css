@@ -1,5 +1,48 @@
-@import "tailwindcss";
-@source not "../../public";
+@import "tailwindcss" source(none);
+
+/* Positivliste statt Ausschlussliste.
+   Tailwind v4 scannt ohne `source(none)` das gesamte Projekt und kann eine als
+   Prosa zitierte Klassenkette nicht von einer verwendeten unterscheiden. Ein
+   Ausschluss einzelner Verzeichnisse greift zu kurz: Auch CHANGELOG.md, README.md
+   und CLAUDE.md nennen Klassennamen – jede Datei, in der jemand über die
+   Oberfläche schreibt, verändert sonst den CSS-Hash und blockt `verify-assets`.
+   Deshalb hier ausdrücklich nur die drei Orte, an denen Klassen wirklich
+   entstehen:
+     templates/  Twig-Vorlagen
+     assets/     Stimulus-Controller setzen Klassen zur Laufzeit (classList.add)
+     src/        FormTypes tragen Klassenketten in 'attr' (z. B. OpeningHourType) */
+@source "../../templates";
+@source "../../assets";
+@source "../../src";
+
+/* Globaler Fokus-Fallback (WCAG 2.4.7). Greift bei Tastaturfokus für jedes
+   Element, das keine eigene Fokus-Utility trägt — insbesondere die Seiten unter
+   home/, about/ und community/ sowie die Footer-Links, die bisher nur den auf
+   farbigem Grund kaum sichtbaren Browser-Default zeigten.
+
+   Eine echte `outline`, kein box-shadow-Ring: Ringe verschwinden im Windows-
+   Kontrastmodus (AK-04). cyan-700 kontrastiert gegen den weißen/gray-50-Grund
+   der meisten Seiten; Aktionen auf den farbigen Verlaufsbändern tragen ihre
+   eigene `focus:outline-white`-Utility, die diesen Fallback durch höhere
+   Spezifität überschreibt (AK-03). */
+:focus-visible {
+    outline: 2px solid #0e7490; /* cyan-700 */
+    outline-offset: 2px;
+}
+
+/* Bewegung reduzieren (WCAG 2.3.3 / 2.2.2). Der Netzfang unter der projektweiten
+   `motion-safe:`-Konvention: schaltet Übergänge, Animationen und sanftes Scrollen
+   flächig ab, wenn das Betriebssystem es verlangt (AK-26, AK-27). */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
 
 /* PWA: iOS-Auto-Zoom beim Fokus auf Formularfelder verhindern (Issue #83).
    Safari zoomt, sobald die Schriftgröße eines Felds < 16px ist. */
@@ -8,6 +51,17 @@
     select,
     textarea {
         font-size: 16px;
+    }
+}
+
+/* Partner-Seite: sanftes Scrollen vom Hero-CTA zum Wartelisten-Formular.
+   Bewusst `no-preference` statt eines `reduce`-Overrides – Umgebungen, die die
+   Media Query gar nicht melden, bekommen so den ruhigen Default (WCAG 2.3.3).
+   Per :has() auf diese eine Seite begrenzt, statt das Scrollverhalten der
+   gesamten Plattform zu ändern. */
+@media (prefers-reduced-motion: no-preference) {
+    html:has(#warteliste) {
+        scroll-behavior: smooth;
     }
 }
 
@@ -23,8 +77,10 @@
 
 .ts-wrapper.focus .ts-control {
     border-color: rgb(168 85 247);
-    box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.3);
-    outline: none;
+    /* Echte outline statt box-shadow-Ring: bleibt im Windows-Kontrastmodus
+       sichtbar (AK-40). Nirgends `outline: none`. */
+    outline: 2px solid rgb(126 34 206); /* purple-700 */
+    outline-offset: 2px;
 }
 
 .ts-wrapper .ts-control .item {
@@ -63,4 +119,50 @@
     padding: 0.5rem 1rem;
     font-size: 0.875rem;
     color: rgb(107 33 168);
+}
+
+/* Druckansicht.
+
+   Der Anlass ist /open: Wer vor einem Fördergespräch die Zahlen braucht,
+   speichert die Seite als PDF. Navigation, Footer, Bottom-Nav und Cookie-Banner
+   sind über `print:hidden` im Layout ausgeblendet – hier steht nur, was sich
+   mit Utility-Klassen nicht ausdrücken lässt. */
+@media print {
+    /* Farbflächen erhalten: Balken und Diagramme sind hier die Daten, nicht
+       Dekoration. Ohne diese Zeile druckt der Browser sie standardmäßig weg. */
+    * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    /* Verlaufsbänder kosten Toner und tragen auf Papier nichts bei.
+       Die Nachfahren müssen mit: Sie tragen `text-white` und blieben sonst
+       weiß auf weißem Papier – also unsichtbar. */
+    section.bg-linear-to-r,
+    section.bg-linear-to-r * {
+        background-image: none !important;
+        background-color: transparent !important;
+        color: #111827 !important;
+        box-shadow: none !important;
+    }
+
+    /* Zugeklappte `<details>` beim Drucken öffnen: Die Tabellenansicht der
+       Diagramme ist auf Papier die einzige Fassung, die alle Werte trägt –
+       zugeklappt ginge sie ersatzlos verloren.
+       `content-visibility` ist nötig, weil Chromium den geschlossenen Zustand
+       darüber steuert und nicht über `display` allein. */
+    details > summary {
+        display: none;
+    }
+
+    details > :not(summary) {
+        display: block !important;
+        content-visibility: visible !important;
+    }
+
+    /* Diagramme und Tabellen nicht über eine Seitengrenze zerreißen. */
+    figure,
+    table {
+        break-inside: avoid;
+    }
 }

@@ -19,20 +19,69 @@ class RestaurantRepository extends ServiceEntityRepository
     }
 
     /**
+     * Die bestbewerteten Häuser für die Startseite.
+     *
+     * ⚠️ **`Paginator` ist hier Pflicht, nicht Bequemlichkeit.** Die beiden
+     * `addSelect()` holen Öffnungszeiten und Küchen mit (gegen N+1) — dadurch
+     * erzeugt jedes Restaurant so viele SQL-Zeilen, wie es Kombinationen aus
+     * beidem hat. `setMaxResults()` begrenzt aber die **Zeilen**, nicht die
+     * Entities: Das bestbewertete Haus allein brachte 14 Zeilen mit, und
+     * `findTopRated(6)` lieferte dadurch **ein** Restaurant statt sechs
+     * (QA B12, BF-64). Der zweite Parameter `$fetchJoinCollection` ist genau
+     * für diesen Fall da.
+     *
      * @return Restaurant[]
      */
     public function findTopRated(int $limit = 6): array
     {
-        return $this->createQueryBuilder('r')
+        $qb = $this->createQueryBuilder('r')
             ->leftJoin('r.openingHours', 'oh')
             ->addSelect('oh')
             ->leftJoin('r.cuisines', 'c')
             ->addSelect('c')
             ->orderBy('r.rating', 'DESC')
             ->addOrderBy('r.name', 'ASC')
-            ->setMaxResults($limit)
-            ->getQuery()
-            ->getResult();
+            ->setMaxResults($limit);
+
+        return iterator_to_array(new Paginator($qb->getQuery(), true), false);
+    }
+
+    /**
+     * Maskiert die LIKE-Platzhalter `%` und `_`.
+     *
+     * Das Ausrufezeichen als Maskierzeichen statt des Backslashes: In MySQL hängt
+     * die Bedeutung des Backslashes in Zeichenketten am `NO_BACKSLASH_ESCAPES`-Modus,
+     * das ESCAPE-Zeichen dagegen steht ausdrücklich in der Abfrage.
+     */
+    private static function escapeLike(string $wert): string
+    {
+        return str_replace(['!', '%', '_'], ['!!', '!%', '!_'], $wert);
+    }
+
+    /**
+     * Verwaltungsliste: neueste zuerst, blätterbar, optional nach Name gefiltert.
+     *
+     * ⚠ BF-52: Vorher `findBy([], ['createdAt' => 'DESC'])` — der gesamte Bestand,
+     * mit allen Bildern und Beziehungen, bei jedem Aufruf. Die öffentliche Liste
+     * blättert seit jeher zu sechst, die API deckelt bei 50; ausgerechnet der
+     * Bereich, der jeden Datensatz mit Vorschaubild rendert, lud alles.
+     *
+     * @return Paginator<Restaurant>
+     */
+    public function findForAdmin(int $page, int $limit, string $suche = ''): Paginator
+    {
+        $qb = $this->createQueryBuilder('r')
+            ->orderBy('r.createdAt', 'DESC')
+            ->setFirstResult(($page - 1) * $limit)
+            ->setMaxResults($limit);
+
+        if ('' !== trim($suche)) {
+            // Dieselbe Maskierung wie im öffentlichen Ortsfilter (BF-59).
+            $qb->andWhere('r.name LIKE :suche ESCAPE \'!\' OR r.city LIKE :suche ESCAPE \'!\'')
+                ->setParameter('suche', '%'.self::escapeLike(trim($suche)).'%');
+        }
+
+        return new Paginator($qb->getQuery(), true);
     }
 
     public function findPaginated(string $sort = 'rating', int $page = 1, int $limit = 6, array $filters = []): Paginator
@@ -94,7 +143,12 @@ class RestaurantRepository extends ServiceEntityRepository
             $qb->andWhere('r.isHalal = true');
         }
         if (!empty($filters['city'])) {
-            $qb->andWhere('r.city LIKE :city')->setParameter('city', '%'.$filters['city'].'%');
+            // ⚠ BF-59: `%` und `_` sind LIKE-Platzhalter und müssen maskiert werden.
+            // `?city=%` lieferte sonst ALLE Restaurants statt keiner — der Filter
+            // fiel lautlos weg. Keine Injection (der Parameter ist gebunden), aber
+            // ein Filter, der bei bestimmten Eingaben das Gegenteil tut.
+            $qb->andWhere('r.city LIKE :city ESCAPE \'!\'')
+                ->setParameter('city', '%'.self::escapeLike($filters['city']).'%');
         }
         if (!empty($filters['cuisine'])) {
             $qb->innerJoin('r.cuisines', 'c_filter')
@@ -162,6 +216,70 @@ class RestaurantRepository extends ServiceEntityRepository
             ->where('r.submittedBy = :user')
             ->setParameter('user', $user)
             ->orderBy('r.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Rohdaten für die Open-Startup-Auswertung: nur die Spalten, die in
+     * Abdeckung, Punktzahl und Impact einfließen, als Array statt als Entity.
+     *
+     * Bewusst keine hydrierten Objekte – die Auswertung liest jede Zeile genau
+     * einmal, ein UnitOfWork mit hunderten Entities wäre reiner Ballast. Der
+     * Zeitfilter macht die Methode zugleich für nachträglich erzeugte
+     * Monats-Snapshots brauchbar.
+     *
+     * @return list<array{
+     *     city: string,
+     *     isVerified: bool,
+     *     isWheelchairAccessible: bool,
+     *     hasAccessibleToilet: bool,
+     *     allowsAssistanceDogs: bool,
+     *     hasBrightLighting: bool,
+     *     hasChangingTable: bool,
+     *     hasDisabledParking: bool,
+     *     doorWidthCm: int|null,
+     *     tableSpacingCm: int|null
+     * }>
+     */
+    public function findMetricRows(?\DateTimeImmutable $createdUntil = null): array
+    {
+        $qb = $this->createQueryBuilder('r')
+            ->select(
+                'r.city AS city',
+                'r.isVerified AS isVerified',
+                'r.isWheelchairAccessible AS isWheelchairAccessible',
+                'r.hasAccessibleToilet AS hasAccessibleToilet',
+                'r.allowsAssistanceDogs AS allowsAssistanceDogs',
+                'r.hasBrightLighting AS hasBrightLighting',
+                'r.hasChangingTable AS hasChangingTable',
+                'r.hasDisabledParking AS hasDisabledParking',
+                'r.doorWidthCm AS doorWidthCm',
+                'r.tableSpacingCm AS tableSpacingCm',
+                // BF-67: Ohne dieses Feld ließe sich „nicht bewertet" nicht von
+                // „nichts vorhanden" unterscheiden — und genau daran hing, dass ein
+                // leerer Eintrag die veröffentlichte Durchschnittspunktzahl senkte.
+                'r.assessedFeatures AS assessedFeatures',
+            );
+
+        if ($createdUntil) {
+            $qb->andWhere('r.createdAt <= :until')->setParameter('until', $createdUntil);
+        }
+
+        return $qb->getQuery()->getArrayResult();
+    }
+
+    /**
+     * Vollständiger Datensatz für den offenen CSV-/JSON-Export unter CC-BY.
+     *
+     * @return Restaurant[]
+     */
+    public function findAllForExport(): array
+    {
+        return $this->createQueryBuilder('r')
+            ->leftJoin('r.cuisines', 'c')
+            ->addSelect('c')
+            ->orderBy('r.name', 'ASC')
             ->getQuery()
             ->getResult();
     }

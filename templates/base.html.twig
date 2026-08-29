@@ -5,6 +5,13 @@
     <title>{% block title %}Endlech.lu{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
+    {# Kurzbeschreibung und kanonische Adresse (Feature 03).
+       Standardmäßig leer — bislang füllt sie nur der Vergleichsbereich. Für alle
+       übrigen Seiten nachzurüsten wäre ein eigenes Feature; die Blöcke hier
+       ändern an keiner bestehenden Seite etwas. #}
+    {% block meta_description %}{% endblock %}
+    {% block canonical %}{% endblock %}
+
     {# PWA: Manifest, Theme-Farbe & iOS-spezifische Tags (Issue #83) #}
     <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
     <meta name="theme-color" content="#0891b2">
@@ -38,8 +45,21 @@
 </head>
 <body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen font-sans">
 
-{# === HEADER / NAVIGATION === #}
-<header class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+{# Skip-Link (WCAG 2.4.1 Bypass Blocks): das erste fokussierbare Element der
+   Seite. Optisch versteckt (sr-only), erscheint erst bei Tastaturfokus und
+   springt hinter die Navigation zu <main id="hauptinhalt">. #}
+<a href="#hauptinhalt"
+   class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-white focus:text-cyan-800 focus:font-semibold focus:shadow-lg focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700">
+    {{ 'nav.skip_to_content'|trans }}
+</a>
+
+{# === HEADER / NAVIGATION ===
+   print:hidden auf Header, Footer, Bottom-Nav und Cookie-Banner: Gedruckt oder
+   als PDF gespeichert ist Navigation nichts wert, und ein `sticky` Header
+   erscheint sonst auf jeder Papierseite erneut. Angelegt für /open, wo das
+   Speichern als PDF vor Fördergesprächen der erwartete Weg ist – gilt aber für
+   jede Seite, weil es überall dieselbe Verbesserung ist. #}
+<header class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm print:hidden">
     <div class="container mx-auto px-4 h-20 flex items-center justify-between">
 
         {# 1. Logo Bereich #}
@@ -54,24 +74,60 @@
         </a>
 
         {# 2. Desktop Navigation #}
-        <nav class="hidden md:flex items-center space-x-8">
+        <nav class="hidden md:flex items-center space-x-6 lg:space-x-8">
             <a href="{{ path('app_restaurant_index') }}" class="text-gray-600 font-medium hover:text-cyan-600 transition">
                 {{ 'nav.find_restaurants'|trans }}
             </a>
+            <a href="{{ path('community_vorschlagen') }}" class="text-gray-600 font-medium whitespace-nowrap hover:text-cyan-600 transition">
+                {{ 'nav.suggest_restaurant'|trans }}
+            </a>
+            {# Die beiden B2B-Zielgruppen unter einem Punkt.
+               Bewusst <details> statt eines Button-Dropdowns wie beim
+               Sprachumschalter: Das funktioniert ohne JavaScript, ist von Haus
+               aus tastaturbedienbar und meldet seinen Zustand selbst an
+               Screenreader. Der Stimulus-Controller schließt es nur zusätzlich
+               bei Escape oder Klick daneben. #}
+            <details class="relative group" data-controller="nav-dropdown">
+                <summary class="flex items-center gap-1.5 text-gray-600 font-medium cursor-pointer list-none whitespace-nowrap hover:text-cyan-600 transition rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-700 [&::-webkit-details-marker]:hidden">
+                    {{ 'nav.participate'|trans }}
+                    <svg class="w-3.5 h-3.5 motion-safe:transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </summary>
+
+                <div class="absolute left-0 mt-2 w-60 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
+                    {# Jede Zielgruppe hat eine eigene Seite. Die Slugs kommen aus
+                       App\Enum\OrganisationType::slug(). #}
+                    {% for item in [
+                        {href: path('app_partner'), label: 'nav.for_restaurants', emoji: '🍽️'},
+                        {href: path('app_organisations_type', {slug: 'gemeinden'}), label: 'nav.for_communes', emoji: '🏛️'},
+                        {href: path('app_organisations_type', {slug: 'unternehmen'}), label: 'nav.for_companies', emoji: '🏢'},
+                        {href: path('app_organisations_type', {slug: 'vereine'}), label: 'nav.for_associations', emoji: '🤲'}
+                    ] %}
+                        <a href="{{ item.href }}"
+                           class="flex items-center gap-2.5 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-100 hover:text-cyan-700 transition focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-cyan-700">
+                            <span aria-hidden="true">{{ item.emoji }}</span>
+                            {{ item.label|trans }}
+                        </a>
+                    {% endfor %}
+                </div>
+            </details>
+            {# Allgemeine Information ohne Handlungsaufforderung – steht deshalb zuletzt. #}
             <a href="{{ path('app_about') }}" class="text-gray-600 font-medium hover:text-cyan-600 transition">
                 {{ 'nav.about'|trans }}
-            </a>
-            <a href="{{ path('community_vorschlagen') }}" class="text-gray-600 font-medium hover:text-cyan-600 transition">
-                {{ 'nav.suggest_restaurant'|trans }}
             </a>
         </nav>
 
         {# 3. Buttons (Login / Register / Benutzer / Sprache) #}
         <div class="flex items-center gap-4">
-            {# Language Switcher #}
-            <div class="hidden md:block">
-                {% include 'partials/_language_switcher.html.twig' %}
-            </div>
+            {# Sprachumschalter — BF-72: auch auf Mobil sichtbar.
+               Er stand in `hidden md:block` und war damit auf genau dem Gerät
+               unerreichbar, für das diese Anwendung als PWA ausgelegt ist (B25);
+               drei der vier gepflegten Kataloge waren dort nur über die Adresszeile
+               zu erreichen. Nicht in die Bottom-Nav (OF-01): die hat vier Felder
+               und ist für Ziele da, nicht für Einstellungen — der Umschalter gehört
+               dorthin, wo er auf dem Desktop auch steht. #}
+            {% include 'partials/_language_switcher.html.twig' %}
             {% if app.user %}
                 <a href="{{ path('app_profile') }}" class="hidden md:inline-flex items-center gap-2 text-sm text-gray-600 hover:text-purple-600 transition">
                     {% include 'partials/_avatar.html.twig' with {user: app.user, size: 'sm'} %}
@@ -82,9 +138,15 @@
                         {{ 'nav.admin'|trans }}
                     </a>
                 {% endif %}
-                <a href="{{ path('app_logout') }}" class="hidden md:inline-block text-sm font-semibold text-gray-500 hover:text-purple-600">
-                    {{ 'nav.logout'|trans }}
-                </a>
+                {# Formular statt Link: Die Firewall verlangt seit dem QA-Durchlauf zu
+                   B02 ein CSRF-Token beim Abmelden (logout.enable_csrf). Ein <a href>
+                   wäre ein GET und ließe sich von einer fremden Seite auslösen. #}
+                <form method="post" action="{{ path('app_logout') }}" class="hidden md:inline-block">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('logout') }}">
+                    <button type="submit" class="text-sm font-semibold text-gray-500 hover:text-purple-600 cursor-pointer transition">
+                        {{ 'nav.logout'|trans }}
+                    </button>
+                </form>
             {% else %}
                 <a href="{{ path('app_login') }}" class="hidden md:inline-block text-sm font-semibold text-gray-500 hover:text-purple-600">
                     {{ 'nav.login'|trans }}
@@ -104,13 +166,13 @@
 
 {# === HAUPTINHALT (Hier wird index.html.twig reingeladen) === #}
 {# pb-16 md:pb-0: auf Mobil Platz für die fixe Bottom-Nav schaffen #}
-<main class="flex-grow pb-16 md:pb-0">
+<main id="hauptinhalt" tabindex="-1" class="flex-grow pb-16 md:pb-0 print:pb-0 scroll-mt-24">
     {% block body %}{% endblock %}
 </main>
 
 {# === FOOTER === #}
-<footer class="bg-gray-900 text-gray-300 py-12 mt-12">
-    <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 text-sm">
+<footer class="bg-gray-900 text-gray-300 py-12 mt-12 print:hidden">
+    <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-sm">
 
         {# Spalte 1 #}
         <div>
@@ -130,9 +192,14 @@
         <div>
             <h4 class="text-white font-bold mb-4 uppercase tracking-wider">{{ 'footer.links'|trans }}</h4>
             <ul class="space-y-2">
-                <li><a href="#" class="hover:text-cyan-400 transition">{{ 'footer.search_restaurants'|trans }}</a></li>
+                <li><a href="{{ path('app_restaurant_index') }}" class="hover:text-cyan-400 transition">{{ 'footer.search_restaurants'|trans }}</a></li>
+                <li><a href="{{ path('community_vorschlagen') }}" class="hover:text-cyan-400 transition">{{ 'nav.suggest_restaurant'|trans }}</a></li>
                 <li><a href="{{ path('app_kriterien') }}" class="hover:text-cyan-400 transition">{{ 'footer.accessibility_criteria'|trans }}</a></li>
+                <li><a href="{{ path('app_partner') }}" class="hover:text-cyan-400 transition">{{ 'footer.partner'|trans }}</a></li>
+                <li><a href="{{ path('app_organisations') }}" class="hover:text-cyan-400 transition">{{ 'nav.organisations'|trans }}</a></li>
+                <li><a href="{{ path('app_open') }}" class="hover:text-cyan-400 transition">{{ 'footer.open'|trans }}</a></li>
                 <li><a href="{{ path('app_impressum') }}" class="hover:text-cyan-400 transition">{{ 'footer.legal'|trans }}</a></li>
+                <li><a href="{{ path('app_accessibility') }}" class="hover:text-cyan-400 transition">{{ 'footer.accessibility_statement'|trans }}</a></li>
                 {% if not (app.request.attributes.get('_route') starts with 'admin_') %}
                     <li data-controller="cookie-consent">
                         <button type="button" class="hover:text-cyan-400 transition text-left" data-action="cookie-consent#openSettings">{{ 'cookie.settings'|trans }}</button>
@@ -142,7 +209,31 @@
             </ul>
         </div>
 
-        {# Spalte 3 #}
+        {# Spalte 3 — Vergleiche (Feature 03).
+           Eigene Spalte statt einer zweiten Überschrift in Spalte 2: Die trägt
+           bereits zehn Einträge, und eine elfte Gruppe darunter zöge die Fußzeile
+           schief. #}
+        <div>
+            <h4 class="text-white font-bold mb-4 uppercase tracking-wider">{{ 'footer.comparisons'|trans }}</h4>
+            <ul class="space-y-2">
+                {% for competitor in comparison_competitors() %}
+                    <li>
+                        <a href="{{ path('app_comparison_show', {'slug': competitor.slug}) }}"
+                           class="hover:text-cyan-400 motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-cyan-400">
+                            {{ 'footer.vs'|trans({'%brand%': competitor.brand}) }}
+                        </a>
+                    </li>
+                {% endfor %}
+                <li>
+                    <a href="{{ path('app_comparison_index') }}"
+                       class="hover:text-cyan-400 motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-cyan-400">
+                        {{ 'footer.all_comparisons'|trans }}
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        {# Spalte 4 #}
         <div>
             <h4 class="text-white font-bold mb-4 uppercase tracking-wider">{{ 'footer.contact_title'|trans }}</h4>
             <p>{{ 'footer.help_improve'|trans }}</p>
@@ -150,21 +241,21 @@
         </div>
     </div>
 
-    <div class="border-t border-gray-800 mt-8 pt-8 text-center text-xs text-gray-500">
+    <div class="border-t border-gray-800 mt-8 pt-8 text-center text-xs text-gray-400">
         &copy; {{ 'now'|date('Y') }} Endlech.lu - {{ 'footer.copyright'|trans }}
         <span class="mx-1">&middot;</span>
-        <span class="text-gray-600">v{{ app_version }}</span>
+        <span class="text-gray-400">v{{ app_version }}</span>
     </div>
 </footer>
 
 {# === MOBILE BOTTOM-NAVIGATION (nur öffentliche Seiten) === #}
 {% if not (app.request.attributes.get('_route') starts with 'admin_') %}
-    {% include 'partials/_bottom_nav.html.twig' %}
+    <div class="print:hidden">{% include 'partials/_bottom_nav.html.twig' %}</div>
 {% endif %}
 
 {# === COOKIE-CONSENT-BANNER (nur öffentliche Seiten) === #}
 {% if not (app.request.attributes.get('_route') starts with 'admin_') %}
-    {% include 'partials/_cookie_banner.html.twig' %}
+    <div class="print:hidden">{% include 'partials/_cookie_banner.html.twig' %}</div>
 {% endif %}
 
 </body>

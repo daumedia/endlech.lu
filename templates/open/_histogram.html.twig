@@ -1,0 +1,83 @@
+{# Histogramm der Barrierefreiheits-Punktzahlen.
+
+   Säulen statt der früheren elf gestapelten Querbalken: Die Punktzahl ist eine
+   geordnete Skala, und nur nebeneinander liest man die Form der Verteilung –
+   wo der Gipfel liegt, wo die Ausreißer sitzen – in einem Blick.
+
+   Eine Farbe für alle Säulen. Die Höhe sagt bereits, wie viele es sind; sie
+   zusätzlich über die Farbe zu sagen, verbraucht den einzigen freien Kanal für
+   Information, die schon dasteht. Die frühere Ampel (grün/cyan/bernstein nach
+   Punktzahl) tat genau das – und bernstein lag mit 1,49:1 ohnehin weit unter
+   dem Mindestkontrast.
+
+   Beschriftet wird selektiv: nur die höchsten Säulen tragen ihren Wert. Bei
+   mehreren gleich hohen sind es alle – eine davon herauszugreifen suggerierte,
+   sie sei die höchste. Eine Zahl über jeder Säule wird ohnehin nicht gelesen;
+   die Tabelle darunter trägt den Rest.
+
+   distribution: Array Punktzahl → Anzahl · maxScore #}
+{% set peak = distribution|length ? max(distribution) : 0 %}
+{% set total = distribution|reduce((carry, count) => carry + count, 0) %}
+{% set peakScores = peak > 0 ? distribution|keys|filter(score => distribution[score] == peak) : [] %}
+
+<figure class="mt-5">
+    {# Der Plot ist ausgeblendet: Jede Säule wiederholt nur, was die Tabelle
+       darunter im Klartext sagt. #}
+    {# Die höchste Säule reicht auf 85 % statt 100 %: Darüber liegt der
+       Streifen für das Wertlabel. Ohne die Reserve würde Label plus Säule
+       zusammen höher als der Container und oben herauslaufen. Alle Säulen
+       teilen denselben Faktor, die Verhältnisse bleiben also unberührt. #}
+    <div class="flex items-end gap-0.5 h-40" aria-hidden="true">
+        {% for score, count in distribution %}
+            <div class="flex-1 flex flex-col justify-end h-full" title="{{ 'open.platform.distribution_row'|trans({'%score%': score, '%max%': maxScore}) }}: {{ count }}">
+                {% if score in peakScores %}
+                    <span class="block text-center text-xs font-semibold text-gray-700 mb-1 leading-none">{{ count }}</span>
+                {% endif %}
+                {% if count > 0 %}
+                    {# 4 px runde Datenkante oben, eckig auf der Grundlinie –
+                       die Säule wächst aus der Achse, sie schwebt nicht. #}
+                    <div class="w-full bg-cyan-600 rounded-t-[4px]"
+                         style="height: {{ (count / peak * 85)|round(2) }}%"></div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+
+    {# Achsenband: Grundlinie als durchgehende Haarlinie, eine Stufe vom Grund
+       abgesetzt – nie gestrichelt, das läse sich als Schwellenwert. #}
+    <div class="border-t border-gray-200 pt-1.5 flex gap-0.5" aria-hidden="true">
+        {% for score in distribution|keys %}
+            <span class="flex-1 text-center text-[11px] tabular-nums {{ score in peakScores ? 'font-semibold text-gray-700' : 'text-gray-500' }}">{{ score }}</span>
+        {% endfor %}
+    </div>
+
+    <figcaption class="mt-2 text-xs text-gray-500">
+        {{ 'open.platform.distribution_axis'|trans({'%max%': maxScore}) }}
+    </figcaption>
+
+    <details class="mt-4">
+        <summary class="cursor-pointer text-sm font-semibold text-gray-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600">
+            {{ 'open.platform.distribution_table'|trans }}
+        </summary>
+        <div class="mt-3 overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="text-left text-xs uppercase tracking-wider text-gray-500 border-b border-gray-200">
+                        <th scope="col" class="py-2 pr-4 font-semibold">{{ 'open.platform.score'|trans }}</th>
+                        <th scope="col" class="py-2 pr-4 font-semibold text-right">{{ 'open.platform.restaurants'|trans }}</th>
+                        <th scope="col" class="py-2 font-semibold text-right">{{ 'open.platform.share'|trans }}</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100 text-gray-700">
+                    {% for score, count in distribution %}
+                        <tr>
+                            <th scope="row" class="py-1.5 pr-4 font-medium text-left tabular-nums">{{ score }} / {{ maxScore }}</th>
+                            <td class="py-1.5 pr-4 text-right tabular-nums">{{ count }}</td>
+                            <td class="py-1.5 text-right tabular-nums text-gray-500">{{ (total > 0 ? count / total * 100 : 0)|format_number({fraction_digit: 1}) }} %</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </details>
+</figure>

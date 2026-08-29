@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html lang="{{ app.request.locale }}">
+{# app.request ist null, sobald eine Mail außerhalb eines Requests gerendert
+   wird (Messenger-Worker). Production versendet zwar synchron, ein Worker
+   ließe das Template hier aber ohne den Fallback hart scheitern. #}
+<html lang="{{ app.request ? app.request.locale : 'de' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,7 +32,7 @@
                     {# Footer #}
                     <tr>
                         <td style="padding: 24px 32px; border-top: 1px solid #f3f4f6; text-align: center;">
-                            <p style="margin: 0; color: #9ca3af; font-size: 11px;">
+                            <p style="margin: 0; color: #4b5563; font-size: 11px;">
                                 &copy; {{ 'now'|date('Y') }} Endlech.lu - {{ 'email.footer'|trans }}
                             </p>
                         </td>
