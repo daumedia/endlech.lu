@@ -896,6 +896,13 @@ Defined in `compose.yaml` and `compose.override.yaml`:
 
 The project uses **CalVer** (Calendar Versioning): `vYYYY.MM.DD` (e.g., `v2026.01.13`). See `CHANGELOG.md`.
 
+**Mehrere Releases am selben Tag zählen mit einem Punkt hoch:** `v2026.08.29`,
+`v2026.08.29.1`, `v2026.08.29.2`. Die frühere Buchstabenform (`2026.03.08b` bis `e`)
+ist **Historie und bleibt unangetastet** – sie wird nicht rückwirkend umgeschrieben,
+aber auch nicht fortgeführt. Die Punktform sortiert sich richtig (nach `z` wäre bei
+Buchstaben Schluss, und `b` liest sich nicht als „der erste Nachtrag"). Der erste
+Release eines Tages trägt **kein** Suffix.
+
 **Bei jedem Release müssen vier Stellen mitgezogen werden** – sie liegen auseinander und wurden schon mehrfach vergessen (das README-Badge stand zwei Releases lang auf einer alten Version, der Footer eines):
 
 1. `CHANGELOG.md` – `[Unreleased]`-Abschnitt zu `[YYYY.MM.DD] – Titel` schließen **und** das Version-Badge in Zeile 5.

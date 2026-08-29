@@ -2,12 +2,12 @@
 
 Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
-![Version](https://img.shields.io/badge/version-2026.08.29a-blue)
+![Version](https://img.shields.io/badge/version-2026.08.29.1-blue)
 ![Status](https://img.shields.io/badge/status-beta-green)
 
 ## [Unreleased]
 
-## [2026.08.29a] – Deploy-Fenster, Passkey-Fehlerseite und Worker-Sperre
+## [2026.08.29.1] – Deploy-Fenster, Passkey-Fehlerseite und Worker-Sperre
 
 Drei Nachträge zum Release desselben Tages, alle am Rand des Deploys: Das
 Auslieferungsfenster liefert keine 500er mehr, ein Passkey-Submit ohne Assertion

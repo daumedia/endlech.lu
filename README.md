@@ -2,7 +2,7 @@
 
 An open platform to find and rate accessible restaurants in Luxembourg. Built for inclusion, community, and simplicity.
 
-![Version](https://img.shields.io/badge/version-v2026.08.29a-blue)
+![Version](https://img.shields.io/badge/version-v2026.08.29.1-blue)
 ![Status](https://img.shields.io/badge/status-beta-green)
 
 <div align="center">
