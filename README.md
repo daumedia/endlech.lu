@@ -296,6 +296,35 @@ button to capture one by hand, which is the fastest way to notice the gap.
 A snapshot can only record what is in the database when it runs. Filling in past
 months later gives them today's numbers, not the ones they had.
 
+### Brevo marketing contacts (every 5 minutes)
+
+Feature 04 never calls Brevo from a web request. Consent writes a row into the
+order book (`marketing_contact`); `app:marketing:sync` is what carries it over.
+Same reason as above — production runs `sync://` with no worker, so an
+"asynchronous" message would run inside the request and hang every waitlist
+signup on a third party's availability.
+
+```
+*/5 * * * * /usr/bin/php ~/public_html/bin/console app:marketing:sync --env=prod --no-interaction
+```
+
+⚠ **Run it as the same system user as PHP-FPM** (`nrzwptqsvx`), not the master
+login the hosting panel defaults to. A job running as master fills `var/log` and
+`var/cache` with files the web server cannot write, and the resulting 500 sends
+you looking in the wrong place. Verify with a one-off `id > …/var/cron-whoami.txt`
+before relying on the panel.
+
+The five-minute interval is what makes the 15-minute promise in the spec hold,
+three times over. The command exits non-zero **only** when `BREVO_API_KEY` is
+missing — individual transfer failures are the expected case and get retried on
+the next run, so a single 429 does not turn the cron red every five minutes.
+
+⚠ **Before the first real run:** the five contact attributes must exist in the
+Brevo account (unknown attributes are silently discarded — the sync would report
+success and transfer nothing but the bare address), and both `docs/datenschutz.md`
+and the privacy section on `/legal` must name Brevo as a recipient for marketing
+purposes. No contact goes out before the declaration mentions it.
+
 Error tracking is active on production only. `SENTRY_DSN` must be present in the
 server's `~/public_html/.env.local` **before** the merge — otherwise the deploy
 goes green while Sentry stays silently disabled. Verify afterwards over SSH with

@@ -26,6 +26,24 @@ parameters:
     app.contact_email: '%env(string:default:app.contact_email_fallback:CONTACT_EMAIL)%'
     app.contact_email_fallback: 'info@endlech.lu'
 
+    # --- Brevo · Marketing-Kontakte (Feature 04) ---
+    # string:-Cast wie bei app.mobiliteit_api_key: ein fehlender oder leerer Wert wird
+    # zu '' statt null. Der Sync-Dienst prüft auf den leeren String und bleibt still
+    # aus (AK-47), statt an einem typisierten Konstruktor zu scheitern.
+    app.brevo_api_key: '%env(string:default::BREVO_API_KEY)%'
+    # ⚠ Bewusst string: und NICHT int: – der int:-Prozessor wirft bei einem leeren Wert
+    # („Non-numeric env var"), und genau das sprengte den Container-Build im Regelfall
+    # „Funktion aus". Die Umwandlung nach int gehört in den Sync-Dienst, der ohnehin
+    # prüfen muss, ob eine Liste konfiguriert ist. Leer = keine Listenzuordnung.
+    app.brevo_list_id: '%env(string:default::BREVO_LIST_ID)%'
+    # Bearer-Geheimnis des Webhooks. Leer = der Webhook nimmt nichts an (AK-46).
+    app.brevo_webhook_token: '%env(string:default::BREVO_WEBHOOK_TOKEN)%'
+    # Deckel und Mindestabstand des Sync-Laufs (Entwurf, „Missbrauchsschutz"): höchstens
+    # 200 Kontakte je Lauf, mindestens 200 ms zwischen zwei Aufrufen an Brevo. Was nicht
+    # hineinpasst, bleibt im Auftragsbuch und geht beim nächsten Lauf hinaus.
+    app.brevo_sync_batch: 200
+    app.brevo_sync_delay_ms: 200
+
     # --- Barrierefreiheitserklärung (Feature 02) ---
     # Die Werte stammen aus dem Prüflauf (Konformitäts-Prüfmatrix, docs/).
     # Bis zur ersten Prüfung ist tested_on leer → die Seite weist den Stand als

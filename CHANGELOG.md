@@ -7,6 +7,56 @@ Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
 ## [Unreleased]
 
+### Feature 04 · Marketing-Kontakte in Brevo (2026-08-30)
+
+Wer sich auf einer Warteliste einträgt oder ein Konto anlegt, kann zusätzlich
+einwilligen, Neuigkeiten zu erhalten. Diese Adressen stehen danach als Kontakte in
+Brevo — nach Sprache und Zielgruppe getrennt, sodass sich eine Kampagne verschicken
+lässt, ohne eine Liste von Hand zusammenzustellen. Anlass ist Risiko 4 im PRD: „Wer
+sich im August einträgt und im Februar noch nichts gehört hat, ist als Interessent
+verloren."
+
+**Kein Anfrage-Ablauf spricht mit Brevo.** Die Einwilligung erzeugt eine Zeile im
+Auftragsbuch `marketing_contact`; der Konsolenbefehl `app:marketing:sync` trägt sie
+hinaus. Grund ist BF-48 — Production läuft mit `sync://` und ohne Worker, eine
+„asynchrone" Messenger-Nachricht liefe dort synchron im Request und hinge jede
+Anmeldung an der Erreichbarkeit eines fremden Dienstes.
+
+⚠ **Das Auftragsbuch hat bewusst keinen Fremdschlüssel.** Ein Widerruf löscht den
+Wartelisten-Eintrag; hinge der Löschauftrag an ihm, verschwände er mit seiner Quelle
+und die Adresse bliebe für immer bei Brevo stehen. Der Auftrag muss die Löschung
+seiner Quelle überleben.
+
+⚠ **Die Freitextnachricht geht nicht mit.** Auf einer Barrierefreiheitsplattform kann
+dort eine Gesundheitsangabe stehen und damit eine besondere Kategorie nach Art. 9
+DSGVO. Was das Auftragsbuch nicht führt, kann nicht abfließen.
+
+⚠ **`self_confirmed_at` trennt den eingelösten Double-Opt-In vom Verwaltungs-Backfill.**
+`confirmed_at` wird an zwei Stellen gesetzt und kann die beiden Fälle nicht
+unterscheiden — über diese Zweideutigkeit gelangte eine nie bestätigte Adresse nach
+Brevo (BF-83/BF-89). Alles, was eine belegte Adresse voraussetzt, fragt jetzt
+`hasSelfConfirmed()`.
+
+⚠ **`confirm()` setzt den Status nur noch aus `PENDING` heraus** (BF-91). Ein
+fortgeschrittener Vertriebsstand ist die jüngere Information; vorher warf eine späte
+Bestätigung einen gewonnenen Kunden auf „bestätigt" zurück — bis hinein in das
+`FUNNEL_STATUS`-Attribut bei Brevo.
+
+**Neu:** Entity `MarketingContact`, Enums `MarketingOrigin` und `MarketingSyncState`,
+Namensraum `App\Marketing\` (Registry, Sync-Dienst, Payload-Abbildung, Brevo-Client),
+sprachfreier Webhook `POST /marketing/brevo/webhook` mit Bearer-Absicherung und
+eigenem Limiter, die Befehle `app:marketing:sync` und `app:marketing:import`
+(Trockenlauf ist der Vorgabefall), Einwilligungsfeld in drei Formularen, Sync-Spalte
+in der Wartelisten-Verwaltung, `docs/datenschutz.md`.
+
+**Migrationen:** `Version20260829120000` (Auftragsbuch + `marketing_consent_at`),
+`Version20260829170000` (`self_confirmed_at`).
+
+⚠ **Vor dem ersten echten Lauf** müssen der AV-Vertrag mit Brevo datiert (BF-88, hängt
+an OF-01) und `BREVO_API_KEY`, `BREVO_LIST_ID`, `BREVO_WEBHOOK_TOKEN` auf dem Server
+gesetzt sein. Ohne Schlüssel ist die Funktion still aus — die Einwilligungen sammeln
+sich im Auftragsbuch und gehen beim ersten Lauf mit.
+
 ## [2026.08.29.1] – Deploy-Fenster, Passkey-Fehlerseite und Worker-Sperre
 
 Drei Nachträge zum Release desselben Tages, alle am Rand des Deploys: Das

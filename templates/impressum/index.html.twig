@@ -55,6 +55,20 @@
             {{ 'legal.mail_text'|trans }}
         </p>
 
+        {# ⚠ Feature 04 / AK-32: Brevo steht hier ein zweites Mal, und das ist
+           kein Versehen. Der Abschnitt darüber beschreibt Brevo als
+           Versanddienstleister — Rechtsgrundlage Vertrag, übermittelt wird die
+           einzelne Nachricht. Seit Feature 04 hält Brevo zusätzlich einen
+           dauerhaften Kontaktbestand zu Werbezwecken, auf Grundlage einer
+           Einwilligung. Zwei Zwecke, zwei Rechtsgrundlagen, zwei Abschnitte:
+           Wer nur den ersten liest, erführe nicht, dass seine Adresse dort
+           liegen bleibt. Art. 13 Abs. 1 lit. e verlangt die Nennung der
+           Empfänger — und der Zweck gehört dazu (vgl. BF-65). #}
+        <h3 class="text-base font-semibold text-gray-700 mb-2">{{ 'legal.marketing_title'|trans }}</h3>
+        <p class="text-gray-600 leading-relaxed mb-4">
+            {{ 'legal.marketing_text'|trans }}
+        </p>
+
         <h3 class="text-base font-semibold text-gray-700 mb-2">{{ 'legal.transit_title'|trans }}</h3>
         <p class="text-gray-600 leading-relaxed mb-4">
             {{ 'legal.transit_text'|trans }}

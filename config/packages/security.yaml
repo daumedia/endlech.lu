@@ -75,6 +75,17 @@ security:
         # Passkey-Endpunkte – locale-frei, deshalb vor den Web-Regeln.
         - { path: '^/passkey/login/options', roles: PUBLIC_ACCESS }
         - { path: '^/passkey/register', roles: IS_AUTHENTICATED_FULLY }
+        # Brevo-Webhook (Feature 04) – locale-frei, deshalb ebenfalls vor den
+        # Web-Regeln. ⚠ Ohne diese Zeile wäre der Endpunkt von KEINER Regel
+        # gedeckt: Die Web-Regeln greifen auf `^/[a-z]{2}/…`, und ein
+        # sprachfreier Pfad fällt durch alle hindurch. Derselbe Fallstrick wie
+        # bei den Passkey-Endpunkten (BF-18).
+        #
+        # PUBLIC_ACCESS ist hier richtig und keine Lücke: Brevo bringt keine
+        # Sitzung mit. Die Absicherung ist das Bearer-Geheimnis, das der
+        # Controller vor jeder Auswertung prüft – plus der Limiter
+        # `marketing_webhook`.
+        - { path: '^/marketing/brevo/webhook', roles: PUBLIC_ACCESS }
         # Web
         - { path: '^/[a-z]{2}/admin', roles: ROLE_ADMIN }
         # ⚠ BF-15: IS_AUTHENTICATED_REMEMBERED statt _FULLY. Vorher zeigte die

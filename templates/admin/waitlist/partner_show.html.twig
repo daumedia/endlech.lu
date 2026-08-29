@@ -43,6 +43,10 @@
                 entry: entry, route: 'admin_waitlist_partner_status', statuses: statuses
             }) }}
 
+            {{ include('admin/waitlist/_marketing.html.twig', {
+                entry: entry, marketingContact: marketingContact
+            }) }}
+
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                 <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">{{ 'admin.waitlist.link_restaurant'|trans }}</h3>
 

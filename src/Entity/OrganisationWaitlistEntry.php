@@ -69,9 +69,32 @@ class OrganisationWaitlistEntry implements WaitlistEntryInterface
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $confirmedAt = null;
 
+    /**
+     * Zeitpunkt, zu dem der Interessent **selbst** bestätigt hat (BF-89).
+     *
+     * ⚠ `confirmedAt` wird an zwei Stellen gesetzt — beim eingelösten
+     * Double-Opt-In **und** beim Statuswechsel in der Verwaltung — und kann
+     * die beiden Fälle deshalb nicht unterscheiden. Alles, was eine belegte
+     * Adresse voraussetzt (allen voran die Übertragung nach Brevo, AK-05),
+     * fragt hier. Ausführliche Begründung in `PartnerWaitlistEntry`.
+     */
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $selfConfirmedAt = null;
+
     /** Zeitpunkt der Einwilligung (DSGVO-Nachweis). */
     #[ORM\Column]
     private \DateTimeImmutable $consentAt;
+
+    /**
+     * Zeitpunkt der **Werbe**-Einwilligung; `null` heißt: keine (Feature 04).
+     *
+     * Getrennt von `$consentAt`: Jene deckt die Kontaktaufnahme zum Angebot,
+     * ein Newsletter geht darüber hinaus (AK-04). Gespeichert wird der
+     * Zeitpunkt und nicht das Häkchen – Art. 7 Abs. 1 DSGVO verlangt, die
+     * Einwilligung nachweisen zu können.
+     */
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $marketingConsentAt = null;
 
     #[ORM\Column(length: 5)]
     private string $locale = 'de';
@@ -152,12 +175,38 @@ class OrganisationWaitlistEntry implements WaitlistEntryInterface
         return null !== $this->confirmedAt;
     }
 
+    /**
+     * Der eingelöste Double-Opt-In — der einzige Weg, auf dem
+     * `selfConfirmedAt` entsteht (BF-89).
+     *
+     * ⚠ **BF-91: Der Status wird nur aus `PENDING` heraus gesetzt.** Eine
+     * späte Bestätigung darf einen fortgeschrittenen Vertriebsstand nicht
+     * überschreiben — er ist die jüngere Information, und der Rückfall wanderte
+     * bis in das `FUNNEL_STATUS`-Attribut bei Brevo (AK-08). Ausführliche
+     * Begründung in `PartnerWaitlistEntry`.
+     */
     public function confirm(): static
     {
-        $this->status = WaitlistStatus::CONFIRMED;
-        $this->confirmedAt = new \DateTimeImmutable();
+        $now = new \DateTimeImmutable();
+
+        if (WaitlistStatus::PENDING === $this->status) {
+            $this->status = WaitlistStatus::CONFIRMED;
+        }
+
+        $this->confirmedAt = $now;
+        $this->selfConfirmedAt = $now;
 
         return $this;
+    }
+
+    public function getSelfConfirmedAt(): ?\DateTimeImmutable
+    {
+        return $this->selfConfirmedAt;
+    }
+
+    public function hasSelfConfirmed(): bool
+    {
+        return null !== $this->selfConfirmedAt;
     }
 
     // --- Getter / Setter -----------------------------------------------------
@@ -309,6 +358,23 @@ class OrganisationWaitlistEntry implements WaitlistEntryInterface
         $this->consentAt = $consentAt;
 
         return $this;
+    }
+
+    public function getMarketingConsentAt(): ?\DateTimeImmutable
+    {
+        return $this->marketingConsentAt;
+    }
+
+    public function setMarketingConsentAt(?\DateTimeImmutable $marketingConsentAt): static
+    {
+        $this->marketingConsentAt = $marketingConsentAt;
+
+        return $this;
+    }
+
+    public function hasMarketingConsent(): bool
+    {
+        return null !== $this->marketingConsentAt;
     }
 
     public function getLocale(): string

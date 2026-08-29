@@ -87,6 +87,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?\DateTimeImmutable $passwordResetTokenExpiresAt = null;
 
     /**
+     * Zeitpunkt der Werbe-Einwilligung; `null` heißt: keine (Feature 04).
+     *
+     * Ein Konto entsteht durch Zustimmung zur **Nutzung** – Werbung ist etwas
+     * anderes und braucht eine eigene, nicht vorangehakte Entscheidung (AK-04).
+     * Gespeichert wird der Zeitpunkt, weil Art. 7 Abs. 1 DSGVO verlangt, die
+     * Einwilligung nachweisen zu können; der Datenexport gibt ihn mit aus
+     * (AK-44).
+     *
+     * ⚠ Der Wert allein bringt niemanden nach Brevo: Erst die bestätigte
+     * E-Mail-Adresse tut das (AK-05). Wer zustimmt und nie verifiziert, wartet
+     * hier folgenlos.
+     */
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $marketingConsentAt = null;
+
+    /**
      * Kennung, unter der dieses Konto gegenüber Passkeys auftritt (WebAuthn user handle).
      *
      * Bewusst nicht die Datenbank-ID: Der Wert liegt dauerhaft auf dem Gerät des
@@ -265,6 +281,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->passwordResetTokenExpiresAt = null;
 
         return $this;
+    }
+
+    public function getMarketingConsentAt(): ?\DateTimeImmutable
+    {
+        return $this->marketingConsentAt;
+    }
+
+    public function setMarketingConsentAt(?\DateTimeImmutable $marketingConsentAt): static
+    {
+        $this->marketingConsentAt = $marketingConsentAt;
+
+        return $this;
+    }
+
+    public function hasMarketingConsent(): bool
+    {
+        return null !== $this->marketingConsentAt;
     }
 
     public function getPendingEmail(): ?string

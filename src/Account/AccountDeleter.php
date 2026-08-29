@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Account;
 
 use App\Entity\User;
+use App\Marketing\MarketingContactRegistry;
 use App\Repository\UserRepository;
 use App\Service\AvatarUploadService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -32,6 +33,7 @@ final readonly class AccountDeleter
         private EntityManagerInterface $em,
         private UserRepository $users,
         private AvatarUploadService $avatars,
+        private MarketingContactRegistry $marketingContacts,
     ) {
     }
 
@@ -57,6 +59,20 @@ final readonly class AccountDeleter
         if (null !== $user->getAvatarFilename()) {
             $this->avatars->delete($user);
         }
+
+        // Feature 04 / AK-14: Dieselbe Reihenfolge wie beim Avatar — erst das
+        // Auswärtige, dann die Zeile. Der Löschauftrag muss stehen, bevor das
+        // Konto verschwindet; danach wüsste niemand mehr, dass in Brevo noch
+        // eine Adresse liegt. Eine Löschung nach Art. 17, die einen Kontakt bei
+        // einem Dritten stehen lässt, ist keine.
+        //
+        // Der Auftrag wird nur gestellt, nicht ausgeführt: Scheitert Brevo,
+        // bleibt die lokale Löschung trotzdem bestehen (AK-16) und der Lauf
+        // holt es nach.
+        // ⚠ BF-84: Das Konto geht als auslösende Quelle mit — steht dieselbe
+        // Adresse noch auf einer Warteliste mit gültiger Einwilligung, bleibt
+        // der Kontakt dort bestehen, statt mitgelöscht zu werden.
+        $this->marketingContacts->scheduleRemoval($user->getEmail(), $user);
 
         $this->em->remove($user);
         $this->em->flush();
