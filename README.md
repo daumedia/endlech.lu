@@ -213,6 +213,24 @@ survives: `.env.local`, `config/jwt/*.pem`, `public/uploads/`, `var/`,
 `vendor/`. There is no worker to recycle — production runs with
 `MESSENGER_TRANSPORT_DSN=sync://`, so mail is sent inside the request.
 
+**The deploy shows a maintenance page while it runs.** Between `git reset` and
+`cache:clear` the new PHP files sit next to the compiled container of the previous
+release — if that container calls a constructor that has changed, every request ends
+in a 500 (this happened on 2026-08-29, `ApiRateLimitSubscriber` with two instead of
+three arguments). So `deploy.sh` touches `var/maintenance` before the reset, and
+`public/index.php` checks for that file **before** loading `vendor/autoload_runtime.php`
+— it needs neither the container nor the autoloader, both of which may be half-written
+at that moment. Visitors get a 503 with `Retry-After` and `public/maintenance.html`
+for roughly 35 seconds instead of an error page.
+
+If the deploy fails, **the maintenance page stays up on purpose** — the tree is new
+and the container old, which is exactly the broken state. The red Actions run is the
+signal; clear it by hand afterwards:
+
+```bash
+ssh <user>@<host> 'rm -f ~/public_html/var/maintenance'
+```
+
 Rollback: push a revert commit to `production`. The next run restores the previous
 state including matching assets, because they live in the same commit.
 

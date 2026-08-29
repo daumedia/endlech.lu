@@ -35,6 +35,35 @@ Sentry ohnehin nie.
 Nebenbei berichtigt: Der Klassen-Docblock des Authenticators behauptete, die
 Login-Seite trage „nur EIN Formular". Sie trägt zwei, seit es Passkeys gibt — der
 Docblock von `SecurityControllerTest` sagt das seit jeher richtig.
+### Der Deploy zeigt eine Wartungsseite statt 500er (2026-08-29)
+
+Der Deploy von v2026.08.29 hat einen Besucher in einen Serverfehler laufen lassen
+(Sentry `ENDLECH-5`, 10:48:14 UTC — mitten im Lauf von 10:47:41 bis 10:48:46).
+
+**Die Ursache ist kein Code-Fehler, sondern die Reihenfolge im Deploy.** Ab
+`git reset --hard` liegen die neuen PHP-Dateien neben dem kompilierten Container des
+Vorgänger-Releases. Der rief `new ApiRateLimitSubscriber($anonymous, $login)` mit zwei
+Argumenten auf, während die Datei auf der Platte seit BF-25 drei verlangt
+(`api_register`). Weil die Klasse an `kernel.request` hängt, traf das **jede** Route,
+nicht nur `/api/v1` — und beim Rendern der Fehlerseite noch einmal.
+
+Der Beleg steht im Event selbst: `release: endlech@2026.08.09`. Die Angabe kommt aus
+`%app.version%` und damit aus dem Container — der war noch der alte, während Sentry
+bereits die neue Datei zeigte.
+
+`deploy.sh` legt jetzt vor dem Reset `var/maintenance` an und entfernt die Datei im
+`EXIT`-Trap nach `cache:clear`. `public/index.php` prüft sie **vor**
+`vendor/autoload_runtime.php` — die Prüfung darf weder Container noch Autoloader
+brauchen, weil genau die in diesem Moment unvollständig sein können. Besucher sehen
+für rund 35 Sekunden eine 503 mit `Retry-After` und `public/maintenance.html`.
+
+**Bei einem gescheiterten Deploy bleibt die Wartungsseite bewusst stehen.** Der
+Arbeitsbaum ist dann neu, der Container alt oder die Migration halb durch — eine 503
+ist dort besser als der 500er, den dieser Zustand sonst liefert. Das Signal zum
+Eingreifen ist der rote Actions-Lauf.
+
+Die Flag-Datei liegt unter `var/`, weil `git clean -fd` ohne `-x` läuft und
+Gitignoriertes unangetastet lässt. Unter `public/` wäre sie nach dem `clean` weg.
 
 ## [2026.08.29] – Vergleichsseiten, Barrierefreiheit und die Rückerfassung
 

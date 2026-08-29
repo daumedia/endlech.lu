@@ -933,11 +933,47 @@ Das `.github/`-Verzeichnis enthält außerdem Issue-Templates (Bug Reports, Feat
 - **Änderung unter `assets/` → `npm run build` ausführen und `public/build` mitcommitten**, sonst blockt `verify-assets` den Deploy. Der Build ist deterministisch (verifiziert), ein Neubau ohne Quelltextänderung erzeugt keine Diffs.
 - **`.nvmrc` ist die gemeinsame Node-Version** für lokale Entwicklung, `ci.yml` und `cd.yml` (beide Workflows nutzen `node-version-file: '.nvmrc'`). Da der committete `public/build` aus der lokalen Node-Version stammt, würde eine abweichende Runner-Version den Vergleich potenziell grundlos rot färben. Wer lokal die Node-Version wechselt, aktualisiert `.nvmrc` mit.
 - `git clean -fd` läuft **ohne** `-x`: alles Gitignorierte überlebt (`.env.local`, `config/jwt/*.pem`, `public/uploads/{avatars,restaurants}`, `var/`, `vendor/`, `public/bundles/`). ⚠️ **`public/uploads/team/` ist per `!`-Regel aus `.gitignore` ausgenommen** – Dateien dort, die nicht committet sind, löscht der Deploy.
-- Kein Null-Downtime: zwischen `git reset` und dem Ende von `composer install` läuft die App für Sekunden gemischt.
+- Kein Null-Downtime, aber auch keine 500er: Zwischen `git reset` und `cache:clear` läuft die App gemischt (neue Dateien, alter Container) — **dieses Fenster deckt seit ENDLECH-5 eine Wartungsseite ab**, siehe unten.
 - Rollback = Revert-Commit auf `production`; der nächste Lauf bringt die passenden Assets automatisch mit, weil sie im selben Commit stecken.
 - PHPUnit ist **kein** Deploy-Gate (passend zur manuellen CI); zuschaltbar über `needs: [verify-assets, tests]`.
 
 Server-Setup (einmalig) und die Waisen-Inventur vor dem ersten Lauf: siehe README → „🚢 Deployment".
+
+### Wartungsfenster während des Deploys (ENDLECH-5)
+
+⚠️ **Ab `git reset` liegen neue PHP-Dateien neben dem kompilierten Container des
+Vorgänger-Releases.** Ruft der alte Container einen geänderten Konstruktor auf, endet
+**jede** Anfrage in einem 500er — nicht nur die betroffene Route, wenn die Klasse an
+`kernel.request` hängt. Am 29.08.2026 traf es `ApiRateLimitSubscriber`: Der Container
+von v2026.08.09 übergab zwei Argumente, die neue Datei verlangte seit BF-25 drei
+(`api_register`). Der gemischte Zustand endet erst mit `cache:clear`, gemessen rund
+35 Sekunden später.
+
+Der Beleg im Sentry-Event ist das Feld `release`. Es kommt aus `%app.version%` und
+damit **aus dem kompilierten Container** — steht dort eine ältere Version als die im
+Repo, ist genau dieses Fenster die Ursache und nicht der Code.
+
+**Deshalb:**
+- `deploy.sh` legt `var/maintenance` an, **bevor** `git reset` läuft, und entfernt die
+  Datei im `EXIT`-Trap. `git fetch` steht davor — es ändert den Arbeitsbaum noch nicht.
+- ⚠️ **Die Flag-Datei liegt unter `var/`, weil das gitignoriert ist.** `git clean -fd`
+  läuft ohne `-x` und fasst sie deshalb nicht an; `cache:clear` räumt nur `var/cache`.
+  Unter `public/` läge sie im Repo-Bereich und wäre nach dem `clean` weg.
+- ⚠️ **Die Prüfung in `public/index.php` steht VOR `require vendor/autoload_runtime.php`.**
+  Sie darf weder Container noch Autoloader brauchen — genau die können während des
+  Deploys unvollständig sein. Antwort: 503 + `Retry-After` + `Cache-Control: no-store`
+  (sonst hält der Varnish des Hostings die Wartungsseite über den Deploy hinaus fest).
+- ⚠️ **Bei einem Abbruch bleibt die Wartungsseite bewusst stehen.** Der Arbeitsbaum ist
+  dann neu, der Container alt oder die Migration halb durch — eine 503 ist dort besser
+  als der 500er, den dieser Zustand liefert. Das Signal ist der rote Actions-Lauf
+  (`::error::`-Annotation); danach von Hand
+  `ssh <user>@<host> 'rm -f ~/public_html/var/maintenance'`.
+- `public/maintenance.html` ist eigenständiges HTML mit Inline-CSS wie `offline.html` —
+  Encore-Assets sind an dieser Stelle nicht verlässlich erreichbar.
+
+Der Service Worker braucht dafür **nichts**: Navigationen laufen network-first ohne
+Cache-Schreiben, alle anderen Wege cachen nur bei `response.ok`. Eine 503 landet
+strukturell in keinem Cache.
 
 ## Fehler-Tracking (Sentry)
 
