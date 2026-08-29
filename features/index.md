@@ -69,6 +69,41 @@ Fixture-Namen in der Restaurantliste, das Anmelde-Rate-Limit greift („Zu viele
 fehlgeschlagene Anmeldeversuche"), 0 Konsolenfehler, keine waagerechte Scrollleiste bei
 375 px.
 
+**2026-08-29 · Release v2026.08.29a ist live.** Nachtrag desselben Tages, ausgelöst durch
+zwei Sentry-Befunde am Rand des vorherigen Deploys: **ENDLECH-5** (das Auslieferungsfenster
+lieferte 500er — jetzt Wartungsseite mit 503 und `Retry-After`), **ENDLECH-6** (ein
+Passkey-Submit ohne Assertion endete in einer nackten Fehlerseite — betrifft `B03`) und die
+Vorbereitung des Messenger-Workers in `deploy.sh`. **Keine Migration**, deshalb keine
+Sicherung nötig.
+
+Auf Produktion nachgeprüft: Die Fußzeile zeigt `v2026.08.29a` — der Beleg, dass der neue
+Container läuft und das Wartungsflag abgeräumt ist. `/de/login`, `/de/restaurants` und
+`/open.json` antworten mit 200, `open.json` führt die echten 3 Lokale. ENDLECH-6 direkt
+belegt: Ein POST auf `/de/login` mit leerem `_assertion` ergibt **302** statt der 400 von
+vorher, ebenso mit unbrauchbarem JSON; der Scanner-Fall ohne Felder bleibt korrekt **400**
+und ist seit diesem Release aus Sentry ausgenommen. `maintenance.html` wird ausgeliefert,
+keine Fixture-Namen in der Restaurantliste. 614 Tests grün, Prod-Container baut fehlerfrei.
+
+Das Rate-Limit wurde **nicht** erneut gegen Produktion gefahren — es ist beim vorherigen
+Release belegt, durch Tests abgedeckt, und ein Nachweis hier hätte die eigene Adresse für
+eine Stunde gesperrt.
+
+⚠ Offen aus dem Deploy-Protokoll: `APP_API_BASE_URL` steht weiterhin nicht in der
+`.env.local` (BF-29) — die API baut ihre Bild-URLs aus dem Host-Header. Der Deploy warnt
+bei jedem Lauf.
+
+⚠ **Der Messenger-Worker ist vorbereitet, aber nicht in Betrieb.** `deploy.sh` hält jetzt
+`var/worker.lock`, bevor der Arbeitsbaum wechselt; solange keine Sperrdatei existiert,
+überspringt es den Block. Die Umstellung von `MESSENGER_TRANSPORT_DSN=sync://` auf die
+Queue braucht erst den Cron (README → *Messenger worker*) und darf **nicht** vorher
+erfolgen.
+
+⚠ **Buchführung:** 23 Bestandsfeatures stehen auf `approved`, obwohl ihre Reparaturen mit
+v2026.08.29 live gingen. Nur `B03` ist hier auf `deployed` gezogen, weil sein Fix Teil
+dieses Releases war und auf Produktion belegt wurde. Der Rest gehört in einem eigenen
+Durchgang nachgeführt — pauschal umzuschreiben, was nicht einzeln nachgeprüft wurde, wäre
+eine Behauptung statt eines Nachweises.
+
 ⚠ **Das Inventar ist an einer Stelle überholt:** Feature `01` steht auf `roadmap`, sein
 Code ist aber seit diesem Release live (Commit „Feature 01: Betroffenenrechte — die
 Sackgasse ist zu"). Das gehört über `/sdd-erfassen` oder eine QA nachgezogen — hier nicht
@@ -101,7 +136,7 @@ Eingang von `sdd-build`. Der Weg ist: `bestand` → `/sdd-erfassen BNN` →
 | 03 | Vergleichsseiten (vs. Google Maps, Wheelmap, TripAdvisor) | P1 | **deployed** | B05, B13, B24, B16, 02 | 2026-08-29 · live in v2026.08.29, auf Produktion nachgeprüft |
 | B01 | Registrierung & E-Mail-Bestätigung | P0 | **approved** | — | 2026-08-23 · QA³: 17/20, nur mittlere Befunde offen |
 | B02 | Anmeldung mit Passwort | P0 | **approved** | B01 | 2026-08-24 · QA²: 16/17, repariert |
-| B03 | Passkey-Anmeldung & -Verwaltung | P0 | **approved** | B01, B02 | 2026-08-24 · QA: 16/20, 3 nicht prüfbar |
+| B03 | Passkey-Anmeldung & -Verwaltung | P0 | **deployed** | B01, B02 | 2026-08-29 · ENDLECH-6 live in v2026.08.29a, auf Produktion belegt (302 statt 400) |
 | B04 | Profil, Avatar & eigene Einreichungen | P0 | **approved** | B01, B11 | 2026-08-24 · QA 2. Durchlauf: 23/24, drei Befunde *mittel* |
 | B05 | Restaurantsuche, Filter & Sortierung | P0 | **approved** | B07, B08 | 2026-08-24 · QA: 24/24, zwei Befunde *niedrig* |
 | B06 | Restaurant-Detailseite | P0 | **approved** | B07, B08, B09, B10 | 2026-08-24 · QA: 23/23, **kein Befund** |
