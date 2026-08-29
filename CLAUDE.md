@@ -925,7 +925,67 @@ Das `.github/`-Verzeichnis enthält außerdem Issue-Templates (Bug Reports, Feat
 
 **Production-Umgebung (verifiziert am 2026-08-06):** Cloudways, SSH-Login `endlech` → Systembenutzer `nrzwptqsvx` (Application-User, dem auch `public_html` gehört – der richtige, nicht der Master-Login). Deploy-Pfad `$HOME/public_html`, Webroot zeigt auf dessen `public/`. PHP 8.4.22, Composer 2.10.1, git 2.30.2. `~/.ssh/` gehört **root** – deshalb liegt der Deploy-Key in `.git/deploy_key` (dort greift auch `git clean` nicht hin) und `known_hosts` wird per `ssh-keyscan` daneben geschrieben; der CI-Key des Runners liegt in `~/.openssh/authorized_keys` (Cloudways-Pfad, gehört dem App-User). `COMPOSER_CACHE_DIR` wird im Skript auf `$HOME/tmp/composer-cache` gesetzt, weil Composers Default `~/.cache` hier nicht beschreibbar ist – sonst läuft jeder Deploy cache-los.
 
-**Kein Messenger-Worker:** Production läuft mit `MESSENGER_TRANSPORT_DSN=sync://` (in `.env.local`, überschreibt das `doctrine://` aus `.env`) – E-Mails werden synchron im Request versendet, es gibt weder Queue noch Worker. `deploy.sh` enthält deshalb **kein** `pkill`. Auf derselben Maschine läuft ein `messenger:consume` einer fremden Application unter anderem Systembenutzer; ein pkill-Muster ohne `-u`-Filter wäre dort eine Fußangel.
+### Messenger-Worker (Umstellung von `sync://` auf die Queue)
+
+**Stand 2026-08-29: `deploy.sh` ist vorbereitet, die Umstellung selbst steht noch aus.**
+Solange in der `.env.local` auf dem Server `MESSENGER_TRANSPORT_DSN=sync://` steht,
+werden E-Mails weiterhin im Request versendet und die Sperre unten läuft ins Leere.
+
+⚠️ **`sync://` NICHT einfach entfernen.** Ohne laufenden Worker greift der Default
+`doctrine://default?auto_setup=0` aus `.env`, und dann stapeln sich die Nachrichten
+in `messenger_messages`, während die App weiter „erfolgreich" meldet – niemand
+bekommt mehr eine Bestätigungsmail, und es fällt erst bei einer Beschwerde auf.
+Die Reihenfolge ist: **erst Cron einrichten, dann deployen, dann die Zeile ziehen**
+(und `cache:clear --env=prod`, sonst hält der kompilierte Container den alten DSN).
+
+Die Tabelle ist bereits da: `Version20260113160019` legt `messenger_messages` an,
+und ihr Schema deckt sich mit dem, was `symfony/doctrine-messenger` erwartet
+(Kombi-Index `(queue_name, available_at, delivered_at, id)`). `auto_setup=0` ist
+deshalb unkritisch.
+
+**Der Worker läuft als Cron, nicht unter Supervisor** – jede Minute, mit
+`--time-limit=55`. Das ist hier die bessere Wahl, weil sich der Worker damit selbst
+ablöst und nach jedem Deploy von allein mit neuem Code und frischem Container
+startet. Ein `pkill` im Deploy entfällt dadurch, und das ist ein Gewinn: Auf
+derselben Maschine läuft ein `messenger:consume` einer **fremden** Application unter
+anderem Systembenutzer, ein Muster ohne `-u`-Filter wäre dort eine Fußangel.
+
+⚠️ **Der Cron muss unter demselben Systembenutzer laufen wie PHP-FPM**
+(`nrzwptqsvx`, nicht der Master-Login, unter dem das Cloudways-Panel seine Cron-Jobs
+anlegt). Ein Worker als Master schreibt `var/log` und `var/cache` mit fremdem
+Eigentümer voll, bis der Webserver dort auf „Permission denied" läuft — ein 500er,
+dessen Ursache man an der falschen Stelle sucht. Vor dem Einrichten prüfen, als wer
+das Panel den Job startet:
+
+```
+* * * * * id > /home/master/applications/nrzwptqsvx/public_html/var/cron-whoami.txt 2>&1
+```
+
+Steht dort `master`, gehört der Job stattdessen per `crontab -e` in die SSH-Sitzung
+des App-Users. Der bestehende `app:metrics:snapshot`-Cron hat dasselbe Thema, fällt
+dort aber kaum auf, weil er einmal im Monat läuft.
+
+Die **Sperrdatei** ist davon bewusst unabhängig: `deploy.sh` öffnet sie lesend
+(`exec 9<`), weil `flock` unabhängig vom Zugriffsmodus sperrt. Ein abweichender
+Eigentümer blockiert damit nicht den Deploy.
+
+**Die Sperre in `deploy.sh`:** Das Skript nimmt sich `var/worker.lock` per `flock`,
+bevor `git reset` läuft, und hält den Deskriptor bis zum Ende. Ein laufender Worker
+wird abgewartet (bis 90 s), jeder Cron-Start während des Deploys springt per
+`flock -n` ab. Ohne das trifft der Worker mitten im `git reset` auf halb neue
+Dateien – derselbe gemischte Zustand wie bei ENDLECH-5, nur im Hintergrund und ohne
+Wartungsseite davor. Die Datei liegt aus demselben Grund unter `var/` wie das
+Wartungsflag: gitignoriert, `git clean -fd` fasst sie nicht an.
+
+**Was die Umstellung mitbringt:** Retry (`max_retries: 3`) und den `failed`-Transport,
+also `messenger:failed:show`/`:retry` statt endgültig verlorener Mails. Und
+Sichtbarkeit – ein im Worker gescheiterter Versand landet als `error` im Monolog-Kanal
+`messenger` und damit über `sentry_logs` in Sentry. Bei `sync://` fangen zwölf
+`catch (TransportExceptionInterface)`-Blöcke in acht Dateien den Fehler ab, **ohne ihn
+zu loggen**: Der Nutzer sieht eine Warnung, der Betreiber erfährt nichts. Nach der
+Umstellung sind diese Blöcke toter Code (ein Dispatch-Fehler ist eine
+Messenger-Exception, keine Mailer-`TransportExceptionInterface`) – sie schaden nicht,
+können aber aufgeräumt werden.
 
 **Production-DB ist MariaDB 10.5**, lokal und in der CI läuft dagegen MySQL 8.0. Da `deploy.sh` bei jedem Lauf `doctrine:migrations:migrate` ausführt, müssen neue Migrationen gegen MariaDB 10.5 lauffähig sein – MySQL-8-only-Syntax (z. B. `CHECK`-Constraints mit JSON-Funktionen, Window-Functions in DDL) schlägt sonst erst auf Production fehl.
 
