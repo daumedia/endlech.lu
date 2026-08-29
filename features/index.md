@@ -1,6 +1,6 @@
 # Features
 
-Stand: 2026-08-23 · Stack-Profil: `symfony-doctrine` · Artefaktpfad: `docs/`
+Stand: 2026-08-28 · Stack-Profil: `symfony-doctrine` · Artefaktpfad: `docs/`
 
 Stand der Rückerfassung: **alle 26 Features rekonstruiert** (2026-08-23).
 Stand der Prüfung: **B01 zweimal geprüft und repariert** → `review` (17/20 Kriterien).
@@ -28,6 +28,33 @@ E-Mail-Eingabe. Ein Befund *mittel* (BF-18), drei Kriterien nicht prüfbar.
 selbst war nie erfasst — weder „RAWeb" noch „EN 301 549" kam im Projekt vor. Zugesagt wird
 WCAG 2.2 AA über den vollen Bestand einschließlich Verwaltung, App-Hülle und Mails.
 
+**2026-08-28 · Feature `03` aufgenommen und spezifiziert.** Vergleichsseiten gegenüber
+Google Maps, Wheelmap und TripAdvisor, erreichbar über einen eigenen
+Bereich in der Fußzeile. Der Anlass steht seit jeher im PRD („Weder Google Maps noch die
+Websites der Häuser beantworten die Fragen, auf die es ankommt“), stand aber nirgends
+öffentlich. Die Spec bindet den Ton an die zugesagten Produktprinzipien: jede Aussage über
+einen Wettbewerber trägt Quelle und Prüfdatum, und die Abdeckungszeile nennt die eigene,
+kleinere Zahl. Der Entwurf steht seit demselben Tag: keine Entität und keine Migration —
+Struktur als Aufzählungen unter `App\Comparison\`, Texte in einer eigenen
+Übersetzungsdomain `comparison`, Zahlen aus derselben Quelle wie `/open`. Drei der vier
+offenen Fragen sind entschieden; **OF-02 (Prüfrhythmus der Wettbewerber-Angaben) bleibt
+offen** und ist ein Prozess, kein Entwurf. Der Aufgabenplan brachte zwei Kriterien ans Licht, die es sonst nie gegeben hätte:
+OF-01 und OF-03 waren **entschieden, aber ohne AK** — nachgetragen als AK-31 und AK-32.
+
+**Gebaut am selben Tag**, 25 Aufgaben in fünf Ebenen, 590 Tests grün. **Jaccede wurde beim
+Bau gestrichen** (OF-05): Die Plattform ist seit dem 2. Juli 2026 nur noch ein statischer
+Abzug — Suche und Anmeldung antworten mit 404, die Apps sind aus den Stores. Ein Vergleich
+mit einem eingestellten Dienst wäre eine Falschaussage über einen fremden Verein. Damit
+nennt AK-03 einen Slug zu viel; die drei übrigen Vergleiche sind vollständig belegt
+(54 Merkmalszeilen, 18 Primärquellen mit Prüfdatum).
+
+**2026-08-29 · QA von `03`:** 31 von 32 Kriterien bestanden, alle sieben Randfälle belegt,
+der Angriffsdurchlauf ohne Fund. **Blockierend ist BF-77:** Bei 320 px scrollen die drei
+Vergleichsseiten waagerecht (`scrollX=212`) — die Merkmalstabelle ist mit ihren
+erklärenden Halbsätzen 525 px breit, wo die Bestandstabelle auf `/partner` mit 324 px
+noch passt. Dazu zwei mittlere Befunde (BF-78: Gruppen- und Bewertungsnamen fallen durch
+jeden Prüflauf; BF-79: zwei gleichnamige Landmarks). Weiter mit `/sdd-build 03`.
+
 Nächster Schritt: `/sdd-erfassen B25`. Die Reparaturen von B01, B02, B04 und B23 warten auf
 `/sdd-deploy`; das neue Feature `01` beginnt mit `/sdd-spec 01`, `02` ist fünfmal geprüft und
 abgenommen (`approved`) — alle vier Befunde behoben, 53/60 belegt, weiter mit `/sdd-deploy 02`
@@ -52,6 +79,7 @@ Eingang von `sdd-build`. Der Weg ist: `bestand` → `/sdd-erfassen BNN` →
 |---|---|---|---|---|---|
 | 01 | Betroffenenrechte: Konto löschen, Daten exportieren, Passwort zurücksetzen | P0 | roadmap | B01, B04, B19 | 2026-08-23 · aus BF-04 herausgelöst |
 | 02 | Barrierefreiheit der Plattform (EN 301 549 / RAWeb) | P0 | **approved** | B01–B26 | 2026-08-26 · QA⁵: alle Befunde (BF-73/74/75/76) behoben, 53/60 belegt, 6 Grenzen (Testdaten/JS/Mail/UA-01) → /sdd-deploy 02 |
+| 03 | Vergleichsseiten (vs. Google Maps, Wheelmap, TripAdvisor) | P1 | **approved** | B05, B13, B24, B16, 02 | 2026-08-29 · QA²: 32/32 AK, 7/7 EC, kein blockierender Befund, 610 Tests grün → /sdd-deploy 03 |
 | B01 | Registrierung & E-Mail-Bestätigung | P0 | **approved** | — | 2026-08-23 · QA³: 17/20, nur mittlere Befunde offen |
 | B02 | Anmeldung mit Passwort | P0 | **approved** | B01 | 2026-08-24 · QA²: 16/17, repariert |
 | B03 | Passkey-Anmeldung & -Verwaltung | P0 | **approved** | B01, B02 | 2026-08-24 · QA: 16/20, 3 nicht prüfbar |
@@ -84,6 +112,7 @@ Eingang von `sdd-build`. Der Weg ist: `bestand` → `/sdd-erfassen BNN` →
 | ID | Umfang | Wo es lebt |
 |---|---|---|
 | 02 | Tastatur und Fokus, Wahrnehmbarkeit, Formulare, Zielgrößen, Sprache und Struktur, Mobil und App-Hülle, Verwaltung, Barrierefreiheitserklärung, Rückmeldeweg | projektweit; neu: Erklärungsseite `/barrierefreiheit` samt Meldeformular |
+| 03 | Fußzeilenbereich „Vergleiche“, Übersichtsseite, drei Vergleichsseiten mit Kurzfazit, Merkmalstabelle, Gegenposition und häufigen Fragen | neu: `/vergleich` und `/vergleich/{slug}`; berührt Fußzeile und Kopfbereich der App-Hülle |
 | B01 | Registrierformular, Token 24 h, Bestätigungsmail, erneutes Senden, Hinweisseite | `RegistrationController`, `EmailVerificationController`, `RegistrationType`, `templates/registration/`, `templates/email_verification/`, `email/verification.html.twig` |
 | B02 | `form_login`, `remember_me`, Abmelden, Zugriffsregeln der `main`-Firewall | `SecurityController`, `config/packages/security.yaml`, `templates/security/login.html.twig` |
 | B03 | WebAuthn-Anmeldung ohne E-Mail-Eingabe, Passkeys anlegen/umbenennen/entfernen | `Security/PasskeyAuthenticator`, `Security/WebauthnUserEntityRepository`, `PasskeyController`, `Entity/WebauthnCredential`, `partials/_passkey_*`, `passkey_ui_controller.ts` |

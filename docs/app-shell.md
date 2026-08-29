@@ -192,17 +192,34 @@ Fußzeile auf kurzen Seiten unten bleibt.
 
 ## Fußzeile
 
-`bg-gray-900 text-gray-300 py-12 mt-12 print:hidden`, drei Spalten
-(`grid-cols-1 md:grid-cols-3`):
+`bg-gray-900 text-gray-300 py-12 mt-12 print:hidden`, **vier Spalten**
+(`grid-cols-1 md:grid-cols-2 lg:grid-cols-4`):
 
 | Spalte | Inhalt |
 |---|---|
 | 1 | Wortmarke, `footer.tagline`, GitHub-Link (`target="_blank"`, `rel="noopener noreferrer"`) |
-| 2 | `footer.links` — sieben Einträge, siehe unten |
-| 3 | `footer.contact_title`, `footer.help_improve`, `mailto:info@endlech.lu` |
+| 2 | `footer.links` — zehn Einträge, siehe unten |
+| 3 | `footer.comparisons` — je ein Link pro Vergleich plus `footer.all_comparisons` (Feature 03) |
+| 4 | `footer.contact_title`, `footer.help_improve`, `mailto:info@endlech.lu` |
 
-Die Linkliste: Restaurants suchen · Kriterien · Partner · Organisationen · Open ·
-Impressum · Cookie-Einstellungen · Feedback (`endlech.userjot.com`, extern).
+Die Linkliste (Spalte 2): Restaurants suchen · Restaurant vorschlagen · Kriterien ·
+Partner · Organisationen · Open · Impressum · Barrierefreiheit ·
+Cookie-Einstellungen · Feedback (`endlech.userjot.com`, extern).
+
+**Spalte 3 kommt aus einer Twig-Erweiterung**, nicht aus dem Controller:
+`comparison_competitors()` in `src/Twig/ComparisonExtension.php`. Die Fußzeile wird
+auf *jeder* Seite gerendert; über den Controller müsste jeder der rund zwanzig
+Controller die Liste mitgeben, und der erste, der es vergisst, liefert eine Seite
+mit halber Fußzeile aus.
+
+⚠ **Der Umbruchpunkt ist `lg:`, nicht `md:`.** Vier Spalten in der Breite, bei der
+bisher drei standen, drückten die Linkliste auf eine unlesbare Spaltenbreite. Auf
+mittleren Breiten stehen jetzt zwei Spalten nebeneinander.
+
+⚠ Bis 2026-08-28 nannte dieser Abschnitt sieben Einträge in Spalte 2 (es waren
+zehn) und führte unter „Bekannte Lücken" einen toten Link, den es nicht mehr gab.
+Wer die Fußzeile ändert, zieht diesen Abschnitt mit — er ist zweimal
+auseinandergelaufen.
 
 **Der Punkt „Cookie-Einstellungen" wird auf Admin-Routen unterdrückt**
 (`{% if not (…_route) starts with 'admin_' %}`) — er ist eine eigene
@@ -327,10 +344,11 @@ Unternehmen, Vereine) stehen nur in der `hidden md:flex`-Kopfnavigation. Beides 
 die Eingänge zu Community-Beitrag und Vertrieb — auf Mobil nur über die Fußzeile
 erreichbar (dort liegen Partner und Organisationen), „vorschlagen" gar nicht.
 
-### 4 · Toter Link in der Fußzeile
+### 4 · ~~Toter Link in der Fußzeile~~ — behoben
 
-`base.html.twig`, Spalte 2, erster Eintrag: `footer.search_restaurants` zeigt auf
-`href="#"` statt auf `app_restaurant_index`.
+`base.html.twig`, Spalte 2, erster Eintrag: `footer.search_restaurants` zeigte auf
+`href="#"` statt auf `app_restaurant_index`. **Inzwischen behoben**; der Eintrag
+verweist auf die Restaurantliste (festgestellt am 2026-08-28).
 
 ### 5 · Der GitHub-Link zeigt auf ein anderes Konto
 

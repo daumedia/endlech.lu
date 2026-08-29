@@ -275,6 +275,10 @@ final class OpenStatsService
         $documentedTableSpacing = 0;
 
         foreach ($rows as $row) {
+            // `isWheelchairAccessible` IST das Merkmal „stufenloser Zugang" – so
+            // ist es in allen vier Katalogen beschriftet und so wird es erhoben
+            // (siehe Doc-Block auf `Restaurant::$isWheelchairAccessible`). Die
+            // Zuordnung sieht wie ein Namensfehler aus und ist keiner.
             $counts['stepFreeEntrances'] += $row['isWheelchairAccessible'] ? 1 : 0;
             $counts['accessibleRestrooms'] += $row['hasAccessibleToilet'] ? 1 : 0;
             $counts['assistanceDogsWelcome'] += $row['allowsAssistanceDogs'] ? 1 : 0;

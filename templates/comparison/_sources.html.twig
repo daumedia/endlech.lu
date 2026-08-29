@@ -1,0 +1,20 @@
+{# Fußnoten unter der Merkmalstabelle.
+
+   ⚠ Das Datum hängt an der Quelle, nicht an der Seite: Wer eine einzelne Zeile
+   nachprüft, datierte sonst stillschweigend alle übrigen mit. format_date statt
+   fester Notation, sonst stünde in der englischen Fassung „28.08.2026". #}
+<section aria-labelledby="quellen-titel" class="mt-8">
+    <h3 id="quellen-titel" class="text-lg font-bold text-gray-900 mb-2">{{ 'sources.title'|trans({}, 'comparison') }}</h3>
+    <p class="text-gray-700 mb-3">{{ 'sources.intro'|trans({'%brand%': page.competitor.brand}, 'comparison') }}</p>
+    <ol class="space-y-2 text-sm text-gray-700">
+        {% for source in page.sources %}
+            <li id="quelle-{{ source.ref }}" class="scroll-mt-24">
+                <span class="font-semibold text-gray-900">[{{ source.ref }}]</span>
+                {{ source.labelKey|trans({}, 'comparison') }} —
+                <a href="{{ source.url }}" rel="nofollow noopener noreferrer" target="_blank"
+                   class="text-cyan-800 underline underline-offset-2 break-all focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700">{{ source.url }}</a>
+                <span class="text-gray-600">({{ 'sources.checked_on'|trans({'%date%': source.checkedAt|format_date('long')}, 'comparison') }})</span>
+            </li>
+        {% endfor %}
+    </ol>
+</section>

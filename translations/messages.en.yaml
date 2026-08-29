@@ -34,6 +34,9 @@ footer:
     help_improve: "Help us improve."
     copyright: "Made with ❤️ in Luxembourg."
     accessibility_statement: "Accessibility"
+    comparisons: "Comparisons"
+    all_comparisons: "All comparisons"
+    vs: "vs. %brand%"
 
 cookie:
     title: "We use cookies"
