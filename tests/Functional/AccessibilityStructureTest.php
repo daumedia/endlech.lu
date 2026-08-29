@@ -29,6 +29,12 @@ final class AccessibilityStructureTest extends AbstractWebTestCase
         yield 'kriterien' => ['/criteria'];
         yield 'impressum' => ['/legal'];
         yield 'accessibility' => ['/accessibility'];
+        // Feature 03 — jede neue öffentliche Seite gehört in diese Liste, sonst
+        // greift AK-54 aus Feature 02 für sie nicht.
+        yield 'vergleich' => ['/vergleich'];
+        yield 'vergleich-google-maps' => ['/vergleich/google-maps'];
+        yield 'vergleich-wheelmap' => ['/vergleich/wheelmap'];
+        yield 'vergleich-tripadvisor' => ['/vergleich/tripadvisor'];
         yield 'login' => ['/login'];
         yield 'register' => ['/register'];
     }

@@ -1,0 +1,56 @@
+{# Merkmalstabelle einer Vergleichsseite.
+
+   Aufbau übernommen aus templates/partner/index.html.twig:86–135 — dort steht das
+   einzige Tabellenmuster des Projekts, das die Barrierefreiheitsregeln vollständig
+   erfüllt:
+   · overflow-x-auto nur hier, damit die Seite bei 320 px nicht waagerecht scrollt
+   · tabindex + role + aria-label machen den Scrollbereich per Tastatur bedienbar
+   · <caption class="sr-only"> beschriftet die Tabelle
+   · th scope="col" in der Kopfzeile, th scope="row" in der ersten Spalte #}
+{# ⚠ `hidden md:block`: Unter `md:` übernimmt die Kartenliste (_cards.html.twig).
+   Die Tabelle trägt in beiden Wertspalten einen Halbsatz und wird damit 525 px
+   breit — bei 320 px scrollte sonst die ganze Seite waagerecht (BF-77). #}
+<div class="hidden md:block overflow-x-auto rounded-xl border border-gray-300 bg-white focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700"
+     tabindex="0" role="region" aria-label="{{ 'table.caption'|trans({'%brand%': page.competitor.brand}, 'comparison') }}">
+    <table class="w-full text-sm">
+        <caption class="sr-only">{{ 'table.caption'|trans({'%brand%': page.competitor.brand}, 'comparison') }}</caption>
+        <thead class="bg-gray-100 border-b border-gray-300">
+            <tr>
+                <th scope="col" class="text-left px-4 py-3 font-semibold text-gray-900">{{ 'table.col_feature'|trans({}, 'comparison') }}</th>
+                <th scope="col" class="text-left px-4 py-3 font-semibold text-gray-900">{{ 'table.col_own'|trans({}, 'comparison') }}</th>
+                <th scope="col" class="text-left px-4 py-3 font-semibold text-gray-900">{{ 'table.col_theirs'|trans({'%brand%': page.competitor.brand}, 'comparison') }}</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+            {% for group in comparison_groups() %}
+                {% set rows = page.rowsIn(group) %}
+                {% if rows is not empty %}
+                    <tr class="bg-gray-50">
+                        {# Gruppenzeile über die volle Breite. th mit colspan statt td,
+                           damit sie als Überschrift der folgenden Zeilen angesagt wird. #}
+                        <th scope="colgroup" colspan="3" class="text-left px-4 py-2 font-bold text-gray-900 uppercase tracking-wide text-xs">
+                            {{ group.transKey|trans({}, 'comparison') }}
+                        </th>
+                    </tr>
+                    {% for row in rows %}
+                        <tr>
+                            <th scope="row" class="text-left px-4 py-3 font-normal text-gray-900 align-top">{{ row.labelKey|trans({}, 'comparison') }}</th>
+                            {% include 'comparison/_verdict.html.twig' with {
+                                verdict: row.own,
+                                note: row.figure
+                                    ? row.ownNoteKey|trans({'%figure%': figures[row.figure]|default(0)|format_number}, 'comparison')
+                                    : row.ownNoteKey|trans({}, 'comparison'),
+                                source: null
+                            } only %}
+                            {% include 'comparison/_verdict.html.twig' with {
+                                verdict: row.theirs,
+                                note: row.theirNoteKey|trans({}, 'comparison'),
+                                source: row.sourceRef
+                            } only %}
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

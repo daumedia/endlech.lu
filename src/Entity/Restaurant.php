@@ -41,6 +41,21 @@ class Restaurant
     #[ORM\Column(nullable: true)]
     private ?float $rating = null;
 
+    /**
+     * Stufenloser Zugang zum Gastraum.
+     *
+     * ⚠ **Der Property-Name ist weiter gefasst als das Merkmal.** Erhoben und
+     * angezeigt wird durchgehend „stufenloser Zugang", nicht Rollstuhleignung im
+     * Ganzen: `accessibility.wheelchair_desc` („Stufenloser Zugang"),
+     * `filter.wheelchair` („Rollstuhl (stufenlos)") und `open.score_wheelchair`
+     * sagen dasselbe in allen vier Katalogen. Deshalb zählt
+     * `OpenStatsService::computeImpact()` dieses Feld als `stepFreeEntrances`
+     * aus — das ist korrekt und kein Namensfehler.
+     *
+     * Wer Rampe, Lift oder Stufenhöhe getrennt erfassen will, braucht ein
+     * **eigenes Feld**; dieses hier umzudeuten würde jede bereits erhobene
+     * Angabe rückwirkend verfälschen.
+     */
     #[ORM\Column]
     private bool $isWheelchairAccessible = false;
 

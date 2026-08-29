@@ -21,12 +21,24 @@ final class CatalogueCompletenessTest extends TestCase
     private const LOCALES = ['lb', 'de', 'fr', 'en'];
 
     /**
+     * Alle geprüften Domains.
+     *
+     * `comparison` kam mit Feature 03 dazu (Vergleichsseiten). Eigene Domain, weil
+     * die Merkmalstabelle ihre Schlüssel datengetrieben aufruft — was der Scanner
+     * unten strukturell nicht sehen kann. Die Lücke schließt
+     * `ComparisonCatalogueTest`, der die in `App\Comparison\` genannten Schlüssel
+     * direkt gegen die Kataloge hält.
+     */
+    private const DOMAINS = ['messages', 'validators', 'comparison'];
+
+    /**
      * @return iterable<string, array{string}>
      */
     public static function domains(): iterable
     {
-        yield 'messages' => ['messages'];
-        yield 'validators' => ['validators'];
+        foreach (self::DOMAINS as $domain) {
+            yield $domain => [$domain];
+        }
     }
 
     #[DataProvider('domains')]
@@ -84,7 +96,7 @@ final class CatalogueCompletenessTest extends TestCase
         self::assertNotEmpty($verwendet, 'Es wurden keine Schlüssel gefunden — der Scanner greift ins Leere.');
 
         $definiert = [];
-        foreach (['messages', 'validators'] as $domain) {
+        foreach (self::DOMAINS as $domain) {
             foreach (self::LOCALES as $locale) {
                 $definiert += self::flatten(Yaml::parseFile($wurzel.'/translations/'.$domain.'.'.$locale.'.yaml') ?? []);
             }

@@ -1,0 +1,10 @@
+{# Eine Wertzelle der Merkmalstabelle (ab `md:`).
+   Der Inhalt steckt in _verdict_body.html.twig, damit die Kartenliste darunter
+   dieselbe Mechanik benutzt. #}
+<td class="px-4 py-3 align-top {{ align|default('text-left') }}">
+    {% include 'comparison/_verdict_body.html.twig' with {
+        verdict: verdict,
+        note: note is defined and note ? note : '',
+        source: source is defined and source ? source : null
+    } only %}
+</td>

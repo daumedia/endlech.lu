@@ -1,0 +1,20 @@
+{# Inhalt einer Bewertung: Symbol, Ansage, Halbsatz, Fußnote.
+
+   Eigenes Partial, weil derselbe Inhalt in zwei Darstellungen erscheint — in der
+   Tabelle ab `md:` und in der Kartenliste darunter (BF-77). Ohne diese Trennung
+   stünde die Screenreader-Mechanik zweimal im Projekt, und eine Korrektur daran
+   würde beim zweiten Mal vergessen.
+
+   ⚠ Das Symbol ist aria-hidden, die Aussage trägt der sr-only-Text. Ein Symbol
+   allein wäre stumm und in Graustufen mehrdeutig (Feature 02, AK-17). #}
+<span class="{{ verdict.textClass }} text-lg font-bold" aria-hidden="true">{{ verdict.symbol }}</span>
+<span class="sr-only">{{ verdict.transKey|trans({}, 'comparison') }}</span>
+{% if note %}
+    <span class="text-gray-700"> — {{ note }}</span>
+{% endif %}
+{% if source %}
+    <a href="#quelle-{{ source }}" class="text-cyan-800 underline underline-offset-2 focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700">
+        <span class="sr-only">{{ 'sources.ref'|trans({'%ref%': source}, 'comparison') }}</span>
+        <span aria-hidden="true">[{{ source }}]</span>
+    </a>
+{% endif %}

@@ -1,6 +1,6 @@
 # Befunde — projektweit
 
-Stand: 2026-08-25 · Quelle: die `qa-report.md` aller geprüften Features
+Stand: 2026-08-29 · Quelle: die `qa-report.md` aller geprüften Features
 
 Diese Liste wird von `sdd-qa` fortgeschrieben, nicht von Hand. Sie ist die Grundlage
 des Auditberichts, den `/sdd-erfassen abschluss` daraus baut.
@@ -40,13 +40,29 @@ obwohl dort nichts mehr zu reparieren ist.
 
 ## Offen
 
-Keine. Alle vier Befunde der `02`-QA (BF-73/74/75/76) sind über fünf Durchläufe behoben und
-verifiziert — siehe unten. Die 72 Rückerfassungs-Befunde ebenfalls.
+| ID | Feature | Befund | Grad | Fundstelle | Status |
+|---|---|---|---|---|---|
+| BF-80 | 02 / projektweit | Bei 768 px scrollen **alle** Seiten um 51 px waagerecht — Startseite, `/about`, `/open`, `/restaurants`, `/criteria`, `/legal` und die Vergleichsseiten. Mit ausgeblendetem `<header>` sind es 0 px; bei genau 768 px greift die Desktop-Navigation, der Platz reicht nicht, `flex-wrap: nowrap` verhindert den Umbruch | mittel | `templates/base.html.twig` — `div.flex items-center gap-4` | offen |
+| BF-82 | 03 | Ein Anbietername von 57 Zeichen **ohne Leerzeichen** sprengt bei 320 px die Kartendarstellung (`scrollX=104`). Bis 30 Zeichen sauber; die realen Wortmarken sind 8–11 Zeichen | niedrig | `templates/comparison/_cards.html.twig` — `<dt>` ohne `overflow-wrap` | offen |
+
+Die drei Befunde des ersten `03`-Durchlaufs (BF-77/78/79), BF-81 sowie die vier der
+`02`-QA und die 72 Rückerfassungs-Befunde sind behoben — siehe unten.
 
 > Nichts davon liegt auf `production`: Feature `02` auf
-> `feature/02-barrierefreiheit-plattform`, die Rückerfassung auf `dev`/`fix/befunde-abarbeiten`.
+> `feature/02-barrierefreiheit-plattform`, Feature `03` auf `feature/03-vergleichsseiten`,
+> die Rückerfassung auf `dev`/`fix/befunde-abarbeiten`.
 
 ## Behoben
+
+### Feature 03 · Vergleichsseiten (QA 2026-08-29, behoben am selben Tag)
+
+| ID | Befund | Grad | Behebung | Gegenprobe |
+|---|---|---|---|---|
+| BF-77 | Die drei Vergleichsseiten scrollten bei 320 px waagerecht (`scrollX=212`); die Merkmalstabelle ist mit ihren erklärenden Halbsätzen 525 px breit | hoch | Kartendarstellung `_cards.html.twig` unter `md:`, Tabelle auf `hidden md:block`; gemeinsamer Inhalt in `_verdict_body.html.twig`. ⚠ Der naheliegende `overflow-wrap: anywhere` wurde ausprobiert und **verworfen** — er beseitigt das Scrollen und zerlegt dabei Wörter mitten im Wort | `scrollX=0` bei 320/375/1280 px auf allen drei Seiten und in allen Sprachen; zwei neue Prüfläufe, Rückbau schlägt fehl |
+| BF-78 | `ComparisonGroup::transKey()` und `Verdict::transKey()` fielen durch jeden Prüflauf — der Schlüssel fehlte in allen vier Katalogen, 594 Tests blieben grün, der rohe Schlüssel stand auf der Seite | mittel | `schluesselAusDerRegistry()` läuft zusätzlich über `ComparisonGroup::cases()` und `Verdict::cases()` | Reproduktion greift nicht mehr: Lauf schlägt mit „1 Schlüssel fehlen in comparison.lb.yaml" fehl |
+| BF-79 | Zwei `<nav>`-Landmarks je Vergleichsseite hießen beide „Weitere Vergleiche" | mittel | eigener Schlüssel `breadcrumb.label` in vier Sprachen | Landmarks heißen jetzt „Sie sind hier" / „Weitere Vergleiche"; neuer Prüflauf, Rückbau schlägt fehl |
+| BF-81 | Der Fußnoten-Prüflauf filterte auf `table a[href^="#quelle-"]` und sah nur die Tabelle. Nachgestellt: Die Kartendarstellung verlor alle 18 Fußnotenlinks, **alle 606 Tests blieben grün** — auf schmalen Anzeigen hätten die Aussagen über den Wettbewerber unbelegt dagestanden | mittel | in der QA vom 2026-08-29 selbst geschlossen: neuer Prüflauf `testBeideDarstellungenBelegenIhreAussagen`, bestehender Test filtert nicht mehr auf `table` | Rückbau schlägt jetzt mit „Die Kartendarstellung belegt keine einzige Aussage" fehl |
+
 
 | ID | Feature | Befund | Grad | Behoben am | Ausgeliefert |
 |---|---|---|---|---|---|

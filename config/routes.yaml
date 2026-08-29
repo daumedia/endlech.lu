@@ -20,6 +20,19 @@ app_open_redirect:
         _locale: lb
         permanent: false
 
+# Locale-freier Kurzlink auf die Vergleichsübersicht (Feature 03).
+# Dieselbe Begründung wie bei /open: Die kurze Adresse steht in Mails und
+# Vorträgen und darf nicht an einer Sprachwahl scheitern. Gilt nur für die
+# Übersicht — die Einzelseiten tragen ihren Slug ohnehin und werden verlinkt,
+# nicht abgetippt.
+app_comparison_redirect:
+    path: /vergleich
+    controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController
+    defaults:
+        route: app_comparison_index
+        _locale: lb
+        permanent: false
+
 # Alle Controller mit /{_locale} Prefix (inkl. Admin)
 # Ausnahmen: Api/V1 und Controller/Open werden separat ohne Locale-Prefix
 # importiert.

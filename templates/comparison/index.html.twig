@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{# Übersicht der Vergleiche (Feature 03).
+
+   Ein leerer Zustand kann hier nicht auftreten: Die Zahl der Vergleiche ist eine
+   Aufzählung im Quelltext, keine Abfrage. Auch kein Ladezustand — die Seite wird
+   serverseitig gerendert und lädt nichts nach. #}
+
+{% block title %}{{ 'index.meta_title'|trans({}, 'comparison') }} – Endlech.lu{% endblock %}
+
+{% block meta_description %}
+    <meta name="description" content="{{ 'index.meta_description'|trans({}, 'comparison') }}">
+{% endblock %}
+
+{% block canonical %}
+    <link rel="canonical" href="{{ url('app_comparison_index') }}">
+{% endblock %}
+
+{% block body %}
+    <section class="bg-linear-to-r from-cyan-700 to-purple-800 text-white py-20">
+        <div class="container mx-auto px-4 max-w-3xl text-center">
+            <p class="inline-block bg-white/20 text-white text-sm font-semibold px-4 py-1.5 rounded-full mb-6">{{ 'index.eyebrow'|trans({}, 'comparison') }}</p>
+            <h1 class="text-3xl md:text-5xl font-bold mb-5 leading-tight">{{ 'index.heading'|trans({}, 'comparison') }}</h1>
+            <p class="text-lg text-cyan-50 leading-relaxed">{{ 'index.intro'|trans({}, 'comparison') }}</p>
+        </div>
+    </section>
+
+    <section class="bg-white py-16">
+        <div class="container mx-auto px-4 max-w-4xl">
+            <ul class="grid gap-6 md:grid-cols-2">
+                {% for page in pages %}
+                    {% set p = page.competitor.transPrefix %}
+                    <li>
+                        <a href="{{ path('app_comparison_show', {'slug': page.competitor.slug}) }}"
+                           class="flex h-full flex-col rounded-xl border-2 border-gray-300 bg-white p-6 motion-safe:transition hover:border-cyan-700 hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-700">
+                            <h2 class="text-lg font-bold text-gray-900 mb-2">{{ (p ~ 'heading')|trans({}, 'comparison') }}</h2>
+                            <p class="text-gray-700 leading-relaxed grow">{{ (p ~ 'subheading')|trans({}, 'comparison') }}</p>
+                            <span class="mt-4 font-semibold text-cyan-800">
+                                {{ 'index.card_cta'|trans({}, 'comparison') }} <span aria-hidden="true">›</span>
+                            </span>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </section>
+
+    {# Methodik — beantwortet die Frage, die eine Vergleichsseite unweigerlich
+       aufwirft: warum sollte ich euch glauben, wenn ihr über andere schreibt. #}
+    <section class="bg-gray-50 py-16">
+        <div class="container mx-auto px-4 max-w-3xl">
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4">{{ 'index.method_title'|trans({}, 'comparison') }}</h2>
+            <p class="text-gray-800 leading-relaxed mb-6">{{ 'index.method_body'|trans({}, 'comparison') }}</p>
+            <div class="flex flex-wrap gap-3">
+                <a href="{{ path('app_kriterien') }}"
+                   class="inline-flex items-center min-h-[48px] rounded-full border border-cyan-700 px-6 font-semibold text-cyan-800 motion-safe:transition hover:bg-cyan-50 focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700">
+                    {{ 'index.method_criteria'|trans({}, 'comparison') }}
+                </a>
+                <a href="{{ path('app_open') }}"
+                   class="inline-flex items-center min-h-[48px] rounded-full border border-cyan-700 px-6 font-semibold text-cyan-800 motion-safe:transition hover:bg-cyan-50 focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700">
+                    {{ 'index.method_open'|trans({}, 'comparison') }}
+                </a>
+            </div>
+            <p class="mt-8 text-sm text-gray-600">{{ 'legal.trademarks'|trans({}, 'comparison') }}</p>
+        </div>
+    </section>
+{% endblock %}

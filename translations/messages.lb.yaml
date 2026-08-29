@@ -34,6 +34,9 @@ footer:
     help_improve: "Hëlleft eis, besser ze ginn."
     copyright: "Made with ❤️ in Luxembourg."
     accessibility_statement: "Barrièrefräiheet"
+    comparisons: "Verglachër"
+    all_comparisons: "All Verglachër"
+    vs: "vs. %brand%"
 
 cookie:
     title: "Mir benotzen Cookien"

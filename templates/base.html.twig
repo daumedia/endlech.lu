@@ -5,6 +5,13 @@
     <title>{% block title %}Endlech.lu{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
+    {# Kurzbeschreibung und kanonische Adresse (Feature 03).
+       Standardmäßig leer — bislang füllt sie nur der Vergleichsbereich. Für alle
+       übrigen Seiten nachzurüsten wäre ein eigenes Feature; die Blöcke hier
+       ändern an keiner bestehenden Seite etwas. #}
+    {% block meta_description %}{% endblock %}
+    {% block canonical %}{% endblock %}
+
     {# PWA: Manifest, Theme-Farbe & iOS-spezifische Tags (Issue #83) #}
     <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
     <meta name="theme-color" content="#0891b2">
@@ -165,7 +172,7 @@
 
 {# === FOOTER === #}
 <footer class="bg-gray-900 text-gray-300 py-12 mt-12 print:hidden">
-    <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 text-sm">
+    <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-sm">
 
         {# Spalte 1 #}
         <div>
@@ -202,7 +209,31 @@
             </ul>
         </div>
 
-        {# Spalte 3 #}
+        {# Spalte 3 — Vergleiche (Feature 03).
+           Eigene Spalte statt einer zweiten Überschrift in Spalte 2: Die trägt
+           bereits zehn Einträge, und eine elfte Gruppe darunter zöge die Fußzeile
+           schief. #}
+        <div>
+            <h4 class="text-white font-bold mb-4 uppercase tracking-wider">{{ 'footer.comparisons'|trans }}</h4>
+            <ul class="space-y-2">
+                {% for competitor in comparison_competitors() %}
+                    <li>
+                        <a href="{{ path('app_comparison_show', {'slug': competitor.slug}) }}"
+                           class="hover:text-cyan-400 motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-cyan-400">
+                            {{ 'footer.vs'|trans({'%brand%': competitor.brand}) }}
+                        </a>
+                    </li>
+                {% endfor %}
+                <li>
+                    <a href="{{ path('app_comparison_index') }}"
+                       class="hover:text-cyan-400 motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-cyan-400">
+                        {{ 'footer.all_comparisons'|trans }}
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        {# Spalte 4 #}
         <div>
             <h4 class="text-white font-bold mb-4 uppercase tracking-wider">{{ 'footer.contact_title'|trans }}</h4>
             <p>{{ 'footer.help_improve'|trans }}</p>
