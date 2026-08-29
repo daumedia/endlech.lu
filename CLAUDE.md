@@ -504,6 +504,16 @@ Anmeldung per Face ID, Touch ID oder Geräte-PIN – **zusätzlich** zum Passwor
 
 ⚠️ **`entry_point: form_login` ist Pflicht**, sobald eine Firewall zwei Authenticator führt – sonst bricht der Container-Build mit `RegisterEntryPointPass`. Nur `form_login` kennt den `login_path`.
 
+⚠️ **`supports()` prüft mit `has('_assertion')`, nicht auf einen gefüllten Wert** (ENDLECH-6).
+Das Passkey-Formular führt kein `_username`. Prüft man auf einen **gefüllten** Wert, fällt
+ein Submit mit leerer Assertion an den `FormLoginAuthenticator` durch — und der wirft dort
+`BadRequestHttpException: The key "_username" must be a string, "NULL" given.` Statt der
+Meldung „Passkey-Anmeldung fehlgeschlagen" sah der Nutzer eine nackte Fehlerseite. Mit
+`has()` beansprucht der Passkey-Weg jeden Submit aus seinem Formular; eine unbrauchbare
+Assertion scheitert regulär und wird zur Flash-Nachricht. Der Passwort-Weg ist unberührt,
+sein Formular sendet kein `_assertion`. Abgesichert durch
+`SecurityControllerTest::testEndlech6…` mit vier Assertion-Formen.
+
 ⚠️ **Der Passkey-Knopf hat ein eigenes `<form>`.** Der `AuthenticationController` aus dem npm-Paket ruft vor dem Start `form.checkValidity()`; im Passwort-Formular sind beide Felder `required`, ein Klick liefe dort gegen die Browser-Validierung. Das Passkey-Formular steht **zuerst im Markup**, weil die Tab-Reihenfolge der sichtbaren folgen muss. Deshalb nutzt `SecurityControllerTest` `formWithField()` statt `filter('form')` – wer dort auf `filter('form')` zurückfällt, greift das Passkey-Formular und bekommt „Unreachable field \"_username\"".
 
 **Entity `WebauthnCredential`** erbt von `Webauthn\CredentialRecord`. Das Bundle registriert dafür selbst eine mapped-superclass (`WebauthnBundle::registerMappings()`) und trägt fünf DBAL-Typen (`base64`, `aaguid`, `trust_path`, …) über `WebauthnExtension::prepend()` ein – für die geerbten Felder braucht es also **keine** ORM-Attribute und keine Konfigurationszeile. Eigene Felder: `id`, `user` (ManyToOne, `ON DELETE CASCADE`), `name`, `createdAt`, `lastUsedAt`.
@@ -977,7 +987,7 @@ strukturell in keinem Cache.
 - `release: 'endlech@%app.version%'` – hängt am CalVer-Parameter aus `config/services.yaml` und zieht bei jedem Release automatisch mit (kein fünfter Handgriff in der Release-Checkliste).
 - `send_default_pii: false` – keine IP-Adressen, Cookies, Request-Header oder Nutzerdaten.
 - `enable_logs: true` – **reicht allein nicht**; der Handler muss zusätzlich in `monolog.yaml` registriert sein (das Sentry-Onboarding-Snippet verschweigt das).
-- `ignore_exceptions` filtert 404/405/403/429 – ohne das hätte Bot-Traffic die Quota geflutet. Matching läuft über `is_a($class, $pattern, true)`, greift also auch auf Subklassen und Interfaces.
+- `ignore_exceptions` filtert 404/405/403/429 **und seit ENDLECH-6 auch 400** (`BadRequestHttpException`) – ohne das hätte Bot-Traffic die Quota geflutet. Der 400er kam von einem Scanner, der `/login` per POST ohne Felder anpokte; Symfonys `FormLoginAuthenticator` wirft dort korrekt, aber das ist ein kaputter Client und kein Anwendungsfehler. ⚠️ **Vor dem Aufnehmen einer Exception hier prüfen, ob das Projekt sie selbst wirft** – `BadRequestHttpException` tut es nirgends (die eigenen 400er sind `JsonResponse`-Rückgaben in Admin- und API-Controllern und erreichen Sentry nie). Matching läuft über `is_a($class, $pattern, true)`, greift also auch auf Subklassen und Interfaces.
 
 **Monolog.** `config/packages/monolog.yaml` hat im `when@prod`-Block den Handler `sentry_logs` (`type: service`, `id: Sentry\SentryBundle\Monolog\LogsHandler`) neben `main`/`console`/`deprecation`. Der Service wird in `sentry.yaml` mit `Monolog\Level::Warning` definiert (Monolog 3 – nicht die deprecatete Konstante `Monolog\Logger::WARNING`). Bewusst `LogsHandler` (schickt Sentry-*Logs*) statt `Sentry\Monolog\Handler` (schickt *Issues*) – deshalb bleibt `register_error_listener` aktiv, ohne dass Exceptions doppelt gemeldet werden.
 

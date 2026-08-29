@@ -7,6 +7,34 @@ Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
 ## [Unreleased]
 
+### Ein Passkey-Submit ohne Assertion endet nicht mehr in einer Fehlerseite (2026-08-29)
+
+Sentry `ENDLECH-6`: `BadRequestHttpException: The key "_username" must be a string,
+"NULL" given.` bei einem POST auf `/de/login`.
+
+Die Login-Seite führt zwei Formulare — das Passkey-Formular kennt weder `_username`
+noch `_password`. `PasskeyAuthenticator::supports()` prüfte auf einen **gefüllten**
+`_assertion`-Wert. War er leer (Ceremony ohne Ergebnis), beanspruchte der Passkey-Weg
+den Submit nicht, und Symfonys `FormLoginAuthenticator` übernahm — der bei fehlendem
+`_username` eine `BadRequestHttpException` wirft. Der Nutzer sah statt
+„Passkey-Anmeldung fehlgeschlagen" eine nackte Fehlerseite.
+
+`supports()` prüft jetzt mit `has()`, ob das Feld **vorhanden** ist. Damit beansprucht
+der Passkey-Authenticator jeden Submit aus seinem Formular; eine unbrauchbare Assertion
+scheitert regulär und landet über `onAuthenticationFailure` als Flash-Nachricht.
+Gemessen: 302 statt 400, für leer, Nicht-JSON, `{}` und unvollständiges JSON. Der
+Passwort-Weg ist unberührt — sein Formular sendet kein `_assertion`.
+
+Der konkrete Auslöser in Sentry war allerdings kein Nutzer, sondern ein Scanner
+(`curl 8.7.1`) mit einem POST ganz ohne Felder. Dieser Fall bleibt korrekterweise ein
+400 — er ist jetzt aber kein Sentry-Issue mehr: `BadRequestHttpException` steht in
+`ignore_exceptions` neben 404/405/403/429. Ungefährlich, weil das Projekt die Klasse
+selbst nirgends wirft; die eigenen 400er sind `JsonResponse`-Rückgaben und erreichten
+Sentry ohnehin nie.
+
+Nebenbei berichtigt: Der Klassen-Docblock des Authenticators behauptete, die
+Login-Seite trage „nur EIN Formular". Sie trägt zwei, seit es Passkeys gibt — der
+Docblock von `SecurityControllerTest` sagt das seit jeher richtig.
 ### Der Deploy zeigt eine Wartungsseite statt 500er (2026-08-29)
 
 Der Deploy von v2026.08.29 hat einen Besucher in einen Serverfehler laufen lassen
