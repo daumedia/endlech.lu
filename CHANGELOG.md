@@ -2,10 +2,17 @@
 
 Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
-![Version](https://img.shields.io/badge/version-2026.08.29-blue)
+![Version](https://img.shields.io/badge/version-2026.08.29a-blue)
 ![Status](https://img.shields.io/badge/status-beta-green)
 
 ## [Unreleased]
+
+## [2026.08.29a] – Deploy-Fenster, Passkey-Fehlerseite und Worker-Sperre
+
+Drei Nachträge zum Release desselben Tages, alle am Rand des Deploys: Das
+Auslieferungsfenster liefert keine 500er mehr, ein Passkey-Submit ohne Assertion
+endet nicht mehr in einer nackten Fehlerseite, und der künftige Messenger-Worker
+kann den Arbeitsbaum nicht mehr mitten im Wechsel erwischen.
 
 ### Deploy hält den Messenger-Worker an, bevor der Arbeitsbaum wechselt (2026-08-29)
 
