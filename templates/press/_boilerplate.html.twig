@@ -1,0 +1,24 @@
+{# Die drei freigegebenen Beschreibungstexte.
+
+   ⚠ Kein <details> und kein Kopier-Knopf: AK-09 sagt zu, dass sich jeder Text
+   ohne JavaScript markieren und kopieren lässt. Text hinter einem Aufklappelement
+   erfüllt das nicht, und ein Knopf brächte einen Stimulus-Controller samt
+   Rückfallweg für ein Kriterium, das es nicht gibt. #}
+<section id="boilerplate" class="bg-white py-16 scroll-mt-24" aria-labelledby="boilerplate-titel">
+    <div class="container mx-auto px-4 max-w-3xl">
+        <h2 id="boilerplate-titel" class="text-2xl md:text-3xl font-bold text-gray-900 mb-3">{{ 'boilerplate.section_title'|trans({}, 'press') }}</h2>
+        <p class="text-gray-700 leading-relaxed mb-8">{{ 'boilerplate.section_intro'|trans({}, 'press') }}</p>
+
+        <div class="space-y-6">
+            {% for laenge in boilerplates %}
+                <article class="rounded-xl border-2 border-gray-300 bg-white p-6">
+                    <h3 class="flex flex-wrap items-baseline gap-x-3 gap-y-1 text-lg font-bold text-gray-900 mb-3">
+                        {{ laenge.labelKey|trans({}, 'press') }}
+                        <span class="text-sm font-normal text-gray-600">{{ 'boilerplate.word_hint'|trans({'%count%': laenge.approxWords}, 'press') }}</span>
+                    </h3>
+                    <p class="text-gray-800 leading-relaxed">{{ laenge.transKey|trans({}, 'press') }}</p>
+                </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>

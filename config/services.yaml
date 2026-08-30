@@ -26,6 +26,26 @@ parameters:
     app.contact_email: '%env(string:default:app.contact_email_fallback:CONTACT_EMAIL)%'
     app.contact_email_fallback: 'info@endlech.lu'
 
+    # --- Presse-Kit (Feature 05) ---
+    # VB-03 erfüllt am 2026-08-30. ⚠ `app.operator_address` bleibt **absichtlich leer**
+    # (OF-04): Es wird keine Anschrift veröffentlicht, erreichbar ist der Betreiber über
+    # den Pressekontakt. Die Zeile „Anschrift" entfällt dadurch im Faktenblatt; kommt
+    # später eine c/o- oder Postfachadresse, erscheint sie ohne Codeänderung wieder.
+    # Die Werte erscheinen an zwei Stellen zugleich — Faktenblatt auf /presse und
+    # Impressum (/legal). Genau deshalb stehen sie hier und nicht in vier
+    # Übersetzungskatalogen: Vier Stellen wären vier Gelegenheiten, eine Änderung
+    # zu vergessen, und `CatalogueCompletenessTest` prüft Vollständigkeit, nicht
+    # Gleichheit (AK-15).
+    app.operator_name: 'Michael Ferreira'
+    app.operator_address: ''
+    app.operator_responsible: 'Michael Ferreira'
+    # Presseadresse. ⚠ VB-02: Das Postfach muss beim Hoster eingerichtet sein und
+    # gelesen werden — eine Presseadresse, die ins Leere läuft, ist schlimmer als
+    # keine. Fallback-Parameter wie bei app.contact_email, damit ein leerer
+    # Umgebungswert nicht zu einem `mailto:` ohne Adresse wird.
+    app.press_email: '%env(string:default:app.press_email_fallback:PRESS_EMAIL)%'
+    app.press_email_fallback: 'support@endlech.lu'
+
     # --- Brevo · Marketing-Kontakte (Feature 04) ---
     # string:-Cast wie bei app.mobiliteit_api_key: ein fehlender oder leerer Wert wird
     # zu '' statt null. Der Sync-Dienst prüft auf den leeren String und bleibt still

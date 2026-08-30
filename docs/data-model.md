@@ -41,6 +41,13 @@ aus dem WebAuthn-Bundle (`Webauthn\CredentialRecord`,
 Elf Enums (alle `string`-backed) liegen in `src/Enum/`, zwölf Repositories in
 `src/Repository/`, 26 Migrationen in `migrations/`.
 
+⚠ **Zwei Features haben bewusst keine Entity und tauchen hier deshalb nicht auf:**
+Feature `03` (Vergleichsseiten, `App\Comparison\`) und Feature `05` (Presse-Kit,
+`App\Press\`). Beide halten ihre Inhalte als unveränderliche Wertobjekte im
+Quelltext und ihre Texte in einer eigenen Übersetzungsdomain; sie legen keine
+Tabelle an und bringen keine Migration mit. Wer für eines von beiden ein Schema
+sucht, sucht vergeblich — das ist kein Rückstand dieser Datei.
+
 ---
 
 ## Konventionen

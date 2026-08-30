@@ -198,13 +198,18 @@ Fußzeile auf kurzen Seiten unten bleibt.
 | Spalte | Inhalt |
 |---|---|
 | 1 | Wortmarke, `footer.tagline`, GitHub-Link (`target="_blank"`, `rel="noopener noreferrer"`) |
-| 2 | `footer.links` — zehn Einträge, siehe unten |
+| 2 | `footer.links` — elf Einträge, siehe unten |
 | 3 | `footer.comparisons` — je ein Link pro Vergleich plus `footer.all_comparisons` (Feature 03) |
 | 4 | `footer.contact_title`, `footer.help_improve`, `mailto:info@endlech.lu` |
 
-Die Linkliste (Spalte 2): Restaurants suchen · Restaurant vorschlagen · Kriterien ·
-Partner · Organisationen · Open · Impressum · Barrierefreiheit ·
-Cookie-Einstellungen · Feedback (`endlech.userjot.com`, extern).
+Die Linkliste (Spalte 2), **elf Einträge**: Restaurants suchen · Restaurant
+vorschlagen · Kriterien · Partner · Organisationen · Open · Impressum ·
+Barrierefreiheit · **Presse** · Cookie-Einstellungen · Feedback
+(`endlech.userjot.com`, extern).
+
+Der Eintrag „Presse" kam mit Feature 05 dazu und steht bewusst in dieser Spalte
+statt in einer eigenen: Ein einzelner Link rechtfertigt keine fünfte Spalte, und
+bei `lg:` zöge sie die Fußzeile schief.
 
 **Spalte 3 kommt aus einer Twig-Erweiterung**, nicht aus dem Controller:
 `comparison_competitors()` in `src/Twig/ComparisonExtension.php`. Die Fußzeile wird
@@ -364,3 +369,47 @@ Das ist funktionsfähig und spart ein zweites Layout; ob es gewollt ist, geht au
 Code nicht hervor. Die Ausnahmen für Bottom-Navigation, Cookie-Banner und
 Cookie-Link zeigen, dass die Kollision an drei Stellen einzeln entschärft wurde —
 ein eigenes Admin-Layout hätte alle drei erübrigt.
+
+### 7 · Die Kopfzeile läuft zwischen 768 px und 1000 px über
+
+**Gemessen am 2026-08-30** beim Selbsttest von Feature 05 (Brave, headless, `/de/about`):
+
+| Fensterbreite | abgemeldet | angemeldet (ROLE_ADMIN) |
+|---|---|---|
+| 320 px · 375 px | ok | ok |
+| **768 px** | **+36 px** | **+81 px** |
+| 800 px | +20 px | — nicht gemessen |
+| 850 px | ok | **+40 px** |
+| 900 px | ok | **+15 px** |
+| 1000 px und mehr | ok | ok |
+
+**Ursache:** `header > div.container` ist ein `flex` ohne Umbruch, und der
+`md:`-Umbruchpunkt liegt bei genau 768 px. Ab dort blendet die Kopfzeile die
+Hauptnavigation (`hidden md:flex`, 416 px) **und** den Konto- und Sprachbereich
+ein — bevor Platz dafür da ist. Bei 768 px messen die drei Gruppen zusammen
+789 px (abgemeldet: Logo 123 + Navigation 416 + Konto 250) beziehungsweise
+833 px (angemeldet: 123 + 416 + 295), während der Inhaltsbereich nach
+`px-4` beidseitig nur 736 px fasst.
+
+**Reichweite:** jede Seite. Nachgemessen auf `/de/about`, `/de/presse`,
+`/de/vergleich`, `/de/open` und `/de/partner` — überall derselbe Wert, weil die
+Ursache in `base.html.twig` liegt und nicht im Seiteninhalt.
+
+⚠ **Das ist kein neuer Befund — er steht seit der QA von Feature `02` als BF-80
+in `features/befunde.md`** (dort mit 51 px gemessen, Grad *mittel*). Beim
+Selbsttest von Feature `05` wurde er am 2026-08-30 erneut gefunden und zunächst
+für neu gehalten; die Messung oben ist der Ertrag daraus, denn **den angemeldeten
+Fall führte BF-80 nicht** — dort ist der Überlauf doppelt so groß und reicht bis
+unter 1000 px. BF-80 ist entsprechend ergänzt, nicht verdoppelt.
+
+⚠ **Warum er zweimal übersehen wurde:** Die Kriterien der Features `02`, `03` und
+`05` nennen **320 px** (die QA von `03` maß zusätzlich 375 px). Dort tritt der
+Fehler nicht auf — die Navigation ist unterhalb von `md:` ausgeblendet. Wer ihn
+behebt, ergänzt zugleich eine Prüfbreite zwischen 768 px und 1000 px, sonst kommt
+er wieder.
+
+**Nicht behoben.** Der Befund entstand beim Bau von Feature 05 und gehört nicht
+dorthin repariert: Er betrifft die App-Hülle und damit jedes Feature. Mögliche
+Richtungen — der Umbruchpunkt der Navigation wandert von `md:` auf `lg:`, oder
+die Kopfzeile darf umbrechen. Beides ist eine Entwurfsentscheidung, keine
+Kleinigkeit.

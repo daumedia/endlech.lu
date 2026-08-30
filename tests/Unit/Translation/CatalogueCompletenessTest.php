@@ -28,8 +28,12 @@ final class CatalogueCompletenessTest extends TestCase
      * unten strukturell nicht sehen kann. Die Lücke schließt
      * `ComparisonCatalogueTest`, der die in `App\Comparison\` genannten Schlüssel
      * direkt gegen die Kataloge hält.
+     *
+     * `press` kam mit Feature 05 dazu (Presse-Kit) — aus demselben Grund: Die
+     * Materialliste, die Zitate und die Meldungen rufen ihre Schlüssel über
+     * `App\Press\` auf. Die Lücke schließt `PressCatalogueTest`.
      */
-    private const DOMAINS = ['messages', 'validators', 'comparison'];
+    private const DOMAINS = ['messages', 'validators', 'comparison', 'press'];
 
     /**
      * @return iterable<string, array{string}>

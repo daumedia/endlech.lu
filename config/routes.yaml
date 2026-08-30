@@ -33,6 +33,18 @@ app_comparison_redirect:
         _locale: lb
         permanent: false
 
+# Locale-freier Kurzlink auf die Presseseite (Feature 05).
+# Dieselbe Begründung wie bei /open und /vergleich: Die kurze Adresse steht in
+# Mails an Redaktionen und auf Visitenkarten und darf nicht an einer Sprachwahl
+# scheitern.
+app_press_redirect:
+    path: /presse
+    controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController
+    defaults:
+        route: app_press_index
+        _locale: lb
+        permanent: false
+
 # Alle Controller mit /{_locale} Prefix (inkl. Admin)
 # Ausnahmen: Api/V1 und Controller/Open werden separat ohne Locale-Prefix
 # importiert.

@@ -2,6 +2,13 @@ twig:
     file_name_pattern: '*.twig'
     globals:
         app_version: '%app.version%'
+        # Feature 05: dieselben Werte auf /presse und /legal. Als Globals und nicht
+        # über die Controller, weil zwei Controller sie brauchen und der dritte, der
+        # sie vergisst, eine Seite mit halben Betreiberangaben ausliefern würde.
+        operator_name: '%app.operator_name%'
+        operator_address: '%app.operator_address%'
+        operator_responsible: '%app.operator_responsible%'
+        press_email: '%app.press_email%'
 
 when@test:
     twig:

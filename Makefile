@@ -65,6 +65,9 @@ test: test-db-setup ## Bereitet die Test-DB vor und führt PHPUnit aus
 cc: ## Cache leeren (Wichtig nach Config-Änderungen)
 	php bin/console cache:clear
 
+press-kit: ## Packt das Presse-Paket neu (public/presse/*.zip – gehört in den Commit)
+	php bin/console app:press:package
+
 assets: ## Baut die Assets für Production (Minifiziert)
 	npm run build
 
