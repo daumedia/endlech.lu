@@ -2,10 +2,10 @@
 
 Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
-![Version](https://img.shields.io/badge/version-2026.08.29.1-blue)
+![Version](https://img.shields.io/badge/version-2026.08.30-blue)
 ![Status](https://img.shields.io/badge/status-beta-green)
 
-## [Unreleased]
+## [2026.08.30] – Presse-Kit und Marketing-Kontakte
 
 ### App-Hülle · Kontaktadresse in der Fußzeile (2026-08-30)
 

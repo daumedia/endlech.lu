@@ -10,7 +10,7 @@ parameters:
 
     # Wird im Footer als `v{{ app_version }}` gerendert (twig.yaml → globals).
     # Bei jedem Release mitziehen – zusammen mit den Badges in CHANGELOG.md und README.md.
-    app.version: '2026.08.29.1'
+    app.version: '2026.08.30'
     # string:-Cast, damit ein leerer/fehlender Key zu '' (nicht null) wird – sonst
     # bricht PublicTransportService (string $apiKey) bei der Graceful-Degradation.
     app.mobiliteit_api_key: '%env(string:default::MOBILITEIT_API_KEY)%'
