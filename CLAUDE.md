@@ -602,7 +602,7 @@ freigegebene Zitate, Meldungen und Pressekontakt. **Keine Entity, keine Migratio
 Struktur als unveränderliche Wertobjekte unter `App\Press\`, Texte in der eigenen
 Übersetzungsdomain `press`. Aufbau wie Feature 03.
 
-⚠️ **Wer eine Datei in `public/presse/` ersetzt, erhöht `CACHE_VERSION` in
+⚠️ **Wer eine Datei in `public/presse-kit/` ersetzt, erhöht `CACHE_VERSION` in
 `public/sw.js`.** Der Service Worker liefert Bilder cache-first aus; ein
 wiederkehrender Besucher sähe sonst die alte Logo-Vorschau neben dem neuen Paket. Das
 Paket selbst wird nie gecacht (es ist kein `image` und liegt nicht unter `/build/`) —
@@ -610,7 +610,7 @@ genau deshalb laufen die beiden auseinander, und **kein Prüflauf sieht es**, we
 im Browser passiert.
 
 ⚠️ **Das Paket ist eine committete Datei, erzeugt von `app:press:package`**
-(`make press-kit`), nicht zur Laufzeit gepackt. Es liegt unter `public/presse/` und
+(`make press-kit`), nicht zur Laufzeit gepackt. Es liegt unter `public/presse-kit/` und
 wird vom Webserver direkt ausgeliefert — der Front-Controller sieht es nie, deshalb
 gibt es hier nichts zu deckeln. `PressPackageTest` öffnet die Datei und vergleicht
 ihren Inhalt mit `PressRegistry::assets()`; wer eine Datei austauscht und den Befehl
@@ -620,6 +620,17 @@ nicht neu laufen lässt, bekommt einen roten Prüflauf statt eines veralteten Do
 selbst braucht die Erweiterung nie — nur der Befehl und der Prüflauf. Fehlt sie in
 `.github/workflows/ci.yml`, bricht der Lauf mit einer Meldung über eine unbekannte
 Klasse ab, die wie ein Codefehler aussieht.
+
+⚠️ **Das Verzeichnis heißt `presse-kit`, nicht `presse` — und ein Verzeichnis unter
+`public/` darf generell nicht so heißen wie eine Route.** Auf Apache schickt `mod_dir`
+jeden Aufruf von `/presse` per **301** auf `/presse/`, sobald ein gleichnamiges
+Verzeichnis existiert; Symfonys Trailing-Slash-Regel schickt zurück — eine endlose
+Schleife auf genau der Adresse, die sprachfrei erreichbar sein sollte (BF-100). **Lokal
+unsichtbar**, weil der Entwicklungsserver kein `mod_dir` hat: Drei QA-Durchläufe und ein
+grüner CI-Lauf haben es nicht gesehen. `RouteDirectoryCollisionTest` prüft seither die
+Ursache statt des Verhaltens. Dazu gibt es `/presse/` **mit** Schrägstrich als eigene
+Weiterleitung — der 301er von `mod_dir` steht in den Browsern derer, die die kaputte
+Adresse einmal geöffnet haben, und ohne diese Route drehten sie sich weiter im Kreis.
 
 ⚠️ **Betreiberangaben stehen als Parameter, nicht im Übersetzungskatalog**
 (`app.operator_name`, `app.operator_address`, `app.operator_responsible`, dazu

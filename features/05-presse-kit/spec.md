@@ -393,6 +393,13 @@ zwei Nummern für dieselbe Prüfung machen den Testbericht doppeldeutig.
   ausliefert, fällt jedem Gestalter auf. Welcher Ton gilt? Entscheidet Michael; die
   Änderung ist ein Wert an zwei Stellen.
 
+- **OF-12** · **Der Entwurf nennt noch `public/presse/`.** Das Verzeichnis heißt seit der
+  Reparatur von BF-100 `public/presse-kit/` — ein Verzeichnis unter `public/`, das so
+  heißt wie eine Route, erzeugt auf Apache eine endlose Weiterleitungsschleife.
+  `design.md` ist an drei Stellen überholt (Abschnitt *Datenmodell*, *Dateien im
+  Verzeichnis*, *Missbrauchsschutz*). Beim nächsten Entwurfsdurchgang nachziehen —
+  `sdd-build` ändert `design.md` nicht.
+
 ## Decision Log
 
 | # | Frage | Entscheidung | Begründung |

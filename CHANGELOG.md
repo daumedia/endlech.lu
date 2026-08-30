@@ -2,8 +2,36 @@
 
 Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
-![Version](https://img.shields.io/badge/version-2026.08.30-blue)
+![Version](https://img.shields.io/badge/version-2026.08.30.1-blue)
 ![Status](https://img.shields.io/badge/status-beta-green)
+
+## [2026.08.30.1] – Presse-Kurzlink repariert
+
+Nachtrag desselben Tages, ausgelöst durch die Nachprüfung des vorherigen Releases:
+**Der sprachfreie Kurzlink `/presse` lief in eine endlose Weiterleitungsschleife.**
+
+Ursache war eine Namensgleichheit, die es nur unter Apache gibt: Das neue Verzeichnis
+`public/presse/` hieß wie die Route. `mod_dir` schickte jeden Aufruf von `/presse`
+**dauerhaft (301)** auf `/presse/`, Symfonys Trailing-Slash-Regel schickte zurück. Lokal
+war nichts zu sehen — der Entwicklungsserver hat kein `mod_dir` und liefert Dateien
+selbst aus.
+
+Zwei Teile:
+
+- Das Verzeichnis heißt jetzt **`public/presse-kit/`**.
+- **Eine einzige Route matcht `/presse` und `/presse/` exakt** (`{trailing_slash}`).
+  Ohne diesen Teil wäre die Schleife nur für neue Besucher gelöst: Der 301er von
+  `mod_dir` steht dauerhaft in den Browsern derer, die die kaputte Adresse geöffnet
+  haben. Zwei getrennte Routen genügen nicht — die zuerst definierte zieht ihre
+  Slash-Regel, bevor die zweite geprüft wird.
+
+⚠ **Die alte Download-Adresse `/presse/presse-kit-endlech-lu.zip` ist damit 404.** Sie war
+rund eine halbe Stunde öffentlich erreichbar.
+
+Neu: `RouteDirectoryCollisionTest` prüft **die Ursache statt des Verhaltens** — kein
+Verzeichnis unter `public/` darf so heißen wie eine Route. Das Verhalten selbst ist lokal
+nicht prüfbar, und genau deshalb haben drei QA-Durchläufe und ein grüner CI-Lauf den
+Fehler nicht gesehen.
 
 ## [2026.08.30] – Presse-Kit und Marketing-Kontakte
 

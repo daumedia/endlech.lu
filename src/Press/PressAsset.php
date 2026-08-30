@@ -15,7 +15,7 @@ namespace App\Press;
  * freigabefähig, und eine Redaktion, die es trotzdem druckt, hat ein Problem,
  * das dieses Presse-Kit verursacht hat.
  *
- * ⚠ `publicPath` zeigt nicht zwingend nach `presse/`: Das Gründerporträt liegt
+ * ⚠ `publicPath` zeigt nicht zwingend nach `presse-kit/`: Das Gründerporträt liegt
  * seit jeher unter `uploads/team/` und ist mit 2048 × 1365 px drucktauglich
  * (rund 17 cm bei 300 dpi). Eine Kopie für die Presse wäre eine zweite Wahrheit,
  * die beim nächsten Bildwechsel auseinanderfällt.

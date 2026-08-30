@@ -37,13 +37,30 @@ app_comparison_redirect:
 # Dieselbe Begründung wie bei /open und /vergleich: Die kurze Adresse steht in
 # Mails an Redaktionen und auf Visitenkarten und darf nicht an einer Sprachwahl
 # scheitern.
+#
+# ⚠ **Der optionale Schrägstrich ist die Reparatur von BF-100, keine Kosmetik.**
+# Solange `public/presse/` existierte, schickte Apaches `mod_dir` jeden Aufruf
+# von /presse **dauerhaft (301)** auf /presse/, und Symfonys Trailing-Slash-Regel
+# schickte zurück — eine endlose Schleife auf Produktion, lokal unsichtbar. Das
+# Verzeichnis heißt seither `presse-kit`; der 301er steht aber weiter in den
+# Browsern derer, die die kaputte Adresse geöffnet haben.
+#
+# Deshalb matcht **eine** Route beide Formen exakt: Weder /presse noch /presse/
+# löst noch eine Trailing-Slash-Weiterleitung aus, beide gehen direkt auf die
+# Sprachfassung. Zwei getrennte Routen genügen nicht — die zuerst definierte
+# zieht ihre Slash-Regel, bevor die zweite geprüft wird; gemessen am 2026-08-30.
+# `ignoreAttributes` hält den Hilfsparameter aus der Zieladresse heraus.
 app_press_redirect:
-    path: /presse
+    path: /presse{trailing_slash}
     controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController
     defaults:
         route: app_press_index
         _locale: lb
         permanent: false
+        trailing_slash: ''
+        ignoreAttributes: ['trailing_slash']
+    requirements:
+        trailing_slash: '/?'
 
 # Alle Controller mit /{_locale} Prefix (inkl. Admin)
 # Ausnahmen: Api/V1 und Controller/Open werden separat ohne Locale-Prefix
