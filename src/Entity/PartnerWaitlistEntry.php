@@ -58,9 +58,45 @@ class PartnerWaitlistEntry implements WaitlistEntryInterface
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $confirmedAt = null;
 
+    /**
+     * Zeitpunkt, zu dem der Interessent **selbst** bestätigt hat (BF-89).
+     *
+     * ⚠ **`confirmedAt` allein reicht nicht, um das zu beantworten.** Es wird
+     * an zwei Stellen gesetzt: beim eingelösten Double-Opt-In **und** beim
+     * Statuswechsel in der Verwaltung, wenn ein Eintrag von Hand weitergesetzt
+     * wird (Bestandsmuster für telefonisch geführte Kontakte). Wer die beiden
+     * Fälle unterscheiden muss, kann es an `confirmedAt` nicht.
+     *
+     * Genau daran ist die erste Reparatur von BF-83 gescheitert: Sie zog die
+     * Prüfung vor den Backfill, womit der *erste* Statuswechsel sauber war und
+     * der *zweite* das nachgesetzte Feld vorfand. Eine Reparatur an der
+     * Reihenfolge kann eine Zweideutigkeit nicht auflösen — sie verschiebt sie.
+     *
+     * Dieses Feld setzt **ausschließlich** `confirm()`, also der Weg über den
+     * Bestätigungslink. Alles, was einer belegten Adresse bedarf — allen voran
+     * die Übertragung nach Brevo (AK-05) — fragt hier und nicht bei
+     * `confirmedAt`.
+     */
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $selfConfirmedAt = null;
+
     /** Zeitpunkt der Einwilligung (DSGVO-Nachweis) – wird beim Absenden gesetzt. */
     #[ORM\Column]
     private \DateTimeImmutable $consentAt;
+
+    /**
+     * Zeitpunkt der **Werbe**-Einwilligung; `null` heißt: keine (Feature 04).
+     *
+     * Getrennt von `$consentAt`: Jene deckt die Kontaktaufnahme **zum Angebot**,
+     * um das es bei der Anmeldung geht. Ein Newsletter geht darüber hinaus und
+     * braucht deshalb eine eigene, nicht vorangehakte Entscheidung (AK-04).
+     *
+     * Hier steht der Zeitpunkt und nicht das Häkchen – Art. 7 Abs. 1 DSGVO
+     * verlangt, die Einwilligung nachweisen zu können. Dasselbe Muster wie bei
+     * `$consentAt`, dessen Formularfeld ebenfalls `mapped: false` ist.
+     */
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $marketingConsentAt = null;
 
     /** Sprache, in der das Formular abgeschickt wurde. */
     #[ORM\Column(length: 5)]
@@ -116,12 +152,52 @@ class PartnerWaitlistEntry implements WaitlistEntryInterface
         return null !== $this->confirmedAt;
     }
 
+    /**
+     * Der eingelöste Double-Opt-In — der einzige Weg, auf dem
+     * `selfConfirmedAt` entsteht (BF-89).
+     *
+     * ⚠ **BF-91: Der Status wird nur aus `PENDING` heraus gesetzt.** Diese
+     * Methode wurde bis BF-89 nie erreicht, wenn ein Admin den Eintrag
+     * zwischenzeitlich weitergesetzt hatte — der Service stieg vorher mit
+     * „bereits bestätigt" aus. Seit diese Abbruchbedingung (zu Recht) weg ist,
+     * kommt eine späte Bestätigung hier an, und ein unbedingtes
+     * `status = CONFIRMED` warf einen gewonnenen Kunden auf „bestätigt"
+     * zurück. Gemessen: `converted` → `confirmed`, und der Rückfall wanderte
+     * über das Auftragsbuch bis nach Brevo (AK-08).
+     *
+     * Ein fortgeschrittener Vertriebsstand ist die **jüngere** Information;
+     * die Bestätigung sagt nichts über ihn aus. Die Zeitstempel werden
+     * trotzdem unbedingt gesetzt: Die Selbstbestätigung ist eingetreten und
+     * gehört festgehalten.
+     */
     public function confirm(): static
     {
-        $this->status = WaitlistStatus::CONFIRMED;
-        $this->confirmedAt = new \DateTimeImmutable();
+        $now = new \DateTimeImmutable();
+
+        if (WaitlistStatus::PENDING === $this->status) {
+            $this->status = WaitlistStatus::CONFIRMED;
+        }
+
+        $this->confirmedAt = $now;
+        $this->selfConfirmedAt = $now;
 
         return $this;
+    }
+
+    public function getSelfConfirmedAt(): ?\DateTimeImmutable
+    {
+        return $this->selfConfirmedAt;
+    }
+
+    /**
+     * Hat der Interessent **selbst** bestätigt?
+     *
+     * Der Unterschied zu `isConfirmed()` ist der ganze Punkt: Jenes ist auch
+     * nach einem Verwaltungs-Statuswechsel wahr.
+     */
+    public function hasSelfConfirmed(): bool
+    {
+        return null !== $this->selfConfirmedAt;
     }
 
     public function getId(): ?int
@@ -259,6 +335,23 @@ class PartnerWaitlistEntry implements WaitlistEntryInterface
         $this->consentAt = $consentAt;
 
         return $this;
+    }
+
+    public function getMarketingConsentAt(): ?\DateTimeImmutable
+    {
+        return $this->marketingConsentAt;
+    }
+
+    public function setMarketingConsentAt(?\DateTimeImmutable $marketingConsentAt): static
+    {
+        $this->marketingConsentAt = $marketingConsentAt;
+
+        return $this;
+    }
+
+    public function hasMarketingConsent(): bool
+    {
+        return null !== $this->marketingConsentAt;
     }
 
     public function getLocale(): string

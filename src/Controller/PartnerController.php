@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\PartnerWaitlistEntry;
+use App\Enum\WaitlistStatus;
 use App\Form\PartnerWaitlistType;
 use App\RateLimit\ActionLimiter;
 use App\Repository\PartnerWaitlistEntryRepository;
@@ -81,6 +82,17 @@ final class PartnerController extends AbstractController
         $entry->setLocale($request->getLocale());
         $entry->setSource(WaitlistRequestHelper::resolveSource($request));
 
+        // Werbe-Einwilligung (Feature 04): nur der Zeitpunkt wird festgehalten.
+        // Ohne Häkchen bleibt das Feld null – bewusst kein else-Zweig, denn
+        // „nicht eingewilligt" ist der Ausgangszustand und kein Vorgang.
+        //
+        // ⚠ Hier geht nichts an Brevo. Übertragen wird erst die BESTÄTIGTE
+        // Adresse (AK-05), und das tut der Bestätigungs-Ablauf, nicht dieses
+        // Formular.
+        if (true === $form->get('marketingConsent')->getData()) {
+            $entry->setMarketingConsentAt(new \DateTimeImmutable());
+        }
+
         $sent = $this->confirmationService->register(
             $entry,
             'app_partner_confirm',
@@ -104,9 +116,17 @@ final class PartnerController extends AbstractController
     public function confirm(string $token, PartnerWaitlistEntryRepository $repository): Response
     {
         $entry = $repository->findOneByConfirmationToken($token);
+
+        // ⚠ BF-91: Vor der Bestätigung merken, ob der Vorgang beim Team
+        // überhaupt neu ist. Seit eine späte Bestätigung durchläuft (BF-89),
+        // erreicht dieser Zweig auch Einträge, die das Team längst bearbeitet
+        // hat — und verschickte für einen gewonnenen Kunden erneut eine
+        // Meldung „Neue Partner-Anmeldung". Der Betreff wäre schlicht falsch.
+        $warNeu = null !== $entry && WaitlistStatus::PENDING === $entry->getStatus();
+
         $state = $this->confirmationService->confirm($entry);
 
-        if (WaitlistConfirmationService::RESULT_CONFIRMED === $state && $entry) {
+        if (WaitlistConfirmationService::RESULT_CONFIRMED === $state && $entry && $warNeu) {
             $this->confirmationService->notifyTeam(
                 $entry,
                 'email/partner/internal_notification.html.twig',

@@ -87,6 +87,24 @@ class PartnerWaitlistType extends AbstractType
                     new IsTrue(message: 'partner_waitlist.consent_required'),
                 ],
             ])
+            // Werbe-Einwilligung (Feature 04) – wie `consent` nicht gemappt, weil
+            // die Entity den Zeitpunkt speichert (marketingConsentAt) und nicht
+            // das Häkchen selbst.
+            //
+            // ⚠ AK-03, Koppelungsverbot (Art. 7 Abs. 4 DSGVO): bewusst OHNE
+            // IsTrue-Constraint und mit required: false. Die Einwilligung darf
+            // keine Bedingung für die Anmeldung sein – bleibt das Feld leer,
+            // läuft der Vorgang unverändert durch. Ein Zwang machte jede
+            // Einwilligung in dieser Liste unwirksam.
+            //
+            // ⚠ AK-02: keine Vorbelegung. Kein 'data' => true – ein
+            // vorangehaktes Kästchen ist keine Einwilligung.
+            ->add('marketingConsent', CheckboxType::class, [
+                'label' => 'marketing.consent.label',
+                'help' => 'marketing.consent.help',
+                'mapped' => false,
+                'required' => false,
+            ])
             // Honeypot: bewusst KEIN type="hidden" – das füllen Bots zuverlässig
             // aus. Ein normales Textfeld mit plausiblem Namen wird per CSS aus
             // dem Blickfeld genommen und im Template zusätzlich mit

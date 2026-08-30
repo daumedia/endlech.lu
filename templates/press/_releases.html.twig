@@ -1,0 +1,36 @@
+{# Pressemitteilungen.
+
+   ⚠ Der leere Zustand blendet den Abschnitt **nicht** aus (AK-27). Ein
+   ausgeblendeter Abschnitt verschweigt, dass hier künftig etwas steht; der
+   Hinweis führt stattdessen zum Pressekontakt. Das ist dasselbe Prinzip wie auf
+   /open: Lücken werden gezeigt, nicht versteckt.
+
+   ⚠ Das Datum läuft über format_date, nicht über eine feste Notation — sonst
+   stünde in der luxemburgischen Fassung ein deutsches Datum (EC-10). #}
+<section id="meldungen" class="bg-gray-50 py-16 scroll-mt-24" aria-labelledby="meldungen-titel">
+    <div class="container mx-auto px-4 max-w-3xl">
+        <h2 id="meldungen-titel" class="text-2xl md:text-3xl font-bold text-gray-900 mb-8">{{ 'releases.section_title'|trans({}, 'press') }}</h2>
+
+        {% if releases is empty %}
+            <div class="rounded-xl border-2 border-dashed border-gray-300 bg-white p-6">
+                <h3 class="font-bold text-gray-900 mb-2">{{ 'releases.empty_title'|trans({}, 'press') }}</h3>
+                <p class="text-gray-800 leading-relaxed">
+                    {{ 'releases.empty_body'|trans({}, 'press') }}
+                    <a href="#kontakt" class="text-cyan-800 underline underline-offset-2 focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700">{{ 'contact.section_title'|trans({}, 'press') }}</a>
+                </p>
+            </div>
+        {% else %}
+            <ol class="space-y-6">
+                {% for meldung in releases %}
+                    <li class="rounded-xl border-2 border-gray-300 bg-white p-6">
+                        <p class="text-sm text-gray-600 mb-1">
+                            <time datetime="{{ meldung.date|date('Y-m-d') }}">{{ meldung.date|format_date('long') }}</time>
+                        </p>
+                        <h3 class="text-lg font-bold text-gray-900 mb-2">{{ meldung.titleKey|trans({}, 'press') }}</h3>
+                        <p class="text-gray-800 leading-relaxed">{{ meldung.bodyKey|trans({}, 'press') }}</p>
+                    </li>
+                {% endfor %}
+            </ol>
+        {% endif %}
+    </div>
+</section>

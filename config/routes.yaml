@@ -33,6 +33,18 @@ app_comparison_redirect:
         _locale: lb
         permanent: false
 
+# Locale-freier Kurzlink auf die Presseseite (Feature 05).
+# Dieselbe Begründung wie bei /open und /vergleich: Die kurze Adresse steht in
+# Mails an Redaktionen und auf Visitenkarten und darf nicht an einer Sprachwahl
+# scheitern.
+app_press_redirect:
+    path: /presse
+    controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController
+    defaults:
+        route: app_press_index
+        _locale: lb
+        permanent: false
+
 # Alle Controller mit /{_locale} Prefix (inkl. Admin)
 # Ausnahmen: Api/V1 und Controller/Open werden separat ohne Locale-Prefix
 # importiert.
@@ -43,6 +55,7 @@ controllers:
         exclude:
             - '../src/Controller/Api/V1/'
             - '../src/Controller/Open/'
+            - '../src/Controller/Marketing/'
     type: attribute
     prefix: /{_locale}
     requirements:
@@ -64,4 +77,14 @@ open_data:
     resource:
         path: ../src/Controller/Open/
         namespace: App\Controller\Open
+    type: attribute
+
+# Brevo-Webhook (Feature 04) – sprachfrei, weil Brevo ohne Sprachpräfix ruft.
+# Ein Locale-Prefix machte die eine URL, die in Brevos Konfiguration steht,
+# von einer Sprachwahl abhängig. Die zugehörige access_control-Zeile steht in
+# security.yaml VOR den Web-Regeln (BF-18).
+marketing_webhook:
+    resource:
+        path: ../src/Controller/Marketing/
+        namespace: App\Controller\Marketing
     type: attribute

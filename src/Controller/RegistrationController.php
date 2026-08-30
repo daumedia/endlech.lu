@@ -92,6 +92,23 @@ final class RegistrationController extends AbstractController
 
             $user->setPassword($hash);
 
+            // Werbe-Einwilligung (Feature 04): nur der Zeitpunkt wird
+            // festgehalten. Ohne Häkchen bleibt das Feld null – bewusst kein
+            // else-Zweig, denn „nicht eingewilligt" ist der Ausgangszustand und
+            // kein Vorgang.
+            //
+            // ⚠ Hier geht nichts an Brevo (AK-05). Ein Konto mit unbestätigter
+            // Adresse gehört in keine Verteilerliste – übertragen wird erst bei
+            // der E-Mail-Verifikation. Wer zustimmt und nie verifiziert, wartet
+            // folgenlos.
+            //
+            // ⚠ Der Aufruf steht NACH dem Enumerations-Zweig oben: Für eine
+            // bereits vergebene Adresse ist die Antwort dieselbe wie hier, und
+            // das Häkchen darf daran nichts ändern.
+            if (true === $form->get('marketingConsent')->getData()) {
+                $user->setMarketingConsentAt(new \DateTimeImmutable());
+            }
+
             $token = $user->generateVerificationToken();
 
             $entityManager->persist($user);

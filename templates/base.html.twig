@@ -200,6 +200,7 @@
                 <li><a href="{{ path('app_open') }}" class="hover:text-cyan-400 transition">{{ 'footer.open'|trans }}</a></li>
                 <li><a href="{{ path('app_impressum') }}" class="hover:text-cyan-400 transition">{{ 'footer.legal'|trans }}</a></li>
                 <li><a href="{{ path('app_accessibility') }}" class="hover:text-cyan-400 transition">{{ 'footer.accessibility_statement'|trans }}</a></li>
+                <li><a href="{{ path('app_press_index') }}" class="hover:text-cyan-400 transition">{{ 'footer.press'|trans }}</a></li>
                 {% if not (app.request.attributes.get('_route') starts with 'admin_') %}
                     <li data-controller="cookie-consent">
                         <button type="button" class="hover:text-cyan-400 transition text-left" data-action="cookie-consent#openSettings">{{ 'cookie.settings'|trans }}</button>
@@ -237,7 +238,7 @@
         <div>
             <h4 class="text-white font-bold mb-4 uppercase tracking-wider">{{ 'footer.contact_title'|trans }}</h4>
             <p>{{ 'footer.help_improve'|trans }}</p>
-            <a href="mailto:info@endlech.lu" class="block mt-2 text-cyan-400 hover:underline">info@endlech.lu</a>
+            <a href="mailto:support@endlech.lu" class="block mt-2 text-cyan-400 hover:underline">support@endlech.lu</a>
         </div>
     </div>
 

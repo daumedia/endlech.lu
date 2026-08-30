@@ -1,0 +1,71 @@
+{#
+    Marketing-Block der Wartelisten-Detailansicht (Feature 04).
+
+    Zeigt zweierlei, das man nicht verwechseln darf:
+      · die Einwilligung an der Quelle — der Nachweis nach Art. 7 Abs. 1 DSGVO,
+      · den Sync-Zustand im Auftragsbuch — was Brevo davon schon hat.
+
+    Beides kann auseinanderlaufen, und genau dann ist der Block nützlich: Eine
+    gescheiterte Übertragung erzeugt keinen Alarm (Sentry sieht Ausfälle, aber
+    keine Lücken). Sie fällt hier auf — oder erst, wenn eine Kampagne jemanden
+    nicht erreicht.
+
+    Erwartet: `entry` (Wartelisten-Eintrag), `marketingContact` (Zeile aus dem
+    Auftragsbuch oder null).
+#}
+<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+    <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">{{ 'marketing.admin.heading'|trans }}</h3>
+
+    <dl class="space-y-3 text-sm">
+        <div>
+            <dt class="text-gray-500 mb-0.5">{{ 'marketing.admin.consent'|trans }}</dt>
+            <dd class="font-semibold text-gray-800">
+                {%- if entry.marketingConsentAt -%}
+                    {{ 'marketing.admin.consent_given'|trans({'%date%': entry.marketingConsentAt|date('d.m.Y H:i')}) }}
+                {%- else -%}
+                    {{ 'marketing.admin.consent_none'|trans }}
+                {%- endif -%}
+            </dd>
+        </div>
+
+        {% if marketingContact %}
+            <div>
+                <dt class="text-gray-500 mb-0.5">{{ 'marketing.admin.column'|trans }}</dt>
+                <dd>
+                    {# Das Abzeichen trägt Farbe UND Text — Farbe trägt nie allein. #}
+                    <span class="{{ marketingContact.syncState.badgeClasses }} text-xs font-bold px-2 py-0.5 rounded-full whitespace-nowrap">
+                        {{ marketingContact.syncState.transKey|trans }}
+                    </span>
+                </dd>
+            </div>
+
+            <div>
+                <dt class="text-gray-500 mb-0.5">{{ 'marketing.admin.origin'|trans }}</dt>
+                <dd class="font-semibold text-gray-800">{{ marketingContact.origin.transKey|trans }}</dd>
+            </div>
+
+            <div>
+                <dt class="text-gray-500 mb-0.5">{{ 'marketing.admin.synced_at'|trans }}</dt>
+                <dd class="font-semibold text-gray-800">
+                    {{- marketingContact.syncedAt ? marketingContact.syncedAt|date('d.m.Y H:i') : 'marketing.admin.not_applicable'|trans -}}
+                </dd>
+            </div>
+
+            {# Der letzte Fehler steht nur da, wenn es einen gibt (AK-15, AK-18).
+               Eine dauerhaft leere Zeile „Letzter Fehler: —" lehrt den Leser,
+               über diese Stelle hinwegzusehen — und dann übersieht er sie auch
+               an dem Tag, an dem etwas drinsteht. #}
+            {% if marketingContact.lastError %}
+                <div class="pt-3 border-t border-gray-200">
+                    <dt class="text-gray-500 mb-0.5">{{ 'marketing.admin.last_error'|trans }}</dt>
+                    <dd class="font-semibold {{ marketingContact.isStuck ? 'text-red-700' : 'text-amber-700' }}">
+                        {{ marketingContact.lastError }}
+                        <span class="font-normal text-gray-500">
+                            ({{ 'marketing.admin.attempts'|trans }}: {{ marketingContact.attempts }})
+                        </span>
+                    </dd>
+                </div>
+            {% endif %}
+        {% endif %}
+    </dl>
+</div>

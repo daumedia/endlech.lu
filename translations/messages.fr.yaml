@@ -34,6 +34,7 @@ footer:
     help_improve: "Aidez-nous à nous améliorer."
     copyright: "Made with ❤️ in Luxembourg."
     accessibility_statement: "Accessibilité"
+    press: "Presse"
     comparisons: "Comparaisons"
     all_comparisons: "Toutes les comparaisons"
     vs: "vs %brand%"
@@ -335,12 +336,16 @@ about:
     mission_title: "Notre mission"
     mission_text: "L'accessibilité ne devrait pas être une question de hasard. Avec Endlech.lu, nous voulons aider les personnes à mobilité réduite à trouver des restaurants au Luxembourg qui sont vraiment accessibles — vérifiés par la communauté, pour la communauté."
     mission_cta: "Découvrir les restaurants"
+    press_teaser_title: "Pour la presse et les médias"
+    press_teaser_body: "Textes de présentation, chiffres actuels, logos et un interlocuteur — au même endroit, validés pour la couverture médiatique."
+    press_teaser_cta: "Vers la page presse"
 
 legal:
     title: "Mentions légales – Endlech.lu"
     heading: "Mentions légales"
     info_title: "Informations conformément au § 5 TMG / Art. 11 Loi sur le commerce électronique"
     info_text: "Endlech.lu\nLuxembourg"
+    responsible_label: "Responsable au sens du droit de la presse"
     contact_title: "Contact"
     contact_email_label: "E-mail :"
     disclaimer_title: "Avertissement"
@@ -354,6 +359,8 @@ legal:
     error_tracking_text: "Afin de détecter et de corriger les erreurs techniques, nous utilisons Sentry (Functional Software, Inc.). En cas d'erreur sur notre site web, des informations techniques telles que l'heure, la page consultée et le message d'erreur sont transmises à des serveurs situés dans l'Union européenne (Francfort-sur-le-Main). Les adresses IP et les données des utilisateurs ne sont pas transmises. La base juridique est notre intérêt légitime à assurer un fonctionnement stable et sûr du site web conformément à l'art. 6, par. 1, point f) du RGPD."
     mail_title: "Envoi d’e-mails (Brevo)"
     mail_text: "Pour l’envoi d’e-mails — confirmations, notifications, listes d’attente — nous utilisons Brevo (Sendinblue GmbH, Cologne). Sont transmis l’adresse e-mail et le nom du destinataire ainsi que le contenu du message. La base légale est l’art. 6 par. 1 lit. b RGPD, respectivement lit. a pour les inscriptions aux listes d’attente. Un contrat de sous-traitance est en place."
+    marketing_title: "Newsletter et campagnes (Brevo)"
+    marketing_text: "Toute personne qui y consent expressément lors de son inscription sur une liste d’attente ou lors de la création d’un compte est enregistrée comme contact chez Brevo (Brevo SA, France) — de manière durable et à des fins publicitaires, donc au-delà du simple envoi d’un message isolé. Sont transmis : l’adresse e-mail, le nom de la personne de contact, le nom de l’organisation ou du restaurant, la langue, le rôle commercial et l’état d’avancement. Les messages en texte libre, les numéros de téléphone et les localités ne sont expressément pas transmis. La base légale est l’art. 6 par. 1 lit. a RGPD (consentement). Le consentement est facultatif, n’est pas une condition d’inscription et peut être retiré à tout moment — via le lien de désinscription de chaque campagne ou en supprimant le compte. Après un retrait, le contact est supprimé chez Brevo."
     transit_title: "Arrêts à proximité (Verkéiersverbond)"
     transit_text: "Sur les pages de détail des restaurants, nous affichons les arrêts de transports en commun. Pour cela, nous interrogeons l’interface du Verkéiersverbond — seules les coordonnées du restaurant sont transmises. Aucune donnée des visiteurs : ni adresse IP ni identifiant. Nous mettons la réponse en cache pendant 24 heures."
     rights_title: "Vos droits"
@@ -1215,6 +1222,36 @@ organisation:
         expired_heading: 'Ce lien a expiré'
         expired_text: 'Les liens de confirmation sont valables sept jours. Inscrivez-vous simplement à nouveau — cela prend une minute et nous vous enverrons un nouveau lien.'
         back: "Vers la vue d'ensemble"
+
+marketing:
+    consent:
+        label: "Je souhaite recevoir les actualités d'Endlech.lu par e-mail."
+        help: "Facultatif et révocable à tout moment. Chaque e-mail contient un lien de désinscription."
+    admin:
+        heading: "Marketing"
+        column: "Brevo"
+        consent: "Consentement marketing"
+        consent_none: "Aucun consentement"
+        consent_given: "Consentement donné le %date%"
+        synced_at: "Transmis le"
+        last_error: "Dernière erreur"
+        attempts: "Tentatives"
+        origin: "Origine"
+        summary: "%consented% consentements · %synced% transmis"
+        not_applicable: "—"
+
+marketing_sync_state:
+    pending: "En attente"
+    synced: "Transmis"
+    failed: "Échec"
+    removal_pending: "Suppression en attente"
+
+marketing_origin:
+    partner: "Partenaire"
+    commune: "Commune"
+    company: "Entreprise"
+    association: "Association"
+    account: "Compte utilisateur"
 
 finance_type:
     income: "Recettes"

@@ -41,6 +41,13 @@ aus dem WebAuthn-Bundle (`Webauthn\CredentialRecord`,
 Elf Enums (alle `string`-backed) liegen in `src/Enum/`, zwölf Repositories in
 `src/Repository/`, 26 Migrationen in `migrations/`.
 
+⚠ **Zwei Features haben bewusst keine Entity und tauchen hier deshalb nicht auf:**
+Feature `03` (Vergleichsseiten, `App\Comparison\`) und Feature `05` (Presse-Kit,
+`App\Press\`). Beide halten ihre Inhalte als unveränderliche Wertobjekte im
+Quelltext und ihre Texte in einer eigenen Übersetzungsdomain; sie legen keine
+Tabelle an und bringen keine Migration mit. Wer für eines von beiden ein Schema
+sucht, sucht vergeblich — das ist kein Rückstand dieser Datei.
+
 ---
 
 ## Konventionen
@@ -380,6 +387,7 @@ Backticks im Tabellennamen, weil `user` in MySQL reserviert ist. Implementiert
 | `pendingEmailTokenExpiresAt` | `pending_email_token_expires_at` | `datetime` | ja | – | 24 Stunden |
 | `avatarFilename` | `avatar_filename` | `varchar(255)` | ja | – | Datei unter `public/uploads/avatars/` |
 | `webauthnHandle` | `webauthn_handle` | `varchar(64)` | ja | **ja** | dauerhafte Kennung auf dem Gerät |
+| `marketingConsentAt` | `marketing_consent_at` | `datetime` | ja | – | Werbe-Einwilligung; `null` = keine. Geht erst nach der E-Mail-Verifikation nach Brevo (Feature 04, AK-05) |
 | `createdAt` | `created_at` | `datetime` | nein | – | |
 
 **Relation:** `passkeys` OneToMany → `WebauthnCredential`, `orphanRemoval: true`,
@@ -492,8 +500,10 @@ stehen noch nicht fest. Implementiert `App\Waitlist\WaitlistEntryInterface`.
 | `message` | `message` | `longtext` | ja | – | |
 | `status` | `status` | `varchar(20)` | nein | – | `WaitlistStatus`, Default `pending` |
 | `confirmationToken` | `confirmation_token` | `varchar(64)` | ja | **ja** | Double-Opt-In |
-| `confirmedAt` | `confirmed_at` | `datetime` | ja | – | |
+| `confirmedAt` | `confirmed_at` | `datetime` | ja | – | ⚠ **zweideutig**: gesetzt vom Double-Opt-In **und** vom Verwaltungs-Backfill in `applyStatus()` |
+| `selfConfirmedAt` | `self_confirmed_at` | `datetime` | ja | – | ⚠ Zeitpunkt der **Selbst**bestätigung — setzt allein `confirm()`. Wer eine belegte Adresse braucht, fragt hier, nicht bei `confirmedAt` (BF-89) |
 | `consentAt` | `consent_at` | `datetime` | nein | – | DSGVO-Nachweis, im Konstruktor gesetzt |
+| `marketingConsentAt` | `marketing_consent_at` | `datetime` | ja | – | Zeitpunkt der **Werbe**-Einwilligung; `null` = keine. Getrennt von `consentAt`: jene deckt die Kontaktaufnahme zum Angebot (Feature 04) |
 | `locale` | `locale` | `varchar(5)` | nein | – | Sprache der Anmeldung, Default `de` |
 | `source` | `source` | `varchar(60)` | ja | – | UTM-Quelle oder Referrer-Host |
 | `createdAt` / `updatedAt` | `created_at` / `updated_at` | `datetime` | nein | – | `updatedAt` per `#[ORM\PreUpdate]` |
@@ -529,7 +539,9 @@ Geldfluss in beide Richtungen**). Implementiert ebenfalls
 | `message` | `message` | `longtext` | ja | – | |
 | `status` | `status` | `varchar(20)` | nein | – | `WaitlistStatus` |
 | `confirmationToken` | `confirmation_token` | `varchar(64)` | ja | **ja** | |
-| `confirmedAt` / `consentAt` | `confirmed_at` / `consent_at` | `datetime` | ja / nein | – | |
+| `confirmedAt` / `consentAt` | `confirmed_at` / `consent_at` | `datetime` | ja / nein | – | ⚠ `confirmedAt` ist zweideutig — siehe `PartnerWaitlistEntry` |
+| `selfConfirmedAt` | `self_confirmed_at` | `datetime` | ja | – | Zeitpunkt der **Selbst**bestätigung; setzt allein `confirm()` (BF-89) |
+| `marketingConsentAt` | `marketing_consent_at` | `datetime` | ja | – | Werbe-Einwilligung; `null` = keine (Feature 04) |
 | `locale` | `locale` | `varchar(5)` | nein | – | |
 | `source` | `source` | `varchar(60)` | ja | – | |
 | `createdAt` / `updatedAt` | `created_at` / `updated_at` | `datetime` | nein | – | |
@@ -593,6 +605,47 @@ werden.
 > **`setAmount()` normalisiert auf zwei Nachkommastellen.** Symfonys `MoneyType`
 > liefert `"42.5"`, die Datenbank `"42.50"` — ohne Normalisierung hinge die
 > Schreibweise davon ab, ob die Entity zwischendurch neu geladen wurde.
+
+---
+
+### MarketingContact
+
+`src/Entity/MarketingContact.php` · Tabelle `marketing_contact` · `MarketingContactRepository`
+
+Das **Auftragsbuch** von Feature 04: eine Zeile je E-Mail-Adresse, die festhält,
+was in Brevo stehen soll und ob es schon dort steht. Ein Cron-Befehl
+(`app:marketing:sync`) arbeitet es ab.
+
+| Property | Spalte | Typ | Null | Unique | Anmerkung |
+|---|---|---|---|---|---|
+| `id` | `id` | `integer` PK | – | – | wird zugleich als `ext_id` an Brevo übergeben |
+| `email` | `email` | `varchar(180)` | nein | **ja** | der fachliche Schlüssel; `setEmail()` normalisiert auf Kleinschreibung |
+| `contactName` | `contact_name` | `varchar(120)` | ja | – | |
+| `organisationName` | `organisation_name` | `varchar(180)` | ja | – | |
+| `locale` | `locale` | `varchar(5)` | nein | – | Sprache der Kampagne |
+| `origin` | `origin` | `varchar(20)` | nein | – | `MarketingOrigin` |
+| `funnelStatus` | `funnel_status` | `varchar(20)` | ja | – | `WaitlistStatus`; leer bei Konten |
+| `consentAt` | `consent_at` | `datetime` | nein | – | Zeitpunkt der Werbe-Einwilligung |
+| `revokedAt` | `revoked_at` | `datetime` | ja | – | gesetzt bei Abmeldung über Brevo — die Zeile wird zur **Sperre** |
+| `syncState` | `sync_state` | `varchar(20)` | nein | – | `MarketingSyncState` |
+| `syncedAt` | `synced_at` | `datetime` | ja | – | |
+| `lastError` | `last_error` | `varchar(255)` | ja | – | ⚠ Klasse und Statuscode, **nie** die Antwort im Wortlaut (AK-31) |
+| `attempts` | `attempts` | `smallint` | nein | – | Rückzug nach `MAX_ATTEMPTS` (5) |
+| `createdAt` / `updatedAt` | `created_at` / `updated_at` | `datetime` | nein | – | `updatedAt` per `#[ORM\PreUpdate]` |
+
+⚠ **Diese Entity hat bewusst KEINE Beziehungen** — die einzige Abweichung von der
+`ON DELETE`-Konvention dieses Projekts. Ein Wartelisten-Widerruf **löscht** den
+Eintrag; hinge der Löschauftrag an einem Fremdschlüssel, verschwände er mit seiner
+Quelle und die Adresse bliebe für immer in Brevo. Der Auftrag muss die Löschung
+seiner Quelle überleben. Die Verbindung läuft über die E-Mail-Adresse.
+
+⚠ **Kein Feld für die Freitextnachricht.** Auf einer Barrierefreiheitsplattform kann
+dort eine Gesundheitsangabe stehen und damit eine besondere Kategorie nach Art. 9
+DSGVO. Was die Tabelle nicht führt, kann nicht abfließen (AK-29).
+
+**Indizes:** `UNIQ_E78FBDB7E7927C74` auf `email` (setzt „eine Adresse, ein Kontakt"
+auf Datenbankebene durch), `IDX_marketing_contact_state_updated` auf
+`(sync_state, updated_at)` — die einzige Abfrage des Sync-Laufs.
 
 ---
 
@@ -667,6 +720,36 @@ Nur der Übergang `pending → confirmed` wird von der anmeldenden Person
 ausgelöst; alles Weitere pflegt das Team im Admin. `qualified` sitzt zwischen
 Kontakt und Abschluss, weil bei Gemeinden und Unternehmen regelmäßig eine
 Vorprüfung dazwischenliegt.
+
+### MarketingOrigin
+
+| Case | Wert | Bedeutung |
+|---|---|---|
+| `PARTNER` | `partner` | Partner-Warteliste |
+| `COMMUNE` | `commune` | Gemeinde |
+| `COMPANY` | `company` | Unternehmen |
+| `ASSOCIATION` | `association` | Verein |
+| `ACCOUNT` | `account` | Nutzerkonto |
+
+Methoden: `transKey()`, `label()`, `brevoValue()`, `fromOrganisationType()`
+
+⚠ Bezeichnet die **Rolle im Vertrieb**, nicht die Person — ausdrücklich **nicht**,
+ob jemand selbst von einer Behinderung betroffen ist (Feature 04, AK-30).
+
+### MarketingSyncState
+
+| Case | Wert | Bedeutung |
+|---|---|---|
+| `PENDING` | `pending` | eingewilligt, noch nicht übertragen |
+| `SYNCED` | `synced` | in Brevo vorhanden |
+| `FAILED` | `failed` | letzter Versuch scheiterte |
+| `REMOVAL_PENDING` | `removal_pending` | Löschauftrag offen |
+
+Methoden: `transKey()`, `label()`, `badgeClasses()`, `isOpen()`
+
+⚠ `FAILED` gehört zu den offenen Zuständen — ein Fehlversuch ist ein Zwischenstand,
+kein Endzustand. Ob eine Zeile endgültig liegen bleibt, entscheidet allein ihr
+Versuchszähler (BF-86).
 
 ### OrganisationType
 
@@ -923,8 +1006,15 @@ gesetzt.
 
 ## Migrations-Historie
 
-26 Migrationen, Namespace `DoctrineMigrations`, Verzeichnis `migrations/`.
+34 Migrationen, Namespace `DoctrineMigrations`, Verzeichnis `migrations/`.
 Format `VersionYYYYMMDDHHMMSS.php`.
+
+⚠ **Die Tabelle unten ist nicht vollständig: Sechs Migrationen vom 24. und
+25. August 2026 fehlen** (`20260824120000`, `20260824160000`, `20260825120000`,
+`20260825130000`, `20260825140000`, `20260825150000`) — sie stammen aus Feature `01`
+und `02`. Der Rückstand ist hier vermerkt und nicht gefüllt, weil das Nachtragen
+fremder Features eine eigene Prüfung braucht: Was in einer Referenz steht, muss
+jemand gegen den Code gehalten haben.
 
 | Version | Inhalt |
 |---|---|
@@ -954,6 +1044,8 @@ Format `VersionYYYYMMDDHHMMSS.php`.
 | `20260820100000` | `organisation_waitlist_entry` |
 | `20260820200000` | `finance_entry`, `metric_snapshot`, Restaurant-Maße |
 | `20260821000000` | `webauthn_credential`, `user.webauthn_handle` |
+| `20260829120000` | **Feature 04:** `marketing_contact` (Auftragsbuch) + `marketing_consent_at` an beiden Wartelisten und am User |
+| `20260829170000` | **BF-89:** `self_confirmed_at` an beiden Wartelisten — trennt den eingelösten Double-Opt-In vom Verwaltungs-Backfill |
 
 > **Neue Migrationen müssen gegen MariaDB 10.5 laufen.** Lokal und in der CI
 > läuft MySQL 8.0, auf Production MariaDB 10.5 — und `deploy.sh` führt bei jedem

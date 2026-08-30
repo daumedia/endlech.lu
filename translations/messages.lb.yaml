@@ -34,6 +34,7 @@ footer:
     help_improve: "Hëlleft eis, besser ze ginn."
     copyright: "Made with ❤️ in Luxembourg."
     accessibility_statement: "Barrièrefräiheet"
+    press: "Press"
     comparisons: "Verglachër"
     all_comparisons: "All Verglachër"
     vs: "vs. %brand%"
@@ -335,12 +336,16 @@ about:
     mission_title: "Eis Missioun"
     mission_text: "Barrierefreiheet soll keen Zoufall sinn. Mat Endlech.lu wëlle mir Mënsche mat ageschränkter Mobilitéit hëllefen, Restauranten zu Lëtzebuerg ze fannen, déi wierklech zougänglech sinn — vun der Community gepréift, fir d'Community."
     mission_cta: "Restauranten entdecken"
+    press_teaser_title: "Fir Press a Medien"
+    press_teaser_body: "Beschreiwungstexter, aktuell Zuelen, Logoen an een Uspriechpartner — alles op enger Plaz, fräigi fir d'Berichterstattung."
+    press_teaser_cta: "Op d'Presssäit"
 
 legal:
     title: "Impressum – Endlech.lu"
     heading: "Impressum"
     info_title: "Informatiounen geméiss § 5 TMG / Art. 11 Loi sur le commerce électronique"
     info_text: "Endlech.lu\nLëtzebuerg"
+    responsible_label: "Verantwortlech am Sënn vum Pressrecht"
     contact_title: "Kontakt"
     contact_email_label: "E-Mail:"
     disclaimer_title: "Haftungsausschloss"
@@ -354,6 +359,8 @@ legal:
     error_tracking_text: "Fir technesch Feeler z'erkennen an ze behiewen, notze mir Sentry (Functional Software, Inc.). Wann op eiser Websäit e Feeler optrëtt, ginn technesch Uginne wéi Zäitpunkt, opgeruffe Säit a Feelermeldung u Serveren an der Europäescher Unioun (Frankfurt um Main) iwwerdroen. IP-Adressen an Notzerdate ginn dobäi net iwwerdroen. Rechtsgrondlag ass eise berechtegten Interessi un engem stabilen a séchere Betrib vun der Websäit no Art. 6 Abs. 1 lit. f DSGVO."
     mail_title: "E-Mail-Versand (Brevo)"
     mail_text: "Fir de Versand vun E-Maile — Bestätegungen, Noriichten, Waardelëschten — benotze mir Brevo (Sendinblue GmbH, Köln). Iwwerdroe ginn d E-Mail-Adress an den Numm vum Empfänger souwéi den Inhalt vun der Noriicht. Rechtsgrondlag ass Art. 6 Abs. 1 lit. b DSGVO respektiv lit. a bei Waardelëscht-Umeldungen. En Optragsveraarbechtungsvertrag läit vir."
+    marketing_title: "Newsletter a Kampagnen (Brevo)"
+    marketing_text: "Wien beim Androe an eng Waardelëscht oder bei der Umeldung ausdrécklech zoustëmmt, gëtt als Kontakt bei Brevo (Brevo SA, Frankräich) gespäichert — dauerhaft a fir Reklammzwecker, also iwwer de blousse Versand vun enger eenzelner Noriicht eraus. Iwwerdroe ginn: E-Mail-Adress, Numm vun der Kontaktpersoun, Numm vun der Organisatioun respektiv vum Restaurant, Sprooch, d Roll am Verkaf an de Bearbechtungsstand. Fräitext-Noriichten, Telefonsnummeren an Uertsaangabe ginn ausdrécklech net iwwerdroen. Rechtsgrondlag ass Art. 6 Abs. 1 lit. a DSGVO (Zoustëmmung). D Zoustëmmung ass fräiwëlleg, keng Bedingung fir d Umeldung an zu all Moment zréckzezéien — iwwer den Ofmellungslink an all Kampagne oder duerch d Läsche vum Kont. No engem Widderruff gëtt de Kontakt bei Brevo ewechgeholl."
     transit_title: "Haltestellen an der Noperschaft (Verkéiersverbond)"
     transit_text: "Op de Restaurant-Detailsäite weise mir Haltestelle vum ëffentlechen Transport. Dofir froe mir d Schnëttplaz vum Verkéiersverbond un — iwwerdroe ginn ausschliisslech d Koordinate vum Restaurant. Keng Donnéeë vun de Besucher: weder IP-Adress nach Kennung. D Äntwert späichere mir 24 Stonne queschent."
     rights_title: "Deng Rechter"
@@ -1215,6 +1222,36 @@ organisation:
         expired_heading: 'Dëse Link ass ofgelaf'
         expired_text: 'Bestätegungslinken gëllen siwe Deeg. Mell dech einfach nach eng Kéier un — dat dauert eng Minutt, a mir schécken dir e frëschen Link.'
         back: "Op d'Iwwersiicht"
+
+marketing:
+    consent:
+        label: "Ech wëll Neiegkeete vun Endlech.lu per E-Mail kréien."
+        help: "Fräiwëlleg an zu all Moment zréckzezéien. An all E-Mail steet en Ofmellungslink."
+    admin:
+        heading: "Marketing"
+        column: "Brevo"
+        consent: "Reklamm-Zoustëmmung"
+        consent_none: "Keng Zoustëmmung"
+        consent_given: "Zougestëmmt den %date%"
+        synced_at: "Iwwerdroen den"
+        last_error: "Leschte Feeler"
+        attempts: "Versich"
+        origin: "Hierkonft"
+        summary: "%consented% zougestëmmt · %synced% iwwerdroen"
+        not_applicable: "—"
+
+marketing_sync_state:
+    pending: "Aussteend"
+    synced: "Iwwerdroen"
+    failed: "Feelgeschloen"
+    removal_pending: "Läschung aussteend"
+
+marketing_origin:
+    partner: "Partner"
+    commune: "Gemeng"
+    company: "Betrib"
+    association: "Veräin"
+    account: "Notzerkont"
 
 finance_type:
     income: "Recetten"

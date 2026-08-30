@@ -34,6 +34,7 @@ footer:
     help_improve: "Help us improve."
     copyright: "Made with ❤️ in Luxembourg."
     accessibility_statement: "Accessibility"
+    press: "Press"
     comparisons: "Comparisons"
     all_comparisons: "All comparisons"
     vs: "vs. %brand%"
@@ -335,12 +336,16 @@ about:
     mission_title: "Our Mission"
     mission_text: "Accessibility shouldn't be a matter of chance. With Endlech.lu, we want to help people with limited mobility find restaurants in Luxembourg that are truly accessible — verified by the community, for the community."
     mission_cta: "Discover Restaurants"
+    press_teaser_title: "For press and media"
+    press_teaser_body: "Boilerplate texts, current figures, logos and a named contact — in one place, approved for reporting."
+    press_teaser_cta: "To the press page"
 
 legal:
     title: "Legal Notice – Endlech.lu"
     heading: "Legal Notice"
     info_title: "Information according to § 5 TMG / Art. 11 Loi sur le commerce électronique"
     info_text: "Endlech.lu\nLuxembourg"
+    responsible_label: "Responsible under press law"
     contact_title: "Contact"
     contact_email_label: "Email:"
     disclaimer_title: "Disclaimer"
@@ -354,6 +359,8 @@ legal:
     error_tracking_text: "To detect and fix technical errors, we use Sentry (Functional Software, Inc.). If an error occurs on our website, technical details such as the time, the page requested and the error message are transmitted to servers in the European Union (Frankfurt am Main). IP addresses and user data are not transmitted. The legal basis is our legitimate interest in the stable and secure operation of the website pursuant to Art. 6(1)(f) GDPR."
     mail_title: "Email delivery (Brevo)"
     mail_text: "We use Brevo (Sendinblue GmbH, Cologne) to send emails — confirmations, notifications, waiting lists. Transmitted are the recipient’s email address and name as well as the content of the message. The legal basis is Art. 6(1)(b) GDPR, or (a) for waiting list sign-ups. A data processing agreement is in place."
+    marketing_title: "Newsletter and campaigns (Brevo)"
+    marketing_text: "Anyone who explicitly consents when joining a waiting list or registering is stored as a contact at Brevo (Brevo SA, France) — permanently and for marketing purposes, that is, beyond merely sending an individual message. Transmitted are: email address, contact person’s name, organisation or restaurant name, language, the role in our sales process and the processing status. Free-text messages, phone numbers and locations are explicitly not transmitted. The legal basis is Art. 6(1)(a) GDPR (consent). Consent is voluntary, not a condition for signing up, and can be withdrawn at any time — via the unsubscribe link in every campaign or by deleting the account. After a withdrawal the contact is removed from Brevo."
     transit_title: "Nearby stops (Verkéiersverbond)"
     transit_text: "On restaurant detail pages we show public transport stops. For this we query the Verkéiersverbond interface — only the restaurant’s coordinates are transmitted. No visitor data: neither IP address nor identifier. We cache the response for 24 hours."
     rights_title: "Your rights"
@@ -1215,6 +1222,36 @@ organisation:
         expired_heading: 'This link has expired'
         expired_text: 'Confirmation links are valid for seven days. Just sign up again — it takes a minute, and we will send you a fresh link.'
         back: "To the overview"
+
+marketing:
+    consent:
+        label: "I would like to receive news from Endlech.lu by email."
+        help: "Optional and revocable at any time. Every email carries an unsubscribe link."
+    admin:
+        heading: "Marketing"
+        column: "Brevo"
+        consent: "Marketing consent"
+        consent_none: "No consent"
+        consent_given: "Consented on %date%"
+        synced_at: "Transferred on"
+        last_error: "Last error"
+        attempts: "Attempts"
+        origin: "Origin"
+        summary: "%consented% consented · %synced% transferred"
+        not_applicable: "—"
+
+marketing_sync_state:
+    pending: "Pending"
+    synced: "Transferred"
+    failed: "Failed"
+    removal_pending: "Removal pending"
+
+marketing_origin:
+    partner: "Partner"
+    commune: "Municipality"
+    company: "Company"
+    association: "Association"
+    account: "User account"
 
 finance_type:
     income: "Income"

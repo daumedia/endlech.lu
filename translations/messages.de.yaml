@@ -34,6 +34,7 @@ footer:
     help_improve: "Helfen Sie uns, besser zu werden."
     copyright: "Made with ❤️ in Luxembourg."
     accessibility_statement: "Barrierefreiheit"
+    press: "Presse"
     comparisons: "Vergleiche"
     all_comparisons: "Alle Vergleiche"
     vs: "vs. %brand%"
@@ -335,12 +336,16 @@ about:
     mission_title: "Unsere Mission"
     mission_text: "Barrierefreiheit soll kein Zufall sein. Mit Endlech.lu wollen wir Menschen mit eingeschränkter Mobilität helfen, Restaurants in Luxemburg zu finden, die wirklich zugänglich sind — geprüft von der Community, für die Community."
     mission_cta: "Restaurants entdecken"
+    press_teaser_title: "Für Presse und Medien"
+    press_teaser_body: "Beschreibungstexte, aktuelle Zahlen, Logos und ein Ansprechpartner — an einer Stelle, freigegeben für die Berichterstattung."
+    press_teaser_cta: "Zur Presseseite"
 
 legal:
     title: "Impressum – Endlech.lu"
     heading: "Impressum"
     info_title: "Angaben gemäß § 5 TMG / Art. 11 Loi sur le commerce électronique"
     info_text: "Endlech.lu\nLuxemburg"
+    responsible_label: "Verantwortlich im Sinne des Presserechts"
     contact_title: "Kontakt"
     contact_email_label: "E-Mail:"
     disclaimer_title: "Haftungsausschluss"
@@ -354,6 +359,8 @@ legal:
     error_tracking_text: "Zur Erkennung und Behebung technischer Fehler nutzen wir Sentry (Functional Software, Inc.). Tritt auf unserer Webseite ein Fehler auf, werden technische Angaben wie Zeitpunkt, aufgerufene Seite und Fehlermeldung an Server in der Europäischen Union (Frankfurt am Main) übermittelt. IP-Adressen und Nutzerdaten werden dabei nicht übertragen. Rechtsgrundlage ist unser berechtigtes Interesse an einem stabilen und sicheren Betrieb der Webseite gemäß Art. 6 Abs. 1 lit. f DSGVO."
     mail_title: "E-Mail-Versand (Brevo)"
     mail_text: "Für den Versand von E-Mails — Bestätigungen, Benachrichtigungen, Wartelisten — nutzen wir Brevo (Sendinblue GmbH, Köln). Übermittelt werden die E-Mail-Adresse und der Name des Empfängers sowie der Inhalt der jeweiligen Nachricht. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Durchführung vorvertraglicher Maßnahmen) beziehungsweise lit. a bei Wartelisten-Anmeldungen. Ein Auftragsverarbeitungsvertrag liegt vor."
+    marketing_title: "Newsletter und Kampagnen (Brevo)"
+    marketing_text: "Wer beim Eintragen in eine Warteliste oder bei der Registrierung ausdrücklich zustimmt, wird als Kontakt bei Brevo (Brevo SA, Frankreich) gespeichert — dauerhaft und zu Werbezwecken, also über den reinen Versand einer einzelnen Nachricht hinaus. Übermittelt werden: E-Mail-Adresse, Name des Ansprechpartners, Organisations- beziehungsweise Restaurantname, Sprache, die Rolle im Vertrieb und der Bearbeitungsstand. Freitextnachrichten, Telefonnummern und Ortsangaben werden ausdrücklich nicht übermittelt. Rechtsgrundlage ist Art. 6 Abs. 1 lit. a DSGVO (Einwilligung). Die Zustimmung ist freiwillig, keine Bedingung für die Anmeldung und jederzeit widerrufbar — über den Abmeldelink in jeder Kampagne oder durch Löschung des Kontos. Nach einem Widerruf wird der Kontakt bei Brevo entfernt."
     transit_title: "Haltestellen in der Nähe (Verkéiersverbond)"
     transit_text: "Auf den Restaurant-Detailseiten zeigen wir Haltestellen des öffentlichen Nahverkehrs. Dafür fragen wir die Schnittstelle des Verkéiersverbond an — übermittelt werden ausschließlich die Koordinaten des Restaurants. Keine Daten der Besucherinnen und Besucher: weder IP-Adresse noch Kennung. Die Antwort speichern wir 24 Stunden zwischen."
     rights_title: "Deine Rechte"
@@ -1215,6 +1222,36 @@ organisation:
         expired_heading: 'Dieser Link ist abgelaufen'
         expired_text: 'Bestätigungslinks gelten sieben Tage. Melde dich einfach noch einmal an — es dauert eine Minute, und wir schicken dir einen frischen Link.'
         back: "Zur Übersicht"
+
+marketing:
+    consent:
+        label: "Ich möchte Neuigkeiten von Endlech.lu per E-Mail erhalten."
+        help: "Freiwillig und jederzeit widerrufbar. Jede E-Mail trägt einen Abmeldelink."
+    admin:
+        heading: "Marketing"
+        column: "Brevo"
+        consent: "Werbe-Einwilligung"
+        consent_none: "Keine Einwilligung"
+        consent_given: "Eingewilligt am %date%"
+        synced_at: "Übertragen am"
+        last_error: "Letzter Fehler"
+        attempts: "Versuche"
+        origin: "Herkunft"
+        summary: "%consented% eingewilligt · %synced% übertragen"
+        not_applicable: "—"
+
+marketing_sync_state:
+    pending: "Ausstehend"
+    synced: "Übertragen"
+    failed: "Fehlgeschlagen"
+    removal_pending: "Löschung ausstehend"
+
+marketing_origin:
+    partner: "Partner"
+    commune: "Gemeinde"
+    company: "Unternehmen"
+    association: "Verein"
+    account: "Nutzerkonto"
 
 finance_type:
     income: "Einnahmen"

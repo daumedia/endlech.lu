@@ -17,7 +17,7 @@
 {% set type_map = {} %}
 {% for t in types %}{% set type_map = type_map|merge({(t.value): t}) %}{% endfor %}
 
-{% set field_order = ['type', 'organisationName', 'contactName', 'contactRole', 'email', 'phone', 'website', 'message', 'consent'] %}
+{% set field_order = ['type', 'organisationName', 'contactName', 'contactRole', 'email', 'phone', 'website', 'message', 'consent', 'marketingConsent'] %}
 {% set first_error_field = null %}
 {% set error_count = form.vars.errors|length %}
 {% for name in field_order %}
@@ -204,6 +204,44 @@
 
             <p id="{{ form.consent.vars.id }}_error" class="text-sm font-semibold text-red-700">
                 {%- for error in form.consent.vars.errors %}{{ error.message }}{% endfor -%}
+            </p>
+
+            {# Werbe-Einwilligung (Feature 04), im selben Kasten direkt unter dem
+               Pflicht-Häkchen – die beiden lesen sich dadurch als Paar. Bewusst
+               OHNE Pflicht-/Optional-Zeile: Das Feld ist freiwillig (AK-03,
+               Koppelungsverbot), eine Markierung suggerierte das Gegenteil.
+
+               Das Feld steht ausserhalb der drei Typblöcke – es gilt für
+               Gemeinde, Unternehmen und Verein gleichermassen und ist deshalb
+               in beiden Feldaufbauten (PRE_SET_DATA und PRE_SUBMIT) vorhanden.
+
+               Kein Include von _form_field.html.twig: Das Partial setzt das
+               Label ÜBER das Widget und gibt ihm die Textfeld-Klassenkette
+               (w-full, px-4, py-2.5) – für eine Checkbox beides falsch.
+
+               ⚠ aria-describedby trägt BEIDE IDs (Hilfetext + Fehlercontainer),
+               durch ein Leerzeichen getrennt.
+               ⚠ aria-invalid ist 'true' oder false, nie null: In `attr`
+               unterdrückt nur `false` das Attribut, `null` renderte
+               aria-invalid="" – Screenreader lesen das als "ungültig". #}
+            <div class="flex items-start gap-3">
+                {{ form_widget(form.marketingConsent, {'attr': {
+                    'class': 'mt-0.5 w-5 h-5 shrink-0 rounded border-gray-500 text-cyan-700 focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700',
+                    'aria-describedby': form.marketingConsent.vars.id ~ '_help ' ~ form.marketingConsent.vars.id ~ '_error',
+                    'aria-invalid': form.marketingConsent.vars.errors|length > 0 ? 'true' : false,
+                }}) }}
+                <span class="min-w-0">
+                    {{ form_label(form.marketingConsent, null, {'label_attr': {'class': 'block text-sm text-gray-900 leading-relaxed cursor-pointer'}}) }}
+                    {# Der Schlüssel steht im FormType ('help' => 'marketing.consent.help');
+                       hier wird er nur übersetzt, damit er nicht doppelt gepflegt wird. #}
+                    <span id="{{ form.marketingConsent.vars.id }}_help" class="mt-0.5 block text-xs text-gray-700">
+                        {{ form.marketingConsent.vars.help|trans }}
+                    </span>
+                </span>
+            </div>
+
+            <p id="{{ form.marketingConsent.vars.id }}_error" class="text-sm font-semibold text-red-700">
+                {%- for error in form.marketingConsent.vars.errors %}{{ error.message }}{% endfor -%}
             </p>
 
             <p class="text-xs text-gray-700">

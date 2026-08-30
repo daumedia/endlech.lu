@@ -594,6 +594,53 @@ Abbrechen-Knopf wäre wirkungslos. Im Test fiel das als „Kein Formular mit act
 IP: Der Angriff ist das Raten des aktuellen Passworts aus einer gekaperten Sitzung
 heraus, und dort wechselt die IP mühelos.
 
+## Presse-Kit (`/presse`, Feature 05)
+
+Öffentliche Presseseite: Beschreibungstexte in drei Längen, Faktenblatt mit den
+Livezahlen von `/open`, Materialpaket zum Herunterladen, Gründerporträt mit Kurzvita,
+freigegebene Zitate, Meldungen und Pressekontakt. **Keine Entity, keine Migration** —
+Struktur als unveränderliche Wertobjekte unter `App\Press\`, Texte in der eigenen
+Übersetzungsdomain `press`. Aufbau wie Feature 03.
+
+⚠️ **Wer eine Datei in `public/presse/` ersetzt, erhöht `CACHE_VERSION` in
+`public/sw.js`.** Der Service Worker liefert Bilder cache-first aus; ein
+wiederkehrender Besucher sähe sonst die alte Logo-Vorschau neben dem neuen Paket. Das
+Paket selbst wird nie gecacht (es ist kein `image` und liegt nicht unter `/build/`) —
+genau deshalb laufen die beiden auseinander, und **kein Prüflauf sieht es**, weil es
+im Browser passiert.
+
+⚠️ **Das Paket ist eine committete Datei, erzeugt von `app:press:package`**
+(`make press-kit`), nicht zur Laufzeit gepackt. Es liegt unter `public/presse/` und
+wird vom Webserver direkt ausgeliefert — der Front-Controller sieht es nie, deshalb
+gibt es hier nichts zu deckeln. `PressPackageTest` öffnet die Datei und vergleicht
+ihren Inhalt mit `PressRegistry::assets()`; wer eine Datei austauscht und den Befehl
+nicht neu laufen lässt, bekommt einen roten Prüflauf statt eines veralteten Downloads.
+
+⚠️ **`ext-zip` steht in `require-dev` und in der CI-Extension-Liste.** Die Anwendung
+selbst braucht die Erweiterung nie — nur der Befehl und der Prüflauf. Fehlt sie in
+`.github/workflows/ci.yml`, bricht der Lauf mit einer Meldung über eine unbekannte
+Klasse ab, die wie ein Codefehler aussieht.
+
+⚠️ **Betreiberangaben stehen als Parameter, nicht im Übersetzungskatalog**
+(`app.operator_name`, `app.operator_address`, `app.operator_responsible`, dazu
+`app.press_email`). Sie erscheinen auf **zwei** Seiten — Faktenblatt und Impressum —
+und vier Katalogeinträge wären vier Stellen, an denen eine Anschrift auseinanderläuft;
+`CatalogueCompletenessTest` prüft Vollständigkeit, nicht Gleichheit. Als Twig-Globals
+eingebunden, weil zwei Controller sie brauchen und der dritte, der sie vergisst, eine
+Seite mit halben Angaben ausliefern würde.
+
+⚠️ **Die Angabe zur Behinderung steht in genau einem Katalogschlüssel** (`person.bio`).
+`PressCatalogueTest` prüft, dass kein anderer Schlüssel der Domain sie enthält — damit
+ist ihr Widerruf eine Textstelle und keine Suche über vier Kataloge. Sie im Boilerplate
+zu wiederholen ist naheliegend (es ist das stärkste Argument des Textes) und macht
+genau diese Zusage kaputt.
+
+⚠️ **Die Wortgrenzen der Beschreibungstexte stehen im Enum `BoilerplateLength`,
+nicht im Prüflauf** — ein Prüflauf mit eigenen Zahlen prüft gegen sich selbst.
+Gezählt wird **je Sprache**: Französisch braucht regelmäßig 15–20 % mehr Wörter als
+Deutsch, und ein deutscher Text, der mit 28 Wörtern gerade passt, sprengt die Grenze
+in der Übersetzung.
+
 ## Cookie-Consent-Banner (Issue #82)
 DSGVO-Banner, das beim ersten Besuch unten erscheint und die Wahl (`accepted`/`declined`) 365 Tage im Cookie `cookie_consent` speichert. Keine Entity/Migration/Backend-Änderung — rein clientseitig.
 Stimulus: `assets/controllers/cookie_consent_controller.ts` — `connect()` zeigt das Banner, wenn kein `cookie_consent`-Cookie existiert; `accept()`/`decline()` setzen den Cookie (`path=/; max-age=365d; samesite=lax`, `secure` nur bei HTTPS — Muster aus `csrf_protection_controller.ts`) und blenden aus. Values: `cookieName` (default `cookie_consent`), `lifetime` (default 365). Cross-Element-Kommunikation idiomatisch über Fenster-Event: der Footer-Link ist eine eigene Controller-Instanz (`<li data-controller="cookie-consent">`), sein `openSettings()` stößt `this.dispatch('open')` an; die Banner-Instanz fängt es über den `@window`-Descriptor (`data-action="cookie-consent:open@window->cookie-consent#reopen"`) ab und zeigt das Banner (`reopen()`). Beide `reopen()`/`connect()` sind via `hasBannerTarget` abgesichert.

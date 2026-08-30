@@ -6,6 +6,8 @@ use App\Entity\OrganisationWaitlistEntry;
 use App\Entity\PartnerWaitlistEntry;
 use App\Enum\OrganisationType;
 use App\Enum\WaitlistStatus;
+use App\Marketing\MarketingContactRegistry;
+use App\Repository\MarketingContactRepository;
 use App\Repository\OrganisationWaitlistEntryRepository;
 use App\Repository\PartnerWaitlistEntryRepository;
 use App\Repository\RestaurantRepository;
@@ -33,8 +35,11 @@ final class AdminWaitlistController extends AbstractController
     private const SOURCE_PARTNER = 'partner';
     private const SOURCE_ORGANISATION = 'organisation';
 
-    public function __construct(private readonly TranslatorInterface $translator)
-    {
+    public function __construct(
+        private readonly TranslatorInterface $translator,
+        private readonly MarketingContactRegistry $marketingContacts,
+        private readonly MarketingContactRepository $marketingContactRepository,
+    ) {
     }
 
     #[Route('', name: 'admin_waitlist_index')]
@@ -73,8 +78,24 @@ final class AdminWaitlistController extends AbstractController
             ? $a['createdAt'] <=> $b['createdAt']
             : $b['createdAt'] <=> $a['createdAt']);
 
+        // Feature 04 / AK-26: Sync-Zustand je Zeile. **Eine** Abfrage für die
+        // ganze Seite – eine je Zeile lüde bei 50 Einträgen 50 Mal nach
+        // (dasselbe Thema wie BF-40 an der Restaurantauswahl).
+        $marketing = $this->marketingContactRepository->findIndexedByEmails(
+            array_column($rows, 'email'),
+        );
+
+        foreach ($rows as $index => $row) {
+            $rows[$index]['marketing'] = $marketing[mb_strtolower(trim($row['email']))] ?? null;
+        }
+
         return $this->render('admin/waitlist/index.html.twig', [
             'rows' => $rows,
+            // AK-27: Gegenprobe zur Kontaktzahl in Brevo. Stimmen die Zahlen
+            // nicht überein, fehlt etwas – und das fällt hier auf, nicht erst
+            // beim Versand einer Kampagne.
+            'marketingConsented' => $this->marketingContactRepository->countConsented(),
+            'marketingCounts' => $this->marketingContactRepository->countBySyncState(),
             'activeSource' => \in_array($source, [self::SOURCE_PARTNER, self::SOURCE_ORGANISATION], true) ? $source : null,
             'activeStatus' => $status,
             'activeType' => $organisationType,
@@ -110,6 +131,11 @@ final class AdminWaitlistController extends AbstractController
         return $this->render('admin/waitlist/partner_show.html.twig', [
             'entry' => $entry,
             'statuses' => WaitlistStatus::cases(),
+            // Feature 04 / AK-15, AK-18: Sync-Zustand und letzter Fehler. Eine
+            // gescheiterte Übertragung erzeugt keinen Alarm – sie fällt nur
+            // hier auf, und sonst erst, wenn eine Kampagne jemanden nicht
+            // erreicht.
+            'marketingContact' => $this->marketingContactRepository->findOneByEmail($entry->getEmail()),
             'restaurants' => $auswahl,
             'restaurantSuche' => $suche,
             'restaurantTotal' => \count($auswahl),
@@ -123,6 +149,7 @@ final class AdminWaitlistController extends AbstractController
         return $this->render('admin/waitlist/organisation_show.html.twig', [
             'entry' => $entry,
             'statuses' => WaitlistStatus::cases(),
+            'marketingContact' => $this->marketingContactRepository->findOneByEmail($entry->getEmail()),
         ]);
     }
 
@@ -212,9 +239,30 @@ final class AdminWaitlistController extends AbstractController
 
         // Wird ein Eintrag im Admin von Hand weitergesetzt, fehlt sonst der
         // Bestätigungszeitpunkt.
+        //
+        // ⚠ Dieser Backfill setzt **nur** `confirmedAt`, nicht
+        // `selfConfirmedAt` — ein Telefonat ist kein Nachweis, dass die
+        // Adresse dem Angerufenen gehört. Es rechtfertigt den
+        // Vertriebsstatus, nicht die Werbung (BF-83/BF-89).
         if (WaitlistStatus::PENDING !== $status && !$entry->isConfirmed()) {
             $entry->setConfirmedAt(new \DateTimeImmutable());
         }
+
+        // Feature 04 / AK-09: Der Vertriebsstatus steht als Attribut
+        // `FUNNEL_STATUS` auch in Brevo und ist dort ein Segmentkriterium –
+        // eine Kampagne fürs Partnerprogramm schließt darüber die bereits
+        // gewonnenen Häuser aus. Bliebe die Änderung hier hängen, liefe genau
+        // diese Kampagne an Menschen, mit denen der Vorgang abgeschlossen ist.
+        //
+        // Die Zeile wird nur auf `pending` zurückgestellt; übertragen wird im
+        // nächsten Lauf. Eine Direktübertragung im Request hinge an der
+        // Erreichbarkeit eines fremden Dienstes (AK-17).
+        // Die Registry entscheidet selbst, ob der Eintrag nach Brevo darf: Sie
+        // fragt `hasSelfConfirmed()`, und das setzt allein der eingelöste
+        // Bestätigungslink. Ein Vorabfilter an dieser Stelle wäre die zweite
+        // Hälfte derselben Zweideutigkeit — genau daran ist die erste
+        // Reparatur von BF-83 gescheitert.
+        $this->marketingContacts->recordWaitlistEntry($entry);
 
         $entityManager->flush();
 
@@ -234,6 +282,10 @@ final class AdminWaitlistController extends AbstractController
             'name' => $entry->getRestaurantName(),
             'detail' => $entry->getLocality(),
             'contact' => $entry->getContactName(),
+            // Nur zum Nachschlagen des Sync-Zustands (Feature 04) – die Liste
+            // zeigt die Adresse nicht an.
+            'email' => $entry->getEmail(),
+            'marketingConsentAt' => $entry->getMarketingConsentAt(),
             'status' => $entry->getStatus(),
             'type' => null,
             'createdAt' => $entry->getCreatedAt(),
@@ -250,6 +302,8 @@ final class AdminWaitlistController extends AbstractController
             'name' => $entry->getOrganisationName(),
             'detail' => $entry->getCommuneName() ?? $entry->getContactRole(),
             'contact' => $entry->getContactName(),
+            'email' => $entry->getEmail(),
+            'marketingConsentAt' => $entry->getMarketingConsentAt(),
             'status' => $entry->getStatus(),
             'type' => $entry->getType(),
             'createdAt' => $entry->getCreatedAt(),

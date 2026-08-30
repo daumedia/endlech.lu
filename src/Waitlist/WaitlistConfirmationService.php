@@ -2,6 +2,7 @@
 
 namespace App\Waitlist;
 
+use App\Marketing\MarketingContactRegistry;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -41,6 +42,7 @@ final class WaitlistConfirmationService
         private readonly UrlGeneratorInterface $urlGenerator,
         #[Autowire('%app.contact_email%')]
         private readonly string $contactEmail,
+        private readonly MarketingContactRegistry $marketingContacts,
     ) {
     }
 
@@ -143,7 +145,14 @@ final class WaitlistConfirmationService
             return self::RESULT_INVALID;
         }
 
-        if ($entry->isConfirmed()) {
+        // ⚠ BF-89, die Kehrseite: **`hasSelfConfirmed()`, nicht `isConfirmed()`.**
+        //
+        // Hat ein Admin den Eintrag zwischenzeitlich weitergesetzt, steht
+        // `confirmedAt` bereits — der echte Bestätigungslink lief dann in
+        // „bereits bestätigt" und trug **nichts** ein. Wer tatsächlich
+        // bestätigte, kam damit nie nach Brevo, obwohl er alles richtig gemacht
+        // hatte. Maßgeblich ist deshalb, ob **er selbst** bestätigt hat.
+        if ($entry->hasSelfConfirmed()) {
             return self::RESULT_ALREADY;
         }
 
@@ -152,6 +161,13 @@ final class WaitlistConfirmationService
         }
 
         $entry->confirm();
+
+        // Feature 04 / AK-05: Erst jetzt ist belegt, dass die Adresse dem
+        // Anmelder gehört – vorher geht sie nicht nach Brevo. Die Registry
+        // schreibt nur ins Auftragsbuch und ruft keinen fremden Dienst; der
+        // Versand hinge sonst an dessen Erreichbarkeit (AK-17).
+        $this->marketingContacts->recordWaitlistEntry($entry);
+
         $this->entityManager->flush();
 
         return self::RESULT_CONFIRMED;
@@ -182,6 +198,18 @@ final class WaitlistConfirmationService
         if (!$entry) {
             return self::RESULT_INVALID;
         }
+
+        // Feature 04 / AK-13: Der Löschauftrag muss stehen, BEVOR der Eintrag
+        // verschwindet. Danach gäbe es niemanden mehr, der ihn stellen könnte,
+        // und die Adresse bliebe für immer in Brevo – ein Widerruf, der bei
+        // einem Dritten wirkungslos bleibt, ist keiner. Das Auftragsbuch hat
+        // deshalb keinen Fremdschlüssel auf diesen Eintrag.
+        // ⚠ BF-84: Der Eintrag geht als auslösende Quelle mit. Steht dieselbe
+        // Adresse noch an einer anderen Quelle mit gültiger Einwilligung – etwa
+        // an einem Nutzerkonto –, wird der Kontakt **nicht** gelöscht, sondern
+        // auf jene Quelle umgeschrieben. Vorher nahm dieser Widerruf die
+        // fremde, nie zurückgenommene Einwilligung mit.
+        $this->marketingContacts->scheduleRemoval($entry->getEmail(), $entry);
 
         $this->entityManager->remove($entry);
         $this->entityManager->flush();

@@ -1,0 +1,86 @@
+{# Bildmaterial und Nutzungsbedingungen.
+
+   ⚠ Fehlt die Paketdatei, tritt der Verweis auf den Pressekontakt an die Stelle
+   des Knopfes (EC-04). Kein toter Link und keine nackte Fehlerseite — die
+   Vorschauen bleiben sichtbar, damit eine Redaktion weiß, was sie anfordert.
+
+   ⚠ Die Größe kommt aus der Datei, nicht aus dem Katalog: Eine Zahl im Katalog
+   veraltet still und sagt nichts darüber, ob die Datei überhaupt da ist.
+
+   ⚠ Der Alternativtext ist die Variantenbezeichnung, nicht der Dateiname
+   (AK-35). „endlech-bildmarke-invers.svg" ist für einen Screenreader keine
+   Information. #}
+<section id="material" class="bg-white py-16 scroll-mt-24" aria-labelledby="material-titel">
+    <div class="container mx-auto px-4 max-w-3xl">
+        <h2 id="material-titel" class="text-2xl md:text-3xl font-bold text-gray-900 mb-3">{{ 'material.section_title'|trans({}, 'press') }}</h2>
+        <p class="text-gray-700 leading-relaxed mb-8">{{ 'material.section_intro'|trans({}, 'press') }}</p>
+
+        <ul class="grid gap-5 sm:grid-cols-2 mb-8">
+            {% for asset in assets %}
+                <li class="rounded-xl border-2 border-gray-300 bg-white overflow-hidden">
+                    <div class="flex items-center justify-center p-6 {{ asset.onDark ? 'bg-gray-900' : 'bg-gray-50' }}">
+                        <img src="{{ asset(asset.publicPath) }}"
+                             alt="{{ asset.labelKey|trans({}, 'press') }}"
+                             class="max-h-24 w-auto max-w-full object-contain">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-semibold text-gray-900">{{ asset.labelKey|trans({}, 'press') }}</h3>
+                        <p class="mt-1 text-sm text-gray-600">
+                            <span class="sr-only">{{ 'material.file_label'|trans({}, 'press') }}:</span>
+                            <span class="break-all">{{ asset.fileName }}</span>
+                            <span aria-hidden="true">·</span>
+                            <span class="sr-only">{{ 'material.format_label'|trans({}, 'press') }}:</span>{{ asset.format }}
+                        </p>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+
+        {% if package.exists %}
+            {% set kb = (package.sizeBytes / 1024)|round %}
+            {% set groesse = kb >= 1024
+                ? (package.sizeBytes / 1048576)|format_number({fraction_digit: 1}) ~ ' MB'
+                : kb|format_number ~ ' kB' %}
+            <a href="{{ asset(package.publicPath) }}" download
+               class="inline-flex items-center justify-center min-h-[48px] rounded-full bg-cyan-700 px-8 font-bold text-white shadow motion-safe:transition hover:bg-cyan-800 hover:shadow-md focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700">
+                {{ 'material.download'|trans({}, 'press') }}
+                <span class="ml-2 font-normal">({{ 'material.download_meta'|trans({'%format%': 'ZIP', '%size%': groesse}, 'press') }})</span>
+            </a>
+        {% else %}
+            <p class="rounded-xl border-2 border-amber-300 bg-amber-50 p-5 text-gray-800">
+                {{ 'material.unavailable'|trans({}, 'press') }}
+                <a href="mailto:{{ press_email }}" class="text-cyan-800 underline underline-offset-2 break-all focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700">{{ press_email }}</a>
+            </p>
+        {% endif %}
+
+        <div class="mt-10 rounded-xl border-2 border-gray-300 bg-gray-50 p-6">
+            <h3 class="text-lg font-bold text-gray-900 mb-2">{{ 'material.terms_title'|trans({}, 'press') }}</h3>
+            <p class="text-gray-800 leading-relaxed mb-5">{{ 'material.terms_intro'|trans({}, 'press') }}</p>
+
+            <div class="grid gap-6 sm:grid-cols-2">
+                <div>
+                    <h4 class="font-semibold text-gray-900 mb-2">{{ 'material.allowed_title'|trans({}, 'press') }}</h4>
+                    <ul class="space-y-2 text-gray-800">
+                        {% for i in 1..4 %}
+                            <li class="flex gap-2">
+                                <span aria-hidden="true" class="text-cyan-700 font-bold">+</span>
+                                <span>{{ ('material.allowed_' ~ i)|trans({}, 'press') }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-gray-900 mb-2">{{ 'material.forbidden_title'|trans({}, 'press') }}</h4>
+                    <ul class="space-y-2 text-gray-800">
+                        {% for i in 1..4 %}
+                            <li class="flex gap-2">
+                                <span aria-hidden="true" class="text-gray-500 font-bold">–</span>
+                                <span>{{ ('material.forbidden_' ~ i)|trans({}, 'press') }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

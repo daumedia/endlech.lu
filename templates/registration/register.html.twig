@@ -59,6 +59,65 @@
                     autofocus: focus_field == 'pw2'
                 }) }}
 
+                {#
+                    Werbe-Einwilligung (Feature 04, AK-01).
+
+                    ⚠️ Sie steht VOR dem Absenden-Knopf. Vorher rendert sie
+                    `form_rest()` aus `form_end()` im Symfony-Standardlayout
+                    UNTER den Knopf – gelesen wird sie dort nicht, und eine
+                    nicht gelesene Einwilligung ist rechtlich wertlos.
+                    `form_widget()` markiert das Feld als gerendert, `form_rest()`
+                    überspringt es danach (der CSRF-Token bleibt unberührt).
+
+                    Bewusst NICHT über `partials/_form_field.html.twig`: Das
+                    Partial setzt das Label mit `block mb-1` ÜBER das Widget und
+                    gibt dem Eingabefeld `w-full … px-4 py-2.5`. Bei einem Häkchen
+                    gehört das Label daneben, nicht darüber, und ein 100 % breites
+                    Kästchen wäre unbrauchbar. Zusätzlich schreibt das Partial in
+                    jede Zeile einen Pflicht-/Optional-Hinweis – hier ein
+                    überflüssiger zweiter Hinweistext neben dem Hilfetext.
+                    Struktur und Klassen stammen deshalb aus dem `consent`-Block
+                    von `partner/_form.html.twig`.
+
+                    ⚠️ Kein Sternchen, kein `required`: Die Einwilligung darf
+                    keine Bedingung für die Registrierung sein (AK-03,
+                    Koppelungsverbot Art. 7 Abs. 4 DSGVO). `required: false` im
+                    RegistrationType hält das `required`-Attribut fern; ohne
+                    Constraint bleibt das Kästchen auch beim erneuten Rendern leer.
+
+                    ⚠️ `aria-invalid` bekommt `false`, nicht `null` – in `attr`
+                    unterdrückt nur `false` ein Attribut. `null` renderte
+                    `aria-invalid=""`, und Screenreader lesen das als „ungültig".
+                #}
+                {% set consent = registrationForm.marketingConsent %}
+                <div class="rounded-xl border border-gray-300 bg-gray-50 p-4 space-y-2">
+                    <div class="flex items-start gap-3">
+                        {{ form_widget(consent, {'attr': {
+                            'class': 'mt-0.5 w-5 h-5 shrink-0 cursor-pointer rounded border-gray-500 text-cyan-700 focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700',
+                            'aria-describedby': consent.vars.id ~ '_help ' ~ consent.vars.id ~ '_error',
+                            'aria-invalid': consent.vars.errors|length > 0 ? 'true' : false,
+                        }}) }}
+                        {# min-h-[44px] auf dem Label: Das Kästchen allein misst
+                           20 px; erst die klickbare Label-Fläche bringt das
+                           Tap-Target über 44 px (die Seite wird überwiegend
+                           mobil benutzt, es gibt eine PWA). #}
+                        {{ form_label(consent, null, {'label_attr': {
+                            'class': 'block min-h-[44px] text-sm text-gray-900 leading-relaxed cursor-pointer',
+                        }}) }}
+                    </div>
+
+                    {# Container existiert immer – so zeigt aria-describedby nie ins Leere. #}
+                    <p id="{{ consent.vars.id }}_error" class="text-sm font-semibold text-red-700">
+                        {%- for error in consent.vars.errors %}{{ error.message }}{{ loop.last ? '' : ' ' }}{% endfor -%}
+                    </p>
+
+                    {# form_help statt eines eigenen Textes: Der Schlüssel
+                       marketing.consent.help steht im RegistrationType, und
+                       Symfony vergibt hier verlässlich die id `…_help`, auf die
+                       das aria-describedby oben zeigt. #}
+                    {{ form_help(consent, {'help_attr': {'class': 'text-xs text-gray-700'}}) }}
+                </div>
+
                 {# Absenden #}
                 <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-lg shadow-md hover:shadow-lg transition transform hover:-translate-y-0.5 focus:outline-2 focus:outline-offset-2 focus:outline-purple-700">
                     {{ 'register.submit'|trans }}

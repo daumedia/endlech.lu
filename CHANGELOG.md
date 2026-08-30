@@ -2,10 +2,115 @@
 
 Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
-![Version](https://img.shields.io/badge/version-2026.08.29.1-blue)
+![Version](https://img.shields.io/badge/version-2026.08.30-blue)
 ![Status](https://img.shields.io/badge/status-beta-green)
 
-## [Unreleased]
+## [2026.08.30] – Presse-Kit und Marketing-Kontakte
+
+### App-Hülle · Kontaktadresse in der Fußzeile (2026-08-30)
+
+Die Fußzeile nennt `support@endlech.lu` statt `info@endlech.lu` — damit dieselbe Adresse
+wie der Pressekontakt. Unverändert bleiben zwei Stellen mit eigenem Zweck: der
+Kontaktweg im Impressum und der zugesagte Rückmeldeweg der Barrierefreiheitserklärung.
+Ebenfalls unverändert `CONTACT_EMAIL` — das ist der interne Empfänger der Team-Mail bei
+bestätigten Wartelisten-Anmeldungen, keine angezeigte Adresse.
+
+### Feature 05 · Presse-Kit (2026-08-30)
+
+Unter `/presse` steht jetzt alles, was für einen Beitrag über Endlech.lu nötig ist:
+freigegebene Beschreibungstexte in drei Längen, ein Faktenblatt mit den Livezahlen der
+Transparenzseite, ein Materialpaket zum Herunterladen, Porträt und Kurzvita, zwei
+freigegebene Zitate und ein Pressekontakt. In allen vier Sprachen, ohne Rückfrage nutzbar.
+
+**Keine Entity, keine Migration.** Struktur als unveränderliche Wertobjekte unter
+`App\Press\`, Texte in der eigenen Übersetzungsdomain `press`, Zahlen aus derselben
+Quelle wie `/open` — dasselbe Muster wie die Vergleichsseiten (Feature 03).
+
+**Die Betreiberangaben stehen als Parameter, nicht im Katalog.** Sie erscheinen auf zwei
+Seiten zugleich — Faktenblatt und Impressum —, und vier Katalogeinträge wären vier
+Stellen, an denen eine Angabe auseinanderläuft; `CatalogueCompletenessTest` prüft
+Vollständigkeit, nicht Gleichheit. Damit trägt `/legal` erstmals einen Namen und einen
+presserechtlich Verantwortlichen.
+
+⚠ **Eine Anschrift wird bewusst nicht veröffentlicht.** Erreichbar ist der Betreiber über
+den Pressekontakt; die Zeile „Anschrift" entfällt, statt eine Mailadresse unter dieser
+Überschrift zu führen. Kommt später eine c/o- oder Postfachadresse, erscheint sie ohne
+Codeänderung wieder.
+
+⚠ **Die Angabe zur Behinderung steht in genau einem Katalogschlüssel** (`person.bio`).
+Ein Prüflauf hält fest, dass kein anderer Schlüssel der Domain sie enthält — damit ist ihr
+Widerruf eine Textstelle und keine Suche über vier Kataloge.
+
+⚠ **Das Paket ist eine committete Datei**, erzeugt von `app:press:package` (`make
+press-kit`), nicht zur Laufzeit gepackt. Ein Prüflauf öffnet die Datei und vergleicht
+ihren Inhalt mit der Materialliste; wer eine Datei austauscht und den Befehl nicht neu
+laufen lässt, bekommt einen roten Lauf statt eines veralteten Downloads. Dafür steht
+`ext-zip` in `require-dev` **und** in der CI-Extension-Liste.
+
+⚠ **Wer eine Datei in `public/presse/` ersetzt, erhöht `CACHE_VERSION` in `public/sw.js`.**
+Der Service Worker liefert Bilder cache-first aus; sonst sähe ein wiederkehrender Besucher
+die alte Vorschau neben dem neuen Paket — und kein Prüflauf sieht das, weil es im Browser
+passiert.
+
+**Die vier Markendateien sind nachgezeichnet, nicht nachgebaut:** `public/images/logo.png`
+mit potrace in zwei Durchgängen (Silhouette über den Alphakanal, Glyphe über die weißen
+Bildpunkte), Abweichung gegen das Original gemessen — **0,244 %**, also nur
+Kantenglättung. ⚠ Der Schriftzug in den beiden Wort-Bildmarken ist `<text>` und noch nicht
+in Pfade umgewandelt.
+
+Neu: `/presse` und der sprachfreie Kurzlink, ein Verweisblock auf `/about`, ein
+Fußzeilen-Eintrag, `app:press:package`, `make press-kit`, zehn Prüfläufe.
+
+
+### Feature 04 · Marketing-Kontakte in Brevo (2026-08-30)
+
+Wer sich auf einer Warteliste einträgt oder ein Konto anlegt, kann zusätzlich
+einwilligen, Neuigkeiten zu erhalten. Diese Adressen stehen danach als Kontakte in
+Brevo — nach Sprache und Zielgruppe getrennt, sodass sich eine Kampagne verschicken
+lässt, ohne eine Liste von Hand zusammenzustellen. Anlass ist Risiko 4 im PRD: „Wer
+sich im August einträgt und im Februar noch nichts gehört hat, ist als Interessent
+verloren."
+
+**Kein Anfrage-Ablauf spricht mit Brevo.** Die Einwilligung erzeugt eine Zeile im
+Auftragsbuch `marketing_contact`; der Konsolenbefehl `app:marketing:sync` trägt sie
+hinaus. Grund ist BF-48 — Production läuft mit `sync://` und ohne Worker, eine
+„asynchrone" Messenger-Nachricht liefe dort synchron im Request und hinge jede
+Anmeldung an der Erreichbarkeit eines fremden Dienstes.
+
+⚠ **Das Auftragsbuch hat bewusst keinen Fremdschlüssel.** Ein Widerruf löscht den
+Wartelisten-Eintrag; hinge der Löschauftrag an ihm, verschwände er mit seiner Quelle
+und die Adresse bliebe für immer bei Brevo stehen. Der Auftrag muss die Löschung
+seiner Quelle überleben.
+
+⚠ **Die Freitextnachricht geht nicht mit.** Auf einer Barrierefreiheitsplattform kann
+dort eine Gesundheitsangabe stehen und damit eine besondere Kategorie nach Art. 9
+DSGVO. Was das Auftragsbuch nicht führt, kann nicht abfließen.
+
+⚠ **`self_confirmed_at` trennt den eingelösten Double-Opt-In vom Verwaltungs-Backfill.**
+`confirmed_at` wird an zwei Stellen gesetzt und kann die beiden Fälle nicht
+unterscheiden — über diese Zweideutigkeit gelangte eine nie bestätigte Adresse nach
+Brevo (BF-83/BF-89). Alles, was eine belegte Adresse voraussetzt, fragt jetzt
+`hasSelfConfirmed()`.
+
+⚠ **`confirm()` setzt den Status nur noch aus `PENDING` heraus** (BF-91). Ein
+fortgeschrittener Vertriebsstand ist die jüngere Information; vorher warf eine späte
+Bestätigung einen gewonnenen Kunden auf „bestätigt" zurück — bis hinein in das
+`FUNNEL_STATUS`-Attribut bei Brevo.
+
+**Neu:** Entity `MarketingContact`, Enums `MarketingOrigin` und `MarketingSyncState`,
+Namensraum `App\Marketing\` (Registry, Sync-Dienst, Payload-Abbildung, Brevo-Client),
+sprachfreier Webhook `POST /marketing/brevo/webhook` mit Bearer-Absicherung und
+eigenem Limiter, die Befehle `app:marketing:sync` und `app:marketing:import`
+(Trockenlauf ist der Vorgabefall), Einwilligungsfeld in drei Formularen, Sync-Spalte
+in der Wartelisten-Verwaltung, `docs/datenschutz.md`.
+
+**Migrationen:** `Version20260829120000` (Auftragsbuch + `marketing_consent_at`),
+`Version20260829170000` (`self_confirmed_at`).
+
+⚠ **Vor dem ersten echten Lauf** müssen der AV-Vertrag mit Brevo datiert (BF-88, hängt
+an OF-01) und `BREVO_API_KEY`, `BREVO_LIST_ID`, `BREVO_WEBHOOK_TOKEN` auf dem Server
+gesetzt sein. Ohne Schlüssel ist die Funktion still aus — die Einwilligungen sammeln
+sich im Auftragsbuch und gehen beim ersten Lauf mit.
 
 ## [2026.08.29.1] – Deploy-Fenster, Passkey-Fehlerseite und Worker-Sperre
 

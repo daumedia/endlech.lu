@@ -1,6 +1,6 @@
 # Befunde — projektweit
 
-Stand: 2026-08-29 · Quelle: die `qa-report.md` aller geprüften Features
+Stand: 2026-08-30 · Quelle: die `qa-report.md` aller geprüften Features
 
 Diese Liste wird von `sdd-qa` fortgeschrieben, nicht von Hand. Sie ist die Grundlage
 des Auditberichts, den `/sdd-erfassen abschluss` daraus baut.
@@ -10,6 +10,34 @@ Durchlauf), B23 (34/35 im zweiten Durchlauf), B19 (17/17, davon eines nicht prü
 B14 (28/28), B15 (27/27), B22 (30/30), B17 (25/25) — abgenommen.
 B10 (24/24 im zweiten Durchlauf), B18 (29/29), B11 (18/19, eines nicht prüfbar), B20 (19/20), B21 (20/20), B09 (18/18), B05 (24/24), **B06 (23/23 — das erste Feature ohne eigenen Befund)**, B07 (17/17, eines nicht ausgeführt), B08 (16/16) — abgenommen.
 B12 (15/15 nach der Reparatur), B13 (14/14), B16 (29/29), B24 (16/16) — abgenommen.
+
+**2026-08-29 · Feature `04`, zweiter Durchlauf: 42/48 bestanden.** Fünf der sechs
+Befunde sind behoben und gegengeprüft, darunter der schwerste (BF-84). **BF-83 war nur
+zur Hälfte behoben** — fortgeführt als BF-89 (kritisch), unabhängig von Messung und
+`code-reviewer` bestätigt. **BF-89 wurde am selben Tag behoben**, diesmal an der Ursache:
+`selfConfirmedAt` trennt den eingelösten Double-Opt-In vom Verwaltungs-Backfill. Offen
+bleiben BF-88 (Betreiberentscheidung) und BF-90 (niedrig).
+
+**2026-08-30 · Feature `04`, vierter Durchlauf: 43/48 — der erste ohne neuen Befund.**
+BF-91 und BF-92 behoben, **AK-08 hält wieder**, 681 Tests grün. Geprüft wurde diesmal die
+**vollständige Zustandsmatrix** von `confirm()` über alle sechs Ausgangszustände und
+**beide** Wartelisten — die ersten drei Durchläufe hatten fast alles nur am Partner-Weg
+gemessen. Offen bleiben allein BF-88 und BF-90, beide ohne Softwareanteil. Der Code ist
+auslieferbar; die **Inbetriebnahme** hängt an T08 (Brevo-Konto) und BF-88.
+
+**2026-08-29 · Feature `04`, dritter Durchlauf: 43/48 bestanden.** BF-89 ist behoben —
+**AK-05 hält erstmals auf allen drei Wegen**. Die Reparatur führte aber **BF-91** ein
+(hoch): Der Bestätigungsklick setzt einen fortgeschrittenen Vertriebsstatus zurück, weil
+`confirm()` jetzt einen Pfad erreicht, der vorher nie offen war — und der Rückfall wandert
+bis nach Brevo, womit **AK-08 durchfällt**. Dritte Runde an derselben Stelle. Dazu BF-92
+(niedrig): `docs/data-model.md` führt Feature 04 überhaupt nicht. **Beide wurden am
+2026-08-30 behoben** — die vierte Abnahme steht aus.
+
+**2026-08-29 · Feature `04` geprüft (erster Durchlauf): 41/48 bestanden, 3 durchgefallen, 4 nicht prüfbar.**
+Nicht abgenommen — zwei kritische Befunde (BF-83, BF-84) und einer hoher (BF-86). Die
+vier nicht prüfbaren Kriterien hängen alle am selben Punkt: Das Brevo-Konto ist nicht
+eingerichtet (AK-07, AK-10, AK-24, AK-27) — ohne Kontozugang lässt sich weder messen, ob
+die Attribute ankommen, noch die Kontaktzahl gegenprüfen.
 
 **2026-08-25 · Alle 72 Befunde sind behoben.** Der Durchgang lief über zehn
 Blöcke; die Reihenfolge folgte dem Schweregrad, nicht der Feature-Nummer. Dabei
@@ -38,12 +66,57 @@ obwohl dort nichts mehr zu reparieren ist.
 > **Lesen** des Codes auffiel, und ist eine Suchliste. Hier stehen nur Befunde, die in
 > einer QA **ausgeführt und belegt** wurden.
 
+**2026-08-30 · Feature `05` geprüft (erster Durchlauf): 32/44 bestanden, 5 durchgefallen,
+7 nicht prüfbar.** Nicht abgenommen — zwei Befunde mit Grad *hoch*. **Alle zwölf offenen
+Kriterien hängen an den drei Vorbedingungen der Spec** (Vektormarken, Postfach,
+Betreiberangaben); nur einer der vier Befunde hat überhaupt einen Codeanteil (BF-95). Der
+Angriffsdurchlauf blieb ohne Fund, axe-core meldet in allen vier Sprachfassungen null
+Verstöße.
+
+⚠ **Der 768-px-Überlauf war bereits als BF-80 erfasst.** Er wurde beim Selbsttest von `05`
+erneut gefunden und dort zunächst als neuer Befund geführt — falsch. Die Messung ist
+trotzdem ein Gewinn: Sie zeigt, dass der Fehler **angemeldet doppelt so groß ist und bis
+unter 1000 px reicht**. BF-80 ist entsprechend ergänzt statt verdoppelt.
+
+**2026-08-30 · Feature `05`, zweiter Durchlauf: 37/44, kein neuer Befund.** Beide
+Reparaturen halten der Gegenprobe stand. Der Ertrag liegt in der Methode: Statt auf VB-01
+zu warten, wurde der **vollständige Zustand hergestellt** (SVG-Platzhalter,
+`app:press:package`) — damit lief die gesamte Materialmechanik zum ersten Mal durch und
+**sechs vormals offene Kriterien sind belegt**. In diesem Zustand meldete die Suite 10
+statt 13 übersprungene Tests. Alle Prüf-Artefakte wurden wieder entfernt. Offen bleiben
+BF-93 bis BF-96 — **keiner davon hat einen Softwareanteil**.
+
+**2026-08-30 · Feature `05`, dritter Durchlauf: 42/44 — production-ready.** Die drei
+Vorbedingungen sind erfüllt; **fünf Kriterien wechselten von offen auf bestanden**, und
+**kein Prüflauf dieses Features überspringt mehr**. BF-93, BF-94 und BF-96 sind behoben.
+Neu ist allein **BF-99** (mittel, kein Codeanteil): Der Schriftzug der Wort-Bildmarken ist
+noch nicht in Pfade umgewandelt.
+
+⚠ **AK-11 bleibt durchgefallen, und das ist eine Entscheidung** (OF-04): Es wird keine
+Anschrift veröffentlicht. Das Impressum zitiert weiterhin § 5 TMG / Art. 11 Loi sur le
+commerce électronique und erfüllt beides nicht. Das Feature hat den Zustand sichtbar
+gemacht, nicht verursacht — vorher stand dort gar nichts außer dem Namen der Plattform.
+Ob AK-11 gestrichen oder zurückgenommen wird, entscheidet Michael in der Spec.
+
+Der Angriffsdurchlauf blieb zum dritten Mal ohne Fund, diesmal einschließlich der neuen
+Angriffsfläche: **vier SVG-Dateien von derselben Herkunft** — kein `<script>`, kein
+`onload`, kein `foreignObject`, kein nachgeladenes Bild.
+
 ## Offen
 
 | ID | Feature | Befund | Grad | Fundstelle | Status |
 |---|---|---|---|---|---|
-| BF-80 | 02 / projektweit | Bei 768 px scrollen **alle** Seiten um 51 px waagerecht — Startseite, `/about`, `/open`, `/restaurants`, `/criteria`, `/legal` und die Vergleichsseiten. Mit ausgeblendetem `<header>` sind es 0 px; bei genau 768 px greift die Desktop-Navigation, der Platz reicht nicht, `flex-wrap: nowrap` verhindert den Umbruch | mittel | `templates/base.html.twig` — `div.flex items-center gap-4` | offen |
+| BF-80 | 02 / projektweit | Bei 768 px scrollen **alle** Seiten um 51 px waagerecht — Startseite, `/about`, `/open`, `/restaurants`, `/criteria`, `/legal` und die Vergleichsseiten. Mit ausgeblendetem `<header>` sind es 0 px; bei genau 768 px greift die Desktop-Navigation, der Platz reicht nicht, `flex-wrap: nowrap` verhindert den Umbruch. **2026-08-30 bei der QA von `05` nachgemessen und verschärft:** abgemeldet +36 px bei 768 px und ab 850 px weg — **angemeldet aber +81 px, und das Band reicht bis unter 1000 px** (850 px → +40, 900 px → +15). Bei 768 px messen Logo (123) + Navigation (416) + Kontobereich (250 bzw. 295 angemeldet) zusammen 789 bzw. 833 px, während der Inhaltsbereich nach `px-4` nur 736 px fasst. Vollständige Messreihe: `docs/app-shell.md`, Bekannte Lücke 7 | mittel | `templates/base.html.twig` — `div.flex items-center gap-4` | offen |
 | BF-82 | 03 | Ein Anbietername von 57 Zeichen **ohne Leerzeichen** sprengt bei 320 px die Kartendarstellung (`scrollX=104`). Bis 30 Zeichen sauber; die realen Wortmarken sind 8–11 Zeichen | niedrig | `templates/comparison/_cards.html.twig` — `<dt>` ohne `overflow-wrap` | offen |
+| BF-90 | 04 | Nach einem `contactDeleted` bleibt bei zwei Quellen eine Zeile auf `synced` stehen, obwohl der Kontakt bei Brevo gelöscht ist: `record()` verweigert wegen der Sperre, `scheduleRemoval()` gibt `null` zurück. **Kein Datenabfluss** — bei Brevo steht nichts mehr —, aber ein lokaler Zustand, der nicht mehr stimmt, und eine Zeile, die niemand aufräumt | niedrig | `src/Marketing/MarketingContactRegistry.php` — `scheduleRemoval()` | offen |
+| BF-88 | 04 | Der AV-Vertrag mit Brevo ist in `docs/datenschutz.md` **nicht festgehalten**, sondern als „noch zu prüfen" markiert; das Prüfdatum fehlt (AK-33). Hängt an **OF-01**, der nie festgelegten Datenschutzstufe des Projekts. Keine Softwarefrage — aber die Freigabe-Sperre für den ersten echten Lauf | mittel | `docs/datenschutz.md` | offen |
+| ~~BF-93~~ | 05 | **behoben 2026-08-30 (QA³)** · Betreiberangaben fehlten auf `/presse` **und** `/legal`: Das Faktenblatt zeigt dreimal „Wird derzeit ergänzt", das Impressum unverändert „Endlech.lu / Luxemburg". AK-11 durchgefallen, AK-15 nicht prüfbar. **Kein Codeanteil** — die Mechanik (ein Parameter, zwei Seiten) steht und ist geprüft, die Werte fehlen (VB-03) | hoch | `config/services.yaml:40–42` | **behoben** — Michael Ferreira als Betreiber und Verantwortlicher; `OperatorDetailsTest` läuft statt zu überspringen. ⚠ Die **Anschrift bleibt bewusst leer** (OF-04), damit kann AK-11 nicht bestehen |
+| ~~BF-94~~ | 05 | **behoben 2026-08-30 (QA³)** · Kein Bildmaterial und kein Paket: vier von fünf Vorschauen laufen in HTTP 404, kein Downloadlink. AK-16 und AK-20 durchgefallen, AK-17/18/19/22 nicht prüfbar. **Kein Codeanteil** — `app:press:package` verweigert bewusst ein halbes Paket (Exit 1), drei Prüfläufe überspringen mit benannter Begründung (VB-01) | hoch | `public/presse/` · `src/Press/PressRegistry.php::assets()` | **behoben** — vier Marken aus `logo.png` nachgezeichnet (0,244 % Abweichung), `make press-kit` gelaufen, Paket mit sechs Dateien |
+| BF-95 | 05 | Eine fehlende Vorschaudatei erzeugt ein Bruchbild statt eines Ersatzes — anders als beim Paket, wo der Kontaktweg an die Stelle des Knopfes tritt. Der Entwurf sieht einen Fehlerzustand nur für `PressPackage` vor. Braucht **erst ein Kriterium** (OF-09), dann Code | mittel | `templates/press/_material.html.twig:18–22` | offen |
+| ~~BF-96~~ | 05 | **behoben 2026-08-30 (QA³)** · Der Fotocredit nannte keinen Urheber („Bildnachweis wird ergänzt"). Die Nutzungsbedingung steht, die Urheberangabe fehlt — ein Presse-Kit, das ein Foto ohne Urheberangabe ausgibt, verursacht das Problem beim Abdruckenden (AK-24, OF-05) | mittel | `translations/press.*.yaml` → `person.photo_credit` | **behoben** — Fotocredit nennt den Urheber, in vier Sprachen |
+| BF-99 | 05 | Der Schriftzug der beiden Wort-Bildmarken liegt als `<text>` vor, nicht als Pfad. Ohne die Schrift auf dem Zielsystem ersetzt der Betrachter sie — bei einer Wortmarke ist die Schrift die Marke. Die Bildmarke selbst ist sauber vektorisiert. Kein Codeanteil: einmal in Illustrator oder Affinity outlinen, dann `make press-kit` erneut | mittel | `public/presse/endlech-wortbildmarke.svg`, `…-invers.svg` | offen |
+| ~~BF-97~~ | 05 | **behoben 2026-08-30** · **Mit vorhandenem Materialpaket antwortet `/presse` in allen vier Sprachen mit HTTP 500.** `_material.html.twig:44` ruft `package.publicPath`; auf `PressPackage` ist der Pfad eine **Klassenkonstante**, und Twig löst `object.attr` nie über eine Konstante auf. Der Fehler liegt im **Regelfall** des Features und blieb verborgen, weil die Umgebung kein Paket hat — der einzige Lauf, der den Abschnitt anfasst, prüfte nur den Ersatzzweig | **kritisch** | `templates/press/_material.html.twig:44` gegen `src/Press/PressPackage.php:22` | **behoben, gegengeprüft 2026-08-30 (QA²)** — `PressPackage::publicPath()`; mit angelegtem Paket 200 in allen vier Sprachen, `PressPackageTest` läuft erstmals durch statt zu überspringen. **Noch nicht ausgeliefert** |
+| ~~BF-98~~ | 05 | **behoben 2026-08-30** · Zusammengesetzte Übersetzungsschlüssel (`'material.allowed_' ~ i`, die sechs `facts.*_value`) fallen durch **beide** Netze: `CatalogueCompletenessTest` erfasst nur Literale, `PressCatalogueTest` nur die von `PressRegistry` genannten. Entfernt man einen aus allen vier Katalogen, bleibt die Suite grün und die Seite zeigt den rohen Schlüssel. Heute ist nichts kaputt — die Absicherung fehlt. Derselbe blinde Fleck wie BF-56 | mittel | `tests/Unit/Translation/PressCatalogueTest.php:129–154` | **behoben, gegengeprüft 2026-08-30 (QA²)** — vierzehn Schlüssel als `ZUSAMMENGESETZTE_SCHLUESSEL`; beide Mutationsproben unabhängig wiederholt, beide werden rot, nach dem Wiederherstellen grün. **Noch nicht ausgeliefert** |
 
 Die drei Befunde des ersten `03`-Durchlaufs (BF-77/78/79), BF-81 sowie die vier der
 `02`-QA und die 72 Rückerfassungs-Befunde sind behoben — siehe unten.
@@ -53,6 +126,26 @@ Die drei Befunde des ersten `03`-Durchlaufs (BF-77/78/79), BF-81 sowie die vier 
 > die Rückerfassung auf `dev`/`fix/befunde-abarbeiten`.
 
 ## Behoben
+
+### Feature 04 · Marketing-Kontakte in Brevo (QA 2026-08-29, behoben am selben Tag)
+
+| ID | Befund | Grad | Behebung | Gegenprobe |
+|---|---|---|---|---|
+| BF-83 | Ein Verwaltungs-Statuswechsel befördert eine nie per Double-Opt-In bestätigte Adresse nach Brevo — der `confirmedAt`-Backfill stand vor dem Registry-Aufruf | **kritisch** | `applyStatus()` hält den Bestätigungsstand fest, **bevor** der Backfill läuft, und ruft die Registry nur dann | ⚠️ **Nur der erste Statuswechsel.** Der zweite liest ein `confirmedAt`, das der erste gesetzt hat — der Fehler tritt eine Runde später erneut auf. Fortgeführt als **BF-89** (QA², 2026-08-29) |
+| BF-84 | Der Widerruf einer Quelle löscht den Kontakt einer anderen, aktiven Quelle mit derselben Adresse. Verstärker: Brevos `contactDeleted`-Echo der **eigenen** Löschung tilgte `marketing_consent_at` an allen Quellen | **kritisch** | `scheduleRemoval()` nimmt die auslösende Quelle entgegen und prüft über `aktiveQuellen()`, ob eine andere übrig bleibt — dann wird die Zeile auf jene umgeschrieben statt gelöscht. `blockByEmail()` steigt ohne vorhandene Zeile aus, und `contactDeleted` entwertet die Einwilligung an der Quelle nicht mehr | Über den echten Widerrufslink: Zeile bleibt (`pending/account`), Konto-Einwilligung steht, Wartelisten-Eintrag gelöscht. `MarketingBefundeTest::testBf84…`, `::testBf84b…` grün |
+| BF-85 | `record()` war ohne zwischenzeitliches `flush()` nicht kollisionsfrei — `findOneByEmail()` sieht die vorgemerkte Zeile nicht | mittel | Die Registry führt eine Merkliste der in diesem Vorgang angelegten Zeilen; `finde()` sucht erst dort und verwirft Einträge, die der EntityManager nach `clear()` nicht mehr führt | `MarketingBefundeTest::testBf85…` grün. ⚠ Die echte Nebenläufigkeit (zwei parallele Requests) bleibt offen — siehe OF-09 |
+| BF-86 | Eine fehlgeschlagene Übertragung wurde nie wieder aufgegriffen; `findOpenForSync()` fragte `FAILED` nicht ab, während der Enum-Kommentar das Gegenteil behauptete | hoch | `FAILED` steht in der Zustandsliste, der Rückzug bleibt allein beim Versuchszähler. Der Kommentar ist korrigiert und verweist auf die zweite Stelle | `MarketingSyncServiceTest::testAk19…` grün: nach 429 überträgt der zweite Lauf |
+| BF-87 | Der Sync-Lauf committete bis zu 200 Zeilen ungeschützt in einer Transaktion | mittel | `flush()` in `try/catch`; ein Fehlschlag protokolliert Fehlerklasse und Zahl der betroffenen Zeilen (keine Adressen) und meldet sie im Ergebnis, statt den Cron-Lauf abzubrechen. Die Bündelung bleibt — wegen der Idempotenz unkritisch | 664 Tests grün |
+
+| BF-89 | Der **zweite** Statuswechsel trug eine nie bestätigte Adresse ein — die BF-83-Reparatur griff nur eine Runde weit. Zweiter Weg: der Bestandsimport. Kehrseite: Nach dem Backfill lief der echte Bestätigungslink ins Leere | **kritisch** | Neues Feld **`selfConfirmedAt`** an beiden Wartelisten (Migration `Version20260829170000`), gesetzt **ausschließlich** von `confirm()`. Registry, `aktiveQuellen()` und die Import-Auswahl fragen `hasSelfConfirmed()`; `WaitlistConfirmationService::confirm()` prüft es für „bereits bestätigt". Der Vorabfilter in `applyStatus()` ist entfallen. ⚠ Der `confirmationToken` taugte **nicht** zur Unterscheidung — er bleibt in beiden Fällen stehen | Vier aufeinanderfolgende Statuswechsel → 0 Kontakte; echter Link danach → 1 Kontakt; AK-09 unverändert (`pending`); Import listet `NUR-BACKFILL` nicht, `ECHTER-DOI` schon; Doppelklick → 1 Kontakt. 674 Tests grün |
+
+| BF-91 | Der Bestätigungsklick setzte einen fortgeschrittenen Vertriebsstatus zurück (`converted` → `confirmed`); der Rückfall wanderte über das Auftragsbuch bis in `FUNNEL_STATUS` bei Brevo (**AK-08**), und das Team bekam erneut eine „Neue Anmeldung"-Meldung | hoch | `confirm()` setzt den Status **nur noch aus `PENDING` heraus**, Zeitstempel weiterhin unbedingt. Beide Bestätigungs-Controller merken vor dem Aufruf, ob der Vorgang neu war (`$warNeu`), und rufen `notifyTeam()` nur dann | Eintrag auf `converted`: Status bleibt, 0 Team-Meldungen, `FUNNEL_STATUS=converted`, Selbstbestätigung festgehalten, Kontakt entsteht. Normalfall unberührt: `confirmed` + 1 Meldung. 677 Tests grün |
+| BF-92 | `docs/data-model.md` führte keinen Bestandteil von Feature 04 | niedrig | Entity `MarketingContact` mit Feldreferenz, Indizes und den beiden ⚠-Begründungen; `marketingConsentAt` an allen drei Quellen, `selfConfirmedAt` an beiden Wartelisten, beide Enums, beide Migrationen | Alle neun Bestandteile in der Datei nachgewiesen. ⚠ Dabei fiel ein **vorbestehender Rückstand** auf: sechs Migrationen aus Feature 01/02 fehlen in der Historie — als Lücke vermerkt, nicht gefüllt |
+
+⚠ **BF-88 und BF-90 bleiben offen** — beide stehen oben unter *Offen* und brauchen eine
+Betreiberentscheidung. BF-88 (AV-Vertrag ohne Datum) hängt an OF-01; BF-90 (verwaiste
+Zeile nach `contactDeleted`, niedrig) gehört mit OF-06 zusammen entschieden.
+
 
 ### Feature 03 · Vergleichsseiten (QA 2026-08-29, behoben am selben Tag)
 
@@ -153,7 +246,55 @@ sondern vergessen.
 
 ## Muster
 
+**Ein Ast, der nie ausgeführt wird, ist keine Abdeckung — er sieht nur so aus.**
+*(2026-08-30, Feature 05, BF-97)* Ein Prüflauf verzweigte an einer Vorbedingung
+(`PressPackage::exists()`) und prüfte in der vorhandenen Umgebung ausschließlich den
+Ersatzzweig. Der Regelfall des Features lag damit in keinem einzigen Test, und ein
+Fehler darin — die Seite antwortet mit 500 — wurde erst sichtbar, als die QA den Zustand
+**herstellte** statt ihn abzuwarten. Wo eine Vorbedingung offen ist, wird der Zustand
+dahinter simuliert; sonst wächst die grüne Suite genau um die Stellen, die niemand
+gesehen hat.
+
+
+
 Was in mehr als einem Feature auftritt — der Grund, warum diese Liste existiert.
+
+- **Eine Reparatur öffnet einen Pfad, den vorher eine Abbruchbedingung verdeckte
+  (BF-89 → BF-91).** Dritte Runde an derselben Stelle, und diesmal war die Ursache eine
+  andere: `WaitlistConfirmationService::confirm()` stieg bei einem verwaltungsseitig
+  bestätigten Eintrag früher mit `RESULT_ALREADY` aus. Die Reparatur nahm diese
+  Abbruchbedingung weg — richtigerweise, denn sie verschluckte echte Bestätigungen —, und
+  damit wurde `Entity::confirm()` in einer Lage erreicht, für die es nie geschrieben war:
+  Es setzt auch den **Status**, und ein gewonnener Kunde fiel auf „bestätigt" zurück.
+  **Folgerung: Wer eine Abbruchbedingung entfernt, prüft, was dahinter liegt.** Der
+  entfernte `return` war die einzige Stelle, die einen ganzen Codepfad unerreichbar hielt
+  — sein Wegfall ist kein kleinerer Eingriff als eine neue Verzweigung.
+- **Eine Reparatur an der Reihenfolge verschiebt einen Fehler, der aus einer
+  Zweideutigkeit stammt (BF-83 → BF-89).** `confirmedAt` bedeutet zweierlei — eingelöster
+  Double-Opt-In und Verwaltungs-Backfill. Die erste Reparatur zog die Prüfung **vor** den
+  Backfill; damit war der erste Statuswechsel sauber und der zweite wieder falsch, weil
+  er das nachgesetzte Feld vorfindet. **Folgerung: Wenn ein Feld zwei Bedeutungen trägt,
+  ist jede Reparatur an der Reihenfolge ein Aufschub.** Die Frage vor der nächsten
+  Reparatur lautet nicht „wann prüfen wir", sondern „woran unterscheiden wir die beiden
+  Fälle". Verwandt mit dem Muster darunter: Auch hier stimmte der Kommentar — er
+  beschrieb nur den Fall, den der Autor vor Augen hatte.
+- **Ein Kommentar, der eine Zusage macht, die der Code nicht hält (BF-46 behoben, BF-86
+  offen).** Zweimal derselbe Mechanismus in einem Projekt, das bewusst dicht und
+  begründend kommentiert: Bei BF-46 sagte der **Nutzertext** „barrierefreie Haltestellen",
+  während die Schnittstelle kein solches Merkmal kennt. Bei BF-86 sagt der
+  **Codekommentar**, der Sync-Lauf greife fehlgeschlagene Zeilen „über ihren
+  Versuchszähler wieder auf, nicht über den Zustand" — die Abfrage tut genau das nicht.
+  Beide Male hat der Kommentar die Prüfung *ersetzt* statt sie zu leiten: Wer ihn liest,
+  hält die Sache für geklärt und sieht nicht mehr nach. **Folgerung für künftige QA: Ein
+  ⚠-Kommentar, der ein Verhalten zusichert, ist ein Prüfauftrag, kein Nachweis.**
+- **Ein geteilter Schlüssel löst einen Fall auf der Schreibseite und bricht ihn auf der
+  Löschseite (BF-84, offen).** `marketing_contact` hat bewusst *eine Zeile je Adresse* —
+  das löst EC-01 („eine Adresse, ein Kontakt") beim Eintragen sauber und auf
+  Datenbankebene. Beim **Austragen** kippt dieselbe Entscheidung: Der Löschauftrag kennt
+  die auslösende Quelle nicht und nimmt die anderen mit. Bisher einmalig; die Zeile steht
+  hier, weil dieselbe Frage bei jedem künftigen quellenübergreifenden Schlüssel wieder
+  auftaucht — die Entwurfsprüfung sollte zu jedem geteilten Schlüssel ausdrücklich fragen,
+  was beim **Entfernen** einer von mehreren Quellen geschieht.
 
 - **Fehlende Eingabeprüfung endet im 500er (BF-27 behoben, BF-51, BF-62, BF-68 offen).**
   Viermal dasselbe: Ein Wert, den niemand geprüft hat, fällt in die nächste Schicht und
