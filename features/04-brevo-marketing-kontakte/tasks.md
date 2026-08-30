@@ -163,7 +163,11 @@ tests/Unit/Translation`, `lint:container`.
       im Befehl und ist nicht per Parameter aufweichbar: **ausschließlich bestätigte
       Wartelisten-Einträge mit `marketingConsentAt`**, keine Konten, keine unbestätigten
       — `AK-21, AK-22, AK-23, AK-36`
-- [x] **T27** · Cron-Eintrag alle 5 Minuten auf `app:marketing:sync` unter dem
+- [~] **T27** ⛔ **nicht erledigt, obwohl abgehakt** — am 2026-08-30 geprüft: Auf
+      Produktion existiert **nur** der Worker-Cron; weder `app:marketing:sync` noch
+      `app:metrics:snapshot` sind eingerichtet. Ohne diesen Eintrag überträgt Feature 04
+      **nie**, egal ob Schlüssel und Listen-ID stehen. Ursprünglicher Text:
+      Cron-Eintrag alle 5 Minuten auf `app:marketing:sync` unter dem
       **PHP-FPM-Systembenutzer** (nicht dem Master-Login), dokumentiert in `README.md`
       neben `app:metrics:snapshot`. `src/Schedule.php` bleibt unberührt — dort feuert
       nichts, solange Produktion mit `sync://` läuft (BF-48) — `AK-10`

@@ -530,6 +530,25 @@ AK-10, AK-24, AK-27), waren es mit der Begründung „das Konto ist nicht einger
 trägt nicht mehr — sie sind prüfbar, sobald ein Schlüssel gesetzt ist. Für die
 Inbetriebnahme bleibt allein **BF-88** (AV-Vertrag) offen.
 
+**2026-08-30 · Zwei von drei Cron-Einträgen fehlen auf Produktion.** Aufgefallen beim
+Versuch, Feature 04 in Betrieb zu nehmen. Der Server führt **nur** den Messenger-Worker;
+das README verlangt drei.
+
+⚠ **`app:metrics:snapshot` (monatlich) fehlt — und das ist nicht nachholbar.** Auf
+Produktion gemessen: `/open.json` liefert `trend: leer`, **es wurde nie ein Snapshot
+geschrieben**. `/open` zeigt deshalb keine Veränderungen, und die Historie lässt sich
+nicht rückwirkend erzeugen — ein aus heutigen Daten zurückgerechneter Verlauf änderte
+sich, sobald jemand einen Eintrag bearbeitet, und wäre als Beleg gegenüber einem
+Ministerium wertlos. Jeder Monat ohne diesen Cron ist ein dauerhaft verlorener Messpunkt.
+Genau davor warnt `docs/`: „eine ausgefallene Historie bliebe unbemerkt".
+
+⚠ **`app:marketing:sync` (alle 5 Minuten) fehlt** — damit überträgt Feature 04 **nie**,
+gleich ob Schlüssel und Listen-ID stehen. **T27 war als erledigt abgehakt**; die Aufgabe
+ist jetzt richtiggestellt. Zusammen mit dem umgekehrten Fall bei T08 (erledigt, aber als
+offen geführt) ist das ein Muster: **Was in `tasks.md` als erledigt steht, ist ein
+Vermerk, kein Nachweis** — bei Aufgaben, die außerhalb des Quelltexts stattfinden,
+gehört der Zustand gemessen und nicht abgehakt.
+
 **Zwei Namensräume:** Einträge mit Präfix `B` sind **Bestand** — gebaut, bevor die
 SDD-Kette da war, und rückwirkend erfasst. Einträge **ohne** Präfix (`01`, `02`, …)
 entstehen durch die Kette und hatten eine Anforderung, bevor Code existierte. An der ID
