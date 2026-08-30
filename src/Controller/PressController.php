@@ -29,7 +29,7 @@ use Symfony\Component\Routing\Attribute\Route;
  * öffentlichen Seiten so aussehen, als seien sie anders behandelt.
  *
  * ⚠ **Das Materialpaket hat keine Route.** Es liegt als Datei unter
- * `public/presse/` und wird vom Webserver direkt ausgeliefert; der
+ * `public/presse-kit/` und wird vom Webserver direkt ausgeliefert; der
  * Front-Controller sieht es nie, weil `public/.htaccess` nur Anfragen
  * weiterleitet, für die keine Datei existiert. Deshalb ist hier nichts zu
  * deckeln — es wird nichts gerechnet (AK-40).

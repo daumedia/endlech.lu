@@ -16,7 +16,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  * Packt das Materialpaket für die Presseseite.
  *
  * Läuft **von Hand** und nicht im Request und nicht im Deploy. Das Ergebnis
- * (`public/presse/presse-kit-endlech-lu.zip`) wird committet: Zur Laufzeit zu
+ * (`public/presse-kit/presse-kit-endlech-lu.zip`) wird committet: Zur Laufzeit zu
  * packen fiele unter die Projektkonvention „ein Weg, der bei jedem Aufruf den
  * ganzen Bestand lädt, braucht einen Deckel", und ein Schritt im Deploy wäre
  * einer mehr, den man bei jedem Auslieferungsfehler mit untersuchen muss.

@@ -20,8 +20,20 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
  */
 final readonly class PressPackage
 {
-    /** Pfad unterhalb von `public/`, ohne führenden Schrägstrich. */
-    public const string PUBLIC_PATH = 'presse/presse-kit-endlech-lu.zip';
+    /**
+     * Pfad unterhalb von `public/`, ohne führenden Schrägstrich.
+     *
+     * ⚠ **Das Verzeichnis heißt `presse-kit`, nicht `presse` — und das ist kein
+     * Geschmack.** Ein Verzeichnis unter `public/`, das so heißt wie eine Route,
+     * erzeugt auf Apache eine endlose Weiterleitungsschleife: `mod_dir` schickt
+     * `/presse` per 301 auf `/presse/`, weil ein Verzeichnis existiert, und
+     * Symfonys Trailing-Slash-Regel schickt es zurück. Der sprachfreie Kurzlink
+     * war damit auf Produktion tot (BF-100), während lokal alles lief — der
+     * Entwicklungsserver hat kein `mod_dir`.
+     *
+     * `RouteDirectoryCollisionTest` hält den Fall fest.
+     */
+    public const string PUBLIC_PATH = 'presse-kit/presse-kit-endlech-lu.zip';
 
     /** Name der Bedingungsdatei im Paket. Siehe `app:press:package`. */
     public const string TERMS_ENTRY = 'NUTZUNGSBEDINGUNGEN.txt';

@@ -12,7 +12,7 @@
  * erhöhen, damit veraltete Caches verworfen werden.
  */
 
-// ⚠ Feature 05: Wer eine Datei in `public/presse/` ersetzt, erhöht diese Zahl.
+// ⚠ Feature 05: Wer eine Datei in `public/presse-kit/` ersetzt, erhöht diese Zahl.
 // Bilder werden weiter unten cache-first ausgeliefert — ein wiederkehrender
 // Besucher sähe sonst die alte Logo-Vorschau neben dem neuen Presse-Paket (das
 // selbst nie gecacht wird, weil es kein `image` ist). AK-17 bräche damit im

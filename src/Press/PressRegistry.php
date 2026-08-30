@@ -45,11 +45,14 @@ final readonly class PressRegistry
      * Die fünf Bestandteile des Materialpakets.
      *
      * ⚠ **Das Porträt liegt bewusst weiter unter `uploads/team/`** und wird nicht
-     * nach `presse/` kopiert. Die Datei ist 2048 × 1365 px groß und damit
+     * nach `presse-kit/` kopiert. Die Datei ist 2048 × 1365 px groß und damit
      * drucktauglich (rund 17 cm bei 300 dpi); eine zweite Kopie wäre eine zweite
      * Wahrheit, die beim nächsten Bildwechsel auseinanderfällt. Sie ist committet
      * — `public/uploads/team/` ist per `!`-Regel aus `.gitignore` ausgenommen,
      * und was dort nicht committet ist, löscht `git clean -fd` im Deploy weg.
+     *
+     * ⚠ **Das Verzeichnis heißt `presse-kit` und nicht `presse`** — siehe
+     * `PressPackage::PUBLIC_PATH`, BF-100.
      *
      * ⚠ **Wer eine dieser Dateien ersetzt, erhöht `CACHE_VERSION` in
      * `public/sw.js`.** Der Service Worker cacht Bilder cache-first: Ein
@@ -62,10 +65,10 @@ final readonly class PressRegistry
     public function assets(): array
     {
         return [
-            new PressAsset(PressAssetKind::WORDMARK_LIGHT, 'presse/endlech-wortbildmarke.svg', 'SVG'),
-            new PressAsset(PressAssetKind::WORDMARK_DARK, 'presse/endlech-wortbildmarke-invers.svg', 'SVG', onDark: true),
-            new PressAsset(PressAssetKind::SYMBOL_LIGHT, 'presse/endlech-bildmarke.svg', 'SVG'),
-            new PressAsset(PressAssetKind::SYMBOL_DARK, 'presse/endlech-bildmarke-invers.svg', 'SVG', onDark: true),
+            new PressAsset(PressAssetKind::WORDMARK_LIGHT, 'presse-kit/endlech-wortbildmarke.svg', 'SVG'),
+            new PressAsset(PressAssetKind::WORDMARK_DARK, 'presse-kit/endlech-wortbildmarke-invers.svg', 'SVG', onDark: true),
+            new PressAsset(PressAssetKind::SYMBOL_LIGHT, 'presse-kit/endlech-bildmarke.svg', 'SVG'),
+            new PressAsset(PressAssetKind::SYMBOL_DARK, 'presse-kit/endlech-bildmarke-invers.svg', 'SVG', onDark: true),
             new PressAsset(
                 PressAssetKind::PORTRAIT,
                 'uploads/team/michael.jpg',
