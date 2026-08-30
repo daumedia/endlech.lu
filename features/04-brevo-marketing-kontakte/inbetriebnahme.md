@@ -8,9 +8,38 @@ steht und bevor die Erklärung den Empfänger nennt.
 
 ---
 
-## T08 · Die fünf Kontaktattribute im Brevo-Konto anlegen
+## Kontostand, gemessen am 2026-08-30
 
-⚠ **Brevo verwirft unbekannte Attribute stillschweigend.** Ohne diesen Schritt meldet
+Über den Brevo-Zugang abgefragt, damit niemand raten muss:
+
+| | Stand |
+|---|---|
+| **Attribute** | alle fünf vorhanden, `normal`/`text` — **T08 ist erfüllt** |
+| **Listen** | drei: **id 5 „Endlech.lu · Neuigkeiten" (0 Abonnenten)**, id 4 „Contacts involved in conversations" (1), id 2 „Your first list" (2) |
+| **Kontakte** | drei, alle vom 29.08.2026 — **keiner** trägt eines der fünf Attribute, **keiner** ist in Liste 5, keiner hat eine `ext_id`. Die Anwendung hat nie übertragen |
+| **Kampagnen** | eine, „test", am 29.08. an Liste 2 mit zwei Empfängern |
+
+⚠ **`BREVO_LIST_ID` ist leer, die Liste existiert aber.** Wer den Schlüssel setzt und die
+Listen-ID vergisst, bekommt einen Sync, der **erfolgreich meldet** — die Kontakte landen in
+Brevo, aber **in keiner Liste**. Eine Kampagne an „Endlech.lu · Neuigkeiten" erreicht dann
+niemanden, und der Fehler sieht aus wie ein leerer Verteiler statt wie eine fehlende
+Konfiguration. Beide Werte gehören zusammen in die `.env.local`:
+
+```
+BREVO_API_KEY=xkeysib-…
+BREVO_LIST_ID=5
+```
+
+Dieselbe Bauart wie die Attributfalle: Brevo verwirft Unbekanntes stillschweigend, und der
+Aufrufer sieht Erfolg.
+
+## T08 · Die fünf Kontaktattribute im Brevo-Konto anlegen — **erfüllt**
+
+Am 2026-08-30 gegen das Konto geprüft: **alle fünf vorhanden.** Der Abschnitt bleibt als
+Nachschlagewerk stehen — für den Fall, dass jemand ein Attribut löscht oder ein zweites
+Konto aufsetzt.
+
+⚠ **Brevo verwirft unbekannte Attribute stillschweigend.** Ohne sie meldet
 `app:marketing:sync` Erfolg und überträgt nur die nackte Adresse — Name, Organisation,
 Sprache, Vertriebsrolle und Bearbeitungsstand fallen weg, ohne Fehler und ohne Warnung.
 
