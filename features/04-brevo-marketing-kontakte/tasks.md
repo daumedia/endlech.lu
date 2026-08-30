@@ -1,6 +1,18 @@
 # 04 · Marketing-Kontakte in Brevo — Aufgabenplan
 
-Status: `approved` (QA⁴ 2026-08-30: 43/48, kein Befund — Inbetriebnahme hängt an T08 und BF-88) · Stand: 2026-08-29 · **37 von 39 Aufgaben erledigt** (offen: T08, T39 — beide brauchen eine Betreiberentscheidung) · Stack-Profil: `symfony-doctrine`
+Status: `approved` (QA⁴ 2026-08-30: 43/48, kein Befund — Inbetriebnahme hängt an BF-88) · Stand: 2026-08-30 · **38 von 39 Aufgaben erledigt** (offen: T39 — braucht eine Betreiberentscheidung) · Stack-Profil: `symfony-doctrine`
+
+⚠ **Diese Kopfzeile führte T08 bis zum 2026-08-30 als offen, obwohl T08 weiter unten seit
+dem Bau abgehakt war.** Der Widerspruch stand in derselben Datei und wanderte von dort in
+`features/index.md`, in vier QA-Berichte und in zwei Antworten an den Betreiber. Am
+2026-08-30 **gegen das Brevo-Konto geprüft**: Alle fünf Attribute existieren —
+`CONTACT_NAME`, `ORGANISATION`, `LOCALE`, `ORIGIN`, `FUNNEL_STATUS`, sämtlich
+`normal`/`text`. T08 ist erfüllt.
+
+⚠ **Folge für die QA:** Die vier Kriterien, die `qa-report-4.md` als *nicht prüfbar*
+führt (AK-07, AK-10, AK-24, AK-27), waren es mit der Begründung „das Brevo-Konto ist nicht
+eingerichtet". Diese Begründung trägt nicht mehr. Sie sind prüfbar, sobald ein Schlüssel
+gesetzt ist — offen bleibt allein **BF-88**.
 
 Ebenen laufen in Reihenfolge. `[P]` heißt: innerhalb dieser Ebene unabhängig von den
 anderen `[P]`-Aufgaben derselben Welle, darf parallel an einen Subagenten gehen.

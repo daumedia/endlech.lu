@@ -514,6 +514,22 @@ Feature 05; hier vermerkt, weil er bei der Nachprüfung sichtbar wurde.
 Damit ist Feature `05` **deployed**. Offen bleiben BF-95 (wartet auf OF-09), BF-99
 (Schriftzug outlinen) und OF-11 (zwei Cyan-Töne) — alle drei ohne Codeanteil.
 
+**2026-08-30 · T08 war längst erledigt — das Inventar sagte das Gegenteil.** Beim Versuch,
+die Kontaktattribute anzulegen, ergab die Abfrage des Brevo-Kontos: **Alle fünf existieren
+bereits** (`CONTACT_NAME`, `ORGANISATION`, `LOCALE`, `ORIGIN`, `FUNNEL_STATUS`, sämtlich
+`normal`/`text`, wie `MarketingPayloadMapper` sie erwartet). Angelegt wurden sie beim Bau
+von Feature `04`; die Aufgabe war dort auch abgehakt.
+
+⚠ **Der Fehler saß in der Kopfzeile von `04/tasks.md`**, die T08 weiter als offen führte,
+während dieselbe Datei ihn zwölf Zeilen tiefer als erledigt auswies. Von dort wanderte die
+Falschaussage in dieses Inventar, in vier QA-Berichte und in zwei Antworten an den
+Betreiber. Richtiggestellt; die Kopfzeile trägt den Widerspruch jetzt als Warnung.
+
+**Folge:** Die vier Kriterien von `04`, die als *nicht prüfbar* geführt sind (AK-07,
+AK-10, AK-24, AK-27), waren es mit der Begründung „das Konto ist nicht eingerichtet". Die
+trägt nicht mehr — sie sind prüfbar, sobald ein Schlüssel gesetzt ist. Für die
+Inbetriebnahme bleibt allein **BF-88** (AV-Vertrag) offen.
+
 **Zwei Namensräume:** Einträge mit Präfix `B` sind **Bestand** — gebaut, bevor die
 SDD-Kette da war, und rückwirkend erfasst. Einträge **ohne** Präfix (`01`, `02`, …)
 entstehen durch die Kette und hatten eine Anforderung, bevor Code existierte. An der ID
