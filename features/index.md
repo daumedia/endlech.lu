@@ -549,6 +549,403 @@ offen geführt) ist das ein Muster: **Was in `tasks.md` als erledigt steht, ist 
 Vermerk, kein Nachweis** — bei Aufgaben, die außerhalb des Quelltexts stattfinden,
 gehört der Zustand gemessen und nicht abgehakt.
 
+**2026-08-30 · Feature `06` aufgenommen und spezifiziert.** Ein Community Feedback Board
+stand nirgends — weder im Inventar noch auf der Roadmap. Der Anlass ist eine Lücke, die
+sich erst beim Nachzählen der Rückmeldewege zeigt: Es gibt zwei, und **beide sind
+einseitig**. Das Meldeformular auf `/barrierefreiheit` (`02`) nimmt Barrieren der Website
+entgegen, ohne dass der Melder je erfährt, was daraus wurde; der Wizard `/community/suggest`
+(B11) meldet neue Restaurants. Wer sich etwas am *Produkt* wünscht, hat keine Adresse dafür.
+
+**Der Zuschnitt war die eigentliche Arbeit.** Drei Lesarten lagen nebeneinander und sind
+drei verschiedene Produkte: Ideen zur Plattform, Bewertungen einzelner Lokale, Korrekturen
+an Einträgen. Gewählt ist die erste; die zweite bleibt der eigene, im PRD belegte
+Roadmap-Punkt („Ein Kernversprechen ist nicht eingelöst"), die dritte endet in einer
+Datenänderung statt in einer Meinung und hängt an B20/B21.
+
+**Eine Entscheidung wurde im Interview zurückgenommen**, und sie ist die folgenreichste:
+Zustimmen sollte zunächst ohne Konto gehen. Jede Umsetzung davon verarbeitet entweder eine
+IP-Adresse oder ist über ein privates Fenster trivial zu umgehen. Mit Kontozwang ist die
+Zahl belastbar **und** das Feature kommt ganz ohne IP-Verarbeitung aus — es ist damit das
+erste Feature seit `04`, das den Datenschutzteil nicht ausweitet, sondern verengt.
+
+⚠ **Der Ideentext ist der erste öffentlich veröffentlichte Freitext des Projekts.** Auf
+einer Barrierefreiheitsplattform steht darin mit hoher Wahrscheinlichkeit eine
+Gesundheitsangabe des Verfassers — dieselbe Erwägung, die in `04` dazu führte, die
+Freitextnachricht der Wartelisten von der Brevo-Übertragung auszunehmen. Hier lässt sie
+sich nicht vermeiden, der Text *ist* das Produkt. Deshalb wird sie benannt (AK-16) und
+eingegrenzt (AK-53, AK-54). **OF-04 macht damit die seit `04` offene Frage nach der
+Datenschutzstufe dringlich** — sie ist nicht neu, aber sie kostet hier zum ersten Mal etwas.
+
+**Zwei Zusagen gelten gegen den Betreiber selbst:** Eine Ablehnung ist ohne öffentliche
+Begründung technisch nicht auslösbar (AK-27), und abgelehnte Ideen bleiben stehen (AK-28).
+Ohne diese beiden gilt Produktprinzip 2 („Lücken werden gezeigt, nicht versteckt") nur so
+lange, wie es gelegen kommt.
+
+⚠ **Das Feature ändert ausgelieferten Code.** Kontolöschung und Datenexport aus Feature
+`01` müssen das Board mitnehmen (AK-65 bis AK-68) — das ist keine Ergänzung an Neuem,
+sondern ein Eingriff in Live-Code und gehört im Aufgabenplan als solcher geführt.
+
+**2026-08-30 · Alle fünf offenen Fragen von `06` entschieden**, noch am Tag der Spec. Jede
+hat ein eigenes Kriterium bekommen (AK-72 bis AK-78) — eine entschiedene Frage ohne
+Kriterium wird später nicht geprüft, genau der Fehler, der in `03` erst beim Aufgabenplan
+auffiel. Damit steht die Spec auf **78 Kriterien**.
+
+- **OF-01 → fünf Werktage, öffentlich zugesagt** (AK-72). Bewusst nicht die zwei Werktage
+  des Pressekontakts (`05`/OF-03): Ein Board ist weniger dringend als eine Presseanfrage,
+  und eine Zusage, die im Urlaub bricht, ist schlechter als eine großzügige. Die interne
+  Meldung bleibt weg.
+- **OF-02 → zwölf Monate Höchstdauer, Hervorhebung ab 30 Tagen** (AK-73, AK-74). Die
+  Hervorhebung behebt die Ursache, die Frist erfüllt Art. 5 Abs. 1 lit. e. ⚠ **Das löst
+  das Muster nur hier:** Bei den Wartelisten (B14/FB-02) und den Werbe-Kontakten
+  (`04`/OF-06) fehlt der Aufräumschritt weiter.
+- **OF-03 → eigener Abschnitt „Schon umgesetzt" unter der Liste** (AK-75).
+- **OF-04 → Stufe B, bestätigt** (AK-78). Die seit `04` offene Frage ist damit beantwortet:
+  Die Plattform **erhebt** keine Gesundheitsdaten, sie erhebt Daten über Restaurants. Eine
+  Art.-9-Angabe kann nur unaufgefordert im Freitext erscheinen, und dafür sind AK-16, AK-52
+  und AK-54 gebaut. ⚠ **Die Bestätigung steht noch nicht in `docs/datenschutz.md`** — dort
+  läuft Stufe B weiter als Annahme. `sdd-spec` schreibt keine Datei außerhalb des
+  Feature-Ordners; AK-78 fordert die Fortschreibung ein, `sdd-tasks` braucht eine Aufgabe
+  dafür.
+- **OF-05 → Zurückziehen ja, bis zur Freigabe** (AK-76, AK-77).
+
+⚠ **Eine Entscheidung hat eine neue Frage erzeugt: OF-06.** AK-74 braucht einen
+wiederkehrenden Lauf — und auf Produktion fehlen heute **zwei von drei** Cron-Einträgen.
+Ein dritter, der ebenfalls nicht eingerichtet wird, wäre kein Zufall mehr. Der Entwurf soll
+deshalb prüfen, ob der Aufräumlauf **ohne** eigenen Cron auskommt.
+
+**2026-08-30 · Systementwurf für `06` steht** — 78 von 78 Kriterien abgedeckt, keine leere
+Zeile. Zwei neue Tabellen (`board_idea`, `board_vote`), ein Enum, zwei Controller, fünf
+Dienste, ein Aufräumbefehl. **Keine neue Bibliothek, kein neuer externer Dienst** — alles
+benutzt Muster, die schon stehen: Moderationsschlange von B21, Limiter am Konto von B11,
+Fallenfeld von B14, Formularfeld von `02`, Blätterung von B05.
+
+⚠ **Der Entwurf hat gefunden, was die Spec übersah: Es gibt das Board schon — extern.**
+Die Fußzeile führt seit Langem „Feedback & Ideen" auf `endlech.userjot.com`, sortiert nach
+Stimmen. Das ist dieses Feature, bei einem Dritten betrieben. AK-02 kollidiert damit direkt;
+der Entwurf **ersetzt** den Verweis, statt einen zwölften Eintrag danebenzustellen. Was mit
+den dort liegenden Ideen und Stimmen geschieht, ist keine Entwurfsfrage → **OF-07, vor
+`sdd-tasks` zu klären.** Der Fund spricht im Übrigen für das Feature: Der Bedarf war real
+genug, dass bereits ein fremdes Werkzeug im Einsatz ist.
+
+**Drei Entwurfsentscheidungen, die man auch anders treffen könnte:**
+
+- **Sichtbarkeit hängt an `published_at`, nicht an einem sechsten Status.** Die fünf Status
+  aus AK-31 beschreiben eine *öffentliche* Idee; „wartet auf Freigabe" ist eine andere
+  Achse. Vermischt hätte ein Statuswechsel eine veröffentlichte Idee vom Netz nehmen können.
+- **Zustimmungen werden gezählt, nicht mitgeführt.** Ein Zählerfeld liefe genau bei AK-66
+  auseinander — die Kaskade beim Kontolöschen läuft in der Datenbank, am Anwendungscode
+  vorbei. Der Ausweg wäre ein Abgleichsbefehl gewesen: ein dritter geplanter Lauf in einem
+  Projekt, dem zwei von drei fehlen. Ab etwa 2000 Ideen neu bewerten.
+- **Der Aufräumlauf aus AK-74 hängt nicht an einem neuen Cron** (OF-06), sondern läuft als
+  Befehl *und* faul beim Öffnen der Warteschlange, höchstens einmal je Tag.
+
+⚠ **OF-08 dazugekommen:** AK-72 sagt fünf Werktage zu, AK-73 hebt erst nach 30 Tagen hervor
+— fünf Wochen, in denen die Zusage bricht, ohne dass es auffällt. Vorschlag: zehn Werktage.
+
+⚠ **Das Feature fasst ausgelieferten Code an:** `AccountDataExporter` (AK-67),
+`AccountDeleter` (EC-09 — wartende Ideen müssen vor dem Konto weg, sonst bleibt eine
+herrenlose Einreichung stehen), `AdminStatsService`, das Dashboard und die Fußzeile. Dazu
+`docs/datenschutz.md` als eigene Aufgabe (AK-78).
+
+**2026-08-30 · OF-06 bis OF-08 entschieden — `06` hat keine offene Frage mehr.** Die Spec
+steht auf **82 Kriterien**, der Entwurf deckt alle 82 ab.
+
+**OF-07 wurde nachgesehen, nicht vermutet.** Ein Abruf von `endlech.userjot.com` zeigte:
+**sieben Einträge, alle vom Betreiber selbst, alle mit null Stimmen** (Presskit, iOS app,
+Android App, Google Login, Apple Login, Chat widget, AI filter). **Es gibt keinen fremden
+Nutzerbestand** — nichts zuzuordnen, nichts zu retten. Damit war aus einer Migrationsfrage
+eine einfache Entscheidung geworden:
+
+- **Das Board startet leer.** Die sieben sind Roadmap-Notizen, keine Community-Beiträge;
+  siebenmal derselbe Name hätte auf einem Board, das nach den Wünschen der Nutzer fragt,
+  das Gegenteil belegt.
+- **Die Titel wandern in die PRD-Roadmap** (AK-82). „Chat-Widget" und „KI-Filter" stehen im
+  PRD bis heute nirgends — die Überführung schließt eine echte Lücke.
+- **Der externe Dienst wird nach dem Deploy abgeschaltet** (AK-81). Dass „Presskit" dort
+  noch auf *In Progress* steht, während `05` seit `v2026.08.30.1` live ist, belegt, dass er
+  nicht gepflegt wird. Ein nicht mehr verlinktes Board bliebe über Suchmaschinen auffindbar
+  und sammelte Beiträge, die niemand liest — genau die Sackgasse, gegen die `06` gebaut wird.
+
+**OF-08 → zweistufig:** Hinweis ab drei Werktagen (AK-73, neu gefasst), deutliche Warnung ab
+fünf (AK-79). Die erste Stufe warnt, *bevor* die Zusage aus AK-72 bricht, die zweite genau
+dann. Werktag heißt Montag bis Freitag, **ohne Feiertagsrechnung** — eine Feiertagstabelle
+für Luxemburg wäre eigene Mechanik ohne Gegenwert.
+
+**OF-06 → kein neuer Cron.** Der Aufräumlauf gibt es als Befehl `app:board:cleanup` *und* er
+wird faul beim Öffnen der Warteschlange angestoßen, höchstens einmal je Tag. Eine Zusage,
+die von einer Servereinrichtung abhängt, die im Projekt schon dreimal ausblieb, ist keine.
+
+⚠ **Drei Aufgaben liegen außerhalb des Quelltexts** und fallen sonst zwischen die Stühle wie
+VB-03 in `05`: AK-78 (`docs/datenschutz.md`), AK-82 (`docs/prd.md`) und **AK-81 — die
+Abschaltung bei userjot.** Letztere ist der einzige Schritt, den kein Prüflauf sehen kann;
+sie gehört zusätzlich in die Nachverifikation nach dem Deploy.
+
+**2026-08-30 · Aufgabenplan für `06` steht** — 36 Aufgaben in fünf Ebenen, 82 von 82
+Kriterien und 12 von 12 Randfällen zugeordnet, in beide Richtungen geprüft.
+
+**Ein Fund beim Schneiden bestimmt die Parallelisierung.** Sechs Template-Aufgaben in
+Ebene 4 sehen unabhängig aus — sie berühren sechs verschiedene Dateien. Sie brauchen aber
+alle Übersetzungsschlüssel, und die liegen in denselben acht Katalogdateien. Parallel
+ausgeführt wäre das exakt der Fehler „zwei Komponenten, beide ergänzen dieselbe
+Index-Datei". Die Kataloge bekommen deshalb eine **eigene Aufgabe davor** (T23); erst
+dadurch ist die `[P]`-Zusage für T25–T30 haltbar.
+
+**Vier parallele Gruppen**, jede mit ausgeschriebener Dateiliste: Ebene 1 → T01+T02;
+Ebene 2 → T05–T09 (fünf getrennte Dienste); Ebene 3 → T16–T18 (Formular, zwei Controller);
+Ebene 4 → T25–T30 (sechs Templates); Ebene 5 → T33–T35 (drei Dokumente). Alles andere
+läuft seriell, meist weil es sich eine Datei teilt.
+
+⚠ **EC-05 sitzt bewusst in Ebene 2, nicht in Ebene 5.** Dass zwei Admin-Fenster dieselbe
+Idee nicht zweimal veröffentlichen, ist eine Zustandsprüfung im `BoardModerator` und kein
+Feinschliff. Als Aufgabe am Ende wäre sie das erste, was bei Zeitdruck gestrichen wird —
+genau so entstand BF-54 bei den Restaurantvorschlägen.
+
+**AK-69 und AK-70 tragen bewusst keine Aufgabe:** Abnahmekriterien über das Ganze, erfüllt
+durch T01–T30 bzw. durch den Verifikationsblock nach jeder Ebene. Eine Sammelaufgabe
+„testen" wäre die erste, die bei Zeitdruck fällt.
+
+⚠ **Drei Aufgaben liegen außerhalb des Quelltexts:** T33 (`docs/datenschutz.md`),
+T34 (`docs/prd.md`) und **T36 — die Abschaltung bei userjot**, der einzige Schritt, den
+kein Prüflauf sehen kann.
+
+**2026-08-30 · Feature `06` gebaut.** 35 von 36 Aufgaben, **791 Tests grün** (3340
+Zusicherungen; Ausgangslage 742). 49 neue Tests, keine neue Abhängigkeit, keine Änderung
+unter `assets/`.
+
+⚠ **Eine Aufgabe ist NICHT erledigt: T36 / AK-81** — die Abschaltung von
+`endlech.userjot.com` geschieht beim Anbieter, außerhalb des Repositorys. Der
+Fußzeilenverweis zeigt bereits aufs eigene Board; solange userjot aber Einreichungen
+annimmt, laufen Beiträge dorthin, die niemand liest. **Vor dem Deploy zu erledigen.**
+
+**Dreimal dieselbe Planabweichung — und sie gehört in den nächsten Aufgabenplan:**
+Konfiguration und Katalogeinträge gehören in dieselbe Ebene wie das Artefakt, das sie
+benutzt. T02 (Limiter) musste von Ebene 1 nach Ebene 3, weil `LimiterCoverageTest` einen
+Limiter ohne Aufrufer als Fehler wertet — die Suite wäre sonst zwei Ebenen lang rot
+gewesen. Die Mail-Schlüssel mussten zu T07, die Formularschlüssel vor Ebene 3.
+
+**Zwei Fehler fand erst der Prüflauf, nicht die Überlegung:**
+
+- **Ein roher Übersetzungsschlüssel stand auf der Seite.** `BoardIdeaStatus::transKey()`
+  lieferte `board.status.declined`, die Kataloge trugen `board.status_declined`.
+  ⚠ **`CatalogueCompletenessTest` sah das nicht** — der Schlüssel entsteht in PHP, nicht
+  als Literal im Template. Das ist ein blinder Fleck des Prüflaufs, der über Feature `06`
+  hinaus gilt. Dafür gibt es jetzt `BoardLocaleTest`, der die gerenderte Seite in allen
+  vier Sprachen auf rohe Schlüssel prüft.
+- **Die Ablehnungsbegründung fehlte in der Listenansicht.** AK-28 verlangt sie „im
+  Board"; ohne den Fund hätte dort ein „Abgelehnt" ohne jedes Warum gestanden.
+
+⚠ **Eine Abweichung vom Entwurf:** Der Slug ist **nicht** unique. Der vorgesehene
+Unique-Index hätte bei zwei gleichnamigen Ideen einen Serverfehler erzeugt, und gleiche
+Titel sind auf einem Wunschboard der Normalfall — die Adresse `/{id}-{slug}` ist durch
+die Kennung eindeutig.
+
+⚠ **Systemweit wirksam:** `AdminStatsService` hat ein fünftes Konstruktorargument (jeder
+Aufrufer muss mitziehen), die Fußzeile zeigt auf **jeder** Seite aufs neue Board, und
+**`docs/datenschutz.md` führt die Datenschutzstufe jetzt als bestätigt (B) statt als
+Annahme** — das gilt projektweit, nicht nur für dieses Feature.
+
+⚠ **Bekannte rote Stelle, nicht von diesem Feature:** `lint:container` schlägt mit einem
+Webauthn-Alias-Fehler fehl. Mit `git stash` gegengeprüft — der Fehler besteht auch ohne
+`06` (Vorbestand aus B03). `make fix-check` gibt es im Makefile nicht, `php-cs-fixer` ist
+nicht installiert; die Stilprüfung des Stack-Profils konnte nicht laufen.
+
+**2026-08-30 · QA von `06`: 77 von 82 Kriterien belegt, kein kritischer Fund.** Der
+Angriffsdurchlauf lief vollständig — alle acht Prüfungen ausgeführt, nicht gelesen.
+806 Tests grün (3418 Zusicherungen), 15 neue.
+
+**Was der Angriff belegt hat:** Kein IDOR (fremdes Konto, sogar das Admin-Konto, bekommt
+auf eine wartende Idee **404**, nicht 403). Die Rollenschranke hält auch gegen einen
+direkt gepokten POST — `published_at` blieb `NULL`. Der Einreichdeckel greift **exakt am
+Grenzwert**: fünf durch, der sechste 429, `COUNT` = 5; und er hängt am Konto, nicht an
+der IP (Konto B kam von derselben IP durch). Fünf ungültige Submits verbrauchen ihn
+nicht. Elf Eingabeformen — 10.000 Zeichen, SQL, Skript, Pfadwechsel, Nullbyte, 120 × „日"
+— erzeugen **keinen einzigen HTTP 500**.
+
+**Der wichtigste Nachweis ist der Mailkörper, nicht der Quelltext:** `To` enthält
+ausschließlich den Verfasser, `Cc`/`Bcc` sind leer, der Titel geht mit — und die
+simulierte Gesundheitsangabe, die Telefonnummer und die Fremdadresse stehen **nicht**
+darin. Damit ist die zentrale Zusage aus dem Datenschutzteil am tatsächlichen Payload
+belegt.
+
+⚠ **AK-49 konnte belegt werden, obwohl der Bau es offenließ:** Alle fünf Wege — Board,
+Sortierung, Filter, Einreichen, Zustimmen — laufen per curl **ohne jedes JavaScript**;
+die Zustimmung landete real in der Datenbank.
+
+**Drei Befunde, alle unterhalb der Blockierschwelle:**
+
+- **BF-101** (*mittel*) · Die Deckel-Meldung nennt **keine Wartezeit**, obwohl AK-59 sie
+  verlangt. `ActionLimiter::retryAfter()` wird im Projekt an vier anderen Stellen genau
+  dafür benutzt — hier nicht.
+- **BF-102** (*niedrig*) · Beim Zustimmen erscheint „Zu viele **Einreichungen**" —
+  ein Schlüssel für zwei Wege.
+- **BF-103** (*mittel*) · ⚠ **`endlech.userjot.com` nimmt weiterhin Einreichungen
+  entgegen.** Keine Softwarefrage, aber die Betriebs-Sperre: Das externe Board ist zwar
+  unverlinkt, über Suchmaschinen und Lesezeichen aber auffindbar — Beiträge landen dort,
+  wo niemand sie liest.
+
+**Zwei neue Muster in `befunde.md`**, beide über dieses Feature hinaus gültig:
+
+1. **Ein Prüflauf, der Schlüssel nur als Literal sucht, sieht die zusammengesetzten
+   nicht.** `CatalogueCompletenessTest` scannt Templates und `src/Form/`; ein in PHP
+   gebauter Schlüssel (`'board.status_' . $value`) kommt in keinem Topf vor. Die Suite
+   blieb grün, während der rohe Schlüsselname auf der Seite stand.
+2. **Konfiguration und Katalogeinträge gehören in dieselbe Ebene wie das Artefakt, das
+   sie benutzt** — dreimal in einem Bau aufgetreten.
+
+**Nicht prüfbar (3):** AK-46 (320 px), AK-47 (Tastatur) und AK-69 (Volldurchlauf von
+Hand) brauchen einen Browser; im Projekt liefe das über Brave + CDP. Ebenso drei
+Randfälle zur Gleichzeitigkeit und die Druckansicht.
+
+**2026-08-30 · BF-101 und BF-102 behoben.** 810 Tests grün (3438 Zusicherungen), vier
+neue. Beide Reproduktionen aus dem Testbericht greifen nicht mehr — live gegen den
+laufenden Server belegt: „Zu viele Einreichungen. Bitte versuche es in **45 Minuten**
+erneut." und „Zu viele **Zustimmungen**. Bitte versuche es in **49 Minuten** erneut."
+
+⚠ **Eine Einschränkung beim Regressionsschutz, die benannt gehört:** Der Deckel lässt
+sich im Test-Kernel **nicht auslösen** — `KernelBrowser` startet den Kernel bei jedem
+Request neu, und der Limiter-Zustand überlebt das dort nicht (außerhalb des Tests wirkt
+das Erschöpfen nachweislich: 10000 → 0). Der neue Prüflauf deckt deshalb ab, was
+tatsächlich falsch war: dass beide Schlüssel existieren, die Wartezeit tragen und
+**verschieden** sind — in vier Sprachen. Das Auslösen selbst bleibt live belegt.
+
+⚠ **BF-103 bleibt offen und wandert bewusst HINTER den Deploy** (Betreiberentscheidung
+2026-08-30). Der Testbericht riet zunächst zum Gegenteil — das war falsch herum gedacht:
+Solange `/community/ideen` nicht live ist, ist `endlech.userjot.com` der **einzige**
+Rückmeldeweg, und ihn vorher zu schließen erzeugte ein Fenster ganz ohne Weg. Die
+Reihenfolge ist **Deploy → userjot schließen**; der Schritt gehört in die
+Nachverifikation von `/sdd-deploy 06`.
+
+**2026-08-30 · Zweiter QA-Durchlauf von `06`: 79 von 82 belegt — aber zwei neue Befunde
+mit Grad *hoch*.** BF-101 und BF-102 sind nachgeprüft und behoben („in **59 Minuten**
+erneut" bzw. „Zu viele **Zustimmungen** … in **60 Minuten**").
+
+**Der Ertrag dieses Durchlaufs liegt woanders:** AK-46, AK-47 und AK-69 standen im ersten
+Bericht als *nicht prüfbar* — jetzt sind sie **im Browser gemessen** (Brave über CDP).
+Zwei davon bestehen, eines fällt durch:
+
+- **AK-46 bestanden.** Bei 320 px: Board, Einzelansicht, Formular und Dankeseite je
+  Überhang = 0 px. Der Weg dorthin war lehrreich: Drei Messungen zeigten 9703 px Überhang
+  und ein Logo von 10000 px — bis sich herausstellte, dass `php -S` mit Router-Skript CSS
+  mit `Content-type: text/html` ausliefert und der Browser das Stylesheet nicht anwendet.
+  **Ein Messartefakt, das wie ein schwerer Layoutfehler aussah.**
+- **AK-47 durchgefallen → BF-104** (*hoch*): Die Titel-Verweise auf dem Board sind **18 px
+  hoch** und der einzige Weg in die Einzelansicht. AK-47 verlangt 44 × 44, WCAG 2.2 AA
+  mindestens 24 × 24. Der Fokus ist dagegen überall sichtbar (8/8, 2/2, 4/4).
+- **AK-69 bestanden**, im Browser durchgespielt bis zur Freigabe.
+
+⚠ **BF-105 (*hoch*) ist der Befund, der am ehesten teuer geworden wäre:** Der committete
+`public/build` ist veralteter Stand — `line-clamp-3` fehlt, obwohl nur Feature 06 die
+Klasse benutzt. `verify-assets` hätte den Deploy blockiert. **Ursache ist ein Denkfehler
+im Aufgabenplan**, der ungeprüft in den Abschlussbericht wanderte: „`npm run build`
+entfällt, das Feature kommt ohne Änderung unter `assets/` aus." Tailwind v4 scannt hier
+aber `templates/` (`@source "../../templates"`). Die Projektregel in `CLAUDE.md` gehört
+auf „Änderung unter `assets/` **oder `templates/`**" erweitert — sonst wiederholt sich
+das beim nächsten Feature. Als Muster in `befunde.md` festgehalten.
+
+**2026-08-30 · BF-104 und BF-105 behoben.** 815 Tests grün (3450 Zusicherungen), fünf
+neue. Beide im Browser bzw. am gebauten Asset nachgeprüft.
+
+- **BF-104** · Der Titel-Verweis trägt jetzt `min-h-[44px] flex items-center`. Nachgemessen
+  mit Brave/CDP: **192 × 44** bei 390 px, **140 × 48** bei 320 px, **null** zu kleine Ziele
+  in `main`, Überhang weiterhin 0 px, Klick und Zustimmen funktionieren.
+  ⚠ **Der elegantere Stretched Link wurde versucht und verworfen.** Er war korrekt gesetzt
+  (`content: ""`, `inset: 0px`, `article` auf `relative`), blieb im Stapel aber unter den
+  Geschwisterelementen: `elementFromPoint` traf `p` und `svg` statt des Verweises. Eine
+  Mindesthöhe am Verweis selbst hängt nicht von der Stapelreihenfolge ab — und ist im
+  Markup prüfbar, statt nur im Browser messbar.
+- **BF-105** · Gebaut. **Determinismus belegt:** Ein dritter Lauf erzeugte identische
+  Prüfsummen für `app.*.css` und `manifest.json` — `verify-assets` bleibt grün. Zu
+  committen: `app.b236d552.css` (neu), `app.f5e6e5d8.css` (entfällt), `entrypoints.json`,
+  `manifest.json`.
+
+**Der wichtigere Ertrag ist ein Prüflauf, den es vorher nicht gab:** `BuiltAssetsTest`
+hält vier charakteristische Regeln gegen das gebaute CSS. Damit meldet sich der Fall
+„Template geändert, Bau vergessen" **im normalen Lauf** statt erst an `verify-assets` im
+Deploy. Gegengeprüft mit einer umbenannten Regel — der Prüflauf wird rot.
+
+⚠ **Nicht geändert, obwohl es naheliegt:** Der Satz in `CLAUDE.md` („Änderung unter
+`assets/` → `npm run build`") gehört auf `templates/` erweitert. Das ist eine projektweite
+Regeländerung und kein Teil eines Fehlerauftrags — als Muster in `befunde.md` festgehalten,
+zu entscheiden außerhalb dieses Features.
+
+⚠ **BF-103** (userjot) bleibt wie entschieden hinter dem Deploy.
+
+**2026-08-30 · Dritter QA-Durchlauf von `06`.** BF-104 und BF-105 sind behoben und
+nachgeprüft — aber **die Reparatur von BF-104 hält den Grenzfällen nicht stand**, die
+vorher nicht in den Prüfdaten waren. Der Durchlauf lief bewusst mit einem kurzen Titel,
+einem sehr langen und einem aus einem einzigen Wort.
+
+- **BF-106** (*mittel*) · Ein Titel aus **80 × „W" ohne Leerzeichen** — innerhalb der
+  erlaubten 120 Zeichen — sprengt das Board: **1089 px Überhang bei 320 px**. Isoliert
+  belegt: Karte im DOM entfernt → 0 px. ⚠ **Das ist BF-82 zum zweiten Mal.** Dort kam der
+  Text aus einer gepflegten Anbieterliste und blieb *niedrig*; hier kommt er aus einem
+  Formular, und jeder angemeldete Nutzer kann es auslösen. Beim zweiten Auftreten ist die
+  Einzelreparatur die falsche Antwort — es fehlt eine Regel im Design-System, dass jedes
+  Element mit Nutzertext eine Umbruchregel trägt. **Die nächsten drei Roadmap-Punkte
+  (Bewertungen, Kommentare, Korrekturhinweise) zeigen alle Freitext.**
+- **BF-107** (*mittel*) · Die Reparatur setzt mit `min-h-[44px]` nur die **Höhe**. Ein
+  kurzer Titel ergibt **36 × 44** — die Breite bleibt unter 44. ⚠ **`BoardTargetSizeTest`
+  fängt das nicht:** Er prüft, dass die Klasse im Markup steht, und das tut sie. Ein
+  Prüflauf, der Klassen liest, sieht keine gerenderte Breite — als Muster festgehalten.
+
+**Was hält:** BF-105 sauber behoben (`BuiltAssetsTest` grün, Bau deterministisch), die
+Zugriffsregeln unverändert dicht (wartende Idee für Gast **404**, Verwaltung **302**),
+815 Tests grün. **EC-10 erstmals belegt:** In der Druckansicht sind Kopf-, Fußzeile und
+Bottom-Navigation auf `display: none`, der Inhalt bleibt — damit 10 von 12 Randfällen.
+
+**2026-08-30 · BF-106 und BF-107 behoben.** 816 Tests grün (3457 Zusicherungen). Beide
+mit denselben Grenzfällen nachgemessen, an denen sie aufgefallen waren.
+
+- **BF-106** · `wrap-anywhere` an **acht Stellen über vier Templates** — Titel,
+  Beschreibung, Team-Antwort und Anzeigename in der Karte, die Antwort auf der
+  Einzelansicht sowie Titel, Beschreibung und Anzeigename in beiden Verwaltungsansichten.
+  Nachgemessen: **0 px Überhang bei 320 und 390 px**, auch wenn Titel, Beschreibung *und*
+  Team-Antwort aus je 80 × „W" bestehen.
+- **BF-107** · **Zwei Anläufe.** `w-full` am Verweis reichte nicht — es bezieht sich auf
+  die Überschrift, und die schrumpft im Flex-Container auf ihre Textbreite („Kurz" blieb
+  36 × 44). `flex-1` an der Überschrift deckte prompt den nächsten Fall auf: Bei 320 px
+  teilen sich Titel und Statusabzeichen eine Zeile, der Titel schrumpfte auf **37 px**.
+  Erst `basis-full min-w-0 sm:basis-auto sm:flex-1` löst beides. Endstand: **null zu kleine
+  Ziele bei 320 und 390 px.**
+
+⚠ **Nur der eigene Fall ist behoben.** `BF-82` in Feature 03 bleibt offen, und die
+Design-System-Regel für Nutzertext ist **nicht** gezogen — beides gehört nicht in einen
+Fehlerauftrag für Feature 06, sondern ist eine eigene Entscheidung. Das Muster steht in
+`befunde.md`.
+
+**Der Prüflauf ist mitgewachsen:** `BoardTargetSizeTest` prüfte bisher nur `min-h-[44px]`
+— genau daran ist BF-107 vorbeigekommen. Er prüft jetzt alle vier zusammenwirkenden
+Klassen plus die Umbruchregel, und seine Grenze („ein Markup-Test sieht keine gerenderte
+Breite") steht als Warnung im Klassenkommentar. Gegengeprüft: Ohne `w-full` wird er rot.
+
+**2026-08-30 · Vierter QA-Durchlauf: kein Befund an `06` — abgenommen.** 81 von 82
+Kriterien belegt, 816 Tests grün. Alle vier Reparaturen halten, auch gegen die
+Grenzfälle, an denen sie zuvor gescheitert waren.
+
+Dieser Durchlauf prüfte gezielt, was die drei vorherigen ausgelassen hatten: **Breiten
+zwischen den bisherigen Messpunkten** (375, 640, 768, 1024, 1280), die **Blätterung mit
+echtem Bestand** (28 Ideen → 20 + 8, „Seite 1 von 2") und die **Verwaltung auf Mobil**.
+Ergebnis am Board: bei sieben Breiten **0 px Überhang und 0 zu kleine Ziele**, mit
+80-Zeichen-Wörtern in Titel, Beschreibung und Team-Antwort.
+
+**Zwei Auffälligkeiten wurden geprüft und als Vorbestand belegt statt als Befund gebucht:**
+
+- **Bei 768 px scrollen alle Seiten um 96 px** — Startseite, `/restaurants`, `/about`
+  **und** das Board, jeweils mit Ursache im `header`, nie in `main`. Das ist **BF-80**,
+  seit Feature `02` offen. Ohne die Gegenprobe auf drei Bestandsseiten wäre daraus ein
+  falscher Befund gegen `06` geworden.
+- **34 zu kleine Ziele in der Verwaltung** stammen ausnahmslos aus der **Admin-Shell**
+  (Sprachumschalter 54 × 28, Navigationseinträge 309 × 36) — null aus der Ideenkarte.
+  Gegenprobe auf `/de/admin/vorschlaege`: dieselbe Lage. ⚠ **Kein Befund gebucht**, weil
+  AK-47 „Board und Formular" nennt und die QA keine Anforderungen erfindet — als Hinweis
+  für **B19** im Bericht vermerkt.
+
+⚠ **Zwei Punkte für die Nachverifikation nach dem Deploy:** **BF-103** (userjot
+schließen, bewusst danach) und **`public/build` mitcommitten** — vier Dateien, ohne die
+`verify-assets` blockiert.
+
+Nächster Schritt: `/sdd-deploy 06`.
+
 **Zwei Namensräume:** Einträge mit Präfix `B` sind **Bestand** — gebaut, bevor die
 SDD-Kette da war, und rückwirkend erfasst. Einträge **ohne** Präfix (`01`, `02`, …)
 entstehen durch die Kette und hatten eine Anforderung, bevor Code existierte. An der ID
@@ -569,6 +966,7 @@ Eingang von `sdd-build`. Der Weg ist: `bestand` → `/sdd-erfassen BNN` →
 | 03 | Vergleichsseiten (vs. Google Maps, Wheelmap, TripAdvisor) | P1 | **deployed** | B05, B13, B24, B16, 02 | 2026-08-29 · live in v2026.08.29, auf Produktion nachgeprüft |
 | 04 | Marketing-Kontakte in Brevo | P1 | **deployed** | B01, B14, B15, B22, 01 | 2026-08-30 · live in v2026.08.30, Migrationen durch, auf Produktion belegt |
 | 05 | Presse-Kit | P2 | **deployed** | B13, B16, B24, 02, 03 | 2026-08-30 · live in v2026.08.30.1, auf Produktion nachgeprüft |
+| 06 | Community Feedback Board | P1 | **approved** | B01, B02, B19, B21, B24, 01, 02 | 2026-08-30 · QA⁴: 81/82 belegt, **kein Befund** · weiter mit `/sdd-deploy 06` |
 | B01 | Registrierung & E-Mail-Bestätigung | P0 | **approved** | — | 2026-08-23 · QA³: 17/20, nur mittlere Befunde offen |
 | B02 | Anmeldung mit Passwort | P0 | **approved** | B01 | 2026-08-24 · QA²: 16/17, repariert |
 | B03 | Passkey-Anmeldung & -Verwaltung | P0 | **deployed** | B01, B02 | 2026-08-29 · ENDLECH-6 live in v2026.08.29.1, auf Produktion belegt (302 statt 400) |
@@ -604,6 +1002,7 @@ Eingang von `sdd-build`. Der Weg ist: `bestand` → `/sdd-erfassen BNN` →
 | 03 | Fußzeilenbereich „Vergleiche“, Übersichtsseite, drei Vergleichsseiten mit Kurzfazit, Merkmalstabelle, Gegenposition und häufigen Fragen | neu: `/vergleich` und `/vergleich/{slug}`; berührt Fußzeile und Kopfbereich der App-Hülle |
 | 04 | Einwilligungs-Checkbox in drei Formularen, Abgleich der Kontakte in beide Richtungen, Löschkaskade bei Widerruf und Kontolöschung, Bestandsübertragung mit Trockenlauf, Sync-Stand in der Wartelisten-Verwaltung | berührt Partner-, Organisations- und Registrierformular sowie `/admin/warteliste`; neu: `docs/datenschutz.md` und der Werbe-Empfänger im Datenschutzabschnitt von `/legal` |
 | 05 | Presseseite mit Boilerplate in drei Längen, Faktenblatt aus den Livezahlen, Bildpaket zum Herunterladen samt Nutzungsbedingungen, Person und Zitate, Meldungen, Pressekontakt | neu: `/presse` und ein Verweisblock auf `/about`; berührt Fußzeile und `/legal` (Betreiberangaben) |
+| 06 | Öffentliches Ideen-Board zur Plattform: Einreichen mit Konto, Freigabe vor Veröffentlichung, Zustimmung, fünf Status mit erzwungener Ablehnungsbegründung, Dublettenzusammenführung, eine Mail bei Veröffentlichung | neu: `/community/ideen` und die Warteschlange in der Verwaltung; berührt Fußzeile, Admin-Dashboard sowie Kontolöschung und Datenexport aus Feature `01` |
 | B01 | Registrierformular, Token 24 h, Bestätigungsmail, erneutes Senden, Hinweisseite | `RegistrationController`, `EmailVerificationController`, `RegistrationType`, `templates/registration/`, `templates/email_verification/`, `email/verification.html.twig` |
 | B02 | `form_login`, `remember_me`, Abmelden, Zugriffsregeln der `main`-Firewall | `SecurityController`, `config/packages/security.yaml`, `templates/security/login.html.twig` |
 | B03 | WebAuthn-Anmeldung ohne E-Mail-Eingabe, Passkeys anlegen/umbenennen/entfernen | `Security/PasskeyAuthenticator`, `Security/WebauthnUserEntityRepository`, `PasskeyController`, `Entity/WebauthnCredential`, `partials/_passkey_*`, `passkey_ui_controller.ts` |

@@ -217,7 +217,14 @@
                         <button type="button" class="hover:text-cyan-400 transition text-left" data-action="cookie-consent#openSettings">{{ 'cookie.settings'|trans }}</button>
                     </li>
                 {% endif %}
-                <li><a href="https://endlech.userjot.com/?cursor=1&amp;order=top&amp;limit=10" class="hover:text-cyan-400 transition" target="_blank" rel="noopener noreferrer">{{ 'footer.feedback'|trans }}</a></li>
+                {#
+                    Feature 06: Der Verweis zeigt auf das EIGENE Board.
+                    ⚠ Bis 2026-08-30 stand hier `endlech.userjot.com` — ein extern
+                    gehostetes Ideen-Board. Es wurde ERSETZT, nicht ergänzt: Zwei
+                    Adressen für dieselbe Frage teilen Nutzer und Stimmen, und das
+                    Board wäre von Anfang an halb leer (AK-02, AK-80).
+                #}
+                <li><a href="{{ path('app_board_index') }}" class="hover:text-cyan-400 transition">{{ 'footer.feedback'|trans }}</a></li>
             </ul>
         </div>
 

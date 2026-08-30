@@ -1,0 +1,46 @@
+{% extends 'email/base.html.twig' %}
+
+{#
+    Die eine Mail des Boards (AK-37). Sie geht genau einmal — beim ersten Mal,
+    dass eine Idee öffentlich wird, gleich mit welchem Status.
+
+    ⚠ Der BESCHREIBUNGSTEXT steht bewusst nicht in dieser Mail. Er kann eine
+    Gesundheitsangabe enthalten (Spec, Datenschutzteil); ihn zusätzlich durch
+    Brevo zu schicken erweiterte die Fläche ohne Gegenwert. Titel und Link
+    genügen — der Text steht auf der verlinkten Seite (AK-54).
+#}
+
+{% block title %}{{ 'email.board_published_title'|trans }}{% endblock %}
+
+{% block body %}
+    <h2 style="margin: 0 0 16px; color: #111827; font-size: 20px; font-weight: 700;">
+        {{ 'email.board_published_greeting'|trans }}
+    </h2>
+
+    <p style="margin: 0 0 16px; color: #6b7280; font-size: 14px; line-height: 1.6;">
+        {{ 'email.board_published_text'|trans }}
+    </p>
+
+    <p style="margin: 0 0 24px; color: #111827; font-size: 16px; font-weight: 700;">
+        {{ ideaTitle }}
+    </p>
+
+    <table role="presentation" style="width: 100%; border: 0;">
+        <tr>
+            <td style="text-align: center; padding: 8px 0 24px;">
+                <a href="{{ ideaUrl }}" style="display: inline-block; background-color: #7c3aed; color: #ffffff; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 14px;">
+                    {{ 'email.board_published_button'|trans }}
+                </a>
+            </td>
+        </tr>
+    </table>
+
+    <p style="margin: 0 0 8px; color: #9ca3af; font-size: 12px;">
+        {{ 'email.board_published_note'|trans }}
+    </p>
+
+    <p style="margin: 0; color: #9ca3af; font-size: 12px;">
+        {{ 'email.board_published_fallback'|trans }}<br>
+        <a href="{{ ideaUrl }}" style="color: #7c3aed; word-break: break-all;">{{ ideaUrl }}</a>
+    </p>
+{% endblock %}

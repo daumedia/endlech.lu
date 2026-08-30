@@ -460,6 +460,16 @@ erste getragen hat.
 | **Favoriten** | README, unerledigt: „User Profiles: Save favorites" |
 | **Bewertungen und Kommentare** | README, unerledigt: „Reviews: Comment system for accessibility feedback" |
 | **Native iOS-App** | `/api/v1` ist ausdrücklich als deren Backend gebaut; Kostenposten `APPLE_DEVELOPER` läuft bereits |
+| **Chat-Widget** | Stand bis 2026-08-30 nur auf dem externen Board `endlech.userjot.com` (Status „Planned") und in keinem Projektartefakt. Mit Feature `06` hierher überführt; das externe Board wird abgeschaltet |
+| **KI-Filter** | Ebenda, Status „Planned". Was genau gefiltert werden soll, ist nicht festgehalten — der Punkt ist ein Merkposten, keine Anforderung |
+| **Android-App · Google-Login · Apple-Login** | Ebenda, Status „Pending". Vollständigkeitshalber notiert; keiner der drei ist bisher begründet oder priorisiert |
+
+> **Herkunft der letzten vier Zeilen:** Bis August 2026 lief unter
+> `endlech.userjot.com` ein extern gehostetes Ideen-Board, verlinkt aus der
+> Fußzeile. Es enthielt sieben Einträge, alle vom Betreiber selbst, alle mit
+> null Stimmen — kein Community-Bestand. Beim Bau von Feature `06` wurden die
+> dort noch nicht anderweitig erfassten Vorhaben hierher übernommen und das
+> externe Board abgeschaltet. „Presskit" und „iOS app" standen bereits.
 
 ### Bewusst zurückgestellt
 

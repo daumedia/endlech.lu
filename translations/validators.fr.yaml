@@ -117,3 +117,9 @@ accessibility:
     report:
         description_required: "Veuillez décrire l'obstacle."
         email_invalid: "Veuillez saisir une adresse e-mail valide."
+
+board:
+    title_required: "Veuillez donner un titre à votre idée."
+    title_too_long: "Le titre ne peut pas dépasser {{ limit }} caractères."
+    description_required: "Veuillez décrire votre idée."
+    description_too_long: "La description ne peut pas dépasser {{ limit }} caractères."

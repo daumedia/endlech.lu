@@ -204,8 +204,16 @@ Fußzeile auf kurzen Seiten unten bleibt.
 
 Die Linkliste (Spalte 2), **elf Einträge**: Restaurants suchen · Restaurant
 vorschlagen · Kriterien · Partner · Organisationen · Open · Impressum ·
-Barrierefreiheit · **Presse** · Cookie-Einstellungen · Feedback
-(`endlech.userjot.com`, extern).
+Barrierefreiheit · **Presse** · Cookie-Einstellungen · **Feedback & Ideen**
+(`app_board_index`, intern).
+
+⚠ **Der Eintrag „Feedback & Ideen" zeigte bis 2026-08-30 auf
+`https://endlech.userjot.com`** — ein extern gehostetes Ideen-Board. Mit
+Feature `06` wurde er **ersetzt**, nicht ergänzt: Zwei Adressen für dieselbe
+Frage teilen Nutzer und Stimmen, und das eigene Board wäre von Anfang an halb
+leer. Der Übersetzungsschlüssel `footer.feedback` bleibt unverändert, nur das
+Ziel wechselt; `target="_blank"` und `rel` sind entfallen, weil der Verweis
+jetzt intern ist. Die Zahl der Einträge bleibt bei elf.
 
 Der Eintrag „Presse" kam mit Feature 05 dazu und steht bewusst in dieser Spalte
 statt in einer eigenen: Ein einzelner Link rechtfertigt keine fünfte Spalte, und

@@ -124,6 +124,13 @@ ausliefert, hat sie gebaut, ohne es zu merken.
 | BF-88 | 04 | Der AV-Vertrag mit Brevo ist in `docs/datenschutz.md` **nicht festgehalten**, sondern als „noch zu prüfen" markiert; das Prüfdatum fehlt (AK-33). Hängt an **OF-01**, der nie festgelegten Datenschutzstufe des Projekts. Keine Softwarefrage — aber die Freigabe-Sperre für den ersten echten Lauf | mittel | `docs/datenschutz.md` | offen |
 | ~~BF-93~~ | 05 | **behoben 2026-08-30 (QA³)** · Betreiberangaben fehlten auf `/presse` **und** `/legal`: Das Faktenblatt zeigt dreimal „Wird derzeit ergänzt", das Impressum unverändert „Endlech.lu / Luxemburg". AK-11 durchgefallen, AK-15 nicht prüfbar. **Kein Codeanteil** — die Mechanik (ein Parameter, zwei Seiten) steht und ist geprüft, die Werte fehlen (VB-03) | hoch | `config/services.yaml:40–42` | **behoben** — Michael Ferreira als Betreiber und Verantwortlicher; `OperatorDetailsTest` läuft statt zu überspringen. ⚠ Die **Anschrift bleibt bewusst leer** (OF-04), damit kann AK-11 nicht bestehen |
 | ~~BF-94~~ | 05 | **behoben 2026-08-30 (QA³)** · Kein Bildmaterial und kein Paket: vier von fünf Vorschauen laufen in HTTP 404, kein Downloadlink. AK-16 und AK-20 durchgefallen, AK-17/18/19/22 nicht prüfbar. **Kein Codeanteil** — `app:press:package` verweigert bewusst ein halbes Paket (Exit 1), drei Prüfläufe überspringen mit benannter Begründung (VB-01) | hoch | `public/presse/` · `src/Press/PressRegistry.php::assets()` | **behoben** — vier Marken aus `logo.png` nachgezeichnet (0,244 % Abweichung), `make press-kit` gelaufen, Paket mit sechs Dateien |
+| ~~BF-106~~ | 06 | **behoben 2026-08-30** · Ein Titel aus einem langen Wort ohne Leerzeichen sprengt das Board** — 80 × „W" (innerhalb der erlaubten 120 Zeichen) ergibt bei 320 px **1089 px Überhang**, bei 390 px 1019 px. Isoliert belegt: Karte im DOM entfernt → 0 px. ⚠ **Das ist BF-82 zum zweiten Mal** — dort aus einer festen Anbieterliste (*niedrig*), **hier aus Nutzereingabe**. Zweites Auftreten = fehlende projektweite Regel für Nutzertext (`overflow-wrap: anywhere`) | mittel | `templates/partials/_board_idea_card.html.twig` — Titel und Beschreibung ohne Umbruchregel | **behoben** — `wrap-anywhere` an acht Stellen über vier Templates; nachgemessen 0 px Überhang bei 320 und 390 px. ⚠ **BF-82 bleibt offen**, die Design-System-Regel ist nicht gezogen |
+| ~~BF-107~~ | 06 | **behoben 2026-08-30** · Kurze Titel ergeben ein 36 × 44 px großes Ziel** — die Reparatur von BF-104 setzt mit `min-h-[44px]` nur die Höhe, nicht die Breite. AK-47 verlangt 44 × 44. ⚠ `BoardTargetSizeTest` fängt es nicht: Er liest die Klasse aus dem Markup und sieht keine gerenderte Breite | mittel | `templates/partials/_board_idea_card.html.twig` | **behoben in zwei Anläufen** — `w-full` allein reichte nicht (die Überschrift schrumpft im Flex-Container), `flex-1` deckte den nächsten Fall auf (37 px neben dem Statusabzeichen bei 320 px). Endstand `basis-full min-w-0 sm:basis-auto sm:flex-1`; null zu kleine Ziele bei 320 und 390 px |
+| ~~BF-104~~ | 06 | **behoben 2026-08-30** · Die Titel-Verweise auf dem Board sind 18 px hoch** — gemessen bei 390 px im Browser (`a 192×18`, `a 202×18`, `a 157×18`, `a 82×18`). Sie sind der **einzige** Weg von der Liste in die Einzelansicht. AK-47 verlangt 44 × 44, WCAG 2.2 AA (2.5.8) mindestens 24 × 24 — beides verfehlt. ⚠ Auf einer Plattform für Menschen mit motorischen Einschränkungen wiegt das schwerer als anderswo, und Feature `02` sagt WCAG 2.2 AA über den vollen Bestand zu | hoch | `templates/partials/_board_idea_card.html.twig` — der `<a>` im `<h3>` | **behoben** — `min-h-[44px] flex items-center`; nachgemessen 192×44 (390 px) und 140×48 (320 px), null zu kleine Ziele. ⚠ Der Stretched Link wurde versucht und verworfen: korrekt gesetzt, im Stapel aber wirkungslos |
+| ~~BF-105~~ | 06 | **behoben 2026-08-30** · Der committete `public/build` ist veralteter Stand** — `line-clamp-3` fehlt im CSS, obwohl nur Feature 06 die Klasse benutzt. Ein `npm run build` erzeugt sofort einen Diff in vier Dateien; `verify-assets` in `cd.yml` **blockiert damit den Deploy**. ⚠ Ursache ist ein Denkfehler, den der Aufgabenplan vorgab („`npm run build` entfällt, kommt ohne Änderung unter `assets/` aus"): **Tailwind v4 scannt `templates/`** (`@source "../../templates"`), nicht nur `assets/` | hoch | `public/build/` · Ursache: `features/06-community-feedback-board/tasks.md:19` und der entsprechende Satz in `CLAUDE.md` | **behoben** — gebaut, Determinismus belegt (identische Prüfsummen beim dritten Lauf); `BuiltAssetsTest` meldet den Fall künftig im normalen Prüflauf. ⚠ **Der Satz in `CLAUDE.md` ist noch nicht erweitert** — projektweite Änderung, gehört nicht in einen Fehlerauftrag |
+| ~~BF-101~~ | 06 | **behoben 2026-08-30** · Die Deckel-Meldung nennt **keine Wartezeit**, obwohl AK-59 sie ausdrücklich verlangt. Der Deckel selbst greift exakt (5 durch, 6. → 429, kein Datensatz). ⚠ `ActionLimiter::retryAfter()` ist vorhanden und wird im Projekt an **vier** anderen Stellen genau dafür benutzt — `AccessibilityController.php:64` rechnet sogar in Minuten um. Hier nicht | mittel | `translations/messages.*.yaml` → `flash.board_rate_limited`; `src/Controller/BoardController.php:109` | **behoben** — `wartezeitInMinuten()` nach dem Muster aus `AccessibilityController`; live belegt („in 45 Minuten erneut“) |
+| ~~BF-102~~ | 06 | **behoben 2026-08-30** · Beim Zustimmen erscheint „Zu viele **Einreichungen**" — derselbe Übersetzungsschlüssel wird für beide Wege benutzt und benennt den falschen Vorgang | niedrig | `src/Controller/BoardController.php:199` | **behoben** — eigener Schlüssel `flash.board_vote_rate_limited` in vier Sprachen; live belegt („Zu viele Zustimmungen … in 49 Minuten“) |
+| BF-103 | 06 | **`endlech.userjot.com` nimmt weiterhin Einreichungen entgegen** (AK-81). Der Fußzeilenverweis zeigt bereits aufs eigene Board — damit ist das externe zwar unverlinkt, über Suchmaschinen und Lesezeichen aber weiter auffindbar. Beiträge landen dort, wo niemand sie liest: genau die Sackgasse, gegen die Feature 06 gebaut wurde. **Keine Softwarefrage** — ein Handgriff im Anbieter-Konto. ⚠ **Reihenfolge: NACH dem Deploy** (Betreiberentscheidung 2026-08-30). Davor wäre userjot der einzige Rückmeldeweg; ihn zu schließen, bevor `/community/ideen` live ist, erzeugte ein Fenster ganz ohne Weg | mittel | außerhalb des Repositorys | offen — eingeplant für die Nachverifikation von `/sdd-deploy 06` |
 | BF-95 | 05 | Eine fehlende Vorschaudatei erzeugt ein Bruchbild statt eines Ersatzes — anders als beim Paket, wo der Kontaktweg an die Stelle des Knopfes tritt. Der Entwurf sieht einen Fehlerzustand nur für `PressPackage` vor. Braucht **erst ein Kriterium** (OF-09), dann Code | mittel | `templates/press/_material.html.twig:18–22` | offen |
 | ~~BF-96~~ | 05 | **behoben 2026-08-30 (QA³)** · Der Fotocredit nannte keinen Urheber („Bildnachweis wird ergänzt"). Die Nutzungsbedingung steht, die Urheberangabe fehlt — ein Presse-Kit, das ein Foto ohne Urheberangabe ausgibt, verursacht das Problem beim Abdruckenden (AK-24, OF-05) | mittel | `translations/press.*.yaml` → `person.photo_credit` | **behoben** — Fotocredit nennt den Urheber, in vier Sprachen |
 | ~~BF-100~~ | 05 | **behoben 2026-08-30** · Der sprachfreie Kurzlink `/presse` läuft auf Produktion in eine endlose Weiterleitungsschleife.** Das neue Verzeichnis `public/presse/` kollidiert mit der Route: Apaches `mod_dir` schickt `/presse` per **301** auf `/presse/` (weil ein Verzeichnis existiert), Symfonys Trailing-Slash-Regel schickt `/presse/` per 301 zurück auf `/presse`. Gemessen am 2026-08-30 direkt nach dem Deploy: 50 Weiterleitungen, dann Abbruch. `/vergleich` und `/open` sind unberührt — dort gibt es kein gleichnamiges Verzeichnis. **Lokal nicht sichtbar**, weil der Symfony-Entwicklungsserver kein `mod_dir` hat. AK-05 ist damit auf Produktion gebrochen — und das ist genau die Adresse, die „in Mails an Redaktionen und auf Visitenkarten steht". ⚠ Der erste Sprung ist ein **301**: Browser merken ihn sich dauerhaft. Wer die Adresse einmal geöffnet hat, läuft auch nach einer Reparatur weiter im Kreis, solange `/presse/` seinerseits auf `/presse` zurückleitet | **kritisch** | `public/presse/` gegen `app_press_redirect` in `config/routes.yaml` | **behoben** — Verzeichnis heißt `presse-kit`, und **eine** Route matcht `/presse` und `/presse/` exakt (`{trailing_slash}`), sodass beide Formen direkt mit 302 auf die Sprachfassung gehen. `RouteDirectoryCollisionTest` hält die Ursache fest. **Noch nicht ausgeliefert** |
@@ -258,6 +265,55 @@ sondern vergessen.
 | BF-03 | B01 | Unbestätigte Konten haben vollen Zugang — kein `user_checker` | hoch | Ein `user_checker` sperrt bestehende unbestätigte Konten im Moment des Deployments aus; wie viele das auf Produktion sind, ist nicht einsehbar. Betreiberentscheidung gegen einen globalen Zwang; die Voraussetzung für eine spätere Umstellung ist mit der Reparatur von BF-01 geschaffen. Dokumentiert als OF-01 der Spec | 2026-08-23 |
 
 ## Muster
+
+**Nutzertext ohne Umbruchregel sprengt schmale Ansichten — zum zweiten Mal.**
+*(2026-08-30, Feature 06, BF-106; zuvor Feature 03, BF-82)* Beide Male dieselbe Ursache:
+Ein Wort ohne Trennstelle, länger als die Kartenbreite, und die Seite scrollt waagerecht.
+In `03` kam der Text aus einer gepflegten Anbieterliste und der Befund blieb *niedrig*; in
+`06` kommt er aus einem Formular, das 120 Zeichen erlaubt — **jeder Besucher sieht die
+Folge, und jeder angemeldete Nutzer kann sie auslösen.** ⚠ Beim zweiten Auftreten ist die
+Einzelreparatur die falsche Antwort: Es fehlt eine Regel im Design-System, dass **jedes
+Element mit Nutzertext** eine Umbruchregel trägt (`overflow-wrap: anywhere`). Sonst
+wiederholt es sich beim dritten Feature, das Freitext anzeigt — und das sind Bewertungen,
+Kommentare und Korrekturhinweise, alle drei bereits auf der Roadmap.
+
+**Ein Prüflauf, der Klassen liest, sieht keine gerenderten Maße.**
+*(2026-08-30, Feature 06, BF-107)* `BoardTargetSizeTest` entstand als Regressionsschutz für
+eine zu kleine Zielgröße und prüft, dass `min-h-[44px]` im Markup steht. Genau das stand
+dort — und trotzdem war das Ziel 36 px **breit**. Ein Markup-Test kann eine Klasse
+bestätigen, nicht ihre Wirkung. Wo ein Kriterium eine **Größe** nennt, braucht es eine
+Messung im Browser; der Markup-Test ist die billigere Ergänzung, nicht der Ersatz.
+
+**Tailwind scannt Templates, nicht nur `assets/` — ein Twig-Template ist eine
+Asset-Änderung.** *(2026-08-30, Feature 06, BF-105)* Die Projektregel lautet bisher
+„Änderung unter `assets/` → `npm run build` und `public/build` mitcommitten". Feature 06
+fasste `assets/` **nicht** an, legte aber neun Templates mit neuen Utility-Klassen an.
+`assets/styles/app.css` führt `@source "../../templates"` — die Klassen entstehen also
+nur mit einem Bau. Aufgabenplan und Abschlussbericht schlossen aus „keine
+`assets/`-Änderung" auf „kein Bau nötig", und der committete CSS-Stand blieb ohne
+`line-clamp-3`. ⚠ Gemerkt hätte es niemand vor dem Deploy: Die Testsuite ist grün, weil
+sie kein CSS auswertet — erst `verify-assets` hätte blockiert, und erst eine Messung im
+Browser zeigt die Folge. **Die Regel gehört auf „Änderung unter `assets/` oder
+`templates/`" erweitert.**
+
+**Ein Prüflauf, der Schlüssel nur als Literal sucht, sieht die zusammengesetzten nicht.**
+*(2026-08-30, Feature 06)* `CatalogueCompletenessTest` scannt `|trans` in Templates und
+`src/Form/`. Ein Übersetzungsschlüssel, der in PHP entsteht — hier
+`BoardIdeaStatus::transKey()` → `'board.status_' . $this->value` —, kommt in keinem der
+beiden Töpfe vor. Beim Bau wich er von den Katalogen ab, die Suite blieb grün, und der
+rohe Schlüsselname stand auf der Seite. Gefunden hat es erst ein Test, der die
+**gerenderte Seite** liest (`BoardLocaleTest`). ⚠ Das gilt über Feature 06 hinaus:
+Überall dort, wo ein Enum oder ein Dienst seinen Schlüssel zusammensetzt, prüft der
+Katalogtest nichts. Die Gegenmaßnahme ist nicht ein größerer Scanner, sondern ein Abruf
+der fertigen Seite.
+
+**Konfiguration und Katalogeinträge gehören in dieselbe Ebene wie das Artefakt, das sie
+benutzt.** *(2026-08-30, Feature 06 — dreimal in einem Bau)* Ein Limiter ohne Aufrufer
+färbt `LimiterCoverageTest` rot; eine Mailvorlage ohne ihre Schlüssel und ein Formular
+ohne seine Beschriftungen färben `CatalogueCompletenessTest` rot. Ein Aufgabenplan, der
+sie in eine frühere Ebene legt, lässt die Suite zwangsläufig über mehrere Ebenen rot —
+und damit fällt genau die Regel aus, die den Bau trägt („rot heißt anhalten"). CLAUDE.md
+sagt es für den Limiter bereits: „legt den Limiter **im selben Commit** an."
 
 **Ein Ast, der nie ausgeführt wird, ist keine Abdeckung — er sieht nur so aus.**
 *(2026-08-30, Feature 05, BF-97)* Ein Prüflauf verzweigte an einer Vorbedingung

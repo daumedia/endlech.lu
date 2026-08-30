@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ idea.title }} · {{ 'board.title'|trans }} · Endlech.lu{% endblock %}
+
+{% block body %}
+<div class="max-w-3xl mx-auto px-4 py-8">
+    <a href="{{ path('app_board_index') }}"
+       class="inline-flex items-center min-h-[48px] text-cyan-700 hover:text-cyan-900 focus:outline-2 focus:outline-offset-2">
+        ← {{ 'board.back_to_board'|trans }}
+    </a>
+
+    {% if not idea.published %}
+        <p class="mt-4 rounded-lg bg-amber-50 border border-amber-200 px-4 py-3 text-amber-900" role="status">
+            {{ 'board.pending_notice'|trans }}
+        </p>
+    {% endif %}
+
+    <div class="mt-4">
+        {% include 'partials/_board_idea_card.html.twig' with {
+            idea: idea,
+            voteCount: voteCount,
+            hasVoted: hasVoted,
+            authorName: authorName,
+            excerpt: false,
+        } only %}
+    </div>
+
+    {# Die Antwort des Teams ist als solche gekennzeichnet und vom Text des
+       Einreichers unterscheidbar (AK-32). #}
+    {% if idea.teamResponse %}
+        <section class="mt-6 rounded-xl border-l-4 border-purple-500 bg-purple-50 p-5">
+            <h2 class="text-sm font-bold uppercase tracking-wide text-purple-800">{{ 'board.response_title'|trans }}</h2>
+            <p class="mt-2 text-gray-800 whitespace-pre-line wrap-anywhere">{{ idea.teamResponse }}</p>
+        </section>
+    {% endif %}
+
+    {# Zurückziehen nur, solange die Idee wartet (AK-76/AK-77). Der fehlende
+       Knopf ist die Höflichkeit — die Regel steht im Controller. #}
+    {% if not idea.published and app.user and app.user == idea.submittedBy %}
+        <form method="post" action="{{ path('app_board_withdraw', {id: idea.id}) }}" class="mt-6"
+              onsubmit="return confirm('{{ 'board.withdraw_confirm'|trans|e('js') }}');">
+            <input type="hidden" name="_token" value="{{ csrf_token('board-withdraw-' ~ idea.id) }}">
+            <button type="submit"
+                    class="min-h-[48px] px-5 rounded-lg border border-red-300 text-red-700 font-semibold focus:outline-2 focus:outline-offset-2 motion-safe:transition hover:bg-red-50">
+                {{ 'board.withdraw'|trans }}
+            </button>
+        </form>
+    {% endif %}
+</div>
+{% endblock %}
