@@ -2,10 +2,75 @@
 
 Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
-![Version](https://img.shields.io/badge/version-2026.08.30.1-blue)
+![Version](https://img.shields.io/badge/version-2026.08.30.2-blue)
 ![Status](https://img.shields.io/badge/status-beta-green)
 
 ## [Unreleased]
+
+## [2026.08.30.2] – Community Feedback Board
+
+**Ein öffentliches Ideen-Board zur Plattform** unter `/community/ideen`. Angemeldete
+reichen einen Vorschlag ein, das Team gibt ihn frei, alle können ihn lesen, Angemeldete
+stimmen zu, und jede Idee trägt einen Status samt öffentlicher Antwort — auch dann, wenn
+die Antwort „nein" lautet.
+
+Der Anlass ist eine Lücke, die sich erst beim Nachzählen zeigt: Es gab zwei Rückmeldewege,
+und **beide waren einseitig**. Das Meldeformular auf `/barrierefreiheit` nimmt Barrieren
+der Website entgegen, ohne dass der Melder je erfährt, was daraus wurde; der Wizard
+`/community/suggest` meldet neue Restaurants. Wer sich etwas am *Produkt* wünschte, hatte
+keine Adresse dafür.
+
+### Der Fußzeilenverweis zeigt aufs eigene Board
+
+⚠ „Feedback & Ideen" führte bisher auf `endlech.userjot.com` — ein extern gehostetes Board
+mit sieben Einträgen, alle vom Betreiber selbst, alle mit null Stimmen. Der Verweis ist
+**ersetzt, nicht ergänzt**: Zwei Adressen für dieselbe Frage teilen Nutzer und Stimmen, und
+das eigene Board wäre von Anfang an halb leer. Die dort noch nicht erfassten Vorhaben —
+**Chat-Widget** und **KI-Filter** — stehen jetzt in der Roadmap des PRD.
+
+### Wie es gebaut ist
+
+Zwei Tabellen (`board_idea`, `board_vote`), ein Enum, zwei Controller, fünf Dienste, ein
+Aufräumbefehl. **Keine neue Abhängigkeit.**
+
+⚠ **Die Sichtbarkeit hängt an `published_at`, nicht am Status.** Die fünf Status
+beschreiben eine *öffentliche* Idee; „wartet auf Freigabe" ist eine andere Achse.
+Vermischt könnte ein Statuswechsel eine veröffentlichte Idee vom Netz nehmen.
+
+⚠ **Zustimmungen werden gezählt, nicht mitgeführt.** Ein Zählerfeld liefe auseinander,
+sobald die Fremdschlüssel-Kaskade beim Kontolöschen Stimmen entfernt — das geschieht in der
+Datenbank, am Anwendungscode vorbei.
+
+⚠ **Eine Ablehnung ist ohne öffentliche Begründung technisch nicht auslösbar**, und
+abgelehnte Ideen bleiben stehen. Ohne beides gilt Produktprinzip 2 („Lücken werden gezeigt,
+nicht versteckt") nur so lange, wie es dem Betreiber gelegen kommt.
+
+⚠ **Der Aufräumlauf hängt an keinem neuen Cron.** Nie freigegebene Einreichungen
+verschwinden nach zwölf Monaten — über `app:board:cleanup` **und** täglich beim Öffnen der
+Moderationsschlange. Auf Produktion fehlen von drei geplanten Läufen zwei; eine Frist, die
+davon abhinge, wäre keine.
+
+### Was sich außerhalb des Features ändert
+
+- **Datenexport und Kontolöschung** (Feature `01`) nehmen Ideen und Zustimmungen mit.
+  Veröffentlichte Ideen bleiben stehen, der Verfasserbezug wird `NULL`; wartende
+  verschwinden mit dem Konto.
+- **`AdminStatsService` hat ein fünftes Konstruktorargument** — jeder Aufrufer muss
+  mitziehen.
+- **`docs/datenschutz.md` führt die Datenschutzstufe jetzt als bestätigt (B)** statt als
+  Annahme, mit der Bedingung, unter der sie kippt. Das gilt projektweit.
+
+### Vier Prüfdurchläufe, sieben Befunde
+
+81 von 82 Kriterien belegt, **816 Tests grün**. Behoben: BF-101 (Deckel-Meldung ohne
+Wartezeit), BF-102 (falscher Vorgang in der Meldung), BF-104 (Tap-Target 18 px hoch),
+BF-105 (veralteter Asset-Build — hätte `verify-assets` blockiert), BF-106 (ein Titel aus
+einem langen Wort sprengte das Board um 1089 px), BF-107 (kurze Titel ergaben ein 36 px
+breites Ziel).
+
+⚠ **Zwei davon fand erst der Browser, kein Prüflauf.** Und BF-105 hätte den Deploy
+blockiert: Tailwind scannt in diesem Projekt `templates/` — **ein Twig-Template ist eine
+Asset-Änderung.** Die Regel in `CLAUDE.md` nennt bislang nur `assets/`.
 
 ### App-Hülle · Favicon
 
