@@ -493,6 +493,27 @@ war eine halbe Stunde lang öffentlich; wer sie in der Zeit verlinkt hat, muss s
 nachziehen. **`design.md` nennt noch `public/presse/`** — als OF-12 in der Spec vermerkt,
 `sdd-build` ändert den Entwurf nicht.
 
+**2026-08-30 · Release v2026.08.30.1 ist live — BF-100 behoben.** Nachtrag desselben
+Tages, **ohne Migration**. Auf Produktion nachgeprüft, und diesmal war die Nachprüfung
+nicht Formsache, sondern der eigentliche Beleg — das Verhalten entsteht nur unter Apache:
+
+- `/presse` → **302, eine einzige Weiterleitung**, endet mit 200 auf `/lb/presse`
+  (vorher: 50 Weiterleitungen und Abbruch). `/presse/` ebenso. **Kein 301 mehr auf
+  keiner der beiden Formen** — das war der Teil, ohne den die Reparatur nur für neue
+  Besucher gewirkt hätte.
+- Fußzeile zeigt **v2026.08.30.1**, Paket unter `/presse-kit/…` mit 200 und gültigem ZIP
+  (6 Einträge), alte Adresse **404**, `/presse-kit/` **404** (keine Dateiliste).
+- Im Browser über alle vier Sprachen: 5 Vorschauen, **0 gebrochen**, 0 fehlgeschlagene
+  Anfragen, **axe 0 Verstöße**, 375 px ohne Querscrollen.
+
+⚠ **Nebenbefund, projektweit und vorbestehend:** `/favicon.ico` und
+`/apple-touch-icon.png` antworten mit **404**. Der Browser fragt sie beim ersten Besuch
+von selbst an — daher ein Konsolenfehler auf jeder Seite, nicht nur hier. Kein Bezug zu
+Feature 05; hier vermerkt, weil er bei der Nachprüfung sichtbar wurde.
+
+Damit ist Feature `05` **deployed**. Offen bleiben BF-95 (wartet auf OF-09), BF-99
+(Schriftzug outlinen) und OF-11 (zwei Cyan-Töne) — alle drei ohne Codeanteil.
+
 **Zwei Namensräume:** Einträge mit Präfix `B` sind **Bestand** — gebaut, bevor die
 SDD-Kette da war, und rückwirkend erfasst. Einträge **ohne** Präfix (`01`, `02`, …)
 entstehen durch die Kette und hatten eine Anforderung, bevor Code existierte. An der ID
@@ -512,7 +533,7 @@ Eingang von `sdd-build`. Der Weg ist: `bestand` → `/sdd-erfassen BNN` →
 | 02 | Barrierefreiheit der Plattform (EN 301 549 / RAWeb) | P0 | **deployed** | B01–B26 | 2026-08-29 · live in v2026.08.29 |
 | 03 | Vergleichsseiten (vs. Google Maps, Wheelmap, TripAdvisor) | P1 | **deployed** | B05, B13, B24, B16, 02 | 2026-08-29 · live in v2026.08.29, auf Produktion nachgeprüft |
 | 04 | Marketing-Kontakte in Brevo | P1 | **deployed** | B01, B14, B15, B22, 01 | 2026-08-30 · live in v2026.08.30, Migrationen durch, auf Produktion belegt |
-| 05 | Presse-Kit | P2 | **approved** | B13, B16, B24, 02, 03 | 2026-08-30 · QA⁴: BF-100 gegengeprüft, 42/44 → Nachrelease v2026.08.30.1 |
+| 05 | Presse-Kit | P2 | **deployed** | B13, B16, B24, 02, 03 | 2026-08-30 · live in v2026.08.30.1, auf Produktion nachgeprüft |
 | B01 | Registrierung & E-Mail-Bestätigung | P0 | **approved** | — | 2026-08-23 · QA³: 17/20, nur mittlere Befunde offen |
 | B02 | Anmeldung mit Passwort | P0 | **approved** | B01 | 2026-08-24 · QA²: 16/17, repariert |
 | B03 | Passkey-Anmeldung & -Verwaltung | P0 | **deployed** | B01, B02 | 2026-08-29 · ENDLECH-6 live in v2026.08.29.1, auf Produktion belegt (302 statt 400) |
