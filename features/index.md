@@ -944,7 +944,33 @@ Ergebnis am Board: bei sieben Breiten **0 px Überhang und 0 zu kleine Ziele**, 
 schließen, bewusst danach) und **`public/build` mitcommitten** — vier Dateien, ohne die
 `verify-assets` blockiert.
 
-Nächster Schritt: `/sdd-deploy 06`.
+**2026-08-30 · `v2026.08.30.2` liegt auf `dev` — der Deploy ist vorbereitet, nicht
+ausgeführt.** Preflight vollständig durchlaufen, Feature-Commit und Release-Commit
+gesetzt, Tag `v2026.08.30.2` vergeben, alles nach `origin` gepusht. 816 Tests grün auf
+`dev`. **Der Merge nach `production` bleibt beim Betreiber** (so entschieden) — er ist
+der Moment, in dem sich der Live-Server ändert.
+
+**Preflight-Ergebnis:** Feature `06` auf `approved` mit „production-ready: ja", keine
+Geheimnisse im Repository, `cache:clear --env=prod` fehlerfrei, `public/build` aktuell und
+deterministisch (BF-105 bleibt behoben). **Alle vier Release-Stellen gezogen** — CHANGELOG
+samt Badge in Zeile 5, README-Badge, `app.version` und der Tag; im Container bestätigt:
+`app_version: 2026.08.30.2`.
+
+**Die Migration ist additiv:** `Version20260830120000` legt ausschließlich zwei neue
+Tabellen an — kein `DROP`, kein `ALTER` an bestehenden Tabellen, `down()` vorhanden. Kein
+Datenverlustrisiko. **Die Sicherung der Produktivdatenbank macht der Betreiber vor dem
+Merge** (so entschieden), obwohl das Risiko gering ist.
+
+⚠ **Zwei Punkte für die Nachverifikation:**
+
+1. **BF-103 — `endlech.userjot.com` schließen**, unmittelbar **nach** dem Deploy. Vorher
+   wäre es der einzige Rückmeldeweg.
+2. **Der Deploy schreibt zwei neue Tabellen und lässt den Worker weiterlaufen.** Die eine
+   Mail des Boards geht über die Queue; `messenger:stats` nach dem Deploy zeigt, ob sie
+   durchläuft.
+
+Nächster Schritt: **Merge `dev` → `production`** durch den Betreiber, danach die
+Live-Nachprüfung.
 
 **Zwei Namensräume:** Einträge mit Präfix `B` sind **Bestand** — gebaut, bevor die
 SDD-Kette da war, und rückwirkend erfasst. Einträge **ohne** Präfix (`01`, `02`, …)
@@ -966,7 +992,7 @@ Eingang von `sdd-build`. Der Weg ist: `bestand` → `/sdd-erfassen BNN` →
 | 03 | Vergleichsseiten (vs. Google Maps, Wheelmap, TripAdvisor) | P1 | **deployed** | B05, B13, B24, B16, 02 | 2026-08-29 · live in v2026.08.29, auf Produktion nachgeprüft |
 | 04 | Marketing-Kontakte in Brevo | P1 | **deployed** | B01, B14, B15, B22, 01 | 2026-08-30 · live in v2026.08.30, Migrationen durch, auf Produktion belegt |
 | 05 | Presse-Kit | P2 | **deployed** | B13, B16, B24, 02, 03 | 2026-08-30 · live in v2026.08.30.1, auf Produktion nachgeprüft |
-| 06 | Community Feedback Board | P1 | **approved** | B01, B02, B19, B21, B24, 01, 02 | 2026-08-30 · QA⁴: 81/82 belegt, **kein Befund** · weiter mit `/sdd-deploy 06` |
+| 06 | Community Feedback Board | P1 | **approved** | B01, B02, B19, B21, B24, 01, 02 | 2026-08-30 · auf `dev` als `v2026.08.30.2`, **wartet auf den Merge nach `production`** |
 | B01 | Registrierung & E-Mail-Bestätigung | P0 | **approved** | — | 2026-08-23 · QA³: 17/20, nur mittlere Befunde offen |
 | B02 | Anmeldung mit Passwort | P0 | **approved** | B01 | 2026-08-24 · QA²: 16/17, repariert |
 | B03 | Passkey-Anmeldung & -Verwaltung | P0 | **deployed** | B01, B02 | 2026-08-29 · ENDLECH-6 live in v2026.08.29.1, auf Produktion belegt (302 statt 400) |
