@@ -35,7 +35,10 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: ctype, iconv, intl, mbstring, pdo_mysql, gd
+          # zip: PressPackageTest (Feature 05) öffnet die committete Paketdatei.
+          # Ohne die Erweiterung bricht der Lauf mit einer Meldung über eine
+          # unbekannte Klasse ab — das sieht wie ein Codefehler aus und ist keiner.
+          extensions: ctype, iconv, intl, mbstring, pdo_mysql, gd, zip
           coverage: none
           tools: composer:v2
 

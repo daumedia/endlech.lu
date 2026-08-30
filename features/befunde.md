@@ -1,6 +1,6 @@
 # Befunde — projektweit
 
-Stand: 2026-08-29 · Quelle: die `qa-report.md` aller geprüften Features
+Stand: 2026-08-30 · Quelle: die `qa-report.md` aller geprüften Features
 
 Diese Liste wird von `sdd-qa` fortgeschrieben, nicht von Hand. Sie ist die Grundlage
 des Auditberichts, den `/sdd-erfassen abschluss` daraus baut.
@@ -66,14 +66,40 @@ obwohl dort nichts mehr zu reparieren ist.
 > **Lesen** des Codes auffiel, und ist eine Suchliste. Hier stehen nur Befunde, die in
 > einer QA **ausgeführt und belegt** wurden.
 
+**2026-08-30 · Feature `05` geprüft (erster Durchlauf): 32/44 bestanden, 5 durchgefallen,
+7 nicht prüfbar.** Nicht abgenommen — zwei Befunde mit Grad *hoch*. **Alle zwölf offenen
+Kriterien hängen an den drei Vorbedingungen der Spec** (Vektormarken, Postfach,
+Betreiberangaben); nur einer der vier Befunde hat überhaupt einen Codeanteil (BF-95). Der
+Angriffsdurchlauf blieb ohne Fund, axe-core meldet in allen vier Sprachfassungen null
+Verstöße.
+
+⚠ **Der 768-px-Überlauf war bereits als BF-80 erfasst.** Er wurde beim Selbsttest von `05`
+erneut gefunden und dort zunächst als neuer Befund geführt — falsch. Die Messung ist
+trotzdem ein Gewinn: Sie zeigt, dass der Fehler **angemeldet doppelt so groß ist und bis
+unter 1000 px reicht**. BF-80 ist entsprechend ergänzt statt verdoppelt.
+
+**2026-08-30 · Feature `05`, zweiter Durchlauf: 37/44, kein neuer Befund.** Beide
+Reparaturen halten der Gegenprobe stand. Der Ertrag liegt in der Methode: Statt auf VB-01
+zu warten, wurde der **vollständige Zustand hergestellt** (SVG-Platzhalter,
+`app:press:package`) — damit lief die gesamte Materialmechanik zum ersten Mal durch und
+**sechs vormals offene Kriterien sind belegt**. In diesem Zustand meldete die Suite 10
+statt 13 übersprungene Tests. Alle Prüf-Artefakte wurden wieder entfernt. Offen bleiben
+BF-93 bis BF-96 — **keiner davon hat einen Softwareanteil**.
+
 ## Offen
 
 | ID | Feature | Befund | Grad | Fundstelle | Status |
 |---|---|---|---|---|---|
-| BF-80 | 02 / projektweit | Bei 768 px scrollen **alle** Seiten um 51 px waagerecht — Startseite, `/about`, `/open`, `/restaurants`, `/criteria`, `/legal` und die Vergleichsseiten. Mit ausgeblendetem `<header>` sind es 0 px; bei genau 768 px greift die Desktop-Navigation, der Platz reicht nicht, `flex-wrap: nowrap` verhindert den Umbruch | mittel | `templates/base.html.twig` — `div.flex items-center gap-4` | offen |
+| BF-80 | 02 / projektweit | Bei 768 px scrollen **alle** Seiten um 51 px waagerecht — Startseite, `/about`, `/open`, `/restaurants`, `/criteria`, `/legal` und die Vergleichsseiten. Mit ausgeblendetem `<header>` sind es 0 px; bei genau 768 px greift die Desktop-Navigation, der Platz reicht nicht, `flex-wrap: nowrap` verhindert den Umbruch. **2026-08-30 bei der QA von `05` nachgemessen und verschärft:** abgemeldet +36 px bei 768 px und ab 850 px weg — **angemeldet aber +81 px, und das Band reicht bis unter 1000 px** (850 px → +40, 900 px → +15). Bei 768 px messen Logo (123) + Navigation (416) + Kontobereich (250 bzw. 295 angemeldet) zusammen 789 bzw. 833 px, während der Inhaltsbereich nach `px-4` nur 736 px fasst. Vollständige Messreihe: `docs/app-shell.md`, Bekannte Lücke 7 | mittel | `templates/base.html.twig` — `div.flex items-center gap-4` | offen |
 | BF-82 | 03 | Ein Anbietername von 57 Zeichen **ohne Leerzeichen** sprengt bei 320 px die Kartendarstellung (`scrollX=104`). Bis 30 Zeichen sauber; die realen Wortmarken sind 8–11 Zeichen | niedrig | `templates/comparison/_cards.html.twig` — `<dt>` ohne `overflow-wrap` | offen |
 | BF-90 | 04 | Nach einem `contactDeleted` bleibt bei zwei Quellen eine Zeile auf `synced` stehen, obwohl der Kontakt bei Brevo gelöscht ist: `record()` verweigert wegen der Sperre, `scheduleRemoval()` gibt `null` zurück. **Kein Datenabfluss** — bei Brevo steht nichts mehr —, aber ein lokaler Zustand, der nicht mehr stimmt, und eine Zeile, die niemand aufräumt | niedrig | `src/Marketing/MarketingContactRegistry.php` — `scheduleRemoval()` | offen |
 | BF-88 | 04 | Der AV-Vertrag mit Brevo ist in `docs/datenschutz.md` **nicht festgehalten**, sondern als „noch zu prüfen" markiert; das Prüfdatum fehlt (AK-33). Hängt an **OF-01**, der nie festgelegten Datenschutzstufe des Projekts. Keine Softwarefrage — aber die Freigabe-Sperre für den ersten echten Lauf | mittel | `docs/datenschutz.md` | offen |
+| BF-93 | 05 | Betreiberangaben fehlen auf `/presse` **und** `/legal`: Das Faktenblatt zeigt dreimal „Wird derzeit ergänzt", das Impressum unverändert „Endlech.lu / Luxemburg". AK-11 durchgefallen, AK-15 nicht prüfbar. **Kein Codeanteil** — die Mechanik (ein Parameter, zwei Seiten) steht und ist geprüft, die Werte fehlen (VB-03) | hoch | `config/services.yaml:40–42` | offen |
+| BF-94 | 05 | Kein Bildmaterial und kein Paket: vier von fünf Vorschauen laufen in HTTP 404, kein Downloadlink. AK-16 und AK-20 durchgefallen, AK-17/18/19/22 nicht prüfbar. **Kein Codeanteil** — `app:press:package` verweigert bewusst ein halbes Paket (Exit 1), drei Prüfläufe überspringen mit benannter Begründung (VB-01) | hoch | `public/presse/` fehlt · `src/Press/PressRegistry.php::assets()` | offen |
+| BF-95 | 05 | Eine fehlende Vorschaudatei erzeugt ein Bruchbild statt eines Ersatzes — anders als beim Paket, wo der Kontaktweg an die Stelle des Knopfes tritt. Der Entwurf sieht einen Fehlerzustand nur für `PressPackage` vor. Braucht **erst ein Kriterium** (OF-09), dann Code | mittel | `templates/press/_material.html.twig:18–22` | offen |
+| BF-96 | 05 | Der Fotocredit nennt keinen Urheber („Bildnachweis wird ergänzt"). Die Nutzungsbedingung steht, die Urheberangabe fehlt — ein Presse-Kit, das ein Foto ohne Urheberangabe ausgibt, verursacht das Problem beim Abdruckenden (AK-24, OF-05) | mittel | `translations/press.*.yaml` → `person.photo_credit` | offen |
+| ~~BF-97~~ | 05 | **behoben 2026-08-30** · **Mit vorhandenem Materialpaket antwortet `/presse` in allen vier Sprachen mit HTTP 500.** `_material.html.twig:44` ruft `package.publicPath`; auf `PressPackage` ist der Pfad eine **Klassenkonstante**, und Twig löst `object.attr` nie über eine Konstante auf. Der Fehler liegt im **Regelfall** des Features und blieb verborgen, weil die Umgebung kein Paket hat — der einzige Lauf, der den Abschnitt anfasst, prüfte nur den Ersatzzweig | **kritisch** | `templates/press/_material.html.twig:44` gegen `src/Press/PressPackage.php:22` | **behoben, gegengeprüft 2026-08-30 (QA²)** — `PressPackage::publicPath()`; mit angelegtem Paket 200 in allen vier Sprachen, `PressPackageTest` läuft erstmals durch statt zu überspringen. **Noch nicht ausgeliefert** |
+| ~~BF-98~~ | 05 | **behoben 2026-08-30** · Zusammengesetzte Übersetzungsschlüssel (`'material.allowed_' ~ i`, die sechs `facts.*_value`) fallen durch **beide** Netze: `CatalogueCompletenessTest` erfasst nur Literale, `PressCatalogueTest` nur die von `PressRegistry` genannten. Entfernt man einen aus allen vier Katalogen, bleibt die Suite grün und die Seite zeigt den rohen Schlüssel. Heute ist nichts kaputt — die Absicherung fehlt. Derselbe blinde Fleck wie BF-56 | mittel | `tests/Unit/Translation/PressCatalogueTest.php:129–154` | **behoben, gegengeprüft 2026-08-30 (QA²)** — vierzehn Schlüssel als `ZUSAMMENGESETZTE_SCHLUESSEL`; beide Mutationsproben unabhängig wiederholt, beide werden rot, nach dem Wiederherstellen grün. **Noch nicht ausgeliefert** |
 
 Die drei Befunde des ersten `03`-Durchlaufs (BF-77/78/79), BF-81 sowie die vier der
 `02`-QA und die 72 Rückerfassungs-Befunde sind behoben — siehe unten.
@@ -202,6 +228,17 @@ sondern vergessen.
 | BF-03 | B01 | Unbestätigte Konten haben vollen Zugang — kein `user_checker` | hoch | Ein `user_checker` sperrt bestehende unbestätigte Konten im Moment des Deployments aus; wie viele das auf Produktion sind, ist nicht einsehbar. Betreiberentscheidung gegen einen globalen Zwang; die Voraussetzung für eine spätere Umstellung ist mit der Reparatur von BF-01 geschaffen. Dokumentiert als OF-01 der Spec | 2026-08-23 |
 
 ## Muster
+
+**Ein Ast, der nie ausgeführt wird, ist keine Abdeckung — er sieht nur so aus.**
+*(2026-08-30, Feature 05, BF-97)* Ein Prüflauf verzweigte an einer Vorbedingung
+(`PressPackage::exists()`) und prüfte in der vorhandenen Umgebung ausschließlich den
+Ersatzzweig. Der Regelfall des Features lag damit in keinem einzigen Test, und ein
+Fehler darin — die Seite antwortet mit 500 — wurde erst sichtbar, als die QA den Zustand
+**herstellte** statt ihn abzuwarten. Wo eine Vorbedingung offen ist, wird der Zustand
+dahinter simuliert; sonst wächst die grüne Suite genau um die Stellen, die niemand
+gesehen hat.
+
+
 
 Was in mehr als einem Feature auftritt — der Grund, warum diese Liste existiert.
 

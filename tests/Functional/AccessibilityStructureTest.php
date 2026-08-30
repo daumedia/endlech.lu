@@ -35,6 +35,9 @@ final class AccessibilityStructureTest extends AbstractWebTestCase
         yield 'vergleich-google-maps' => ['/vergleich/google-maps'];
         yield 'vergleich-wheelmap' => ['/vergleich/wheelmap'];
         yield 'vergleich-tripadvisor' => ['/vergleich/tripadvisor'];
+        // Feature 05 — die Presseseite. Ohne diese Zeile greift AK-54 aus
+        // Feature 02 für sie nicht.
+        yield 'presse' => ['/presse'];
         yield 'login' => ['/login'];
         yield 'register' => ['/register'];
     }

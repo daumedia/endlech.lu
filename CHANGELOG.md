@@ -7,6 +7,53 @@ Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
 ## [Unreleased]
 
+### Feature 05 · Presse-Kit (2026-08-30)
+
+Unter `/presse` steht jetzt alles, was für einen Beitrag über Endlech.lu nötig ist:
+freigegebene Beschreibungstexte in drei Längen, ein Faktenblatt mit den Livezahlen der
+Transparenzseite, ein Materialpaket zum Herunterladen, Porträt und Kurzvita, zwei
+freigegebene Zitate und ein Pressekontakt. In allen vier Sprachen, ohne Rückfrage nutzbar.
+
+**Keine Entity, keine Migration.** Struktur als unveränderliche Wertobjekte unter
+`App\Press\`, Texte in der eigenen Übersetzungsdomain `press`, Zahlen aus derselben
+Quelle wie `/open` — dasselbe Muster wie die Vergleichsseiten (Feature 03).
+
+**Die Betreiberangaben stehen als Parameter, nicht im Katalog.** Sie erscheinen auf zwei
+Seiten zugleich — Faktenblatt und Impressum —, und vier Katalogeinträge wären vier
+Stellen, an denen eine Angabe auseinanderläuft; `CatalogueCompletenessTest` prüft
+Vollständigkeit, nicht Gleichheit. Damit trägt `/legal` erstmals einen Namen und einen
+presserechtlich Verantwortlichen.
+
+⚠ **Eine Anschrift wird bewusst nicht veröffentlicht.** Erreichbar ist der Betreiber über
+den Pressekontakt; die Zeile „Anschrift" entfällt, statt eine Mailadresse unter dieser
+Überschrift zu führen. Kommt später eine c/o- oder Postfachadresse, erscheint sie ohne
+Codeänderung wieder.
+
+⚠ **Die Angabe zur Behinderung steht in genau einem Katalogschlüssel** (`person.bio`).
+Ein Prüflauf hält fest, dass kein anderer Schlüssel der Domain sie enthält — damit ist ihr
+Widerruf eine Textstelle und keine Suche über vier Kataloge.
+
+⚠ **Das Paket ist eine committete Datei**, erzeugt von `app:press:package` (`make
+press-kit`), nicht zur Laufzeit gepackt. Ein Prüflauf öffnet die Datei und vergleicht
+ihren Inhalt mit der Materialliste; wer eine Datei austauscht und den Befehl nicht neu
+laufen lässt, bekommt einen roten Lauf statt eines veralteten Downloads. Dafür steht
+`ext-zip` in `require-dev` **und** in der CI-Extension-Liste.
+
+⚠ **Wer eine Datei in `public/presse/` ersetzt, erhöht `CACHE_VERSION` in `public/sw.js`.**
+Der Service Worker liefert Bilder cache-first aus; sonst sähe ein wiederkehrender Besucher
+die alte Vorschau neben dem neuen Paket — und kein Prüflauf sieht das, weil es im Browser
+passiert.
+
+**Die vier Markendateien sind nachgezeichnet, nicht nachgebaut:** `public/images/logo.png`
+mit potrace in zwei Durchgängen (Silhouette über den Alphakanal, Glyphe über die weißen
+Bildpunkte), Abweichung gegen das Original gemessen — **0,244 %**, also nur
+Kantenglättung. ⚠ Der Schriftzug in den beiden Wort-Bildmarken ist `<text>` und noch nicht
+in Pfade umgewandelt.
+
+Neu: `/presse` und der sprachfreie Kurzlink, ein Verweisblock auf `/about`, ein
+Fußzeilen-Eintrag, `app:press:package`, `make press-kit`, zehn Prüfläufe.
+
+
 ### Feature 04 · Marketing-Kontakte in Brevo (2026-08-30)
 
 Wer sich auf einer Warteliste einträgt oder ein Konto anlegt, kann zusätzlich

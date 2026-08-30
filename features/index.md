@@ -1,6 +1,6 @@
 # Features
 
-Stand: 2026-08-29 · Stack-Profil: `symfony-doctrine` · Artefaktpfad: `docs/`
+Stand: 2026-08-30 · Stack-Profil: `symfony-doctrine` · Artefaktpfad: `docs/`
 
 Stand der Rückerfassung: **alle 26 Features rekonstruiert** (2026-08-23).
 Stand der Prüfung: **B01 zweimal geprüft und repariert** → `review` (17/20 Kriterien).
@@ -266,6 +266,173 @@ AK-27) bleiben unprüfbar, solange das Brevo-Konto nicht eingerichtet ist (**T08
 die Funktion still aus —, aber die **Freigabe-Sperre T39** hält den ersten echten Lauf
 auf, bis beides steht. Nächster Schritt: `/sdd-deploy 04`.
 
+**2026-08-30 · Feature `05` aufgenommen und spezifiziert.** Ein Presse-Kit stand nirgends
+im Inventar — wer heute über die Plattform schreiben will, findet keinen freigegebenen
+Beschreibungstext, kein brauchbares Logo und keinen Namen eines Verantwortlichen. Die Spec
+setzt eine eigene Seite `/presse` an (Verweisblock auf `/about`), mit Boilerplate in drei
+Längen, Faktenblatt aus derselben Quelle wie `/open`, einem Bildpaket, Person und Zitaten,
+Meldungen und dem Kontakt `support@endlech.lu`.
+
+⚠ **Drei Vorbedingungen sind keine Funktion und blockieren die Auslieferung:** Die
+**Vektormarken existieren nicht** (es gibt nur `logo.png` mit 10000 × 7664 px — ein
+Rasterlogo taugt im Zeitungsdruck nichts), **`support@endlech.lu` gibt es im Projekt
+nicht**, und die **Betreiberangaben müssen erst feststehen**. Letzteres zieht `/legal` mit:
+Das Impressum nennt heute nur „Endlech.lu, Luxemburg" und genügt damit weder Art. 11 der
+luxemburgischen E-Commerce-Regelung noch dem Presserecht.
+
+Zwei Entscheidungen sind bewusst und nicht umkehrbar, sobald das Material verbreitet ist:
+Veröffentlicht werden die **Privatanschrift** des Betreibers und die **Gesundheitsangabe**
+aus der Gründervita (SMA2) — beide stehen heute schon öffentlich, werden hier aber gezielt
+zur Weiterverbreitung freigegeben. Damit steht **OF-01 aus `docs/datenschutz.md` (die
+Datenschutzstufe des Projekts) erneut auf der Tagesordnung**; die bisherige Annahme Stufe B
+trägt eine besondere Kategorie nach Art. 9 nicht ohne Weiteres. Nächster Schritt:
+`/sdd-architektur 05`.
+
+**Entwurf am selben Tag.** Aufbau wie Feature `03`: Struktur als unveränderliche
+Datenstrukturen unter `App\Press\`, Texte in einer eigenen Übersetzungsdomain `press`,
+Zahlen aus derselben Quelle wie `/open`. Keine Entität, keine Migration. Zwei
+Entscheidungen tragen den Entwurf: Die **Betreiberangaben stehen als Parameter** und
+werden von `/presse` und `/legal` aus derselben Stelle gelesen — vier Katalogeinträge
+wären vier Stellen, an denen eine Anschrift auseinanderlaufen kann, und der Katalogtest
+prüft Vollständigkeit, nicht Gleichheit. Und das **Materialpaket erzeugt ein
+Konsolenbefehl** aus derselben Liste, aus der die Seite ihre Vorschauen baut; ein Prüflauf
+öffnet die committete Datei und vergleicht sie damit (OF-07 entschieden). 44 von 44
+Kriterien abgedeckt, zwei davon ausdrücklich **nicht durch Code** (AK-29: die Presseadresse
+nimmt Post an; AK-41: ein Beitrag entsteht ohne Rückfrage).
+
+**Zwei Kriterien kamen beim Entwurf dazu** (AK-43, AK-44): Kurzbeschreibung und kanonische
+Adresse. Die Twig-Blöcke dafür stehen seit Feature `03` leer bereit und wären eine Zeile —
+aber ohne Kriterium füllt sie niemand, prüft sie niemand, und der nächste Umbau entfernt
+sie unbemerkt. Bei einer Seite, deren Zweck über eine Suchmaschine läuft, wäre das die
+teuerste Auslassung. Damit sind es **44 Kriterien**, alle abgedeckt.
+
+⚠ **Drei Funde beim Entwerfen, die sonst erst beim Bauen aufgefallen wären:**
+**(1)** `ext-zip` fehlt in der CI-Erweiterungsliste (`.github/workflows/ci.yml:38`) — der
+Paket-Prüflauf würde dort mit einer Meldung über eine unbekannte Klasse rot, die wie ein
+Codefehler aussieht. **(2)** Der Service Worker cacht Bilder cache-first: Eine ersetzte
+Logo-Vorschau bliebe im Browser wiederkehrender Besucher alt, während das Paket (das
+strukturell nie gecacht wird) bereits neu ist — AK-17 bricht dann dort, wo kein Prüflauf
+hinsieht. Regel: Wer eine Datei in `public/presse/` ersetzt, erhöht `CACHE_VERSION`.
+**(3)** Das vorhandene Gründerporträt ist 2048 × 1365 px und damit drucktauglich — es
+braucht **keine** zweite Datei fürs Presse-Kit, die beim nächsten Bildwechsel
+auseinanderfiele.
+
+**Aufgabenplan am selben Tag.** 37 Aufgaben in fünf Ebenen, keine Migration. Drei
+Entscheidungen prägen die Reihenfolge: Die **Übersetzungsdomain `press` steht in Ebene 1**
+— dieselbe Lehre wie bei Feature `04`, ein Katalogeintrag, der erst beim Feinschliff
+entsteht, färbt den Prüflauf drei Ebenen früher rot. Die **funktionalen Läufe stehen am
+Ende von Ebene 4**, nicht in Ebene 3: Sie rendern die Seite, und ohne Vorlagen prüften sie
+eine Fehlerseite (bei `03` lagen sie in Ebene 3 und standen bis Ebene 4 rot). Und
+**`ext-zip` ist eine eigene Aufgabe** (T06), weil die CI die Erweiterung heute nicht
+installiert — ohne sie bricht der Paket-Prüflauf auf dem Runner mit einer Meldung ab, die
+wie ein Codefehler aussieht.
+
+43 der 44 Kriterien tragen eine Aufgabe. **AK-41 trägt bewusst keine**: „Ein Beitrag
+entsteht allein mit `/presse`" prüft das Zusammenspiel aller anderen Kriterien und lässt
+sich nicht bauen, nur abnehmen — Handprüfung in der QA, wie AK-29, dessen Nachweis eine
+Testmail ist. Nächster Schritt: `/sdd-build 05` — **aber erst, wenn VB-01 bis VB-03
+stehen**: ohne Vektormarken entsteht ein leeres Paket, ohne gelesenes Postfach nennt die
+Seite eine tote Adresse, ohne Betreiberangaben tragen Impressum und Faktenblatt denselben
+Platzhalter.
+
+**2026-08-30 · Befund an der App-Hülle, herausgelöst aus Feature `05`.** Der Selbsttest
+des Presse-Kits fand einen Überlauf, den keine bisherige Prüfung finden konnte: **Die
+Kopfzeile lässt die Seite zwischen 768 px und 1000 px waagerecht scrollen** — abgemeldet
++36 px bei 768 px, **angemeldet +81 px und bis unter 1000 px hinauf**. Ursache ist der
+`md:`-Umbruchpunkt in `base.html.twig`: Ab genau 768 px erscheinen Hauptnavigation
+(416 px) und Kontobereich, bevor Platz dafür ist. Betrifft **jede Seite**, nachgemessen
+auf `/about`, `/vergleich`, `/open` und `/partner`.
+
+⚠ **Richtigstellung vom selben Tag:** Der Befund war **nicht neu**. Er steht seit der QA
+von Feature `02` als **BF-80** in `features/befunde.md` — der Baubericht behauptete das
+Gegenteil, und das war falsch. Der Ertrag der Messung bleibt: **BF-80 kannte den
+angemeldeten Fall nicht**, und dort ist der Überlauf doppelt so groß und reicht bis unter
+1000 px. BF-80 ist ergänzt statt verdoppelt; die vollständige Messreihe steht als
+**Bekannte Lücke 7** in `docs/app-shell.md`. Übersehen wurde er zweimal aus demselben
+Grund: Die Kriterien von `02`, `03` und `05` nennen 320 px, die QA von `03` zusätzlich
+375 px — unterhalb von `md:` ist die Navigation ausgeblendet. **Nicht behoben:** Der Umbruchpunkt von `md:` auf
+`lg:` zu ziehen oder die Kopfzeile umbrechen zu lassen ist eine Entwurfsentscheidung an
+der App-Hülle und gehörte in kein Feature nebenbei hinein. Der Befund hat heute **kein
+Feature-Zuhause** — er trifft die Hülle, die B25 nur für die Bottom-Navigation abdeckt.
+
+**2026-08-30 · QA von `05`: 31 von 44 bestanden, nicht abgenommen.** Der schwerste Befund
+entstand erst, als die Prüfung den **Regelfall herstellte**, statt ihn abzuwarten:
+**Sobald das Materialpaket existiert, antwortet `/presse` in allen vier Sprachen mit
+HTTP 500** (BF-97, kritisch). `_material.html.twig:44` ruft `package.publicPath` — auf
+`PressPackage` ist der Pfad eine Klassenkonstante, und Twig löst `object.attr` nie über
+eine Konstante auf. Verborgen blieb das, weil die Umgebung kein Paket hat: Der einzige
+Lauf, der den Abschnitt anfasst, verzweigt an `PressPackage::exists()` und prüfte nur den
+Ersatzzweig. **Der Regelfall des Features lag in keinem einzigen Test.** Daraus ein neues
+projektweites Muster: *Ein Ast, der nie ausgeführt wird, ist keine Abdeckung — er sieht
+nur so aus.*
+
+Dazu **BF-98** (mittel): Zusammengesetzte Übersetzungsschlüssel fallen durch beide
+Prüfläufe — entfernt man einen aus allen vier Katalogen, bleibt die Suite grün und die
+Seite zeigt den rohen Schlüssel. Und drei Befunde ohne Codeanteil (BF-93 bis BF-96), die
+sämtlich an den drei Vorbedingungen hängen.
+
+Der **Angriffsdurchlauf blieb ohne Fund**: keine fremde Ressource, keine Reflexion von
+Eingaben, 405 auf allen Schreibwegen, keine Personendaten in Protokollen, kein Geheimnis
+im Quelltext; axe-core meldet in allen vier Sprachfassungen null Verstöße. Zwei neue
+Prüfläufe, davon einer absichtlich rot als Befund-Nachweis. **Reihenfolge für die
+Reparatur: erst BF-97, dann VB-01** — sonst macht das Ablegen der Marken die Seite kaputt
+statt fertig. Nächster Schritt: `/sdd-build 05`.
+
+**2026-08-30 · BF-97 und BF-98 behoben.** Die Reparatur des kritischen Befunds ist eine
+Methode: `PressPackage::publicPath()`. Gegen die Reproduktion aus dem Testbericht geprüft —
+mit angelegtem Paket antworten alle vier Sprachfassungen mit **200**, der Knopf liest sich
+„Presse-Paket herunterladen (ZIP · 244 kB)". **Beim Beheben fiel ein Fehler im
+Befund-Nachweis selbst auf:** Sein `tearDown()` rief `parent::tearDown()` nicht, der Kernel
+blieb zwischen den Testmethoden gebootet, und die Folgefehler sahen aus wie ein zweiter
+Anwendungsfehler. BF-98 ist über vierzehn nachgetragene Schlüssel geschlossen; **beide
+Mutationsproben wiederholt** — Entfernen aus allen vier Katalogen färbt den Lauf jetzt rot,
+vorher blieb er grün. 741 Tests, kein roter Lauf mehr.
+
+**Nicht repariert, weil ohne Codeanteil:** BF-93 (Betreiberangaben, VB-03), BF-94
+(Vektormarken, VB-01), BF-96 (Fotocredit, OF-05). BF-95 wartet auf die Entscheidung zu
+OF-09. ⚠ **Reihenfolge bleibt: erst BF-97 ausliefern, dann VB-01** — jetzt erfüllt.
+
+**2026-08-30 · Zweiter QA-Durchlauf von `05`: 37 von 44, kein neuer Befund.** Beide
+Reparaturen halten. Der Ertrag ist eine Methode, die aus dem Muster des ersten Durchlaufs
+folgt: **den Zustand herstellen, statt auf ihn zu warten.** Vier SVG-Platzhalter abgelegt,
+`app:press:package` laufen lassen — damit lief die Materialmechanik zum ersten Mal
+vollständig durch: sechs Dateien im Paket, alle vier Sprachabschnitte in der
+Bedingungsdatei, fünf Vorschauen ohne eine fehlgeschlagene Anfrage, ein gültiges ZIP über
+HTTP, und `PressPackageTest` lief **durch statt zu überspringen** (10 statt 13
+übersprungene Tests). **Sechs vormals offene Kriterien sind damit belegt**; die Artefakte
+wurden restlos entfernt.
+
+Damit gilt eine ausgesprochene Regel für solche Belege: *Ein Kriterium über die Mechanik
+ist bestanden, wenn die Mechanik ausgeführt wurde und hielt; ein Kriterium über den Inhalt
+des Materials bleibt offen, bis das Material existiert.* **AK-18 bleibt deshalb offen** —
+ob das Paket die Wort-Bildmarke enthält, beantwortet kein grauer Platzhalter.
+
+⚠ **Nächster Schritt ist ausnahmsweise nicht `/sdd-build`.** Von den vier offenen Befunden
+hat keiner einen Softwareanteil: Es fehlen die Vektormarken (VB-01), die Betreiberangaben
+(VB-03), der Fotocredit (OF-05) und das Postfach (VB-02); BF-95 wartet auf die Entscheidung
+zu OF-09. Danach genügt ein kurzer dritter Durchlauf über die sieben betroffenen Kriterien.
+
+**2026-08-30 · VB-01 erfüllt: Die vier Markendateien liegen vor.** Kein Nachbau von Hand —
+`public/images/logo.png` wurde mit potrace in zwei Durchgängen nachgezeichnet (Silhouette
+über den Alphakanal, Glyphe über die weißen Bildpunkte) und die Abweichung gegen das
+Original **gemessen: 0,244 %**, also nur Kantenglättung. Farben aus der Quelldatei
+(`#01b6ed` / `#ffffff`), Schriftzug und seine beiden Farbfassungen aus
+`templates/base.html.twig`. `make press-kit` erzeugt daraus ein Paket aus sechs Dateien;
+die Seite zeigt fünf Vorschauen ohne fehlgeschlagene Anfrage, axe meldet in allen vier
+Sprachen null Verstöße, und die Suite meldet **10 statt 13 übersprungene Tests**.
+
+⚠ **Zwei Funde, die erst mit echtem Material sichtbar wurden.** (1) **Die Bilddatei zeigt
+ein „ND"-Monogramm** — nicht „Endlech.lu". Dieselbe Datei steckt in der Kopfzeile und über
+`bin/generate-pwa-icons.sh` in **allen elf App-Icons**. Auf Nachfrage bestätigt, dass es
+die Marke ist; als Beobachtung festgehalten, weil ein Presse-Kit die Marke verbreitet.
+(2) **Zwei verschiedene Cyan-Töne** — Fläche `#01b6ed`, Nutzungsbedingungen und Schriftzug
+`#0891b2`. Als **OF-11** in der Spec vermerkt, nicht nebenbei vereinheitlicht.
+
+⚠ **Der Schriftzug in den beiden Wort-Bildmarken ist `<text>`, nicht in Pfade
+umgewandelt.** Ohne die Schrift auf dem Zielsystem ersetzt der Betrachter sie. Vor der
+Freigabe in Illustrator oder Affinity einmal outlinen — steht als Kommentar in beiden
+Dateien.
+
 **Zwei Namensräume:** Einträge mit Präfix `B` sind **Bestand** — gebaut, bevor die
 SDD-Kette da war, und rückwirkend erfasst. Einträge **ohne** Präfix (`01`, `02`, …)
 entstehen durch die Kette und hatten eine Anforderung, bevor Code existierte. An der ID
@@ -285,6 +452,7 @@ Eingang von `sdd-build`. Der Weg ist: `bestand` → `/sdd-erfassen BNN` →
 | 02 | Barrierefreiheit der Plattform (EN 301 549 / RAWeb) | P0 | **deployed** | B01–B26 | 2026-08-29 · live in v2026.08.29 |
 | 03 | Vergleichsseiten (vs. Google Maps, Wheelmap, TripAdvisor) | P1 | **deployed** | B05, B13, B24, B16, 02 | 2026-08-29 · live in v2026.08.29, auf Produktion nachgeprüft |
 | 04 | Marketing-Kontakte in Brevo | P1 | **approved** | B01, B14, B15, B22, 01 | 2026-08-30 · QA⁴: 43/48, erster Durchlauf ohne Befund, 681 Tests grün — auslieferbar |
+| 05 | Presse-Kit | P2 | **review** | B13, B16, B24, 02, 03 | 2026-08-30 · QA²: 37/44, kein neuer Befund; offen sind nur Material und Angaben (BF-93/94/96) |
 | B01 | Registrierung & E-Mail-Bestätigung | P0 | **approved** | — | 2026-08-23 · QA³: 17/20, nur mittlere Befunde offen |
 | B02 | Anmeldung mit Passwort | P0 | **approved** | B01 | 2026-08-24 · QA²: 16/17, repariert |
 | B03 | Passkey-Anmeldung & -Verwaltung | P0 | **deployed** | B01, B02 | 2026-08-29 · ENDLECH-6 live in v2026.08.29.1, auf Produktion belegt (302 statt 400) |
@@ -319,6 +487,7 @@ Eingang von `sdd-build`. Der Weg ist: `bestand` → `/sdd-erfassen BNN` →
 | 02 | Tastatur und Fokus, Wahrnehmbarkeit, Formulare, Zielgrößen, Sprache und Struktur, Mobil und App-Hülle, Verwaltung, Barrierefreiheitserklärung, Rückmeldeweg | projektweit; neu: Erklärungsseite `/barrierefreiheit` samt Meldeformular |
 | 03 | Fußzeilenbereich „Vergleiche“, Übersichtsseite, drei Vergleichsseiten mit Kurzfazit, Merkmalstabelle, Gegenposition und häufigen Fragen | neu: `/vergleich` und `/vergleich/{slug}`; berührt Fußzeile und Kopfbereich der App-Hülle |
 | 04 | Einwilligungs-Checkbox in drei Formularen, Abgleich der Kontakte in beide Richtungen, Löschkaskade bei Widerruf und Kontolöschung, Bestandsübertragung mit Trockenlauf, Sync-Stand in der Wartelisten-Verwaltung | berührt Partner-, Organisations- und Registrierformular sowie `/admin/warteliste`; neu: `docs/datenschutz.md` und der Werbe-Empfänger im Datenschutzabschnitt von `/legal` |
+| 05 | Presseseite mit Boilerplate in drei Längen, Faktenblatt aus den Livezahlen, Bildpaket zum Herunterladen samt Nutzungsbedingungen, Person und Zitate, Meldungen, Pressekontakt | neu: `/presse` und ein Verweisblock auf `/about`; berührt Fußzeile und `/legal` (Betreiberangaben) |
 | B01 | Registrierformular, Token 24 h, Bestätigungsmail, erneutes Senden, Hinweisseite | `RegistrationController`, `EmailVerificationController`, `RegistrationType`, `templates/registration/`, `templates/email_verification/`, `email/verification.html.twig` |
 | B02 | `form_login`, `remember_me`, Abmelden, Zugriffsregeln der `main`-Firewall | `SecurityController`, `config/packages/security.yaml`, `templates/security/login.html.twig` |
 | B03 | WebAuthn-Anmeldung ohne E-Mail-Eingabe, Passkeys anlegen/umbenennen/entfernen | `Security/PasskeyAuthenticator`, `Security/WebauthnUserEntityRepository`, `PasskeyController`, `Entity/WebauthnCredential`, `partials/_passkey_*`, `passkey_ui_controller.ts` |

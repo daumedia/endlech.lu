@@ -6,11 +6,32 @@
 <div class="container mx-auto px-4 py-12 max-w-2xl">
     <h1 class="text-3xl font-bold text-gray-900 mb-8">{{ 'legal.heading'|trans }}</h1>
 
+    {# ⚠ Betreiberangaben kommen aus denselben Parametern wie das Faktenblatt auf
+       /presse (Feature 05, AK-15). Vier Katalogeinträge wären vier Stellen, an
+       denen eine Anschrift auseinanderlaufen kann, und `CatalogueCompletenessTest`
+       prüft Vollständigkeit, nicht Gleichheit.
+
+       ⚠ Solange die Parameter leer sind (VB-03), bleibt der bisherige Text
+       stehen. Bewusst nicht der „wird ergänzt"-Hinweis von /presse: Ein Impressum
+       darf durch dieses Feature nicht weniger aussagen als vorher. #}
     <section class="mb-8">
         <h2 class="text-xl font-semibold text-gray-800 mb-3">{{ 'legal.info_title'|trans }}</h2>
-        <p class="text-gray-700 leading-relaxed">
-            {{ 'legal.info_text'|trans|nl2br }}
-        </p>
+        {% if operator_name is not empty %}
+            <p class="text-gray-700 leading-relaxed">
+                {{ operator_name }}{% if operator_address is not empty %}<br>
+                {{ operator_address|nl2br }}{% endif %}
+            </p>
+            {% if operator_responsible is not empty %}
+                <p class="text-gray-700 leading-relaxed mt-3">
+                    {{ 'legal.responsible_label'|trans }}<br>
+                    {{ operator_responsible|nl2br }}
+                </p>
+            {% endif %}
+        {% else %}
+            <p class="text-gray-700 leading-relaxed">
+                {{ 'legal.info_text'|trans|nl2br }}
+            </p>
+        {% endif %}
     </section>
 
     <section class="mb-8">

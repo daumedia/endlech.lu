@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{# Presseseite (Feature 05).
+
+   Überschriftenhierarchie (Feature 02, AK-15): genau ein <h1> im Kopfband, jede
+   Sektion <h2>, Karten <h3>. Keine übersprungene Ebene.
+
+   ⚠ Das Kopfband ist ein <section>, kein <div>. Der @media-print-Block in
+   assets/styles/app.css greift auf den Selektor `section.bg-linear-to-r`; als
+   <div> druckte es weiß auf weiß (EC-05).
+
+   ⚠ Die sieben Abschnitts-ids sind Vertrag, nicht Dekoration: Sie tragen die
+   Sprungmarken oben, erlauben den Verweis auf einen einzelnen Abschnitt aus einer
+   Mail an eine Redaktion, und PressControllerTest prüft sie in allen vier
+   Sprachen (AK-42).
+
+   Ein Ladezustand tritt nicht auf — serverseitig gerendert, nichts wird
+   nachgeladen. Der leere Zustand betrifft nur die Meldungen (_releases), der
+   Fehlerzustand nur das Paket (_material). #}
+
+{% block title %}{{ 'meta_title'|trans({}, 'press') }}{% endblock %}
+
+{% block meta_description %}
+    <meta name="description" content="{{ 'meta_description'|trans({}, 'press') }}">
+{% endblock %}
+
+{% block canonical %}
+    <link rel="canonical" href="{{ url('app_press_index') }}">
+{% endblock %}
+
+{% block body %}
+    {# === KOPFBAND ========================================================= #}
+    <section class="bg-linear-to-r from-cyan-700 to-purple-800 text-white py-20">
+        <div class="container mx-auto px-4 max-w-3xl">
+            <p class="inline-block bg-white/20 text-white text-sm font-semibold px-4 py-1.5 rounded-full mb-6">{{ 'eyebrow'|trans({}, 'press') }}</p>
+            <h1 class="text-3xl md:text-5xl font-bold mb-5 leading-tight">{{ 'heading'|trans({}, 'press') }}</h1>
+            <p class="text-lg text-cyan-50 leading-relaxed mb-8">{{ 'intro'|trans({}, 'press') }}</p>
+
+            <nav aria-label="{{ 'jump_label'|trans({}, 'press') }}">
+                <ul class="flex flex-wrap gap-2 text-sm">
+                    {% for anker, titel in {
+                        'boilerplate': 'boilerplate.section_title',
+                        'fakten': 'facts.section_title',
+                        'material': 'material.section_title',
+                        'person': 'person.section_title',
+                        'zitate': 'quotes.section_title',
+                        'meldungen': 'releases.section_title',
+                        'kontakt': 'contact.section_title'
+                    } %}
+                        <li>
+                            <a href="#{{ anker }}"
+                               class="inline-flex items-center min-h-[44px] rounded-full border border-white/40 px-4 font-semibold text-white motion-safe:transition hover:bg-white/10 focus:outline-2 focus:outline-offset-2 focus:outline-white">
+                                {{ titel|trans({}, 'press') }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </nav>
+        </div>
+    </section>
+
+    {% include 'press/_boilerplate.html.twig' %}
+    {% include 'press/_facts.html.twig' %}
+    {% include 'press/_material.html.twig' %}
+    {% include 'press/_person.html.twig' %}
+    {% include 'press/_quotes.html.twig' %}
+    {% include 'press/_releases.html.twig' %}
+    {% include 'press/_contact.html.twig' %}
+{% endblock %}
