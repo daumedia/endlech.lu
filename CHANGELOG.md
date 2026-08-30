@@ -7,6 +7,14 @@ Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
 ## [Unreleased]
 
+### App-Hülle · Kontaktadresse in der Fußzeile (2026-08-30)
+
+Die Fußzeile nennt `support@endlech.lu` statt `info@endlech.lu` — damit dieselbe Adresse
+wie der Pressekontakt. Unverändert bleiben zwei Stellen mit eigenem Zweck: der
+Kontaktweg im Impressum und der zugesagte Rückmeldeweg der Barrierefreiheitserklärung.
+Ebenfalls unverändert `CONTACT_EMAIL` — das ist der interne Empfänger der Team-Mail bei
+bestätigten Wartelisten-Anmeldungen, keine angezeigte Adresse.
+
 ### Feature 05 · Presse-Kit (2026-08-30)
 
 Unter `/presse` steht jetzt alles, was für einen Beitrag über Endlech.lu nötig ist:

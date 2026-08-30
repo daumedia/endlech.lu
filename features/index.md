@@ -433,6 +433,24 @@ umgewandelt.** Ohne die Schrift auf dem Zielsystem ersetzt der Betrachter sie. V
 Freigabe in Illustrator oder Affinity einmal outlinen — steht als Kommentar in beiden
 Dateien.
 
+**2026-08-30 · Dritter QA-Durchlauf von `05`: 42 von 44 — abgenommen.** Alle drei
+Vorbedingungen sind erfüllt, fünf Kriterien wechselten von offen auf bestanden, und **kein
+Prüflauf dieses Features überspringt mehr** (die zehn Übersprungenen der Suite stammen aus
+anderen Features). 741 Tests grün, axe null Verstöße in vier Sprachen, Angriffsdurchlauf
+ohne Fund — einschließlich der neuen Angriffsfläche: vier SVG von derselben Herkunft, ohne
+`<script>`, `onload` oder `foreignObject`.
+
+⚠ **AK-11 bleibt durchgefallen — als Entscheidung, nicht als Mangel.** Es wird keine
+Anschrift veröffentlicht (OF-04), damit kann „Betreiber mit vollständiger Anschrift" nicht
+bestehen. Das Impressum zitiert § 5 TMG / Art. 11 und erfüllt beides weiterhin nicht;
+dieses Feature hat den Zustand sichtbar gemacht, nicht verursacht. **Ob das Kriterium
+gestrichen oder zurückgenommen wird, gehört in die Spec und braucht Michaels Zustimmung.**
+
+Offen bleiben **BF-95** (wartet auf OF-09) und neu **BF-99** (mittel): Der Schriftzug der
+Wort-Bildmarken ist noch `<text>` statt Pfad — einmal outlinen, dann `make press-kit`
+erneut und `CACHE_VERSION` erhöhen. **AK-26** bleibt unprüfbar, solange keine
+Pressemitteilung existiert (OF-06). Nächster Schritt: `/sdd-deploy 05`.
+
 **Zwei Namensräume:** Einträge mit Präfix `B` sind **Bestand** — gebaut, bevor die
 SDD-Kette da war, und rückwirkend erfasst. Einträge **ohne** Präfix (`01`, `02`, …)
 entstehen durch die Kette und hatten eine Anforderung, bevor Code existierte. An der ID
@@ -452,7 +470,7 @@ Eingang von `sdd-build`. Der Weg ist: `bestand` → `/sdd-erfassen BNN` →
 | 02 | Barrierefreiheit der Plattform (EN 301 549 / RAWeb) | P0 | **deployed** | B01–B26 | 2026-08-29 · live in v2026.08.29 |
 | 03 | Vergleichsseiten (vs. Google Maps, Wheelmap, TripAdvisor) | P1 | **deployed** | B05, B13, B24, B16, 02 | 2026-08-29 · live in v2026.08.29, auf Produktion nachgeprüft |
 | 04 | Marketing-Kontakte in Brevo | P1 | **approved** | B01, B14, B15, B22, 01 | 2026-08-30 · QA⁴: 43/48, erster Durchlauf ohne Befund, 681 Tests grün — auslieferbar |
-| 05 | Presse-Kit | P2 | **review** | B13, B16, B24, 02, 03 | 2026-08-30 · QA²: 37/44, kein neuer Befund; offen sind nur Material und Angaben (BF-93/94/96) |
+| 05 | Presse-Kit | P2 | **approved** | B13, B16, B24, 02, 03 | 2026-08-30 · QA³: 42/44, production-ready → `/sdd-deploy 05` |
 | B01 | Registrierung & E-Mail-Bestätigung | P0 | **approved** | — | 2026-08-23 · QA³: 17/20, nur mittlere Befunde offen |
 | B02 | Anmeldung mit Passwort | P0 | **approved** | B01 | 2026-08-24 · QA²: 16/17, repariert |
 | B03 | Passkey-Anmeldung & -Verwaltung | P0 | **deployed** | B01, B02 | 2026-08-29 · ENDLECH-6 live in v2026.08.29.1, auf Produktion belegt (302 statt 400) |

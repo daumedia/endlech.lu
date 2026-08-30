@@ -86,6 +86,22 @@ zu warten, wurde der **vollständige Zustand hergestellt** (SVG-Platzhalter,
 statt 13 übersprungene Tests. Alle Prüf-Artefakte wurden wieder entfernt. Offen bleiben
 BF-93 bis BF-96 — **keiner davon hat einen Softwareanteil**.
 
+**2026-08-30 · Feature `05`, dritter Durchlauf: 42/44 — production-ready.** Die drei
+Vorbedingungen sind erfüllt; **fünf Kriterien wechselten von offen auf bestanden**, und
+**kein Prüflauf dieses Features überspringt mehr**. BF-93, BF-94 und BF-96 sind behoben.
+Neu ist allein **BF-99** (mittel, kein Codeanteil): Der Schriftzug der Wort-Bildmarken ist
+noch nicht in Pfade umgewandelt.
+
+⚠ **AK-11 bleibt durchgefallen, und das ist eine Entscheidung** (OF-04): Es wird keine
+Anschrift veröffentlicht. Das Impressum zitiert weiterhin § 5 TMG / Art. 11 Loi sur le
+commerce électronique und erfüllt beides nicht. Das Feature hat den Zustand sichtbar
+gemacht, nicht verursacht — vorher stand dort gar nichts außer dem Namen der Plattform.
+Ob AK-11 gestrichen oder zurückgenommen wird, entscheidet Michael in der Spec.
+
+Der Angriffsdurchlauf blieb zum dritten Mal ohne Fund, diesmal einschließlich der neuen
+Angriffsfläche: **vier SVG-Dateien von derselben Herkunft** — kein `<script>`, kein
+`onload`, kein `foreignObject`, kein nachgeladenes Bild.
+
 ## Offen
 
 | ID | Feature | Befund | Grad | Fundstelle | Status |
@@ -94,10 +110,11 @@ BF-93 bis BF-96 — **keiner davon hat einen Softwareanteil**.
 | BF-82 | 03 | Ein Anbietername von 57 Zeichen **ohne Leerzeichen** sprengt bei 320 px die Kartendarstellung (`scrollX=104`). Bis 30 Zeichen sauber; die realen Wortmarken sind 8–11 Zeichen | niedrig | `templates/comparison/_cards.html.twig` — `<dt>` ohne `overflow-wrap` | offen |
 | BF-90 | 04 | Nach einem `contactDeleted` bleibt bei zwei Quellen eine Zeile auf `synced` stehen, obwohl der Kontakt bei Brevo gelöscht ist: `record()` verweigert wegen der Sperre, `scheduleRemoval()` gibt `null` zurück. **Kein Datenabfluss** — bei Brevo steht nichts mehr —, aber ein lokaler Zustand, der nicht mehr stimmt, und eine Zeile, die niemand aufräumt | niedrig | `src/Marketing/MarketingContactRegistry.php` — `scheduleRemoval()` | offen |
 | BF-88 | 04 | Der AV-Vertrag mit Brevo ist in `docs/datenschutz.md` **nicht festgehalten**, sondern als „noch zu prüfen" markiert; das Prüfdatum fehlt (AK-33). Hängt an **OF-01**, der nie festgelegten Datenschutzstufe des Projekts. Keine Softwarefrage — aber die Freigabe-Sperre für den ersten echten Lauf | mittel | `docs/datenschutz.md` | offen |
-| BF-93 | 05 | Betreiberangaben fehlen auf `/presse` **und** `/legal`: Das Faktenblatt zeigt dreimal „Wird derzeit ergänzt", das Impressum unverändert „Endlech.lu / Luxemburg". AK-11 durchgefallen, AK-15 nicht prüfbar. **Kein Codeanteil** — die Mechanik (ein Parameter, zwei Seiten) steht und ist geprüft, die Werte fehlen (VB-03) | hoch | `config/services.yaml:40–42` | offen |
-| BF-94 | 05 | Kein Bildmaterial und kein Paket: vier von fünf Vorschauen laufen in HTTP 404, kein Downloadlink. AK-16 und AK-20 durchgefallen, AK-17/18/19/22 nicht prüfbar. **Kein Codeanteil** — `app:press:package` verweigert bewusst ein halbes Paket (Exit 1), drei Prüfläufe überspringen mit benannter Begründung (VB-01) | hoch | `public/presse/` fehlt · `src/Press/PressRegistry.php::assets()` | offen |
+| ~~BF-93~~ | 05 | **behoben 2026-08-30 (QA³)** · Betreiberangaben fehlten auf `/presse` **und** `/legal`: Das Faktenblatt zeigt dreimal „Wird derzeit ergänzt", das Impressum unverändert „Endlech.lu / Luxemburg". AK-11 durchgefallen, AK-15 nicht prüfbar. **Kein Codeanteil** — die Mechanik (ein Parameter, zwei Seiten) steht und ist geprüft, die Werte fehlen (VB-03) | hoch | `config/services.yaml:40–42` | **behoben** — Michael Ferreira als Betreiber und Verantwortlicher; `OperatorDetailsTest` läuft statt zu überspringen. ⚠ Die **Anschrift bleibt bewusst leer** (OF-04), damit kann AK-11 nicht bestehen |
+| ~~BF-94~~ | 05 | **behoben 2026-08-30 (QA³)** · Kein Bildmaterial und kein Paket: vier von fünf Vorschauen laufen in HTTP 404, kein Downloadlink. AK-16 und AK-20 durchgefallen, AK-17/18/19/22 nicht prüfbar. **Kein Codeanteil** — `app:press:package` verweigert bewusst ein halbes Paket (Exit 1), drei Prüfläufe überspringen mit benannter Begründung (VB-01) | hoch | `public/presse/` · `src/Press/PressRegistry.php::assets()` | **behoben** — vier Marken aus `logo.png` nachgezeichnet (0,244 % Abweichung), `make press-kit` gelaufen, Paket mit sechs Dateien |
 | BF-95 | 05 | Eine fehlende Vorschaudatei erzeugt ein Bruchbild statt eines Ersatzes — anders als beim Paket, wo der Kontaktweg an die Stelle des Knopfes tritt. Der Entwurf sieht einen Fehlerzustand nur für `PressPackage` vor. Braucht **erst ein Kriterium** (OF-09), dann Code | mittel | `templates/press/_material.html.twig:18–22` | offen |
-| BF-96 | 05 | Der Fotocredit nennt keinen Urheber („Bildnachweis wird ergänzt"). Die Nutzungsbedingung steht, die Urheberangabe fehlt — ein Presse-Kit, das ein Foto ohne Urheberangabe ausgibt, verursacht das Problem beim Abdruckenden (AK-24, OF-05) | mittel | `translations/press.*.yaml` → `person.photo_credit` | offen |
+| ~~BF-96~~ | 05 | **behoben 2026-08-30 (QA³)** · Der Fotocredit nannte keinen Urheber („Bildnachweis wird ergänzt"). Die Nutzungsbedingung steht, die Urheberangabe fehlt — ein Presse-Kit, das ein Foto ohne Urheberangabe ausgibt, verursacht das Problem beim Abdruckenden (AK-24, OF-05) | mittel | `translations/press.*.yaml` → `person.photo_credit` | **behoben** — Fotocredit nennt den Urheber, in vier Sprachen |
+| BF-99 | 05 | Der Schriftzug der beiden Wort-Bildmarken liegt als `<text>` vor, nicht als Pfad. Ohne die Schrift auf dem Zielsystem ersetzt der Betrachter sie — bei einer Wortmarke ist die Schrift die Marke. Die Bildmarke selbst ist sauber vektorisiert. Kein Codeanteil: einmal in Illustrator oder Affinity outlinen, dann `make press-kit` erneut | mittel | `public/presse/endlech-wortbildmarke.svg`, `…-invers.svg` | offen |
 | ~~BF-97~~ | 05 | **behoben 2026-08-30** · **Mit vorhandenem Materialpaket antwortet `/presse` in allen vier Sprachen mit HTTP 500.** `_material.html.twig:44` ruft `package.publicPath`; auf `PressPackage` ist der Pfad eine **Klassenkonstante**, und Twig löst `object.attr` nie über eine Konstante auf. Der Fehler liegt im **Regelfall** des Features und blieb verborgen, weil die Umgebung kein Paket hat — der einzige Lauf, der den Abschnitt anfasst, prüfte nur den Ersatzzweig | **kritisch** | `templates/press/_material.html.twig:44` gegen `src/Press/PressPackage.php:22` | **behoben, gegengeprüft 2026-08-30 (QA²)** — `PressPackage::publicPath()`; mit angelegtem Paket 200 in allen vier Sprachen, `PressPackageTest` läuft erstmals durch statt zu überspringen. **Noch nicht ausgeliefert** |
 | ~~BF-98~~ | 05 | **behoben 2026-08-30** · Zusammengesetzte Übersetzungsschlüssel (`'material.allowed_' ~ i`, die sechs `facts.*_value`) fallen durch **beide** Netze: `CatalogueCompletenessTest` erfasst nur Literale, `PressCatalogueTest` nur die von `PressRegistry` genannten. Entfernt man einen aus allen vier Katalogen, bleibt die Suite grün und die Seite zeigt den rohen Schlüssel. Heute ist nichts kaputt — die Absicherung fehlt. Derselbe blinde Fleck wie BF-56 | mittel | `tests/Unit/Translation/PressCatalogueTest.php:129–154` | **behoben, gegengeprüft 2026-08-30 (QA²)** — vierzehn Schlüssel als `ZUSAMMENGESETZTE_SCHLUESSEL`; beide Mutationsproben unabhängig wiederholt, beide werden rot, nach dem Wiederherstellen grün. **Noch nicht ausgeliefert** |
 
