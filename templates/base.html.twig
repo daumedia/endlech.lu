@@ -12,6 +12,17 @@
     {% block meta_description %}{% endblock %}
     {% block canonical %}{% endblock %}
 
+    {# Favicon.
+       ⚠ Browser fragen `/favicon.ico` beim ersten Besuch **von sich aus** an, auch
+       ohne Deklaration — und ohne die Datei stand auf jeder Seite ein 404 in der
+       Konsole (bei der Nachprüfung von v2026.08.30.1 aufgefallen). Die Datei liegt
+       jetzt im Wurzelverzeichnis, wo sie gesucht wird, und ist zusätzlich
+       ausdrücklich deklariert: Dann muss der Browser gar nicht erst raten.
+       Sie trägt dieselbe Marke wie die App-Icons, erzeugt aus `icons/icon-192.png`
+       in 16, 32 und 48 Punkten. #}
+    <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="16x16 32x32 48x48">
+    <link rel="icon" type="image/png" href="{{ asset('icons/icon-192.png') }}" sizes="192x192">
+
     {# PWA: Manifest, Theme-Farbe & iOS-spezifische Tags (Issue #83) #}
     <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
     <meta name="theme-color" content="#0891b2">

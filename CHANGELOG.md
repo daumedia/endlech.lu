@@ -5,6 +5,21 @@ Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 ![Version](https://img.shields.io/badge/version-2026.08.30.1-blue)
 ![Status](https://img.shields.io/badge/status-beta-green)
 
+## [Unreleased]
+
+### App-Hülle · Favicon
+
+`/favicon.ico` fehlte — und Browser fragen die Adresse beim ersten Besuch **von sich aus**
+an, auch ohne Deklaration. Auf jeder Seite stand dadurch ein 404 in der Konsole; bei der
+Nachprüfung von v2026.08.30.1 aufgefallen. Die Datei liegt jetzt im Wurzelverzeichnis
+(16, 32 und 48 Punkte in einer Datei, erzeugt aus `icons/icon-192.png`) und ist zusätzlich
+im Kopfbereich deklariert, damit der Browser nicht raten muss.
+
+⚠ `/apple-touch-icon.png` antwortet weiterhin mit 404 und bleibt es: iOS nimmt die im
+Kopfbereich deklarierten `apple-touch-icon`-Verweise, die es seit der PWA gibt. Die Adresse
+im Wurzelverzeichnis ist nur der Rückfall für Clients ohne HTML — sie zu bedienen hieße,
+dieselbe Datei zweimal auszuliefern.
+
 ## [2026.08.30.1] – Presse-Kurzlink repariert
 
 Nachtrag desselben Tages, ausgelöst durch die Nachprüfung des vorherigen Releases:
