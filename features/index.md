@@ -451,6 +451,27 @@ Wort-Bildmarken ist noch `<text>` statt Pfad — einmal outlinen, dann `make pre
 erneut und `CACHE_VERSION` erhöhen. **AK-26** bleibt unprüfbar, solange keine
 Pressemitteilung existiert (OF-06). Nächster Schritt: `/sdd-deploy 05`.
 
+**2026-08-30 · Release v2026.08.30 ist live.** Zwei Features auf einmal: `05` (Presse-Kit)
+und `04` (Marketing-Kontakte in Brevo), dazu die Fußzeilen-Adresse. **Zwei Migrationen**
+liefen mit, beide additiv (`marketing_contact`, `marketing_consent_at`, `self_confirmed_at`).
+Der Betreiber hat vorher gesichert; `BREVO_API_KEY` ist auf dem Server leer, damit ist
+Feature 04 still aus, bis T08 und BF-88 stehen.
+
+Auf Produktion nachgeprüft: Fußzeile zeigt **v2026.08.30** (Beleg, dass der neue Container
+läuft), `/presse` in allen vier Sprachen 200, das Paket lädt (1 097 194 Bytes, gültiges ZIP,
+sechs Einträge, kein defekter), alle vier Marken als `image/svg+xml`, das Faktenblatt zeigt
+**3 / 3 / 2 — identisch mit `/open.json`**, die Fußzeile nennt `support@endlech.lu`, das
+Impressum trägt erstmals einen Namen, die Einwilligungs-Checkbox von Feature 04 rendert
+(Beleg, dass die Migrationen durch sind), unbekannte Adressen ergeben 404 ohne Stacktrace,
+keine Testdaten in der Restaurantliste.
+
+⚠ **Ein kritischer Befund direkt nach dem Deploy: BF-100.** Der sprachfreie Kurzlink
+`/presse` läuft in eine endlose Weiterleitungsschleife — das neue Verzeichnis
+`public/presse/` trägt denselben Namen wie die Route, und Apaches `mod_dir` schickt
+`/presse` auf `/presse/`, während Symfony zurückschickt. **Lokal unsichtbar**, weil der
+Entwicklungsserver kein `mod_dir` hat. Feature `05` steht deshalb wieder auf `review`;
+der Rest des Releases ist unberührt. Weiter mit `/sdd-build 05`.
+
 **Zwei Namensräume:** Einträge mit Präfix `B` sind **Bestand** — gebaut, bevor die
 SDD-Kette da war, und rückwirkend erfasst. Einträge **ohne** Präfix (`01`, `02`, …)
 entstehen durch die Kette und hatten eine Anforderung, bevor Code existierte. An der ID
@@ -469,8 +490,8 @@ Eingang von `sdd-build`. Der Weg ist: `bestand` → `/sdd-erfassen BNN` →
 | 01 | Betroffenenrechte: Konto löschen, Daten exportieren, Passwort zurücksetzen | P0 | roadmap | B01, B04, B19 | 2026-08-23 · aus BF-04 herausgelöst |
 | 02 | Barrierefreiheit der Plattform (EN 301 549 / RAWeb) | P0 | **deployed** | B01–B26 | 2026-08-29 · live in v2026.08.29 |
 | 03 | Vergleichsseiten (vs. Google Maps, Wheelmap, TripAdvisor) | P1 | **deployed** | B05, B13, B24, B16, 02 | 2026-08-29 · live in v2026.08.29, auf Produktion nachgeprüft |
-| 04 | Marketing-Kontakte in Brevo | P1 | **approved** | B01, B14, B15, B22, 01 | 2026-08-30 · QA⁴: 43/48, erster Durchlauf ohne Befund, 681 Tests grün — auslieferbar |
-| 05 | Presse-Kit | P2 | **approved** | B13, B16, B24, 02, 03 | 2026-08-30 · QA³: 42/44, production-ready → `/sdd-deploy 05` |
+| 04 | Marketing-Kontakte in Brevo | P1 | **deployed** | B01, B14, B15, B22, 01 | 2026-08-30 · live in v2026.08.30, Migrationen durch, auf Produktion belegt |
+| 05 | Presse-Kit | P2 | **review** | B13, B16, B24, 02, 03 | 2026-08-30 · live in v2026.08.30, aber **BF-100 kritisch**: `/presse` schleift |
 | B01 | Registrierung & E-Mail-Bestätigung | P0 | **approved** | — | 2026-08-23 · QA³: 17/20, nur mittlere Befunde offen |
 | B02 | Anmeldung mit Passwort | P0 | **approved** | B01 | 2026-08-24 · QA²: 16/17, repariert |
 | B03 | Passkey-Anmeldung & -Verwaltung | P0 | **deployed** | B01, B02 | 2026-08-29 · ENDLECH-6 live in v2026.08.29.1, auf Produktion belegt (302 statt 400) |
