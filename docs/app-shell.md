@@ -200,16 +200,44 @@ Fußzeile auf kurzen Seiten unten bleibt.
 | 1 | Wortmarke, `footer.tagline`, GitHub-Link (`target="_blank"`, `rel="noopener noreferrer"`) |
 | 2 | `footer.links` — elf Einträge, siehe unten |
 | 3 | `footer.comparisons` — je ein Link pro Vergleich plus `footer.all_comparisons` (Feature 03) |
-| 4 | `footer.contact_title`, `footer.help_improve`, `mailto:info@endlech.lu` |
+| 4 | `footer.contact_title`, `footer.help_improve`, `mailto:support@endlech.lu` — darunter, abgesetzt durch `border-t`, `footer.roadmap` und `footer.changelog` (Feature 07) |
 
 Die Linkliste (Spalte 2), **elf Einträge**: Restaurants suchen · Restaurant
 vorschlagen · Kriterien · Partner · Organisationen · Open · Impressum ·
-Barrierefreiheit · **Presse** · Cookie-Einstellungen · Feedback
-(`endlech.userjot.com`, extern).
+Barrierefreiheit · **Presse** · Cookie-Einstellungen · **Feedback & Ideen**
+(`app_board_index`, intern).
+
+⚠ **Der Eintrag „Feedback & Ideen" zeigte bis 2026-08-30 auf
+`https://endlech.userjot.com`** — ein extern gehostetes Ideen-Board. Mit
+Feature `06` wurde er **ersetzt**, nicht ergänzt: Zwei Adressen für dieselbe
+Frage teilen Nutzer und Stimmen, und das eigene Board wäre von Anfang an halb
+leer. Der Übersetzungsschlüssel `footer.feedback` bleibt unverändert, nur das
+Ziel wechselt; `target="_blank"` und `rel` sind entfallen, weil der Verweis
+jetzt intern ist. Die Zahl der Einträge bleibt bei elf.
 
 Der Eintrag „Presse" kam mit Feature 05 dazu und steht bewusst in dieser Spalte
 statt in einer eigenen: Ein einzelner Link rechtfertigt keine fünfte Spalte, und
 bei `lg:` zöge sie die Fußzeile schief.
+
+⚠ **Roadmap und Changelog stehen in Spalte 4, nicht in Spalte 2** (Feature 07).
+Spalte 2 trägt bereits elf Einträge, und Feature 03 hat aus genau diesem Grund
+Spalte 3 aufgemacht. Eine **fünfte** Spalte bräche das `lg:grid-cols-4`-Raster —
+und die Kopfzeile hat mit **BF-80** ohnehin eine offene Umbruchlücke zwischen
+768 px und 1000 px; kein Feature sollte sie nebenbei vergrößern. Spalte 4 war die
+dünnste und trägt die zwei Einträge, ohne dass sich etwas verschiebt.
+
+⚠ **Die Fußzeile überschreibt ihre vier Spalten mit `<h4>`.** Da die letzte
+Inhaltsüberschrift jeder Seite eine `h2` ist, springt die Überschriftenkette
+seitenweit von h2 auf h4 — ein Screenreader meldet eine Ebene, zu der es keine
+übergeordnete gibt (WCAG 1.3.1). Beim Bau von Feature 07 gemessen und auf
+`/presse`, `/open`, `/about` und `/vergleich` gegengeprüft: **überall dasselbe**.
+Die Reparatur wäre eine Zeile hier, betrifft aber jede Seite und steht als OF-10
+in `features/07-roadmap-changelog/spec.md`.
+
+⚠ **Der `hreflang`-Block spiegelt die Abfragezeichenfolge.**
+`/de/roadmap?stage=secret` erzeugt `<link rel="alternate" href="/lb/roadmap?stage=secret">`
+— auf jeder Seite. Escaped, also kein XSS (nachgemessen), aber eine Eingabe des
+Aufrufers erscheint in der Antwort. Steht als OF-09 ebenda.
 
 **Spalte 3 kommt aus einer Twig-Erweiterung**, nicht aus dem Controller:
 `comparison_competitors()` in `src/Twig/ComparisonExtension.php`. Die Fußzeile wird

@@ -1,0 +1,61 @@
+# Öffentlicher Changelog (Feature 07). Eigene Domain neben `roadmap`, weil die
+# Einträge datengetrieben über `App\Roadmap\ReleaseNote::titleKey()` aufgerufen
+# werden — der Scanner in CatalogueCompletenessTest sieht solche Schlüssel nicht.
+# Die Lücke schließt RoadmapCatalogueTest.
+#
+# ⚠ Der Aktualitätshinweis liegt in der Domain `roadmap` (Schlüssel `freshness.*`):
+# beide Seiten teilen sich dasselbe Partial.
+meta_title: "Changelog – Endlech.lu"
+meta_description: "Was sich auf Endlech.lu geändert hat — verständlich zusammengefasst, nach Jahren geordnet."
+eyebrow: "Was sich geändert hat"
+heading: "Changelog"
+intro: "Was auf Endlech.lu dazugekommen ist — in verständlicher Sprache, ohne Fachbegriffe."
+
+empty:
+    title: "Noch kein Eintrag"
+    body: "Hier steht noch nichts. Die vollständige technische Fassung gibt es im Repository."
+
+year_heading: "%year%"
+
+summary:
+    title: "Aufbau der Plattform"
+    period: "Januar bis März 2026"
+    body: "In dieser Zeit ist Endlech.lu entstanden: Restaurantliste, Detailseiten, Konten, Zahlungsangaben, verifizierte Lokale und die ersten Angaben zur Barrierefreiheit. Die einzelnen Schritte sind im Repository nachlesbar."
+
+repo:
+    section_title: "Vollständige Fassung"
+    explainer: "Im Repository liegt der technische Changelog: jede Auslieferung, auch die rein internen, mit Fehlerbehebungen, Datenbankänderungen und Verweisen auf den Quelltext. Er ist für Entwicklerinnen und Entwickler geschrieben und nicht kommentiert."
+    language_note: "Nur auf Deutsch verfügbar."
+    link_label: "CHANGELOG.md auf GitHub öffnen"
+
+release:
+    v2026_08_31:
+        title: "Roadmap und Changelog"
+        body: "Zwei neue Seiten zeigen, woran gearbeitet wird: Die Roadmap führt in drei Spalten auf, was in Arbeit, geplant und angedacht ist — und was bewusst nicht gebaut wird. Der Changelog erzählt, was sich zuletzt geändert hat. Ohne Termine, dafür mit einer Begründung zu jedem Vorhaben."
+    v2026_08_30_2:
+        title: "Ideen-Board"
+        body: "Ein öffentliches Board für Vorschläge zur Plattform: Ideen einreichen, fremden zustimmen, und zu jeder Idee steht, was daraus geworden ist — auch dann, wenn die Antwort Nein lautet."
+    v2026_08_30:
+        title: "Presseseite und Neuigkeiten per E-Mail"
+        body: "Eine Presseseite mit fertigen Beschreibungstexten, aktuellen Zahlen und Logos zum Herunterladen. Wer auf einer der Wartelisten steht, kann sich außerdem für Neuigkeiten per E-Mail eintragen."
+    v2026_08_29:
+        title: "Vergleichsseiten und Barrierefreiheit"
+        body: "Drei Seiten, die Endlech.lu offen mit Google Maps, Wheelmap und TripAdvisor vergleichen — mit Quelle und Prüfdatum zu jeder Aussage. Dazu eine vollständige Überarbeitung für Tastatur, Screenreader und Kontrast und eine Seite, auf der der Stand der Barrierefreiheit nachlesbar ist."
+    v2026_08_09:
+        title: "Klare Antworten statt leerer Kästchen"
+        body: "Im Vorschlagsformular ersetzen drei Antworten — Ja, Nein, Weiß nicht — die früheren Häkchen. Ein leeres Kästchen bedeutete vorher zweierlei zugleich; bei Barrierefreiheit ist der Unterschied wesentlich."
+    v2026_06_19:
+        title: "Zum Home-Bildschirm hinzufügen"
+        body: "Endlech.lu lässt sich auf dem iPhone wie eine App installieren: eigenes Symbol, Vollbild und eine Seite, die auch ohne Netz etwas anzeigt. Unten erscheint eine Navigationsleiste in Daumenreichweite."
+    v2026_03_22:
+        title: "Öffnungszeiten, Küche und Haltestellen"
+        body: "Jedes Lokal kann mehrere Zeitfenster pro Tag führen, und die Liste lässt sich auf „jetzt geöffnet“ filtern. Dazu Küchen-Typen zum Filtern und die Haltestellen in der Nähe."
+    v2026_03_17:
+        title: "Profil und eigene Einreichungen"
+        body: "Ein eigenes Profil mit Bild, Namen und der Liste der Lokale, die man selbst eingereicht hat. Restaurants bekommen ein Titelbild."
+    v2026_03_08e:
+        title: "Fotos zu jedem Lokal"
+        body: "Mehrere Fotos je Restaurant, vergrößerbar und mit einer Beschreibung, die auch ein Screenreader vorlesen kann."
+    v2026_03_08d:
+        title: "Filter für die Restaurantliste"
+        body: "Die Liste lässt sich nach den Merkmalen filtern, auf die es ankommt: stufenloser Eingang, barrierefreies WC, Assistenzhunde und weitere."

@@ -7,12 +7,22 @@ unter `/legal` (`templates/impressum/index.html.twig`, Abschnitt „Datenschutz"
 Beide müssen zusammenpassen: Was hier als Empfänger steht und dort nicht, ist
 eine Lücke in der Erklärung — nicht in dieser Datei.
 
-> ⚠ **Offen: die Datenschutzstufe des Projekts (OF-01).** Das PRD legt keine
-> fest. Diese Datei geht von **Stufe B** aus (übliche Personendaten, keine
-> besonderen Kategorien nach Art. 9 DSGVO) — so, wie `features/04-brevo-marketing-kontakte/spec.md`
-> es annimmt. Die Annahme ist **nicht bestätigt**. Sie zu bestätigen oder zu
-> korrigieren ist eine Betreiberentscheidung; fällt sie auf eine höhere Stufe,
-> ist dieser Abschnitt und der Umfang der Übertragung an Brevo erneut zu prüfen.
+> ✅ **Datenschutzstufe: B — bestätigt am 2026-08-30** (Feature `06`, OF-04).
+> Übliche Personendaten, keine besonderen Kategorien nach Art. 9 DSGVO als
+> *erhobene* Daten.
+>
+> **Begründung:** Die Plattform erhebt Daten über **Restaurants**, nicht über
+> Gesundheit. Ein Konto führt Name, E-Mail-Adresse und Avatar. Eine Angabe nach
+> Art. 9 kann ausschließlich **unaufgefordert im Freitext** erscheinen — in der
+> Nachricht einer Wartelisten-Anmeldung, im Meldeformular auf
+> `/barrierefreiheit` oder seit Feature `06` in einer Board-Idee. Für genau
+> diesen Fall gelten die Maßnahmen unten.
+>
+> ⚠ **Wer ein Feld ergänzt, das eine Gesundheitsangabe strukturiert erfasst —
+> ein Ankreuzfeld „Rollstuhl", eine Auswahl „Art der Einschränkung" —, hebt
+> diese Einstufung auf.** Dann ist Stufe C fällig: Verarbeitungsverzeichnis
+> nach Art. 30, Datenminimierung als Entwurfsprinzip, Verschlüsselung auf
+> Feldebene prüfen, Folgenabschätzung erwägen.
 
 ---
 
@@ -88,6 +98,54 @@ Das ist derselbe fehlende Aufräumschritt wie bei den Wartelisten (B14/FB-02).
 eingeschaltet. Das PRD schließt Web-Analytics aus und begründet das mit
 Datensparsamkeit; ob das auch für Kampagnen gilt, ist nicht entschieden.
 
+### Community Feedback Board (Feature 06, seit 2026-08-30)
+
+| | |
+|---|---|
+| **Zweck** | Öffentliches Sammeln und Beantworten von Ideen **zur Plattform** |
+| **Rechtsgrundlage** | Art. 6 Abs. 1 lit. f — berechtigtes Interesse an der Weiterentwicklung; die Veröffentlichung geschieht auf Veranlassung der betroffenen Person selbst |
+| **Empfänger** | keine. Der Beitragstext verlässt das System an **niemanden** außer den Verfasser selbst |
+| **Speicherort** | eigene Datenbank (`board_idea`, `board_vote`) |
+
+**Verarbeitete Daten**
+
+| Feld | Inhalt |
+|---|---|
+| `title`, `description` | Freitext des Verfassers — **öffentlich sichtbar nach Freigabe** |
+| `submitted_by_id` | Verweis auf das Konto; `NULL` nach dessen Löschung |
+| `locale` | Sprache der Einreichung |
+| `board_vote` | welches Konto welcher Idee zugestimmt hat — **nicht öffentlich**, nur die Summe erscheint |
+
+⚠ **Der Beitragstext ist der erste öffentlich veröffentlichte Freitext des
+Projekts.** Auf einer Barrierefreiheitsplattform steht darin mit hoher
+Wahrscheinlichkeit eine Gesundheitsangabe des Verfassers („Ich bin auf einen
+Rollstuhl angewiesen und wünsche mir …"). Vermeiden lässt sich das nicht — der
+Text *ist* das Produkt. Eingegrenzt wird er dreifach:
+
+- **Hinweis vor dem Absenden** (AK-16): Das Formular sagt ausdrücklich, dass der
+  Text öffentlich wird und keine Gesundheits- oder Kontaktangaben enthalten soll.
+- **Freigabe vor Veröffentlichung** (AK-71): Kein Beitrag wird ohne Sichtung
+  öffentlich. Ein Text, der zu viel preisgibt, lässt sich vorher abfangen.
+- **Kein Abfluss** (AK-53, AK-54): Der Text geht an keinen Auftragsverarbeiter.
+  Die eine Mail an den Verfasser führt **Titel und Link, nicht den Volltext**;
+  Fehlerberichte an Sentry enthalten keine Beitragstexte
+  (`zend.exception_ignore_args=On`).
+
+**Löschung und Auskunft**
+
+- **Kontolöschung:** Wartende Einreichungen werden **mitgelöscht**.
+  Veröffentlichte Ideen bleiben stehen, ihr Verfasserbezug wird auf `NULL`
+  gesetzt — andere haben zugestimmt und das Team hat öffentlich geantwortet.
+  Der Anzeigename wird bei jeder Anzeige aus dem Konto abgeleitet und
+  verschwindet damit von selbst; es gibt **kein** eingefrorenes Namensfeld.
+  Abgegebene Zustimmungen verschwinden vollständig, die Zahl sinkt entsprechend.
+- **Löschfrist:** Nie freigegebene Einreichungen werden nach **zwölf Monaten**
+  gelöscht (`app:board:cleanup`, zusätzlich täglich beim Öffnen der
+  Moderationsschlange). Für veröffentlichte Ideen gibt es keine Frist — sie sind
+  Teil einer öffentlichen Zusage.
+- **Auskunft:** Der Datenexport eines Kontos führt seine eingereichten Ideen samt
+  Status **und** die Ideen, denen es zugestimmt hat.
+
 ### Weitere Verarbeiter
 
 | Dienst | Zweck | Sitz | Bemerkung |
@@ -105,7 +163,8 @@ Das ist AK-34 aus Feature 04 und keine Nacharbeit:
 - [ ] **AV-Vertrag mit Brevo geprüft und hier mit Datum eingetragen**
 - [ ] **`/legal` nennt Brevo als Empfänger für Werbezwecke** — nicht nur als
       Versanddienstleister
-- [ ] **OF-01 beantwortet** (Datenschutzstufe des Projekts)
+- [x] ~~**OF-01 beantwortet** (Datenschutzstufe des Projekts)~~ — **am 2026-08-30
+      auf Stufe B festgelegt**, siehe oben
 
 Erst danach: `app:marketing:import --commit` bzw. der erste Cron-Lauf mit
 gesetztem Schlüssel. **Kein Kontakt geht raus, bevor die Erklärung ihn nennt.**

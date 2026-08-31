@@ -649,6 +649,77 @@ auf Datenbankebene durch), `IDX_marketing_contact_state_updated` auf
 
 ---
 
+### BoardIdea
+
+`src/Entity/BoardIdea.php` · Tabelle `board_idea` · `BoardIdeaRepository`
+
+Eine Idee zur **Plattform** auf dem Community-Board (Feature 06). Nicht zu
+verwechseln mit `RestaurantSuggestion` — die schlägt ein *Lokal* vor.
+
+| Property | Spalte | Typ | Null | Anmerkung |
+|---|---|---|---|---|
+| `id` | `id` | `integer` PK | – | AUTO |
+| `title` | `title` | `varchar(120)` | nein | |
+| `description` | `description` | `longtext` | nein | max. 2000 Zeichen per Constraint |
+| `slug` | `slug` | `varchar(160)` | nein | **bewusst nicht unique**, siehe unten |
+| `status` | `status` | `varchar(20)` | nein | `enumType: BoardIdeaStatus` |
+| `submittedBy` | `submitted_by_id` | FK → `` `user` `` | ja | `ON DELETE SET NULL` |
+| `locale` | `locale` | `varchar(5)` | nein | Sprache der Einreichung |
+| `teamResponse` | `team_response` | `longtext` | ja | öffentliche Antwort; bei Ablehnung die Begründung |
+| `duplicateOf` | `duplicate_of_id` | FK → `board_idea` | ja | `ON DELETE SET NULL` |
+| `publishedAt` | `published_at` | `datetime` | ja | **`NULL` = wartet, gesetzt = öffentlich** |
+| `notifiedAt` | `notified_at` | `datetime` | ja | Sperre gegen einen zweiten Mailversand |
+| `createdAt` / `updatedAt` | – | `datetime` | nein | `updatedAt` per `#[ORM\PreUpdate]` |
+
+**Indizes:** `IDX_board_idea_public (published_at, status)`,
+`IDX_board_idea_queue (published_at, created_at)`.
+
+> **Warum die Sichtbarkeit an `published_at` hängt und nicht am Status.** Die
+> fünf Status beschreiben eine *öffentliche* Idee; „wartet auf Freigabe" ist eine
+> andere Achse. Vermischt könnte ein Statuswechsel eine veröffentlichte Idee vom
+> Netz nehmen. Getrennt ist die Zusage „kein Beitrag war je ohne Freigabe
+> öffentlich" eine einzige Bedingung.
+
+> **Warum der Slug nicht unique ist.** Die Adresse lautet `/{id}-{slug}` —
+> eindeutig macht sie die Kennung. Ein Unique-Index erzeugte bei zwei
+> gleichnamigen Ideen einen Serverfehler, und gleiche Titel sind auf einem
+> Wunschboard der Normalfall. `setSlug()` kürzt auf 160 Zeichen, weil der
+> Slugger ausdehnt (aus „ß" wird „ss", aus einem japanischen Zeichen bis zu drei
+> Buchstaben).
+
+> **Warum es kein Feld für den Anzeigenamen gibt.** Er wird bei jeder Anzeige aus
+> `submittedBy` abgeleitet (`App\Board\AuthorName`). Ein eingefrorener
+> Schnappschuss überlebte die Kontolöschung und wäre der Weg zurück zur Person,
+> den das Löschkonzept ausschließt.
+
+> **Warum es kein Zählerfeld für Zustimmungen gibt.** Gezählt wird in der
+> Abfrage. Ein Zählerfeld liefe auseinander, sobald die Fremdschlüssel-Kaskade
+> beim Kontolöschen Stimmen entfernt — das geschieht in der Datenbank, am
+> Anwendungscode vorbei.
+
+---
+
+### BoardVote
+
+`src/Entity/BoardVote.php` · Tabelle `board_vote` · `BoardVoteRepository`
+
+| Property | Spalte | Typ | Null | Anmerkung |
+|---|---|---|---|---|
+| `id` | `id` | `integer` PK | – | AUTO |
+| `idea` | `idea_id` | FK → `board_idea` | nein | **`ON DELETE CASCADE`** |
+| `user` | `user_id` | FK → `` `user` `` | nein | **`ON DELETE CASCADE`** |
+| `createdAt` | `created_at` | `datetime` | nein | |
+
+**Unique:** `UNIQ_board_vote_idea_user (idea_id, user_id)` — eine Stimme je Konto
+und Idee, erzwungen in der Datenbank.
+
+> ⚠ **Hier kaskadiert es, entgegen der Konvention oben** („`SET NULL`, wo der
+> Datensatz eigenständig weiterlebt"). Eine Stimme lebt *nicht* eigenständig
+> weiter: Sie ist die Handlung einer Person und ohne sie bedeutungslos. Genau das
+> ist der Unterschied zur Idee, die bleibt.
+
+---
+
 ### MetricSnapshot
 
 `src/Entity/MetricSnapshot.php` · Tabelle `metric_snapshot` · `MetricSnapshotRepository`
@@ -783,6 +854,22 @@ Methoden: `type()`, `transKey()`, `label()`, `emoji()`, `tracksQuantity()`,
 `type()` ist die **einzige** Quelle der Zuordnung Einnahme/Ausgabe im Projekt.
 `tracksQuantity()` gilt nur für `INCLUSION_BOX_MATERIALS` — das ist der einzige
 Posten, bei dem eine Stückzahl fachlich etwas bedeutet.
+
+### BoardIdeaStatus
+
+`src/Enum/BoardIdeaStatus.php` — `new` · `reviewing` · `planned` · `done` ·
+`declined`. Methoden `transKey()`, `label()`, `emoji()`, `badgeClasses()`.
+
+⚠ **„Wartet auf Freigabe" ist kein Fall dieses Enums** — das ist
+`publishedAt IS NULL`.
+
+⚠ **`transKey()` liefert einen flachen Schlüssel** (`board.status_new`). Der
+Katalogprüflauf scannt Template-Literale und `src/Form/`; einen in PHP
+zusammengesetzten Schlüssel sieht er nicht. Eine Abweichung fällt erst im
+Browser auf, als roher Schlüsselname auf der Seite — genau so beim Bau von
+Feature 06 einmal passiert.
+
+---
 
 ### Canton
 
@@ -1006,7 +1093,7 @@ gesetzt.
 
 ## Migrations-Historie
 
-34 Migrationen, Namespace `DoctrineMigrations`, Verzeichnis `migrations/`.
+35 Migrationen, Namespace `DoctrineMigrations`, Verzeichnis `migrations/`.
 Format `VersionYYYYMMDDHHMMSS.php`.
 
 ⚠ **Die Tabelle unten ist nicht vollständig: Sechs Migrationen vom 24. und
@@ -1046,6 +1133,7 @@ jemand gegen den Code gehalten haben.
 | `20260821000000` | `webauthn_credential`, `user.webauthn_handle` |
 | `20260829120000` | **Feature 04:** `marketing_contact` (Auftragsbuch) + `marketing_consent_at` an beiden Wartelisten und am User |
 | `20260829170000` | **BF-89:** `self_confirmed_at` an beiden Wartelisten — trennt den eingelösten Double-Opt-In vom Verwaltungs-Backfill |
+| `20260830120000` | `board_idea`, `board_vote` — Community Feedback Board (Feature 06) |
 
 > **Neue Migrationen müssen gegen MariaDB 10.5 laufen.** Lokal und in der CI
 > läuft MySQL 8.0, auf Production MariaDB 10.5 — und `deploy.sh` führt bei jedem

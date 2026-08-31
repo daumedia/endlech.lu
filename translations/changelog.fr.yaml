@@ -1,0 +1,55 @@
+# Journal des modifications public (Feature 07). Voir changelog.de.yaml pour le domaine.
+meta_title: "Journal des modifications – Endlech.lu"
+meta_description: "Ce qui a changé sur Endlech.lu — résumé en langage clair, classé par année."
+eyebrow: "Ce qui a changé"
+heading: "Journal des modifications"
+intro: "Ce qui s'est ajouté sur Endlech.lu — en langage clair, sans jargon technique."
+
+empty:
+    title: "Aucune entrée pour l'instant"
+    body: "Il n'y a encore rien ici. La version technique complète se trouve dans le dépôt."
+
+year_heading: "%year%"
+
+summary:
+    title: "Construction de la plateforme"
+    period: "De janvier à mars 2026"
+    body: "C'est la période où Endlech.lu a vu le jour : liste des restaurants, fiches détaillées, comptes, moyens de paiement, établissements vérifiés et les premières indications d'accessibilité. Le détail des étapes est consultable dans le dépôt."
+
+repo:
+    section_title: "Version complète"
+    explainer: "Le dépôt contient le journal technique : chaque mise en production, y compris purement interne, avec les corrections de bogues, les modifications de base de données et les renvois au code source. Il est écrit pour des développeurs et n'est pas commenté."
+    language_note: "Disponible uniquement en allemand."
+    link_label: "Ouvrir CHANGELOG.md sur GitHub"
+
+release:
+    v2026_08_31:
+        title: "Feuille de route et journal des modifications"
+        body: "Deux nouvelles pages montrent ce sur quoi nous travaillons : la feuille de route présente en trois colonnes ce qui est en cours, prévu et à l'étude — ainsi que ce que nous ne construisons délibérément pas. Le journal raconte ce qui a changé récemment. Sans dates, mais avec une justification pour chaque point."
+    v2026_08_30_2:
+        title: "Tableau d'idées"
+        body: "Un tableau public pour les propositions concernant la plateforme : proposer une idée, soutenir celle d'un autre, et pour chaque idée, ce qu'elle est devenue — y compris lorsque la réponse est non."
+    v2026_08_30:
+        title: "Page presse et actualités par e-mail"
+        body: "Une page presse avec des textes de présentation prêts à l'emploi, des chiffres actuels et des logos à télécharger. Les personnes inscrites sur une liste d'attente peuvent en outre recevoir les actualités par e-mail."
+    v2026_08_29:
+        title: "Pages de comparaison et accessibilité"
+        body: "Trois pages qui comparent ouvertement Endlech.lu à Google Maps, Wheelmap et TripAdvisor — chaque affirmation avec sa source et sa date de vérification. S'y ajoutent une refonte complète pour le clavier, les lecteurs d'écran et le contraste, ainsi qu'une page exposant l'état de l'accessibilité."
+    v2026_08_09:
+        title: "Des réponses claires plutôt que des cases vides"
+        body: "Dans le formulaire de proposition, trois réponses — oui, non, je ne sais pas — remplacent les anciennes cases à cocher. Une case vide signifiait auparavant deux choses à la fois ; en matière d'accessibilité, la différence est essentielle."
+    v2026_06_19:
+        title: "Ajouter à l'écran d'accueil"
+        body: "Endlech.lu s'installe sur iPhone comme une application : icône dédiée, plein écran et une page qui affiche encore quelque chose sans réseau. Une barre de navigation apparaît en bas, à portée de pouce."
+    v2026_03_22:
+        title: "Horaires, cuisine et arrêts de transport"
+        body: "Chaque établissement peut avoir plusieurs plages horaires par jour, et la liste se filtre sur « ouvert maintenant ». S'y ajoutent les types de cuisine comme filtre et les arrêts à proximité."
+    v2026_03_17:
+        title: "Profil et propositions personnelles"
+        body: "Un profil personnel avec photo, nom et la liste des établissements que l'on a soi-même proposés. Les restaurants reçoivent une photo de couverture."
+    v2026_03_08e:
+        title: "Photos pour chaque établissement"
+        body: "Plusieurs photos par restaurant, agrandissables et accompagnées d'une description qu'un lecteur d'écran peut restituer."
+    v2026_03_08d:
+        title: "Filtres pour la liste des restaurants"
+        body: "La liste se filtre selon les critères qui comptent : entrée de plain-pied, toilettes accessibles, chiens d'assistance et d'autres encore."
