@@ -1,0 +1,120 @@
+{% extends 'base.html.twig' %}
+
+{#
+    Der öffentliche Changelog (Feature 07).
+
+    ⚠ **Das laufende Jahr steht offen, frühere Jahre in einem <details>** (AK-22,
+    AK-23). Kein JavaScript und **kein handgeschriebenes `aria-expanded`**:
+    <details>/<summary> meldet seinen Zustand selbst an Screenreader, und ein von
+    Hand gesetztes Attribut ließe sich ohne Skript nie aktualisieren — es wäre nach
+    dem ersten Klick falsch. Dieselbe Regel steht in CLAUDE.md für die FAQ.
+
+    ⚠ **Nur gezeigte Releases erscheinen** (AK-21). Die stillen stehen in der
+    Registry, damit der Prüflauf sie kennt, nicht damit sie jemand liest.
+#}
+
+{% block title %}{{ 'meta_title'|trans({}, 'changelog') }}{% endblock %}
+
+{% block meta_description %}
+    <meta name="description" content="{{ 'meta_description'|trans({}, 'changelog') }}">
+{% endblock %}
+
+{% block canonical %}
+    <link rel="canonical" href="{{ url('app_changelog_index') }}">
+{% endblock %}
+
+{% macro entry(item, domain) %}
+    {% if item.version is defined %}
+        <article class="rounded-xl border border-gray-200 bg-white p-5">
+            <div class="mb-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                <h3 class="text-lg font-bold text-gray-900">{{ item.titleKey|trans({}, 'changelog') }}</h3>
+                <p class="text-sm text-gray-500">
+                    <time datetime="{{ item.date|date('Y-m-d') }}">{{ item.date|format_date('long') }}</time>
+                    <span class="mx-1" aria-hidden="true">·</span>
+                    <span class="font-mono text-xs">{{ item.version }}</span>
+                </p>
+            </div>
+            <p class="text-gray-700 leading-relaxed">{{ item.bodyKey|trans({}, 'changelog') }}</p>
+        </article>
+    {% else %}
+        {# Die Sammelzeile der Aufbauphase — kein Release, deshalb keine Version. #}
+        <article class="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-5">
+            <div class="mb-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                <h3 class="text-lg font-bold text-gray-900">{{ item.titleKey|trans({}, 'changelog') }}</h3>
+                <p class="text-sm text-gray-500">{{ item.periodKey|trans({}, 'changelog') }}</p>
+            </div>
+            <p class="text-gray-700 leading-relaxed">{{ item.bodyKey|trans({}, 'changelog') }}</p>
+        </article>
+    {% endif %}
+{% endmacro %}
+
+{% block body %}
+    {% import _self as parts %}
+
+    {# === KOPFBAND ========================================================= #}
+    <section class="bg-linear-to-r from-cyan-700 to-purple-800 text-white py-12 md:py-16">
+        <div class="container mx-auto px-4 max-w-3xl">
+            <p class="inline-block bg-white/20 text-white text-sm font-semibold px-4 py-1.5 rounded-full mb-4">{{ 'eyebrow'|trans({}, 'changelog') }}</p>
+            <h1 class="text-3xl md:text-4xl font-bold mb-3 leading-tight">{{ 'heading'|trans({}, 'changelog') }}</h1>
+            <p class="text-lg text-cyan-50 leading-relaxed">{{ 'intro'|trans({}, 'changelog') }}</p>
+        </div>
+    </section>
+
+    {# === EINTRÄGE ========================================================= #}
+    <section class="bg-white py-10 md:py-14">
+        <div class="container mx-auto px-4 max-w-3xl">
+            <div class="mb-6">
+                {% include 'partials/_freshness.html.twig' with {'lastChange': lastChange} only %}
+            </div>
+
+            {% if years is empty %}
+                {# Leerer Zustand (AK-25): erklärender Text, keine leere Seite. #}
+                <div class="rounded-xl border border-gray-200 bg-gray-50 p-6">
+                    <h2 class="text-lg font-bold text-gray-900">{{ 'empty.title'|trans({}, 'changelog') }}</h2>
+                    <p class="mt-2 text-gray-600">{{ 'empty.body'|trans({}, 'changelog') }}</p>
+                </div>
+            {% else %}
+                {% for year, entries in years %}
+                    {% if year == currentYear %}
+                        <section aria-labelledby="year-{{ year }}" class="mb-10">
+                            <h2 id="year-{{ year }}" class="mb-4 text-2xl font-bold text-gray-900">{{ 'year_heading'|trans({'%year%': year}, 'changelog') }}</h2>
+                            <div class="space-y-4">
+                                {% for item in entries %}{{ parts.entry(item, 'changelog') }}{% endfor %}
+                            </div>
+                        </section>
+                    {% else %}
+                        <details class="mb-4 rounded-xl border border-gray-200 bg-gray-50">
+                            <summary class="cursor-pointer px-5 py-4 text-lg font-bold text-gray-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600">
+                                {{ 'year_heading'|trans({'%year%': year}, 'changelog') }}
+                            </summary>
+                            <div class="space-y-4 px-5 pb-5">
+                                {% for item in entries %}{{ parts.entry(item, 'changelog') }}{% endfor %}
+                            </div>
+                        </details>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </div>
+    </section>
+
+    {# === VOLLSTÄNDIGE FASSUNG ============================================= #}
+    {#
+        AK-24 verlangt den Verweis samt Hinweis auf die Sprache, AK-51 den Satz
+        darüber, was den Leser dort erwartet (OF-05). Beide stehen hier bewusst
+        nebeneinander: Wer ohne Entwicklerhintergrund klickt, landet sonst
+        unvermittelt in Migrationsnamen.
+    #}
+    <section class="bg-gray-50 py-12" aria-labelledby="repo-heading">
+        <div class="container mx-auto px-4 max-w-3xl">
+            <h2 id="repo-heading" class="mb-3 text-2xl font-bold text-gray-900">{{ 'repo.section_title'|trans({}, 'changelog') }}</h2>
+            <p class="mb-2 text-gray-700 leading-relaxed">{{ 'repo.explainer'|trans({}, 'changelog') }}</p>
+            <p class="mb-4 text-sm text-gray-500">{{ 'repo.language_note'|trans({}, 'changelog') }}</p>
+            <a href="https://github.com/Mukaarts/endlech.lu/blob/dev/CHANGELOG.md"
+               rel="noopener"
+               class="inline-flex min-h-[48px] items-center gap-2 rounded-lg bg-cyan-700 px-5 py-3 font-semibold text-white hover:bg-cyan-800 motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-cyan-600">
+                {{ 'repo.link_label'|trans({}, 'changelog') }}
+                <span aria-hidden="true">↗</span>
+            </a>
+        </div>
+    </section>
+{% endblock %}

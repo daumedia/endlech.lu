@@ -1,0 +1,94 @@
+# Ëffentlech Roadmap (Feature 07). Kuck roadmap.de.yaml fir d'Wiel vun der Domain.
+meta_title: "Roadmap – Endlech.lu"
+meta_description: "Wourun elo geschafft gëtt, wat als Nächst kënnt a wat mir bewosst net bauen. Ouni Datumen, mat Begrënnung."
+eyebrow: "Wat mir bauen"
+heading: "Roadmap"
+intro: "Wourun elo geschafft gëtt, wat als Nächst kënnt — a wat mir bewosst net bauen."
+no_dates_hint: "Hei steet kee Datum. Endlech.lu gëtt niewebäi gebaut, an een Termin, deen näerens gehale ka ginn, ass keng Auskunft."
+
+stage:
+    in_progress:
+        title: "An Aarbecht"
+        empty: "Am Moment gëtt näischt Neies gebaut. Wat zulescht fäerdeg gouf, steet am Changelog."
+    planned:
+        title: "Geplangt"
+        empty: "Näischt fest geplangt — wat hei stoe sollt, seet eis am beschten d'Ideeën-Board."
+    considered:
+        title: "Ugeduecht"
+        empty: "Näischt weider ugeduecht. Virschléi si um Ideeën-Board wëllkomm."
+
+shelved:
+    section_title: "Bewosst net gebaut"
+    section_intro: "Dës Punkte kommen net — op alle Fall net esou. Si stinn hei, fir datt keen doropp waart."
+
+community:
+    heading: "Aus dem Ideeën-Board"
+    selection_hint: "Hei stinn déi zéng geplangten Ideeë mat de meeschten Zoustëmmungen. Wien um Board zoustëmmt, entscheet mat, wat dovunner uewe steet."
+    more: "{1}Nach eng geplangten Idee steet um Board.|]1,Inf[%count% weider geplangten Ideeë stinn um Board."
+    votes: "{0}Nach keng Zoustëmmung|{1}1 Zoustëmmung|]1,Inf[%count% Zoustëmmungen"
+    source_label: "Community-Idee"
+    open_board: "Op d'Ideeën-Board"
+
+more:
+    section_title: "Weiderliesen"
+    changelog_label: "Changelog"
+    changelog_hint: "Wat an de leschte Wochen a Méint dobäikomm ass."
+    board_label: "Ideeën-Board"
+    board_hint: "Eng eegen Idee araichen oder fir eng friem stëmmen."
+
+freshness:
+    label: "Stand: %date%"
+    stale: "Zulescht den %date% aktualiséiert — zënterhier sinn %days% Deeg vergaangen. Dës Säit ass eventuell net méi aktuell."
+    never: "Nach keen Androen am Changelog."
+
+item:
+    roadmap_changelog:
+        title: "Ëffentlech Roadmap a Changelog"
+        reason: "Dës Säit selwer. Vun dobaussen war bis elo net z'erkennen, ob nach un der Plattform geschafft gëtt."
+    reviews:
+        title: "Bewäertungen a Kommentaren"
+        reason: "Gäscht sollen hir eegen Erfarung zu engem Lokal hannerloosse kënnen, net nëmmen déi erfaassten Ugaben liesen."
+    map:
+        title: "Kaartenusiicht"
+        reason: "D'Koordinate leien un all Lokal scho vir. Et feelt d'Kaart, déi weist, wat an der Noperschaft ass."
+    favourites:
+        title: "Favoritten"
+        reason: "Lokaler markéieren, ouni se all Kéier nei ze sichen — den éischten Notzen vun engem Kont iwwer d'Araiche eraus."
+    ios_app:
+        title: "Native iOS-App"
+        reason: "D'Schnëttplaz dofir steet zënter Juni. Ob eng eege App sech lount, hänkt dovun of, ob et genuch Inhalt gëtt, deen ee ënnerwee brauch."
+    chat_widget:
+        title: "Chat-Fënster"
+        reason: "En direkten Draht fir Froen, déi kee Formulaire ofdeckt. Virdru muss gekläert ginn, wien äntwert a wéi séier."
+    ai_filter:
+        title: "KI-ënnerstëtzt Sich"
+        reason: "Eng Sich, déi op „mam Rollstull, roueg, mëttes op“ äntwert. Wat si genee kënne soll, ass nach net festgeluecht."
+    android_and_logins:
+        title: "Android-App, Google- an Apple-Umeldung"
+        reason: "Notéiert, well dono gefrot gouf. Keen vun den dräi Punkten ass bis elo begrënnt oder agerangéiert."
+
+shelved_item:
+    passkey_conditional_ui:
+        title: "Passkey-Virschlag am Umeldefeld"
+        reason: "Technesch méiglech, mä den eegene Passkey-Knapp erfëllt dee selwechten Zweck ouni zousätzlech Feelerquell."
+    passkey_signup:
+        title: "Kont mat engem Passkey uleeën"
+        reason: "E Kont brauch eng bestätegt E-Mail-Adress. Ouni si gëtt et kee Wee zréck, wann d'Apparat verluer geet."
+    passkey_api:
+        title: "Passkeys an der Schnëttplaz fir Apps"
+        reason: "D'App mellt sech mat engem Token un. En zweeten Umeldewee bréngt do kee zousätzleche Schutz."
+    passkey_attestation:
+        title: "Hierkonftspréifung vu Passkeys"
+        reason: "En Nowäis iwwer den Hiersteller vum Sécherheetsschlëssel géif Apparater aussperren, ouni datt een d'Ugaben auswäert."
+    apple_splash:
+        title: "Startbildschirmer fir d'iPhone-Installatioun"
+        reason: "En Dutzend Bilddateien pro Apparategréisst fir een Zéngtel Sekonn manner wäisse Bildschierm."
+    pull_to_refresh:
+        title: "Zéien fir ze aktualiséieren"
+        reason: "D'Säit lued bei all Opruff nei. D'Geste géif nobauen, wat de Browser schonn ka."
+    push_notifications:
+        title: "Push-Noriichten"
+        reason: "Ouni en Uleies, dat eng Ënnerbriechung rechtfäerdegt, ass eng Push-Noriicht nëmmen eng Stéierung. Wou eppes ze mellen ass, gëtt et eng E-Mail."
+    mobile_audit:
+        title: "Eemoleg Mobil-Duerchsiicht vun alle Säiten"
+        reason: "Amplaz vun enger eemoleger Duerchsiicht gëtt all nei Säit bei 320 Pixel gepréift. Dat hält méi laang."

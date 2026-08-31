@@ -983,6 +983,290 @@ Ein Bestandsfeature läuft **nicht** durch `sdd-tasks` und nicht durch den regul
 Eingang von `sdd-build`. Der Weg ist: `bestand` → `/sdd-erfassen BNN` →
 `rekonstruiert` → `/sdd-qa BNN`.
 
+**2026-08-30 · Feature `07` aufgenommen und spezifiziert.** Ein Besucher kann heute nicht
+erkennen, ob an der Plattform noch gearbeitet wird: Der Changelog liegt als `CHANGELOG.md`
+im Repository (21 Releases, einsprachig deutsch, mit Konstruktorargumenten im Text), die
+Roadmap als Tabelle in `docs/prd.md`. Bis zum 30. August gab es genau **eine** öffentlich
+sichtbare Statusanzeige — das externe Board `endlech.userjot.com`, das Feature `06` gerade
+abgeschaltet hat. Das eigene Board zeigt seither, was die Community will; was der Betreiber
+vorhat, zeigt es nicht.
+
+Die Spec setzt `/roadmap` und `/changelog` an: drei Status-Spalten (In Arbeit · Geplant ·
+Angedacht), **keine Termine**, ein eigener Block „Bewusst nicht gebaut“ mit den acht
+zurückgestellten Punkten aus `CLAUDE.md`, und ein Changelog als redaktionelle Kurzfassung
+in vier Sprachen — `CHANGELOG.md` bleibt die technische Fassung und wird verlinkt. Bauart
+wie `03` und `05`: keine Entität, keine Migration, eigene Übersetzungsdomain.
+
+⚠ **Zwei Entscheidungen aus dem Interview tragen das Feature.** Community-Ideen mit Status
+`Geplant` werden **live abgefragt statt kopiert** — eine zurückgezogene Idee kann sonst auf
+der Roadmap stehen bleiben, bis es jemand merkt. Und der Changelog zeigt **nur, was ein
+Besucher merkt**; die übrigen Releases tragen einen ausdrücklichen Vermerk „still“. Genau
+dieser Vermerk macht die Vollständigkeit erst prüfbar (AK-26): Ohne ihn könnte ein Prüflauf
+nicht zwischen „bewusst still“ und „vergessen“ unterscheiden, und die Absicherung des neuen
+fünften Punkts der Release-Checkliste wäre wertlos.
+
+⚠ **Kein Rate Limit — bewusst, mit Begründung.** Beide Seiten sind rein lesend; ein Deckel
+wäre die erste öffentliche Leseseite der Plattform, die Besucher aussperrt. Die Konvention
+aus `CLAUDE.md` (jeder Weg, der den gesamten Bestand lädt, braucht einen Deckel) wird
+stattdessen an der Ursache erfüllt: Zwischenspeicher plus harte Obergrenze von zehn Ideen,
+belegt durch AK-45 bis AK-47.
+
+⚠ **Drei Vorbedingungen blockieren die Auslieferung, keine davon ist Code:** Feature `06`
+ist abgenommen, aber **noch nicht nach `production` gemerged** (VB-01) — die Roadmap liest
+seinen Bestand und verlinkt auf ihn. Der Betreiber hat noch nicht festgelegt, welches der
+sieben PRD-Vorhaben in welcher Spalte steht (VB-02) — ohne das erfindet der Bau eine
+Priorisierung und veröffentlicht sie als Zusage. Und es steht nicht fest, welche der 21
+Altreleases rückwirkend einen Eintrag bekommen (VB-03).
+
+⚠ **OF-02 ist die unangenehme Frage und gehört Michael:** Kommt **Bewertungen und
+Kommentare** auf die Roadmap? Das PRD führt es als Risiko 1 — die Startseite wirbt seit
+jeher mit „echten Bewertungen“, die es nicht gibt. Auf der Roadmap wäre dieses Versprechen
+zum ersten Mal öffentlich als *noch nicht eingelöst* markiert; weggelassen, bleibt die Lücke
+unerwähnt. Sechs offene Fragen insgesamt, 50 Kriterien. Nächster Schritt:
+`/sdd-architektur 07`.
+
+**Entwurf am selben Tag.** Bauart wie `03` und `05`: keine Entität, keine Migration,
+Struktur als unveränderliche Wertobjekte unter `App\Roadmap\`, Texte in **zwei** eigenen
+Domains (`roadmap`, `changelog`) mit **einem** gemeinsamen Katalogtest. Zwei Seiten, ein
+Controller, zwei sprachfreie Kurzlinks. 50 von 50 Kriterien abgedeckt, zwei davon
+ausdrücklich **nicht durch Code** (AK-20: kein Codebegriff im Text; AK-40: keine
+Personennamen) — beide sind redaktionelle Zusagen an einen Text, den kein Prüflauf
+beurteilen kann, und stehen als solche vermerkt, damit die QA sie nicht für abgesichert
+hält.
+
+**Zwei Entscheidungen tragen den Entwurf.** Der Zwischenspeicher wird von einem
+**Doctrine-Entity-Listener** verworfen statt von Aufrufen in `BoardModerator` und
+`BoardVoteService` — er fasst Feature `06` nicht an und deckt jeden künftigen Schreibweg
+mit ab. Und der Begründungstext ist **Bestandteil des Wertobjekts**: Ein Roadmap-Eintrag
+ohne `…reason`-Schlüssel existiert strukturell nicht, weil der Katalogtest ihn in vier
+Sprachen verlangt. AK-05 und AK-29 sind damit erzwungen statt erbeten.
+
+⚠ **Vier Funde beim Entwerfen, die sonst erst beim Bauen aufgefallen wären.**
+**(1)** Der **Ideentitel im Board trägt keine Sprachauszeichnung** — Zeile 110 von
+`_board_idea_card.html.twig` zeichnet die Beschreibung aus, Zeile 86 den Titel nicht. Die
+Roadmap zeigt genau den Titel; AK-33 stellt die Auszeichnung dort **erstmals her**, statt
+ein Muster zu übernehmen. Die Spec behauptete das Gegenteil und ist korrigiert; im Board
+selbst bleibt die Lücke offen und gehört zu `06`. **(2)** `findPublishedPaginated()`
+schließt `Umgesetzt` aus und blättert zu zwanzigst — wer sie wiederverwendete, würfe die
+Hälfte weg; es braucht eine eigene Abfrage. **(3)** Die **Stimmen-Kaskade beim Kontolöschen
+läuft an Doctrine vorbei** (so im Changelog von `06` beschrieben): Ein Listener auf
+`BoardVote` allein sähe sie nicht, deshalb hängt er zusätzlich am gelöschten Konto, und die
+Lebensdauer von einer Stunde bleibt als zweites Netz — daraus **OF-07**. **(4)** Die
+**Fußzeilenspalte 2 ist voll** (elf Einträge); die zwei neuen Verweise gehen in Spalte 4,
+weil eine fünfte Spalte das `lg:grid-cols-4`-Raster bräche und die App-Hülle mit BF-80
+bereits eine offene Umbruchlücke hat.
+
+⚠ **Kein Rate Limit — als Entscheidung vermerkt, nicht als Lücke.** Die Konvention aus
+`CLAUDE.md` wird an der Ursache erfüllt: Die Begrenzung auf zehn Ideen steht **in der
+Abfrage**, damit lädt kein Aufruf je den Bestand. Ein Limiter wäre die erste öffentliche
+Leseseite der Plattform, die Besucher aussperrt.
+
+⚠ **Kein Verzeichnis `public/roadmap` und kein `public/changelog`** — sonst wiederholt sich
+BF-100 auf zwei neuen Adressen. `RouteDirectoryCollisionTest` deckt beide ohne Zutun ab,
+weil er die Ursache prüft und nicht das Verhalten. Nächster Schritt: `/sdd-tasks 07`.
+
+**Aufgabenplan am selben Tag.** 26 Aufgaben in fünf Ebenen, keine Migration. 49 der 50
+Kriterien tragen eine Aufgabe, alle elf Randfälle ebenfalls. Drei Entscheidungen prägen
+die Reihenfolge: Die **beiden Übersetzungsdomains stehen in Ebene 1** — dieselbe Lehre wie
+bei `04` und `05`, ein Katalogeintrag, der erst im Feinschliff entsteht, färbt den Prüflauf
+drei Ebenen früher rot. Die **beiden Prüfläufe stehen in Ebene 2 neben den Registries**,
+nicht am Ende: Sie lesen nur und schlagen bei leeren Listen zunächst fehl — genau das ist
+der Beleg, dass sie prüfen. Und **`npm run build` ist eine eigene Aufgabe** (T26), weil
+Tailwind die Templates scannt; bei Feature `04` erzwang eine einzige neue Klasse einen
+Neubau, den der Plan nicht vorgesehen hatte.
+
+⚠ **AK-40 trägt bewusst keine Aufgabe.** „Der Changelog nennt keine natürliche Person"
+lässt sich nicht bauen, nur abnehmen — ein Name unterscheidet sich für eine Maschine nicht
+von einem Produktnamen. Der Nachweis ist eine Handprüfung in der QA. Eine Alibi-Aufgabe
+dafür wäre schlimmer als keine: Sie sähe später aus wie eine Absicherung, die es nicht
+gibt. Dasselbe gilt zur Hälfte für **AK-20** — T18 baut die Seite, ob der Text die Zusage
+hält, liest ebenfalls die QA.
+
+⚠ **Zwei Aufgaben stehen still, bis der Betreiber entschieden hat:** **T07** (welches
+Vorhaben in welcher Spalte — VB-02, samt OF-02 zu den Bewertungen) und **T08** (welche der
+21 Altreleases öffentlich werden — VB-03). Beides ist keine Programmierarbeit, und ohne die
+Antworten entstünde eine erfundene Priorisierung beziehungsweise ein Changelog mit einem
+einzigen Eintrag. **VB-01 blockiert den Bau dagegen nicht**, nur die Auslieferung: `06`
+liegt abgenommen auf `dev`, darauf lässt sich bauen — ausgeliefert werden darf `07` erst
+danach. Nächster Schritt: `/sdd-build 07`.
+
+**2026-08-30 · Gebaut am selben Tag, alle 26 Aufgaben.** 907 Tests grün (vorher 741 mit
+Feature 06), davon 63 neu. Beide Seiten stehen in vier Sprachen; im Browser gemessen:
+**8 von 8 Aufrufen ohne Querscrollen bei 320 px**, „In Arbeit" im ersten Bildschirm,
+0 Konsolenfehler.
+
+**Vier Funde, die erst der Bau zutage brachte.** **(1)** Eine frisch eingeplante Idee hat
+**null** Zustimmungen — mein Pluralmuster kannte nur `{1}` und `]1,Inf[`, und die Seite
+antwortete mit **HTTP 500**. Genau der Regelfall. Behoben, `{0}`-Zweig in allen vier
+Katalogen. **(2)** Der **Zwischenspeicher ist über HTTP nicht testbar**: Der Testclient
+bootet den Kernel bei jedem Request neu, und selbst mit `disableReboot()` leert Symfonys
+`services_resetter` den Array-Adapter zwischen zwei Requests. Drei Läufe, die den Listener
+zu belegen schienen, belegten nichts — sie sind umgeschrieben, der echte Nachweis steht
+jetzt als Integrationstest. **(3)** Der `hreflang`-Block der App-Hülle **spiegelt die
+Abfragezeichenfolge** auf jeder Seite (OF-09). **(4)** Die **Fußzeile überschreibt ihre
+Spalten mit `<h4>`**, wodurch die Überschriftenkette jeder Seite von h2 auf h4 springt
+(OF-10) — der einzige axe-Verstoß, der nach Abzug der Debug-Toolbar übrig bleibt.
+
+⚠ **Vier Kriterien bleiben offen, keines davon aus eigenem Verschulden.** **AK-34**
+(axe null Verstöße) und **AK-38** (lückenlose Ebenen seitenweit) scheitern beide an
+OF-10; im Inhaltsbereich ist die Kette lückenlos. **AK-44** scheitert an OF-09 — escaped,
+also kein Sicherheitsproblem, aber eine Eingabe erscheint in der Antwort. **AK-20** und
+**AK-40** sind redaktionelle Zusagen an einen Text und werden in der QA gelesen.
+Nachgemessen an `/presse`, `/open`, `/about`, `/vergleich` und `/community/ideen`: OF-09
+und OF-10 treffen **jede** Seite des Projekts.
+
+⚠ **Eine bewusste Abweichung vom Entwurf:** `ReleaseVisibility` ist **dreiwertig**
+(`SHOWN`/`SUMMARISED`/`SILENT`) statt des vorgesehenen `public: bool`. Der Bool trägt die
+Sammelzeile aus OF-01 nicht — er müsste zwei Bedeutungen tragen, und genau daran hing
+BF-89. Erst die Dreiteilung macht `ChangelogCompletenessTest` aussagekräftig: „bewusst
+still" ist von „vergessen" unterscheidbar.
+
+**Die Release-Checkliste hat jetzt fünf Punkte** — der neue ist der einzige, den ein
+Prüflauf erzwingt. Beide neuen Läufe sind gegengeprüft: Ein entferntes Release färbt rot
+und nennt die Version, ein aus **allen vier** Katalogen entfernter Schlüssel ebenfalls —
+während `CatalogueCompletenessTest` dabei grün bleibt. Das ist der Beleg, warum es den
+zweiten Lauf braucht (BF-98).
+
+Nächster Schritt: `/sdd-qa 07`.
+
+**2026-08-30 · QA von `07`: 48 von 52 bestanden, nicht abgenommen.** Alle elf Randfälle
+geprüft (neun belegt, zwei redaktionell nicht herstellbar), Angriffsdurchlauf über alle
+acht Punkte. Der Zustand wurde **hergestellt statt abgewartet** — zwölf geplante Ideen mit
+gestaffelten Stimmen, eine nie freigegebene, je eine in den vier anderen Status; danach
+restlos entfernt.
+
+**Was der Prüflauf belegt, was kein Test konnte:** Eine über den ORM abgelehnte Idee
+verschwindet an der **laufenden Anwendung** ohne Deploy und ohne Cache-Leeren (1 → 0
+Treffer), eine depublizierte ebenso. Umgekehrt: 13 per SQL **am ORM vorbei** eingefügte
+Stimmen bleiben unsichtbar, bis `cache:pool:clear cache.roadmap` läuft — damit sind
+AK-46 und AK-47 erstmals unter Produktionsbedingungen belegt, nicht nur im Test.
+
+⚠ **Blockierend ist BF-108, und er sitzt genau dort, wo niemand gemessen hat.** Bei
+**768 px** ist der Titel jeder Community-Karte eine **senkrechte Buchstabenkolonne** —
+12 px breit, 648 px hoch; beim längsten Titel 2352 px. Bei 320 px (64 px) und 1280 px
+(176 px) ist nichts zu sehen; der Fehler lebt in der Mitte. **Es ist BF-107 zum zweiten
+Mal**: dieselbe Bauart (Titel neben `shrink-0`-Abzeichen im Flex-Container), die Feature
+`06` in zwei Anläufen gelöst hat — Feature `07` baute die Karte neu und begann von vorn.
+Daraus zwei neue projektweite Muster: *die Klassenkette gehört ins Design-System*, und
+*768 px gehört als dritte Messbreite in jedes Darstellungskriterium* (auch BF-80 wurde
+zweimal genau dort übersehen).
+
+**Drei Befunde ohne Codeanteil dieses Features:** **BF-109** (Fußzeile überschreibt mit
+`<h4>` → `heading-order` auf jeder Seite, blockiert AK-34 und AK-38) und **BF-110**
+(`hreflang` spiegelt die Abfragezeichenfolge, blockiert AK-44) sind **projektweite
+Altlasten der App-Hülle** — nachgemessen auf `/presse`, `/open`, `/about`, `/vergleich`
+und `/community/ideen`. **BF-111** gehört zu Feature `06`: Eine wartende Idee **ohne
+Verfasser** ist öffentlich lesbar (`null !== null` ist `false`), heute nicht erreichbar,
+aber die Prüfung ist richtig aus dem falschen Grund — und der vorhandene Test bemerkt es
+nicht, weil er nur den Fall *mit* Verfasser kennt.
+
+912 Tests grün, fünf davon neu aus der QA. Nächster Schritt: `/sdd-build 07` mit BF-108.
+
+**2026-08-30 · BF-108 behoben.** `flex-wrap` am Container, `basis-full min-w-0
+lg:basis-auto lg:flex-1` am Titel. ⚠ **Der Umbruchpunkt ist `lg:`, nicht `sm:` wie in
+Feature `06`** — dort füllt die Karte die Seitenbreite, hier steht sie in einer von drei
+Spalten: ab `md:` misst die Spalte 229 px, und mit `sm:` wäre genau der gemessene Fall
+stehen geblieben. Das Muster zu übernehmen hätte hier nicht gereicht; es musste
+verstanden werden.
+
+Gegen die Reproduktion aus dem Testbericht gemessen: **214 / 269 / 155 / 326 px** bei
+320 / 375 / 768 / 1280 px — gleichauf mit den kuratierten Einträgen daneben. Die Höhe des
+120-Zeichen-Titels fällt von **2352 px auf 168 px**, die gemessene Karte von 12 × 648 auf
+155 × 48 px. 320 px bleibt überlauffrei, axe unverändert.
+
+**Der neue Prüflauf fängt das Muster, nicht den Einzelfall:** `RoadmapCardLayoutTest`
+verlangt, dass **keine** Überschrift in einem Flex-Container neben einem
+`shrink-0`-Element steht, ohne selbst schrumpfen zu dürfen — geprüft über **beide**
+Kartenvorlagen (`/roadmap` und `/community/ideen`). Damit fällt eine dritte Karte dieser
+Bauart auf, bevor sie in die QA kommt. Zwei Gegenproben: Klassenkette entfernt → zwei
+Fehlschläge, `flex-wrap` entfernt → einer, wiederhergestellt → grün.
+
+**Nicht angefasst, weil außerhalb des Auftrags:** BF-109 und BF-110 (App-Hülle, jede
+Seite des Projekts) und BF-111 (Feature `06`). 915 Tests grün. Nächster Schritt:
+`/sdd-qa 07` — der dritte Messpunkt 768 px gehört in die Reihe.
+
+**2026-08-30 · Zweiter QA-Durchlauf: 49 von 52, kein neuer Befund — abgenommen.** Geprüft
+wurde nicht die Reparatur allein, sondern **ihre Umgebung**, nach der Lehre, die BF-108
+selbst geliefert hat: **36 Messpunkte von 320 bis 1440 px** statt vier. Ergebnis: Der
+Community-Titel ist auf der **gesamten Strecke** exakt so breit wie die kuratierten
+Einträge daneben (Verhältnis 1,00), bei 768 px 155 statt 12 px.
+
+⚠ **Ein Messwert sah nach einem Befund aus und war keiner.** Ab 1024 px fiel das Minimum
+über alle Titel auf 91 px — es betrifft ausschließlich den Titel „Kurz" (91 × 24 px, eine
+Zeile, lesbar). Ab `lg:` greift `lg:flex-1`, und ein kurzer Titel *soll* schmal sein.
+**Die selbst gewählte `lg:`-Annahme des Bauberichts trägt**, an vier Punkten um den
+Umbruch herum nachgeprüft.
+
+**Die Gegenprobe zum neuen Prüflauf wurde unabhängig geführt** — mit einem anderen
+Eingriff als der Bau: Klassen aus `_board_idea_card.html.twig` (**Feature 06**) entfernt,
+Roadmap unberührt → Lauf rot, nennt `/de/community/ideen`. Der Musterlauf fängt also
+tatsächlich beide Kartenvorlagen. Daraus ein Hinweis ohne Befundcharakter: Er liegt in
+der Testdatei von `07`, prüft aber eine **projektweite** Regel — bei nächster Gelegenheit
+gehört er an eine neutrale Stelle, sonst sucht jemand den Fehler am falschen Feature.
+
+⚠ **Das Querscrollen bei 768–832 px ist BF-80, nicht dieses Feature.** Mit ausgeblendetem
+`<header>` 0 px Überhang, und auf `/presse`, `/open`, `/about` und `/community/ideen`
+identisch (36 → 28 → 20 → 12 → 4 → 0). Erstmals über den vollen Bereich vermessen.
+
+**Drei Kriterien bleiben durchgefallen — alle drei ohne Codeanteil dieses Features:**
+AK-34 und AK-38 an BF-109 (Fußzeile mit `<h4>`), AK-44 an BF-110 (`hreflang` spiegelt).
+Beide sind *mittel* bzw. *niedrig* und blockieren nach den Regeln der Kette nicht; ihre
+Reparatur ist je eine Zeile in `base.html.twig` und verändert **jede** Seite.
+
+915 Tests grün, Prüfdaten restlos entfernt (`SELECT COUNT(*) FROM board_idea` → 0).
+Nächster Schritt: **`/sdd-deploy 07`** — ⚠ **erst nach Feature `06`** (VB-01).
+
+**2026-08-30 · Roadmap-Pflege im Admin: erwogen, bewusst vertagt — keine Spec.** Der
+Wunsch, die drei Spalten und den Block „Bewusst nicht gebaut" in der Verwaltung zu
+pflegen, kehrt eine **ausdrücklich begründete Entwurfsentscheidung** von `07` um
+(Decision Log 4: „Kuratierte Vorhaben stehen im Code", Alternative *Entität mit
+Verwaltungsmaske* verworfen). Betroffen wären 16 Einträge und **128 Texte in vier
+Sprachen**, die heute im Katalog liegen und von `RoadmapCatalogueTest` erzwungen werden.
+
+**Entscheidung: erst `07` ausliefern, dann anhand der Erfahrung entscheiden.** Ob die
+Pflege im Code wirklich stört, zeigt sich nach ein paar Releases — und beantwortet die
+Frage mit Beobachtung statt mit Vermutung. Es wurde **keine Spec geschrieben und kein
+Feature angelegt**; `07` bleibt unverändert `approved`.
+
+**Der Zuschnitt steht aber schon fest, falls es gebaut wird** — und er ist der schmale:
+
+| Frage | Entscheidung |
+|---|---|
+| Umfang | **Nur verschieben und Reihenfolge.** Kein Texteingabefeld im Admin |
+| Texte | **bleiben im Katalog.** Keine Migration, kein Datenverlust |
+| Changelog | **bleibt im Code.** AK-26 verlöre sonst seine Grundlage — ein Prüflauf kann eine Datenbank nicht gegen `CHANGELOG.md` halten |
+
+⚠ **Das ist der entscheidende Zuschnitt, nicht eine Detailfrage.** Solange nur die
+*Zuordnung* verwaltet wird und die Texte im Katalog bleiben, bleiben beide Zusagen
+strukturell erhalten: die vier Sprachen je Eintrag und die Begründungspflicht (AK-05,
+AK-29). Bei voller Pflege im Admin fielen beide weg — ein Eintrag ohne Begründung und
+eine Roadmap, die auf drei von vier Sprachfassungen unvollständig ist, wären erstmals
+möglich. **Wer das Thema später aufgreift, beginnt hier und nicht bei der Maske.**
+
+**2026-08-30 · Alle sieben offenen Fragen von `07` entschieden — das Feature ist
+baubereit.** VB-02 und VB-03 sind damit erfüllt, T07 und T08 stehen nicht mehr still.
+Die Spaltenzuordnung folgt dem PRD-Abschnitt „Vorschlag: Reihenfolge" (Bewertungen ·
+Karte · Favoriten unter *Geplant*, iOS · Chat-Widget · KI-Filter · Android unter
+*Angedacht*), „In Arbeit" trägt das Feature selbst. Der Changelog startet mit **neun**
+öffentlichen Releases plus einer Sammelzeile „Aufbau der Plattform"; alles Übrige trägt
+den Vermerk *still*. Der Zwischenspeicher hält **3600 s** — der Listener deckt die
+Änderungen ab, die Dauer ist nur das Netz.
+
+**Zwei Entscheidungen haben je ein Kriterium nachgetragen** — damit sind es **52**:
+**AK-51** (ein Satz neben dem Repo-Verweis, was den Leser dort erwartet, OF-05) und
+**AK-52** (die Auswahlregel der Community-Ideen steht **immer** über der Gruppe, auch
+bei weniger als zehn, OF-06). Beide sind in `design.md` und `tasks.md` zugeordnet; die
+Abdeckung ist maschinell gegengeprüft und lückenlos.
+
+⚠ **OF-02 ist entschieden und hat einen neuen offenen Punkt hinterlassen.**
+„Bewertungen und Kommentare" steht auf der Roadmap, aber **ohne Bezug auf das
+Werbeversprechen** der Startseite. Damit bleibt Risiko 1 aus dem PRD unberührt: Die
+Startseite wirbt weiter mit „Bewerten" und „Echte Bewertungen von echten Besuchern",
+und das Produkt kann es nicht. Festgehalten als **OF-08** in `spec.md`. Es gehört in
+ein eigenes Vorhaben — entweder die Funktion bauen oder die Texte anpassen —, **nicht
+in Feature `07`**; hier ist bewusst keine Feature-Zeile dafür angelegt worden, weil das
+eine neue Anforderung wäre und Michaels Entscheidung braucht.
+
 ## Inventar
 
 | ID | Feature | Prio | Status | Abhängig von | Zuletzt |
@@ -993,6 +1277,7 @@ Eingang von `sdd-build`. Der Weg ist: `bestand` → `/sdd-erfassen BNN` →
 | 04 | Marketing-Kontakte in Brevo | P1 | **deployed** | B01, B14, B15, B22, 01 | 2026-08-30 · live in v2026.08.30, Migrationen durch, auf Produktion belegt |
 | 05 | Presse-Kit | P2 | **deployed** | B13, B16, B24, 02, 03 | 2026-08-30 · live in v2026.08.30.1, auf Produktion nachgeprüft |
 | 06 | Community Feedback Board | P1 | **approved** | B01, B02, B19, B21, B24, 01, 02 | 2026-08-30 · auf `dev` als `v2026.08.30.2`, **wartet auf den Merge nach `production`** |
+| 07 | Öffentliche Roadmap und Changelog | P2 | **approved** | 06, B13, B16, B24, 02, 03, 05 | 2026-08-30 · QA²: 49/52, kein neuer Befund — ⚠ Deploy **nach** `06` |
 | B01 | Registrierung & E-Mail-Bestätigung | P0 | **approved** | — | 2026-08-23 · QA³: 17/20, nur mittlere Befunde offen |
 | B02 | Anmeldung mit Passwort | P0 | **approved** | B01 | 2026-08-24 · QA²: 16/17, repariert |
 | B03 | Passkey-Anmeldung & -Verwaltung | P0 | **deployed** | B01, B02 | 2026-08-29 · ENDLECH-6 live in v2026.08.29.1, auf Produktion belegt (302 statt 400) |
@@ -1029,6 +1314,7 @@ Eingang von `sdd-build`. Der Weg ist: `bestand` → `/sdd-erfassen BNN` →
 | 04 | Einwilligungs-Checkbox in drei Formularen, Abgleich der Kontakte in beide Richtungen, Löschkaskade bei Widerruf und Kontolöschung, Bestandsübertragung mit Trockenlauf, Sync-Stand in der Wartelisten-Verwaltung | berührt Partner-, Organisations- und Registrierformular sowie `/admin/warteliste`; neu: `docs/datenschutz.md` und der Werbe-Empfänger im Datenschutzabschnitt von `/legal` |
 | 05 | Presseseite mit Boilerplate in drei Längen, Faktenblatt aus den Livezahlen, Bildpaket zum Herunterladen samt Nutzungsbedingungen, Person und Zitate, Meldungen, Pressekontakt | neu: `/presse` und ein Verweisblock auf `/about`; berührt Fußzeile und `/legal` (Betreiberangaben) |
 | 06 | Öffentliches Ideen-Board zur Plattform: Einreichen mit Konto, Freigabe vor Veröffentlichung, Zustimmung, fünf Status mit erzwungener Ablehnungsbegründung, Dublettenzusammenführung, eine Mail bei Veröffentlichung | neu: `/community/ideen` und die Warteschlange in der Verwaltung; berührt Fußzeile, Admin-Dashboard sowie Kontolöschung und Datenexport aus Feature `01` |
+| 07 | Zwei öffentliche Seiten: Roadmap in drei Status-Spalten samt Block „Bewusst nicht gebaut“, Changelog als redaktionelle Kurzfassung je Release nach Jahren gruppiert; Community-Ideen mit Status `Geplant` werden live eingezogen | neu: `/roadmap` und `/changelog`; berührt Fußzeile, `docs/prd.md` (Roadmap-Tabelle) und die Release-Checkliste in `CLAUDE.md` |
 | B01 | Registrierformular, Token 24 h, Bestätigungsmail, erneutes Senden, Hinweisseite | `RegistrationController`, `EmailVerificationController`, `RegistrationType`, `templates/registration/`, `templates/email_verification/`, `email/verification.html.twig` |
 | B02 | `form_login`, `remember_me`, Abmelden, Zugriffsregeln der `main`-Firewall | `SecurityController`, `config/packages/security.yaml`, `templates/security/login.html.twig` |
 | B03 | WebAuthn-Anmeldung ohne E-Mail-Eingabe, Passkeys anlegen/umbenennen/entfernen | `Security/PasskeyAuthenticator`, `Security/WebauthnUserEntityRepository`, `PasskeyController`, `Entity/WebauthnCredential`, `partials/_passkey_*`, `passkey_ui_controller.ts` |

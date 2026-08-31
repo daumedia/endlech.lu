@@ -133,6 +133,62 @@ class BoardIdeaRepository extends ServiceEntityRepository
     }
 
     /**
+     * Die geplanten Ideen für die öffentliche Roadmap (Feature 07, AK-12, AK-17).
+     *
+     * ⚠ **Eigene Methode statt `findPublishedPaginated()` mit Status-Filter.** Jene
+     * liefert 20 Einträge je Seite, baut einen `Paginator` und behandelt
+     * `Umgesetzt` gesondert — für zehn Einträge ohne Blätterung wäre die Hälfte
+     * der Rückgabe Abfall.
+     *
+     * ⚠ **Gezählt wird über `COUNT(...) AS HIDDEN` mit `GROUP BY`, nicht über
+     * einen `addSelect`-Join.** Ein fetch-join vervielfacht die SQL-Zeilen je
+     * Entität, und `setMaxResults()` begrenzt Zeilen, nicht Objekte — eine Idee
+     * mit zwölf Stimmen füllte sonst allein die ganze Spalte (BF-64).
+     *
+     * Sichtbarkeit wie im Board: nur freigegebene Ideen, keine zusammengeführten
+     * Dubletten. Der Filter steht in den Kriterien und nicht in der Ausgabe, damit
+     * eine wartende Idee nicht im ausgelieferten Quelltext landet (AK-14, AK-43).
+     *
+     * @return BoardIdea[]
+     */
+    public function findPublishedPlanned(int $limit): array
+    {
+        return $this->createQueryBuilder('i')
+            ->addSelect('COUNT(v.id) AS HIDDEN stimmen')
+            ->leftJoin('i.votes', 'v')
+            ->andWhere('i.publishedAt IS NOT NULL')
+            ->andWhere('i.duplicateOf IS NULL')
+            ->andWhere('i.status = :status')
+            ->setParameter('status', BoardIdeaStatus::PLANNED)
+            ->groupBy('i.id')
+            ->orderBy('stimmen', 'DESC')
+            // Zweitschlüssel bei Gleichstand: die neuere Idee steht oben (EC-03).
+            ->addOrderBy('i.publishedAt', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Wie viele geplante Ideen es insgesamt gibt (AK-17, EC-04).
+     *
+     * Eine eigene Zählabfrage statt eines zweiten Durchlaufs über den Bestand:
+     * Damit lädt auch bei zweihundert geplanten Ideen kein Aufruf mehr als die
+     * zehn angezeigten (AK-45).
+     */
+    public function countPublishedPlanned(): int
+    {
+        return (int) $this->createQueryBuilder('i')
+            ->select('COUNT(i.id)')
+            ->andWhere('i.publishedAt IS NOT NULL')
+            ->andWhere('i.duplicateOf IS NULL')
+            ->andWhere('i.status = :status')
+            ->setParameter('status', BoardIdeaStatus::PLANNED)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
      * Die Moderationsschlange: älteste zuerst (AK-24).
      *
      * @return BoardIdea[]

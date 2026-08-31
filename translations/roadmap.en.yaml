@@ -1,0 +1,94 @@
+# Public roadmap (Feature 07). See roadmap.de.yaml for why this is its own domain.
+meta_title: "Roadmap – Endlech.lu"
+meta_description: "What we are building now, what comes next, and what we deliberately will not build. No dates, with reasons."
+eyebrow: "What we are building"
+heading: "Roadmap"
+intro: "What we are working on, what comes next — and what we deliberately will not build."
+no_dates_hint: "There are no dates here. Endlech.lu is built alongside a day job, and a deadline nobody can keep is not information."
+
+stage:
+    in_progress:
+        title: "In progress"
+        empty: "Nothing new is being built right now. What was finished most recently is in the changelog."
+    planned:
+        title: "Planned"
+        empty: "Nothing firmly planned — the idea board is the best place to tell us what belongs here."
+    considered:
+        title: "Under consideration"
+        empty: "Nothing else under consideration. Suggestions are welcome on the idea board."
+
+shelved:
+    section_title: "Deliberately not built"
+    section_intro: "These are not coming — at least not in this form. They are listed here so that nobody waits for them."
+
+community:
+    heading: "From the idea board"
+    selection_hint: "These are the ten planned ideas with the most support. Supporting an idea on the board decides what appears at the top."
+    more: "{1}One more planned idea is on the board.|]1,Inf[%count% more planned ideas are on the board."
+    votes: "{0}No votes yet|{1}1 vote|]1,Inf[%count% votes"
+    source_label: "Community idea"
+    open_board: "Go to the idea board"
+
+more:
+    section_title: "Read on"
+    changelog_label: "Changelog"
+    changelog_hint: "What has been added over the past weeks and months."
+    board_label: "Idea board"
+    board_hint: "Submit your own idea or support someone else's."
+
+freshness:
+    label: "Last updated: %date%"
+    stale: "Last updated on %date% — that was %days% days ago. This page may no longer be current."
+    never: "No changelog entry yet."
+
+item:
+    roadmap_changelog:
+        title: "Public roadmap and changelog"
+        reason: "This page itself. From the outside there was no way to tell whether the platform was still being worked on."
+    reviews:
+        title: "Reviews and comments"
+        reason: "Guests should be able to share their own experience of a venue, not only read the recorded details."
+    map:
+        title: "Map view"
+        reason: "Coordinates already exist for every venue. What is missing is the map that shows what is nearby."
+    favourites:
+        title: "Favourites"
+        reason: "Save venues instead of searching for them again — the first use of an account beyond submitting."
+    ios_app:
+        title: "Native iOS app"
+        reason: "The interface for it has existed since June. Whether a dedicated app is worth it depends on there being enough content people need while out."
+    chat_widget:
+        title: "Chat window"
+        reason: "A direct line for questions no form covers. Who answers, and how quickly, has to be settled first."
+    ai_filter:
+        title: "AI-assisted search"
+        reason: "A search that answers “wheelchair, quiet, open at lunchtime”. What exactly it should be able to do is not yet defined."
+    android_and_logins:
+        title: "Android app, Google and Apple sign-in"
+        reason: "Noted because it was asked for. None of the three has been justified or prioritised so far."
+
+shelved_item:
+    passkey_conditional_ui:
+        title: "Passkey suggestion in the sign-in field"
+        reason: "Technically possible, but our own passkey button serves the same purpose without an extra source of failure."
+    passkey_signup:
+        title: "Creating an account with a passkey"
+        reason: "An account needs a confirmed email address. Without one there would be no way back if the device is lost."
+    passkey_api:
+        title: "Passkeys in the app interface"
+        reason: "The app signs in with a token. A second sign-in route would add no protection there."
+    passkey_attestation:
+        title: "Verifying where a passkey comes from"
+        reason: "Requiring proof of the security key's manufacturer would shut out devices without anyone evaluating that information."
+    apple_splash:
+        title: "Launch screens for iPhone installation"
+        reason: "A dozen image files per device size for a tenth of a second less white screen."
+    pull_to_refresh:
+        title: "Pull to refresh"
+        reason: "The page reloads on every request. The gesture would rebuild what the browser already does."
+    push_notifications:
+        title: "Push notifications"
+        reason: "Without a reason that justifies an interruption, a push notification is just a disturbance. Where there is something to report, there is an email."
+    mobile_audit:
+        title: "A one-off mobile review of every page"
+        reason: "Instead of a one-off review, every new page is checked at 320 pixels. That lasts longer."
