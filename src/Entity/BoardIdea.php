@@ -79,8 +79,24 @@ class BoardIdea
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $teamResponse = null;
 
-    /** Gesetzt = als Dublette zusammengeführt; die Adresse leitet dann auf das Original. */
-    #[ORM\ManyToOne]
+    /**
+     * Gesetzt = als Dublette zusammengeführt; die Adresse leitet dann auf das Original.
+     *
+     * ⚠ **`targetEntity` ist Pflicht, weil der Property-Typ `?self` lautet (BF-116).**
+     * Ohne die Angabe leitet Doctrine das Ziel aus dem Typ ab — und **PHP 8.4 löst
+     * `self` dort nicht zur Klasse auf**, sondern übergibt den Namen wörtlich. Auf
+     * Produktion brach `cache:clear` deshalb ab: „The target-entity `App\Entity\self`
+     * cannot be found in `App\Entity\BoardIdea#duplicateOf`." Der Deploy vom
+     * 2026-08-31 scheiterte daran und musste zurückgerollt werden.
+     *
+     * ⚠ **Lokal nicht reproduzierbar** — hier läuft PHP 8.5.2, dort greift die
+     * Auflösung, und `cache:clear --env=prod` ist grün. Dritter Fall der Sorte
+     * „lokal ≠ Produktion" nach `mod_dir` (BF-100) und MySQL 8 gegen MariaDB 10.5.
+     *
+     * `self::class` wird zur Übersetzungszeit aufgelöst und ist damit von jeder
+     * Sprachversion unabhängig. `MappingSelfTargetTest` hält die Regel fest.
+     */
+    #[ORM\ManyToOne(targetEntity: self::class)]
     #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?self $duplicateOf = null;
 

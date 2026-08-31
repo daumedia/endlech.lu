@@ -1388,6 +1388,104 @@ nichts mehr.
 Nächster Schritt: **`/sdd-deploy`** — die Release-Vorbereitung für `v2026.08.30.3` liegt
 fertig auf `dev`. ⚠ Erst Feature `06`, dann `07` (VB-01).
 
+**2026-08-31 · Deploy von `v2026.08.31` gescheitert und zurückgerollt — BF-116.** Der
+Preflight lief vollständig durch (920 Tests, Prod-Container grün, Assets deterministisch);
+dabei fiel auf, dass die gestern vorbereitete Version **falsch datiert** war
+(`2026.08.30.3` bei einer Auslieferung am 31.) — korrigiert auf **v2026.08.31** über alle
+fünf Stellen der Checkliste.
+
+⚠ **Auf Produktion brach `cache:clear` ab:** *„The target-entity `App\Entity\self` cannot
+be found in `App\Entity\BoardIdea#duplicateOf`."* Ursache ist `#[ORM\ManyToOne]` **ohne
+`targetEntity`** bei einem Property vom Typ `?self` — Doctrine leitet das Ziel aus dem Typ
+ab, und **PHP 8.4** (Produktion) löst `self` dort nicht zur Klasse auf. **Lokal läuft PHP
+8.5.2**, dort greift die Auflösung; `cache:warmup --env=prod` und
+`doctrine:schema:validate` waren grün.
+
+**Die Wartungsseite blieb wie vorgesehen stehen** (ENDLECH-5), die Seite antwortete mit
+503. **Rollback per Revert-Commit**, Lauf grün, Seite wieder online — `/`,
+`/de/restaurants` und `/de/open` mit 200, Fußzeile zeigt **v2026.08.30.1**, die neuen
+Adressen erwartungsgemäß 404.
+
+⚠ **Die Datenbank blieb unberührt.** Der Abbruch kam im `composer install`-Post-Script,
+also **vor** `doctrine:migrations:migrate` — im Protokoll null Migrations-Zeilen. Der
+Rollback war deshalb gefahrlos, und die Sicherung wurde nicht gebraucht.
+
+**Daraus das dritte Muster der Sorte „lokal ≠ Produktion":** Nach `mod_dir` (BF-100) und
+MySQL 8 gegen MariaDB 10.5 ist es jetzt die **PHP-Version**. Alle drei sind vor dem Deploy
+unsichtbar und von keinem Prüflauf erfasst. *Was aus der Laufzeitumgebung kommt —
+Webserver, Datenbank, Sprachversion —, ist lokal nicht geprüft, sondern nur nicht
+aufgefallen.*
+
+**Feature `06` steht damit auf `review`** (kritischer Befund an ausgeliefertem Code-Stand),
+**Feature `07` bleibt `approved`** und ist auslieferbar, kommt aber nicht raus, solange
+`06` blockiert (VB-01). Nächster Schritt: **`/sdd-build 06`** mit BF-116 — die Reparatur
+ist `targetEntity: self::class`.
+
+**2026-08-31 · BF-116 behoben.** `#[ORM\ManyToOne(targetEntity: self::class)]` —
+`self::class` wird zur Übersetzungszeit aufgelöst und ist von der Sprachversion
+unabhängig. Doctrine meldet lokal jetzt wie zuvor `App\Entity\BoardIdea`;
+`cache:clear --env=prod` bleibt grün. 922 Tests.
+
+⚠ **Der Fehler ist lokal nicht reproduzierbar, und das prägt den Nachweis.** PHP 8.4
+steht auf diesem Rechner nicht zur Verfügung (nur 8.3 als Symlink auf 8.5 und 8.5
+selbst), und auf 8.5 löst Doctrine `?self` korrekt auf. **Jede verhaltensbasierte
+Prüfung bliebe hier blind.** Der Nachweis ist deshalb ein **statischer** Prüflauf:
+`MappingSelfTargetTest` verlangt, dass keine Assoziation mit dem Property-Typ `self`
+ohne explizites `targetEntity` steht.
+
+**Projektweit geprüft: genau eine Stelle war betroffen.** Fünf weitere Assoziationen
+haben kein `targetEntity`, aber auch keinen `self`-Typ — dort löst Doctrine den
+Klassennamen problemlos auf.
+
+⚠ **Beim Schreiben des Prüflaufs fiel derselbe Fehler zweimal an:** Das erste Suchmuster
+verlangte Klammern hinter dem Attribut und übersah `#[ORM\ManyToOne]` — **ausgerechnet
+die Schreibweise, an der BF-116 hing**. Der Lauf prüft deshalb zuerst sich selbst: Er
+verlangt, mindestens ein Attribut *ohne* Klammern gefunden zu haben. Zwei Gegenproben:
+`targetEntity` entfernt → rot; **eine neue Entity mit demselben Muster** → rot.
+
+**Der endgültige Beleg ist der nächste Deploy** — lokal lässt sich nur zeigen, dass die
+Ursache strukturell beseitigt ist.
+
+⚠ **Nebenbefund, vorbestehend:** `doctrine:schema:validate` meldet „schema is not in sync"
+— mit **und ohne** meine Änderung identisch. Es ist das dokumentierte Diff-Rauschen
+(Index-Umbenennungen an `cuisine`, `ordering_option`, `restaurant`); `board_idea` kommt
+darin nicht vor, und „The mapping files are correct" steht daneben.
+
+Nächster Schritt: `/sdd-qa 06`.
+
+**2026-08-31 · QA von `06` nach BF-116: kein neuer Befund — abgenommen.** Der Baubericht
+meldete den Fehler als **lokal nicht reproduzierbar** und stützte sich auf einen
+statischen Prüflauf. Diese Prüfung hat die Reproduktion **nachgeholt** — mit einem
+einzigen Befehl:
+
+```
+docker run --rm -v "$PWD":/app -w /app php:8.4-cli php <skript>
+```
+
+**Ursache belegt:** `ReflectionProperty::getType()->getName()` liefert unter **8.4.25
+`self`**, unter **8.5.2 `App\Entity\BoardIdea`**. **Reparatur belegt, in beide
+Richtungen:** Doctrines `AttributeDriver` löst unter 8.4 **ohne** die Angabe zu
+`App\Entity\self` auf — Klasse existiert nicht, **wortgleich mit der Produktionsmeldung**
+—, **mit** der Angabe zu `App\Entity\BoardIdea`. Kein Symfony-Kernel, keine Extensions,
+keine Datenbank nötig.
+
+**Daraus ein projektweites Muster, das mehr wert ist als der Befund selbst:** *Bevor ein
+Befund als „lokal nicht reproduzierbar" abgelegt wird, wird die Laufzeitumgebung im
+Container nachgestellt.* BF-116 galt als „nur auf Produktion prüfbar" — bis ein
+`docker run` in unter einer Minute das Gegenteil zeigte. Für Apache und `mod_dir`
+(BF-100) wäre es `php:8.4-apache`.
+
+Der neue Prüflauf wurde mit einer **anderen** Gegenprobe als der Bau geprüft (eine
+`OneToOne`-Assoziation mit `self`-Typ) → rot. Er fängt also nicht nur `ManyToOne` und
+nicht nur den bekannten Fall. Regression grün: Dublettenzusammenführung, beide
+Board-Seiten mit 200, `cache:clear --env=prod` OK, **922 Tests**.
+
+⚠ **Offen bleibt BF-111** (*mittel*, blockiert nicht): Die wartende Idee ohne Verfasser
+ist weiterhin öffentlich lesbar; die Zeile steht unverändert in
+`BoardController.php:169`.
+
+Nächster Schritt: **`/sdd-deploy`** — beide Features zusammen, `06` vor `07` (VB-01).
+
 **2026-08-30 · Roadmap-Pflege im Admin: erwogen, bewusst vertagt — keine Spec.** Der
 Wunsch, die drei Spalten und den Block „Bewusst nicht gebaut" in der Verwaltung zu
 pflegen, kehrt eine **ausdrücklich begründete Entwurfsentscheidung** von `07` um
@@ -1448,8 +1546,8 @@ eine neue Anforderung wäre und Michaels Entscheidung braucht.
 | 03 | Vergleichsseiten (vs. Google Maps, Wheelmap, TripAdvisor) | P1 | **deployed** | B05, B13, B24, B16, 02 | 2026-08-29 · live in v2026.08.29, auf Produktion nachgeprüft |
 | 04 | Marketing-Kontakte in Brevo | P1 | **deployed** | B01, B14, B15, B22, 01 | 2026-08-30 · live in v2026.08.30, Migrationen durch, auf Produktion belegt |
 | 05 | Presse-Kit | P2 | **deployed** | B13, B16, B24, 02, 03 | 2026-08-30 · live in v2026.08.30.1, auf Produktion nachgeprüft |
-| 06 | Community Feedback Board | P1 | **approved** | B01, B02, B19, B21, B24, 01, 02 | 2026-08-30 · auf `dev` als `v2026.08.30.2`, **wartet auf den Merge nach `production`** |
-| 07 | Öffentliche Roadmap und Changelog | P2 | **approved** | 06, B13, B16, B24, 02, 03, 05 | 2026-08-31 · QA⁵: 50/52, **kein neuer Befund** — ⚠ Deploy nach `06` |
+| 06 | Community Feedback Board | P1 | **approved** | B01, B02, B19, B21, B24, 01, 02 | 2026-08-31 · BF-116 unter PHP 8.4 belegt und behoben |
+| 07 | Öffentliche Roadmap und Changelog | P2 | **approved** | 06, B13, B16, B24, 02, 03, 05 | 2026-08-31 · QA⁵: 50/52 — **auslieferbar, blockiert durch BF-116 an `06`** |
 | B01 | Registrierung & E-Mail-Bestätigung | P0 | **approved** | — | 2026-08-23 · QA³: 17/20, nur mittlere Befunde offen |
 | B02 | Anmeldung mit Passwort | P0 | **approved** | B01 | 2026-08-24 · QA²: 16/17, repariert |
 | B03 | Passkey-Anmeldung & -Verwaltung | P0 | **deployed** | B01, B02 | 2026-08-29 · ENDLECH-6 live in v2026.08.29.1, auf Produktion belegt (302 statt 400) |
