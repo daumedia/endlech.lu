@@ -29,6 +29,7 @@ final readonly class ChangelogRegistry
     public function notes(): array
     {
         return [
+            new ReleaseNote('2026.08.31', new \DateTimeImmutable('2026-08-31'), ReleaseVisibility::SHOWN),
             new ReleaseNote('2026.08.30.2', new \DateTimeImmutable('2026-08-30'), ReleaseVisibility::SHOWN),
             new ReleaseNote('2026.08.30.1', new \DateTimeImmutable('2026-08-30'), ReleaseVisibility::SILENT),
             new ReleaseNote('2026.08.30', new \DateTimeImmutable('2026-08-30'), ReleaseVisibility::SHOWN),

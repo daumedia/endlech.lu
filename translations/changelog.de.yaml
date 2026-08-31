@@ -29,6 +29,9 @@ repo:
     link_label: "CHANGELOG.md auf GitHub öffnen"
 
 release:
+    v2026_08_31:
+        title: "Roadmap und Changelog"
+        body: "Zwei neue Seiten zeigen, woran gearbeitet wird: Die Roadmap führt in drei Spalten auf, was in Arbeit, geplant und angedacht ist — und was bewusst nicht gebaut wird. Der Changelog erzählt, was sich zuletzt geändert hat. Ohne Termine, dafür mit einer Begründung zu jedem Vorhaben."
     v2026_08_30_2:
         title: "Ideen-Board"
         body: "Ein öffentliches Board für Vorschläge zur Plattform: Ideen einreichen, fremden zustimmen, und zu jeder Idee steht, was daraus geworden ist — auch dann, wenn die Antwort Nein lautet."

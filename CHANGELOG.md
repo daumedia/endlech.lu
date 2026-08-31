@@ -2,10 +2,68 @@
 
 Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
-![Version](https://img.shields.io/badge/version-2026.08.30.2-blue)
+![Version](https://img.shields.io/badge/version-2026.08.31-blue)
 ![Status](https://img.shields.io/badge/status-beta-green)
 
 ## [Unreleased]
+
+## [2026.08.31] – Roadmap und Changelog
+
+**Zwei öffentliche Leseseiten** unter `/roadmap` und `/changelog`. Die Roadmap zeigt in
+drei Spalten (In Arbeit · Geplant · Angedacht), woran gearbeitet wird, dazu den Block
+„Bewusst nicht gebaut"; der Changelog zeigt je Release einen verständlichen Text, nach
+Jahren gruppiert.
+
+Von außen war bisher nicht erkennbar, ob an der Plattform noch gearbeitet wird: Der
+Changelog lag nur als Datei im Repository, die Roadmap als Tabelle im PRD. Die einzige
+öffentlich sichtbare Statusanzeige war das externe Board, das Feature 06 abgeschaltet hat.
+
+### Keine Termine, dafür Begründungen
+
+⚠ **An keinem Roadmap-Eintrag steht ein Datum** — und das ist strukturell abgesichert:
+`RoadmapItem` hat kein Datumsfeld. Was es nicht gibt, kann kein Template versehentlich
+rendern. Ein gerissener Termin kostet mehr Glaubwürdigkeit, als eine Zahl einbringt.
+
+⚠ **Der Begründungssatz gehört zum Wertobjekt.** `RoadmapCatalogueTest` verlangt ihn in
+vier Sprachen; ein Vorhaben ohne Begründung erreicht die Produktion nicht.
+
+### Wie es gebaut ist
+
+Keine Entity, keine Migration — Struktur als unveränderliche Wertobjekte unter
+`App\Roadmap\`, Texte in den eigenen Domains `roadmap` und `changelog`. Aufbau wie
+Feature 03 und 05.
+
+⚠ **`ReleaseVisibility` ist dreiwertig** (`SHOWN`/`SUMMARISED`/`SILENT`), nicht `bool`.
+Der Entwurf sah ein `public: bool` vor; das trägt die Sammelzeile für die Aufbauphase
+nicht. Ein Feld mit zwei Bedeutungen ist genau das Muster, das BF-89 teuer bezahlt hat.
+
+⚠ **Die Community-Ideen werden live abgefragt, nicht kopiert.** Nur so kann eine im Board
+zurückgezogene Idee nicht auf der Roadmap stehen bleiben. Höchstens zehn — **die Grenze
+steht in der Abfrage**, nicht in der Darstellung. Deshalb bewusst **kein Rate Limit**:
+Ein Deckel auf einer rein lesenden Seite träfe Besucher statt Angreifer.
+
+⚠ **`RoadmapCacheListener` hängt auch an `User::postRemove`.** Beim Löschen eines Kontos
+fallen die Stimmen über die Fremdschlüssel-Kaskade in der Datenbank weg; Doctrine feuert
+dafür kein `BoardVote`-Ereignis.
+
+### Was sich außerhalb des Features ändert
+
+- **Die Release-Checkliste hat jetzt fünf Punkte.** Der neue ist der einzige, den ein
+  Prüflauf erzwingt: `ChangelogCompletenessTest` verlangt für jede Version aus dieser
+  Datei einen öffentlichen Eintrag **oder** einen ausdrücklichen Vermerk „still".
+- `BoardIdeaRepository` bekommt zwei Abfragemethoden; Feature 06 bleibt unberührt.
+- Die Fußzeile führt Roadmap und Changelog in Spalte 4 — Spalte 2 trägt bereits elf
+  Einträge.
+- Neuer Cache-Pool `cache.roadmap`, zwei sprachfreie Kurzlinks `/roadmap` und
+  `/changelog`.
+
+### Bekannte Lücken
+
+Zwei Kriterien fallen an Altlasten der App-Hülle durch, die **jede** Seite betreffen: Die
+Fußzeile überschreibt ihre Spalten mit `<h4>` (Überschriftenkette springt von h2 auf h4),
+und der `hreflang`-Block spiegelt die Abfragezeichenfolge. Beide sind als BF-109 und
+BF-110 vermerkt.
+
 
 ## [2026.08.30.2] – Community Feedback Board
 

@@ -23,6 +23,9 @@ repo:
     link_label: "Ouvrir CHANGELOG.md sur GitHub"
 
 release:
+    v2026_08_31:
+        title: "Feuille de route et journal des modifications"
+        body: "Deux nouvelles pages montrent ce sur quoi nous travaillons : la feuille de route présente en trois colonnes ce qui est en cours, prévu et à l'étude — ainsi que ce que nous ne construisons délibérément pas. Le journal raconte ce qui a changé récemment. Sans dates, mais avec une justification pour chaque point."
     v2026_08_30_2:
         title: "Tableau d'idées"
         body: "Un tableau public pour les propositions concernant la plateforme : proposer une idée, soutenir celle d'un autre, et pour chaque idée, ce qu'elle est devenue — y compris lorsque la réponse est non."

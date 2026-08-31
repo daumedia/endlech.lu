@@ -23,6 +23,9 @@ repo:
     link_label: "CHANGELOG.md op GitHub opmaachen"
 
 release:
+    v2026_08_31:
+        title: "Roadmap a Changelog"
+        body: "Zwee nei Säite weisen, wourun geschafft gëtt: D'Roadmap féiert an dräi Spalten op, wat an Aarbecht, geplangt an ugeduecht ass — a wat mir bewosst net bauen. De Changelog erzielt, wat sech zulescht geännert huet. Ouni Datumen, dofir mat enger Begrënnung zu all Virhuelen."
     v2026_08_30_2:
         title: "Ideeën-Board"
         body: "En ëffentlecht Board fir Virschléi zur Plattform: Ideeën araichen, friemen zoustëmmen, an zu all Idee steet, wat doraus ginn ass — och dann, wann d'Äntwert Neen ass."
