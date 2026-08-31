@@ -38,6 +38,8 @@ footer:
     comparisons: "Vergleiche"
     all_comparisons: "Alle Vergleiche"
     vs: "vs. %brand%"
+    roadmap: "Roadmap"
+    changelog: "Changelog"
 
 cookie:
     title: "Wir verwenden Cookies"

@@ -452,6 +452,15 @@ erste getragen hat.
 
 ## Roadmap
 
+> **Seit Feature `07` steht diese Roadmap öffentlich** unter `/roadmap` — in drei
+> Spalten, ohne Termine, jeder Eintrag mit Begründung. Die Zuordnung der Vorhaben zu
+> den Spalten folgt dem Abschnitt *Vorschlag: Reihenfolge* weiter unten; die Texte
+> liegen in der Übersetzungsdomain `roadmap`, die Struktur in
+> `App\Roadmap\RoadmapRegistry`. **Wer hier ein Vorhaben ergänzt oder streicht,
+> zieht die Registry mit** — sonst laufen die interne und die öffentliche Fassung
+> auseinander. Der Abschnitt *Bewusst zurückgestellt* erscheint dort als Block
+> „Bewusst nicht gebaut".
+
 ### Belegt offen
 
 | Vorhaben | Beleg |

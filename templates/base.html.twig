@@ -257,6 +257,19 @@
             <h4 class="text-white font-bold mb-4 uppercase tracking-wider">{{ 'footer.contact_title'|trans }}</h4>
             <p>{{ 'footer.help_improve'|trans }}</p>
             <a href="mailto:support@endlech.lu" class="block mt-2 text-cyan-400 hover:underline">support@endlech.lu</a>
+
+            {#
+                Feature 07: Roadmap und Changelog stehen HIER, nicht in Spalte 2.
+                Die trägt bereits elf Einträge — Feature 03 hat aus genau diesem
+                Grund eine eigene Spalte aufgemacht. Eine fünfte Spalte bräche das
+                lg:grid-cols-4-Raster, und die Kopfzeile hat mit BF-80 schon eine
+                offene Umbruchlücke zwischen 768 px und 1000 px; kein Feature
+                sollte sie nebenbei vergrößern.
+            #}
+            <ul class="mt-6 space-y-2 border-t border-gray-800 pt-5">
+                <li><a href="{{ path('app_roadmap_index') }}" class="hover:text-cyan-400 motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-cyan-400">{{ 'footer.roadmap'|trans }}</a></li>
+                <li><a href="{{ path('app_changelog_index') }}" class="hover:text-cyan-400 motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-cyan-400">{{ 'footer.changelog'|trans }}</a></li>
+            </ul>
         </div>
     </div>
 

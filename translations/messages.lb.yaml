@@ -38,6 +38,8 @@ footer:
     comparisons: "Verglachër"
     all_comparisons: "All Verglachër"
     vs: "vs. %brand%"
+    roadmap: "Roadmap"
+    changelog: "Changelog"
 
 cookie:
     title: "Mir benotzen Cookien"
