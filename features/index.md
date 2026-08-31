@@ -1486,6 +1486,43 @@ ist weiterhin öffentlich lesbar; die Zeile steht unverändert in
 
 Nächster Schritt: **`/sdd-deploy`** — beide Features zusammen, `06` vor `07` (VB-01).
 
+**2026-08-31 · Release v2026.08.31 ist live — Features `06` und `07` zusammen.** Der
+dritte Anlauf nach dem gescheiterten Deploy vom selben Tag. **Eine Migration** lief mit
+(`Version20260830120000`, additiv: `board_idea`, `board_vote`).
+
+⚠ **Der Preflight hatte diesmal einen Schritt mehr — und genau den, der gefehlt hatte:**
+das **Mapping gegen PHP 8.4** im Container (`docker run --rm -v "$PWD":/app -w /app
+php:8.4-cli`). 15 Entities geprüft, jede Assoziation zeigt auf eine existierende Klasse.
+Dieser Schritt hätte BF-116 gefangen, bevor die Seite offline ging.
+
+Auf Produktion nachgeprüft:
+
+- Fußzeile zeigt **v2026.08.31** — der Beleg, dass der neue Container läuft
+- **Alle acht neuen Adressen mit 200**: `/{lb,de,fr,en}/roadmap` und `…/changelog`
+- `/de/community/ideen` und `…/neu` mit 200 — der Beleg, dass die Migration durch ist
+- Kurzlinks `/roadmap` und `/changelog`: **302, ein Sprung**, kein 301 (die Lehre aus BF-100)
+- Roadmap inhaltlich wie in VB-02 festgelegt: *In Arbeit* — Öffentliche Roadmap und
+  Changelog · *Geplant* — Bewertungen und Kommentare, Kartenansicht, Favoriten ·
+  *Angedacht* — Native iOS-App, Chat-Fenster, KI-gestützte Suche, Android-App mit Google-
+  und Apple-Anmeldung · **8 Punkte** unter „Bewusst nicht gebaut"
+- **Kein Datum an keinem Eintrag** (AK-06) — auf der ausgelieferten Seite gemessen
+- Changelog: 11 Einträge, der erste „Roadmap und Changelog · 2026.08.31"; **kein stilles
+  Release sichtbar**
+- **EC-01 erstmals im Echtbetrieb belegt**: Das Board ist auf Produktion leer, und die
+  Spalte „Geplant" zeigt nur die kuratierten Vorhaben — kein leerer Community-Block
+- Fußzeile führt beide Seiten, keine Prüfdaten in der Anwendung
+
+⚠ **Der Tag `v2026.08.31` wurde verschoben** (von `a057482` auf `783ae3f`). Das Release
+unter der ursprünglichen Marke wurde **nie ausgeliefert** — der Deploy scheiterte an
+BF-116 —, und ein zusätzliches `v2026.08.31.1` für einen Fehler, den nie jemand gesehen
+hat, hätte die Historie mit einem Phantom belastet.
+
+**Offen, ohne den Betrieb zu beeinträchtigen:** **BF-109** und **BF-110** (Altlasten der
+App-Hülle, jede Seite), **BF-111** (wartende Idee ohne Verfasser, Feature `06`),
+**BF-103** (das externe Board `endlech.userjot.com` nimmt weiter Einreichungen entgegen —
+laut Betreiberentscheidung **nach** dem Deploy abzuschalten, jetzt fällig) und **OF-11**
+(Aktualitätshinweis bei einem Datum in der Zukunft).
+
 **2026-08-30 · Roadmap-Pflege im Admin: erwogen, bewusst vertagt — keine Spec.** Der
 Wunsch, die drei Spalten und den Block „Bewusst nicht gebaut" in der Verwaltung zu
 pflegen, kehrt eine **ausdrücklich begründete Entwurfsentscheidung** von `07` um
@@ -1546,8 +1583,8 @@ eine neue Anforderung wäre und Michaels Entscheidung braucht.
 | 03 | Vergleichsseiten (vs. Google Maps, Wheelmap, TripAdvisor) | P1 | **deployed** | B05, B13, B24, B16, 02 | 2026-08-29 · live in v2026.08.29, auf Produktion nachgeprüft |
 | 04 | Marketing-Kontakte in Brevo | P1 | **deployed** | B01, B14, B15, B22, 01 | 2026-08-30 · live in v2026.08.30, Migrationen durch, auf Produktion belegt |
 | 05 | Presse-Kit | P2 | **deployed** | B13, B16, B24, 02, 03 | 2026-08-30 · live in v2026.08.30.1, auf Produktion nachgeprüft |
-| 06 | Community Feedback Board | P1 | **approved** | B01, B02, B19, B21, B24, 01, 02 | 2026-08-31 · BF-116 unter PHP 8.4 belegt und behoben |
-| 07 | Öffentliche Roadmap und Changelog | P2 | **approved** | 06, B13, B16, B24, 02, 03, 05 | 2026-08-31 · QA⁵: 50/52 — **auslieferbar, blockiert durch BF-116 an `06`** |
+| 06 | Community Feedback Board | P1 | **deployed** | B01, B02, B19, B21, B24, 01, 02 | 2026-08-31 · live in v2026.08.31, auf Produktion nachgeprüft |
+| 07 | Öffentliche Roadmap und Changelog | P2 | **deployed** | 06, B13, B16, B24, 02, 03, 05 | 2026-08-31 · live in v2026.08.31, auf Produktion nachgeprüft |
 | B01 | Registrierung & E-Mail-Bestätigung | P0 | **approved** | — | 2026-08-23 · QA³: 17/20, nur mittlere Befunde offen |
 | B02 | Anmeldung mit Passwort | P0 | **approved** | B01 | 2026-08-24 · QA²: 16/17, repariert |
 | B03 | Passkey-Anmeldung & -Verwaltung | P0 | **deployed** | B01, B02 | 2026-08-29 · ENDLECH-6 live in v2026.08.29.1, auf Produktion belegt (302 statt 400) |
