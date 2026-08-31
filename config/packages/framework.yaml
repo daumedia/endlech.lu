@@ -130,6 +130,22 @@ framework:
             policy: 'sliding_window'
             limit: 120
             interval: '5 minutes'
+        # Community-Board (Feature 06): Eine Idee einreichen füllt dieselbe
+        # Moderationsschlange wie ein Restaurantvorschlag, und die abzuarbeiten
+        # ist Handarbeit. ⚠ Gezählt wird am KONTO, nicht an der IP — der Weg
+        # setzt eine bestätigte Anmeldung voraus, und dort wechselt der
+        # Angreifer die IP mühelos, das Konto nicht (wie `password_change`).
+        board_submit:
+            policy: 'sliding_window'
+            limit: 5
+            interval: '1 hour'
+        # Zustimmen ist billig und soll es bleiben — der Deckel richtet sich
+        # gegen maschinelles Hochstufen vieler Ideen in Folge, nicht gegen den
+        # Nutzer, der sich durch die Liste arbeitet. Ebenfalls am Konto.
+        board_vote:
+            policy: 'sliding_window'
+            limit: 60
+            interval: '1 hour'
 
 when@test:
     framework:
@@ -206,3 +222,11 @@ when@test:
                 policy: 'sliding_window'
                 limit: 10000
                 interval: '5 minutes'
+            board_submit:
+                policy: 'sliding_window'
+                limit: 10000
+                interval: '1 hour'
+            board_vote:
+                policy: 'sliding_window'
+                limit: 10000
+                interval: '1 hour'

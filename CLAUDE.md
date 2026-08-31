@@ -847,7 +847,7 @@ Kein Feld für Vertragspartner, Restaurant oder Rechnungsnummer: Was nicht erfas
 
 **Entity `MetricSnapshot`:** `capturedFor` (DATE, **unique** → Idempotenz auf DB-Ebene), typisierte Spalten für die Verlaufsgrafiken plus `payload` (JSON) mit der vollständigen Momentaufnahme. Grund für die Entity: Ein aus den heutigen Daten zurückgerechneter Verlauf änderte sich rückwirkend, sobald jemand einen Eintrag bearbeitet – als Beleg gegenüber einem Ministerium wertlos.
 
-**Zeitplan vs. Cron:** `src/Schedule.php` (`#[AsSchedule]`, `RecurringMessage::cron('15 3 1 * *', …, Europe/Luxembourg)`) → `App\Message\CaptureMetricSnapshot` → `CaptureMetricSnapshotHandler`. ⚠️ **Symfony Scheduler braucht `messenger:consume scheduler_default`; Production läuft mit `sync://` und ohne Worker** – dort feuert der Zeitplan nicht. Der reale Auslöser ist der **Cron-Eintrag auf `app:metrics:snapshot`** (README → Deployment). Der Befehl unterstützt `--month=YYYY-MM` und `--force`. Zusätzlich gibt es im Admin einen Knopf (`admin_finance_snapshot`), weil eine ausgefallene Historie sonst unbemerkt bliebe und sich nicht rückwirkend erzeugen lässt.
+**Zeitplan vs. Cron:** `src/Schedule.php` (`#[AsSchedule]`, `RecurringMessage::cron('15 3 1 * *', …, Europe/Luxembourg)`) → `App\Message\CaptureMetricSnapshot` → `CaptureMetricSnapshotHandler`. ⚠️ **Symfony Scheduler braucht einen Worker auf dem Transport `scheduler_default`; der Cron auf Production konsumiert nur `async`** – dort feuert der Zeitplan nicht. Der reale Auslöser ist der **Cron-Eintrag auf `app:metrics:snapshot`** (README → Deployment). Der Befehl unterstützt `--month=YYYY-MM` und `--force`. Zusätzlich gibt es im Admin einen Knopf (`admin_finance_snapshot`), weil eine ausgefallene Historie sonst unbemerkt bliebe und sich nicht rückwirkend erzeugen lässt.
 
 **Cache:** eigener Pool `cache.open_stats` in `config/packages/cache.yaml` (Filesystem, TTL 3600; in `when@test` `cache.adapter.array`). Ein eigener Pool statt `cache.app`, damit `clear()` nach einer Admin-Änderung nicht den halben Anwendungscache mitnimmt.
 
@@ -950,6 +950,52 @@ Defined in `compose.yaml` and `compose.override.yaml`:
 - **Templates:** All emails extend `email/base.html.twig` for consistent Endlech.lu branding
 - **Error handling:** Controllers catch `TransportExceptionInterface` and show user-friendly flash messages
 
+## Öffentliche Roadmap und Changelog (`/roadmap`, `/changelog`, Feature 07)
+
+Zwei öffentliche Leseseiten: `/roadmap` zeigt in drei Spalten (In Arbeit · Geplant ·
+Angedacht), woran gearbeitet wird, plus den Block „Bewusst nicht gebaut"; `/changelog`
+zeigt je Release einen verständlichen Text, nach Jahren gruppiert. **Keine Entity, keine
+Migration** — Struktur als unveränderliche Wertobjekte unter `App\Roadmap\`, Texte in
+den eigenen Domains `roadmap` und `changelog`. Aufbau wie Feature 03 und 05.
+
+⚠ **An keinem Roadmap-Eintrag steht ein Datum** — und das ist strukturell abgesichert:
+`RoadmapItem` hat kein Datumsfeld. Was es nicht gibt, kann kein Template versehentlich
+rendern. Ein gerissener Termin kostet mehr Glaubwürdigkeit, als eine Zahl einbringt.
+
+⚠ **Der Begründungssatz gehört zum Wertobjekt.** `RoadmapItem::reasonKey()` existiert
+immer, und `RoadmapCatalogueTest` verlangt ihn in vier Sprachen. Ein Vorhaben ohne
+Begründung erreicht die Produktion nicht — AK-05 und AK-29 sind erzwungen, nicht erbeten.
+
+⚠ **`ReleaseVisibility` ist dreiwertig** (`SHOWN`/`SUMMARISED`/`SILENT`), nicht `bool`.
+Der Entwurf sah ein `public: bool` vor; das trägt die Sammelzeile für die Aufbauphase
+nicht. Ein Feld mit zwei Bedeutungen ist genau das Muster, das dieses Projekt mit BF-89
+schon einmal teuer bezahlt hat.
+
+⚠ **Die Community-Ideen werden live abgefragt, nicht kopiert.** Nur so kann eine im
+Board zurückgezogene Idee nicht auf der Roadmap stehen bleiben. Höchstens zehn, sortiert
+nach Zustimmungen — **die Grenze steht in der Abfrage**, nicht in der Darstellung, damit
+kein Aufruf je den Bestand lädt. Deshalb gibt es hier bewusst **kein Rate Limit**: Ein
+Deckel auf einer rein lesenden Seite träfe Besucher statt Angreifer.
+
+⚠ **`RoadmapCacheListener` hängt auch an `User::postRemove`.** Beim Löschen eines Kontos
+fallen die Stimmen über die Fremdschlüssel-Kaskade **in der Datenbank** weg; Doctrine
+feuert dafür kein `BoardVote`-Ereignis. Ohne diesen Fall stünde bis zu eine Stunde lang
+eine zu hohe Zustimmungszahl auf der Seite.
+
+⚠ **Der Zwischenspeicher ist über HTTP nicht testbar.** Der Testclient bootet den Kernel
+bei jedem Request neu, und selbst mit `disableReboot()` leert Symfonys
+`services_resetter` den Array-Adapter zwischen zwei Requests — ein funktionaler Lauf
+wäre grün, ob der Cache arbeitet oder nicht. Der Nachweis steht deshalb in
+`tests/Integration/Roadmap/CommunityRoadmapTest.php`.
+
+⚠ **Kein Verzeichnis `public/roadmap` und kein `public/changelog` anlegen** — sonst
+wiederholt sich BF-100 auf zwei neuen Adressen. `RouteDirectoryCollisionTest` prüft die
+Ursache projektweit.
+
+⚠ **Pluralformen brauchen den Fall `{0}`.** Eine frisch eingeplante Idee hat null
+Zustimmungen; ohne `{0}`-Zweig wirft Symfony dort, und die Seite antwortet mit 500. Beim
+Bau gemessen und behoben.
+
 ## Versioning
 
 The project uses **CalVer** (Calendar Versioning): `vYYYY.MM.DD` (e.g., `v2026.01.13`). See `CHANGELOG.md`.
@@ -961,12 +1007,28 @@ aber auch nicht fortgeführt. Die Punktform sortiert sich richtig (nach `z` wär
 Buchstaben Schluss, und `b` liest sich nicht als „der erste Nachtrag"). Der erste
 Release eines Tages trägt **kein** Suffix.
 
-**Bei jedem Release müssen vier Stellen mitgezogen werden** – sie liegen auseinander und wurden schon mehrfach vergessen (das README-Badge stand zwei Releases lang auf einer alten Version, der Footer eines):
+**Bei jedem Release müssen fünf Stellen mitgezogen werden** – sie liegen auseinander und wurden schon mehrfach vergessen (das README-Badge stand zwei Releases lang auf einer alten Version, der Footer eines):
 
 1. `CHANGELOG.md` – `[Unreleased]`-Abschnitt zu `[YYYY.MM.DD] – Titel` schließen **und** das Version-Badge in Zeile 5.
 2. `README.md` – Version-Badge (Format mit `v`-Präfix).
 3. `config/services.yaml` – Parameter `app.version`; wird über `twig.yaml` als `app_version` global gesetzt und in `templates/base.html.twig` im Footer gerendert. **Das ist die einzige Stelle, die Besucher sehen.**
 4. Git-Tag `vYYYY.MM.DD` auf dem Release-Commit in `dev`, danach GitHub-Release (`gh release create`).
+5. **`App\Roadmap\ChangelogRegistry::notes()`** (Feature 07) – die neue Version eintragen,
+   entweder mit `ReleaseVisibility::SHOWN` **und** einem Text in allen vier
+   `changelog.*.yaml`, oder mit `SILENT`, wenn ein Gast die Änderung nicht merkt.
+
+⚠ **Punkt 5 ist der einzige, den ein Prüflauf erzwingt.** `ChangelogCompletenessTest`
+liest die `## [version]`-Überschriften aus `CHANGELOG.md` und färbt rot, sobald eine
+Version weder einen öffentlichen Eintrag noch einen ausdrücklichen Vermerk trägt. Genau
+dafür ist `ReleaseVisibility` dreiwertig statt ein `bool`: „bewusst still" und
+„vergessen" wären sonst nicht unterscheidbar, und der Lauf könnte nur behaupten statt
+zu prüfen.
+
+⚠ **Im selben Handgriff die Roadmap durchsehen** (Feature 07, OF-03). Ein eigener
+Termin dafür bräuchte jemanden, der ihn erzwingt; ein Release ist ohnehin der Moment,
+in dem sich etwas verändert hat. Dabei gilt: **Ein Vorhaben, das zwölf Monate ohne
+Fortschritt in „Geplant" steht, wandert nach „Angedacht" zurück** (OF-04) – eine
+Zusage, die niemand mehr einlöst, macht jede andere Zeile der Seite unglaubwürdig.
 
 Konvention: Release-Commit direkt auf `dev` mit dem Titel `Release vYYYY.MM.DD – Titel`, Tag darauf, anschließend Merge `dev` → `production` (= Deploy).
 
@@ -992,16 +1054,29 @@ Das `.github/`-Verzeichnis enthält außerdem Issue-Templates (Bug Reports, Feat
 
 ### Messenger-Worker (Umstellung von `sync://` auf die Queue)
 
-**Stand 2026-08-29: `deploy.sh` ist vorbereitet, die Umstellung selbst steht noch aus.**
-Solange in der `.env.local` auf dem Server `MESSENGER_TRANSPORT_DSN=sync://` steht,
-werden E-Mails weiterhin im Request versendet und die Sperre unten läuft ins Leere.
+**Stand 2026-08-30: die Queue ist in Betrieb.** In der `.env.local` auf dem Server
+steht **kein** `MESSENGER_TRANSPORT_DSN` — damit greift der Vorgabewert
+`doctrine://default?auto_setup=0` aus `.env`, und der Worker-Cron konsumiert ihn
+jede Minute. Der frühere Hinweis „Umstellung steht noch aus" war überholt.
 
-⚠️ **`sync://` NICHT einfach entfernen.** Ohne laufenden Worker greift der Default
-`doctrine://default?auto_setup=0` aus `.env`, und dann stapeln sich die Nachrichten
-in `messenger_messages`, während die App weiter „erfolgreich" meldet – niemand
-bekommt mehr eine Bestätigungsmail, und es fällt erst bei einer Beschwerde auf.
-Die Reihenfolge ist: **erst Cron einrichten, dann deployen, dann die Zeile ziehen**
-(und `cache:clear --env=prod`, sonst hält der kompilierte Container den alten DSN).
+⚠️ **Der Ausfall ist hier lautlos.** Läuft der Worker nicht oder scheitert er beim
+Start, stapeln sich die Nachrichten in `messenger_messages`, während die App weiter
+„erfolgreich" meldet – niemand bekommt mehr eine Bestätigungsmail (Registrierung,
+Double-Opt-In beider Wartelisten, E-Mail-Wechsel), und es fällt erst bei einer
+Beschwerde auf. **Der Zustand gehört gemessen, nicht angenommen:**
+
+```bash
+php bin/console messenger:stats --env=prod        # Rückstau in async
+php bin/console messenger:failed:show --env=prod  # nach 3 Versuchen aufgegeben
+```
+
+Eine dreistellige Zahl in `async` heißt: der Worker läuft nicht.
+`messenger:failed:retry` schickt Liegengebliebenes nach.
+
+⚠️ **Wer je wieder `sync://` setzt, nimmt der Sperre unten die Wirkung** und schaltet
+Retry und `failed`-Transport ab. Beim Zurückstellen gilt dieselbe Reihenfolge wie bei
+der Umstellung — und immer `cache:clear --env=prod`, sonst hält der kompilierte
+Container den alten DSN.
 
 Die Tabelle ist bereits da: `Version20260113160019` legt `messenger_messages` an,
 und ihr Schema deckt sich mit dem, was `symfony/doctrine-messenger` erwartet
@@ -1042,15 +1117,18 @@ Dateien – derselbe gemischte Zustand wie bei ENDLECH-5, nur im Hintergrund und
 Wartungsseite davor. Die Datei liegt aus demselben Grund unter `var/` wie das
 Wartungsflag: gitignoriert, `git clean -fd` fasst sie nicht an.
 
-**Was die Umstellung mitbringt:** Retry (`max_retries: 3`) und den `failed`-Transport,
+**Was die Queue mitbringt:** Retry (`max_retries: 3`) und den `failed`-Transport,
 also `messenger:failed:show`/`:retry` statt endgültig verlorener Mails. Und
 Sichtbarkeit – ein im Worker gescheiterter Versand landet als `error` im Monolog-Kanal
-`messenger` und damit über `sentry_logs` in Sentry. Bei `sync://` fangen zwölf
+`messenger` und damit über `sentry_logs` in Sentry. Bei `sync://` fingen zwölf
 `catch (TransportExceptionInterface)`-Blöcke in acht Dateien den Fehler ab, **ohne ihn
-zu loggen**: Der Nutzer sieht eine Warnung, der Betreiber erfährt nichts. Nach der
-Umstellung sind diese Blöcke toter Code (ein Dispatch-Fehler ist eine
-Messenger-Exception, keine Mailer-`TransportExceptionInterface`) – sie schaden nicht,
-können aber aufgeräumt werden.
+zu loggen**: Der Nutzer sah eine Warnung, der Betreiber erfuhr nichts.
+
+⚠️ **Diese zwölf Blöcke sind seit der Umstellung toter Code** – ein Dispatch-Fehler ist
+eine Messenger-Exception, keine Mailer-`TransportExceptionInterface`. Sie schaden
+nicht, täuschen aber eine Absicherung vor, die an dieser Stelle nichts mehr auffängt;
+wer dort einen Fehlerfall prüfen will, prüft ihn im Worker. Aufräumen ist ein eigener
+Auftrag, kein Nebenbei-Handgriff.
 
 **Production-DB ist MariaDB 10.5**, lokal und in der CI läuft dagegen MySQL 8.0. Da `deploy.sh` bei jedem Lauf `doctrine:migrations:migrate` ausführt, müssen neue Migrationen gegen MariaDB 10.5 lauffähig sein – MySQL-8-only-Syntax (z. B. `CHECK`-Constraints mit JSON-Funktionen, Window-Functions in DDL) schlägt sonst erst auf Production fehl.
 

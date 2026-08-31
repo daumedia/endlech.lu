@@ -12,6 +12,17 @@
     {% block meta_description %}{% endblock %}
     {% block canonical %}{% endblock %}
 
+    {# Favicon.
+       ⚠ Browser fragen `/favicon.ico` beim ersten Besuch **von sich aus** an, auch
+       ohne Deklaration — und ohne die Datei stand auf jeder Seite ein 404 in der
+       Konsole (bei der Nachprüfung von v2026.08.30.1 aufgefallen). Die Datei liegt
+       jetzt im Wurzelverzeichnis, wo sie gesucht wird, und ist zusätzlich
+       ausdrücklich deklariert: Dann muss der Browser gar nicht erst raten.
+       Sie trägt dieselbe Marke wie die App-Icons, erzeugt aus `icons/icon-192.png`
+       in 16, 32 und 48 Punkten. #}
+    <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="16x16 32x32 48x48">
+    <link rel="icon" type="image/png" href="{{ asset('icons/icon-192.png') }}" sizes="192x192">
+
     {# PWA: Manifest, Theme-Farbe & iOS-spezifische Tags (Issue #83) #}
     <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
     <meta name="theme-color" content="#0891b2">
@@ -206,7 +217,14 @@
                         <button type="button" class="hover:text-cyan-400 transition text-left" data-action="cookie-consent#openSettings">{{ 'cookie.settings'|trans }}</button>
                     </li>
                 {% endif %}
-                <li><a href="https://endlech.userjot.com/?cursor=1&amp;order=top&amp;limit=10" class="hover:text-cyan-400 transition" target="_blank" rel="noopener noreferrer">{{ 'footer.feedback'|trans }}</a></li>
+                {#
+                    Feature 06: Der Verweis zeigt auf das EIGENE Board.
+                    ⚠ Bis 2026-08-30 stand hier `endlech.userjot.com` — ein extern
+                    gehostetes Ideen-Board. Es wurde ERSETZT, nicht ergänzt: Zwei
+                    Adressen für dieselbe Frage teilen Nutzer und Stimmen, und das
+                    Board wäre von Anfang an halb leer (AK-02, AK-80).
+                #}
+                <li><a href="{{ path('app_board_index') }}" class="hover:text-cyan-400 transition">{{ 'footer.feedback'|trans }}</a></li>
             </ul>
         </div>
 
@@ -239,6 +257,19 @@
             <h4 class="text-white font-bold mb-4 uppercase tracking-wider">{{ 'footer.contact_title'|trans }}</h4>
             <p>{{ 'footer.help_improve'|trans }}</p>
             <a href="mailto:support@endlech.lu" class="block mt-2 text-cyan-400 hover:underline">support@endlech.lu</a>
+
+            {#
+                Feature 07: Roadmap und Changelog stehen HIER, nicht in Spalte 2.
+                Die trägt bereits elf Einträge — Feature 03 hat aus genau diesem
+                Grund eine eigene Spalte aufgemacht. Eine fünfte Spalte bräche das
+                lg:grid-cols-4-Raster, und die Kopfzeile hat mit BF-80 schon eine
+                offene Umbruchlücke zwischen 768 px und 1000 px; kein Feature
+                sollte sie nebenbei vergrößern.
+            #}
+            <ul class="mt-6 space-y-2 border-t border-gray-800 pt-5">
+                <li><a href="{{ path('app_roadmap_index') }}" class="hover:text-cyan-400 motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-cyan-400">{{ 'footer.roadmap'|trans }}</a></li>
+                <li><a href="{{ path('app_changelog_index') }}" class="hover:text-cyan-400 motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-cyan-400">{{ 'footer.changelog'|trans }}</a></li>
+            </ul>
         </div>
     </div>
 

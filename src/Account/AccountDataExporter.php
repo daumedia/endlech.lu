@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Account;
 
 use App\Entity\User;
+use App\Repository\BoardIdeaRepository;
+use App\Repository\BoardVoteRepository;
 use App\Repository\RestaurantRepository;
 use App\Repository\RestaurantSuggestionRepository;
 
@@ -26,6 +28,8 @@ final readonly class AccountDataExporter
     public function __construct(
         private RestaurantRepository $restaurants,
         private RestaurantSuggestionRepository $suggestions,
+        private BoardIdeaRepository $boardIdeas,
+        private BoardVoteRepository $boardVotes,
     ) {
     }
 
@@ -80,6 +84,29 @@ final readonly class AccountDataExporter
                     'submittedAt' => $suggestion->getCreatedAt()->format(\DateTimeInterface::ATOM),
                 ],
                 $this->suggestions->findBySuggester($user),
+            ),
+            // Feature 06 / AK-67: Eingereichte Ideen und abgegebene Zustimmungen.
+            // Beides sind Handlungen dieses Kontos und gehören damit in die
+            // Auskunft nach Art. 15/20 DSGVO.
+            'boardIdeas' => array_map(
+                static fn ($idea) => [
+                    'id' => $idea->getId(),
+                    'title' => $idea->getTitle(),
+                    'description' => $idea->getDescription(),
+                    'status' => $idea->getStatus()->value,
+                    'published' => $idea->isPublished(),
+                    'teamResponse' => $idea->getTeamResponse(),
+                    'submittedAt' => $idea->getCreatedAt()->format(\DateTimeInterface::ATOM),
+                ],
+                $this->boardIdeas->findBySubmitter($user),
+            ),
+            'boardVotes' => array_map(
+                static fn ($vote) => [
+                    'ideaId' => $vote->getIdea()?->getId(),
+                    'ideaTitle' => $vote->getIdea()?->getTitle(),
+                    'votedAt' => $vote->getCreatedAt()->format(\DateTimeInterface::ATOM),
+                ],
+                $this->boardVotes->findBy(['user' => $user], ['createdAt' => 'DESC']),
             ),
         ];
     }
