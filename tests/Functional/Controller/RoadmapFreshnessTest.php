@@ -93,8 +93,22 @@ final class RoadmapFreshnessTest extends KernelTestCase
                 $vorher = $datum;
             }
 
-            $letzter = end($eintraege);
-            self::assertInstanceOf(ChangelogSummary::class, $letzter, 'Die Sammelzeile muss die älteste Zeile ihres Jahres sein.');
+            // ⚠ **Nur in ihrem eigenen Jahr (BF-114).** Vorher verlangte der Lauf die
+            // Sammelzeile als älteste Zeile **jedes** Jahres — das galt nur, solange die
+            // Registry ein einziges Jahr führte. Ein Release in einem neuen Jahr hätte
+            // ihn rot gemacht, obwohl alles richtig ist.
+            $mitSammelzeile = array_filter(
+                $eintraege,
+                static fn (ReleaseNote|ChangelogSummary $e): bool => $e instanceof ChangelogSummary,
+            );
+
+            if ([] !== $mitSammelzeile) {
+                self::assertInstanceOf(
+                    ChangelogSummary::class,
+                    end($eintraege),
+                    sprintf('Im Jahr %s steht die Sammelzeile nicht als älteste Zeile.', $jahr),
+                );
+            }
         }
     }
 
@@ -103,7 +117,7 @@ final class RoadmapFreshnessTest extends KernelTestCase
      * jemand etwas ändert.
      */
     #[DataProvider('jahre')]
-    public function testDasLaufendeJahrIstOffenDasFruehereZugeklappt(string $laufendesJahr, int $erwarteteDetails): void
+    public function testDasLaufendeJahrIstOffenDasFruehereZugeklappt(string $laufendesJahr): void
     {
         self::bootKernel();
 
@@ -129,21 +143,46 @@ final class RoadmapFreshnessTest extends KernelTestCase
         // <details> (Navigations-Dropdown). Wer die ganze Seite zählt, misst es mit.
         $imInhalt = (new Crawler($html))->filter('main details')->count();
 
+        // ⚠ **Die erwartete Zahl wird abgeleitet, nicht genannt (BF-114).** Vorher
+        // standen im Datenlieferanten feste Werte (0 bzw. 1) — sie galten nur, solange
+        // die Registry genau ein Jahr führte. Mit dem ersten Release in 2027 wären beide
+        // falsch gewesen, ohne dass jemand einen Fehler gemacht hätte. Zugeklappt gehört
+        // jedes Jahr **außer** dem laufenden.
+        $erwartet = \count(array_filter(
+            array_keys($registry->byYear()),
+            static fn (string|int $jahr): bool => (string) $jahr !== $laufendesJahr,
+        ));
+
         self::assertSame(
-            $erwarteteDetails,
+            $erwartet,
             $imInhalt,
-            sprintf('Bei laufendem Jahr %s wird falsch auf- oder zugeklappt.', $laufendesJahr),
+            sprintf(
+                'Bei laufendem Jahr %s müssen %d von %d Jahren zugeklappt sein.',
+                $laufendesJahr,
+                $erwartet,
+                \count($registry->byYear()),
+            ),
         );
     }
 
     /**
-     * @return iterable<string, array{string, int}>
+     * Die zu prüfenden „laufenden Jahre" kommen aus der Registry.
+     *
+     * ⚠ **Keine festen Jahreszahlen (BF-114).** Geprüft werden zwei Lagen, die es immer
+     * gibt, egal wie viele Jahre die Registry führt: das jüngste Jahr **mit** Einträgen
+     * (dann bleibt es offen) und ein Jahr **ohne** Einträge (dann klappt alles zu). Die
+     * erwartete Zahl leitet der Lauf selbst ab.
+     *
+     * @return iterable<string, array{string}>
      */
     public static function jahre(): iterable
     {
-        // 2026 ist das einzige Jahr mit Einträgen: offen, kein <details>.
-        yield 'laufendes Jahr 2026' => ['2026', 0];
-        // Ein Jahr später ist 2026 Geschichte und klappt zu.
-        yield 'laufendes Jahr 2027' => ['2027', 1];
+        $jahre = array_map('strval', array_keys((new ChangelogRegistry())->byYear()));
+        sort($jahre);
+
+        $juengstes = end($jahre) ?: '2026';
+
+        yield 'laufendes Jahr ist das jüngste mit Einträgen' => [$juengstes];
+        yield 'laufendes Jahr ohne Einträge' => [(string) ((int) $juengstes + 1)];
     }
 }

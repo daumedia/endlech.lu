@@ -408,6 +408,16 @@ ursprünglichen Nummer stehen — `design.md` und `tasks.md` verweisen darauf.
   in der Fußzeile), betrifft aber **jede** Seite und gehört deshalb zu Feature `02`
   oder in einen eigenen Auftrag an die Hülle. — **Michael entscheidet, wohin der
   Befund gehört.**
+- **OF-11** *(beim Beheben von BF-115 am 2026-08-30 aufgefallen)* · **Der
+  Aktualitätshinweis unterscheidet nicht zwischen Vergangenheit und Zukunft.**
+  `date().diff()` liefert die Tagesdifferenz als Betrag; ein Eintragsdatum, das
+  versehentlich in der Zukunft liegt (Tippfehler beim Release: `2027` statt `2026`),
+  erzeugt die Meldung „Zuletzt aktualisiert am 15. Januar 2027 — seither sind 136 Tage
+  vergangen. Diese Seite ist möglicherweise nicht mehr aktuell." — an der laufenden
+  Anwendung gemessen. Die Seite behauptet damit, veraltet zu sein, obwohl das Datum noch
+  nicht erreicht ist. **Kein Kriterium deckt den Fall ab** (AK-27 und AK-28 kennen nur
+  die Vergangenheit), und er entsteht nur durch einen Eingabefehler. — **Michael
+  entscheidet, ob das ein Kriterium wert ist.**
 
 ## Decision Log
 

@@ -6,6 +6,9 @@ namespace App\Tests\Functional\Controller;
 
 use App\Entity\BoardIdea;
 use App\Enum\BoardIdeaStatus;
+use App\Roadmap\ChangelogRegistry;
+use App\Roadmap\ReleaseNote;
+use App\Roadmap\RoadmapRegistry;
 use App\Tests\AbstractWebTestCase;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -177,15 +180,32 @@ final class RoadmapControllerTest extends AbstractWebTestCase
         }
     }
 
-    /** AK-07, AK-08: Der Block „Bewusst nicht gebaut" steht außerhalb der Spalten. */
+    /**
+     * AK-07, AK-08: Der Block „Bewusst nicht gebaut" steht außerhalb der Spalten.
+     *
+     * ⚠ **Die erwartete Zahl wird abgeleitet, nicht genannt (BF-113).** Vorher stand
+     * hier `assertCount(8, …)`; ein neunter zurückgestellter Punkt hätte den Lauf rot
+     * gemacht, obwohl alles richtig ist — und genau das ist der Regelbetrieb: OF-03
+     * sieht eine Roadmap-Durchsicht bei jedem Release vor, OF-04 die Rückstufung nach
+     * zwölf Monaten. Einträge wandern planmäßig.
+     *
+     * Der abgeleitete Wert prüft mehr als die feste Zahl: die **Kopplung** zwischen
+     * Registry und Seite. Verschluckt das Template einen Punkt, weicht die Zahl ab.
+     */
     public function testZurueckgestelltesStehtAusserhalbDerSpalten(): void
     {
         $client = static::createClient();
         $crawler = $client->request('GET', self::LOCALE.'/roadmap');
 
+        $erwartet = \count((new RoadmapRegistry())->shelved());
+        self::assertGreaterThan(0, $erwartet, 'Die Registry führt keinen zurückgestellten Punkt — der Lauf prüft ins Leere.');
+
         $block = $crawler->filter('section[aria-labelledby="shelved-heading"]');
         self::assertCount(1, $block, 'Der Block „Bewusst nicht gebaut" fehlt (AK-07).');
-        self::assertCount(8, $block->filter('li'), 'Es müssen acht zurückgestellte Punkte sein.');
+        self::assertCount($erwartet, $block->filter('li'), sprintf(
+            'Die Seite zeigt nicht die %d zurückgestellten Punkte, die die Registry führt.',
+            $erwartet,
+        ));
         self::assertCount(0, $block->filter('section[aria-labelledby^="stage-"]'), 'Der Block darf in keiner Spalte liegen (AK-08).');
     }
 
@@ -201,13 +221,38 @@ final class RoadmapControllerTest extends AbstractWebTestCase
         self::assertGreaterThan(0, $block->filter('a[href*="/community/ideen"]')->count());
     }
 
-    /** AK-20, AK-21: Neun Releases plus Sammelzeile — die stillen erscheinen nicht. */
-    public function testChangelogZeigtNeunReleasesUndDieSammelzeile(): void
+    /**
+     * AK-20, AK-21: Die Seite zeigt genau die Einträge, die die Registry als
+     * sichtbar führt — die stillen erscheinen nicht.
+     *
+     * ⚠ **Die erwartete Zahl wird abgeleitet, nicht genannt (BF-112).** Vorher stand
+     * hier `assertCount(10, …)`; damit wurde der Lauf bei **jedem** Release rot,
+     * obwohl alles richtig war — beim Deploy von `v2026.08.30.3` zum ersten Mal.
+     * Ein Prüflauf, der bei jedem korrekten Vorgang anschlägt, wird nach dem dritten
+     * Mal ignoriert, und dann fehlt genau die Absicherung, für die er gebaut wurde.
+     *
+     * Der abgeleitete Wert prüft mehr als die feste Zahl: nicht eine Momentaufnahme,
+     * sondern die **Kopplung** zwischen Registry und Seite. Verschluckt das Template
+     * einen gezeigten Eintrag oder rendert es einen stillen, weicht die Zahl ab.
+     */
+    public function testChangelogZeigtGenauDieSichtbarenEintraege(): void
     {
         $client = static::createClient();
         $crawler = $client->request('GET', self::LOCALE.'/changelog');
 
-        self::assertCount(10, $crawler->filter('article'), 'Neun gezeigte Releases plus die Sammelzeile.');
+        $registry = new ChangelogRegistry();
+        $gezeigt = \count(array_filter(
+            $registry->notes(),
+            static fn (ReleaseNote $n): bool => $n->isShown(),
+        ));
+        $erwartet = $gezeigt + (null !== $registry->summary() ? 1 : 0);
+
+        self::assertGreaterThan(0, $gezeigt, 'Die Registry führt keinen einzigen sichtbaren Eintrag — der Lauf prüft ins Leere.');
+        self::assertCount($erwartet, $crawler->filter('article'), sprintf(
+            'Die Seite zeigt nicht die %d Einträge, die die Registry als sichtbar führt (%d Releases plus Sammelzeile).',
+            $erwartet,
+            $gezeigt,
+        ));
 
         $text = $crawler->filter('body')->text();
         foreach (['2026.08.30.1', '2026.08.29.1', '2026.08.06'] as $still) {

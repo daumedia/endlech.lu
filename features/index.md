@@ -1216,6 +1216,178 @@ Reparatur ist je eine Zeile in `base.html.twig` und verändert **jede** Seite.
 915 Tests grün, Prüfdaten restlos entfernt (`SELECT COUNT(*) FROM board_idea` → 0).
 Nächster Schritt: **`/sdd-deploy 07`** — ⚠ **erst nach Feature `06`** (VB-01).
 
+**2026-08-30 · Deploy angehalten, BF-112 gefunden und behoben.** Der Preflight lief
+vollständig durch; Feature `07` ist committet und nach `dev` gemergt, die
+Release-Vorbereitung für **v2026.08.30.3** liegt bereit. **Nichts ging nach
+`production`.**
+
+⚠ **Der neue Prüflauf hat beim ersten scharfen Einsatz funktioniert.** Sobald
+`2026.08.30.3` in `CHANGELOG.md` stand, wurde `ChangelogCompletenessTest` rot und nannte
+die Version — bis Registry-Eintrag und vier Übersetzungen standen. Genau wofür der fünfte
+Punkt der Release-Checkliste gebaut wurde.
+
+⚠ **Dabei fiel BF-112 auf, und der Fund gehört dem Release, nicht der QA.** Beide
+QA-Durchläufe waren grün, weil beide gegen einen **eingefrorenen** Bestand liefen:
+`testChangelogZeigtNeunReleasesUndDieSammelzeile` prüfte mit `assertCount(10, …)` gegen
+eine feste Zahl und wäre bei **jedem** Release rot geworden. Ein Prüflauf, der bei jedem
+korrekten Vorgang anschlägt, wird nach dem dritten Mal ignoriert — dann fehlt die
+Absicherung, für die er gebaut wurde.
+
+**Behoben:** Die Zahl wird aus `ChangelogRegistry` **abgeleitet statt genannt**. Der Lauf
+prüft damit mehr als vorher — nicht eine Momentaufnahme, sondern die Kopplung zwischen
+Registry und Seite. Zwei Gegenproben: ein weiteres Release → grün, ein vom Template
+verschluckter Eintrag → rot. 915 Tests grün.
+
+**Daraus eine Lehre für künftige Prüfläufe:** *Ein Lauf, der eine Liste zählt, gehört
+einmal mit einem zusätzlichen Eintrag ausgeführt.* Dieselbe Familie wie die Lehre aus
+Feature `05` — den Zustand herstellen, statt auf ihn zu warten —, hier auf den Release
+angewandt.
+
+Nächster Schritt: `/sdd-qa 07` über die betroffenen Kriterien (AK-20, AK-21, AK-22),
+danach `/sdd-deploy` erneut. ⚠ Die Release-Vorbereitung liegt **uncommittet auf `dev`**
+und wartet dort.
+
+**2026-08-30 · Dritter QA-Durchlauf: BF-112 gegengeprüft — und dabei zweimal dieselbe
+Bauart daneben gefunden.** AK-20, AK-21 und AK-22 sind belegt (11 Artikel = 10 Releases
+plus Sammelzeile, kein stilles Release sichtbar, im Artikeltext einzig „TripAdvisor" als
+Großschreibung — ein Produktname). Die Gegenprobe lief **mit einem anderen Eingriff als
+der Bau**: alle `SUMMARISED` auf `SILENT`, Sammelzeile fällt weg → grün. Die Ableitung
+ist nicht auf den Regelfall geraten.
+
+⚠ **Die Reparatur hat die Stelle behoben, nicht die Lehre angewandt.** Zwei weitere
+Prüfläufe tragen denselben Fehler, beide **nachgestellt**: **BF-113** —
+`assertCount(8, …)` für die zurückgestellten Punkte wird rot, sobald ein neunter
+dazukommt (und OF-03/OF-04 sehen genau das als Regelbetrieb vor). **BF-114** — die
+Jahres-Prüfungen nehmen an, dass es nur **ein** Jahr gibt; mit einem Release vom
+15.01.2027 werden **zwei** Läufe rot. Das tritt **sicher** ein, nicht nur möglicherweise.
+
+**Daraus ein projektweites Muster** (in `befunde.md`): *Feste Zahlen in Prüfläufen, die
+vom wachsenden Bestand abhängen.* Dreimal dieselbe Bauart in einem Feature. Alle drei
+sind grün, solange sich nichts ändert — und werden rot, sobald der Regelbetrieb genau
+das tut, wofür das Feature gebaut wurde. **Regel: Wer eine Liste zählt, leitet die
+erwartete Zahl aus der Quelle ab und führt den Lauf einmal mit einem zusätzlichen Eintrag
+aus.** Es ist dasselbe Versäumnis wie bei BF-107 → BF-108: eine Stelle repariert, die
+Nachbarschaft nicht mitgenommen.
+
+⚠ **Randnotiz zur Prüfung selbst:** Eine Probe lief zunächst gegen eine **gestoppte
+Datenbank** und meldete „actual size 0" — was wie ein Befund aussah und keiner war
+(`Connection refused`). Nach dem Start des Containers wiederholt. Festgehalten, weil ein
+Prüfbericht auch sagen muss, wo er sich selbst korrigiert hat.
+
+**Abgenommen mit Empfehlung:** Der höchste Grad ist *mittel*, keiner der Befunde trifft
+eine Funktion für Besucher — nach den Regeln blockiert das nicht. **BF-114 sollte
+trotzdem vor dem Deploy fallen**, weil er garantiert eintritt und dann zwei Läufe rot
+sind, ohne dass jemand einen Fehler gemacht hat. 915 Tests grün.
+
+Nächster Schritt: **`/sdd-build 07`** mit BF-113 und BF-114 (empfohlen) **oder**
+`/sdd-deploy` — beide Befunde sind erfasst. ⚠ In jedem Fall erst Feature `06`.
+
+**2026-08-30 · BF-113 und BF-114 behoben — dieselbe Regel, drei Stellen.** Alle nach dem
+Muster von BF-112: **Die erwartete Zahl wird aus der Quelle abgeleitet, nicht genannt.**
+BF-113 zieht sie aus `RoadmapRegistry::shelved()`; BF-114 leitet die Zahl der
+zugeklappten Jahre ab (jedes außer dem laufenden) und verlangt die Sammelzeile nur noch
+in **ihrem eigenen** Jahr.
+
+⚠ **Eine dritte Stelle kam beim Beheben dazu, die der Testbericht nicht benannt hatte:**
+Der Datenlieferant von `testDasLaufendeJahrIstOffenDasFruehereZugeklappt` trug selbst
+feste Jahreszahlen (`['2026', 0]`, `['2027', 1]`). Er liefert jetzt zwei Lagen, die es
+immer gibt — das jüngste Jahr **mit** Einträgen und eines **ohne**.
+
+**Beide Reproduktionen aus dem Bericht sind grün**, und beide Läufe haben ihre Prüfkraft
+behalten: Ein vom Template verschluckter zurückgestellter Punkt macht den einen rot („Die
+Seite zeigt nicht die 8 …"), ein fälschlich zugeklapptes laufendes Jahr den anderen („…
+müssen 0 von 1 Jahren zugeklappt sein"). 915 Tests grün.
+
+Nächster Schritt: `/sdd-qa 07`, danach `/sdd-deploy`. ⚠ Erst Feature `06`; die
+Release-Vorbereitung für `v2026.08.30.3` liegt weiterhin uncommittet auf `dev`.
+
+**2026-08-30 · Vierter QA-Durchlauf: BF-113 und BF-114 halten — und eine
+Vollbetriebs-Probe fördert BF-115 zutage.** Statt 25 feste Zahlen zu lesen, wurde **der
+Bestand wachsen gelassen**: zwei Releases in einem neuen Jahr, ein neunter
+zurückgestellter Punkt, ein neuntes kuratiertes Vorhaben. Beide Reparaturen halten, beide
+Läufe haben ihre Prüfkraft behalten.
+
+⚠ **Der eine Fehlschlag war kein Zahlenmuster mehr, sondern ein inhaltlicher Fehler.**
+**BF-115:** Ein **zugeklapptes Jahr trägt keine Überschrift**. Das laufende bekommt
+`<h2 id="year-…">`, ein früheres nur ein `<summary>` — für einen Screenreader keine
+Gliederung. Am ausgelieferten HTML gemessen: `h1 „Changelog"` → `<summary> „2027"` →
+`h3 „Probe A"`, also ein Sprung von h1 auf h3 (WCAG 1.3.1).
+
+**Heute unsichtbar, tritt sicher ein:** Solange die Registry ein einziges Jahr führt, gibt
+es kein `<details>`. Mit dem ersten Release im Januar 2027 rutscht 2026 hinein und
+verliert seine Überschrift — auf einer Seite, die dann längst live ist. ⚠ **Anders als
+BF-109 gehört dieser Befund dem Feature**, nicht der Hülle: AK-38 fällt jetzt aus **zwei
+unabhängigen** Gründen durch.
+
+**Daraus das zweite Muster dieses Features:** *Ein Zustand, den der Kalender erst später
+herstellt, wird heute nicht geprüft.* Drei QA-Durchläufe gegen den eingefrorenen Stand
+haben BF-114 und BF-115 nicht gefunden — beide sitzen im selben Zweig, dem zugeklappten
+Jahr.
+
+**Neuer Prüflauf `RoadmapYearHeadingTest`**, der die Seite mit einem **frei wählbaren
+laufenden Jahr** rendert und damit den Zustand herstellt, den der Kalender erst 2027
+liefert. Zwei seiner fünf Fälle sind **absichtlich rot**, bis BF-115 fällt. Beim
+Schreiben zweimal nachgeschärft: Der erste Wurf maß die ganze Seite (und schlug an BF-109
+an), der zweite hielt die `h3` der Artikel für die Jahresüberschrift.
+
+⚠ **Production-ready: nein — aber nicht wegen des Schweregrads.** BF-115 ist *mittel* und
+würde nach den Regeln nicht blockieren; der absichtlich rote Prüflauf lässt jedoch den
+Deploy-Preflight an seinem Punkt „Verifikationsbefehl grün" scheitern. Das ist gewollt:
+Ein Befund, der garantiert eintritt, soll nicht als Fußnote mitfahren.
+
+Nächster Schritt: **`/sdd-build 07`** mit BF-115 — eine Zeile im Template
+(`<summary><h2>…</h2></summary>`), danach ist der Lauf grün.
+
+**2026-08-30 · BF-115 behoben.** `<summary><h2 class="inline">…</h2></summary>` — HTML
+erlaubt im `<summary>` Heading-Content, `inline` hält die Überschrift neben dem
+Aufklapp-Dreieck (gemessen: 21 px hoch in einem 60 px hohen `<summary>`, kein Umbruch).
+Mit **hergestellter Reproduktion** am ausgelieferten HTML nachgemessen: Die Kette lautet
+`h1 → h2 „2027" → h3 → h2 „2026" → h3 …` — **keine Sprünge**. Gegenprobe: Überschrift
+entfernt → beide Läufe rot. **920 Tests grün**, vorher zwei absichtlich rot.
+
+⚠ **Ein Messfehler von mir, der fast zu einer Falschmeldung geführt hätte.** Der erste
+Messbefehl suchte `<h[1-6]>` **und** `<summary>` in einem Ausdruck — dabei greift der
+`<summary>`-Zweig zuerst und verschluckt die darin liegende `h2`. Das Ergebnis sah aus
+wie ein unveränderter Sprung, während der PHPUnit-Lauf mit echtem DOM-Parser zur selben
+Zeit grün war. Erst der Vergleich beider brachte es ans Licht. **Ein Regex ist kein
+Parser** — festgehalten, weil derselbe Fehler jede HTML-Messung dieses Projekts treffen
+kann.
+
+**Neu offen als OF-11** (nicht behoben, wäre eine neue Anforderung): Der
+Aktualitätshinweis unterscheidet **nicht zwischen Vergangenheit und Zukunft** —
+`date().diff()` liefert den Betrag. Ein Eintragsdatum, das versehentlich in der Zukunft
+liegt, erzeugt „Zuletzt aktualisiert am 15. Januar 2027 — seither sind 136 Tage
+vergangen". Kein Kriterium deckt den Fall ab.
+
+Nächster Schritt: `/sdd-qa 07`.
+
+**2026-08-31 · Fünfter QA-Durchlauf: 50 von 52, kein neuer Befund — abgenommen.** Die
+Vollbetriebs-Probe wurde weitergetrieben: **drei Jahre** in der Registry (2026, 2027,
+2028), eines mit einem stillen Release, nur 2026 mit Sammelzeile. Beide zugeklappten
+Jahre tragen ihre `h2`, die Kette ist lückenlos, 920 Tests grün.
+
+**AK-38 ist damit bestanden** — es fiel zuvor aus **zwei** Gründen durch, der
+feature-eigene (BF-115) ist behoben. Übrig bleiben AK-34 und AK-44, beide ohne
+Codeanteil in diesem Feature: `heading-order` an der Fußzeile (BF-109) und die
+`hreflang`-Spiegelung (BF-110), beide in `base.html.twig` und auf jeder Seite.
+
+⚠ **Der methodische Fund dieses Durchlaufs: axe hätte BF-115 nie gefunden.** Mit
+zurückgenommener Reparatur gemessen — bei **zugeklappten** Jahren meldet axe nur den
+Fußzeilen-Verstoß, der Sprung von h1 auf h3 bleibt unsichtbar; erst **aufgeklappt** sieht
+axe ihn. **Ein zugeklapptes `<details>` verbirgt seinen Inhalt vor der Prüfung** — das
+gilt für jeden axe-Lauf des Projekts, auch die von `02`, `03` und `05`. Projektweit
+nachgesehen (`/open`, `/vergleich`, `/criteria`): **kein verborgener Befund**. Die
+Beobachtung bleibt gültig und gehört in künftige Prüfungen: *Ein axe-Lauf sollte
+aufklappbare Abschnitte einmal geöffnet messen.*
+
+**Fünf Durchläufe, vier davon mit je einem Fund** — BF-108 (768 px), BF-112/113/114
+(feste Zahlen), BF-115 (zugeklapptes Jahr). Jeder wurde sichtbar, weil der Durchlauf
+einen Zustand herstellte, den der vorherige nicht angefasst hatte. Der fünfte fand
+nichts mehr.
+
+Nächster Schritt: **`/sdd-deploy`** — die Release-Vorbereitung für `v2026.08.30.3` liegt
+fertig auf `dev`. ⚠ Erst Feature `06`, dann `07` (VB-01).
+
 **2026-08-30 · Roadmap-Pflege im Admin: erwogen, bewusst vertagt — keine Spec.** Der
 Wunsch, die drei Spalten und den Block „Bewusst nicht gebaut" in der Verwaltung zu
 pflegen, kehrt eine **ausdrücklich begründete Entwurfsentscheidung** von `07` um
@@ -1277,7 +1449,7 @@ eine neue Anforderung wäre und Michaels Entscheidung braucht.
 | 04 | Marketing-Kontakte in Brevo | P1 | **deployed** | B01, B14, B15, B22, 01 | 2026-08-30 · live in v2026.08.30, Migrationen durch, auf Produktion belegt |
 | 05 | Presse-Kit | P2 | **deployed** | B13, B16, B24, 02, 03 | 2026-08-30 · live in v2026.08.30.1, auf Produktion nachgeprüft |
 | 06 | Community Feedback Board | P1 | **approved** | B01, B02, B19, B21, B24, 01, 02 | 2026-08-30 · auf `dev` als `v2026.08.30.2`, **wartet auf den Merge nach `production`** |
-| 07 | Öffentliche Roadmap und Changelog | P2 | **approved** | 06, B13, B16, B24, 02, 03, 05 | 2026-08-30 · QA²: 49/52, kein neuer Befund — ⚠ Deploy **nach** `06` |
+| 07 | Öffentliche Roadmap und Changelog | P2 | **approved** | 06, B13, B16, B24, 02, 03, 05 | 2026-08-31 · QA⁵: 50/52, **kein neuer Befund** — ⚠ Deploy nach `06` |
 | B01 | Registrierung & E-Mail-Bestätigung | P0 | **approved** | — | 2026-08-23 · QA³: 17/20, nur mittlere Befunde offen |
 | B02 | Anmeldung mit Passwort | P0 | **approved** | B01 | 2026-08-24 · QA²: 16/17, repariert |
 | B03 | Passkey-Anmeldung & -Verwaltung | P0 | **deployed** | B01, B02 | 2026-08-29 · ENDLECH-6 live in v2026.08.29.1, auf Produktion belegt (302 statt 400) |

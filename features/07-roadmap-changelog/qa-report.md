@@ -439,3 +439,396 @@ verweist ins Leere.
 ⚠ **Was mit ausgeliefert wird, ohne behoben zu sein:** BF-109 und BF-110 (App-Hülle,
 betreffen jede Seite und sind seit BF-80 bzw. B24 vorbestehend) sowie BF-111 (Feature
 `06`, liegt auf `dev`). Alle drei stehen in `features/befunde.md`.
+
+---
+
+# Nachtrag: BF-112 (2026-08-30, aus dem Deploy-Preflight)
+
+**Nicht von der QA gefunden, sondern vom Release selbst.** Beide QA-Durchläufe waren
+grün — der Fehler entsteht erst, wenn eine Version dazukommt.
+
+**Befund:** `testChangelogZeigtNeunReleasesUndDieSammelzeile` prüfte mit
+`assertCount(10, …)` gegen eine fest verdrahtete Zahl. Beim Vorbereiten von
+`v2026.08.30.3` schlug er fehl (`actual size 11 matches expected size 10`), obwohl alles
+richtig war.
+
+⚠ **Nicht kosmetisch.** Der fünfte Punkt der Release-Checkliste hätte damit bei **jedem**
+Release einen roten Lauf erzeugt — und ein Prüflauf, der bei jedem korrekten Vorgang
+anschlägt, wird nach dem dritten Mal ignoriert. Dann fehlt genau die Absicherung, für die
+er gebaut wurde.
+
+**✅ Behoben am 2026-08-30.** Die erwartete Zahl wird aus `ChangelogRegistry` abgeleitet
+statt genannt. Der Lauf prüft dadurch **mehr** als vorher: nicht eine Momentaufnahme,
+sondern die Kopplung zwischen Registry und Seite.
+
+| Gegenprobe | Erwartung | Ergebnis |
+|---|---|---|
+| Ein weiteres Release eintragen (der BF-112-Fall) | grün | **grün** — 1 Test, 5 Assertions |
+| Template verschluckt einen Eintrag (`entries\|slice(1)`) | rot | **rot** — „Die Seite zeigt nicht die 11 Einträge, die die Registry als sichtbar führt" |
+
+Der Testname trägt keine Zahl mehr: `testChangelogZeigtGenauDieSichtbarenEintraege`.
+
+**Was der Vorgang über die Prüfung selbst sagt:** Zwei QA-Durchläufe haben diesen Fehler
+nicht gefunden, weil beide gegen einen **eingefrorenen** Bestand liefen. Er wurde erst
+sichtbar, als der Release den Zustand veränderte — dieselbe Lehre wie bei Feature `05`
+(*den Zustand herstellen, statt auf ihn zu warten*), hier auf den Release angewandt:
+**Ein Prüflauf, der eine Liste zählt, gehört einmal mit einem zusätzlichen Eintrag
+ausgeführt.**
+
+---
+
+# Dritter Durchlauf (2026-08-30, abends)
+
+Auftrag: BF-112 gegenprüfen und AK-20, AK-21, AK-22 neu belegen. Der eigentliche Ertrag
+liegt daneben — **BF-112 war ein Muster, kein Einzelfall.**
+
+| | Anzahl (3. Durchlauf) |
+|---|---|
+| Kriterien neu bewertet | 3 (AK-20, AK-21, AK-22) |
+| **Gesamtstand** | **49 von 52 bestanden**, 3 durchgefallen, 0 nicht prüfbar |
+| neue Befunde | **2** (BF-113, BF-114 — beide *mittel*) |
+| Tests grün | 915 von 915 (10 übersprungen, aus anderen Features) |
+
+## BF-112: behoben und unabhängig gegengeprüft
+
+| Prüfung | Ergebnis |
+|---|---|
+| AK-22 · Artikel auf der Seite | **11** = 10 gezeigte Releases + Sammelzeile, abgeleitet aus der Registry |
+| AK-20 · erster Eintrag | „Roadmap und Changelog · 2026.08.30.3" |
+| AK-20 · Codebegriffe **nur im Artikeltext** (4 558 Zeichen) | einzig „TripAdvisor" — ein Produktname |
+| AK-21 · stille Releases sichtbar | **keine** (`2026.08.30.1`, `2026.08.29.1`, `2026.08.06`) |
+
+**Gegenprobe mit einem anderen Eingriff als der Bau:** Alle `SUMMARISED`-Releases auf
+`SILENT` gesetzt, die Sammelzeile fällt damit weg → Lauf **grün**. Die Ableitung
+berücksichtigt den `summary`-Zweig korrekt und ist nicht auf den Regelfall geraten.
+
+## Der eigentliche Fund: dieselbe Bauart, zweimal daneben
+
+Die Reparatur von BF-112 hat die Stelle behoben, **nicht die Lehre angewandt**. Zwei
+weitere Prüfläufe tragen denselben Fehler — beide nachgestellt, nicht vermutet:
+
+**BF-113 · `assertCount(8, …)` für die zurückgestellten Punkte.** Ein neunter Eintrag in
+`RoadmapRegistry::shelved()` macht den Lauf rot: *„actual size 9 matches expected size
+8"*. Der Auslöser ist der Regelbetrieb — OF-03 sieht eine Roadmap-Durchsicht bei jedem
+Release vor, OF-04 die Rückstufung nach zwölf Monaten. Einträge wandern planmäßig.
+
+**BF-114 · Die Jahres-Prüfungen nehmen an, dass es nur ein Jahr gibt.** Mit einem
+Release vom 15.01.2027 werden **zwei** Läufe rot:
+
+1. `testDasLaufendeJahrIstOffenDasFruehereZugeklappt` erwartet feste `<details>`-Zahlen
+   → *„Failed asserting that 1 is identical to 0"*
+2. `testDieGruppierungNachJahrenIstVollstaendig` verlangt die Sammelzeile als älteste
+   Zeile **jedes** Jahres — 2027 hat keine
+   → *„Failed asserting that an instance of ReleaseNote is an instance of ChangelogSummary"*
+
+⚠ **Das tritt sicher ein**, spätestens mit dem ersten Release im Januar 2027 — anders als
+BF-113, das einen Handgriff voraussetzt.
+
+## Warum das zählt
+
+Alle drei Läufe sind grün, solange sich nichts ändert, und werden rot, sobald der
+Regelbetrieb genau das tut, wofür das Feature gebaut wurde: ein Release hinzufügen, ein
+Vorhaben zurückstufen, ein Jahr weiterrücken. **Ein Prüflauf, der bei jedem korrekten
+Vorgang anschlägt, wird nach dem dritten Mal ignoriert** — und dann fehlt die
+Absicherung, für die er gebaut wurde. Genau darauf ruht der fünfte Punkt der
+Release-Checkliste.
+
+Als projektweites Muster in `features/befunde.md` festgehalten, zusammen mit der Regel:
+**Wer eine Liste zählt, leitet die erwartete Zahl aus der Quelle ab und führt den Lauf
+einmal mit einem zusätzlichen Eintrag aus.**
+
+⚠ **Es ist dasselbe Versäumnis wie bei BF-107 → BF-108:** eine Stelle repariert, die
+Nachbarschaft nicht mitgenommen. Zweites Auftreten desselben Verhaltens in einem Feature.
+
+## Randnotiz zur Prüfung selbst
+
+Eine Probe lief zunächst gegen eine **gestoppte Datenbank** und meldete „actual size 0" —
+was wie ein Befund am Feature aussah und keiner war (`SQLSTATE[HY000] [2002] Connection
+refused`). Erst nach dem Start des Containers war die Messung gültig und wurde
+wiederholt. Festgehalten, weil ein Prüfbericht auch sagen muss, wo er sich selbst
+korrigiert hat.
+
+## Fazit des dritten Durchlaufs
+
+**Production-ready: ja** — der höchste Grad der offenen Befunde ist *mittel*, und keiner
+betrifft eine Funktion für Besucher.
+
+⚠ **Empfehlung trotzdem: BF-114 vor dem Deploy beheben.** Er tritt garantiert ein, und
+dann sind zwei Läufe rot, ohne dass jemand einen Fehler gemacht hat. BF-113 kann warten,
+bis der neunte zurückgestellte Punkt entsteht. Beide zusammen sind eine Reparatur an
+zwei Testdateien — dieselbe Ableitungsregel wie bei BF-112.
+
+## Nächster Schritt
+
+Zwei Wege, und die Entscheidung gehört dem Betreiber:
+
+- **`/sdd-build 07`** mit BF-113 und BF-114 — sauber, verschiebt den Deploy um einen
+  Durchgang. Empfohlen, weil BF-114 sicher eintritt.
+- **`/sdd-deploy`** — die Befunde stehen erfasst in `features/befunde.md` und blockieren
+  nach den Regeln der Kette nicht. Die Release-Vorbereitung für `v2026.08.30.3` liegt
+  fertig auf `dev`.
+
+⚠ In beiden Fällen gilt weiter: **erst Feature `06`**, dann `07` (VB-01).
+
+---
+
+## ✅ BF-113 und BF-114 behoben (2026-08-30)
+
+Beide nach derselben Regel wie BF-112: **Die erwartete Zahl wird aus der Quelle
+abgeleitet, nicht genannt.**
+
+| Befund | Reparatur | Reproduktion aus dem Bericht | Prüfkraft erhalten? |
+|---|---|---|---|
+| **BF-113** | Zahl aus `RoadmapRegistry::shelved()` | neunter Punkt → **grün** | Template verschluckt einen → **rot**: „Die Seite zeigt nicht die 8 zurückgestellten Punkte" |
+| **BF-114 (1)** | Zugeklappt ist jedes Jahr **außer** dem laufenden | Release 2027 → **grün** | laufendes Jahr fälschlich zugeklappt → **rot**: „Bei laufendem Jahr 2026 müssen 0 von 1 Jahren zugeklappt sein" |
+| **BF-114 (2)** | Sammelzeile nur in **ihrem eigenen** Jahr verlangt | Release 2027 → **grün** | — |
+
+⚠ **Auch der Datenlieferant trug feste Jahreszahlen** (`['2026', 0]`, `['2027', 1]`) —
+das war die dritte Stelle desselben Fehlers und im Testbericht nicht benannt. Er liefert
+jetzt zwei Lagen, die es immer gibt: das jüngste Jahr **mit** Einträgen und eines
+**ohne**.
+
+915 Tests grün.
+
+---
+
+# Vierter Durchlauf (2026-08-30, spätabends)
+
+Auftrag: BF-113 und BF-114 gegenprüfen. Die Frage, mit der ich angefangen habe, war
+aber eine andere — nach drei Durchläufen, die dieses Muster jedes Mal an einer neuen
+Stelle fanden: **Gibt es eine vierte?**
+
+| | Anzahl (4. Durchlauf) |
+|---|---|
+| **Gesamtstand** | 49 von 52 bestanden, 3 durchgefallen |
+| neue Befunde | **1** (BF-115, *mittel*) — **kein** Zahlenmuster, sondern ein inhaltlicher Fehler |
+| Tests neu geschrieben | 5 (1 Datei), davon **2 absichtlich rot** |
+| Tests grün | 915 von 915 im heutigen Zustand · **917 mit dem neuen Lauf, davon 2 rot** |
+
+## BF-113 und BF-114: behoben, gegengeprüft
+
+| Prüfung | Ergebnis |
+|---|---|
+| BF-113 · neunter zurückgestellter Punkt | **grün** — Zahl kommt aus `RoadmapRegistry::shelved()` |
+| BF-114 · Release in einem neuen Jahr | **grün** — beide vormals roten Läufe halten |
+| Prüfkraft 1 · Template verschluckt einen Punkt | **rot**: „Die Seite zeigt nicht die 8 zurückgestellten Punkte" |
+| Prüfkraft 2 · laufendes Jahr fälschlich zugeklappt | **rot**: „Bei laufendem Jahr 2026 müssen 0 von 1 Jahren zugeklappt sein" |
+
+Die vom Bau gemeldete **dritte Stelle** (feste Jahreszahlen im Datenlieferanten) ist
+mitrepariert und belegt: Der Lieferant führt jetzt das jüngste Jahr **mit** Einträgen und
+eines **ohne**.
+
+## Die Vollbetriebs-Probe — und was sie zutage brachte
+
+Statt 25 feste Zahlen zu lesen, habe ich **den Bestand wachsen lassen**: zwei Releases in
+einem neuen Jahr (eines davon still), ein neunter zurückgestellter Punkt, ein neuntes
+kuratiertes Vorhaben. Dann die volle Suite.
+
+**Ergebnis: ein Fehlschlag — und es ist kein Zahlenmuster, sondern ein echter Fehler.**
+
+### BUG-05 / BF-115 · Ein zugeklapptes Jahr trägt keine Überschrift — mittel
+
+**Betrifft:** AK-38 (WCAG 1.3.1)
+
+**Reproduktion:**
+1. Ein Release in einem Jahr eintragen, das nicht das laufende ist
+2. `/de/changelog` öffnen und die Überschriften des Inhaltsbereichs lesen
+
+**Erwartet:** Lückenlose Kette.
+
+**Tatsächlich:** Gemessen am ausgelieferten HTML —
+
+```
+h1  „Changelog"
+<summary> „2027"   ← keine Überschrift für Screenreader
+h3  „Probe A"      ⚠ SPRUNG von h1
+h2  „2026"
+h3  „Roadmap und Changelog"
+…
+```
+
+**Ort:** `templates/roadmap/changelog.html.twig` — die Jahresschleife hat zwei Zweige.
+Das laufende Jahr bekommt `<section aria-labelledby="year-…"><h2 id="year-…">`, ein
+früheres nur `<details><summary>2027</summary>`. Ein `<summary>` ist für einen
+Screenreader **keine Überschrift**; die Artikel darin tragen `h3` und hängen an nichts.
+
+⚠ **Heute unsichtbar, tritt sicher ein.** Solange die Registry ein einziges Jahr führt,
+gibt es kein `<details>`. Mit dem ersten Release im Januar 2027 rutscht 2026 hinein und
+verliert seine Überschrift — auf einer Seite, die dann längst live ist.
+
+⚠ **Anders als BF-109 gehört dieser Befund dem Feature**, nicht der App-Hülle. AK-38
+fällt damit aus **zwei unabhängigen** Gründen durch; BF-109 zu beheben würde nicht
+genügen.
+
+**Vorschlag:** Eine Überschrift ins `<summary>` — HTML erlaubt dort Heading-Content
+(`<summary><h2>2026</h2></summary>`). Der bestehende `<section aria-labelledby>`-Zweig
+zeigt, wie es beim offenen Jahr schon gelöst ist.
+
+## Neue Tests
+
+| Datei | Fälle | Deckt ab |
+|---|---|---|
+| `tests/Functional/Controller/RoadmapYearHeadingTest.php` | 5, davon **2 absichtlich rot** | AK-38 im zugeklappten Jahr (BF-115) |
+
+Der Lauf rendert die Seite mit einem **frei wählbaren laufenden Jahr** und stellt damit
+den Zustand her, den der Kalender sonst erst 2027 liefert. Beide Lagen werden geprüft:
+alle Jahre offen (grün) und jedes Jahr zugeklappt (rot, bis BF-115 fällt).
+
+⚠ Beim Schreiben zweimal nachgeschärft, und beide Male war der erste Wurf zu lax:
+(1) Er maß die **ganze Seite** und schlug deshalb auch an BF-109 an — jetzt nur `<main>`.
+(2) Er fragte, ob im `<details>` *irgendeine* Überschrift steht — die `h3` der Artikel
+erfüllten das. Gefragt ist die Überschrift **des Jahres**, also im `<summary>` selbst.
+
+## Fazit
+
+**Production-ready: nein** — und zwar aus einem anderen Grund als dem Schweregrad.
+
+BF-115 ist *mittel* und würde nach den Regeln der Kette nicht blockieren. Der neue
+Prüflauf, der ihn festhält, ist aber **absichtlich rot** — und damit scheitert der
+Deploy-Preflight an seinem Punkt „Verifikationsbefehl grün". Das ist gewollt: Ein
+Befund, der garantiert eintritt, soll nicht als Fußnote mitfahren.
+
+Zwei Wege:
+
+- **`/sdd-build 07`** mit BF-115 — eine Zeile im Template, danach ist der Lauf grün.
+  **Empfohlen.**
+- Den neuen Lauf überspringen (`markTestSkipped`) und ohne die Reparatur ausliefern —
+  möglich, aber dann steht ein bekannter, terminierter WCAG-Verstoß in einem Projekt,
+  das WCAG 2.2 AA über den vollen Bestand zusagt.
+
+Unverändert offen und **nicht** von diesem Feature verursacht: BF-109, BF-110 (App-Hülle)
+und BF-111 (Feature `06`).
+
+---
+
+## ✅ BF-115 behoben (2026-08-30)
+
+`<summary><h2 class="inline">…</h2></summary>` — HTML erlaubt im `<summary>`
+Heading-Content, `inline` hält die Überschrift neben dem Aufklapp-Dreieck.
+
+**Mit hergestellter Reproduktion** (ein Release in einem neuen Jahr) am ausgelieferten
+HTML nachgemessen:
+
+```
+h1  „Changelog"
+h2  „2027"          ← neu, im <summary>
+h3  „Probe"
+h2  „2026"
+h3  … (10 Einträge)
+h2  „Vollständige Fassung"
+
+Sprünge: KEINE
+```
+
+| Prüfung | Ergebnis |
+|---|---|
+| Überschriftenkette im Inhaltsbereich | **keine Sprünge** |
+| Darstellung | `display: inline`, 21 px hoch in einem 60 px hohen `<summary>` — kein Umbruch · `qa/BF-115-behoben-jahresueberschrift.png` |
+| Gegenprobe: Überschrift entfernt | **beide Läufe rot** |
+| `RoadmapYearHeadingTest` | **5 von 5 grün** (vorher 2 rot) |
+
+⚠ **Ein Messfehler von mir, der fast zu einer Falschmeldung geführt hätte:** Der erste
+Messbefehl suchte `<h[1-6]>` **und** `<summary>` in einem Ausdruck — dabei greift der
+`<summary>`-Zweig zuerst und verschluckt die darin liegende `h2`. Das Ergebnis sah aus
+wie ein unveränderter Sprung. Der PHPUnit-Lauf mit echtem DOM-Parser war zur selben Zeit
+grün; erst der Vergleich beider brachte es ans Licht. **Ein Regex ist kein Parser** —
+festgehalten, weil derselbe Fehler jede HTML-Messung dieses Projekts treffen kann.
+
+## Neue offene Frage: OF-11
+
+Beim Herstellen der Reproduktion fiel auf, dass der Aktualitätshinweis **nicht zwischen
+Vergangenheit und Zukunft unterscheidet**: `date().diff()` liefert den Betrag. Ein
+Eintragsdatum, das versehentlich in der Zukunft liegt, erzeugt „Zuletzt aktualisiert am
+15. Januar 2027 — seither sind 136 Tage vergangen. Diese Seite ist möglicherweise nicht
+mehr aktuell." Kein Kriterium deckt den Fall ab; er entsteht nur durch einen
+Eingabefehler. Als **OF-11** in `spec.md` vermerkt, **nicht** behoben — das wäre eine
+neue Anforderung.
+
+---
+
+# Fünfter Durchlauf (2026-08-31) — **kein neuer Befund**
+
+Vier Durchläufe brachten je einen Fund, weil jeder einen Zustand herstellte, den der
+vorherige nicht angefasst hatte. Dieser trieb dieselbe Methode weiter — **drei Jahre
+statt zwei** — und fand nichts mehr.
+
+| | Anzahl (5. Durchlauf) |
+|---|---|
+| **Gesamtstand** | **50 von 52 bestanden**, 2 durchgefallen, 0 nicht prüfbar |
+| neue Befunde | **keiner** |
+| Tests grün | **920 von 920** (10 übersprungen, aus anderen Features) |
+
+## BF-115: behoben, mit drei Jahren gegengeprüft
+
+Erweiterte Vollbetriebs-Probe: drei Jahre in der Registry (2026, 2027, 2028), eines davon
+mit einem stillen Release, nur 2026 mit Sammelzeile.
+
+```
+h1  „Changelog"
+h2  „2028"      ← zugeklappt, trägt Überschrift
+h3  „P28"
+h2  „2027"      ← zugeklappt, trägt Überschrift
+h3  „P27a"
+h2  „2026"      ← laufendes Jahr, offen
+h3  … (10 Einträge)
+h2  „Vollständige Fassung"
+
+Sprünge: KEINE
+```
+
+Beide zugeklappten Jahre tragen eine `h2`, das stille Release aus 2027 erscheint nicht,
+920 Tests grün.
+
+## Der methodische Fund: axe hätte BF-115 nie gefunden
+
+Mit **zurückgenommener** Reparatur gemessen:
+
+| Zustand | axe | eigener Prüflauf |
+|---|---|---|
+| Jahre zugeklappt (**Normalfall**) | **1 Verstoß** — nur die Fußzeile. BF-115 **unsichtbar** | findet ihn |
+| Jahre aufgeklappt | 2 Verstöße — jetzt sieht axe den `h3`-Sprung | findet ihn |
+
+**Ein zugeklapptes `<details>` verbirgt seinen Inhalt vor der Prüfung.** Jeder axe-Lauf
+dieses Projekts — auch die von Feature `02`, `03` und `05` — prüft nur, was gerade
+sichtbar ist.
+
+Projektweit nachgesehen, ob dahinter mehr steckt:
+
+| Seite | `<details>` im Inhalt | axe zugeklappt | aufgeklappt |
+|---|---|---|---|
+| `/de/open` | 1 | 1 | 1 |
+| `/de/changelog` | 2 | 1 | 1 |
+| `/de/vergleich` | 0 | 1 | 1 |
+| `/de/criteria` | 0 | 1 | 1 |
+
+**Kein verborgener Befund.** Die Beobachtung bleibt trotzdem gültig und gehört in künftige
+Prüfungen: **Ein axe-Lauf sollte aufklappbare Abschnitte einmal geöffnet messen.** Als
+Hinweis vermerkt, nicht als Befund — die Spec kennt diese Anforderung nicht.
+
+## Verbliebene durchgefallene Kriterien
+
+| AK | Grund | Gehört zu |
+|---|---|---|
+| AK-34 | `heading-order` an `div:nth-child(2) > h4` — die Fußzeile | **BF-109**, App-Hülle |
+| AK-44 | `hreflang` spiegelt die Abfragezeichenfolge | **BF-110**, App-Hülle |
+
+**AK-38 ist jetzt bestanden.** Es fiel zuvor aus zwei Gründen durch; der feature-eigene
+(BF-115) ist behoben, und im Inhaltsbereich ist die Kette bei drei Jahren lückenlos. Der
+verbleibende Sprung sitzt ausschließlich in der Fußzeile und wird von AK-34 erfasst.
+
+## Fazit
+
+**Production-ready: ja.** 50 von 52 Kriterien bestanden, kein neuer Befund, 920 Tests
+grün. Die beiden verbliebenen Durchfaller haben **keinen Codeanteil in diesem Feature**:
+Sie sitzen in `templates/base.html.twig` und betreffen jede Seite des Projekts.
+
+**Offen, ohne zu blockieren:** BF-109, BF-110 (App-Hülle), BF-111 (Feature `06`),
+**OF-11** (Aktualitätshinweis bei einem Datum in der Zukunft — kein Kriterium deckt ihn
+ab).
+
+## Nächster Schritt
+
+**`/sdd-deploy`** — die Release-Vorbereitung für `v2026.08.30.3` liegt fertig auf `dev`.
+
+⚠ **Erst Feature `06`**, dann `07` (VB-01): Die Roadmap liest dessen Bestand und verlinkt
+auf `app_board_index`.
