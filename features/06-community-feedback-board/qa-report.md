@@ -484,3 +484,85 @@ Beide bleiben im Projekt und laufen künftig bei jeder Änderung mit.
 - **Admin-Shell** (B19): 34 Bedienelemente unter 44 × 44 px, u. a. der Sprachumschalter
   mit 54 × 28. Auf `/de/admin/vorschlaege` (B21) dieselbe Lage. **Kein neuer Befund
   gebucht** — es fehlt ein Kriterium dafür, und die QA erfindet keine Anforderungen.
+
+---
+
+# Nachtrag: BF-116 (2026-08-31, aus dem Deploy)
+
+**Nicht von der QA gefunden, sondern vom Deploy selbst.** Beide QA-Durchläufe von
+Feature `06` waren grün — der Fehler tritt nur auf PHP 8.4 auf, und lokal läuft 8.5.
+
+**Befund:** `#[ORM\ManyToOne]` ohne `targetEntity` bei einem Property vom Typ `?self`.
+Auf Produktion brach `cache:clear` ab: *„The target-entity `App\Entity\self` cannot be
+found in `App\Entity\BoardIdea#duplicateOf`."* Der Deploy vom 2026-08-31 scheiterte, die
+Wartungsseite blieb stehen, die Seite war offline. Rollback per Revert.
+
+## ✅ Behoben — und diesmal reproduziert
+
+Der Baubericht meldete den Fehler als **lokal nicht reproduzierbar** und stützte sich auf
+einen statischen Prüflauf. Diese Prüfung hat die Reproduktion nachgeholt: **ein
+Container mit der Produktions-Sprachversion genügt.**
+
+```
+docker run --rm -v "$PWD":/app -w /app php:8.4-cli php <skript>
+```
+
+**Die Ursache, gemessen:**
+
+| PHP | `ReflectionProperty::getType()->getName()` |
+|---|---|
+| 8.5.2 (lokal) | `App\Entity\BoardIdea` — aufgelöst |
+| **8.4.25** (Produktion) | **`self`** — nicht aufgelöst |
+
+**Die Reparatur, in beide Richtungen belegt** — Doctrines `AttributeDriver` unter 8.4:
+
+| Zustand | `targetEntity` löst auf zu | |
+|---|---|---|
+| **mit** `targetEntity: self::class` | `App\Entity\BoardIdea` | Klasse existiert ✓ |
+| **ohne** (der Zustand des Deploys) | **`App\Entity\self`** | existiert nicht ✗ — **wortgleich mit der Produktionsmeldung** |
+
+Kein Symfony-Kernel, keine Extensions, keine Datenbank nötig — es genügte, den
+`AttributeDriver` die Metadaten aufbauen zu lassen.
+
+## Prüfung des neuen Prüflaufs
+
+`MappingSelfTargetTest` (statisch, umgebungsunabhängig) — mit einer **anderen** Gegenprobe
+als der Bau geprüft: eine `OneToOne`-Assoziation mit `self`-Typ in einer neuen Entity →
+**rot**. Der Lauf fängt also nicht nur `ManyToOne` und nicht nur den bekannten Fall.
+
+Projektweit nachgezählt: **genau eine** Stelle war betroffen. Fünf weitere Assoziationen
+haben kein `targetEntity`, aber auch keinen `self`-Typ — dort ist die Auflösung
+unproblematisch.
+
+## Regression
+
+| Prüfung | Ergebnis |
+|---|---|
+| Dublettenzusammenführung (nutzt `duplicateOf`) | 2 Tests grün |
+| `/de/community/ideen`, `/de/community/ideen/neu` | 200 |
+| `cache:clear --env=prod` lokal | OK |
+| Volle Suite | **922 Tests grün** |
+| `doctrine:schema:validate` | „mapping files are correct"; die Schema-Abweichung ist **vorbestehend** (Index-Rauschen an `cuisine`, `ordering_option`, `restaurant`) und mit wie ohne die Änderung identisch |
+
+## Die Lehre, die über diesen Befund hinausgeht
+
+BF-116 galt als „nur auf Produktion prüfbar" — bis ein `docker run` in unter einer Minute
+das Gegenteil zeigte. Als projektweites Muster festgehalten: **Bevor ein Befund als „lokal
+nicht reproduzierbar" abgelegt wird, wird die Laufzeitumgebung im Container nachgestellt.**
+Für die Sprachversion genügt das offizielle Image; für Apache und `mod_dir` (BF-100) wäre
+es `php:8.4-apache`.
+
+## Fazit
+
+**Production-ready: ja.** Kein neuer Befund, 922 Tests grün, Ursache und Reparatur unter
+der Produktions-Sprachversion belegt.
+
+⚠ **Offen bleibt BF-111** (*mittel*, blockiert nicht): Eine wartende Idee **ohne
+Verfasser** ist öffentlich lesbar, weil `null !== null` false ergibt. Über den
+Anwendungsweg heute nicht erreichbar — `AccountDeleter` löscht wartende Ideen vor dem
+Konto —, aber die Prüfung ist richtig aus dem falschen Grund. Die Zeile steht unverändert
+in `BoardController.php:169`.
+
+## Nächster Schritt
+
+`/sdd-deploy` — ⚠ mit Feature `07` zusammen, in dieser Reihenfolge (VB-01).
