@@ -264,24 +264,6 @@ Durchgang durch `~/.claude/sdd/sicherheit.md`, alle sechs Abschnitte. Datenschut
 - **OF-02** · Wie kann ein bestehendes Konto nachträglich zustimmen? Heute erreicht die
   Checkbox nur den Registriervorgang; wer schon ein Konto hat, hat keinen Weg hinein. Ein
   Schalter im Profil wäre der naheliegende Ort, wurde aber nicht beauftragt. — Betreiber
-
-  ⚠ **Es genügt nicht, das Feld zu setzen.** `MarketingContactRegistry::recordUser()`
-  wird an genau einer Stelle gerufen — `EmailVerificationController:74`, beim Bestätigen
-  der Adresse nach der Registrierung. Ein bereits verifiziertes Konto holt kein Lauf
-  nachträglich ab, auch nicht `app:marketing:import` (das nimmt ausdrücklich keine
-  Konten). Wer OF-02 umsetzt, braucht deshalb **beides**: den Schalter *und* einen
-  zweiten Aufrufpunkt. Ein Schalter allein wäre eine Einwilligung, die folgenlos bleibt
-  — schlimmer als keiner, weil sie dem Nutzer etwas zusagt, das nicht geschieht.
-
-  ⚠ **Der Widerruf hängt mit dran** (Art. 7 Abs. 3): Wer bei der Registrierung angehakt
-  hat, kann heute nur über den Abmeldelink einer Kampagne widerrufen — also erst,
-  nachdem er Werbung bekommen hat. Derselbe Schalter löst beide Richtungen.
-
-  **Stand 2026-08-30 gemessen: zwei Konten, beide dem Betreiber persönlich bekannt.**
-  Damit ist die Frage vorerst gegenstandslos — für zwei Personen ist ein Feature
-  unverhältnismäßig, und der direkte Weg ist ohnehin der bessere. Sie wird wieder
-  dringlich, sobald Registrierungen von Fremden eingehen; dann ist der gesamte
-  Nutzerbestand ohne diesen Schalter für Kampagnen unerreichbar.
 - **OF-03** · Bleibt die Öffnungs- und Klickverfolgung in Brevo eingeschaltet? Sie ist
   dort Vorgabe. Das PRD schließt Web-Analytics aus und begründet das mit Datensparsamkeit
   — ob das auch für Kampagnen gilt, ist nicht entschieden. — Betreiber

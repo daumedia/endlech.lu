@@ -19,7 +19,6 @@ final class AdminDashboardController extends AbstractController
             'restaurantCount' => $stats->getRestaurantCount(),
             'verifiedCount' => $stats->getVerifiedCount(),
             'pendingSuggestionCount' => $stats->getPendingSuggestionCount(),
-            'pendingBoardIdeaCount' => $stats->getPendingBoardIdeaCount(),
             'userCount' => $stats->getUserCount(),
             'imageCount' => $stats->getImageCount(),
             'restaurantsThisMonth' => $stats->getRestaurantsAddedThisMonth(),

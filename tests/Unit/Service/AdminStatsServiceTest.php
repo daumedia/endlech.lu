@@ -4,7 +4,6 @@ namespace App\Tests\Unit\Service;
 
 use App\Entity\Restaurant;
 use App\Entity\User;
-use App\Repository\BoardIdeaRepository;
 use App\Repository\RestaurantImageRepository;
 use App\Repository\RestaurantRepository;
 use App\Repository\RestaurantSuggestionRepository;
@@ -29,17 +28,13 @@ final class AdminStatsServiceTest extends TestCase
         $suggestions = $this->createStub(RestaurantSuggestionRepository::class);
         $suggestions->method('countPending')->willReturn(4);
 
-        $boardIdeas = $this->createStub(BoardIdeaRepository::class);
-        $boardIdeas->method('countAwaitingReview')->willReturn(2);
-
-        $service = new AdminStatsService($restaurants, $users, $images, $suggestions, $boardIdeas);
+        $service = new AdminStatsService($restaurants, $users, $images, $suggestions);
 
         self::assertSame(11, $service->getRestaurantCount());
         self::assertSame(3, $service->getVerifiedCount());
         self::assertSame(5, $service->getUserCount());
         self::assertSame(7, $service->getImageCount());
         self::assertSame(4, $service->getPendingSuggestionCount());
-        self::assertSame(2, $service->getPendingBoardIdeaCount());
     }
 
     public function testThisMonthCountersUseFirstDayOfMonth(): void
@@ -63,7 +58,6 @@ final class AdminStatsServiceTest extends TestCase
             $users,
             $this->createStub(RestaurantImageRepository::class),
             $this->createStub(RestaurantSuggestionRepository::class),
-            $this->createStub(BoardIdeaRepository::class),
         );
 
         self::assertSame(2, $service->getRestaurantsAddedThisMonth());
@@ -86,7 +80,6 @@ final class AdminStatsServiceTest extends TestCase
             $users,
             $this->createStub(RestaurantImageRepository::class),
             $this->createStub(RestaurantSuggestionRepository::class),
-            $this->createStub(BoardIdeaRepository::class),
         );
 
         self::assertSame($recentRestaurants, $service->getRecentRestaurants(5));

@@ -26,22 +26,6 @@ framework:
                 adapter: cache.adapter.filesystem
                 default_lifetime: 3600
 
-            # Community-Ideen der öffentlichen Roadmap (/roadmap, Feature 07).
-            #
-            # Eigener Pool statt cache.open_stats: Beide werfen ihren Inhalt
-            # vollständig weg. Eine Finanzänderung im Admin nähme sonst die
-            # Roadmap mit, eine Zustimmung im Board die Kennzahlen.
-            #
-            # ⚠ Die Lebensdauer ist NICHT der Hauptweg (OF-07, entschieden am
-            # 2026-08-30). Verworfen wird der Pool von RoadmapCacheListener,
-            # sobald sich eine Idee, eine Stimme oder ein Konto ändert; die
-            # Stunde ist das Netz für Wege, die niemand vorhergesehen hat —
-            # etwa die Fremdschlüssel-Kaskade, die Stimmen in der Datenbank
-            # entfernt, am Anwendungscode vorbei.
-            cache.roadmap:
-                adapter: cache.adapter.filesystem
-                default_lifetime: 3600
-
 when@test:
     framework:
         cache:
@@ -50,12 +34,5 @@ when@test:
                 # überleben: Ein Test, der Restaurants anlegt und danach /open
                 # aufruft, sähe sonst den Stand eines früheren Tests.
                 cache.open_stats:
-                    adapter: cache.adapter.array
-                    default_lifetime: 3600
-
-                # Gleiche Begründung wie oben: Ein Test, der eine Idee auf
-                # „Geplant" setzt und danach /roadmap aufruft, sähe sonst den
-                # Stand eines früheren Tests.
-                cache.roadmap:
                     adapter: cache.adapter.array
                     default_lifetime: 3600

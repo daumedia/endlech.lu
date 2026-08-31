@@ -39,25 +39,6 @@
         </div>
     </div>
 
-    {# Board-Karte (Feature 06).
-       ⚠ Dieser Zähler ist der EINZIGE Hinweis auf die Warteschlange: Für neue
-       Einreichungen wurde bewusst keine interne Meldung gewählt. Wer ihn
-       entfernt, kappt die einzige Sichtbarkeit (AK-25). #}
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 {{ pendingBoardIdeaCount > 0 ? 'border-amber-300' : '' }}">
-        <div class="flex items-center gap-4">
-            <div class="bg-cyan-50 text-cyan-600 p-3 rounded-lg text-2xl">🗳️</div>
-            <div>
-                <p class="text-sm text-gray-500">{{ 'board.admin_queue'|trans }}</p>
-                <p class="text-3xl font-bold {{ pendingBoardIdeaCount > 0 ? 'text-amber-600' : 'text-gray-900' }}">{{ pendingBoardIdeaCount }}</p>
-            </div>
-        </div>
-        <div class="mt-4 pt-4 border-t border-gray-100">
-            <a href="{{ path('admin_board_index') }}" class="text-sm font-semibold text-purple-600 hover:text-purple-800 transition">
-                {{ 'board.title'|trans }}
-            </a>
-        </div>
-    </div>
-
     {# Vorschläge-Karte #}
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 {{ pendingSuggestionCount > 0 ? 'border-amber-300' : '' }}">
         <div class="flex items-center gap-4">

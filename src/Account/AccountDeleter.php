@@ -6,7 +6,6 @@ namespace App\Account;
 
 use App\Entity\User;
 use App\Marketing\MarketingContactRegistry;
-use App\Repository\BoardIdeaRepository;
 use App\Repository\UserRepository;
 use App\Service\AvatarUploadService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -35,7 +34,6 @@ final readonly class AccountDeleter
         private UserRepository $users,
         private AvatarUploadService $avatars,
         private MarketingContactRegistry $marketingContacts,
-        private BoardIdeaRepository $boardIdeas,
     ) {
     }
 
@@ -75,18 +73,6 @@ final readonly class AccountDeleter
         // Adresse noch auf einer Warteliste mit gültiger Einwilligung, bleibt
         // der Kontakt dort bestehen, statt mitgelöscht zu werden.
         $this->marketingContacts->scheduleRemoval($user->getEmail(), $user);
-
-        // Feature 06 / EC-09: Noch nicht freigegebene Ideen verschwinden mit dem
-        // Konto. Der Fremdschlüssel ist `SET NULL` — richtig für eine
-        // veröffentlichte Idee (AK-65: andere haben zugestimmt, das Team hat
-        // geantwortet), falsch für eine wartende: Die bliebe als herrenlose
-        // Einreichung in der Moderationsschlange stehen, und eine spätere
-        // Freigabe schickte eine Mail an eine Adresse, die es nicht mehr gibt.
-        //
-        // Abgegebene Zustimmungen brauchen hier nichts: Sie kaskadieren über den
-        // Fremdschlüssel, und weil die Zahl gezählt und nicht mitgeführt wird,
-        // stimmt sie danach von allein (AK-66).
-        $this->boardIdeas->deleteUnpublishedBy($user);
 
         $this->em->remove($user);
         $this->em->flush();

@@ -62,33 +62,6 @@ app_press_redirect:
     requirements:
         trailing_slash: '/?'
 
-# Locale-freie Kurzlinks auf Roadmap und Changelog (Feature 07).
-# Dieselbe Begründung wie bei /open, /vergleich und /presse: kurze Adressen, die
-# in Mails und Vorträgen stehen, dürfen nicht an einer Sprachwahl scheitern.
-#
-# ⚠ **Nicht permanent.** Ein 301 bliebe in fremden Browsern stehen — das war der
-# teure Teil von BF-100, nicht die Schleife selbst.
-#
-# ⚠ **Es darf kein Verzeichnis `public/roadmap` und kein `public/changelog`
-# entstehen.** Apaches mod_dir schickte sonst /roadmap per 301 auf /roadmap/,
-# während Symfony zurückschickt — lokal unsichtbar, weil der Entwicklungsserver
-# kein mod_dir hat. RouteDirectoryCollisionTest prüft genau diese Ursache.
-app_roadmap_redirect:
-    path: /roadmap
-    controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController
-    defaults:
-        route: app_roadmap_index
-        _locale: lb
-        permanent: false
-
-app_changelog_redirect:
-    path: /changelog
-    controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController
-    defaults:
-        route: app_changelog_index
-        _locale: lb
-        permanent: false
-
 # Alle Controller mit /{_locale} Prefix (inkl. Admin)
 # Ausnahmen: Api/V1 und Controller/Open werden separat ohne Locale-Prefix
 # importiert.

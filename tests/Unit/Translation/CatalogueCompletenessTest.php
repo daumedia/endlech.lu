@@ -33,7 +33,7 @@ final class CatalogueCompletenessTest extends TestCase
      * Materialliste, die Zitate und die Meldungen rufen ihre Schlüssel über
      * `App\Press\` auf. Die Lücke schließt `PressCatalogueTest`.
      */
-    private const DOMAINS = ['messages', 'validators', 'comparison', 'press', 'roadmap', 'changelog'];
+    private const DOMAINS = ['messages', 'validators', 'comparison', 'press'];
 
     /**
      * @return iterable<string, array{string}>

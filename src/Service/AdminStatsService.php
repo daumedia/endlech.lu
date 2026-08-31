@@ -4,7 +4,6 @@ namespace App\Service;
 
 use App\Entity\Restaurant;
 use App\Entity\User;
-use App\Repository\BoardIdeaRepository;
 use App\Repository\RestaurantImageRepository;
 use App\Repository\RestaurantRepository;
 use App\Repository\RestaurantSuggestionRepository;
@@ -17,7 +16,6 @@ class AdminStatsService
         private readonly UserRepository $userRepository,
         private readonly RestaurantImageRepository $imageRepository,
         private readonly RestaurantSuggestionRepository $suggestionRepository,
-        private readonly BoardIdeaRepository $boardIdeaRepository,
     ) {
     }
 
@@ -34,18 +32,6 @@ class AdminStatsService
     public function getPendingSuggestionCount(): int
     {
         return $this->suggestionRepository->countPending();
-    }
-
-    /**
-     * Wartende Ideen auf dem Community-Board (Feature 06, AK-25).
-     *
-     * ⚠ Der Zähler ist hier der einzige Hinweis auf die Warteschlange: Für neue
-     * Einreichungen wurde bewusst keine interne Meldung gewählt (Decision Log 8).
-     * Wer ihn aus dem Dashboard entfernt, kappt die einzige Sichtbarkeit.
-     */
-    public function getPendingBoardIdeaCount(): int
-    {
-        return $this->boardIdeaRepository->countAwaitingReview();
     }
 
     public function getUserCount(): int

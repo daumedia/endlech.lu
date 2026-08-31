@@ -117,9 +117,3 @@ accessibility:
     report:
         description_required: "Bitte beschreiben Sie die Barriere."
         email_invalid: "Bitte geben Sie eine gültige E-Mail-Adresse ein."
-
-board:
-    title_required: "Bitte gib deiner Idee einen Titel."
-    title_too_long: "Der Titel darf höchstens {{ limit }} Zeichen lang sein."
-    description_required: "Bitte beschreibe deine Idee."
-    description_too_long: "Die Beschreibung darf höchstens {{ limit }} Zeichen lang sein."
