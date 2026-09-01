@@ -12,6 +12,13 @@ security:
         dev:
             pattern: ^/(_profiler|_wdt|assets|build)/
             security: false
+        # Lebendigkeitspruefung: keine Sitzung, kein Benutzerprovider, kein
+        # Datenbankzugriff. Ohne diese Zeile liefe /health durch die lazy
+        # `main`-Firewall und setzte bei jedem Aufruf des Orchestrators ein
+        # Sitzungs-Cookie - alle 30 Sekunden, dauerhaft.
+        health:
+            pattern: ^/health$
+            security: false
         api_login:
             pattern: ^/api/v1/auth/login$
             stateless: true

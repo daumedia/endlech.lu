@@ -1178,6 +1178,94 @@ Der Service Worker braucht dafür **nichts**: Navigationen laufen network-first 
 Cache-Schreiben, alle anderen Wege cachen nur bei `response.ok`. Eine 503 landet
 strukturell in keinem Cache.
 
+## Container-Image (`Dockerfile`, Coolify)
+
+Zweiter Auslieferungsweg neben dem SSH-Deploy nach Cloudways — **kein Ersatz**. Das
+Bild fährt auf `dunglas/frankenphp:1-php8.4` in drei Stufen: `vendor` (Composer),
+`assets` (Encore), `runtime`. **Kein FrankenPHP-Worker-Modus**: Der klassische
+Request-pro-Prozess ist langsamer, verzeiht aber Zustandslecks, die ein Worker
+gnadenlos aufdeckt.
+
+⚠️ **PHP 8.4, nicht 8.3.** `composer.json` verlangt `>=8.4`.
+
+⚠️ **`zip` gehört in den `vendor`-Stage, nicht in die Laufzeit.** Ohne die Erweiterung
+bricht `composer install` mit „The zip extension and unzip/7z commands are both
+missing" ab — die Anwendung selbst braucht sie nie (`ext-zip` steht in `require-dev`,
+nur `app:press:package` und sein Prüflauf nutzen sie).
+
+⚠️ **`vendor/symfony/ux-turbo` muss VOR `npm ci` im Node-Stage liegen** —
+`"@symfony/ux-turbo": "file:vendor/symfony/ux-turbo/assets"` in `package.json` ist eine
+Datei-Abhängigkeit in den Composer-Bestand hinein. Derselbe Fallstrick wie im
+`verify-assets`-Job; wer ihn hier vergisst, bekommt einen toten Symlink.
+
+⚠️ **`assets/`, `templates/` und `src/` müssen im Node-Stage vollständig vorliegen.**
+`assets/styles/app.css` deklariert sie als `@source` (Positivliste, siehe dort). Fehlt
+eines, liefert Tailwind ein nahezu leeres Stylesheet aus — **ohne** dass der Build
+fehlschlägt. Der Nachweis, dass es stimmt, ist der Hash: Das im Bild gebaute CSS ist
+byte-identisch mit dem committeten Stand, also blockt der Docker-Weg `verify-assets`
+nicht.
+
+⚠️ **`public/build` steht in der `.dockerignore`.** Der Node-Stage baut es neu, und
+`COPY` löscht nichts — läge der committete Stand mit im Kontext, blieben die alten
+gehashten Dateien für immer im Bild liegen.
+
+⚠️ **`--no-scripts` beim `composer install` ist Pflicht.** Die `auto-scripts` rufen
+`importmap:install`, aber `symfony/asset-mapper` ist in diesem Projekt gar nicht
+installiert — `importmap.php` ist eine Altlast aus dem Skeleton, das Projekt fährt
+Encore. `assets:install public` und `cache:warmup` laufen deshalb als eigene Schritte;
+ersteres, weil die Swagger-UI unter `/api/docs` aus `public/bundles/` lädt.
+
+⚠️ **Der Warmup braucht Platzhalterwerte für `APP_SECRET` und `DATABASE_URL`.**
+Letztere steht **nicht** in `.env` (sie lag immer nur in `.env.local`), und ohne sie
+bootet der Kernel im Build nicht. Unkritisch, weil Symfony `%env(...)%` im
+kompilierten Container als Platzhalter hält und erst zur Laufzeit auflöst.
+
+**Was das Bild nicht löst:** den Messenger-Worker (ohne zweiten Dienst mit
+`messenger:consume async` wird keine einzige Mail versendet — siehe oben, der Ausfall
+ist lautlos), die JWT-Schlüssel (`config/jwt/*.pem` sind gitignored und bewusst nicht
+im Bild; Volume auf `/app/config/jwt` plus einmalig `lexik:jwt:generate-keypair`), die
+Migrationen und das Upload-Volume.
+
+## Route `/health`
+
+Sprachfreie Lebendigkeitsprüfung für Docker, Coolify und Load Balancer. Eigener
+Loader-Block in `config/routes.yaml` mit `exclude` am `controllers`-Loader — dasselbe
+Muster wie `Api/V1/`, `Open/` und `Marketing/`.
+
+⚠️ **Ohne den eigenen Block hinge sie unter `/{_locale}`** und `/health` wäre ein 302er
+auf `/lb/health`. Jeder Orchestrator, der Weiterleitungen nicht verfolgt, hielte den
+Container für krank.
+
+⚠️ **Bewusst ohne Datenbankabfrage.** Beantwortet wird „läuft der PHP-Prozess", nicht
+„ist das Gesamtsystem gesund". Hinge sie an der Datenbank, nähme ein kurzer Ausfall
+dort den Container mit — und der Neustart hülfe nichts, weil die Ursache außerhalb
+liegt.
+
+⚠️ **`stateless: true` ist kein Schmuck, und die Firewall `health` mit
+`security: false` ebenso wenig.** Der `LocaleSubscriber` fasst bei jedem Request die
+Sitzung an; bei einem Healthcheck im 30-Sekunden-Takt sind das rund 100 000 Dateien im
+Jahr, die niemand je liest. Der Subscriber steigt seither bei jeder Route mit
+`_stateless` aus, **bevor** er `getSession()` ruft.
+
+## Konvention: `TRUSTED_PROXIES` hinter jedem Reverse Proxy
+
+`framework.trusted_proxies` liest `%env(TRUSTED_PROXIES)%`, Vorgabe leer (= Verhalten
+wie bisher, kein Proxy wird vertraut). Auf Cloudways bleibt der Wert leer, in Coolify
+gehört `private_ranges` hinein.
+
+⚠️ **Ohne den Wert teilen sich hinter einem Proxy ALLE Besucher einen einzigen
+Rate-Limit-Deckel.** `Request::getClientIp()` liefert dort die Adresse des Proxys, für
+jeden dieselbe — betroffen ist jeder IP-basierte Limiter dieses Projekts
+(Registrierung BF-02, Anmeldung BF-13, Passkey-Challenge BF-18, Adressänderung BF-21,
+API-Einreichung BF-30, beide Wartelisten). Der erste Angreifer sperrt damit die
+gesamte Nutzerschaft aus und kommt selbst mit einem Proxy-Wechsel daran vorbei; genau
+die Umkehrung dessen, wofür die Deckel gebaut wurden. Zusätzlich erkennt Symfony ohne
+die Zeile hinter TLS-Terminierung das Schema nicht — erzeugte URLs stünden auf
+`http://`, in jeder Mail.
+
+Am Konto zählende Limiter (`password_change`) sind davon unberührt — das ist der
+zweite Grund für diese Unterscheidung.
+
 ## Fehler-Tracking (Sentry)
 
 `sentry/sentry-symfony` 5.x meldet uncaught Exceptions und Monolog-Records ab `WARNING` an ein Sentry-Projekt in der **EU-Region** (`ingest.de.sentry.io`, Frankfurt).

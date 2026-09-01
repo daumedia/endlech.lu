@@ -7,6 +7,79 @@ Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
 ## [Unreleased]
 
+### Container-Image für Coolify
+
+**`Dockerfile` und `.dockerignore` im Repo-Root.** Ein produktionstaugliches Image auf
+Basis von `dunglas/frankenphp:1-php8.4`, in drei Stufen: Composer-Abhängigkeiten,
+Encore-Assets, schlanke Laufzeit. Der bestehende Weg über `.github/deploy.sh` nach
+Cloudways bleibt unangetastet — das Image ist ein zweiter Weg, kein Ersatz.
+
+Kein FrankenPHP-Worker-Modus in dieser Fassung: Der klassische Request-pro-Prozess ist
+langsamer, verzeiht aber Zustandslecks, die ein Worker gnadenlos aufdeckt.
+
+⚠ **PHP 8.4, nicht 8.3.** `composer.json` verlangt `>=8.4`; ein 8.3-Image scheitert
+schon an `composer install`.
+
+⚠ **`zip` gehört in den Build-Stage, nicht in die Laufzeit.** Ohne die Erweiterung
+bricht Composer mit „The zip extension and unzip/7z commands are both missing" ab. Die
+Anwendung selbst braucht sie nie (`ext-zip` steht in `require-dev`).
+
+⚠ **`vendor/symfony/ux-turbo` muss VOR `npm ci` im Node-Stage liegen.** `package.json`
+führt `"@symfony/ux-turbo": "file:vendor/symfony/ux-turbo/assets"` — eine
+Datei-Abhängigkeit in den Composer-Bestand hinein. Derselbe Fallstrick wie im
+`verify-assets`-Job der GitHub-Action, hier zum zweiten Mal.
+
+⚠ **`assets/`, `templates/` und `src/` müssen im Node-Stage vollständig vorliegen.**
+`assets/styles/app.css` deklariert sie als `@source`; fehlt eines, liefert Tailwind ein
+nahezu leeres Stylesheet aus — **ohne** dass der Build fehlschlägt. Gegenprobe: Das im
+Image gebaute CSS ist byte-identisch mit dem committeten Stand (`app.506cce9d.css`).
+
+⚠ **`public/build` steht in der `.dockerignore`.** Der Node-Stage baut es neu, und `COPY`
+löscht nichts — läge der committete Stand mit im Kontext, blieben die alten gehashten
+Dateien für immer im Image liegen.
+
+⚠ **`--no-scripts` beim `composer install` ist Pflicht.** Die `auto-scripts` in
+`composer.json` rufen `importmap:install`, aber `symfony/asset-mapper` ist in diesem
+Projekt gar nicht installiert (`importmap.php` ist eine Altlast aus dem Skeleton).
+`assets:install` und `cache:warmup` laufen deshalb als eigene Schritte — ersteres, weil
+die Swagger-UI unter `/api/docs` aus `public/bundles/` lädt.
+
+### Neu: `/health`
+
+Sprachfreie Lebendigkeitsprüfung für Docker, Coolify und Load Balancer, mit eigenem
+Loader-Block in `config/routes.yaml`.
+
+⚠ **Ohne den eigenen Block hinge der Endpunkt unter `/{_locale}`** und `/health` wäre
+ein 302er auf `/lb/health` — jeder Orchestrator, der Weiterleitungen nicht verfolgt,
+hielte den Container für krank.
+
+⚠ **Bewusst ohne Datenbankabfrage.** Der Endpunkt beantwortet „läuft der PHP-Prozess",
+nicht „ist das Gesamtsystem gesund". Hinge er an der Datenbank, nähme ein kurzer Ausfall
+dort den Container mit — und der Neustart hülfe nicht, weil die Ursache außerhalb liegt.
+
+### Behoben: Sitzung für jeden Aufruf des Healthchecks
+
+`LocaleSubscriber` startete für **jeden** Request eine Sitzung. Bei einem Healthcheck im
+30-Sekunden-Takt sind das rund 100 000 Dateien im Jahr, die niemand je liest. Die Route
+trägt jetzt `stateless: true`, und der Sprachwähler steigt bei solchen Routen aus, bevor
+er die Sitzung anfasst.
+
+### Behoben: ein Rate-Limit-Deckel für alle Besucher hinter einem Proxy
+
+**`framework.trusted_proxies` fehlte.** Hinter einem Reverse Proxy — Coolify, Traefik,
+Cloudflare — ist `Request::getClientIp()` die Adresse des Proxys, für jeden Besucher
+dieselbe. Damit teilten sich sämtliche IP-basierten Limiter dieses Projekts
+(Registrierung, Anmeldung, Passkey-Challenge, Adressänderung, API-Einreichung, beide
+Wartelisten) **einen einzigen Deckel**: Der erste Angreifer sperrt die gesamte
+Nutzerschaft aus und kommt selbst mit einem Proxy-Wechsel daran vorbei. Zusätzlich
+erkennt Symfony ohne die Zeile hinter TLS-Terminierung das Schema nicht — erzeugte URLs
+stünden auf `http://`.
+
+Neue Umgebungsvariable `TRUSTED_PROXIES`, leer als Vorgabe: Ohne Wert verhält sich die
+Anwendung wie bisher. Auf Cloudways bleibt sie leer, in Coolify gehört
+`private_ranges` hinein.
+
+
 ## [2026.08.31] – Roadmap und Changelog
 
 **Zwei öffentliche Leseseiten** unter `/roadmap` und `/changelog`. Die Roadmap zeigt in
