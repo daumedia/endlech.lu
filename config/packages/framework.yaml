@@ -2,6 +2,22 @@
 framework:
     secret: '%env(APP_SECRET)%'
 
+    # ⚠ Pflicht, sobald die App hinter einem Reverse Proxy laeuft (Coolify,
+    # Traefik, Cloudflare). Ohne das ist `Request::getClientIp()` die Adresse des
+    # Proxys - fuer JEDEN Besucher dieselbe. Damit teilten sich alle IP-basierten
+    # Limiter dieses Projekts (Registrierung, Anmeldung, Passkey-Challenge,
+    # Adressaenderung, API-Einreichung, Wartelisten) einen einzigen Deckel: Der
+    # erste Angreifer sperrte die gesamte Nutzerschaft aus, und er selbst kaeme
+    # mit einem Proxy-Wechsel daran vorbei. Ausserdem erkennt Symfony ohne diese
+    # Zeile hinter TLS-Terminierung das Schema nicht - erzeugte URLs stuenden auf
+    # `http://`.
+    #
+    # Leerer Wert = Verhalten wie bisher (kein Proxy vertraut). In Coolify auf
+    # das Docker-Netz setzen, z. B. `10.0.0.0/8,172.16.0.0/12,192.168.0.0/16`,
+    # oder `private_ranges` als Kurzform.
+    trusted_proxies: '%env(TRUSTED_PROXIES)%'
+    trusted_headers: ['x-forwarded-for', 'x-forwarded-host', 'x-forwarded-proto', 'x-forwarded-port', 'x-forwarded-prefix']
+
     # Note that the session will be started ONLY if you read or write from it.
     session: true
 
