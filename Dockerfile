@@ -181,3 +181,64 @@ EXPOSE 80
 # Nutzerdaten und Caddys Zertifikatsspeicher gehören auf Volumes, nicht ins
 # Image. In Coolify als Persistent Storage anlegen.
 VOLUME ["/app/public/uploads", "/data", "/config"]
+
+# ---------------------------------------------------------------------------
+# worker – derselbe Code, derselbe Container, anderer Prozess
+# ---------------------------------------------------------------------------
+# In Coolify eine zweite Ressource aus demselben Dockerfile, über „Docker build
+# stage target: worker". Erbt alles von `runtime` — Code, Erweiterungen,
+# php.ini, Rechte — und tauscht nur den Startbefehl.
+#
+# ⚠ **Ohne diesen Prozess ist der Ausfall lautlos.** Weder eine Bestätigungsmail
+# noch der Monats-Snapshot noch der Brevo-Abgleich findet statt, während die
+# Anwendung weiter „erfolgreich" meldet und sich die Nachrichten in
+# `messenger_messages` stapeln. Der Zustand gehört gemessen, nicht angenommen:
+# `messenger:stats` und `messenger:failed:show`.
+FROM runtime AS worker
+
+# ⚠ `pcntl` fehlt im FrankenPHP-Image — nachgesehen, nicht vermutet: `php -m`
+# listet dort `posix`, aber kein `pcntl`. Für den Webserver ist das richtig, für
+# einen Worker nicht: Ohne die Erweiterung meldet Symfonys `SignalRegistry` keine
+# Unterstützung, und `messenger:consume` kann SIGTERM nicht abfangen.
+#
+# Die Folge trifft genau den häufigsten Fall, den Neustart beim Ausrollen: Docker
+# schickt SIGTERM, der Worker ignoriert es und wird nach der Schonfrist hart
+# beendet — mitten in einer Nachricht. Beim Doctrine-Transport bleibt die dann mit
+# gesetztem `delivered_at` liegen und kommt erst nach `redeliver_timeout` (Vorgabe
+# eine Stunde) zurück. Eine Bestätigungsmail ginge also eine Stunde zu spät hinaus
+# oder ein zweites Mal, falls der Versand schon durch war.
+#
+# Deshalb steht die Erweiterung hier und nicht im `base`-Stage: Der Webserver
+# braucht sie nie, und in einem Request-Kontext ist sie unerwünscht.
+RUN install-php-extensions pcntl
+
+# ⚠ Der geerbte HEALTHCHECK prüft `http://127.0.0.1/health` und muss hier
+# zwangsläufig scheitern — der Worker startet keinen Webserver. Ohne diese Zeile
+# meldete der Container dauerhaft „unhealthy", und ein Orchestrator startete ihn
+# im Kreis neu, obwohl er einwandfrei arbeitet.
+HEALTHCHECK NONE
+
+# ⚠ `SERVER_NAME`, `EXPOSE 80` und der Caddy-Verlauf aus `runtime` bleiben stehen,
+# sind hier aber wirkungslos: Sie liest allein FrankenPHP, und das startet nie.
+# Der Entrypoint des Basisimage stellt nur dann `frankenphp run` voran, wenn das
+# erste Argument mit `-` beginnt (nachgesehen in `/usr/local/bin/docker-php-entrypoint`)
+# — bei `php` als erstem Wort läuft schlicht `exec php …`. In Coolify bekommt
+# diese Ressource deshalb **keine Domain und keinen Port**.
+#
+# Die drei Transporte sind die tatsächlichen Namen aus
+# `config/packages/messenger.yaml`, gegengeprüft mit `messenger:consume` gegen
+# einen ungültigen Namen: „Valid receivers are: async, failed, scheduler_metrics,
+# scheduler_marketing." Der `failed`-Transport gehört ausdrücklich NICHT dazu —
+# er ist die Ablage für endgültig Gescheitertes und wird von Hand mit
+# `messenger:failed:show` und `:retry` bearbeitet. Wer ihn hier mitkonsumiert,
+# schickt jede aufgegebene Nachricht sofort wieder in dieselbe Schleife.
+#
+# ⚠ **`--time-limit=3600` beendet den Prozess nach einer Stunde — mit Absicht, und
+# es setzt eine Neustart-Regel voraus.** Der Worker löst sich damit selbst ab und
+# läuft nach jedem Ausrollen von allein mit neuem Code und frischem Container an;
+# zugleich verfällt jeder Speicher, den ein langlebiger PHP-Prozess ansammelt.
+# Steht die Ressource in Coolify aber auf „no restart", ist der Worker nach einer
+# Stunde weg und kommt nicht zurück — und genau dieser Ausfall ist der lautlose.
+CMD ["php", "bin/console", "messenger:consume", \
+     "async", "scheduler_metrics", "scheduler_marketing", \
+     "--time-limit=3600", "--memory-limit=256M", "--env=prod"]
