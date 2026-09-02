@@ -7,6 +7,23 @@ Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
 ## [Unreleased]
 
+### Branches umbenannt: `dev` → `main`, `production` → `master`
+
+Umbenannt über GitHubs Branch-Rename, damit offene Verweise und der Default-Branch
+mitwandern. Mitgezogen wurden die beiden Stellen, die den Namen tatsächlich
+auswerten — `.github/workflows/cd.yml` (`branches: [master]`) und
+`.github/deploy.sh` (`DEPLOY_BRANCH`) — dazu die Beschreibungen in `README.md` und
+`CLAUDE.md`.
+
+⚠ **`master` ist hier der Produktionszweig, `main` der Entwicklungszweig** — umgekehrt
+zur verbreiteten Lesart, in der `master` nur der alte Name für `main` ist. Wer die
+beiden verwechselt, deployt aus Versehen oder gar nicht.
+
+Historische Einträge in `CHANGELOG.md` und `features/index.md` behalten die alten
+Namen: Sie beschreiben, was damals galt. Das Datum der Umbenennung steht in
+`CLAUDE.md`, damit sie auflösbar bleiben.
+
+
 ## [2026.09.02] – Container-Image für Coolify
 
 **`Dockerfile` und `.dockerignore` im Repo-Root.** Ein produktionstaugliches Image auf

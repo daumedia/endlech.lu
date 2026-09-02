@@ -1012,7 +1012,7 @@ Release eines Tages trägt **kein** Suffix.
 1. `CHANGELOG.md` – `[Unreleased]`-Abschnitt zu `[YYYY.MM.DD] – Titel` schließen **und** das Version-Badge in Zeile 5.
 2. `README.md` – Version-Badge (Format mit `v`-Präfix).
 3. `config/services.yaml` – Parameter `app.version`; wird über `twig.yaml` als `app_version` global gesetzt und in `templates/base.html.twig` im Footer gerendert. **Das ist die einzige Stelle, die Besucher sehen.**
-4. Git-Tag `vYYYY.MM.DD` auf dem Release-Commit in `dev`, danach GitHub-Release (`gh release create`).
+4. Git-Tag `vYYYY.MM.DD` auf dem Release-Commit in `main`, danach GitHub-Release (`gh release create`).
 5. **`App\Roadmap\ChangelogRegistry::notes()`** (Feature 07) – die neue Version eintragen,
    entweder mit `ReleaseVisibility::SHOWN` **und** einem Text in allen vier
    `changelog.*.yaml`, oder mit `SILENT`, wenn ein Gast die Änderung nicht merkt.
@@ -1030,7 +1030,12 @@ in dem sich etwas verändert hat. Dabei gilt: **Ein Vorhaben, das zwölf Monate 
 Fortschritt in „Geplant" steht, wandert nach „Angedacht" zurück** (OF-04) – eine
 Zusage, die niemand mehr einlöst, macht jede andere Zeile der Seite unglaubwürdig.
 
-Konvention: Release-Commit direkt auf `dev` mit dem Titel `Release vYYYY.MM.DD – Titel`, Tag darauf, anschließend Merge `dev` → `production` (= Deploy).
+Konvention: Release-Commit direkt auf `main` mit dem Titel `Release vYYYY.MM.DD – Titel`, Tag darauf, anschließend Merge `main` → `master` (= Deploy).
+
+⚠ **`master` ist der Produktionszweig, `main` der Entwicklungszweig** – umgekehrt zur
+verbreiteten Lesart, in der `master` der alte Name für `main` ist. Wer die beiden
+verwechselt, deployt aus Versehen oder gar nicht. Die Branches hießen bis zum
+2026-09-02 `dev` und `production`.
 
 ## CI
 
@@ -1042,13 +1047,13 @@ Das `.github/`-Verzeichnis enthält außerdem Issue-Templates (Bug Reports, Feat
 
 ## Deployment (CD)
 
-**Ein Merge nach `production` ist der Deploy.** Kein Deployer, keine atomic releases – der Runner öffnet eine SSH-Sitzung, der Server aktualisiert sich selbst. Zwei Dateien im Repo, drei Secrets (`SSH_PRIVATE_KEY`, `APP_USER`, `APP_HOST`), Ziel ist Cloudways (`~/public_html`).
+**Ein Merge nach `master` ist der Deploy.** Kein Deployer, keine atomic releases – der Runner öffnet eine SSH-Sitzung, der Server aktualisiert sich selbst. Zwei Dateien im Repo, drei Secrets (`SSH_PRIVATE_KEY`, `APP_USER`, `APP_HOST`), Ziel ist Cloudways (`~/public_html`).
 
-**`.github/workflows/cd.yml`** – Trigger `push` auf `production` + `workflow_dispatch`; `concurrency: deploy-production` (zwei parallele Deploys würden sich den Arbeitsbaum umschreiben). Zwei Jobs:
+**`.github/workflows/cd.yml`** – Trigger `push` auf `master` + `workflow_dispatch`; `concurrency: deploy-production` (zwei parallele Deploys würden sich den Arbeitsbaum umschreiben). Zwei Jobs:
 - **`verify-assets`** – baut `public/build` neu und vergleicht mit dem committeten Stand. **Reihenfolge ist Pflicht: `composer install` VOR `npm ci`/`npm run build`**, weil `node_modules/@symfony/ux-turbo` ein Symlink nach `vendor/symfony/ux-turbo/assets` ist (`file:`-Dependency in `package.json`) – ohne `vendor/` scheitert Webpack am toten Link. Verglichen wird mit `git status --porcelain public/build`, **nicht** `git diff --exit-code`: bei aktivem `cleanupOutputBeforeBuild()` erscheint ein geänderter Hash als *untracked* Datei, die `git diff` nie meldet.
 - **`deploy`** (`needs: verify-assets`) – Sparse-Checkout nur von `.github/deploy.sh`, `webfactory/ssh-agent`, dann `ssh … 'bash -s' < .github/deploy.sh`.
 
-**`.github/deploy.sh`** – die gesamte Logik, versioniert und lokal mit `bash -n` prüfbar. `set -euo pipefail` (ohne die Zeile zählt nur der Exit-Code des letzten Befehls – eine gescheiterte Migration liefe durch und der Lauf würde grün), dann `git fetch` + `git reset --hard origin/production` + `git clean -fd`, `composer install --no-dev --optimize-autoloader`, `doctrine:migrations:migrate`, `cache:clear`.
+**`.github/deploy.sh`** – die gesamte Logik, versioniert und lokal mit `bash -n` prüfbar. `set -euo pipefail` (ohne die Zeile zählt nur der Exit-Code des letzten Befehls – eine gescheiterte Migration liefe durch und der Lauf würde grün), dann `git fetch` + `git reset --hard origin/master` + `git clean -fd`, `composer install --no-dev --optimize-autoloader`, `doctrine:migrations:migrate`, `cache:clear`.
 
 **Production-Umgebung (verifiziert am 2026-08-06):** Cloudways, SSH-Login `endlech` → Systembenutzer `nrzwptqsvx` (Application-User, dem auch `public_html` gehört – der richtige, nicht der Master-Login). Deploy-Pfad `$HOME/public_html`, Webroot zeigt auf dessen `public/`. PHP 8.4.22, Composer 2.10.1, git 2.30.2. `~/.ssh/` gehört **root** – deshalb liegt der Deploy-Key in `.git/deploy_key` (dort greift auch `git clean` nicht hin) und `known_hosts` wird per `ssh-keyscan` daneben geschrieben; der CI-Key des Runners liegt in `~/.openssh/authorized_keys` (Cloudways-Pfad, gehört dem App-User). `COMPOSER_CACHE_DIR` wird im Skript auf `$HOME/tmp/composer-cache` gesetzt, weil Composers Default `~/.cache` hier nicht beschreibbar ist – sonst läuft jeder Deploy cache-los.
 
@@ -1137,7 +1142,7 @@ Auftrag, kein Nebenbei-Handgriff.
 - **`.nvmrc` ist die gemeinsame Node-Version** für lokale Entwicklung, `ci.yml` und `cd.yml` (beide Workflows nutzen `node-version-file: '.nvmrc'`). Da der committete `public/build` aus der lokalen Node-Version stammt, würde eine abweichende Runner-Version den Vergleich potenziell grundlos rot färben. Wer lokal die Node-Version wechselt, aktualisiert `.nvmrc` mit.
 - `git clean -fd` läuft **ohne** `-x`: alles Gitignorierte überlebt (`.env.local`, `config/jwt/*.pem`, `public/uploads/{avatars,restaurants}`, `var/`, `vendor/`, `public/bundles/`). ⚠️ **`public/uploads/team/` ist per `!`-Regel aus `.gitignore` ausgenommen** – Dateien dort, die nicht committet sind, löscht der Deploy.
 - Kein Null-Downtime, aber auch keine 500er: Zwischen `git reset` und `cache:clear` läuft die App gemischt (neue Dateien, alter Container) — **dieses Fenster deckt seit ENDLECH-5 eine Wartungsseite ab**, siehe unten.
-- Rollback = Revert-Commit auf `production`; der nächste Lauf bringt die passenden Assets automatisch mit, weil sie im selben Commit stecken.
+- Rollback = Revert-Commit auf `master`; der nächste Lauf bringt die passenden Assets automatisch mit, weil sie im selben Commit stecken.
 - PHPUnit ist **kein** Deploy-Gate (passend zur manuellen CI); zuschaltbar über `needs: [verify-assets, tests]`.
 
 Server-Setup (einmalig) und die Waisen-Inventur vor dem ersten Lauf: siehe README → „🚢 Deployment".
@@ -1272,7 +1277,7 @@ zweite Grund für diese Unterscheidung.
 
 **Nur `prod`.** `config/bundles.php` registriert `SentryBundle` mit `['prod' => true]` – in dev und test existiert die Extension nicht (`debug:config sentry` schlägt dort bewusst fehl). Damit kann weder lokale Entwicklung noch die Test-Suite Daten senden, und `ci.yml` braucht keine Anpassung. Zum lokalen Testen: `php bin/console sentry:test --env=prod` mit temporärem DSN in `.env.local`.
 
-**DSN.** `SENTRY_DSN` steht leer in `.env` (committed) und wird **ausschließlich in der `.env.local` auf dem Server** gesetzt – das Repo ist öffentlich, ein committeter DSN erlaubte Fremden das Einschleusen von Events. Leerer Wert = Sentry lautlos inaktiv (dasselbe Muster wie `MOBILITEIT_API_KEY`); der leere Default in `.env` verhindert zugleich, dass `%env(SENTRY_DSN)%` den Container-Build sprengt. ⚠️ Der Eintrag muss **vor** dem Merge nach `production` auf dem Server stehen, sonst deployt es grün und Sentry bleibt still.
+**DSN.** `SENTRY_DSN` steht leer in `.env` (committed) und wird **ausschließlich in der `.env.local` auf dem Server** gesetzt – das Repo ist öffentlich, ein committeter DSN erlaubte Fremden das Einschleusen von Events. Leerer Wert = Sentry lautlos inaktiv (dasselbe Muster wie `MOBILITEIT_API_KEY`); der leere Default in `.env` verhindert zugleich, dass `%env(SENTRY_DSN)%` den Container-Build sprengt. ⚠️ Der Eintrag muss **vor** dem Merge nach `master` auf dem Server stehen, sonst deployt es grün und Sentry bleibt still.
 
 **`config/packages/sentry.yaml`** (alles unter `when@prod`):
 - `release: 'endlech@%app.version%'` – hängt am CalVer-Parameter aus `config/services.yaml` und zieht bei jedem Release automatisch mit (kein fünfter Handgriff in der Release-Checkliste).

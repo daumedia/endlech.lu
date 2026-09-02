@@ -14,7 +14,7 @@
 set -euo pipefail
 
 DEPLOY_DIR="$HOME/public_html"
-DEPLOY_BRANCH="production"
+DEPLOY_BRANCH="master"
 
 # Composers Default-Cache (~/.cache) ist auf diesem Hosting nicht beschreibbar –
 # ohne diese Zeile laeuft jeder Deploy komplett ohne Cache ("Proceeding without
