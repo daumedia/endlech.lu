@@ -430,7 +430,7 @@ base directory `/`, branch `master`:
 | Domain | `endlech.lu` | *(none)* |
 | Port | `80` | *(none)* |
 | Restart policy | `unless-stopped` | `unless-stopped` |
-| Healthcheck | `/health` (Coolify's own, uses `wget`) | **switch off in the UI** |
+| Healthcheck | `/health` (Coolify's own, uses `wget`) | **switch Coolify's off** — the image brings its own |
 
 **Environment variables.** The app needs `APP_SECRET`, `DATABASE_URL`,
 `TRUSTED_PROXIES=private_ranges`, `DEFAULT_URI=https://endlech.lu`, `MAILER_DSN`,
@@ -445,7 +445,14 @@ the `HEALTHCHECK` from the Dockerfile — it installs its own, a `wget` against
 declares the fresh container unhealthy and rolls back to the old one. Measured on
 2026-09-02: the container was working fine and had already logged
 `[OK] Consuming messages from transports "async, scheduler_metrics, scheduler_marketing"`
-when it was discarded. `HEALTHCHECK NONE` in the image does not prevent this.
+when it was discarded.
+
+⚠️ **Do not answer that with `HEALTHCHECK NONE`.** Once Coolify's own check is off it
+falls back to the image's and queries `docker inspect '{{json .State.Health.Status}}'`
+— a container with `NONE` has no `.State.Health` at all, and the deploy dies with
+`map has no entry for key "Health"`. The worker stage therefore ships its own check:
+it reads `/proc/1/cmdline` and verifies PID 1 is still the consumer. No extra package,
+and the probe cannot match itself because only `/proc/1` is read.
 
 ⚠️ **`APP_SECRET` must be byte-identical in both**, see *Messenger worker* above.
 

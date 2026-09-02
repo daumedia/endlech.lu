@@ -1215,16 +1215,28 @@ einen eigenen auf `GET /health` und ruft darin `wget` auf. Zwei Folgen, beide am
    und Coolifys Vorgabe fragt nach `wget`. Ohne das Paket scheitert die Prüfung
    zehnmal mit „/bin/sh: 1: wget: not found", der frische Container gilt als krank
    und Coolify rollt zurück. Deshalb `apt-get install wget` im `runtime`-Stage.
-2. **Auf der Worker-Ressource gehört der Healthcheck in der Oberfläche
-   abgeschaltet.** `HEALTHCHECK NONE` im Bild genügt dort nicht: Coolify prüft
-   trotzdem einen Webserver, den dieser Container niemals startet. Der Beleg im
-   Protokoll ist bitter — der verworfene Container hatte bereits
+2. **Auf der Worker-Ressource gehört Coolifys eigener Healthcheck in der
+   Oberfläche abgeschaltet.** Er prüft HTTP, und dieser Container serviert keines.
+   Der Beleg im Protokoll ist bitter — der verworfene Container hatte bereits
    „[OK] Consuming messages from transports \"async, scheduler_metrics,
    scheduler_marketing\"" geschrieben, arbeitete also einwandfrei.
 
-⚠️ **`HEALTHCHECK NONE` bleibt trotzdem im Stage.** Für `docker run` und Compose ist
-es richtig: Dort greift der geerbte Healthcheck, prüft einen Webserver, den es nicht
-gibt, und der Container meldete dauerhaft „unhealthy".
+⚠️⚠️ **Und dann NICHT `HEALTHCHECK NONE` setzen.** Sobald Coolifys eigene Prüfung
+aus ist, fällt es auf die des Bildes zurück — und fragt `docker inspect
+'{{json .State.Health.Status}}'` ab. Ein Container mit `NONE` hat kein
+`.State.Health`, und der Deploy bricht ab mit „template parsing error: map has no
+entry for key \"Health\"". Gemessen am 2026-09-02, unmittelbar nachdem das
+Abschalten den ersten Fehler behoben hatte. Der worker-Stage setzt deshalb einen
+**eigenen, passenden** Healthcheck: Er liest `/proc/1/cmdline` und prüft, ob PID 1
+noch der Consumer ist. Kein Zusatzpaket nötig (`pgrep` säße in `procps`), und der
+Prüfprozess kann sich nicht selbst finden, weil ausschließlich `/proc/1` gelesen
+wird. Nachgestellt: `healthy` nach 10 Sekunden, und mit einem fremden PID-1-Prozess
+liefert derselbe Aufruf Exit-Code 1.
+
+⚠️ Das ist eine **Lebendigkeits**-, keine Fortschrittsprüfung: „der Consumer läuft",
+nicht „er arbeitet Nachrichten ab". Letzteres beantwortet `messenger:stats` — ein
+Rückstau in `async` ist das Signal, und der lässt sich von innen nicht sinnvoll in
+einen Exit-Code gießen.
 
 ⚠️ **`--time-limit=3600` setzt eine Neustart-Regel voraus.** Der Worker löst sich
 damit selbst ab (neuer Code nach jedem Ausrollen, kein angesammelter Speicher) —
