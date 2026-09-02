@@ -7,6 +7,24 @@ Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
 ## [Unreleased]
 
+### `app` als letztes Stage — ein leeres Build-Target baute den Worker
+
+⚠ **Ohne `--target` baut Docker das LETZTE Stage einer Datei.** Seit `worker` am
+Ende stand, lieferte `docker build .` — und ein leer gelassenes „Docker build stage
+target" in Coolify — den Messenger-Consumer statt der Anwendung. Der Container war
+dabei kerngesund und meldete `healthy`; er servierte nur kein HTTP, und der Proxy
+davor antwortete mit **502 Bad Gateway**.
+
+Am 2026-09-02 auf Production eingetreten, rund eine Stunde Ausfall. Die Fehlersuche
+lief lange in die falsche Richtung, weil alle Deploy-Protokolle grün waren und der
+Healthcheck des Containers korrekt `healthy` meldete — er prüfte ja den Worker, und
+der lief.
+
+Die Datei endet jetzt auf `FROM runtime AS app`, einen reinen Alias. Damit liefert
+der Standardfall wieder die Anwendung; der Worker wird ausdrücklich mit
+`--target worker` angefordert. Wer ein neues Stage anlegt, hängt es nicht dahinter.
+
+
 ### `wget` im Image — Coolifys Healthcheck ignoriert den des Dockerfiles
 
 Coolify liest die `HEALTHCHECK`-Anweisung des Bildes **nicht**, sondern setzt beim

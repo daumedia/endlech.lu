@@ -1184,6 +1184,15 @@ Letztere steht **nicht** in `.env` (sie lag immer nur in `.env.local`), und ohne
 bootet der Kernel im Build nicht. Unkritisch, weil Symfony `%env(...)%` im
 kompilierten Container als Platzhalter hält und erst zur Laufzeit auflöst.
 
+⚠️ **`app` MUSS das letzte Stage der Datei bleiben.** Es ist ein reiner Alias auf
+`runtime` und existiert nur, weil Docker ohne `--target` das **letzte** Stage baut.
+Solange `worker` am Ende stand, lieferte ein `docker build .` — und ebenso ein leer
+gelassenes „Docker build stage target" in Coolify — den Messenger-Consumer statt der
+Anwendung. Der Container war dabei kerngesund und meldete `healthy`; er servierte
+nur kein HTTP, und der Proxy davor antwortete mit **502 Bad Gateway**. Gemessen am
+2026-09-02 auf Production, mit rund einer Stunde Ausfall. Wer ein neues Stage
+anlegt, hängt es **nicht** dahinter.
+
 ### Worker-Stage
 
 `FROM runtime AS worker` am Ende derselben Datei — in Coolify eine **zweite
