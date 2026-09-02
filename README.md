@@ -430,7 +430,7 @@ base directory `/`, branch `master`:
 | Domain | `endlech.lu` | *(none)* |
 | Port | `80` | *(none)* |
 | Restart policy | `unless-stopped` | `unless-stopped` |
-| Healthcheck | `/health` (built in) | disabled in the image |
+| Healthcheck | `/health` (Coolify's own, uses `wget`) | **switch off in the UI** |
 
 **Environment variables.** The app needs `APP_SECRET`, `DATABASE_URL`,
 `TRUSTED_PROXIES=private_ranges`, `DEFAULT_URI=https://endlech.lu`, `MAILER_DSN`,
@@ -438,6 +438,14 @@ base directory `/`, branch `master`:
 `MOBILITEIT_API_KEY`, `BREVO_*` and `CONTACT_EMAIL`. The worker needs the same set
 minus `TRUSTED_PROXIES`, `WEBAUTHN_RP_ID` and `CORS_ALLOW_ORIGIN` — there is no
 request there.
+
+⚠️ **Switch the healthcheck off on the worker resource.** Coolify does **not** use
+the `HEALTHCHECK` from the Dockerfile — it installs its own, a `wget` against
+`GET /health`. The worker serves no HTTP, so that check fails ten times, Coolify
+declares the fresh container unhealthy and rolls back to the old one. Measured on
+2026-09-02: the container was working fine and had already logged
+`[OK] Consuming messages from transports "async, scheduler_metrics, scheduler_marketing"`
+when it was discarded. `HEALTHCHECK NONE` in the image does not prevent this.
 
 ⚠️ **`APP_SECRET` must be byte-identical in both**, see *Messenger worker* above.
 
