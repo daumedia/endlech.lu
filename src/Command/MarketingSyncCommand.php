@@ -7,6 +7,7 @@ namespace App\Command;
 use App\Marketing\MarketingSyncService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Command\LockableTrait;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -17,11 +18,14 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  *
  * Der einzige reguläre Auslöser von {@see MarketingSyncService::run()}: Der
  * Dienst läuft bewusst nie in einer Anfrage, damit keine Anmeldung an der
- * Erreichbarkeit von Brevo hängt (AK-17). Auf Production ruft ein Cron-Eintrag
- * diesen Befehl **alle 5 Minuten** — die Frist von 15 Minuten aus AK-10 ist
- * damit dreifach unterschritten. Ein Messenger-Handler wäre der naheliegende
- * Weg, scheidet aber aus: Production läuft mit `sync://` und ohne Worker, „async"
- * wäre dort synchron im Request.
+ * Erreichbarkeit von Brevo hängt (AK-17). Ausgelöst wird der Befehl **alle 5
+ * Minuten** vom Zeitplan {@see \App\Scheduler\MarketingScheduleProvider} — die
+ * Frist von 15 Minuten aus AK-10 ist damit dreifach unterschritten.
+ *
+ * ⚠ Der Zeitplan ruft diesen Befehl über `RunCommandMessage`, geht also exakt
+ * denselben Weg wie ein Aufruf von Hand. Ein eigener Messenger-Handler müsste die
+ * Prüfung von `--limit`, die Unterscheidung von Fehlversuch und fehlendem
+ * Schlüssel sowie AK-31 nachbauen — und liefe irgendwann auseinander.
  *
  * ⚠ **Fehlversuche färben den Lauf nicht rot** (AK-19). Sie sind der eingeplante
  * Normalfall — der nächste Durchgang greift sie von allein wieder auf. Ein
@@ -40,6 +44,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 final class MarketingSyncCommand extends Command
 {
+    // Verhindert, dass sich zwei Durchgänge überlappen – der Scheduler alle
+    // fünf Minuten, ein Nachlauf von Hand, ein zweiter Worker.
+    use LockableTrait;
+
     public function __construct(private readonly MarketingSyncService $sync)
     {
         parent::__construct();
@@ -55,7 +63,39 @@ final class MarketingSyncCommand extends Command
         );
     }
 
+    /**
+     * Nimmt die Sperre und gibt sie in jedem Fall wieder frei.
+     *
+     * ⚠ **Das `finally` ist Pflicht, nicht Stil.** `LockableTrait::lock()` wirft
+     * beim zweiten Aufruf auf derselben Instanz „A lock is already in place." —
+     * und genau das tut `CaptureMetricSnapshotCommandTest`, der `execute()`
+     * zweimal hintereinander auf demselben Objekt ruft, um die Idempotenz zu
+     * prüfen. Ohne die Freigabe wäre der Prüflauf rot.
+     *
+     * ⚠ **Ein belegtes Schloss ist SUCCESS, kein FAILURE.** Der Lauf wurde
+     * übersprungen, weil bereits einer unterwegs ist — das ist der eingeplante
+     * Normalfall und kein Fehler. Bei FAILURE würde `RunCommandMessage` eine
+     * Ausnahme werfen, die Nachricht liefe in den `failed`-Transport, und bei
+     * einem Fünf-Minuten-Takt stapelte sich dort Rauschen.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        if (!$this->lock()) {
+            (new SymfonyStyle($input, $output))->warning(
+                'Es läuft bereits ein Durchgang – dieser Aufruf endet ohne Wirkung.',
+            );
+
+            return Command::SUCCESS;
+        }
+
+        try {
+            return $this->fuehreAus($input, $output);
+        } finally {
+            $this->release();
+        }
+    }
+
+    private function fuehreAus(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
         $limitOption = $input->getOption('limit');
