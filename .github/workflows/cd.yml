@@ -1,11 +1,11 @@
 name: CD
 
-# Ein Merge nach production ist der Deploy. Der Runner hält keinen Code vor –
+# Ein Merge nach master ist der Deploy. Der Runner hält keinen Code vor –
 # er öffnet eine SSH-Sitzung und lässt den Server sich selbst aktualisieren
 # (siehe .github/deploy.sh).
 on:
   push:
-    branches: [production]
+    branches: [master]
   workflow_dispatch:
 
 # Zwei parallele Deploys würden sich den Arbeitsbaum umschreiben.

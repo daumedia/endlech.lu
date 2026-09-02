@@ -181,7 +181,7 @@ no path, no IP address. It also covers every subdomain, but never the other way
 round, so production must use `endlech.lu` and **not** `www.endlech.lu`.
 
 Set it in the server's `~/public_html/.env.local` **before** merging into
-`production`. A wrong value deploys green and only shows up when someone tries
+`master`. A wrong value deploys green and only shows up when someone tries
 to sign in — the browser rejects the ceremony with a `SecurityError`.
 
 Locally the default `localhost` applies. Browsers treat `localhost` as a secure
@@ -193,12 +193,12 @@ list stays empty on purpose, so the spec's own rule applies.
 
 ## 🚢 Deployment
 
-A merge into `production` **is** the deploy. GitHub Actions opens an SSH session and
+A merge into `master` **is** the deploy. GitHub Actions opens an SSH session and
 the server updates itself — see `.github/workflows/cd.yml` (the connection) and
 `.github/deploy.sh` (everything that actually happens).
 
 ```
-dev ──merge──▶ production ──push──▶ verify-assets ──▶ deploy (SSH)
+main ──merge──▶ master ──push──▶ verify-assets ──▶ deploy (SSH)
 ```
 
 The `verify-assets` job rebuilds `public/build` and compares it against the
@@ -206,7 +206,7 @@ committed one. **`public/build` is checked into the repo** — so whenever you
 touch anything under `assets/`, run `npm run build` and commit the result, or
 the deploy is blocked.
 
-On the server, `deploy.sh` runs `git reset --hard origin/production` followed by
+On the server, `deploy.sh` runs `git reset --hard origin/master` followed by
 `git clean -fd`, then `composer install --no-dev`, the Doctrine migrations and
 `cache:clear`. `git clean` runs **without** `-x`, so everything gitignored
 survives: `.env.local`, `config/jwt/*.pem`, `public/uploads/`, `var/`,
@@ -232,7 +232,7 @@ signal; clear it by hand afterwards:
 ssh <user>@<host> 'rm -f ~/public_html/var/maintenance'
 ```
 
-Rollback: push a revert commit to `production`. The next run restores the previous
+Rollback: push a revert commit to `master`. The next run restores the previous
 state including matching assets, because they live in the same commit.
 
 ### Container image (Coolify)
@@ -395,7 +395,7 @@ cat .git/deploy_key.pub   # → GitHub → Settings → Deploy keys (no write ac
 
 git remote add origin git@github.com:daumedia/endlech.lu.git
 git fetch origin
-git checkout -f -B production origin/production
+git checkout -f -B master origin/master
 
 git clean -nd   # DRY RUN: review this list before the first real deploy
 ```
