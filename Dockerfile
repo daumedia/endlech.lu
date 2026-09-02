@@ -116,6 +116,21 @@ ENV APP_ENV=prod \
 # php.ini-production: display_errors=Off, kürzere Fehlerausgabe.
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
+# ⚠ `wget` allein für Coolifys Healthcheck. Coolify benutzt den HEALTHCHECK aus
+# diesem Dockerfile NICHT — es setzt beim Ausrollen einen eigenen und ruft darin
+# `wget` auf. Fehlt das Programm, scheitert die Prüfung zehnmal mit
+# „/bin/sh: 1: wget: not found", der frische Container gilt als krank und Coolify
+# rollt auf den alten zurück. Gemessen am 2026-09-02: Der Container lief dabei
+# einwandfrei und meldete im Log „[OK] Consuming messages from transports …" —
+# verworfen wurde er trotzdem.
+#
+# `curl` liegt bereits im Basisimage, hilft hier aber nicht: Coolifys Vorgabe
+# fragt nach `wget`. Ein Paket von rund einem Megabyte gegen einen Deploy, der
+# ohne erkennbaren Fehler zurückrollt.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends wget \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY <<'INI' /usr/local/etc/php/conf.d/zz-app.ini
 ; Produktionswerte für Symfony. `validate_timestamps=0` ist zulässig, weil ein
 ; Deploy hier immer ein neuer Container ist – es gibt keinen Fall, in dem sich
@@ -170,9 +185,13 @@ RUN set -eux; \
     php bin/console cache:warmup --no-interaction; \
     chown -R www-data:www-data var
 
-# Ohne curl im Image – die Prüfung läuft über den PHP-Interpreter, der ohnehin
-# da ist. Ein Fehlerstatus lässt file_get_contents false zurückgeben, das ist
-# das Signal. start-period deckt den Kaltstart ab.
+# Die Prüfung läuft über den PHP-Interpreter, der ohnehin da ist; ein
+# Fehlerstatus lässt file_get_contents false zurückgeben, das ist das Signal.
+# start-period deckt den Kaltstart ab.
+#
+# ⚠ Das gilt für `docker run` und Compose. **Coolify benutzt diese Zeile nicht** —
+# es setzt beim Ausrollen einen eigenen Healthcheck auf `GET /health` und ruft
+# darin `wget` auf (siehe oben).
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
     CMD ["php", "-r", "$r = @file_get_contents('http://127.0.0.1/health'); exit(false !== $r && str_contains($r, 'ok') ? 0 : 1);"]
 
@@ -216,6 +235,15 @@ RUN install-php-extensions pcntl
 # zwangsläufig scheitern — der Worker startet keinen Webserver. Ohne diese Zeile
 # meldete der Container dauerhaft „unhealthy", und ein Orchestrator startete ihn
 # im Kreis neu, obwohl er einwandfrei arbeitet.
+#
+# ⚠⚠ **Diese Zeile allein genügt in Coolify NICHT.** Coolify liest den HEALTHCHECK
+# des Bildes nicht, sondern setzt beim Ausrollen einen eigenen auf `GET /health`.
+# Für die Worker-Ressource muss er deshalb **in der Oberfläche abgeschaltet
+# werden** (Configuration → Healthcheck → aus). Sonst prüft Coolify einen
+# Webserver, den dieser Container niemals startet, verwirft den frischen
+# Container nach zehn Versuchen als krank und rollt auf den alten zurück — bei
+# einem Prozess, der ausweislich seines eigenen Logs einwandfrei arbeitet.
+# Gemessen am 2026-09-02.
 HEALTHCHECK NONE
 
 # ⚠ `SERVER_NAME`, `EXPOSE 80` und der Caddy-Verlauf aus `runtime` bleiben stehen,
