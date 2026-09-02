@@ -7,6 +7,39 @@ Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
 ## [Unreleased]
 
+### Cloudways abgelöst: Coolify ist der einzige Auslieferungsweg
+
+`.github/workflows/cd.yml` und `.github/deploy.sh` sind entfernt. Ein Merge nach
+`master` bleibt der Deploy, aber Coolify baut jetzt aus dem `Dockerfile` und tauscht
+den Container, statt dass ein Runner per SSH einen Arbeitsbaum umschreibt.
+
+⚠ **Ein Workflow, der grün meldet ohne etwas zu bewirken, ist schlimmer als keiner.**
+Genau das wäre `cd.yml` geworden: Er hätte bei jedem Push auf `master` weiter gegen
+einen Server deployt, der nichts mehr ausliefert.
+
+**Was der Wechsel mitgenommen hat — und was an seine Stelle tritt:**
+
+| entfallen | Ersatz |
+|---|---|
+| `verify-assets` prüfte `public/build` gegen die Quellen | Der `assets`-Stage baut sie im Image aus dem Quelltext |
+| `deploy.sh` führte die Migrationen aus | **Post-Deployment-Command in Coolify** |
+| Wartungsseite gegen das ENDLECH-5-Fenster | Entfällt — ein Container-Tausch hat kein solches Fenster |
+| Cron für `messenger:consume` | Die Worker-Ressource (`--target worker`) |
+
+⚠ **Die Migration ist der Punkt, an dem der Wechsel am ehesten weh tut.** Vorher lief
+sie bei jedem Deploy automatisch mit; jetzt ist sie eine Zeile in einem Coolify-Feld,
+die jemand gesetzt haben muss. Ein Deploy mit neuer Entity und ohne Migration meldet
+grün und wirft danach bei jeder betroffenen Seite einen 500er.
+
+Die Wartungsseite in `public/index.php` bleibt als **Handschalter**
+(`touch var/maintenance`) — sie kostet ein `file_exists` je Anfrage und ist der
+einzige Weg, die Seite ohne Deploy stillzulegen.
+
+Historische Einträge in `CHANGELOG.md` und `features/` behalten die alten Namen und
+Abläufe: Sie beschreiben, was damals galt. Das Datum des Wechsels steht in
+`CLAUDE.md`, damit sie auflösbar bleiben.
+
+
 ### Worker-Stage im Dockerfile
 
 `FROM runtime AS worker` — in Coolify eine zweite Ressource aus demselben Dockerfile
