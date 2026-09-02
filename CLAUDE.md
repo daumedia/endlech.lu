@@ -1141,6 +1141,99 @@ ist deshalb unkritisch.
 - **Neue Migration? Prüfen, dass der Post-Deployment-Command in Coolify steht.**
 - PHPUnit ist **kein** Deploy-Gate (passend zur manuellen CI).
 
+## Zeitpläne statt System-Cron (`src/Scheduler/`)
+
+Seit dem 2026-09-02 laufen beide wiederkehrenden Aufgaben über Symfonys Scheduler,
+nicht mehr über zwei Cron-Einträge auf Cloudways. Auf einem Container-Hosting gibt
+es keinen Cron, und zwei Auslöser für dieselbe Sache sind eine Quelle für
+Doppelläufe.
+
+| Zeitplan | Takt | Nachricht | Nachholen |
+|---|---|---|---|
+| `metrics` | `15 3 1 * *` | `CaptureMetricSnapshot` | **ja**, jeder verpasste Termin¹ |
+| `marketing` | `*/5 * * * *` | `RunCommandMessage('app:marketing:sync')` | **nein**, genau ein Durchgang |
+
+¹ ⚠️ **Nachholen heißt hier „der Termin wird zugestellt", nicht „der damalige
+Monatswert kommt zurück".** `MetricSnapshotService::capture()` nimmt ohne Argument
+immer den Vormonat *relativ zum Laufzeitpunkt*, und ein vorhandener Monat bleibt
+ohne `--force` unangetastet. Gedeckt ist damit der Fall, für den Nachholen gebaut
+ist: ein Deploy oder Neustart genau um 03:15 am Ersten — der Lauf kommt Minuten
+später und schreibt den richtigen Monat. Steht der Consumer über einen
+Monatswechsel hinaus, bleibt die Lücke bestehen; drei nachgeholte Termine schreiben
+dann dreimal denselben Monat, wovon zwei folgenlos verpuffen. Das ist Absicht und
+kein Mangel: Ein Snapshot hält den Stand seines Laufzeitpunkts fest, ein
+nachträglich gefüllter Monat trüge heutige Zahlen unter altem Datum.
+
+Der Antrieb ist ein einziger Consumer:
+
+```bash
+php bin/console messenger:consume async scheduler_metrics scheduler_marketing \
+    --time-limit=3600 --memory-limit=192M --env=prod
+```
+
+⚠️ **`getSchedule()` MUSS das Schedule-Objekt zwischenspeichern** (`$this->schedule ??= …`).
+Die Methode wird mehrfach gerufen — vom Transport, vom Generator, von
+`debug:scheduler`. Ohne die Zwischenspeicherung entsteht bei jedem Aufruf ein
+**neues** Sperrobjekt auf derselben Ressource; das zweite `acquire()` scheitert am
+`flock` des ersten, `MessageGenerator::getMessages()` bricht in Zeile 52 ab und
+liefert schweigend nichts. Gemessen am 2026-09-02: Ein Consumer lief 220 Sekunden
+über einen fälligen Fünf-Minuten-Takt hinweg und verarbeitete null Nachrichten —
+während `debug:scheduler` weiterhin vollkommen richtig aussah. **Es gibt dazu keine
+Fehlermeldung.**
+
+⚠️ **Zwei Zeitpläne, weil `processOnlyLastMissedRun()` am Zeitplan hängt, nicht am
+Eintrag** (`MessageGenerator` fragt `$this->schedule->shouldProcessOnlyLastMissedRun()`).
+Zwei Aufgaben mit gegensätzlichem Nachholbedarf passen deshalb nicht in denselben.
+Der Preis sind zwei Transporte im Consumer-Befehl.
+
+⚠️ **`catchUp()` gibt es in symfony/scheduler 8.0 nicht.** Die öffentliche Fläche
+von `Schedule` kennt `stateful()`, `processOnlyLastMissedRun()` und `lock()` — mehr
+nicht. Nachholen ist das **Standardverhalten** eines Zeitplans mit Zustand; man
+schaltet es mit `processOnlyLastMissedRun(true)` ab, nicht mit einem Aufruf ein.
+Beide Provider setzen das Flag trotzdem ausdrücklich, damit erkennbar bleibt, ob
+jemand es gewollt oder bloß vergessen hat.
+
+⚠️ **Der Merkposten liegt in der Datenbank, nicht unter `var/cache`.** Pool
+`cache.scheduler` (`cache.adapter.doctrine_dbal`, Tabelle `cache_items`, Migration
+`Version20260902200000` — die trägt `CREATE TABLE IF NOT EXISTS`, weil der Adapter
+dieselbe Tabelle beim ersten Schreibzugriff selbst anlegt und die Migration sonst
+bei JEDEM Deploy an „Table 'cache_items' already exists" scheitert; am 2026-09-02
+auf Production eingetreten, aufgeräumt mit
+`doctrine:migrations:version 'DoctrineMigrations\Version20260902200000' --add`). Ein Pool im Dateisystem überlebt `cache:clear` nicht — und
+das läuft bei **jedem** Deploy. Ein leerer Merkposten bedeutet „letzter Lauf: jetzt";
+ein Monatslauf, der genau in das Deploy-Fenster fiel, wäre damit endgültig verloren,
+ohne Fehlermeldung. Nachgeprüft: `SELECT item_id FROM cache_items` zeigt
+`scheduler_checkpoint_metrics` und `scheduler_checkpoint_marketing`.
+
+⚠️ **Im `when@test`-Block gehört `provider: ~` neben den Array-Adapter.** Pools
+werden verschmolzen; ohne die Zeile bleibt `provider: doctrine.dbal.default_connection`
+stehen und landet als erstes Konstruktor-Argument im `ArrayAdapter`
+(„Argument #1 ($defaultLifetime) must be of type int, Connection given") — gemessen
+als 456 fehlgeschlagene Prüfläufe auf einmal.
+
+⚠️ **Beide Zeitpläne brauchen einen EIGENEN Sperrnamen** (`scheduler-metrics`,
+`scheduler-marketing`). Teilten sie sich eine Sperre, blockierte der eine den
+anderen — lautlos, siehe oben.
+
+**Sperre auch auf Befehlsebene:** `CaptureMetricSnapshotCommand` und
+`MarketingSyncCommand` tragen `LockableTrait`. Der Zeitplan-Lock verhindert doppelte
+*Erzeugung*, dieser hier doppelte *Ausführung* — etwa wenn jemand von Hand nachfasst,
+während der Fünf-Minuten-Takt läuft. ⚠️ Das `release()` im `finally` ist Pflicht:
+`CaptureMetricSnapshotCommandTest` ruft `execute()` zweimal auf derselben Instanz, und
+`LockableTrait::lock()` wirft dort sonst „A lock is already in place". Ein belegtes
+Schloss liefert bewusst `SUCCESS` — bei `FAILURE` würfe `RunCommandMessage` eine
+Ausnahme, und der `failed`-Transport füllte sich im Fünf-Minuten-Takt mit Rauschen.
+
+**Beide Befehle bleiben unverändert von Hand aufrufbar** — Name, Argumente und
+Optionen sind dieselben (`--month`, `--force`, `--limit`). Für Nachläufe ist das der
+Weg.
+
+**Was das Verhalten belegt:** `tests/Unit/Scheduler/CatchUpBehaviourTest.php` stellt
+Ausfälle mit einer `MockClock` nach und zählt die erzeugten Nachrichten — drei Monate
+Ausfall ergeben drei Monatsläufe, drei Tage Ausfall ergeben einen Brevo-Lauf, und die
+Gegenprobe ohne das Flag ergibt zwölf. Ohne diesen Lauf wäre die Einstellung ein
+Boolean, dessen Wirkung sich erst nach einem echten Ausfall zeigt.
+
 ## Container-Image (`Dockerfile`, Coolify)
 
 Seit dem 2026-09-02 **der** Auslieferungsweg: Coolify baut daraus zwei Ressourcen,

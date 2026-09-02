@@ -7,6 +7,30 @@ Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
 ## [Unreleased]
 
+### `cache_items`-Migration idempotent
+
+`Version20260902200000` trägt jetzt `CREATE TABLE IF NOT EXISTS`.
+
+⚠ **Die Tabelle hat zwei mögliche Erzeuger** — die Migration und
+`DoctrineDbalAdapter`, der sie beim ersten Schreibzugriff selbst anlegt. Läuft der
+Worker vor der Migration, existiert die Tabelle danach ohne Eintrag in
+`doctrine_migration_versions`, und die Migration scheitert an
+`SQLSTATE[42S01] … Table 'cache_items' already exists` — **bei jedem weiteren
+Deploy**, bis jemand von Hand eingreift. Beim Umzug auf ein neues Hosting ist genau
+diese Reihenfolge der Normalfall, weil der Consumer sofort seinen Merkposten
+schreibt. Am 2026-09-02 auf Production eingetreten.
+
+Aufräumen in einer bereits betroffenen Umgebung:
+`doctrine:migrations:version 'DoctrineMigrations\Version20260902200000' --add`.
+
+Dabei ist aufgefallen, dass der Abschnitt „Zeitpläne statt System-Cron" beim
+Umschreiben des Deployment-Kapitels aus `CLAUDE.md` verschwunden war — er lag
+zwischen den beiden ersetzten Überschriften und ging beim Blockersatz mit. Ein
+Verweis weiter oben in der Datei zeigte seither ins Leere, und damit fehlten die
+Fallstricke zum Zwischenspeichern des Schedule-Objekts, zu den zwei getrennten
+Zeitplänen und zu `provider: ~` im Testblock. Wiederhergestellt.
+
+
 ### `wget` im Image — Coolifys Healthcheck ignoriert den des Dockerfiles
 
 Coolify liest die `HEALTHCHECK`-Anweisung des Bildes **nicht**, sondern setzt beim

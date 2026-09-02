@@ -28,10 +28,16 @@ framework:
             # Lauf: jetzt" — ein Monatslauf, der während des Deploys fällig war,
             # wäre damit endgültig weg, ohne Fehlermeldung.
             #
-            # Die Tabelle `cache_items` legt `Version20260902200000` an. Der
-            # Adapter erzeugt sie zwar bei Bedarf selbst, aber dann im laufenden
-            # Betrieb und unbemerkt — auf MariaDB 10.5 (Cloudways) lieber
-            # deterministisch per Migration.
+            # Die Tabelle `cache_items` legt `Version20260902200000` an.
+            #
+            # ⚠ Sie hat ZWEI mögliche Erzeuger: die Migration und dieser Adapter,
+            # der sie beim ersten Schreibzugriff selbst anlegt, wenn sie fehlt.
+            # Läuft der Worker vor der Migration — beim Umzug auf ein neues
+            # Hosting der Normalfall, weil der Consumer sofort seinen Merkposten
+            # schreibt —, existiert die Tabelle danach ohne Eintrag in
+            # `doctrine_migration_versions`, und die Migration scheitert bei JEDEM
+            # Deploy an „Table 'cache_items' already exists". Genau deshalb trägt
+            # sie `CREATE TABLE IF NOT EXISTS` (gemessen am 2026-09-02).
             cache.scheduler:
                 adapter: cache.adapter.doctrine_dbal
                 provider: 'doctrine.dbal.default_connection'
