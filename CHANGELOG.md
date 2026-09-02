@@ -7,6 +7,106 @@ Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
 ## [Unreleased]
 
+### Cloudways abgelöst: Coolify ist der einzige Auslieferungsweg
+
+`.github/workflows/cd.yml` und `.github/deploy.sh` sind entfernt. Ein Merge nach
+`master` bleibt der Deploy, aber Coolify baut jetzt aus dem `Dockerfile` und tauscht
+den Container, statt dass ein Runner per SSH einen Arbeitsbaum umschreibt.
+
+⚠ **Ein Workflow, der grün meldet ohne etwas zu bewirken, ist schlimmer als keiner.**
+Genau das wäre `cd.yml` geworden: Er hätte bei jedem Push auf `master` weiter gegen
+einen Server deployt, der nichts mehr ausliefert.
+
+**Was der Wechsel mitgenommen hat — und was an seine Stelle tritt:**
+
+| entfallen | Ersatz |
+|---|---|
+| `verify-assets` prüfte `public/build` gegen die Quellen | Der `assets`-Stage baut sie im Image aus dem Quelltext |
+| `deploy.sh` führte die Migrationen aus | **Post-Deployment-Command in Coolify** |
+| Wartungsseite gegen das ENDLECH-5-Fenster | Entfällt — ein Container-Tausch hat kein solches Fenster |
+| Cron für `messenger:consume` | Die Worker-Ressource (`--target worker`) |
+
+⚠ **Die Migration ist der Punkt, an dem der Wechsel am ehesten weh tut.** Vorher lief
+sie bei jedem Deploy automatisch mit; jetzt ist sie eine Zeile in einem Coolify-Feld,
+die jemand gesetzt haben muss. Ein Deploy mit neuer Entity und ohne Migration meldet
+grün und wirft danach bei jeder betroffenen Seite einen 500er.
+
+Die Wartungsseite in `public/index.php` bleibt als **Handschalter**
+(`touch var/maintenance`) — sie kostet ein `file_exists` je Anfrage und ist der
+einzige Weg, die Seite ohne Deploy stillzulegen.
+
+Historische Einträge in `CHANGELOG.md` und `features/` behalten die alten Namen und
+Abläufe: Sie beschreiben, was damals galt. Das Datum des Wechsels steht in
+`CLAUDE.md`, damit sie auflösbar bleiben.
+
+
+### Worker-Stage im Dockerfile
+
+`FROM runtime AS worker` — in Coolify eine zweite Ressource aus demselben Dockerfile
+über „Docker build stage target: worker". Erbt Code, Erweiterungen und Rechte,
+tauscht nur den Startbefehl gegen den Messenger-Consumer.
+
+⚠ **`pcntl` fehlt im FrankenPHP-Image.** Ohne die Erweiterung fängt
+`messenger:consume` kein SIGTERM ab. Gemessen mit `docker stop`: mit `pcntl` endet
+der Worker in 0 Sekunden und protokolliert „Received signal 15 → Stopping worker";
+ohne sie mit **Exit-Code 137**, also durch SIGKILL — mitten in einer Nachricht, die
+danach erst nach einer Stunde `redeliver_timeout` zurückkommt. Die Erweiterung steht
+deshalb im worker-Stage, nicht im base-Stage: Der Webserver braucht sie nie.
+
+⚠ **`HEALTHCHECK NONE`**, sonst prüft der geerbte Healthcheck einen Webserver, den
+dieser Container nie startet — und der Orchestrator startet ihn im Kreis neu.
+
+⚠ **`--time-limit=3600` setzt eine Neustart-Regel voraus.** Ohne sie ist der Worker
+nach einer Stunde weg und kommt nicht zurück.
+
+⚠ **App und Worker brauchen dasselbe `APP_SECRET`.** `RunCommandMessage` wird beim
+Serialisieren signiert, und der Schlüssel ist `kernel.secret`. Mit abweichendem Wert
+bricht `messenger:failed:show` mit „Invalid signature" ab — ausgerechnet der Befehl,
+den man aufruft, wenn schon etwas schiefging.
+
+
+### Zeitpläne statt System-Cron
+
+Beide wiederkehrenden Aufgaben laufen über Symfonys Scheduler (`src/Scheduler/`)
+statt über zwei Cron-Einträge auf Cloudways: der Monatslauf der Open-Startup-Kennzahlen
+(`15 3 1 * *`) und der Brevo-Kontaktabgleich (`*/5 * * * *`). Angetrieben von einem
+einzigen Consumer, der zugleich den Mailversand abarbeitet:
+
+```
+php bin/console messenger:consume async scheduler_metrics scheduler_marketing \
+    --time-limit=3600 --memory-limit=192M --env=prod
+```
+
+⚠ **`getSchedule()` muss das Schedule-Objekt zwischenspeichern.** Ohne `??=` entsteht
+bei jedem Aufruf ein neues Sperrobjekt auf derselben Ressource, das zweite `acquire()`
+scheitert am `flock` des ersten, und der Generator liefert **schweigend nichts**.
+Gemessen: 220 Sekunden Consumer über einen fälligen Takt, null Nachrichten — bei
+einem `debug:scheduler`, das vollkommen richtig aussah.
+
+⚠ **Zwei Zeitpläne statt einem**, weil das Nachholen am Zeitplan hängt und nicht am
+einzelnen Eintrag. Der Monatslauf holt **jeden** verpassten Termin nach; das rettet den
+Fall, für den Nachholen da ist: ein Deploy oder Neustart genau um 03:15 am Ersten.
+⚠ Es holt **keine vergangenen Monate zurück** — `MetricSnapshotService::capture()`
+nimmt immer den Vormonat *relativ zum Laufzeitpunkt*, und ein bereits vorhandener
+Monat bleibt unangetastet. Steht der Consumer über einen Monatswechsel hinaus, bleibt
+die Lücke; sie ließe sich ohnehin nur mit heutigen Zahlen unter altem Datum füllen. Der
+Fünf-Minuten-Takt holt **genau einen** Durchgang nach — drei Tage Ausfall wären sonst
+864 Läufe hintereinander, von denen 863 ein leeres Auftragsbuch vorfänden.
+
+⚠ **Der Merkposten liegt in der Datenbank** (Pool `cache.scheduler`, Tabelle
+`cache_items`, Migration `Version20260902200000`). Ein Pool unter `var/cache` überlebt
+`cache:clear` nicht, und das läuft bei jedem Deploy — ein Monatslauf, der in dieses
+Fenster fiel, wäre ohne Fehlermeldung verloren.
+
+Neu: `symfony/lock`. Sperren auf zwei Ebenen — je Zeitplan gegen doppelte Erzeugung
+durch mehrere Consumer, dazu `LockableTrait` in beiden Befehlen gegen überlappende
+Ausführung. Die Befehle bleiben unverändert von Hand aufrufbar; an Name, Argumenten
+und Optionen ändert sich nichts.
+
+`tests/Unit/Scheduler/CatchUpBehaviourTest.php` misst das Nachholverhalten mit einer
+gestellten Uhr, statt es zu behaupten.
+
+
 ### Branches umbenannt: `dev` → `main`, `production` → `master`
 
 Umbenannt über GitHubs Branch-Rename, damit offene Verweise und der Default-Branch

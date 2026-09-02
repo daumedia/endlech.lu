@@ -169,7 +169,7 @@ src/
 ├── Open/                # Open-Startup-Logik (Stats, Kantonszuordnung, Punktzahl, Snapshots)
 ├── Repository/          # Doctrine repositories (UserRepository, RestaurantRepository, CuisineRepository, WebauthnCredentialRepository)
 ├── Security/            # PasskeyAuthenticator, WebauthnUserEntityRepository
-├── Schedule.php         # Wiederkehrende Aufgaben (#[AsSchedule])
+├── Scheduler/           # Wiederkehrende Aufgaben (#[AsSchedule]) – zwei Zeitpläne
 └── Kernel.php           # Symfony kernel
 
 config/
@@ -847,7 +847,7 @@ Kein Feld für Vertragspartner, Restaurant oder Rechnungsnummer: Was nicht erfas
 
 **Entity `MetricSnapshot`:** `capturedFor` (DATE, **unique** → Idempotenz auf DB-Ebene), typisierte Spalten für die Verlaufsgrafiken plus `payload` (JSON) mit der vollständigen Momentaufnahme. Grund für die Entity: Ein aus den heutigen Daten zurückgerechneter Verlauf änderte sich rückwirkend, sobald jemand einen Eintrag bearbeitet – als Beleg gegenüber einem Ministerium wertlos.
 
-**Zeitplan vs. Cron:** `src/Schedule.php` (`#[AsSchedule]`, `RecurringMessage::cron('15 3 1 * *', …, Europe/Luxembourg)`) → `App\Message\CaptureMetricSnapshot` → `CaptureMetricSnapshotHandler`. ⚠️ **Symfony Scheduler braucht einen Worker auf dem Transport `scheduler_default`; der Cron auf Production konsumiert nur `async`** – dort feuert der Zeitplan nicht. Der reale Auslöser ist der **Cron-Eintrag auf `app:metrics:snapshot`** (README → Deployment). Der Befehl unterstützt `--month=YYYY-MM` und `--force`. Zusätzlich gibt es im Admin einen Knopf (`admin_finance_snapshot`), weil eine ausgefallene Historie sonst unbemerkt bliebe und sich nicht rückwirkend erzeugen lässt.
+**Zeitplan:** `src/Scheduler/MetricsScheduleProvider.php` (`#[AsSchedule('metrics')]`, `RecurringMessage::cron('15 3 1 * *', …, Europe/Luxembourg)`) → `App\Message\CaptureMetricSnapshot` → `CaptureMetricSnapshotHandler`. Ausgelöst vom Consumer auf `scheduler_metrics` (siehe „Zeitpläne statt System-Cron"); der frühere Cron-Eintrag auf `app:metrics:snapshot` ist seit dem 2026-09-02 abgelöst. Verpasste Monatsläufe werden einzeln nachgeholt. Der Befehl unterstützt weiterhin `--month=YYYY-MM` und `--force`. Zusätzlich gibt es im Admin einen Knopf (`admin_finance_snapshot`), weil eine ausgefallene Historie sonst unbemerkt bliebe und sich nicht rückwirkend erzeugen lässt.
 
 **Cache:** eigener Pool `cache.open_stats` in `config/packages/cache.yaml` (Filesystem, TTL 3600; in `when@test` `cache.adapter.array`). Ein eigener Pool statt `cache.app`, damit `clear()` nach einer Admin-Änderung nicht den halben Anwendungscache mitnimmt.
 
@@ -1047,28 +1047,65 @@ Das `.github/`-Verzeichnis enthält außerdem Issue-Templates (Bug Reports, Feat
 
 ## Deployment (CD)
 
-**Ein Merge nach `master` ist der Deploy.** Kein Deployer, keine atomic releases – der Runner öffnet eine SSH-Sitzung, der Server aktualisiert sich selbst. Zwei Dateien im Repo, drei Secrets (`SSH_PRIVATE_KEY`, `APP_USER`, `APP_HOST`), Ziel ist Cloudways (`~/public_html`).
+**Ein Merge nach `master` ist der Deploy.** Coolify beobachtet den Zweig, baut aus
+dem `Dockerfile` und tauscht den Container. Zwei Ressourcen aus derselben Datei:
+die Anwendung (`--target runtime`) und der Messenger-Worker (`--target worker`).
 
-**`.github/workflows/cd.yml`** – Trigger `push` auf `master` + `workflow_dispatch`; `concurrency: deploy-production` (zwei parallele Deploys würden sich den Arbeitsbaum umschreiben). Zwei Jobs:
-- **`verify-assets`** – baut `public/build` neu und vergleicht mit dem committeten Stand. **Reihenfolge ist Pflicht: `composer install` VOR `npm ci`/`npm run build`**, weil `node_modules/@symfony/ux-turbo` ein Symlink nach `vendor/symfony/ux-turbo/assets` ist (`file:`-Dependency in `package.json`) – ohne `vendor/` scheitert Webpack am toten Link. Verglichen wird mit `git status --porcelain public/build`, **nicht** `git diff --exit-code`: bei aktivem `cleanupOutputBeforeBuild()` erscheint ein geänderter Hash als *untracked* Datei, die `git diff` nie meldet.
-- **`deploy`** (`needs: verify-assets`) – Sparse-Checkout nur von `.github/deploy.sh`, `webfactory/ssh-agent`, dann `ssh … 'bash -s' < .github/deploy.sh`.
+⚠️ **Seit dem 2026-09-02 gibt es keinen SSH-Deploy mehr.** `.github/workflows/cd.yml`
+und `.github/deploy.sh` sind entfernt, Cloudways ist abgelöst. Wer in älteren
+Protokollen (`CHANGELOG.md`, `features/`) auf `deploy.sh`, `verify-assets` oder
+`~/public_html` stößt: Das beschreibt den Stand bis zu diesem Datum und gilt nicht
+mehr.
 
-**`.github/deploy.sh`** – die gesamte Logik, versioniert und lokal mit `bash -n` prüfbar. `set -euo pipefail` (ohne die Zeile zählt nur der Exit-Code des letzten Befehls – eine gescheiterte Migration liefe durch und der Lauf würde grün), dann `git fetch` + `git reset --hard origin/master` + `git clean -fd`, `composer install --no-dev --optimize-autoloader`, `doctrine:migrations:migrate`, `cache:clear`.
+**Was der Wechsel mitgenommen hat — und was an seine Stelle tritt:**
 
-**Production-Umgebung (verifiziert am 2026-08-06):** Cloudways, SSH-Login `endlech` → Systembenutzer `nrzwptqsvx` (Application-User, dem auch `public_html` gehört – der richtige, nicht der Master-Login). Deploy-Pfad `$HOME/public_html`, Webroot zeigt auf dessen `public/`. PHP 8.4.22, Composer 2.10.1, git 2.30.2. `~/.ssh/` gehört **root** – deshalb liegt der Deploy-Key in `.git/deploy_key` (dort greift auch `git clean` nicht hin) und `known_hosts` wird per `ssh-keyscan` daneben geschrieben; der CI-Key des Runners liegt in `~/.openssh/authorized_keys` (Cloudways-Pfad, gehört dem App-User). `COMPOSER_CACHE_DIR` wird im Skript auf `$HOME/tmp/composer-cache` gesetzt, weil Composers Default `~/.cache` hier nicht beschreibbar ist – sonst läuft jeder Deploy cache-los.
+| entfallen | Ersatz |
+|---|---|
+| `verify-assets` prüfte `public/build` gegen die Quellen | Der `assets`-Stage baut sie im Image aus dem Quelltext; `.dockerignore` schließt den committeten Stand aus |
+| `deploy.sh` führte `doctrine:migrations:migrate` aus | **Post-Deployment-Command in Coolify** — sonst läuft keine Migration |
+| Wartungsseite gegen das ENDLECH-5-Fenster | Entfällt: Ein Container-Tausch hat kein Fenster, in dem neuer Code neben altem Container liegt |
+| Cron-Eintrag für `messenger:consume` | Die Worker-Ressource (siehe Container-Image) |
 
-### Messenger-Worker (Umstellung von `sync://` auf die Queue)
+⚠️ **Die Migration ist der Punkt, an dem dieser Wechsel am ehesten weh tut.** Vorher
+lief sie bei jedem Deploy automatisch mit; jetzt ist sie eine Zeile in einem
+Coolify-Feld, die jemand gesetzt haben muss. Ein Deploy mit neuer Entity und ohne
+Migration meldet grün und wirft danach bei jeder betroffenen Seite einen 500er.
 
-**Stand 2026-08-30: die Queue ist in Betrieb.** In der `.env.local` auf dem Server
-steht **kein** `MESSENGER_TRANSPORT_DSN` — damit greift der Vorgabewert
-`doctrine://default?auto_setup=0` aus `.env`, und der Worker-Cron konsumiert ihn
-jede Minute. Der frühere Hinweis „Umstellung steht noch aus" war überholt.
+**Production-DB:** MariaDB — neue Migrationen bleiben deshalb frei von
+MySQL-8-only-Syntax (`CHECK`-Constraints mit JSON-Funktionen, Window-Functions in
+DDL). Lokal und in der CI läuft MySQL 8.0, der Unterschied fällt sonst erst auf
+Production auf.
 
-⚠️ **Der Ausfall ist hier lautlos.** Läuft der Worker nicht oder scheitert er beim
-Start, stapeln sich die Nachrichten in `messenger_messages`, während die App weiter
-„erfolgreich" meldet – niemand bekommt mehr eine Bestätigungsmail (Registrierung,
-Double-Opt-In beider Wartelisten, E-Mail-Wechsel), und es fällt erst bei einer
-Beschwerde auf. **Der Zustand gehört gemessen, nicht angenommen:**
+**Rollback:** Revert-Commit auf `master`, oder in Coolify den vorherigen Build
+erneut ausrollen.
+
+### Wartungsseite: jetzt ein Handschalter
+
+`public/index.php` prüft weiterhin auf `var/maintenance`, **bevor**
+`vendor/autoload_runtime.php` geladen wird, und liefert dann 503 mit `Retry-After`
+und `public/maintenance.html`. Angelegt wird die Datei nur noch von Hand:
+
+```bash
+docker exec <container> touch var/maintenance
+docker exec <container> rm -f var/maintenance
+```
+
+⚠️ **Die Prüfung darf weiterhin weder Container noch Autoloader brauchen** — genau
+darum steht sie vor dem `require`. Sie ist billig (ein `file_exists` je Anfrage) und
+der einzige Weg, die Seite ohne Deploy stillzulegen.
+
+### Messenger-Worker
+
+Der Worker ist eine **zweite Coolify-Ressource** aus demselben Dockerfile
+(`--target worker`), keine Domain, kein Port, Restart-Regel `unless-stopped`.
+Einzelheiten und Fallstricke stehen unter „Container-Image".
+
+⚠️ **Der Ausfall ist hier lautlos.** Läuft der Worker nicht, stapeln sich die
+Nachrichten in `messenger_messages`, während die App weiter „erfolgreich" meldet —
+niemand bekommt mehr eine Bestätigungsmail (Registrierung, Double-Opt-In beider
+Wartelisten, E-Mail-Wechsel), kein Monats-Snapshot entsteht, kein Brevo-Abgleich
+läuft. Es fällt erst bei einer Beschwerde auf. **Der Zustand gehört gemessen, nicht
+angenommen:**
 
 ```bash
 php bin/console messenger:stats --env=prod        # Rückstau in async
@@ -1078,115 +1115,37 @@ php bin/console messenger:failed:show --env=prod  # nach 3 Versuchen aufgegeben
 Eine dreistellige Zahl in `async` heißt: der Worker läuft nicht.
 `messenger:failed:retry` schickt Liegengebliebenes nach.
 
-⚠️ **Wer je wieder `sync://` setzt, nimmt der Sperre unten die Wirkung** und schaltet
-Retry und `failed`-Transport ab. Beim Zurückstellen gilt dieselbe Reihenfolge wie bei
-der Umstellung — und immer `cache:clear --env=prod`, sonst hält der kompilierte
-Container den alten DSN.
+⚠️ **Wer je wieder `sync://` setzt**, nimmt der Queue Retry und `failed`-Transport
+— und damit die einzige Sichtbarkeit, die es für gescheiterten Versand gibt. Bei
+`sync://` fingen zwölf `catch (TransportExceptionInterface)`-Blöcke in acht Dateien
+den Fehler ab, **ohne ihn zu loggen**: Der Nutzer sah eine Warnung, der Betreiber
+erfuhr nichts.
 
-Die Tabelle ist bereits da: `Version20260113160019` legt `messenger_messages` an,
-und ihr Schema deckt sich mit dem, was `symfony/doctrine-messenger` erwartet
-(Kombi-Index `(queue_name, available_at, delivered_at, id)`). `auto_setup=0` ist
-deshalb unkritisch.
+⚠️ **Diese zwölf Blöcke sind seit der Umstellung toter Code** – ein Dispatch-Fehler
+ist eine Messenger-Exception, keine Mailer-`TransportExceptionInterface`. Sie
+schaden nicht, täuschen aber eine Absicherung vor, die an dieser Stelle nichts mehr
+auffängt; wer dort einen Fehlerfall prüfen will, prüft ihn im Worker. Aufräumen ist
+ein eigener Auftrag, kein Nebenbei-Handgriff.
 
-**Der Worker läuft als Cron, nicht unter Supervisor** – jede Minute, mit
-`--time-limit=55`. Das ist hier die bessere Wahl, weil sich der Worker damit selbst
-ablöst und nach jedem Deploy von allein mit neuem Code und frischem Container
-startet. Ein `pkill` im Deploy entfällt dadurch, und das ist ein Gewinn: Auf
-derselben Maschine läuft ein `messenger:consume` einer **fremden** Application unter
-anderem Systembenutzer, ein Muster ohne `-u`-Filter wäre dort eine Fußangel.
-
-⚠️ **Der Cron muss unter demselben Systembenutzer laufen wie PHP-FPM**
-(`nrzwptqsvx`, nicht der Master-Login, unter dem das Cloudways-Panel seine Cron-Jobs
-anlegt). Ein Worker als Master schreibt `var/log` und `var/cache` mit fremdem
-Eigentümer voll, bis der Webserver dort auf „Permission denied" läuft — ein 500er,
-dessen Ursache man an der falschen Stelle sucht. Vor dem Einrichten prüfen, als wer
-das Panel den Job startet:
-
-```
-* * * * * id > /home/master/applications/nrzwptqsvx/public_html/var/cron-whoami.txt 2>&1
-```
-
-Steht dort `master`, gehört der Job stattdessen per `crontab -e` in die SSH-Sitzung
-des App-Users. Der bestehende `app:metrics:snapshot`-Cron hat dasselbe Thema, fällt
-dort aber kaum auf, weil er einmal im Monat läuft.
-
-Die **Sperrdatei** ist davon bewusst unabhängig: `deploy.sh` öffnet sie lesend
-(`exec 9<`), weil `flock` unabhängig vom Zugriffsmodus sperrt. Ein abweichender
-Eigentümer blockiert damit nicht den Deploy.
-
-**Die Sperre in `deploy.sh`:** Das Skript nimmt sich `var/worker.lock` per `flock`,
-bevor `git reset` läuft, und hält den Deskriptor bis zum Ende. Ein laufender Worker
-wird abgewartet (bis 90 s), jeder Cron-Start während des Deploys springt per
-`flock -n` ab. Ohne das trifft der Worker mitten im `git reset` auf halb neue
-Dateien – derselbe gemischte Zustand wie bei ENDLECH-5, nur im Hintergrund und ohne
-Wartungsseite davor. Die Datei liegt aus demselben Grund unter `var/` wie das
-Wartungsflag: gitignoriert, `git clean -fd` fasst sie nicht an.
-
-**Was die Queue mitbringt:** Retry (`max_retries: 3`) und den `failed`-Transport,
-also `messenger:failed:show`/`:retry` statt endgültig verlorener Mails. Und
-Sichtbarkeit – ein im Worker gescheiterter Versand landet als `error` im Monolog-Kanal
-`messenger` und damit über `sentry_logs` in Sentry. Bei `sync://` fingen zwölf
-`catch (TransportExceptionInterface)`-Blöcke in acht Dateien den Fehler ab, **ohne ihn
-zu loggen**: Der Nutzer sah eine Warnung, der Betreiber erfuhr nichts.
-
-⚠️ **Diese zwölf Blöcke sind seit der Umstellung toter Code** – ein Dispatch-Fehler ist
-eine Messenger-Exception, keine Mailer-`TransportExceptionInterface`. Sie schaden
-nicht, täuschen aber eine Absicherung vor, die an dieser Stelle nichts mehr auffängt;
-wer dort einen Fehlerfall prüfen will, prüft ihn im Worker. Aufräumen ist ein eigener
-Auftrag, kein Nebenbei-Handgriff.
-
-**Production-DB ist MariaDB 10.5**, lokal und in der CI läuft dagegen MySQL 8.0. Da `deploy.sh` bei jedem Lauf `doctrine:migrations:migrate` ausführt, müssen neue Migrationen gegen MariaDB 10.5 lauffähig sein – MySQL-8-only-Syntax (z. B. `CHECK`-Constraints mit JSON-Funktionen, Window-Functions in DDL) schlägt sonst erst auf Production fehl.
+Die Tabelle ist da: `Version20260113160019` legt `messenger_messages` an, und ihr
+Schema deckt sich mit dem, was `symfony/doctrine-messenger` erwartet — `auto_setup=0`
+ist deshalb unkritisch.
 
 **Konsequenzen für die tägliche Arbeit:**
-- **Änderung unter `assets/` → `npm run build` ausführen und `public/build` mitcommitten**, sonst blockt `verify-assets` den Deploy. Der Build ist deterministisch (verifiziert), ein Neubau ohne Quelltextänderung erzeugt keine Diffs.
-- **`.nvmrc` ist die gemeinsame Node-Version** für lokale Entwicklung, `ci.yml` und `cd.yml` (beide Workflows nutzen `node-version-file: '.nvmrc'`). Da der committete `public/build` aus der lokalen Node-Version stammt, würde eine abweichende Runner-Version den Vergleich potenziell grundlos rot färben. Wer lokal die Node-Version wechselt, aktualisiert `.nvmrc` mit.
-- `git clean -fd` läuft **ohne** `-x`: alles Gitignorierte überlebt (`.env.local`, `config/jwt/*.pem`, `public/uploads/{avatars,restaurants}`, `var/`, `vendor/`, `public/bundles/`). ⚠️ **`public/uploads/team/` ist per `!`-Regel aus `.gitignore` ausgenommen** – Dateien dort, die nicht committet sind, löscht der Deploy.
-- Kein Null-Downtime, aber auch keine 500er: Zwischen `git reset` und `cache:clear` läuft die App gemischt (neue Dateien, alter Container) — **dieses Fenster deckt seit ENDLECH-5 eine Wartungsseite ab**, siehe unten.
-- Rollback = Revert-Commit auf `master`; der nächste Lauf bringt die passenden Assets automatisch mit, weil sie im selben Commit stecken.
-- PHPUnit ist **kein** Deploy-Gate (passend zur manuellen CI); zuschaltbar über `needs: [verify-assets, tests]`.
-
-Server-Setup (einmalig) und die Waisen-Inventur vor dem ersten Lauf: siehe README → „🚢 Deployment".
-
-### Wartungsfenster während des Deploys (ENDLECH-5)
-
-⚠️ **Ab `git reset` liegen neue PHP-Dateien neben dem kompilierten Container des
-Vorgänger-Releases.** Ruft der alte Container einen geänderten Konstruktor auf, endet
-**jede** Anfrage in einem 500er — nicht nur die betroffene Route, wenn die Klasse an
-`kernel.request` hängt. Am 29.08.2026 traf es `ApiRateLimitSubscriber`: Der Container
-von v2026.08.09 übergab zwei Argumente, die neue Datei verlangte seit BF-25 drei
-(`api_register`). Der gemischte Zustand endet erst mit `cache:clear`, gemessen rund
-35 Sekunden später.
-
-Der Beleg im Sentry-Event ist das Feld `release`. Es kommt aus `%app.version%` und
-damit **aus dem kompilierten Container** — steht dort eine ältere Version als die im
-Repo, ist genau dieses Fenster die Ursache und nicht der Code.
-
-**Deshalb:**
-- `deploy.sh` legt `var/maintenance` an, **bevor** `git reset` läuft, und entfernt die
-  Datei im `EXIT`-Trap. `git fetch` steht davor — es ändert den Arbeitsbaum noch nicht.
-- ⚠️ **Die Flag-Datei liegt unter `var/`, weil das gitignoriert ist.** `git clean -fd`
-  läuft ohne `-x` und fasst sie deshalb nicht an; `cache:clear` räumt nur `var/cache`.
-  Unter `public/` läge sie im Repo-Bereich und wäre nach dem `clean` weg.
-- ⚠️ **Die Prüfung in `public/index.php` steht VOR `require vendor/autoload_runtime.php`.**
-  Sie darf weder Container noch Autoloader brauchen — genau die können während des
-  Deploys unvollständig sein. Antwort: 503 + `Retry-After` + `Cache-Control: no-store`
-  (sonst hält der Varnish des Hostings die Wartungsseite über den Deploy hinaus fest).
-- ⚠️ **Bei einem Abbruch bleibt die Wartungsseite bewusst stehen.** Der Arbeitsbaum ist
-  dann neu, der Container alt oder die Migration halb durch — eine 503 ist dort besser
-  als der 500er, den dieser Zustand liefert. Das Signal ist der rote Actions-Lauf
-  (`::error::`-Annotation); danach von Hand
-  `ssh <user>@<host> 'rm -f ~/public_html/var/maintenance'`.
-- `public/maintenance.html` ist eigenständiges HTML mit Inline-CSS wie `offline.html` —
-  Encore-Assets sind an dieser Stelle nicht verlässlich erreichbar.
-
-Der Service Worker braucht dafür **nichts**: Navigationen laufen network-first ohne
-Cache-Schreiben, alle anderen Wege cachen nur bei `response.ok`. Eine 503 landet
-strukturell in keinem Cache.
+- **Änderung unter `assets/` → `npm run build` ausführen und `public/build`
+  mitcommitten.** Für die Produktion ist das seit dem Wechsel egal (das Image baut
+  selbst), für jeden, der die App ohne Docker startet, nicht.
+- **`.nvmrc` ist die gemeinsame Node-Version** für die lokale Entwicklung und
+  `ci.yml`. Das Dockerfile führt sie als `ARG NODE_VERSION` — bei einem Wechsel
+  beide Stellen mitziehen.
+- **Neue Migration? Prüfen, dass der Post-Deployment-Command in Coolify steht.**
+- PHPUnit ist **kein** Deploy-Gate (passend zur manuellen CI).
 
 ## Container-Image (`Dockerfile`, Coolify)
 
-Zweiter Auslieferungsweg neben dem SSH-Deploy nach Cloudways — **kein Ersatz**. Das
-Bild fährt auf `dunglas/frankenphp:1-php8.4` in drei Stufen: `vendor` (Composer),
+Seit dem 2026-09-02 **der** Auslieferungsweg: Coolify baut daraus zwei Ressourcen,
+die Anwendung (`--target runtime`) und den Worker (`--target worker`). Das Bild
+fährt auf `dunglas/frankenphp:1-php8.4` in drei Stufen: `vendor` (Composer),
 `assets` (Encore), `runtime`. **Kein FrankenPHP-Worker-Modus**: Der klassische
 Request-pro-Prozess ist langsamer, verzeiht aber Zustandslecks, die ein Worker
 gnadenlos aufdeckt.
@@ -1225,9 +1184,71 @@ Letztere steht **nicht** in `.env` (sie lag immer nur in `.env.local`), und ohne
 bootet der Kernel im Build nicht. Unkritisch, weil Symfony `%env(...)%` im
 kompilierten Container als Platzhalter hält und erst zur Laufzeit auflöst.
 
-**Was das Bild nicht löst:** den Messenger-Worker (ohne zweiten Dienst mit
-`messenger:consume async` wird keine einzige Mail versendet — siehe oben, der Ausfall
-ist lautlos), die JWT-Schlüssel (`config/jwt/*.pem` sind gitignored und bewusst nicht
+### Worker-Stage
+
+`FROM runtime AS worker` am Ende derselben Datei — in Coolify eine **zweite
+Ressource** aus demselben Dockerfile über „Docker build stage target: worker".
+Erbt Code, Erweiterungen, php.ini und Rechte; getauscht wird nur der Startbefehl:
+
+```
+php bin/console messenger:consume async scheduler_metrics scheduler_marketing \
+    --time-limit=3600 --memory-limit=256M --env=prod
+```
+
+⚠️ **`pcntl` fehlt im FrankenPHP-Image** — nachgesehen, nicht vermutet: `php -m`
+listet dort `posix`, aber kein `pcntl`. Ohne die Erweiterung meldet Symfonys
+`SignalRegistry` keine Unterstützung, und `messenger:consume` fängt **kein SIGTERM**
+ab. Gemessen am 2026-09-02 mit `docker stop`: mit `pcntl` beendet der Worker in
+0 Sekunden und protokolliert „Received signal 15 → Stopping worker"; ohne sie endet
+er mit **Exit-Code 137**, also durch SIGKILL — mitten in einer Nachricht. Beim
+Doctrine-Transport bleibt die dann mit gesetztem `delivered_at` liegen und kommt
+erst nach `redeliver_timeout` (Vorgabe eine Stunde) zurück: Eine Bestätigungsmail
+ginge eine Stunde zu spät hinaus oder ein zweites Mal. Genau deshalb steht
+`install-php-extensions pcntl` im **worker**-Stage und nicht im `base`-Stage — der
+Webserver braucht sie nie.
+
+⚠️ **`HEALTHCHECK NONE` ist Pflicht.** Der geerbte Healthcheck prüft
+`http://127.0.0.1/health`; der Worker startet keinen Webserver und meldete sonst
+dauerhaft „unhealthy", woraufhin ein Orchestrator ihn im Kreis neu startet, obwohl
+er einwandfrei arbeitet.
+
+⚠️ **`--time-limit=3600` setzt eine Neustart-Regel voraus.** Der Worker löst sich
+damit selbst ab (neuer Code nach jedem Ausrollen, kein angesammelter Speicher) —
+steht die Ressource aber auf „no restart", ist er nach einer Stunde weg und kommt
+nicht zurück. Und dieser Ausfall ist der lautlose.
+
+⚠️ **Der `failed`-Transport gehört NICHT in den Befehl.** Er ist die Ablage für
+endgültig Gescheitertes und wird von Hand über `messenger:failed:show` und `:retry`
+bearbeitet. Wer ihn mitkonsumiert, schickt jede aufgegebene Nachricht sofort wieder
+in dieselbe Schleife.
+
+⚠️ **App und Worker MÜSSEN dasselbe `APP_SECRET` tragen.** In Coolify sind das zwei
+Ressourcen mit je eigener Variablenliste — zwei verschiedene Werte einzutragen ist
+ein Handgriff, und der Bruch ist lautlos. Grund: `RunCommandMessage` wird beim
+Serialisieren **signiert** (`console.messenger.execute_command_handler` trägt
+`['sign' => true]`, siehe `MessengerPass::$signedMessageTypes`), und der Schlüssel
+dafür ist `kernel.secret`. Beim Bauen gemessen: Eine vom Worker in den
+`failed`-Transport geschriebene Nachricht war mit abweichendem Secret nicht mehr
+lesbar — `messenger:failed:show` brach mit „Invalid signature for message
+\"RunCommandMessage\"" ab. Ausgerechnet der Befehl, den man aufruft, wenn schon
+etwas schiefging.
+
+**Zum Logging ist nichts zu tun** — entgegen dem ersten Anschein: `when@prod` in
+`config/packages/monolog.yaml` schreibt bereits nach `php://stderr` (JSON), die
+Datei unter `var/log` gilt nur für `dev` und `test`. Nachgestellt im Container: Der
+Start meldet `[OK] Consuming messages from transport …`, ein gescheiterter Lauf
+erscheint als `CRITICAL` im Kanal `messenger` in `docker logs`, und dazwischen ist
+Ruhe, weil `fingers_crossed` erst ab `error` ausschreibt. Wer hier einen
+stderr-Handler ergänzt, baut ihn ein zweites Mal.
+
+`SERVER_NAME` und `EXPOSE 80` erbt das Stage mit, beide bleiben wirkungslos: Sie
+liest allein FrankenPHP, und das startet nie. Der Entrypoint des Basisimage stellt
+nur bei einem führenden `-` ein `frankenphp run` voran (nachgesehen in
+`/usr/local/bin/docker-php-entrypoint`); bei `php` als erstem Wort läuft schlicht
+`exec php …`. Die Worker-Ressource bekommt in Coolify deshalb **keine Domain und
+keinen Port**.
+
+**Was das Bild nicht löst:** die JWT-Schlüssel (`config/jwt/*.pem` sind gitignored und bewusst nicht
 im Bild; Volume auf `/app/config/jwt` plus einmalig `lexik:jwt:generate-keypair`), die
 Migrationen und das Upload-Volume.
 
@@ -1255,8 +1276,9 @@ Jahr, die niemand je liest. Der Subscriber steigt seither bei jeder Route mit
 ## Konvention: `TRUSTED_PROXIES` hinter jedem Reverse Proxy
 
 `framework.trusted_proxies` liest `%env(TRUSTED_PROXIES)%`, Vorgabe leer (= Verhalten
-wie bisher, kein Proxy wird vertraut). Auf Cloudways bleibt der Wert leer, in Coolify
-gehört `private_ranges` hinein.
+wie bisher, kein Proxy wird vertraut). **In Coolify gehört `private_ranges` hinein** —
+die App steht dort hinter dem Proxy des Hostings. Nur ohne Proxy davor bleibt der
+Wert leer.
 
 ⚠️ **Ohne den Wert teilen sich hinter einem Proxy ALLE Besucher einen einzigen
 Rate-Limit-Deckel.** `Request::getClientIp()` liefert dort die Adresse des Proxys, für
@@ -1307,7 +1329,7 @@ zweite Grund für diese Unterscheidung.
 | `tsconfig.json`       | TypeScript compiler configuration          |
 | `eslint.config.mjs`   | ESLint flat config (TypeScript rules)      |
 | `.nvmrc`              | Node-Version für lokal + beide Workflows   |
-| `.github/deploy.sh`   | Deploy-Logik (läuft per SSH auf dem Server)|
+| `Dockerfile`          | Produktions-Image, Stages `runtime` und `worker` |
 | `importmap.php`       | Symfony AssetMapper module mapping         |
 | `.editorconfig`       | Editor formatting rules                    |
 | `docs/`               | Datenmodell-, Design-System- und PRD-Referenz |
