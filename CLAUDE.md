@@ -1207,10 +1207,24 @@ ginge eine Stunde zu spät hinaus oder ein zweites Mal. Genau deshalb steht
 `install-php-extensions pcntl` im **worker**-Stage und nicht im `base`-Stage — der
 Webserver braucht sie nie.
 
-⚠️ **`HEALTHCHECK NONE` ist Pflicht.** Der geerbte Healthcheck prüft
-`http://127.0.0.1/health`; der Worker startet keinen Webserver und meldete sonst
-dauerhaft „unhealthy", woraufhin ein Orchestrator ihn im Kreis neu startet, obwohl
-er einwandfrei arbeitet.
+⚠️ **Coolify liest den `HEALTHCHECK` des Bildes NICHT.** Es setzt beim Ausrollen
+einen eigenen auf `GET /health` und ruft darin `wget` auf. Zwei Folgen, beide am
+2026-09-02 gemessen:
+
+1. **`wget` muss im Bild liegen** — `curl` ist im FrankenPHP-Image, `wget` nicht,
+   und Coolifys Vorgabe fragt nach `wget`. Ohne das Paket scheitert die Prüfung
+   zehnmal mit „/bin/sh: 1: wget: not found", der frische Container gilt als krank
+   und Coolify rollt zurück. Deshalb `apt-get install wget` im `runtime`-Stage.
+2. **Auf der Worker-Ressource gehört der Healthcheck in der Oberfläche
+   abgeschaltet.** `HEALTHCHECK NONE` im Bild genügt dort nicht: Coolify prüft
+   trotzdem einen Webserver, den dieser Container niemals startet. Der Beleg im
+   Protokoll ist bitter — der verworfene Container hatte bereits
+   „[OK] Consuming messages from transports \"async, scheduler_metrics,
+   scheduler_marketing\"" geschrieben, arbeitete also einwandfrei.
+
+⚠️ **`HEALTHCHECK NONE` bleibt trotzdem im Stage.** Für `docker run` und Compose ist
+es richtig: Dort greift der geerbte Healthcheck, prüft einen Webserver, den es nicht
+gibt, und der Container meldete dauerhaft „unhealthy".
 
 ⚠️ **`--time-limit=3600` setzt eine Neustart-Regel voraus.** Der Worker löst sich
 damit selbst ab (neuer Code nach jedem Ausrollen, kein angesammelter Speicher) —

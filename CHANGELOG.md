@@ -7,6 +7,25 @@ Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
 ## [Unreleased]
 
+### `wget` im Image — Coolifys Healthcheck ignoriert den des Dockerfiles
+
+Coolify liest die `HEALTHCHECK`-Anweisung des Bildes **nicht**, sondern setzt beim
+Ausrollen einen eigenen auf `GET /health` und ruft darin `wget` auf. Im
+FrankenPHP-Image liegt `curl`, aber kein `wget` — die Prüfung scheiterte deshalb
+zehnmal mit „/bin/sh: 1: wget: not found", der frische Container galt als krank, und
+Coolify rollte auf den alten zurück.
+
+⚠ **Der verworfene Container arbeitete einwandfrei.** Im selben Protokoll steht
+`[OK] Consuming messages from transports "async, scheduler_metrics, scheduler_marketing"`.
+Ein Deploy, der ohne erkennbaren Anwendungsfehler zurückrollt, ist genau die Sorte
+Fehler, die man an der falschen Stelle sucht.
+
+⚠ **Für die Worker-Ressource reicht das nicht.** Dort gehört Coolifys Healthcheck in
+der Oberfläche abgeschaltet: Der Prozess serviert kein HTTP, also schlägt jede
+HTTP-Prüfung fehl, gleich welches Programm sie benutzt. `HEALTHCHECK NONE` im Bild
+verhindert das nicht — es gilt nur für `docker run` und Compose.
+
+
 ### Cloudways abgelöst: Coolify ist der einzige Auslieferungsweg
 
 `.github/workflows/cd.yml` und `.github/deploy.sh` sind entfernt. Ein Merge nach
