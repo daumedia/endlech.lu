@@ -5,6 +5,7 @@ namespace App\Command;
 use App\Open\MetricSnapshotService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Command\LockableTrait;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -13,9 +14,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 /**
  * Schreibt den Monats-Snapshot der Open-Startup-Kennzahlen.
  *
- * Für Production der eigentliche Auslöser: Dort läuft kein Messenger-Worker,
- * also feuert der Zeitplan aus App\Schedule nicht. Der Cron-Eintrag ruft
- * diesen Befehl am Ersten jedes Monats auf.
+ * Der reguläre Auslöser ist seit dem 2026-09-02 der Zeitplan
+ * {@see \App\Scheduler\MetricsScheduleProvider} — er schickt am Ersten jedes
+ * Monats eine `CaptureMetricSnapshot` los, die im Dienst dasselbe tut wie dieser
+ * Befehl. Der Befehl bleibt für Nachläufe und Prüfungen von Hand.
  *
  * `--month` holt einzelne Monate nach – etwa nach einem ausgefallenen Cron
  * oder beim erstmaligen Befüllen der Historie. Die Werte sind dann allerdings
@@ -28,6 +30,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 final class CaptureMetricSnapshotCommand extends Command
 {
+    // Verhindert, dass sich zwei Durchgänge überlappen – der Scheduler alle
+    // fünf Minuten, ein Nachlauf von Hand, ein zweiter Worker.
+    use LockableTrait;
+
     public function __construct(private readonly MetricSnapshotService $snapshots)
     {
         parent::__construct();
@@ -50,7 +56,39 @@ final class CaptureMetricSnapshotCommand extends Command
             );
     }
 
+    /**
+     * Nimmt die Sperre und gibt sie in jedem Fall wieder frei.
+     *
+     * ⚠ **Das `finally` ist Pflicht, nicht Stil.** `LockableTrait::lock()` wirft
+     * beim zweiten Aufruf auf derselben Instanz „A lock is already in place." —
+     * und genau das tut `CaptureMetricSnapshotCommandTest`, der `execute()`
+     * zweimal hintereinander auf demselben Objekt ruft, um die Idempotenz zu
+     * prüfen. Ohne die Freigabe wäre der Prüflauf rot.
+     *
+     * ⚠ **Ein belegtes Schloss ist SUCCESS, kein FAILURE.** Der Lauf wurde
+     * übersprungen, weil bereits einer unterwegs ist — das ist der eingeplante
+     * Normalfall und kein Fehler. Bei FAILURE würde `RunCommandMessage` eine
+     * Ausnahme werfen, die Nachricht liefe in den `failed`-Transport, und bei
+     * einem Fünf-Minuten-Takt stapelte sich dort Rauschen.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        if (!$this->lock()) {
+            (new SymfonyStyle($input, $output))->warning(
+                'Es läuft bereits ein Durchgang – dieser Aufruf endet ohne Wirkung.',
+            );
+
+            return Command::SUCCESS;
+        }
+
+        try {
+            return $this->fuehreAus($input, $output);
+        } finally {
+            $this->release();
+        }
+    }
+
+    private function fuehreAus(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
         $monthOption = $input->getOption('month');

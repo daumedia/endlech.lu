@@ -302,7 +302,7 @@ replaces itself every minute, so it picks up new code after a deploy on its own 
 the same machine under a different system user). Add it once:
 
 ```
-* * * * * /usr/bin/flock -n /home/master/applications/nrzwptqsvx/public_html/var/worker.lock /usr/bin/php /home/master/applications/nrzwptqsvx/public_html/bin/console messenger:consume async --time-limit=55 --memory-limit=128M --env=prod -q
+* * * * * /usr/bin/flock -n /home/master/applications/nrzwptqsvx/public_html/var/worker.lock /usr/bin/php /home/master/applications/nrzwptqsvx/public_html/bin/console messenger:consume async scheduler_metrics scheduler_marketing --time-limit=55 --memory-limit=128M --env=prod -q
 ```
 
 `flock -n` keeps the runs from overlapping and is the same lock `deploy.sh` takes
@@ -318,19 +318,44 @@ master user the Cloudways panel uses by default — otherwise it fills `var/log`
 Check afterwards with `php bin/console messenger:stats`: a growing number means
 nothing is consuming.
 
+### Scheduled tasks
+
+Both recurring jobs run through Symfony's Scheduler (`src/Scheduler/`), not through
+system cron. One consumer drives them together with the mail queue:
+
+```bash
+php bin/console messenger:consume async scheduler_metrics scheduler_marketing \
+    --time-limit=3600 --memory-limit=192M --env=prod
+```
+
+| Schedule | Cron | Catch-up after downtime |
+|---|---|---|
+| `metrics` | `15 3 1 * *` | **every** missed run — covers a deploy landing on 03:15 of the 1st |
+| `marketing` | `*/5 * * * *` | **one** run only — three days down would otherwise mean 864 |
+
+The checkpoint that makes catch-up possible lives in the **database** (pool
+`cache.scheduler`, table `cache_items`), not under `var/cache`: a filesystem pool
+does not survive `cache:clear`, which runs on every deploy. Inspect it with
+`php bin/console debug:scheduler`.
+
+⚠️ Both commands remain callable by hand — `app:metrics:snapshot --month=2026-08`
+and `app:marketing:sync --limit=50` are unchanged. They hold a lock while running, so
+a manual catch-up cannot collide with the scheduled one.
+
 ### Monthly metrics snapshot
 
 The `/open` page shows a trend built from stored monthly snapshots, not from
 recalculated history. Those snapshots are written by `app:metrics:snapshot`.
 
-`App\Schedule` declares the recurring task (1st of each month, 03:15
-Europe/Luxembourg), but Symfony Scheduler needs a running
-`messenger:consume scheduler_default` — and production has no worker. **The cron
-entry is what actually runs it there.** Add it once in the hosting panel:
+`App\Scheduler\MetricsScheduleProvider` declares the recurring task (1st of each
+month, 03:15 Europe/Luxembourg). **The consumer above is what runs it** — there is
+no cron entry for this any more. A run missed because the worker was down at 03:15
+is delivered as soon as it comes back.
 
-```
-15 3 1 * * /usr/bin/php ~/public_html/bin/console app:metrics:snapshot --env=prod --no-interaction
-```
+⚠️ Catch-up delivers the *trigger*, it does not reconstruct *past months*:
+`capture()` always takes the month before the moment it runs, and an existing month
+is left alone. If the consumer is down across a month boundary, that month stays
+empty — and filling it later would only stamp today's numbers with an old date.
 
 The command is idempotent: a month that already has a snapshot is left alone
 (`--force` overwrites, `--month=YYYY-MM` fills a gap). If the cron is missing or
@@ -345,15 +370,17 @@ months later gives them today's numbers, not the ones they had.
 
 Feature 04 never calls Brevo from a web request. Consent writes a row into the
 order book (`marketing_contact`); `app:marketing:sync` is what carries it over.
-Same reason as above — production runs `sync://` with no worker, so an
-"asynchronous" message would run inside the request and hang every waitlist
-signup on a third party's availability.
+It never runs inside a request, so no signup hangs on a third party's availability.
+`App\Scheduler\MarketingScheduleProvider` schedules it every five minutes and the
+consumer above executes it — through `RunCommandMessage`, i.e. the exact same path a
+manual call takes. **No cron entry for this any more either.**
 
-```
-*/5 * * * * /usr/bin/php ~/public_html/bin/console app:marketing:sync --env=prod --no-interaction
-```
+Unlike the monthly snapshot, this one catches up **a single run** after downtime:
+the command drains an order book rather than a point in time, so the first run
+already does the whole backlog, and 863 further runs would only hammer Brevo.
 
-⚠ **Run it as the same system user as PHP-FPM** (`nrzwptqsvx`), not the master
+⚠ **If you still run the messenger worker from cron, run it as the same system user
+as PHP-FPM** (`nrzwptqsvx`), not the master
 login the hosting panel defaults to. A job running as master fills `var/log` and
 `var/cache` with files the web server cannot write, and the resulting 500 sends
 you looking in the wrong place. Verify with a one-off `id > …/var/cron-whoami.txt`

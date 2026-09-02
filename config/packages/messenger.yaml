@@ -1,3 +1,13 @@
+# Ein einziger Consumer arbeitet beide Warteschlangen ab — Mailversand und
+# Zeitplan:
+#
+#     php bin/console messenger:consume async scheduler_metrics scheduler_marketing \
+#         --time-limit=3600 --memory-limit=192M --env=prod
+#
+# ⚠ Ohne ihn ist der Ausfall lautlos: Nachrichten stapeln sich in
+# `messenger_messages`, die Anwendung meldet weiter Erfolg, und weder eine
+# Bestätigungsmail noch ein Monats-Snapshot noch der Brevo-Abgleich findet statt.
+# Der Zustand gehört gemessen: `messenger:stats`, `messenger:failed:show`.
 framework:
     messenger:
         failure_transport: failed
@@ -14,6 +24,32 @@ framework:
                     multiplier: 2
             failed: 'doctrine://default?queue_name=failed'
             # sync: 'sync://'
+
+            # Die beiden Zeitpläne aus src/Scheduler/. Symfony legte diese
+            # Transporte auch ohne Eintrag an; sie stehen hier ausdrücklich, weil
+            # sie eine eigene Retry-Regel brauchen.
+            #
+            # ⚠ **Zwei Transporte, weil sie sich im Nachholen unterscheiden.**
+            # `processOnlyLastMissedRun()` hängt am Zeitplan, nicht am einzelnen
+            # Eintrag — der Monatslauf holt alles Verpasste nach, der
+            # Fünf-Minuten-Takt genau einen Durchgang. In einem gemeinsamen
+            # Zeitplan wäre nur eines von beidem möglich.
+            #
+            # ⚠ `max_retries: 0` ist Absicht. Ein Zeitplan-Task, der scheitert,
+            # wird vom nächsten planmäßigen Lauf ohnehin wiederholt — beim
+            # Brevo-Abgleich fünf Minuten später. Mit der Vorgabe von drei
+            # Versuchen käme zu jedem Ausfall ein Stapel Wiederholungen, und bei
+            # einem Fünf-Minuten-Takt füllt das den `failed`-Transport schneller,
+            # als jemand hineinsieht. Sichtbar bleibt der Fehler trotzdem: über
+            # `failed` und über Monolog in Sentry.
+            scheduler_metrics:
+                dsn: 'schedule://metrics'
+                retry_strategy:
+                    max_retries: 0
+            scheduler_marketing:
+                dsn: 'schedule://marketing'
+                retry_strategy:
+                    max_retries: 0
 
         default_bus: messenger.bus.default
 

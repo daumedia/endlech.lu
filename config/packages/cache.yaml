@@ -16,6 +16,29 @@ framework:
 
         # Namespaced pools use the above "app" backend by default
         pools:
+            # Merkposten der Zeitpläne (App\Scheduler\*). Symfony hält hier je
+            # Zeitplan fest, bis wann er abgearbeitet ist — daraus errechnet er
+            # nach einem Ausfall, welche Läufe fehlen.
+            #
+            # ⚠ **Datenbank, nicht Dateisystem — und das ist der ganze Zweck.**
+            # Alle anderen Pools hier liegen unter var/cache; das ist für sie
+            # richtig, weil ihr Inhalt jederzeit neu berechnet werden kann. Der
+            # Merkposten kann das nicht: Er IST die Information. `cache:clear`
+            # läuft bei jedem Deploy, und ein leerer Merkposten bedeutet „letzter
+            # Lauf: jetzt" — ein Monatslauf, der während des Deploys fällig war,
+            # wäre damit endgültig weg, ohne Fehlermeldung.
+            #
+            # Die Tabelle `cache_items` legt `Version20260902200000` an. Der
+            # Adapter erzeugt sie zwar bei Bedarf selbst, aber dann im laufenden
+            # Betrieb und unbemerkt — auf MariaDB 10.5 (Cloudways) lieber
+            # deterministisch per Migration.
+            cache.scheduler:
+                adapter: cache.adapter.doctrine_dbal
+                provider: 'doctrine.dbal.default_connection'
+                # Kein default_lifetime: Der Merkposten darf nicht ablaufen.
+                # Symfony setzt selbst eine Frist von fünf Jahren
+                # (Checkpoint::CACHE_EXPIRY).
+
             # Kennzahlen der Open-Startup-Seite (/open).
             #
             # Ein eigener Pool statt cache.app, damit der Admin nach einer
@@ -46,6 +69,21 @@ when@test:
     framework:
         cache:
             pools:
+                # Im Test kein Datenbank-Pool: Die Schreibvorgänge lägen in der
+                # Transaktion, die dama/doctrine-test-bundle nach jedem Test
+                # zurückrollt — der Merkposten wäre also ohnehin nicht haltbar,
+                # und die Tabelle müsste in der Test-DB stehen.
+                # ⚠ `provider: ~` ist Pflicht, nicht Zierde. Die Pool-Definition
+                # wird mit dem Block oben verschmolzen; ohne diese Zeile bliebe
+                # dort `provider: doctrine.dbal.default_connection` stehen und
+                # landete als erstes Konstruktor-Argument im ArrayAdapter:
+                # „ArrayAdapter::__construct(): Argument #1 ($defaultLifetime)
+                # must be of type int, Doctrine\DBAL\Connection given" — und zwar
+                # als 500er in 456 Prüfläufen auf einmal.
+                cache.scheduler:
+                    adapter: cache.adapter.array
+                    provider: ~
+
                 # In Tests darf kein Ergebnis über Kernel-Neustarts hinweg
                 # überleben: Ein Test, der Restaurants anlegt und danach /open
                 # aufruft, sähe sonst den Stand eines früheren Tests.

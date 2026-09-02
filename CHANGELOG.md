@@ -7,6 +7,48 @@ Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
 ## [Unreleased]
 
+### Zeitpläne statt System-Cron
+
+Beide wiederkehrenden Aufgaben laufen über Symfonys Scheduler (`src/Scheduler/`)
+statt über zwei Cron-Einträge auf Cloudways: der Monatslauf der Open-Startup-Kennzahlen
+(`15 3 1 * *`) und der Brevo-Kontaktabgleich (`*/5 * * * *`). Angetrieben von einem
+einzigen Consumer, der zugleich den Mailversand abarbeitet:
+
+```
+php bin/console messenger:consume async scheduler_metrics scheduler_marketing \
+    --time-limit=3600 --memory-limit=192M --env=prod
+```
+
+⚠ **`getSchedule()` muss das Schedule-Objekt zwischenspeichern.** Ohne `??=` entsteht
+bei jedem Aufruf ein neues Sperrobjekt auf derselben Ressource, das zweite `acquire()`
+scheitert am `flock` des ersten, und der Generator liefert **schweigend nichts**.
+Gemessen: 220 Sekunden Consumer über einen fälligen Takt, null Nachrichten — bei
+einem `debug:scheduler`, das vollkommen richtig aussah.
+
+⚠ **Zwei Zeitpläne statt einem**, weil das Nachholen am Zeitplan hängt und nicht am
+einzelnen Eintrag. Der Monatslauf holt **jeden** verpassten Termin nach; das rettet den
+Fall, für den Nachholen da ist: ein Deploy oder Neustart genau um 03:15 am Ersten.
+⚠ Es holt **keine vergangenen Monate zurück** — `MetricSnapshotService::capture()`
+nimmt immer den Vormonat *relativ zum Laufzeitpunkt*, und ein bereits vorhandener
+Monat bleibt unangetastet. Steht der Consumer über einen Monatswechsel hinaus, bleibt
+die Lücke; sie ließe sich ohnehin nur mit heutigen Zahlen unter altem Datum füllen. Der
+Fünf-Minuten-Takt holt **genau einen** Durchgang nach — drei Tage Ausfall wären sonst
+864 Läufe hintereinander, von denen 863 ein leeres Auftragsbuch vorfänden.
+
+⚠ **Der Merkposten liegt in der Datenbank** (Pool `cache.scheduler`, Tabelle
+`cache_items`, Migration `Version20260902200000`). Ein Pool unter `var/cache` überlebt
+`cache:clear` nicht, und das läuft bei jedem Deploy — ein Monatslauf, der in dieses
+Fenster fiel, wäre ohne Fehlermeldung verloren.
+
+Neu: `symfony/lock`. Sperren auf zwei Ebenen — je Zeitplan gegen doppelte Erzeugung
+durch mehrere Consumer, dazu `LockableTrait` in beiden Befehlen gegen überlappende
+Ausführung. Die Befehle bleiben unverändert von Hand aufrufbar; an Name, Argumenten
+und Optionen ändert sich nichts.
+
+`tests/Unit/Scheduler/CatchUpBehaviourTest.php` misst das Nachholverhalten mit einer
+gestellten Uhr, statt es zu behaupten.
+
+
 ### Branches umbenannt: `dev` → `main`, `production` → `master`
 
 Umbenannt über GitHubs Branch-Rename, damit offene Verweise und der Default-Branch
