@@ -2,16 +2,23 @@
 
 use App\Kernel;
 
-// Wartungsfenster (ENDLECH-5): `deploy.sh` legt diese Datei an, bevor
-// `git reset --hard` die neuen Klassen einspielt, und entfernt sie erst nach
-// `cache:clear`. Dazwischen liegen neue PHP-Dateien neben dem kompilierten
-// Container des Vorgaenger-Releases – ruft der alte Container dort einen
-// geaenderten Konstruktor auf, endet jede Anfrage in einem 500er (gemessen am
-// 29.08.2026: `ApiRateLimitSubscriber` mit zwei statt drei Argumenten).
+// Wartungsschalter. Urspruenglich gegen ENDLECH-5 gebaut: Der SSH-Deploy nach
+// Cloudways legte diese Datei vor `git reset --hard` an, weil dort neue
+// PHP-Dateien neben dem kompilierten Container des Vorgaengers lagen und jede
+// Anfrage in einem 500er endete (gemessen am 29.08.2026: `ApiRateLimitSubscriber`
+// mit zwei statt drei Argumenten).
 //
-// Die Pruefung steht bewusst VOR `vendor/autoload_runtime.php`: Sie darf weder
-// den Container noch den Autoloader brauchen, weil genau die waehrend des
-// Deploys unvollstaendig sein koennen.
+// Seit dem Wechsel auf Coolify (2026-09-02) gibt es dieses Fenster nicht mehr —
+// ein Container-Tausch laesst den alten Container laufen, bis der neue steht. Die
+// Pruefung bleibt trotzdem: Sie ist der einzige Weg, die Seite ohne einen Deploy
+// stillzulegen, und kostet ein `file_exists` je Anfrage. Angelegt wird die Datei
+// jetzt von Hand:
+//
+//     docker exec <container> touch var/maintenance
+//
+// Sie steht weiterhin VOR `vendor/autoload_runtime.php`: Sie darf weder den
+// Container noch den Autoloader brauchen. Und unter `var/`, weil das gitignoriert
+// ist und ein Container-Neustart sie damit ohnehin verwirft.
 if (file_exists(dirname(__DIR__).'/var/maintenance')) {
     http_response_code(503);
     header('Retry-After: 120');

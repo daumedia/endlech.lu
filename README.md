@@ -180,8 +180,8 @@ php bin/console cache:clear
 no path, no IP address. It also covers every subdomain, but never the other way
 round, so production must use `endlech.lu` and **not** `www.endlech.lu`.
 
-Set it in the server's `~/public_html/.env.local` **before** merging into
-`master`. A wrong value deploys green and only shows up when someone tries
+Set it as an environment variable on the Coolify app resource **before** merging
+into `master`. A wrong value deploys green and only shows up when someone tries
 to sign in — the browser rejects the ceremony with a `SecurityError`.
 
 Locally the default `localhost` applies. Browsers treat `localhost` as a secure
@@ -193,53 +193,52 @@ list stays empty on purpose, so the spec's own rule applies.
 
 ## 🚢 Deployment
 
-A merge into `master` **is** the deploy. GitHub Actions opens an SSH session and
-the server updates itself — see `.github/workflows/cd.yml` (the connection) and
-`.github/deploy.sh` (everything that actually happens).
+A merge into `master` **is** the deploy. Coolify watches that branch, builds the
+image from the `Dockerfile` in this repo and swaps the container.
 
 ```
-main ──merge──▶ master ──push──▶ verify-assets ──▶ deploy (SSH)
+main ──merge──▶ master ──▶ Coolify builds --target runtime ──▶ container swap
+                          └──▶ Coolify builds --target worker  ──▶ container swap
 ```
 
-The `verify-assets` job rebuilds `public/build` and compares it against the
-committed one. **`public/build` is checked into the repo** — so whenever you
-touch anything under `assets/`, run `npm run build` and commit the result, or
-the deploy is blocked.
+Two resources out of the same Dockerfile: the app (`--target runtime`) and the
+messenger worker (`--target worker`). See *Container image* below for what each
+one needs.
 
-On the server, `deploy.sh` runs `git reset --hard origin/master` followed by
-`git clean -fd`, then `composer install --no-dev`, the Doctrine migrations and
-`cache:clear`. `git clean` runs **without** `-x`, so everything gitignored
-survives: `.env.local`, `config/jwt/*.pem`, `public/uploads/`, `var/`,
-`vendor/`. Production still runs with `MESSENGER_TRANSPORT_DSN=sync://`, so mail
-is sent inside the request — see *Messenger worker* below for the prepared switch
-to the queue.
-
-**The deploy shows a maintenance page while it runs.** Between `git reset` and
-`cache:clear` the new PHP files sit next to the compiled container of the previous
-release — if that container calls a constructor that has changed, every request ends
-in a 500 (this happened on 2026-08-29, `ApiRateLimitSubscriber` with two instead of
-three arguments). So `deploy.sh` touches `var/maintenance` before the reset, and
-`public/index.php` checks for that file **before** loading `vendor/autoload_runtime.php`
-— it needs neither the container nor the autoloader, both of which may be half-written
-at that moment. Visitors get a 503 with `Retry-After` and `public/maintenance.html`
-for roughly 35 seconds instead of an error page.
-
-If the deploy fails, **the maintenance page stays up on purpose** — the tree is new
-and the container old, which is exactly the broken state. The red Actions run is the
-signal; clear it by hand afterwards:
+**No maintenance page any more, and none needed.** The old SSH deploy overwrote
+files in place, which left new PHP code sitting next to the previous release's
+compiled container for roughly 35 seconds — every request a 500 (it happened on
+2026-08-29). A container swap has no such window: the old container serves until
+the new one is up. `public/index.php` still checks for `var/maintenance` before
+loading the autoloader, but nothing creates that file automatically — it is a
+**manual switch** now:
 
 ```bash
-ssh <user>@<host> 'rm -f ~/public_html/var/maintenance'
+docker exec <container> touch var/maintenance   # 503 + Retry-After
+docker exec <container> rm -f var/maintenance
 ```
 
-Rollback: push a revert commit to `master`. The next run restores the previous
-state including matching assets, because they live in the same commit.
+**Migrations do not run themselves.** Set `php bin/console doctrine:migrations:migrate -n`
+as a post-deployment command in Coolify, or run it by hand after a deploy that
+carries one. This is the single biggest difference to the old setup, where
+`deploy.sh` always ran them.
+
+Rollback: push a revert commit to `master`, or redeploy the previous build from
+Coolify's deployment list.
+
+⚠️ **`public/build` is still committed, but nothing verifies it any more.** The
+old `verify-assets` job rebuilt it and blocked the deploy on a mismatch; that
+workflow is gone with Cloudways. It no longer matters for production — the image
+builds its assets from source in the `assets` stage and `.dockerignore` excludes
+the committed copy. It does still matter for anyone running the app without
+Docker, so keep committing it after changes under `assets/`.
 
 ### Container image (Coolify)
 
 `Dockerfile` and `.dockerignore` in the repo root build a production image on
-`dunglas/frankenphp:1-php8.4`. This is a **second** path, not a replacement — the
-SSH deploy above is untouched.
+`dunglas/frankenphp:1-php8.4`. Since 2026-09-02 this is **the** deployment path —
+the SSH deploy to Cloudways is gone, along with `.github/workflows/cd.yml` and
+`.github/deploy.sh`.
 
 ```bash
 docker build -t endlech .
@@ -297,41 +296,43 @@ gone after an hour, silently.
 
 ### Messenger worker
 
-Production still sends mail inside the request (`MESSENGER_TRANSPORT_DSN=sync://`
-in `.env.local`). `deploy.sh` is already prepared for the switch to the Doctrine
-queue; the switch itself is not done yet.
+Mail is queued, not sent inside the request (`MESSENGER_TRANSPORT_DSN` defaults to
+`doctrine://default?auto_setup=0`). Something has to consume that queue, and in
+Coolify that is a **second resource from the same Dockerfile** — build stage target
+`worker`, no domain, no port, restart policy `unless-stopped`.
 
-**Do not just delete that line.** Without a running worker the `.env` default
-`doctrine://default?auto_setup=0` takes over, messages pile up in
-`messenger_messages` and the app keeps reporting success — nobody receives a
-confirmation mail and nothing warns you. The order is: cron first, then deploy,
-then drop the line and run `cache:clear --env=prod` (the compiled container holds
-the old DSN otherwise).
+⚠️ **The failure is silent.** Without a running consumer, messages pile up in
+`messenger_messages` while the app keeps reporting success: nobody gets a
+confirmation mail (registration, both waitlist double-opt-ins, email change), no
+monthly snapshot is written, no Brevo sync runs. Nothing warns you. Measure it,
+don't assume it:
 
-The table already exists — `Version20260113160019` creates it and its schema
-matches what `symfony/doctrine-messenger` expects.
-
-The worker runs as a **cron job, not under supervisor**: with `--time-limit=55` it
-replaces itself every minute, so it picks up new code after a deploy on its own and
-`deploy.sh` needs no `pkill` (a foreign application's `messenger:consume` runs on
-the same machine under a different system user). Add it once:
-
-```
-* * * * * /usr/bin/flock -n /home/master/applications/nrzwptqsvx/public_html/var/worker.lock /usr/bin/php /home/master/applications/nrzwptqsvx/public_html/bin/console messenger:consume async scheduler_metrics scheduler_marketing --time-limit=55 --memory-limit=128M --env=prod -q
+```bash
+php bin/console messenger:stats --env=prod        # backlog in async
+php bin/console messenger:failed:show --env=prod  # gave up after 3 tries
 ```
 
-`flock -n` keeps the runs from overlapping and is the same lock `deploy.sh` takes
-before `git reset`, so no worker touches a half-updated tree. `-q` keeps the log
-quiet — real failures go to Monolog and on to Sentry. Do **not** consume the
-`failed` transport here; it exists for `messenger:failed:show`/`:retry` by hand.
+A three-digit number in `async` means the worker is not running.
+`messenger:failed:retry` sends the leftovers back through.
 
-⚠️ The cron must run as the **same system user as PHP-FPM** (`nrzwptqsvx`), not the
-master user the Cloudways panel uses by default — otherwise it fills `var/log` and
-`var/cache` with files the web server cannot overwrite. Verify with a throwaway
-`* * * * * id > …/var/cron-whoami.txt` before relying on it.
+The worker's `--time-limit=3600` makes it exit every hour on purpose: it replaces
+itself, picks up new code, and drops whatever memory a long-lived PHP process
+accumulates. ⚠️ That only works with a **restart policy** — on "no restart" the
+worker is simply gone after an hour, and that is exactly the silent failure above.
 
-Check afterwards with `php bin/console messenger:stats`: a growing number means
-nothing is consuming.
+⚠️ **The `failed` transport is deliberately not consumed.** It exists for
+`messenger:failed:show` / `:retry` by hand; consuming it would send every
+given-up message straight back into the same loop.
+
+⚠️ **App and worker need the same `APP_SECRET`.** They are two resources with two
+separate variable lists in Coolify, so two different values are one slip away.
+`RunCommandMessage` is signed on serialization with `kernel.secret`, and with a
+mismatch `messenger:failed:show` aborts with `Invalid signature` — the one command
+you reach for when something already went wrong.
+
+The queue table already exists: `Version20260113160019` creates `messenger_messages`
+and its schema matches what `symfony/doctrine-messenger` expects, which is why
+`auto_setup=0` is harmless.
 
 ### Scheduled tasks
 
@@ -412,51 +413,50 @@ success and transfer nothing but the bare address), and both `docs/datenschutz.m
 and the privacy section on `/legal` must name Brevo as a recipient for marketing
 purposes. No contact goes out before the declaration mentions it.
 
-Error tracking is active on production only. `SENTRY_DSN` must be present in the
-server's `~/public_html/.env.local` **before** the merge — otherwise the deploy
-goes green while Sentry stays silently disabled. Verify afterwards over SSH with
-`php bin/console sentry:test`.
+Error tracking is active on production only. `SENTRY_DSN` must be set on **both**
+Coolify resources before the merge — otherwise the deploy goes green while Sentry
+stays silently disabled, and errors in the worker are exactly the ones you cannot
+see any other way. Verify afterwards with
+`docker exec <container> php bin/console sentry:test --env=prod`.
 
-### One-time server setup
+### One-time setup in Coolify
 
-The deploy directory must be a git checkout with its own deploy key. The key
-belongs in `.git/` — that directory sits outside the web root, is not part of
-the repo, and neither `reset --hard` nor `clean` touches it:
+Two resources, both **Build Pack: Dockerfile**, Dockerfile location `/Dockerfile`,
+base directory `/`, branch `master`:
 
-```bash
-cd ~/public_html
-tar czf /tmp/before-deploy.tar.gz .env.local config/jwt public/uploads  # backup first
+| | App | Worker |
+|---|---|---|
+| Build stage target | `runtime` | `worker` |
+| Domain | `endlech.lu` | *(none)* |
+| Port | `80` | *(none)* |
+| Restart policy | `unless-stopped` | `unless-stopped` |
+| Healthcheck | `/health` (built in) | disabled in the image |
 
-git init
-ssh-keygen -t ed25519 -C "endlech-deploy" -f .git/deploy_key -N ""
-chmod 600 .git/deploy_key
-ssh-keyscan github.com > .git/known_hosts
-git config core.sshCommand "ssh -i $PWD/.git/deploy_key \
-  -o IdentitiesOnly=yes -o UserKnownHostsFile=$PWD/.git/known_hosts"
-cat .git/deploy_key.pub   # → GitHub → Settings → Deploy keys (no write access)
+**Environment variables.** The app needs `APP_SECRET`, `DATABASE_URL`,
+`TRUSTED_PROXIES=private_ranges`, `DEFAULT_URI=https://endlech.lu`, `MAILER_DSN`,
+`WEBAUTHN_RP_ID=endlech.lu`, `CORS_ALLOW_ORIGIN`, plus `SENTRY_DSN`,
+`MOBILITEIT_API_KEY`, `BREVO_*` and `CONTACT_EMAIL`. The worker needs the same set
+minus `TRUSTED_PROXIES`, `WEBAUTHN_RP_ID` and `CORS_ALLOW_ORIGIN` — there is no
+request there.
 
-git remote add origin git@github.com:daumedia/endlech.lu.git
-git fetch origin
-git checkout -f -B master origin/master
+⚠️ **`APP_SECRET` must be byte-identical in both**, see *Messenger worker* above.
 
-git clean -nd   # DRY RUN: review this list before the first real deploy
-```
+⚠️ **`TRUSTED_PROXIES` is not optional behind Coolify's proxy.** Without it
+`Request::getClientIp()` returns the proxy's address for *every* visitor, so all
+IP-based limiters share one bucket: the first attacker locks out everyone else and
+walks past it themselves by switching proxies.
 
-That last line is the one not to skip. It shows what `git clean -fd` will delete
-on the first deploy — untracked and *not* gitignored. Check upload paths
-individually with `git check-ignore -v <path>`; if the command stays silent, the
-file is **not** protected.
+⚠️ **`DEFAULT_URI` matters more in the worker than in the app.** There is no request
+to derive a host from, so every link in every mail it sends comes from this value.
 
-This inventory was run on 2026-08-06 against the live server: **18 orphans**, all
-of them genuine leftovers (pre-TypeScript `assets/*.js`, six stale
-`public/build/` hashes, the old `tests/` layout, and a Cloudways placeholder
-`index.php` in the project root — harmless, the web root points at `public/`).
-Everything that must survive was confirmed protected: `.env.local`,
-`config/jwt/*.pem`, and all four user uploads under
-`public/uploads/{avatars,restaurants}`.
+**Persistent storage.** `/app/public/uploads` on the app (restaurant photos and
+avatars are gone after the next deploy otherwise) and `/app/config/jwt` — mount it,
+then run `php bin/console lexik:jwt:generate-keypair` once inside the container, or
+every `/api/v1/auth/login` fails. The keys are gitignored and deliberately not in
+the image.
 
-Three repository secrets are required — `SSH_PRIVATE_KEY`, `APP_USER`,
-`APP_HOST` — using a key pair separate from the server's deploy key.
+**Migrations.** `php bin/console doctrine:migrations:migrate -n` as a
+post-deployment command. Nothing runs them for you.
 
 ## 📂 Structure
 
