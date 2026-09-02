@@ -2,12 +2,12 @@
 
 Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
-![Version](https://img.shields.io/badge/version-2026.08.31-blue)
+![Version](https://img.shields.io/badge/version-2026.09.02-blue)
 ![Status](https://img.shields.io/badge/status-beta-green)
 
 ## [Unreleased]
 
-### Container-Image für Coolify
+## [2026.09.02] – Container-Image für Coolify
 
 **`Dockerfile` und `.dockerignore` im Repo-Root.** Ein produktionstaugliches Image auf
 Basis von `dunglas/frankenphp:1-php8.4`, in drei Stufen: Composer-Abhängigkeiten,
