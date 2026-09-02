@@ -232,19 +232,27 @@ FROM runtime AS worker
 RUN install-php-extensions pcntl
 
 # ⚠ Der geerbte HEALTHCHECK prüft `http://127.0.0.1/health` und muss hier
-# zwangsläufig scheitern — der Worker startet keinen Webserver. Ohne diese Zeile
-# meldete der Container dauerhaft „unhealthy", und ein Orchestrator startete ihn
-# im Kreis neu, obwohl er einwandfrei arbeitet.
+# zwangsläufig scheitern — der Worker startet keinen Webserver. Er wird deshalb
+# überschrieben, aber **nicht** mit `HEALTHCHECK NONE`:
 #
-# ⚠⚠ **Diese Zeile allein genügt in Coolify NICHT.** Coolify liest den HEALTHCHECK
-# des Bildes nicht, sondern setzt beim Ausrollen einen eigenen auf `GET /health`.
-# Für die Worker-Ressource muss er deshalb **in der Oberfläche abgeschaltet
-# werden** (Configuration → Healthcheck → aus). Sonst prüft Coolify einen
-# Webserver, den dieser Container niemals startet, verwirft den frischen
-# Container nach zehn Versuchen als krank und rollt auf den alten zurück — bei
-# einem Prozess, der ausweislich seines eigenen Logs einwandfrei arbeitet.
-# Gemessen am 2026-09-02.
-HEALTHCHECK NONE
+# ⚠⚠ **`HEALTHCHECK NONE` bringt Coolify zum Abbruch.** Ein Container ohne
+# Healthcheck hat kein `.State.Health` — und Coolify fragt genau das ab, sobald
+# seine eigene Prüfung abgeschaltet ist und es auf die des Bildes zurückfällt.
+# Gemessen am 2026-09-02: „Custom healthcheck found in Dockerfile" gefolgt von
+# „template parsing error: map has no entry for key \"Health\"" und einem
+# fehlgeschlagenen Deploy. Die Prüfung muss also **existieren** und passen.
+#
+# Geprüft wird die Kommandozeile von PID 1 — im Container ist das der Consumer
+# selbst. Kein zusätzliches Paket nötig (`pgrep` säße in `procps`, das nicht im
+# Bild liegt), und der Healthcheck-Prozess selbst kann sich nicht versehentlich
+# selbst finden, weil ausschließlich `/proc/1` gelesen wird.
+#
+# ⚠ Das ist eine Lebendigkeitsprüfung, keine Fortschrittsprüfung: Sie sagt „der
+# Consumer läuft", nicht „er arbeitet Nachrichten ab". Wer Letzteres wissen will,
+# fragt `messenger:stats` — ein Rückstau in `async` ist das Signal, und der lässt
+# sich von innen nicht sinnvoll in einen Exit-Code gießen.
+HEALTHCHECK --interval=60s --timeout=5s --start-period=15s --retries=3 \
+    CMD ["php", "-r", "exit(str_contains((string) @file_get_contents('/proc/1/cmdline'), 'messenger') ? 0 : 1);"]
 
 # ⚠ `SERVER_NAME`, `EXPOSE 80` und der Caddy-Verlauf aus `runtime` bleiben stehen,
 # sind hier aber wirkungslos: Sie liest allein FrankenPHP, und das startet nie.

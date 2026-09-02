@@ -22,8 +22,17 @@ Fehler, die man an der falschen Stelle sucht.
 
 ⚠ **Für die Worker-Ressource reicht das nicht.** Dort gehört Coolifys Healthcheck in
 der Oberfläche abgeschaltet: Der Prozess serviert kein HTTP, also schlägt jede
-HTTP-Prüfung fehl, gleich welches Programm sie benutzt. `HEALTHCHECK NONE` im Bild
-verhindert das nicht — es gilt nur für `docker run` und Compose.
+HTTP-Prüfung fehl, gleich welches Programm sie benutzt.
+
+⚠ **Und dann nicht `HEALTHCHECK NONE` setzen** — die naheliegende Antwort, die den
+nächsten Deploy killt. Sobald Coolifys eigene Prüfung aus ist, fällt es auf die des
+Bildes zurück und fragt `docker inspect '{{json .State.Health.Status}}'` ab; ein
+Container mit `NONE` hat kein `.State.Health`, und der Deploy bricht ab mit
+„template parsing error: map has no entry for key \"Health\"". Der worker-Stage bringt
+deshalb einen eigenen, passenden Healthcheck mit: Er liest `/proc/1/cmdline` und
+prüft, ob PID 1 noch der Consumer ist — ohne Zusatzpaket, und der Prüfprozess kann
+sich nicht selbst finden. Nachgestellt: „healthy" nach 10 Sekunden, Exit-Code 1 bei
+einem fremden PID-1-Prozess.
 
 
 ### Cloudways abgelöst: Coolify ist der einzige Auslieferungsweg
