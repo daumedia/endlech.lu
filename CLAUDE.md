@@ -1314,9 +1314,71 @@ Letztere steht **nicht** in `.env` (sie lag immer nur in `.env.local`), und ohne
 bootet der Kernel im Build nicht. Unkritisch, weil Symfony `%env(...)%` im
 kompilierten Container als Platzhalter hält und erst zur Laufzeit auflöst.
 
-**Was das Bild nicht löst:** den Messenger-Worker (ohne zweiten Dienst mit
-`messenger:consume async` wird keine einzige Mail versendet — siehe oben, der Ausfall
-ist lautlos), die JWT-Schlüssel (`config/jwt/*.pem` sind gitignored und bewusst nicht
+### Worker-Stage
+
+`FROM runtime AS worker` am Ende derselben Datei — in Coolify eine **zweite
+Ressource** aus demselben Dockerfile über „Docker build stage target: worker".
+Erbt Code, Erweiterungen, php.ini und Rechte; getauscht wird nur der Startbefehl:
+
+```
+php bin/console messenger:consume async scheduler_metrics scheduler_marketing \
+    --time-limit=3600 --memory-limit=256M --env=prod
+```
+
+⚠️ **`pcntl` fehlt im FrankenPHP-Image** — nachgesehen, nicht vermutet: `php -m`
+listet dort `posix`, aber kein `pcntl`. Ohne die Erweiterung meldet Symfonys
+`SignalRegistry` keine Unterstützung, und `messenger:consume` fängt **kein SIGTERM**
+ab. Gemessen am 2026-09-02 mit `docker stop`: mit `pcntl` beendet der Worker in
+0 Sekunden und protokolliert „Received signal 15 → Stopping worker"; ohne sie endet
+er mit **Exit-Code 137**, also durch SIGKILL — mitten in einer Nachricht. Beim
+Doctrine-Transport bleibt die dann mit gesetztem `delivered_at` liegen und kommt
+erst nach `redeliver_timeout` (Vorgabe eine Stunde) zurück: Eine Bestätigungsmail
+ginge eine Stunde zu spät hinaus oder ein zweites Mal. Genau deshalb steht
+`install-php-extensions pcntl` im **worker**-Stage und nicht im `base`-Stage — der
+Webserver braucht sie nie.
+
+⚠️ **`HEALTHCHECK NONE` ist Pflicht.** Der geerbte Healthcheck prüft
+`http://127.0.0.1/health`; der Worker startet keinen Webserver und meldete sonst
+dauerhaft „unhealthy", woraufhin ein Orchestrator ihn im Kreis neu startet, obwohl
+er einwandfrei arbeitet.
+
+⚠️ **`--time-limit=3600` setzt eine Neustart-Regel voraus.** Der Worker löst sich
+damit selbst ab (neuer Code nach jedem Ausrollen, kein angesammelter Speicher) —
+steht die Ressource aber auf „no restart", ist er nach einer Stunde weg und kommt
+nicht zurück. Und dieser Ausfall ist der lautlose.
+
+⚠️ **Der `failed`-Transport gehört NICHT in den Befehl.** Er ist die Ablage für
+endgültig Gescheitertes und wird von Hand über `messenger:failed:show` und `:retry`
+bearbeitet. Wer ihn mitkonsumiert, schickt jede aufgegebene Nachricht sofort wieder
+in dieselbe Schleife.
+
+⚠️ **App und Worker MÜSSEN dasselbe `APP_SECRET` tragen.** In Coolify sind das zwei
+Ressourcen mit je eigener Variablenliste — zwei verschiedene Werte einzutragen ist
+ein Handgriff, und der Bruch ist lautlos. Grund: `RunCommandMessage` wird beim
+Serialisieren **signiert** (`console.messenger.execute_command_handler` trägt
+`['sign' => true]`, siehe `MessengerPass::$signedMessageTypes`), und der Schlüssel
+dafür ist `kernel.secret`. Beim Bauen gemessen: Eine vom Worker in den
+`failed`-Transport geschriebene Nachricht war mit abweichendem Secret nicht mehr
+lesbar — `messenger:failed:show` brach mit „Invalid signature for message
+\"RunCommandMessage\"" ab. Ausgerechnet der Befehl, den man aufruft, wenn schon
+etwas schiefging.
+
+**Zum Logging ist nichts zu tun** — entgegen dem ersten Anschein: `when@prod` in
+`config/packages/monolog.yaml` schreibt bereits nach `php://stderr` (JSON), die
+Datei unter `var/log` gilt nur für `dev` und `test`. Nachgestellt im Container: Der
+Start meldet `[OK] Consuming messages from transport …`, ein gescheiterter Lauf
+erscheint als `CRITICAL` im Kanal `messenger` in `docker logs`, und dazwischen ist
+Ruhe, weil `fingers_crossed` erst ab `error` ausschreibt. Wer hier einen
+stderr-Handler ergänzt, baut ihn ein zweites Mal.
+
+`SERVER_NAME` und `EXPOSE 80` erbt das Stage mit, beide bleiben wirkungslos: Sie
+liest allein FrankenPHP, und das startet nie. Der Entrypoint des Basisimage stellt
+nur bei einem führenden `-` ein `frankenphp run` voran (nachgesehen in
+`/usr/local/bin/docker-php-entrypoint`); bei `php` als erstem Wort läuft schlicht
+`exec php …`. Die Worker-Ressource bekommt in Coolify deshalb **keine Domain und
+keinen Port**.
+
+**Was das Bild nicht löst:** die JWT-Schlüssel (`config/jwt/*.pem` sind gitignored und bewusst nicht
 im Bild; Volume auf `/app/config/jwt` plus einmalig `lexik:jwt:generate-keypair`), die
 Migrationen und das Upload-Volume.
 

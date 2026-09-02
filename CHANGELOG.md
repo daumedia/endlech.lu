@@ -7,6 +7,31 @@ Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
 ## [Unreleased]
 
+### Worker-Stage im Dockerfile
+
+`FROM runtime AS worker` — in Coolify eine zweite Ressource aus demselben Dockerfile
+über „Docker build stage target: worker". Erbt Code, Erweiterungen und Rechte,
+tauscht nur den Startbefehl gegen den Messenger-Consumer.
+
+⚠ **`pcntl` fehlt im FrankenPHP-Image.** Ohne die Erweiterung fängt
+`messenger:consume` kein SIGTERM ab. Gemessen mit `docker stop`: mit `pcntl` endet
+der Worker in 0 Sekunden und protokolliert „Received signal 15 → Stopping worker";
+ohne sie mit **Exit-Code 137**, also durch SIGKILL — mitten in einer Nachricht, die
+danach erst nach einer Stunde `redeliver_timeout` zurückkommt. Die Erweiterung steht
+deshalb im worker-Stage, nicht im base-Stage: Der Webserver braucht sie nie.
+
+⚠ **`HEALTHCHECK NONE`**, sonst prüft der geerbte Healthcheck einen Webserver, den
+dieser Container nie startet — und der Orchestrator startet ihn im Kreis neu.
+
+⚠ **`--time-limit=3600` setzt eine Neustart-Regel voraus.** Ohne sie ist der Worker
+nach einer Stunde weg und kommt nicht zurück.
+
+⚠ **App und Worker brauchen dasselbe `APP_SECRET`.** `RunCommandMessage` wird beim
+Serialisieren signiert, und der Schlüssel ist `kernel.secret`. Mit abweichendem Wert
+bricht `messenger:failed:show` mit „Invalid signature" ab — ausgerechnet der Befehl,
+den man aufruft, wenn schon etwas schiefging.
+
+
 ### Zeitpläne statt System-Cron
 
 Beide wiederkehrenden Aufgaben laufen über Symfonys Scheduler (`src/Scheduler/`)

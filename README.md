@@ -268,15 +268,30 @@ limiters share a single bucket: the first attacker locks out everyone else and w
 past it themselves by switching proxies. Symfony also fails to see the scheme behind
 TLS termination and generates `http://` URLs.
 
-**Three things the image does not solve on its own:**
+**The worker runs from the same Dockerfile.** Build it with
+`--target worker` (in Coolify: *Docker build stage target* = `worker`) — same code,
+same extensions, different command:
 
-1. **The messenger worker.** `MESSENGER_TRANSPORT_DSN` defaults to the Doctrine queue.
-   Without a second service running `messenger:consume async`, no mail is ever sent —
-   messages pile up in `messenger_messages` while the UI keeps reporting success.
-2. **JWT keys.** `config/jwt/*.pem` are gitignored and deliberately not in the image.
+```bash
+docker build --target worker -t endlech-worker .
+```
+
+It adds `pcntl` (missing from the FrankenPHP image) so `messenger:consume` can catch
+SIGTERM: measured with `docker stop`, the worker stage exits in 0 s logging
+`Received signal 15`, while the runtime stage dies with exit code 137 — SIGKILL, in
+the middle of whatever it was handling. It also sets `HEALTHCHECK NONE`, because the
+inherited check probes an HTTP server this container never starts.
+
+⚠️ `--time-limit=3600` makes the worker replace itself every hour, which is how it
+picks up new code after a deploy — but it needs a **restart policy**, or it is simply
+gone after an hour, silently.
+
+**Two things the image still does not solve:**
+
+1. **JWT keys.** `config/jwt/*.pem` are gitignored and deliberately not in the image.
    Mount a volume at `/app/config/jwt` and run `lexik:jwt:generate-keypair` once, or
    every `/api/v1/auth/login` fails.
-3. **Migrations and uploads.** Run `doctrine:migrations:migrate -n` as a post-deployment
+2. **Migrations and uploads.** Run `doctrine:migrations:migrate -n` as a post-deployment
    command, and mount `/app/public/uploads` — otherwise every restaurant photo is gone
    after the next deploy.
 
