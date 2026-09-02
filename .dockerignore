@@ -1,0 +1,65 @@
+# Alles, was im Image nichts verloren hat oder dort neu entsteht.
+# Kleinerer Build-Kontext = schnellere Builds und weniger Cache-Invalidierung.
+
+# --- wird im Image selbst erzeugt ---
+/vendor/
+/node_modules/
+/var/
+/public/build/
+/public/bundles/
+
+# ⚠ /public/build/ MUSS ignoriert werden: Der Node-Stage baut es neu, und COPY
+# löscht nichts. Läge der committete Stand mit im Kontext, blieben die alten
+# gehashten Dateien im Image liegen — Müll, der bei jedem Deploy wächst.
+
+# --- Werkzeug und Metadaten ---
+/.git/
+/.github/
+/.idea/
+/.claude/
+/.phpunit.cache/
+/.editorconfig
+/.nvmrc
+/compose.yaml
+/compose.override.yaml
+/Makefile
+/Dockerfile
+/.dockerignore
+
+# --- Geheimnisse: dürfen NIE ins Image ---
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/jwt/*.pem
+/config/secrets/
+
+# --- Test- und Entwicklungsartefakte ---
+/tests/
+/phpunit.dist.xml
+/phpunit.xml
+/eslint.config.mjs
+# ⚠ tsconfig.json NICHT ignorieren – ts-loader liest sie im Encore-Build.
+/bin/a11y-audit.mjs
+/bin/generate-pwa-icons.sh
+
+# --- Dokumentation und SDD-Artefakte (im Betrieb ungenutzt) ---
+/docs/
+/features/
+/qa/
+/CHANGELOG.md
+/CLAUDE.md
+/README.md
+/LICENSE
+
+# --- Nutzerdaten: gehören in ein Volume, nicht ins Image ---
+/public/uploads/avatars/*
+/public/uploads/restaurants/*
+!/public/uploads/**/.gitkeep
+
+# ⚠ /public/uploads/team/ bleibt drin — die Datei ist committet (Ausnahmeregel
+# in .gitignore) und wird auf der Presseseite ausgeliefert.
+
+# --- Sonstiges ---
+**/.DS_Store
+npm-debug.log
+yarn-error.log

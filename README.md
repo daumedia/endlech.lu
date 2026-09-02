@@ -2,7 +2,7 @@
 
 An open platform to find and rate accessible restaurants in Luxembourg. Built for inclusion, community, and simplicity.
 
-![Version](https://img.shields.io/badge/version-v2026.08.31-blue)
+![Version](https://img.shields.io/badge/version-v2026.09.02-blue)
 ![Status](https://img.shields.io/badge/status-beta-green)
 
 <div align="center">
@@ -234,6 +234,51 @@ ssh <user>@<host> 'rm -f ~/public_html/var/maintenance'
 
 Rollback: push a revert commit to `production`. The next run restores the previous
 state including matching assets, because they live in the same commit.
+
+### Container image (Coolify)
+
+`Dockerfile` and `.dockerignore` in the repo root build a production image on
+`dunglas/frankenphp:1-php8.4`. This is a **second** path, not a replacement — the
+SSH deploy above is untouched.
+
+```bash
+docker build -t endlech .
+docker run -p 8080:80 -e APP_SECRET=… -e DATABASE_URL=… endlech
+```
+
+Three stages: Composer dependencies, Encore assets, slim runtime. `/health` returns
+`{"status":"ok"}` and is what the `HEALTHCHECK` polls — no curl in the image, the
+check runs through `php -r`.
+
+**Environment variables that must be set** (everything else has a default in `.env`):
+
+| Variable | Value |
+|---|---|
+| `APP_SECRET` | `openssl rand -hex 32` |
+| `DATABASE_URL` | `mysql://user:pass@host:3306/endlech?serverVersion=8.0&charset=utf8mb4` |
+| `TRUSTED_PROXIES` | `private_ranges` — see below |
+| `DEFAULT_URI` | `https://endlech.lu`, or every mail links to `http://localhost` |
+| `MAILER_DSN` | `brevo+api://KEY@default` |
+| `WEBAUTHN_RP_ID` | `endlech.lu` — a wrong value only surfaces at the first passkey login |
+| `CORS_ALLOW_ORIGIN` | `^https://(www\.)?endlech\.lu$` |
+
+⚠️ **`TRUSTED_PROXIES` is not optional behind a proxy.** Without it
+`Request::getClientIp()` is the proxy's address for *every* visitor, so all IP-based
+limiters share a single bucket: the first attacker locks out everyone else and walks
+past it themselves by switching proxies. Symfony also fails to see the scheme behind
+TLS termination and generates `http://` URLs.
+
+**Three things the image does not solve on its own:**
+
+1. **The messenger worker.** `MESSENGER_TRANSPORT_DSN` defaults to the Doctrine queue.
+   Without a second service running `messenger:consume async`, no mail is ever sent —
+   messages pile up in `messenger_messages` while the UI keeps reporting success.
+2. **JWT keys.** `config/jwt/*.pem` are gitignored and deliberately not in the image.
+   Mount a volume at `/app/config/jwt` and run `lexik:jwt:generate-keypair` once, or
+   every `/api/v1/auth/login` fails.
+3. **Migrations and uploads.** Run `doctrine:migrations:migrate -n` as a post-deployment
+   command, and mount `/app/public/uploads` — otherwise every restaurant photo is gone
+   after the next deploy.
 
 ### Messenger worker
 

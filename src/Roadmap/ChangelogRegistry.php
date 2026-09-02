@@ -29,6 +29,10 @@ final readonly class ChangelogRegistry
     public function notes(): array
     {
         return [
+            // Rein technisch: Container-Image, /health und trusted_proxies.
+            // Ein Gast der Website merkt davon nichts — deshalb SILENT und
+            // kein Text in den vier changelog.*.yaml.
+            new ReleaseNote('2026.09.02', new \DateTimeImmutable('2026-09-02'), ReleaseVisibility::SILENT),
             new ReleaseNote('2026.08.31', new \DateTimeImmutable('2026-08-31'), ReleaseVisibility::SHOWN),
             new ReleaseNote('2026.08.30.2', new \DateTimeImmutable('2026-08-30'), ReleaseVisibility::SHOWN),
             new ReleaseNote('2026.08.30.1', new \DateTimeImmutable('2026-08-30'), ReleaseVisibility::SILENT),

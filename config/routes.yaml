@@ -100,6 +100,7 @@ controllers:
             - '../src/Controller/Api/V1/'
             - '../src/Controller/Open/'
             - '../src/Controller/Marketing/'
+            - '../src/Controller/Health/'
     type: attribute
     prefix: /{_locale}
     requirements:
@@ -131,4 +132,17 @@ marketing_webhook:
     resource:
         path: ../src/Controller/Marketing/
         namespace: App\Controller\Marketing
+    type: attribute
+
+# Lebendigkeitspruefung fuer Docker/Coolify - sprachfrei, weil ein Healthcheck
+# keine Sprachwahl treffen kann. Ein Locale-Prefix machte aus /health einen
+# 302er auf /lb/health, und jeder Orchestrator, der Weiterleitungen nicht
+# verfolgt, haelt den Container fuer krank.
+#
+# Es darf kein Verzeichnis `public/health` entstehen - sonst wiederholt sich
+# BF-100 (mod_dir-Schleife). RouteDirectoryCollisionTest prueft das projektweit.
+health:
+    resource:
+        path: ../src/Controller/Health/
+        namespace: App\Controller\Health
     type: attribute
