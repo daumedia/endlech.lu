@@ -464,7 +464,12 @@ and the probe cannot match itself because only `/proc/1` is read.
 ⚠️ **`TRUSTED_PROXIES` is not optional behind Coolify's proxy.** Without it
 `Request::getClientIp()` returns the proxy's address for *every* visitor, so all
 IP-based limiters share one bucket: the first attacker locks out everyone else and
-walks past it themselves by switching proxies.
+walks past it themselves by switching proxies. Symfony also fails to see HTTPS, so
+every generated URL is `http://` — in mails, in redirects, and in the login form,
+where the browser then blocks the submit as mixed content and Turbo reports a bare
+`TypeError: Failed to fetch`. Check it from outside with
+`curl -sI https://endlech.lu/ | grep -i location`: an `http://` location means the
+value is missing.
 
 ⚠️ **`DEFAULT_URI` matters more in the worker than in the app.** There is no request
 to derive a host from, so every link in every mail it sends comes from this value.

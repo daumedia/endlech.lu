@@ -1421,6 +1421,33 @@ die Zeile hinter TLS-Terminierung das Schema nicht — erzeugte URLs stünden au
 Am Konto zählende Limiter (`password_change`) sind davon unberührt — das ist der
 zweite Grund für diese Unterscheidung.
 
+⚠️ **Woran man den fehlenden Wert erkennt — die Symptome zeigen nicht auf die
+Ursache.** Am 2026-09-02 auf Production gemessen, nachdem die Variable beim Umzug
+nicht mitgekommen war:
+
+```
+Mixed Content: The page at 'https://endlech.lu/de/login' was loaded over HTTPS,
+but requested an insecure resource 'http://endlech.lu/de/login'.
+TypeError: Failed to fetch   (turbo)
+```
+
+Der Browser blockt, Turbo meldet einen Netzwerkfehler, und der Anmeldeknopf tut
+schlicht nichts. Das sieht nach einem JavaScript-Problem aus und ist keines. Schnell
+nachweisbar von außen:
+
+```bash
+curl -sI https://endlech.lu/ | grep -i location   # http:// = Wert fehlt
+```
+
+Nachgestellt mit demselben Bild, nur die Variable unterschiedlich, Request mit
+`X-Forwarded-Proto: https`: leer → `location: http://…`, `private_ranges` →
+`location: https://…`. Das Schlüsselwort ist von Symfony anerkannt
+(`FrameworkExtension`-Konfiguration und `Request::setTrustedProxies()`).
+
+**Kein Repo-Fix möglich:** Ein Default `private_ranges` in `.env` wäre für jeden
+falsch, der ohne Proxy betreibt — dort übernähme die Anwendung dann Client-Adressen
+aus gefälschten `X-Forwarded-For`-Headern. Der Wert gehört in die Umgebung.
+
 ## Fehler-Tracking (Sentry)
 
 `sentry/sentry-symfony` 5.x meldet uncaught Exceptions und Monolog-Records ab `WARNING` an ein Sentry-Projekt in der **EU-Region** (`ingest.de.sentry.io`, Frankfurt).

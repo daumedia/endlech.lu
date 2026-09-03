@@ -7,6 +7,20 @@ Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
 ## [Unreleased]
 
+### Dokumentiert: Woran man ein fehlendes `TRUSTED_PROXIES` erkennt
+
+Kein Codewechsel — die Konfiguration war korrekt, der Wert fehlte in der Umgebung.
+Festgehalten wird das **Symptom**, weil es nicht auf die Ursache zeigt: Der Browser
+meldet `Mixed Content … requested an insecure resource 'http://…/de/login'`, Turbo
+wirft `TypeError: Failed to fetch`, und der Anmeldeknopf tut nichts. Das sieht nach
+einem JavaScript-Problem aus und ist keines.
+
+Von außen nachweisbar mit `curl -sI https://endlech.lu/ | grep -i location` — ein
+`http://` im Location-Header heißt, der Wert fehlt. Nachgestellt mit demselben Bild
+und nur unterschiedlicher Variable: leer → `http://…`, `private_ranges` →
+`https://…`.
+
+
 ### `cache_items`-Migration idempotent
 
 `Version20260902200000` trägt jetzt `CREATE TABLE IF NOT EXISTS`.
