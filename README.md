@@ -424,9 +424,14 @@ see any other way. Verify afterwards with
 Two resources, both **Build Pack: Dockerfile**, Dockerfile location `/Dockerfile`,
 base directory `/`, branch `master`:
 
+⚠️ **Set the stage target explicitly on both.** Docker builds the *last* stage when
+none is given. The file ends with `app` (an alias for `runtime`) precisely so that an
+empty field yields the application — but relying on that leaves one rename away from
+serving a worker on your domain.
+
 | | App | Worker |
 |---|---|---|
-| Build stage target | `runtime` | `worker` |
+| Build stage target | `runtime` (or empty) | **`worker`** — never leave empty |
 | Domain | `endlech.lu` | *(none)* |
 | Port | `80` | *(none)* |
 | Restart policy | `unless-stopped` | `unless-stopped` |

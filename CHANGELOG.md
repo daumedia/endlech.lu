@@ -7,6 +7,47 @@ Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
 ## [Unreleased]
 
+### `cache_items`-Migration idempotent
+
+`Version20260902200000` trägt jetzt `CREATE TABLE IF NOT EXISTS`.
+
+⚠ **Die Tabelle hat zwei mögliche Erzeuger** — die Migration und
+`DoctrineDbalAdapter`, der sie beim ersten Schreibzugriff selbst anlegt. Läuft der
+Worker vor der Migration, existiert die Tabelle danach ohne Eintrag in
+`doctrine_migration_versions`, und die Migration scheitert an
+`SQLSTATE[42S01] … Table 'cache_items' already exists` — **bei jedem weiteren
+Deploy**, bis jemand von Hand eingreift. Beim Umzug auf ein neues Hosting ist genau
+diese Reihenfolge der Normalfall, weil der Consumer sofort seinen Merkposten
+schreibt. Am 2026-09-02 auf Production eingetreten.
+
+Aufräumen in einer bereits betroffenen Umgebung:
+`doctrine:migrations:version 'DoctrineMigrations\Version20260902200000' --add`.
+
+Dabei ist aufgefallen, dass der Abschnitt „Zeitpläne statt System-Cron" beim
+Umschreiben des Deployment-Kapitels aus `CLAUDE.md` verschwunden war — er lag
+zwischen den beiden ersetzten Überschriften und ging beim Blockersatz mit. Ein
+Verweis weiter oben in der Datei zeigte seither ins Leere, und damit fehlten die
+Fallstricke zum Zwischenspeichern des Schedule-Objekts, zu den zwei getrennten
+Zeitplänen und zu `provider: ~` im Testblock. Wiederhergestellt.
+
+### `app` als letztes Stage — ein leeres Build-Target baute den Worker
+
+⚠ **Ohne `--target` baut Docker das LETZTE Stage einer Datei.** Seit `worker` am
+Ende stand, lieferte `docker build .` — und ein leer gelassenes „Docker build stage
+target" in Coolify — den Messenger-Consumer statt der Anwendung. Der Container war
+dabei kerngesund und meldete `healthy`; er servierte nur kein HTTP, und der Proxy
+davor antwortete mit **502 Bad Gateway**.
+
+Am 2026-09-02 auf Production eingetreten, rund eine Stunde Ausfall. Die Fehlersuche
+lief lange in die falsche Richtung, weil alle Deploy-Protokolle grün waren und der
+Healthcheck des Containers korrekt `healthy` meldete — er prüfte ja den Worker, und
+der lief.
+
+Die Datei endet jetzt auf `FROM runtime AS app`, einen reinen Alias. Damit liefert
+der Standardfall wieder die Anwendung; der Worker wird ausdrücklich mit
+`--target worker` angefordert. Wer ein neues Stage anlegt, hängt es nicht dahinter.
+
+
 ### `wget` im Image — Coolifys Healthcheck ignoriert den des Dockerfiles
 
 Coolify liest die `HEALTHCHECK`-Anweisung des Bildes **nicht**, sondern setzt beim

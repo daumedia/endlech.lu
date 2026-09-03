@@ -278,3 +278,19 @@ HEALTHCHECK --interval=60s --timeout=5s --start-period=15s --retries=3 \
 CMD ["php", "bin/console", "messenger:consume", \
      "async", "scheduler_metrics", "scheduler_marketing", \
      "--time-limit=3600", "--memory-limit=256M", "--env=prod"]
+
+# ---------------------------------------------------------------------------
+# app – MUSS das letzte Stage bleiben
+# ---------------------------------------------------------------------------
+# Reiner Alias auf `runtime`, und er steht hier aus genau einem Grund: **Ohne
+# `--target` baut Docker das LETZTE Stage einer Datei.** Solange `worker` am Ende
+# stand, lieferte ein `docker build .` — und ebenso ein leer gelassenes „Docker
+# build stage target" in Coolify — den Messenger-Consumer statt der Anwendung.
+# Der Container war dabei kerngesund und meldete `healthy`; er servierte nur kein
+# HTTP, und der Proxy davor antwortete mit **502 Bad Gateway**. Gemessen am
+# 2026-09-02 auf Production.
+#
+# ⚠ **Wer ein neues Stage anlegt, hängt es NICHT hinter dieses hier.** Der
+# Standardfall muss die Anwendung sein; alles andere wird ausdrücklich angefordert
+# (`--target worker`).
+FROM runtime AS app
