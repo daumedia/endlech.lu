@@ -298,6 +298,22 @@ gesetztem Schlüssel. **Kein Kontakt geht raus, bevor die Erklärung ihn nennt.*
 
 ## Offene Punkte mit Frist
 
+> **Vorbereitet am 2026-09-05:** Für alle Punkte, die einen Kontozugang brauchen, liegen
+> fertige Texte und Klickwege bereit — `docs/anfragen/`. Die Checkliste dort ist nach
+> Dringlichkeit geordnet und nennt zu jedem Punkt, wohin die Antwort gehört.
+>
+> | Datei | Deckt ab |
+> |---|---|
+> | `2026-09-checkliste-konten.md` | DS-04, BE-01, BE-03 und die Vorarbeit zu DS-02 |
+> | `2026-09-brevo-dpa.md` | DS-01b, DS-01c, DS-01d — fertige Anfrage an `dpo@brevo.com` |
+> | `2026-09-hostinger-standort.md` | DS-02b, DS-02c — fertige Anfrage, mit dem Hinweis, was vorher im hPanel steht |
+>
+> ⚠ **DS-01b braucht wirklich eine Anfrage.** Ziffer 6.2 des DPA verlangt eine Anmeldung
+> „via the dedicated form", **verlinkt dieses Formular aber nicht** — weder im
+> Vertragstext noch auf den Hilfeseiten (beides am 2026-09-05 geprüft). Ohne Nachfrage
+> lässt sich das Widerspruchsrecht gegen neue Unterauftragsverarbeiter nicht ausüben.
+
+
 Aufgenommen am 2026-09-05 im Rahmen von `/sdd-betrieb`, nach der Auslieferung von
 Feature 08. Was hier ohne Datum steht, hat niemanden, der es erzwingt.
 
