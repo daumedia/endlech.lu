@@ -1256,6 +1256,26 @@ php bin/console messenger:failed:show --env=prod  # nach 3 Versuchen aufgegeben
 Eine dreistellige Zahl in `async` heißt: der Worker läuft nicht.
 `messenger:failed:retry` schickt Liegengebliebenes nach.
 
+**Seit dem 2026-09-05 misst das ein Befehl statt eines Menschen:**
+`app:messenger:watch` prüft den Rückstau und meldet ihn per Mail an
+`app.contact_email`. Er läuft täglich um 07:20 aus dem Zeitplan `marketing`;
+Schwelle sind 25 unbearbeitete Nachrichten oder eine, die seit über 30 Minuten
+in Zustellung hängt. `--dry-run` prüft, ohne zu versenden.
+
+⚠️ **Der Befehl versendet über `TransportInterface`, nicht über
+`MailerInterface`.** Letzterer schiebt jede Mail über den Messenger
+(`SendEmailMessage: async`) — die Warnung läge damit in genau der
+Warteschlange, vor der sie warnt, und ginge erst hinaus, wenn der Worker wieder
+läuft. Also nie, wenn es darauf ankommt. Beim Einrichten gemessen: Mit
+`MailerInterface` stieg der Stand von 30 auf **31**, und die 31. war die Warnung.
+`MessengerWatchCommandTest::testWarnungLandetNichtInDerWarteschlange` hält das fest.
+
+⚠️ **Diese Überwachung erkennt keinen vollständigen Stillstand.** Sie läuft im
+selben Consumer wie das, was sie beobachtet — steht er, läuft auch sie nicht. Sie
+sieht einen **Rückstau** (Worker arbeitet, kommt nicht nach) und eine Altlast nach
+einem Neustart. Den Totalausfall sieht nur eine Prüfung von außen; die ist als
+**BE-01** in `docs/datenschutz.md` vorbereitet und noch nicht eingerichtet.
+
 ⚠️ **Wer je wieder `sync://` setzt**, nimmt der Queue Retry und `failed`-Transport
 — und damit die einzige Sichtbarkeit, die es für gescheiterten Versand gibt. Bei
 `sync://` fingen zwölf `catch (TransportExceptionInterface)`-Blöcke in acht Dateien

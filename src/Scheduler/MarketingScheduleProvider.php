@@ -104,6 +104,24 @@ final class MarketingScheduleProvider implements ScheduleProviderInterface
                     new RunCommandMessage('app:app-waitlist:cleanup --no-interaction'),
                     new \DateTimeZone('Europe/Luxembourg'),
                 ),
+            )
+            ->add(
+                // Überwachung der Warteschlange (2026-09-05). Täglich um 07:20 —
+                // zu einer Zeit, zu der jemand die Meldung auch liest.
+                //
+                // ⚠ **Der Wächter läuft im selben Prozess wie das, was er
+                // überwacht.** Steht der Consumer, läuft auch dieser Eintrag
+                // nicht — dann meldet niemand etwas. Das ist keine Nachlässigkeit,
+                // sondern die Grenze dieser Bauart: Sie erkennt einen **Rückstau**
+                // (Worker läuft, kommt aber nicht nach) und einen abgestürzten
+                // Consumer erst, wenn er neu startet und die Altlast vorfindet.
+                // Den vollständigen Stillstand sieht nur eine Prüfung von außen
+                // — siehe BE-01 in `docs/datenschutz.md`.
+                RecurringMessage::cron(
+                    '20 7 * * *',
+                    new RunCommandMessage('app:messenger:watch --no-interaction'),
+                    new \DateTimeZone('Europe/Luxembourg'),
+                ),
             );
     }
 }

@@ -52,9 +52,9 @@ Das ist die erste Weitergabe dieser Art im Projekt.
 | `email` | E-Mail-Adresse |
 | `ext_id` | interne Datensatz-Kennung |
 | `CONTACT_NAME` | Name des Ansprechpartners |
-| `ORGANISATION` | Restaurant- bzw. Organisationsname |
+| `ORGANISATION` | Restaurant- bzw. Organisationsname — **bei App-Wartelisten-Einträgen leer**. Die Plattformwahl (iOS/Android) geht ausdrücklich **nicht** mit (Feature 08, AK-54). ⚠ Sie ging es kurzzeitig doch: `getDisplayName()` liefert bei jener Warteliste das Plattform-Label, und derselbe geteilte Aufruf schrieb es als `ORGANISATION` fort (BF-120, behoben vor der Auslieferung) |
 | `LOCALE` | Sprache |
-| `ORIGIN` | Rolle im Vertrieb: Partner, Gemeinde, Unternehmen, Verein, Nutzerkonto |
+| `ORIGIN` | Rolle im Vertrieb: Partner, Gemeinde, Unternehmen, Verein, Nutzerkonto, **App-Warteliste** (seit Feature 08, 2026-09-05) |
 | `FUNNEL_STATUS` | Vertriebsstatus |
 
 **Ausdrücklich nicht übermittelt:**
@@ -146,11 +146,68 @@ Text *ist* das Produkt. Eingegrenzt wird er dreifach:
 - **Auskunft:** Der Datenexport eines Kontos führt seine eingereichten Ideen samt
   Status **und** die Ideen, denen es zugestimmt hat.
 
+### App-Warteliste (Feature 08, seit 2026-09-05)
+
+| | |
+|---|---|
+| **Zweck** | Benachrichtigung, sobald die mobile App verfügbar ist; für iOS zusätzlich der Zugang zur TestFlight-Testfassung |
+| **Rechtsgrundlage** | Art. 6 Abs. 1 lit. a — Einwilligung, eingeholt per Double-Opt-In |
+| **Empfänger** | Brevo (Versand beider Mails). Der Kontaktbestand **nur** bei zusätzlich erteilter Werbe-Einwilligung — die ist getrennt, freiwillig und nicht vorangehakt (Koppelungsverbot, Art. 7 Abs. 4) |
+| **Speicherort** | eigene Datenbank (`app_waitlist_entry`) |
+
+**Verarbeitete Daten** — abschließend, es sind sechs:
+
+| Feld | Inhalt |
+|---|---|
+| `email` | E-Mail-Adresse, normalisiert auf Kleinschreibung |
+| `platform` | `ios` oder `android` |
+| `consent_at` | Zeitpunkt der Einwilligung (Nachweis nach Art. 7 Abs. 1) |
+| `marketing_consent_at` | Zeitpunkt der **Werbe**-Einwilligung; `null` = keine |
+| `locale` | Sprache des Formulars |
+| `source` | UTM-Quelle oder Referrer-Host |
+
+Dazu die Verwaltungszeitstempel (`created_at`, `updated_at`, `confirmed_at`,
+`self_confirmed_at`, `beta_link_sent_at`) und der Bestätigungstoken.
+
+**Ausdrücklich nicht erhoben:** kein Name, keine IP-Adresse, kein Gerätemodell, keine
+Telefonnummer. Was nicht erfasst ist, kann nicht versehentlich veröffentlicht werden —
+die Feldliste ist durch einen Prüflauf abgesichert
+(`AppWaitlistQaTest::testAk42KeineBesonderenKategorien`), ein neues Feld ist damit eine
+Entscheidung und kein Nebenprodukt.
+
+**Keine besondere Kategorie nach Art. 9.** Die Wahl zwischen zwei Betriebssystemen sagt
+nichts über Gesundheit, Herkunft oder Überzeugung.
+
+**Löschfrist:** Nie selbst bestätigte Vormerkungen werden nach **30 Tagen** gelöscht —
+ohne eingelöste Bestätigung liegt keine Einwilligung vor. Der Lauf hängt an zwei
+unabhängigen Wegen (täglicher Zeitplan **und** ein Durchgang je Kalendertag beim Öffnen
+der Verwaltungsliste), weil auf Produktion schon zweimal ein geplanter Lauf ausblieb.
+
+⚠ **Gemessen wird an `consent_at`, nicht an `created_at`** (BF-122). Letzteres wird
+zurückgesetzt, wenn ein abgelaufener Bestätigungslink neu ausgestellt wird — darüber
+ließ sich die Aufbewahrung sonst unbegrenzt verlängern, auch mit fremden Adressen.
+
+⚠ **Bestätigte Vormerkungen haben keine Frist** (OF-01, Betreiberentscheid 2026-09-04).
+Die Liste soll eine Veröffentlichung überleben — nach iOS kommt Android. Der
+Widerrufsweg ist damit die einzige Ausstiegsmöglichkeit: **Jede Mail trägt einen
+Abmeldelink, und er löscht den Eintrag**, statt ihn zu markieren (Art. 7 Abs. 3).
+
+⚠ **Abweichung zu B14/B15:** Beim Löschen eines Nutzerkontos wird eine App-Vormerkung
+unter derselben Adresse **mitgelöscht**; Partner- und Organisationseinträge bleiben
+ausdrücklich stehen. Begründung und offene Frage: `features/08-app-warteliste/spec.md`,
+OF-08.
+
+**An Apple geht aus diesem Feature nichts.** Der TestFlight-Link ist ein Link in einer
+Mail; die Anwendung ruft Apple nicht auf. Wer ihn anklickt, tritt selbst in Apples
+Reichweite — das ist seine Handlung, nicht die der Plattform.
+
+---
+
 ### Weitere Verarbeiter
 
 | Dienst | Zweck | Sitz | Bemerkung |
 |---|---|---|---|
-| Cloudways (Hosting) | Betrieb der Anwendung und Datenbank | — | ⚠ Vertrag und Sitz hier noch nachzutragen |
+| Coolify (Hosting) | Betrieb der Anwendung, des Messenger-Workers und der Datenbank | ⚠ nachzutragen | **Seit dem 2026-09-02**; löste Cloudways ab (Container statt SSH-Deploy, siehe `CLAUDE.md`). ⚠ Vertrag, Sitz und Serverstandort hier noch nachzutragen — bei einem Verzeichnis der Auftragsverarbeiter ist der Betreiber der Server keine Nebensache |
 | Sentry | Fehler-Tracking | EU (`ingest.de.sentry.io`, Frankfurt) | `send_default_pii: false` — keine IP-Adressen, Cookies, Request-Header oder Nutzerdaten. `zend.exception_ignore_args` bleibt auf `On`, damit keine Funktionsargumente (und damit keine Passwörter) in Stacktraces landen |
 | Mobilité (HAFAS) | Haltestellen in der Nähe | Luxemburg | Es gehen **Koordinaten eines Restaurants** hin, keine Nutzerdaten |
 
@@ -168,3 +225,97 @@ Das ist AK-34 aus Feature 04 und keine Nacharbeit:
 
 Erst danach: `app:marketing:import --commit` bzw. der erste Cron-Lauf mit
 gesetztem Schlüssel. **Kein Kontakt geht raus, bevor die Erklärung ihn nennt.**
+
+---
+
+## Offene Punkte mit Frist
+
+Aufgenommen am 2026-09-05 im Rahmen von `/sdd-betrieb`, nach der Auslieferung von
+Feature 08. Was hier ohne Datum steht, hat niemanden, der es erzwingt.
+
+| # | Punkt | Warum es drängt | Frist | Wer |
+|---|---|---|---|---|
+| **DS-01** | **AV-Vertrag mit Brevo prüfen, Datum und Ablageort hier eintragen** | Brevo führt seit Feature 04 einen **Bestand** — Adressen samt Zielgruppe und Vertriebsstatus, dauerhaft gespeichert, zu einem anderen Zweck als dem Versand. Bis Feature 04 bekam es nur die einzelne Nachricht. ⚠ Ein nachträglich abgeschlossener Vertrag legalisiert nicht, was vorher lief | **2026-09-30** | Betreiber |
+| **DS-02** | **Coolify: Vertrag, Sitz und Serverstandort nachtragen** | Der Hoster betreibt Anwendung, Worker **und** Datenbank — er sieht alles. Der Eintrag stand bis heute auf dem abgelösten Anbieter | **2026-09-30** | Betreiber |
+| **DS-03** | **`/legal` nennt Brevo als Empfänger für Werbezwecke** — nicht nur als Versanddienstleister | Offen seit Feature 04 (AK-34). Kein Kontakt geht raus, bevor die Erklärung ihn nennt | vor dem ersten Kampagnenlauf | Betreiber |
+| **DS-04** | **Öffnungs- und Klickverfolgung in Brevo entscheiden** | Standardmäßig eingeschaltet. Das PRD schließt Web-Analytics aus und begründet das mit Datensparsamkeit; ob das auch für Kampagnen gilt, ist nicht entschieden (OF-03) | vor dem ersten Kampagnenlauf | Betreiber |
+
+⚠ **DS-01 und DS-02 sind keine Formalien.** Beide betreffen Verarbeiter, die bereits
+echte Personendaten halten. Sie stehen hier mit Datum, weil ein offener Punkt ohne Frist
+in drei Monaten genauso offen ist — nur dass dann niemand mehr weiß, seit wann.
+
+## Betriebsüberwachung
+
+Stand 2026-09-05. Was hier fehlt, meldet seinen Ausfall nicht selbst.
+
+| Bereich | Zustand | Wo |
+|---|---|---|
+| Fehler-Tracking | **läuft** — Sentry, EU-Region (`ingest.de.sentry.io`), nur `prod`, `send_default_pii: false`. DSN in Coolify gesetzt (Betreiber bestätigt 2026-09-05) | `config/packages/sentry.yaml` |
+| Rate Limits | **läuft** — 22 Limiter, jeder verdrahtet und mit `when@test`-Override; `LimiterCoverageTest` färbt rot, sobald einer davon fehlt | `config/packages/framework.yaml` |
+| Protokollierung | **läuft** — `prod` schreibt nach `stderr`, `!doctrine` und `!request` ausgeschlossen, damit keine Bestätigungstoken im Hoster-Log landen (BF-23) | `config/packages/monolog.yaml` |
+| Lebendigkeitsprüfung | **läuft** — `/health`, sprachfrei, bewusst **ohne** Datenbankabfrage | `src/Controller/Health/` |
+| **Messenger-Worker** | **überwacht seit 2026-09-05** — `app:messenger:watch` meldet einen Rückstau per Mail, täglich aus dem `marketing`-Zeitplan | siehe unten |
+| **Uptime von außen** | ⚠ **fehlt** — vorbereitet, aber kein Wächter eingerichtet (BE-01) | — |
+| Produktanalyse | ⚠ **fehlt** — als Feature auf der Roadmap, nicht als Betriebsmaßnahme (BE-02) | — |
+| Sicherungen der Datenbank | ⚠ **ungeprüft** — ob Coolify sichert und wie oft, ist nicht dokumentiert (BE-03) | — |
+
+### BE-01 · Uptime-Prüfung von außen — vorbereitet, noch einzurichten
+
+Ein Konto kann dieser Durchgang nicht anlegen. Die Angaben stehen fertig; einzutragen
+sind sie bei UptimeRobot, Better Stack oder einem gleichwertigen Dienst.
+
+| | |
+|---|---|
+| **Endpunkt 1** | `https://endlech.lu/health` — alle 5 Minuten, erwartet **200** |
+| **Endpunkt 2** | `https://endlech.lu/open.json` — alle 15 Minuten, erwartet **200** und gültiges JSON |
+| **Zertifikat** | Ablaufwarnung 14 Tage vorher |
+| **Alarmweg** | dieselbe Adresse wie `app.contact_email`; der Weg gehört **einmal ausgelöst**, bevor man sich auf ihn verlässt |
+
+⚠ **Zwei Endpunkte, und das ist der Punkt.** `/health` beantwortet bewusst nur „läuft
+der PHP-Prozess" — es macht **keine** Datenbankabfrage, damit ein kurzer Ausfall der
+Datenbank nicht den Container mitreißt (der Neustart hülfe dort nichts, die Ursache
+liegt außerhalb). Genau deshalb sagt ein grünes `/health` **nichts** darüber, ob die
+Anwendung funktioniert. `/open.json` schließt die Lücke: Es liest Restaurants, Finanzen
+und seit Feature 08 die App-Warteliste — wer damit 200 und gültiges JSON bekommt, weiß,
+dass die Datenbank antwortet.
+
+⚠ **Diese Prüfung ist die einzige, die einen vollständig stehenden Container bemerkt.**
+Die Warteschlangen-Überwachung läuft im selben Prozess wie das, was sie überwacht: Steht
+der Consumer, läuft auch sie nicht. Beide zusammen decken den Fall ab, keine allein.
+
+### BE-02 · Produktanalyse — als Feature, nicht als Betriebsmaßnahme
+
+Ein Analyse-Skript im Frontend ist eine **Produktänderung**: Es berührt die App-Hülle,
+den Datenschutzabschnitt in `/legal` und — je nach Wahl — das Einwilligungsbanner. Es
+gehört deshalb als Feature auf die Roadmap und nicht in einen Betriebsdurchgang.
+
+Vorarbeit, damit die Entscheidung später keine Recherche mehr braucht:
+
+| Weg | Einwilligung nötig? | Folge |
+|---|---|---|
+| **Plausible / Umami** | nein — cookielos, keine Personendaten | Ein Skript, ein Absatz in `/legal`, ein Verarbeiter mehr. Beantwortet „wie viele öffnen `/app`, wie viele senden ab" |
+| **PostHog (EU)** | ja | Ereignisse und Trichter, deutlich mehr Erkenntnis — dafür Banner-Kopplung und ein längerer Datenschutzhinweis |
+| **Serverseitig zählen** | nein | Kein Fremddienst, aber auch keine Absprungrate: Der Server sieht keinen Abbruch vor dem Absenden |
+
+⚠ **Das PRD schließt Web-Analytics aus** und begründet das mit Datensparsamkeit. Eine
+Analyse einzuführen widerspricht dem, solange das PRD nicht mitgezogen wird — das ist
+eine Produktentscheidung und keine technische.
+
+⚠ **Bei ereignisbasierter Analyse gehören keine Personendaten in Ereignisnamen oder
+-eigenschaften.** Eine Nutzer-ID ist in Ordnung, eine E-Mail-Adresse nicht.
+
+### BE-03 · Sicherungen der Datenbank — ungeprüft
+
+Ob Coolify die Datenbank sichert, in welchem Takt und wie lange die Sicherungen liegen,
+ist nirgends dokumentiert. **Das gehört gemessen, nicht angenommen**: eine Sicherung
+wiederherstellen, bevor sie gebraucht wird.
+
+⚠ Seit Feature 08 liegen dort E-Mail-Adressen Dritter mit Einwilligungszeitpunkt — die
+lassen sich nicht rekonstruieren. Bei den Restaurantdaten wäre ein Verlust ärgerlich,
+hier ist er endgültig.
+
+| | |
+|---|---|
+| **Zu klären** | Sichert Coolify automatisch? Takt? Aufbewahrung? Liegt die Sicherung auf demselben Rechner wie die Datenbank? |
+| **Zu prüfen** | Eine Sicherung einmal einspielen — ein Rückweg, den niemand gegangen ist, ist eine Annahme |
+| **Frist** | 2026-09-30 |

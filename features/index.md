@@ -1574,6 +1574,24 @@ ein eigenes Vorhaben — entweder die Funktion bauen oder die Texte anpassen —
 in Feature `07`**; hier ist bewusst keine Feature-Zeile dafür angelegt worden, weil das
 eine neue Anforderung wäre und Michaels Entscheidung braucht.
 
+**2026-09-05 · Betriebsdurchgang nach dem ersten Deployment** (`/sdd-betrieb`).
+Eingerichtet: **Überwachung der Messenger-Warteschlange** (`app:messenger:watch`, täglich
+07:20 aus dem `marketing`-Zeitplan) — der Ausfall, den `CLAUDE.md` selbst als „lautlos"
+beschreibt und an dem beide Mails von Feature 08 hängen. Beim Auslösen des Alarms fiel
+ein Konstruktionsfehler auf: `MailerInterface` schiebt die Warnung über den Messenger,
+sie hätte also in genau der Warteschlange gelegen, vor der sie warnt (gemessen: 30 → 31).
+Umgestellt auf `TransportInterface`.
+
+Datenschutzunterlagen nachgezogen: Feature 08 ins Verarbeitungsverzeichnis, `ORIGIN` und
+`ORGANISATION` im Brevo-Abschnitt berichtigt, **Cloudways → Coolify** (der Eintrag stand
+seit dem Hosterwechsel am 2026-09-02 falsch). Vier offene Punkte mit Frist (DS-01 bis
+DS-04), drei Betriebslücken beschrieben (BE-01 Uptime, BE-02 Analyse, BE-03 Sicherungen).
+
+**Feature `09` aufgenommen:** Produktanalyse gehört als Feature auf die Roadmap, nicht in
+einen Betriebsdurchgang — ein Analyse-Skript berührt App-Hülle, `/legal` und womöglich
+das Einwilligungsbanner. ⚠ Das PRD schließt Web-Analytics ausdrücklich aus; eine
+Einführung widerspricht ihm, solange es nicht mitgezogen wird.
+
 **2026-09-05 · Feature `08` ausgeliefert** — `v2026.09.05`, auf Produktion nachgeprüft.
 `/app` leitet sprachfrei weiter, die Seite lädt in allen vier Sprachen ohne rohe
 Schlüssel, das Formular trägt beide Plattform-Radios und den Honeypot, `/open.json`
@@ -1646,6 +1664,7 @@ AK-49 verlangt ausdrücklich den *Aufruf* des Aufräumlaufs, nicht bloß seine E
 | 05 | Presse-Kit | P2 | **deployed** | B13, B16, B24, 02, 03 | 2026-08-30 · live in v2026.08.30.1, auf Produktion nachgeprüft |
 | 06 | Community Feedback Board | P1 | **deployed** | B01, B02, B19, B21, B24, 01, 02 | 2026-08-31 · live in v2026.08.31, auf Produktion nachgeprüft |
 | 07 | Öffentliche Roadmap und Changelog | P2 | **deployed** | 06, B13, B16, B24, 02, 03, 05 | 2026-08-31 · live in v2026.08.31, auf Produktion nachgeprüft |
+| 09 | Produktanalyse (Plausible/Umami oder PostHog) | P2 | roadmap | 02, B26, B13 | 2026-09-05 · aus `/sdd-betrieb` — Entscheidung offen, siehe `docs/datenschutz.md` BE-02 |
 | 08 | Warteliste für die mobile App (iOS-Beta / Android) | P1 | **deployed** | B14, B22, B24, 02, 04 | 2026-09-05 · live in v2026.09.05, auf Produktion nachgeprüft |
 | B01 | Registrierung & E-Mail-Bestätigung | P0 | **approved** | — | 2026-08-23 · QA³: 17/20, nur mittlere Befunde offen |
 | B02 | Anmeldung mit Passwort | P0 | **approved** | B01 | 2026-08-24 · QA²: 16/17, repariert |

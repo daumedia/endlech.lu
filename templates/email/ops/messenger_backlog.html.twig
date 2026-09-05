@@ -1,0 +1,53 @@
+{% extends 'email/base.html.twig' %}
+
+{#
+    Betriebsmeldung an das Team — kein Nutzerkontakt.
+
+    ⚠ Bewusst fest auf Deutsch und ohne Übersetzungsschlüssel: Sie geht an genau
+    eine Adresse (`app.contact_email`), und vier Katalogeinträge für einen Text,
+    den nur der Betreiber liest, wären vier Stellen, an denen etwas veraltet.
+    Dasselbe Muster wie die internen Meldungen der Wartelisten.
+#}
+
+{% block title %}Rückstau in der Warteschlange{% endblock %}
+
+{% block body %}
+    <h2 style="margin: 0 0 16px; color: #111827; font-size: 20px; font-weight: 700;">
+        Der Messenger-Worker verarbeitet nichts
+    </h2>
+
+    <p style="margin: 0 0 24px; color: #6b7280; font-size: 14px; line-height: 1.6;">
+        In der Warteschlange liegen <strong>{{ offen }}</strong> unbearbeitete Nachrichten
+        (Schwelle: {{ schwelle }}){% if haengend > 0 %}, davon <strong>{{ haengend }}</strong>
+        seit über einer halben Stunde in Zustellung{% endif %}.
+    </p>
+
+    <p style="margin: 0 0 24px; color: #6b7280; font-size: 14px; line-height: 1.6;">
+        Solange das so bleibt, geht <strong>keine Bestätigungsmail</strong> mehr hinaus —
+        weder für die Registrierung noch für eine der drei Wartelisten noch für einen
+        E-Mail-Wechsel. Für die Betroffenen sieht das aus wie ein kaputtes Formular.
+    </p>
+
+    <table role="presentation" style="width: 100%; border: 0; background-color: #f9fafb; border-radius: 8px;">
+        <tr>
+            <td style="padding: 16px;">
+                <p style="margin: 0 0 8px; color: #374151; font-size: 13px; font-weight: 700;">Nachsehen:</p>
+                <p style="margin: 0; color: #6b7280; font-size: 13px; font-family: monospace; line-height: 1.8;">
+                    php bin/console messenger:stats --env=prod<br>
+                    php bin/console messenger:failed:show --env=prod
+                </p>
+                <p style="margin: 12px 0 0; color: #6b7280; font-size: 13px; line-height: 1.6;">
+                    Häufigste Ursache: Die Worker-Ressource in Coolify läuft nicht.
+                    <code>--time-limit=3600</code> beendet den Prozess stündlich selbst —
+                    steht die Ressource auf „no restart", kommt er nicht zurück.
+                </p>
+            </td>
+        </tr>
+    </table>
+
+    <p style="margin: 24px 0 0; color: #9ca3af; font-size: 12px; line-height: 1.6;">
+        Diese Meldung kommt von <code>app:messenger:watch</code>, täglich aus dem
+        Zeitplan <code>marketing</code>. Sie wird synchron versendet, also am Messenger
+        vorbei — sonst läge sie in genau der Warteschlange, vor der sie warnt.
+    </p>
+{% endblock %}
