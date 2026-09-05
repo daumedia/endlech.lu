@@ -32,12 +32,43 @@ eine Lücke in der Erklärung — nicht in dieser Datei.
 
 | | |
 |---|---|
-| **Anbieter** | Brevo SA (vormals Sendinblue), Frankreich |
-| **Sitz** | EU — keine Drittlandsübermittlung nach Kapitel V DSGVO |
+| **Anbieter** | Brevo SA (vormals Sendinblue), 7 rue de Madrid, 75008 Paris, Frankreich · Datenschutzbeauftragter: `dpo@brevo.com` |
+| **Sitz** | Frankreich (EU) |
+| **Drittlandsübermittlung** | ⚠ **ja — über Unterauftragsverarbeiter.** Siehe die Liste unten. Abgesichert über EU-US Data Privacy Framework und Standardvertragsklauseln |
 | **Zwecke** | (1) Versand von Transaktionsmails, (2) **seit Feature 04:** Führung eines Kontaktbestands für Werbe-Kampagnen |
 | **Rechtsgrundlage** | Zweck 1: Art. 6 Abs. 1 lit. b (Vertrag/vorvertraglich) · Zweck 2: **Art. 6 Abs. 1 lit. a — Einwilligung** |
-| **AV-Vertrag** | ⚠ **noch zu prüfen und zu datieren** — siehe unten |
-| **Datum der Prüfung** | ⚠ offen |
+| **AV-Vertrag** | **Annex 2 der Brevo General Terms and Conditions** — gilt automatisch mit Annahme der AGB, **keine gesonderte Unterzeichnung nötig**. Bei Widersprüchen geht das DPA den AGB vor (Ziff. 1.4) |
+| **Gelesene Fassung** | Annex 2 – Data Protection Agreement, Stand **15.05.2024**, Kopie in `qa/brevo-dpa/` · geprüft am **2026-09-05** |
+| **Löschung nach Vertragsende** | **100 Tage** (Ziff. 8.1). Eine Löschbescheinigung gibt es auf erste Anfrage (Ziff. 8.2). ⚠ Innerhalb dieser Frist muss ein Export selbst erfolgen |
+
+⚠ **Die frühere Angabe „EU — keine Drittlandsübermittlung nach Kapitel V DSGVO" war
+falsch** und stand hier seit Feature 04. Brevo selbst sitzt in Frankreich, aber mehrere
+seiner Unterauftragsverarbeiter verarbeiten in den USA — **Datadog** (Protokollierung)
+sogar ausschließlich dort. Die Übermittlung ist zulässig, aber sie findet statt, und ein
+Verzeichnis, das sie verneint, trägt bei einer Auskunft nicht. Korrigiert am 2026-09-05
+nach Lektüre des Vertragstexts.
+
+**Unterauftragsverarbeiter** (Schedule 1 des DPA, Stand 15.05.2024):
+
+| Dienst | Aufgabe | Serverstandort | Grundlage |
+|---|---|---|---|
+| Google Cloud Platform | Hosting | Belgien | DPF + Standardvertragsklauseln |
+| Scaleway/Iliad | Hosting | Frankreich | — (EU) |
+| OVH | Hosting | Frankreich | — (EU) |
+| Hetzner Online | Hosting | Deutschland | — (EU) |
+| Cloudflare | CDN und Firewall | USA/EU | DPF + Standardvertragsklauseln |
+| Zendesk | Support-Ticketsystem | EU/USA | BCR + SCC + „Data Centre Location Add-On" |
+| **Datadog** | Protokollierung und Fehlersuche | **USA** | EU-US Data Privacy Framework |
+
+Dazu optional, nur bei Nutzung des jeweiligen Dienstes: Looker (Dashboards), Integry
+(Integrationen), Convrrt (Landingpages) — alle mit US-Bezug. **Endlech.lu nutzt keinen
+davon**; wer einen einschaltet, erweitert damit die Übermittlung und zieht diese Liste mit.
+
+⚠ **Über neue Unterauftragsverarbeiter wird nur informiert, wer sich dafür angemeldet
+hat.** Ziff. 6.2: *„Provided that Customer has subscribed to receive notifications via the
+dedicated form"* — dann zehn Werktage vorher, mit Widerspruchsrecht. **Ohne diese
+Anmeldung erfährt der Verantwortliche nichts** und kann sein Widerspruchsrecht nicht
+ausüben. Das ist ein Handgriff im Brevo-Konto, kein Vertragsdetail: siehe DS-01.
 
 ⚠ **Der zweite Zweck ist neu und ändert die Art der Weitergabe grundlegend.**
 Bis Feature 04 bekam Brevo nur die einzelne Nachricht, die es zustellen sollte.
@@ -217,7 +248,11 @@ Reichweite — das ist seine Handlung, nicht die der Plattform.
 
 Das ist AK-34 aus Feature 04 und keine Nacharbeit:
 
-- [ ] **AV-Vertrag mit Brevo geprüft und hier mit Datum eingetragen**
+- [x] ~~**AV-Vertrag mit Brevo geprüft und hier mit Datum eingetragen**~~ — **am
+      2026-09-05 erledigt.** Er ist Annex 2 der AGB und gilt automatisch mit deren
+      Annahme; die Kernpunkte (Löschfrist 100 Tage, Unterauftragsverarbeiter samt
+      Serverstandorten, Widerspruchsrecht) stehen jetzt oben. Offen bleiben DS-01b bis
+      DS-01d — Anmeldung zu den Benachrichtigungen, Fassungsprüfung, Datum der Annahme
 - [ ] **`/legal` nennt Brevo als Empfänger für Werbezwecke** — nicht nur als
       Versanddienstleister
 - [x] ~~**OF-01 beantwortet** (Datenschutzstufe des Projekts)~~ — **am 2026-08-30
@@ -235,7 +270,10 @@ Feature 08. Was hier ohne Datum steht, hat niemanden, der es erzwingt.
 
 | # | Punkt | Warum es drängt | Frist | Wer |
 |---|---|---|---|---|
-| **DS-01** | **AV-Vertrag mit Brevo prüfen, Datum und Ablageort hier eintragen** | Brevo führt seit Feature 04 einen **Bestand** — Adressen samt Zielgruppe und Vertriebsstatus, dauerhaft gespeichert, zu einem anderen Zweck als dem Versand. Bis Feature 04 bekam es nur die einzelne Nachricht. ⚠ Ein nachträglich abgeschlossener Vertrag legalisiert nicht, was vorher lief | **2026-09-30** | Betreiber |
+| **DS-01a** | ~~AV-Vertrag mit Brevo prüfen~~ — **erledigt 2026-09-05.** Er ist Annex 2 der AGB und gilt automatisch; eine gesonderte Unterzeichnung gibt es nicht und war nie nötig. Vertragstext gelesen, Kernpunkte oben eingetragen, Kopie in `qa/brevo-dpa/` | — | ✅ |
+| **DS-01b** | **Im Brevo-Konto für Benachrichtigungen über neue Unterauftragsverarbeiter anmelden** | Ziff. 6.2 macht die Vorabinformation von einer Anmeldung über ein eigenes Formular abhängig. Ohne sie erfährt der Verantwortliche von einem neuen Unterauftragsverarbeiter **gar nichts** und kann die zehn Werktage Widerspruchsfrist nicht nutzen | **2026-09-30** | Betreiber |
+| **DS-01c** | **Prüfen, ob die gelesene DPA-Fassung noch die geltende ist** | Die vorliegende trägt den Stand **15.05.2024** — über zwei Jahre alt. Ob seither eine neue in Kraft ist, ließ sich von außen nicht feststellen; im Konto bzw. in den AGB steht das Datum | **2026-09-30** | Betreiber |
+| **DS-01d** | **Datum der AGB-Annahme festhalten** | Das DPA gilt ab Annahme der AGB — dieses Datum ist der Vertragsbeginn und gehört ins Verzeichnis. Es steht in der Kontoeröffnung bzw. der ersten Rechnung | **2026-09-30** | Betreiber |
 | **DS-02** | **Coolify: Vertrag, Sitz und Serverstandort nachtragen** | Der Hoster betreibt Anwendung, Worker **und** Datenbank — er sieht alles. Der Eintrag stand bis heute auf dem abgelösten Anbieter | **2026-09-30** | Betreiber |
 | **DS-03** | **`/legal` nennt Brevo als Empfänger für Werbezwecke** — nicht nur als Versanddienstleister | Offen seit Feature 04 (AK-34). Kein Kontakt geht raus, bevor die Erklärung ihn nennt | vor dem ersten Kampagnenlauf | Betreiber |
 | **DS-04** | **Öffnungs- und Klickverfolgung in Brevo entscheiden** | Standardmäßig eingeschaltet. Das PRD schließt Web-Analytics aus und begründet das mit Datensparsamkeit; ob das auch für Kampagnen gilt, ist nicht entschieden (OF-03) | vor dem ersten Kampagnenlauf | Betreiber |
