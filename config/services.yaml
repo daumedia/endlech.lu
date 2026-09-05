@@ -62,10 +62,23 @@ parameters:
     # zu vergessen, und `CatalogueCompletenessTest` prüft Vollständigkeit, nicht
     # Gleichheit (AK-15).
     app.operator_name: 'DAUMEDIA S.A.R.L.-S'
+    # Ausgeschrieben, weil ein Kürzel die Rechtsform nicht benennt: § 5 Abs. 1
+    # Nr. 1 DDG verlangt sie bei juristischen Personen ausdrücklich, und wer
+    # „S.A.R.L.-S" nicht kennt, liest daraus nichts.
+    app.operator_legal_form: 'Société à responsabilité limitée simplifiée'
     app.operator_address: "13, rue de la Fontaine\nL-3768 Tétange\nLuxemburg"
     app.operator_responsible: 'Michael Ferreira Rodrigues'
     # Handelsregister und Ermächtigung — Art. 5 der Loi du 14 août 2000 verlangt
     # beide ausdrücklich, die Ermächtigung samt der Behörde, die sie erteilt hat.
+    #
+    # ⚠ **Der deutsche Titel nennt zusätzlich § 5 DDG — als Hinweis, nicht als
+    # Rechtsgrundlage.** Für eine luxemburgische Gesellschaft gilt das
+    # Herkunftslandprinzip (Art. 3 der E-Commerce-Richtlinie): einschlägig ist
+    # luxemburgisches Recht. Das DDG (seit 14.05.2024, löste das TMG ab) bindet
+    # in Deutschland niedergelassene Anbieter. Der Verweis steht dort, weil
+    # deutschsprachige Leser ihn erwarten und die Pflichtangaben inhaltlich
+    # dieselben sind — er steht **nur in der deutschen Fassung**; in fr, en und
+    # lb wäre er sinnlos.
     app.operator_rcs: 'B311765'
     app.operator_authorisation: '10199120/0'
     app.operator_vat: ''

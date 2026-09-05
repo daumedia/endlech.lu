@@ -12,6 +12,7 @@ twig:
         # 14 août 2000 verlangt Handelsregisternummer, Ermächtigung und — falls
         # vorhanden — die MwSt-Nummer. Letztere ist leer, bis sie vergeben ist;
         # das Template blendet die Zeile dann von selbst ein.
+        operator_legal_form: '%app.operator_legal_form%'
         operator_rcs: '%app.operator_rcs%'
         operator_authorisation: '%app.operator_authorisation%'
         operator_vat: '%app.operator_vat%'

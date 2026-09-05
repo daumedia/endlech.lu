@@ -18,7 +18,8 @@
         <h2 class="text-xl font-semibold text-gray-800 mb-3">{{ 'legal.info_title'|trans }}</h2>
         {% if operator_name is not empty %}
             <p class="text-gray-700 leading-relaxed">
-                {{ operator_name }}{% if operator_address is not empty %}<br>
+                {{ operator_name }}{% if operator_legal_form is not empty %}<br>
+                <span class="text-gray-600">{{ operator_legal_form }}</span>{% endif %}{% if operator_address is not empty %}<br>
                 {{ operator_address|nl2br }}{% endif %}
             </p>
             {#
