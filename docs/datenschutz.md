@@ -314,11 +314,49 @@ Feature 08. Was hier ohne Datum steht, hat niemanden, der es erzwingt.
 | **DS-03b** | ~~Widersprüchliche Angabe zum selben Verarbeiter~~ — **behoben 2026-09-05.** `legal.mail_text` nannte „Sendinblue GmbH, Köln", `legal.marketing_text` im selben Abschnitt „Brevo SA, Frankreich". Vertragspartner ist Brevo SA, Paris (so auch im DPA). Berichtigt in vier Sprachen | — | ✅ |
 | **DS-03c** | ~~Der Hoster fehlte in der Erklärung~~ — **behoben 2026-09-05.** Neuer Abschnitt `legal.hosting_*`: Hostinger, Zypern, Server in Deutschland. ⚠ Er hält Anwendung, Worker **und** Datenbank — Art. 13 Abs. 1 lit. e verlangt seine Nennung so gut wie die von Brevo. BF-65 hatte drei Empfänger nachgetragen und den Hoster übersehen | — | ✅ |
 | **DS-03d** | ~~Kein Hinweis auf Drittlandsübermittlung~~ — **behoben 2026-09-05.** Neuer Abschnitt `legal.transfer_*`: Alle unmittelbaren Empfänger sitzen in der EU, ihre Unterauftragsverarbeiter nicht durchgängig (Datadog USA bei Brevo, Cloudflare bei beiden). Art. 13 Abs. 1 lit. f | — | ✅ |
-| **DS-04** | **Öffnungs- und Klickverfolgung in Brevo entscheiden** | Standardmäßig eingeschaltet. Das PRD schließt Web-Analytics aus und begründet das mit Datensparsamkeit; ob das auch für Kampagnen gilt, ist nicht entschieden (OF-03) | vor dem ersten Kampagnenlauf | Betreiber |
+| **DS-04** | **Anonyme Nachverfolgung in Brevo einschalten** — Konto → Settings → Default settings → Tracking → „Anonymous email tracking" auf **Yes**, dann oben rechts speichern | **Entschieden am 2026-09-05.** ⚠ Die Frist war als „vor dem ersten Kampagnenlauf" notiert und damit zu spät angesetzt: Brevo verfolgt auch **Transaktionsmails**, und die laufen seit dem ersten Tag. Es geht also nicht um eine künftige Kampagne, sondern um Bestätigungsmails, die bereits verschickt wurden | **sofort** | Betreiber |
 
 ⚠ **DS-01 und DS-02 sind keine Formalien.** Beide betreffen Verarbeiter, die bereits
 echte Personendaten halten. Sie stehen hier mit Datum, weil ein offener Punkt ohne Frist
 in drei Monaten genauso offen ist — nur dass dann niemand mehr weiß, seit wann.
+
+### Öffnungs- und Klickverfolgung (Entscheidung vom 2026-09-05)
+
+**Entschieden: anonyme Nachverfolgung.** Öffnungen und Klicks werden weiter gezählt,
+aber nicht mehr einer Person zugeordnet — Brevo anonymisiert dabei E-Mail-Adresse und
+IP-Adresse des Empfängers.
+
+**Warum nicht so lassen, wie es war:** Die Einwilligung dieses Projekts lautet *„Ich
+möchte Neuigkeiten von Endlech.lu per E-Mail erhalten."* Sie deckt den **Empfang** ab.
+Eine Messung, wer wann was geöffnet hat, ist etwas anderes und stand dort nie.
+
+⚠ **Bei den Bestätigungsmails wiegt das schwerer als bei Kampagnen.** Wer sich auf eine
+Warteliste setzt, bestätigt eine Adresse — er willigt in **gar keine** Werbeverarbeitung
+ein, und die Bestätigungsmail geht auch an Menschen, die den Vorgang nie abschließen.
+Das Verfolgen ihres Öffnungsverhaltens hätte keine Grundlage, auf die man sich berufen
+könnte.
+
+**Warum nicht vollständig abschalten:** Für Transaktionsmails ist das bei Brevo nicht
+als Option vorgesehen. Und die Zustellquote ist die einzige Kennzahl, an der ein
+Zustellproblem auffällt, bevor sich jemand beschwert — bei einem Projekt, dessen
+Wartelisten vollständig am Double-Opt-In hängen, ist das keine Kleinigkeit.
+
+**Was der Mittelweg kostet:** Eine Segmentierung nach Öffnern oder Klickern ist danach
+nicht mehr möglich, und auf der Kontaktseite steht nicht mehr, ob eine bestimmte Person
+geöffnet hat. Für dieses Projekt ist das kein Verlust — es betreibt kein
+zielgruppenscharfes Kampagnenmarketing und will es laut PRD auch nicht.
+
+**Passt zum PRD:** Dort steht *„Es gibt kein Web-Analytics … Keine Besucherverfolgung.
+Passt zur Datensparsamkeit."* Eine personenbezogene Öffnungsmessung im Postfach wäre
+dieselbe Verfolgung, nur an anderer Stelle.
+
+⚠ **Die Einstellung wirkt nur für künftige und geplante Mails**, nicht rückwirkend. Was
+bis zur Umstellung an personenbezogenen Öffnungsdaten entstanden ist, liegt weiter in
+Brevo — wer es entfernen will, muss es dort löschen.
+
+⚠ **Nach dem Umschalten gehört diese Zeile hier ergänzt**: Datum der Umstellung und wer
+sie vorgenommen hat. Ohne Datum ist später nicht feststellbar, welcher Zeitraum betroffen
+war.
 
 ## Betriebsüberwachung
 
