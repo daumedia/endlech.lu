@@ -2,10 +2,43 @@
 
 Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
-![Version](https://img.shields.io/badge/version-2026.09.02-blue)
+![Version](https://img.shields.io/badge/version-2026.09.05-blue)
 ![Status](https://img.shields.io/badge/status-beta-green)
 
 ## [Unreleased]
+
+## [2026.09.05] – Warteliste für die mobile App
+
+### Warteliste für die mobile App (`/app`, Feature 08)
+
+Eine dritte Warteliste neben Partnern und Organisationen, diesmal für die App.
+Wer sich einträgt, wählt **iOS oder Android** — und erfährt dabei ehrlich, wie es
+um die jeweilige Plattform steht: Für iPhone und iPad läuft eine
+TestFlight-Testfassung, für Android ist nichts gebaut, und es wird auch kein
+Termin versprochen. Die Vormerkung ist dort der Bedarfsnachweis, an dem sich
+später entscheidet, ob überhaupt angefangen wird.
+
+Der Zugangslink kommt in einer **zweiten** Mail, erst nach dem Bestätigungsklick.
+Stünde er schon in der Bestätigungsmail, hätte der Klick keinen Grund mehr — und
+wer eine fremde Adresse einträgt, schickte dem Fremden den Beta-Zugang.
+
+Erfasst werden nur Adresse und Plattform. Kein Name, kein Gerätemodell: Was nicht
+erfasst ist, kann nicht versehentlich veröffentlicht werden. Nie bestätigte
+Vormerkungen werden nach 30 Tagen automatisch gelöscht — und der Lauf hängt an
+zwei Wegen, weil auf Produktion schon zweimal ein geplanter Cron ausblieb. Jede
+Mail trägt einen Abmeldelink, der den Eintrag löscht statt ihn zu markieren.
+
+Auf `/open` erscheint die Zahl der Vormerkungen erst ab 50 — und dann strukturell:
+Darunter steht sie auch nicht im JSON, nicht bloß versteckt im Template.
+
+**Drei Stellen im Bestand mussten mitziehen**, sonst hätte das Feature lautlos nur
+halb gewirkt: die Herkunftsauflösung des Marketing-Registers, seine Quellensuche
+(ohne sie hätte ein Widerruf die Adresse in Brevo stehen lassen) und die
+Zeilennormalisierung der Verwaltungsliste. Dabei fiel auf, dass deren
+Quellen-Filter mit Negationen arbeitete: Bei zwei Wartelisten war das äquivalent
+zu einem positiven Vergleich, bei dreien hätte `?source=app` weiterhin alle
+Partner- und Organisationszeilen mitgeliefert.
+
 
 ### Dokumentiert: Woran man ein fehlendes `TRUSTED_PROXIES` erkennt
 

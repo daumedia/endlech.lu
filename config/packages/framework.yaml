@@ -94,6 +94,17 @@ framework:
             policy: 'sliding_window'
             limit: 5
             interval: '1 hour'
+        # App-Warteliste (Feature 08): pro IP 10 Versuche je Stunde. Eigener Zähler,
+        # nicht `partner_waitlist` mitbenutzt — genau das war BF-38.
+        #
+        # Großzügiger als die beiden anderen Wartelisten (5), weil sich hier
+        # Privatpersonen vom Telefon aus eintragen: Mobilfunk-NAT und Firmen-WLAN
+        # legen viele Besucher auf dieselbe Adresse. Bei einer Partneranmeldung
+        # sitzt ein Betrieb dahinter, bei dieser hier eine Person in der Bahn.
+        app_waitlist:
+            policy: 'sliding_window'
+            limit: 10
+            interval: '1 hour'
         # Offene Datenendpunkte (BF-42): jeder Abruf lädt den GESAMTEN Bestand. Der
         # Datensatz soll abrufbar bleiben — gedeckelt wird der Dauerabruf, nicht die
         # Nutzung. 60 je Stunde reichen für jeden Zweck, den CC BY 4.0 vorsieht.
@@ -183,6 +194,10 @@ when@test:
                 limit: 10000
                 interval: '1 hour'
             partner_waitlist:
+                policy: 'sliding_window'
+                limit: 10000
+                interval: '1 hour'
+            app_waitlist:
                 policy: 'sliding_window'
                 limit: 10000
                 interval: '1 hour'

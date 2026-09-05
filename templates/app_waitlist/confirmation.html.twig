@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{#
+    Bestätigungs- UND Abmeldeseite der App-Warteliste (Feature 08).
+
+    Beide Routen des Controllers rendern diese Vorlage:
+      app_app_waitlist_confirm  → state = confirmed | already | expired | invalid
+      app_app_waitlist_revoke   → state = revoked | invalid, dazu revoked = true
+
+    Die Zustandsdarstellung selbst kommt aus `partials/_waitlist_confirmation.html.twig`.
+    ⚠ Die geteilte Vorlage wird hier NICHT angefasst — sie trägt B14 und B15.
+    Was diesem Feature eigen ist, steht deshalb hier: die Umdeutung des
+    unbekannten Tokens auf der Abmelderoute und der Rückverweis beim
+    abgelaufenen Link.
+#}
+
+{#
+    ⚠ AK-33: Auf der Abmelderoute ist ein unbekannter Token KEIN Fehler.
+
+    Der Eintrag wird beim Abmelden gelöscht (nicht auf einen Status gesetzt),
+    und der Abmeldelink steht in zwei Mails, die im Postfach liegen bleiben. Ein
+    zweiter Klick findet deshalb zwangsläufig nichts mehr — genau der
+    Normalfall. „Link ungültig" wäre dort eine Fehlermeldung für eine Handlung,
+    die vollständig geglückt ist.
+
+    Der Zustand wird auf `revoked` umgeschrieben statt hier eigenes Markup zu
+    bauen: AK-33 verlangt wörtlich „dieselbe Bestätigungsseite" wie beim ersten
+    Aufruf. Zwei getrennte Texte liefen mit der Zeit auseinander, ohne dass es
+    jemandem auffiele — der zweite Klick wird selten nachgesehen.
+
+    Nebeneffekt und beabsichtigt: Von außen ist nicht unterscheidbar, ob ein
+    Token je existiert hat.
+#}
+{% set is_revoke_route = revoked|default(false) %}
+{% set effective_state = (is_revoke_route and state == 'invalid') ? 'revoked' : state %}
+
+{% block title %}{{ (is_revoke_route ? 'app_waitlist.confirm.revoke_title' : 'app_waitlist.confirm.title')|trans }} – Endlech.lu{% endblock %}
+
+{% block body %}
+    {{ include('partials/_waitlist_confirmation.html.twig', {
+        state: effective_state,
+        prefix: 'app_waitlist.confirm',
+        back_route: 'app_app_waitlist'
+    }) }}
+
+    {#
+        ⚠ AK-28 / EC-07: Der abgelaufene Link braucht einen Weg nach vorn.
+
+        Zwischen Tag 7 und Tag 30 existiert der Eintrag noch, ist aber nicht
+        mehr einlösbar — und weil eine Adresse nur einmal auf der Liste stehen
+        darf, kommt der Interessent ohne diesen Hinweis nicht mehr hinein. Er
+        soll nicht raten müssen, dass ein erneutes Eintragen der Ausweg ist.
+
+        Der Verweis steht hier ausdrücklich und nicht nur im `back`-Knopf der
+        geteilten Vorlage: Dessen Ziel ist ein Parameter, das Kriterium ist
+        keiner. Wer `back_route` später umhängt, nähme AK-28 sonst lautlos mit.
+    #}
+    {% if effective_state == 'expired' %}
+        <div class="container mx-auto px-4 -mt-10 pb-16 max-w-xl text-center">
+            <p class="text-sm text-gray-700 leading-relaxed">
+                {{ 'app_waitlist.confirm.expired_again_hint'|trans }}
+                <a href="{{ path('app_app_waitlist') }}"
+                   class="font-semibold text-cyan-800 underline rounded focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700">
+                    {{ 'app_waitlist.confirm.expired_again_link'|trans }}
+                </a>
+            </p>
+        </div>
+    {% endif %}
+{% endblock %}

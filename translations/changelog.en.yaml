@@ -23,6 +23,9 @@ repo:
     link_label: "Open CHANGELOG.md on GitHub"
 
 release:
+    v2026_09_05:
+        title: "The app waiting list"
+        body: "Endlech.lu is coming to your phone. A test build is already running for iPhone and iPad — sign up and you get access by email. For Android nothing has been built yet, and we say so plainly: your entry counts when we decide whether to start."
     v2026_08_31:
         title: "Roadmap and changelog"
         body: "Two new pages show what is being worked on: the roadmap lists in three columns what is in progress, planned and under consideration — and what we deliberately will not build. The changelog tells what has changed most recently. No dates, but a reason for every item."

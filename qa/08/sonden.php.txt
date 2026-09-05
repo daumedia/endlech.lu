@@ -1,0 +1,275 @@
+<?php
+
+namespace App\Tests\Functional\Controller;
+
+use App\Entity\AppWaitlistEntry;
+use App\Enum\AppPlatform;
+use App\Repository\AppWaitlistEntryRepository;
+use App\Tests\AbstractWebTestCase;
+use App\Waitlist\WaitlistConfirmationService;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+
+/** QA-Sonden — belegen vermutete Fehler. Nicht Teil der Feature-Tests. */
+final class AppWaitlistQaProbeTest extends AbstractWebTestCase
+{
+    private const PFAD = self::LOCALE.'/app';
+
+    /**
+     * SONDE 1 — Ist der neu ausgestellte Token sofort wieder abgelaufen?
+     *
+     * AK-17 verspricht: abgelaufener Vorgang + erneutes Eintragen → neue Mail
+     * mit neuem Token. Wenn `createdAt` dabei stehen bleibt, misst
+     * `isExpired()` weiter am alten Datum — der Link in der neuen Mail wäre
+     * bereits tot, und die Sackgasse bestünde fort.
+     */
+    public function testSonde1NeuerTokenNachAblauf(): void
+    {
+        $client = static::createClient();
+        $entry = $this->eintrag($client, 'sonde1@example.lu');
+        $this->altern($client, $entry, '-8 days');
+
+        $this->absenden($client, 'sonde1@example.lu');
+
+        $frisch = $this->repo($client)->findOneByEmail('sonde1@example.lu');
+        $service = $client->getContainer()->get(WaitlistConfirmationService::class);
+
+        fwrite(\STDERR, sprintf(
+            "\n[SONDE 1] createdAt nach erneutem Eintragen: %s | isExpired: %s\n",
+            $frisch->getCreatedAt()->format('Y-m-d H:i'),
+            $service->isExpired($frisch) ? 'JA — Link sofort tot' : 'nein',
+        ));
+
+        // Der eigentliche Nachweis: Löst der Link in der neuen Mail ein?
+        $client->request('GET', self::LOCALE.'/app/confirmation/'.$frisch->getConfirmationToken());
+        fwrite(\STDERR, sprintf(
+            "[SONDE 1] Aufruf des NEUEN Links: HTTP %d (200 = brauchbar, 410 = tot)\n",
+            $client->getResponse()->getStatusCode(),
+        ));
+
+        self::assertTrue(true);
+    }
+
+    /**
+     * SONDE 2 — Verbraucht der Dublettenzweig Kontingent?
+     *
+     * Er steht VOR `consume()`. Löst er eine Mail aus, wäre das ein Versandweg
+     * an eine frei wählbare fremde Adresse ohne wirksamen Deckel.
+     */
+    public function testSonde2DublettenzweigVerbrauchtKontingent(): void
+    {
+        $client = static::createClient();
+        $entry = $this->eintrag($client, 'sonde2@example.lu');
+        $this->altern($client, $entry, '-8 days');
+
+        $factory = $client->getContainer()->get('limiter.app_waitlist');
+        $vorher = $factory->create('127.0.0.1')->consume(0)->getRemainingTokens();
+
+        $mails = [];
+        for ($i = 0; $i < 5; ++$i) {
+            $this->absenden($client, 'sonde2@example.lu');
+            // Nur die Mails DIESES Requests — der Collector wird je Request
+            // zurückgesetzt, aber `absenden()` macht GET und POST.
+            $mails[] = \count(self::getMailerMessages());
+        }
+        $mails = implode('+', $mails).' = '.array_sum($mails);
+
+        $nachher = $factory->create('127.0.0.1')->consume(0)->getRemainingTokens();
+
+        fwrite(\STDERR, sprintf(
+            "[SONDE 2] 5 Submits auf eine abgelaufene Dublette → Mails je Submit: %s; Kontingent %d → %d (Differenz %d)\n",
+            $mails,
+            $vorher,
+            $nachher,
+            $vorher - $nachher,
+        ));
+
+        self::assertTrue(true);
+    }
+
+    /** SONDE 3 — Eingabefeld gegen XSS, SQL-Injection und Pfadtraversal. */
+    public function testSonde3BoeseEingaben(): void
+    {
+        $client = static::createClient();
+
+        $client->catchExceptions(false);
+
+        $eingaben = [
+            'pfad' => '../../etc/passwd@example.lu',
+            'xss' => '<script>alert(1)</script>@example.lu',
+            'sql' => "a'; DROP TABLE app_waitlist_entry; --@example.lu",
+            'lang' => str_repeat('x', 10000).'@example.lu',
+            'emoji' => '🙂🙂🙂@example.lu',
+            'leer' => '',
+            'einzeln' => 'a',
+        ];
+
+        foreach ($eingaben as $name => $wert) {
+            $this->absendenMit($client, $wert);
+            $code = $client->getResponse()->getStatusCode();
+            $roh = $client->getResponse()->getContent();
+
+            fwrite(\STDERR, sprintf(
+                "[SONDE 3] %-8s → HTTP %d%s%s\n",
+                $name,
+                $code,
+                str_contains((string) $roh, '<script>alert(1)</script>') ? '  ⚠ SKRIPT UNESCAPED' : '',
+                preg_match('/SQLSTATE|Exception|Stack trace/i', (string) $roh) ? '  ⚠ ROHE FEHLERMELDUNG' : '',
+            ));
+        }
+
+        // Tabelle noch da?
+        $anzahl = $client->getContainer()->get(EntityManagerInterface::class)
+            ->getConnection()->fetchOne('SELECT COUNT(*) FROM app_waitlist_entry');
+        fwrite(\STDERR, sprintf("[SONDE 3] Tabelle existiert weiterhin, Zeilen: %d\n", $anzahl));
+
+        self::assertTrue(true);
+    }
+
+    private function absendenMit(KernelBrowser $client, string $email): void
+    {
+        $crawler = $client->request('GET', self::PFAD);
+        $form = $this->formWithField($crawler, 'app_waitlist[email]');
+        $form['app_waitlist[email]'] = $email;
+        $form['app_waitlist[platform]']->select('ios');
+        $form['app_waitlist[consent]']->tick();
+        $client->submit($form);
+    }
+
+    /**
+     * SONDE 4 — Bleibt trotz des 500ers eine Zeile stehen?
+     *
+     * `register()` speichert VOR dem Mailversand (Reihenfolge Token → flush →
+     * Mail, damit eine gescheiterte Zustellung die Anmeldung nicht verliert).
+     * Fliegt die Ausnahme erst beim Versand, ist der Datensatz bereits committed.
+     */
+    public function testSonde4ZeileTrotzFehler(): void
+    {
+        $client = static::createClient();
+        $vorher = (int) $client->getContainer()->get(EntityManagerInterface::class)
+            ->getConnection()->fetchOne('SELECT COUNT(*) FROM app_waitlist_entry');
+
+        try {
+            $this->absendenMit($client, '../../etc/passwd@example.lu');
+        } catch (\Throwable $e) {
+            fwrite(\STDERR, sprintf("[SONDE 4] Ausnahme: %s\n", $e::class));
+        }
+
+        $nachher = (int) $client->getContainer()->get(EntityManagerInterface::class)
+            ->getConnection()->fetchOne('SELECT COUNT(*) FROM app_waitlist_entry');
+
+        fwrite(\STDERR, sprintf(
+            "[SONDE 4] Zeilen vorher %d, nachher %d — AK-08 verlangt: kein Eintrag\n",
+            $vorher,
+            $nachher,
+        ));
+
+        self::assertTrue(true);
+    }
+
+    /** SONDE 5 — Gegenprobe: hat die Partner-Warteliste (B14) denselben Fehler? */
+    public function testSonde5GegenprobePartner(): void
+    {
+        $client = static::createClient();
+        $client->catchExceptions(false);
+
+        $crawler = $client->request('GET', self::LOCALE.'/partner');
+        $form = $this->formWithField($crawler, 'partner_waitlist[email]');
+        $form['partner_waitlist[restaurantName]'] = 'Test';
+        $form['partner_waitlist[contactName]'] = 'Test';
+        $form['partner_waitlist[email]'] = '../../etc/passwd@example.lu';
+        $form['partner_waitlist[locality]'] = 'Strassen';
+        $form['partner_waitlist[consent]']->tick();
+
+        try {
+            $client->submit($form);
+            fwrite(\STDERR, sprintf(
+                "[SONDE 5] Partner-Formular: HTTP %d — kein Fehler\n",
+                $client->getResponse()->getStatusCode(),
+            ));
+        } catch (\Throwable $e) {
+            fwrite(\STDERR, sprintf("[SONDE 5] Partner-Formular wirft EBENFALLS: %s\n", $e::class));
+        }
+
+        self::assertTrue(true);
+    }
+
+    /**
+     * SONDE 6 — Was steht TATSÄCHLICH im Marketing-Auftragsbuch?
+     *
+     * `design.md` sagt zu: E-Mail, Herkunft `app`, Einwilligungszeitpunkt,
+     * Sprache. Die Plattform geht ausdrücklich NICHT mit (AK-54). Geprüft wird
+     * die Zeile, nicht der Quelltext, der sie schreibt.
+     */
+    public function testSonde6PayloadAnBrevo(): void
+    {
+        $client = static::createClient();
+        $em = $client->getContainer()->get(EntityManagerInterface::class);
+
+        $entry = $this->eintrag($client, 'payload@example.lu');
+        $entry->setMarketingConsentAt(new \DateTimeImmutable());
+        $em->flush();
+
+        $client->request('GET', self::LOCALE.'/app/confirmation/'.$entry->getConfirmationToken());
+
+        $zeile = $em->getConnection()->fetchAssociative(
+            'SELECT * FROM marketing_contact WHERE email = :e',
+            ['e' => 'payload@example.lu'],
+        );
+
+        fwrite(\STDERR, "[SONDE 6] Zeile im Auftragsbuch:\n");
+        foreach ($zeile ?: [] as $feld => $wert) {
+            fwrite(\STDERR, sprintf("           %-22s %s\n", $feld, var_export($wert, true)));
+        }
+
+        $roh = json_encode($zeile, \JSON_THROW_ON_ERROR);
+        fwrite(\STDERR, sprintf(
+            "[SONDE 6] Plattform im Payload: %s | Token im Payload: %s\n",
+            str_contains($roh, 'ios') ? '⚠ JA' : 'nein',
+            str_contains($roh, (string) $entry->getConfirmationToken()) ? '⚠ JA' : 'nein',
+        ));
+
+        self::assertTrue(true);
+    }
+
+    // -- Hilfen
+
+    private function repo(KernelBrowser $c): AppWaitlistEntryRepository
+    {
+        return $c->getContainer()->get(AppWaitlistEntryRepository::class);
+    }
+
+    private function absenden(KernelBrowser $client, string $email): void
+    {
+        $crawler = $client->request('GET', self::PFAD);
+        $form = $this->formWithField($crawler, 'app_waitlist[email]');
+        $form['app_waitlist[email]'] = $email;
+        $form['app_waitlist[platform]']->select('ios');
+        $form['app_waitlist[consent]']->tick();
+        $client->submit($form);
+    }
+
+    private function eintrag(KernelBrowser $client, string $email): AppWaitlistEntry
+    {
+        $em = $client->getContainer()->get(EntityManagerInterface::class);
+        $e = new AppWaitlistEntry();
+        $e->setEmail($email);
+        $e->setPlatform(AppPlatform::IOS);
+        $e->setLocale('de');
+        $e->generateConfirmationToken();
+        $em->persist($e);
+        $em->flush();
+
+        return $e;
+    }
+
+    private function altern(KernelBrowser $client, AppWaitlistEntry $e, string $v): void
+    {
+        $em = $client->getContainer()->get(EntityManagerInterface::class);
+        $em->getConnection()->executeStatement(
+            'UPDATE app_waitlist_entry SET created_at = :d WHERE id = :id',
+            ['d' => (new \DateTimeImmutable($v))->format('Y-m-d H:i:s'), 'id' => $e->getId()],
+        );
+        $em->refresh($e);
+    }
+}

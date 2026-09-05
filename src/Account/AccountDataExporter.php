@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Account;
 
 use App\Entity\User;
+use App\Repository\AppWaitlistEntryRepository;
 use App\Repository\BoardIdeaRepository;
 use App\Repository\BoardVoteRepository;
 use App\Repository\RestaurantRepository;
@@ -30,6 +31,7 @@ final readonly class AccountDataExporter
         private RestaurantSuggestionRepository $suggestions,
         private BoardIdeaRepository $boardIdeas,
         private BoardVoteRepository $boardVotes,
+        private AppWaitlistEntryRepository $appWaitlist,
     ) {
     }
 
@@ -38,6 +40,10 @@ final readonly class AccountDataExporter
      */
     public function export(User $user): array
     {
+        // Feature 08 / AK-51: Die App-Vormerkung hängt an der Adresse, nicht am
+        // Konto — es gibt keine Beziehung, über die sie sonst gefunden würde.
+        $appEntry = $this->appWaitlist->findOneByEmail($user->getEmail());
+
         return [
             'exportedAt' => (new \DateTimeImmutable())->format(\DateTimeInterface::ATOM),
             'format' => 'endlech.lu account export v1',
@@ -108,6 +114,32 @@ final readonly class AccountDataExporter
                 ],
                 $this->boardVotes->findBy(['user' => $user], ['createdAt' => 'DESC']),
             ),
+            // Feature 08 / AK-51: Die Vormerkung für die App ist eine Angabe zu
+            // dieser Person und gehört damit in die Auskunft nach Art. 15/20
+            // DSGVO. Höchstens eine Zeile je Adresse (Unique-Index auf `email`),
+            // deshalb ein Objekt statt einer Liste — und `null`, wenn keine
+            // besteht, wie bei `pendingEmail` weiter oben.
+            //
+            // ⚠ **Ohne `confirmationToken`.** Er ist kein Datum über die Person,
+            // sondern ein Zugangsgeheimnis: Wer ihn hat, bestätigt und löscht die
+            // Vormerkung. Ihn mitzugeben machte aus der Auskunft genau das
+            // Angriffswerkzeug, das der Klassenkommentar oben ausschließt — der
+            // Export landet am Ende in einem unverschlüsselten Postfach.
+            'appWaitlist' => null === $appEntry ? null : [
+                // ⚠ `->value`, nicht der Enum-Fall selbst: Was hier steht, geht
+                // durch `json_encode` und muss ein Skalar sein.
+                'platform' => $appEntry->getPlatform()?->value,
+                'status' => $appEntry->getStatus()->value,
+                'createdAt' => $appEntry->getCreatedAt()->format(\DateTimeInterface::ATOM),
+                // Beide Zeitpunkte, weil sie Verschiedenes belegen (BF-89):
+                // `selfConfirmedAt` setzt allein der Klick des Betroffenen,
+                // `confirmedAt` kann auch aus einem Statuswechsel im Admin
+                // stammen. Nur der erste weist eine Einwilligung nach.
+                'confirmedAt' => $appEntry->getConfirmedAt()?->format(\DateTimeInterface::ATOM),
+                'selfConfirmedAt' => $appEntry->getSelfConfirmedAt()?->format(\DateTimeInterface::ATOM),
+                'marketingConsentAt' => $appEntry->getMarketingConsentAt()?->format(\DateTimeInterface::ATOM),
+                'betaLinkSentAt' => $appEntry->getBetaLinkSentAt()?->format(\DateTimeInterface::ATOM),
+            ],
         ];
     }
 }

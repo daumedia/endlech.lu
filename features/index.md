@@ -1,6 +1,6 @@
 # Features
 
-Stand: 2026-08-30 · Stack-Profil: `symfony-doctrine` · Artefaktpfad: `docs/`
+Stand: 2026-09-04 · Stack-Profil: `symfony-doctrine` · Artefaktpfad: `docs/`
 
 Stand der Rückerfassung: **alle 26 Features rekonstruiert** (2026-08-23).
 Stand der Prüfung: **B01 zweimal geprüft und repariert** → `review` (17/20 Kriterien).
@@ -1574,6 +1574,53 @@ ein eigenes Vorhaben — entweder die Funktion bauen oder die Texte anpassen —
 in Feature `07`**; hier ist bewusst keine Feature-Zeile dafür angelegt worden, weil das
 eine neue Anforderung wäre und Michaels Entscheidung braucht.
 
+**2026-09-05 · Feature `08` abgenommen** (dritter QA-Durchlauf): 58 von 58 Kriterien,
+**kein offener Befund**. BF-122 ist behoben und über vier Sonden gegengeprüft — darunter
+der vollständige Missbrauchsweg über HTTP und zehn Erneuerungsrunden. Keine der sechs
+Reparaturen ist zurückgekommen; 985 Tests grün. AK-44 bleibt *nicht prüfbar* (der
+Test-Override hebt jeden Limiter auf 10000) und gehört in die Nachprüfung auf Produktion.
+
+**2026-09-05 · Status von `08` auf `review` zurückgesetzt.** `approved` beschrieb den
+Stand nicht mehr: Sobald ein Befund zur Behebung ansteht, ist das Feature nicht
+abgenommen, unabhängig von seinem Grad. Die Korrektur gehört zur Entscheidung im
+Deploy-Preflight und hätte dort schon erfolgen müssen — nachgeholt beim nächsten
+`/sdd-build`, weil dessen Eingang sonst formal verschlossen gewesen wäre.
+
+**2026-09-05 · Auslieferung von `08` angehalten — Preflight.** Der Betreiber hat
+entschieden, **BF-122 vor dem Release zu beheben**. Formal blockiert der Befund nicht
+(Grad *mittel*), die Entscheidung geht darüber hinaus. Es wurde nichts committet, kein
+Release erzeugt und nichts ausgeliefert; der Stand liegt unverändert auf
+`feature/08-app-warteliste`.
+
+Zwei Preflight-Punkte waren zum Zeitpunkt des Abbruchs ohnehin offen: das
+Arbeitsverzeichnis (53 Dateien nicht committet) und der Versionsstand — alle fünf
+Release-Stellen zeigen noch auf `2026.09.02`. Beide gehören in den Release-Durchgang
+**nach** der Reparatur, nicht davor: Der Code ändert sich noch.
+
+Bestätigt und damit kein Hindernis mehr: Der Post-Deployment-Command für die Migrationen
+steht in Coolify, und `APP_TESTFLIGHT_URL` ist dort hinterlegt. Die Freigabe, den Merge
+nach `master` beim nächsten Anlauf vollständig durchzuziehen, liegt vor.
+
+**2026-09-05 · Feature `08` abgenommen** (zweiter QA-Durchlauf): 57 von 58 Kriterien,
+alle fünf Befunde des ersten Laufs behoben und gegen ihre Reproduktion geprüft. **Vier der
+fünf Reparaturen sind nebenwirkungsfrei; eine hat BF-122 erzeugt** — `renewConfirmationWindow()`
+setzt `createdAt` zurück, und daran hängt außer der Token-Frist auch die 30-Tage-Aufbewahrung.
+Grad *mittel*, blockiert nicht, gehört aber vor dem Release entschieden.
+
+**2026-09-05 · Feature `08` geprüft — nicht abgenommen** (erster Durchlauf). 53 von 58 Kriterien bestanden,
+vier durchgefallen, eines nicht prüfbar. Drei Befunde mit Grad *hoch*, und alle drei liegen
+auf demselben Weg: dem Umgang mit einer Adresse, die schon einmal eingetragen wurde.
+**BF-119 betrifft nicht nur `08`** — die Gegenprobe am Partner-Formular zeigt dieselbe
+Ausnahme; alle vier Formulare des Projekts prüfen E-Mail-Adressen großzügiger, als der
+Mailversand sie akzeptiert.
+
+**2026-09-04 · Feature `08` aufgenommen und spezifiziert.** Dritte Warteliste neben Partner
+(B14) und Organisationen (B15), diesmal für die mobile App. Sie teilt deren Mechanik
+(`WaitlistConfirmationService`, `WaitlistEntryInterface`, Abmeldeweg aus BF-37) und behebt
+im selben Zug zwei Fehlbestände, die dort offen sind: der Bestätigungstoken läuft ab
+(FB-03) und nie bestätigte Einträge werden nach 30 Tagen tatsächlich gelöscht (FB-02) —
+AK-49 verlangt ausdrücklich den *Aufruf* des Aufräumlaufs, nicht bloß seine Existenz.
+
 ## Inventar
 
 | ID | Feature | Prio | Status | Abhängig von | Zuletzt |
@@ -1585,6 +1632,7 @@ eine neue Anforderung wäre und Michaels Entscheidung braucht.
 | 05 | Presse-Kit | P2 | **deployed** | B13, B16, B24, 02, 03 | 2026-08-30 · live in v2026.08.30.1, auf Produktion nachgeprüft |
 | 06 | Community Feedback Board | P1 | **deployed** | B01, B02, B19, B21, B24, 01, 02 | 2026-08-31 · live in v2026.08.31, auf Produktion nachgeprüft |
 | 07 | Öffentliche Roadmap und Changelog | P2 | **deployed** | 06, B13, B16, B24, 02, 03, 05 | 2026-08-31 · live in v2026.08.31, auf Produktion nachgeprüft |
+| 08 | Warteliste für die mobile App (iOS-Beta / Android) | P1 | **approved** | B14, B22, B24, 02, 04 | 2026-09-05 · QA³: 58/58, **kein offener Befund** |
 | B01 | Registrierung & E-Mail-Bestätigung | P0 | **approved** | — | 2026-08-23 · QA³: 17/20, nur mittlere Befunde offen |
 | B02 | Anmeldung mit Passwort | P0 | **approved** | B01 | 2026-08-24 · QA²: 16/17, repariert |
 | B03 | Passkey-Anmeldung & -Verwaltung | P0 | **deployed** | B01, B02 | 2026-08-29 · ENDLECH-6 live in v2026.08.29.1, auf Produktion belegt (302 statt 400) |
@@ -1622,6 +1670,7 @@ eine neue Anforderung wäre und Michaels Entscheidung braucht.
 | 05 | Presseseite mit Boilerplate in drei Längen, Faktenblatt aus den Livezahlen, Bildpaket zum Herunterladen samt Nutzungsbedingungen, Person und Zitate, Meldungen, Pressekontakt | neu: `/presse` und ein Verweisblock auf `/about`; berührt Fußzeile und `/legal` (Betreiberangaben) |
 | 06 | Öffentliches Ideen-Board zur Plattform: Einreichen mit Konto, Freigabe vor Veröffentlichung, Zustimmung, fünf Status mit erzwungener Ablehnungsbegründung, Dublettenzusammenführung, eine Mail bei Veröffentlichung | neu: `/community/ideen` und die Warteschlange in der Verwaltung; berührt Fußzeile, Admin-Dashboard sowie Kontolöschung und Datenexport aus Feature `01` |
 | 07 | Zwei öffentliche Seiten: Roadmap in drei Status-Spalten samt Block „Bewusst nicht gebaut“, Changelog als redaktionelle Kurzfassung je Release nach Jahren gruppiert; Community-Ideen mit Status `Geplant` werden live eingezogen | neu: `/roadmap` und `/changelog`; berührt Fußzeile, `docs/prd.md` (Roadmap-Tabelle) und die Release-Checkliste in `CLAUDE.md` |
+| 08 | Öffentliches Formular mit Plattformwahl (genau eine), Double-Opt-In, TestFlight-Link in der **zweiten** Mail, Abmeldelink, Aufräumlauf nach 30 Tagen, Kennzahl auf `/open` ab 50 Vormerkungen | neu: `/{_locale}/app` samt sprachfreier Weiterleitung; berührt Fußzeile, Startseite, `/admin/warteliste` (dritte Quelle), `/open` und die Löschkaskade aus Feature `01` |
 | B01 | Registrierformular, Token 24 h, Bestätigungsmail, erneutes Senden, Hinweisseite | `RegistrationController`, `EmailVerificationController`, `RegistrationType`, `templates/registration/`, `templates/email_verification/`, `email/verification.html.twig` |
 | B02 | `form_login`, `remember_me`, Abmelden, Zugriffsregeln der `main`-Firewall | `SecurityController`, `config/packages/security.yaml`, `templates/security/login.html.twig` |
 | B03 | WebAuthn-Anmeldung ohne E-Mail-Eingabe, Passkeys anlegen/umbenennen/entfernen | `Security/PasskeyAuthenticator`, `Security/WebauthnUserEntityRepository`, `PasskeyController`, `Entity/WebauthnCredential`, `partials/_passkey_*`, `passkey_ui_controller.ts` |

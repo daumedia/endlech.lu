@@ -123,3 +123,11 @@ board:
     title_too_long: "Den Titel dierf héchstens {{ limit }} Zeechen laang sinn."
     description_required: "Wgl. beschreif deng Iddi."
     description_too_long: "D’Beschreiwung dierf héchstens {{ limit }} Zeechen laang sinn."
+
+# Warteliste für die mobile App (Feature 08)
+app_waitlist:
+    platform_required: "Wielt wgl. aus, fir wéinen Apparat Dir Bescheed wëllt kréien."
+    email_blank: "Gitt wgl. Är E-Mail-Adress un."
+    email_invalid: "Dës E-Mail-Adress gesäit net gëlteg aus."
+    email_max: "D’E-Mail-Adress dierf héchstens 180 Zeeche laang sinn."
+    consent_required: "Ouni dëst Averständnis kënne mir Iech net Bescheed ginn."

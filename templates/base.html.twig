@@ -265,10 +265,14 @@
                 lg:grid-cols-4-Raster, und die Kopfzeile hat mit BF-80 schon eine
                 offene Umbruchlücke zwischen 768 px und 1000 px; kein Feature
                 sollte sie nebenbei vergrößern.
+
+                Feature 08 setzt den Verweis auf die App-Warteliste aus derselben
+                Begründung darunter — nicht als zwölften Eintrag in Spalte 2.
             #}
             <ul class="mt-6 space-y-2 border-t border-gray-800 pt-5">
                 <li><a href="{{ path('app_roadmap_index') }}" class="hover:text-cyan-400 motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-cyan-400">{{ 'footer.roadmap'|trans }}</a></li>
                 <li><a href="{{ path('app_changelog_index') }}" class="hover:text-cyan-400 motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-cyan-400">{{ 'footer.changelog'|trans }}</a></li>
+                <li><a href="{{ path('app_app_waitlist') }}" class="hover:text-cyan-400 motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-cyan-400">{{ 'footer.app'|trans }}</a></li>
             </ul>
         </div>
     </div>

@@ -6,6 +6,7 @@ namespace App\Account;
 
 use App\Entity\User;
 use App\Marketing\MarketingContactRegistry;
+use App\Repository\AppWaitlistEntryRepository;
 use App\Repository\BoardIdeaRepository;
 use App\Repository\UserRepository;
 use App\Service\AvatarUploadService;
@@ -14,8 +15,9 @@ use Doctrine\ORM\EntityManagerInterface;
 /**
  * Löscht ein Konto endgültig (Art. 17 DSGVO).
  *
- * Was verschwindet: der Nutzerdatensatz, seine Passkeys (Kaskade) und die
- * Avatar-Datei im Dateisystem.
+ * Was verschwindet: der Nutzerdatensatz, seine Passkeys (Kaskade), die
+ * Avatar-Datei im Dateisystem und die App-Vormerkung unter derselben Adresse
+ * (Feature 08 / AK-50 — ⚠ nur diese eine Warteliste, siehe unten).
  *
  * ⚠ **Was bleibt, ist eine Entscheidung und keine Nachlässigkeit:** Restaurants
  * und Vorschläge, die dieser Nutzer eingereicht hat, überleben — ihr Bezug auf
@@ -36,6 +38,7 @@ final readonly class AccountDeleter
         private AvatarUploadService $avatars,
         private MarketingContactRegistry $marketingContacts,
         private BoardIdeaRepository $boardIdeas,
+        private AppWaitlistEntryRepository $appWaitlist,
     ) {
     }
 
@@ -60,6 +63,39 @@ final readonly class AccountDeleter
         // beschreibt.
         if (null !== $user->getAvatarFilename()) {
             $this->avatars->delete($user);
+        }
+
+        // Feature 08 / AK-50: Die Vormerkung für die App steht unter derselben
+        // Adresse und geht mit dem Konto. Sie muss **vor** `scheduleRemoval()`
+        // fallen, denn dieser Aufruf zählt, welche Quellen unter der Adresse
+        // noch eine gültige Werbe-Einwilligung tragen (BF-84, gleich darunter):
+        // Stünde die Vormerkung dabei noch, bliebe der Brevo-Kontakt am Leben
+        // und hinge danach an einer Zeile, die es nicht mehr gibt. Dasselbe
+        // Muster wie beim Avatar und beim Löschauftrag — erst das Abhängige,
+        // dann die Zeile.
+        //
+        // ⚠ **Das `flush()` hier ist keine Zierde.** `scheduleRemoval()` sucht
+        // die Quellen über eine Abfrage, und Doctrine liefert eine bloß
+        // vorgemerkte Löschung weiterhin aus dem Identity Map mit. Ohne den
+        // Schreibvorgang wäre die Reihenfolge auf dem Papier richtig und in der
+        // Wirkung wirkungslos. Bricht danach etwas ab, steht ein Konto ohne
+        // Vormerkung da — ärgerlich und nachholbar; umgekehrt bliebe eine
+        // Adresse in Brevo, deren Löschung jemand ausdrücklich verlangt hat.
+        //
+        // ⚠ **Bewusste Abweichung vom Bestandsverhalten.** Partner- und
+        // Organisationseinträge bleiben beim Kontolöschen ausdrücklich stehen;
+        // der BF-84-Hinweis unten begründet das damit, dass eine eigenständige
+        // Wartelisten-Einwilligung nicht am Konto hängt. Für die App-Warteliste
+        // ist am 2026-09-04 anders entschieden worden — mitlöschen. Damit
+        // verhalten sich **drei Wartelisten in derselben Lage unterschiedlich**;
+        // der Widerspruch ist bekannt und nicht aufgelöst. OF-08 in
+        // `features/08-app-warteliste/spec.md` hält die Frage offen, ob es
+        // dabei bleibt oder B14/B15 nachziehen.
+        $appEntry = $this->appWaitlist->findOneByEmail($user->getEmail());
+
+        if (null !== $appEntry) {
+            $this->em->remove($appEntry);
+            $this->em->flush();
         }
 
         // Feature 04 / AK-14: Dieselbe Reihenfolge wie beim Avatar — erst das

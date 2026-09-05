@@ -1,0 +1,76 @@
+{% extends 'email/base.html.twig' %}
+
+{#
+    Erste Mail der App-Warteliste: der Double-Opt-In (Feature 08 / AK-18).
+
+    ⚠ AK-19: Hier steht KEIN TestFlight-Link — nur der Bestätigungslink.
+    Andernfalls hätte der Bestätigungsklick keinen Grund mehr, und wer eine
+    fremde Adresse einträgt, schickte dem Fremden den Beta-Zugang. Der Zugang
+    kommt erst mit `beta_access.html.twig`, nach der eingelösten Bestätigung.
+
+    Kontext: entry, confirmUrl, revokeUrl (aus WaitlistConfirmationService::register)
+#}
+
+{% block title %}{{ 'email.app_confirm_title'|trans }}{% endblock %}
+
+{% block body %}
+    {#
+        Keine Anrede mit Namen: Dieses Feature erhebt keinen. `getContactName()`
+        gibt bewusst einen leeren String zurück — eine erfundene Anrede landete
+        über das Auftragsbuch in Brevo.
+    #}
+    <h2 style="margin: 0 0 16px; color: #111827; font-size: 20px; font-weight: 700;">
+        {{ 'email.app_confirm_greeting'|trans }}
+    </h2>
+
+    <p style="margin: 0 0 24px; color: #6b7280; font-size: 14px; line-height: 1.6;">
+        {{ 'email.app_confirm_text'|trans }}
+    </p>
+
+    <table role="presentation" style="width: 100%; border: 0;">
+        <tr>
+            <td style="text-align: center; padding: 8px 0 24px;">
+                <a href="{{ confirmUrl }}" style="display: inline-block; background-color: #7c3aed; color: #ffffff; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 14px;">
+                    {{ 'email.app_confirm_button'|trans }}
+                </a>
+            </td>
+        </tr>
+    </table>
+
+    {#
+        Die gewählte Plattform zum Gegenlesen. Steht in einer eigenen Zeile und
+        nicht als Platzhalter im Fließtext: Die Spalte ist zwar NOT NULL, der
+        PHP-Typ aber nullable — ein `null` risse hier sonst die ganze Mail auf,
+        und eine Ausnahme beim Rendern einer Mail bemerkt niemand rechtzeitig.
+    #}
+    {% if entry.platform %}
+        <p style="margin: 0 0 16px; color: #4b5563; font-size: 13px;">
+            {{ 'email.app_confirm_platform'|trans({'%platform%': entry.platform.emoji ~ ' ' ~ entry.platform.transKey|trans}) }}
+        </p>
+    {% endif %}
+
+    <p style="margin: 0 0 8px; color: #9ca3af; font-size: 12px;">
+        {{ 'email.app_confirm_note'|trans }}
+    </p>
+
+    {# 7 Tage — dieselbe Frist wie WaitlistConfirmationService::TOKEN_LIFETIME_DAYS.
+       Wer sie kennt, klickt rechtzeitig statt in die Sackgasse aus EC-07. #}
+    <p style="margin: 0 0 8px; color: #9ca3af; font-size: 12px;">
+        {{ 'email.app_confirm_expiry'|trans }}
+    </p>
+
+    <p style="margin: 0; color: #9ca3af; font-size: 12px;">
+        {{ 'email.app_confirm_fallback'|trans }}<br>
+        <a href="{{ confirmUrl }}" style="color: #7c3aed; word-break: break-all;">{{ confirmUrl }}</a>
+    </p>
+
+    {# BF-37 / AK-30: Der Rückweg gehört in JEDE Mail. Art. 7 Abs. 3 verlangt,
+       dass ein Widerruf „ebenso einfach" ist wie die Einwilligung — und die war
+       ein Klick. Die zweite Mail trägt ihn ebenso. #}
+    {% if revokeUrl %}
+        <p style="margin: 24px 0 0; color: #9ca3af; font-size: 12px; line-height: 1.6;">
+            {{ 'email.waitlist_revoke_hint'|trans }}
+            <a href="{{ revokeUrl }}" style="color: #6b7280; text-decoration: underline;">{{ 'email.waitlist_revoke_link'|trans }}</a>
+        </p>
+    {% endif %}
+{% endblock %}

@@ -12,7 +12,16 @@ use Symfony\Component\Scheduler\ScheduleProviderInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 
 /**
- * Der Brevo-Kontaktabgleich alle fünf Minuten — **ohne** Nachholen.
+ * Wiederkehrende Hausarbeit ohne Nachholen: der Brevo-Kontaktabgleich alle fünf
+ * Minuten und die tägliche Aufräumung der App-Warteliste.
+ *
+ * ⚠ **Der Name des Zeitplans ist enger als sein Inhalt.** Die Aufräumung
+ * (Feature 08) hat mit Marketing nichts zu tun und sitzt trotzdem hier: Beide
+ * Aufgaben teilen die Eigenschaft, dass ein verpasster Lauf durch genau einen
+ * nachgeholten aufgeholt wird — und `processOnlyLastMissedRun()` hängt am
+ * Zeitplan, nicht am einzelnen Eintrag. Ein passender dritter Zeitplan kostete
+ * einen dritten Transport im Consumer-Befehl an drei Orten, von denen einer in
+ * Coolify von Hand gepflegt wird (OF-07 in `features/08-app-warteliste/spec.md`).
  *
  * ⚠ **`processOnlyLastMissedRun(true)` ist hier die eigentliche Aussage.** Stand
  * der Consumer drei Tage, wären 864 Läufe fällig; ohne das Flag arbeitete der
@@ -66,6 +75,33 @@ final class MarketingScheduleProvider implements ScheduleProviderInterface
                 RecurringMessage::cron(
                     '*/5 * * * *',
                     new RunCommandMessage('app:marketing:sync --no-interaction'),
+                    new \DateTimeZone('Europe/Luxembourg'),
+                ),
+            )
+            ->add(
+                // Feature 08, AK-47/AK-49: Nie bestätigte App-Vormerkungen
+                // fallen nach 30 Tagen weg. Einmal täglich um 03:40 — spät
+                // genug, dass der Monatslauf um 03:15 durch ist, und außerhalb
+                // der Zeit, in der jemand die Verwaltung offen hat.
+                //
+                // ⚠ **Hier und nicht in einem eigenen Zeitplan.** Ein dritter
+                // Zeitplan bräuchte einen dritten Transport im
+                // `messenger:consume`-Befehl, und der steht an drei Stellen:
+                // im `worker`-Stage des Dockerfiles, in `CLAUDE.md` und in
+                // Coolifys Startbefehl. Die dritte zieht niemand automatisch
+                // nach, und ihr Ausfall ist lautlos.
+                //
+                // Das `processOnlyLastMissedRun(true)` dieses Zeitplans passt
+                // dazu: Der Lauf arbeitet einen Bestand ab, keinen Zeitpunkt —
+                // ein einzelner nachgeholter Durchgang holt alles auf, genau
+                // wie beim Brevo-Abgleich.
+                //
+                // ⚠ Die Zeitzone ist hier nicht optional wie beim
+                // Fünf-Minuten-Takt: Ohne sie liefe der Eintrag nach UTC und
+                // damit im Sommer um 05:40 Ortszeit.
+                RecurringMessage::cron(
+                    '40 3 * * *',
+                    new RunCommandMessage('app:app-waitlist:cleanup --no-interaction'),
                     new \DateTimeZone('Europe/Luxembourg'),
                 ),
             );

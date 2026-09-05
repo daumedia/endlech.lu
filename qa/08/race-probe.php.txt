@@ -1,0 +1,52 @@
+<?php
+
+namespace App\Tests\Functional\Controller;
+
+use App\Tests\AbstractWebTestCase;
+use Doctrine\ORM\EntityManagerInterface;
+
+final class RaceProbeTest extends AbstractWebTestCase
+{
+    /**
+     * Stellt das Wettrennen aus EC-06 am echten HTTP-Weg nach: Die konkurrierende
+     * Zeile entsteht, nachdem der Controller `findOneByEmail()` gerufen hat.
+     * Nachgebildet, indem die Zeile per rohem SQL eingefügt wird, während das
+     * Formular bereits geladen ist — der Controller sieht sie beim Prüfen nicht,
+     * weil sie erst beim Submit existiert … also fügen wir sie unmittelbar davor ein
+     * und lassen den Controller mit leerem Identity Map arbeiten.
+     */
+    public function testWettlaufAmHttpWeg(): void
+    {
+        $client = static::createClient();
+        $client->catchExceptions(false);
+        $em = $client->getContainer()->get(EntityManagerInterface::class);
+
+        $crawler = $client->request('GET', self::LOCALE.'/app');
+        $form = $this->formWithField($crawler, 'app_waitlist[email]');
+        $form['app_waitlist[email]'] = 'race@example.lu';
+        $form['app_waitlist[platform]']->select('ios');
+        $form['app_waitlist[consent]']->tick();
+
+        // Die konkurrierende Anfrage war schneller — ihre Zeile steht bereits,
+        // aber mit einem Token, den dieser Vorgang nicht kennt. Entscheidend:
+        // Sie wurde per SQL eingefügt, umgeht also Doctrines Identity Map nicht,
+        // sondern steht wirklich in der Tabelle.
+        $em->getConnection()->executeStatement(
+            "INSERT INTO app_waitlist_entry (email, platform, status, consent_at, locale, created_at, updated_at)
+             VALUES ('race@example.lu', 'ios', 'pending', NOW(), 'de', NOW(), NOW())"
+        );
+        $em->clear();
+
+        try {
+            $client->submit($form);
+            fwrite(\STDERR, sprintf(
+                "\n[RACE] HTTP %d — sauber abgefangen\n",
+                $client->getResponse()->getStatusCode(),
+            ));
+        } catch (\Throwable $e) {
+            fwrite(\STDERR, sprintf("\n[RACE] UNGEFANGEN: %s\n", $e::class));
+        }
+
+        self::assertTrue(true);
+    }
+}

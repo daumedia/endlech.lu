@@ -3,6 +3,7 @@
 namespace App\Marketing;
 
 use App\Entity\MarketingContact;
+use App\Entity\AppWaitlistEntry;
 use App\Entity\OrganisationWaitlistEntry;
 use App\Entity\PartnerWaitlistEntry;
 use App\Entity\User;
@@ -98,7 +99,19 @@ class MarketingContactRegistry
             consentAt: $entry->getMarketingConsentAt() ?? new \DateTimeImmutable(),
             locale: $entry->getLocale(),
             contactName: $entry->getContactName(),
-            organisationName: $entry->getDisplayName(),
+            // ⚠ **BF-120: `getDisplayName()` bedeutet nicht überall dasselbe.**
+            // Bei B14 und B15 ist es ein echter Organisationsname und gehört
+            // als Brevo-Attribut ORGANISATION hinaus. Bei der App-Warteliste
+            // liefert dieselbe Methode das **Plattform-Label** („iOS") — sie
+            // erhebt keinen Namen, und die Verwaltungsliste braucht dort etwas
+            // Anzeigbares. Über diesen geteilten Aufruf wanderte die
+            // Plattformwahl nach Brevo, obwohl AK-54 und der Entwurf sie
+            // ausdrücklich ausschließen („Beide Felder bleiben leer").
+            //
+            // Die Abfrage steht hier und nicht in der Entity: `getDisplayName()`
+            // ist für die Anzeige richtig; falsch war allein, sie ungeprüft als
+            // Marketing-Attribut weiterzureichen.
+            organisationName: $entry instanceof AppWaitlistEntry ? null : $entry->getDisplayName(),
             funnelStatus: $entry->getStatus(),
         );
     }
@@ -431,7 +444,7 @@ class MarketingContactRegistry
         $normalised = mb_strtolower(trim($email));
         $sources = [];
 
-        foreach ([PartnerWaitlistEntry::class, OrganisationWaitlistEntry::class, User::class] as $class) {
+        foreach ([PartnerWaitlistEntry::class, OrganisationWaitlistEntry::class, AppWaitlistEntry::class, User::class] as $class) {
             foreach ($this->entityManager->getRepository($class)->findBy(['email' => $normalised]) as $found) {
                 $sources[] = $found;
             }
@@ -461,7 +474,11 @@ class MarketingContactRegistry
                 : MarketingOrigin::fromOrganisationType($type);
         }
 
-        // Ein dritter Wartelisten-Typ müsste hier eingetragen werden. Bis
+        if ($entry instanceof AppWaitlistEntry) {
+            return MarketingOrigin::APP;
+        }
+
+        // Ein vierter Wartelisten-Typ müsste hier eingetragen werden. Bis
         // dahin ist ACCOUNT die harmloseste Annahme: kein Vertriebskanal.
         return MarketingOrigin::ACCOUNT;
     }

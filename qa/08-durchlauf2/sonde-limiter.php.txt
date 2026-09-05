@@ -1,0 +1,92 @@
+<?php
+
+namespace App\Tests\Functional\Controller;
+
+use App\Entity\AppWaitlistEntry;
+use App\Enum\AppPlatform;
+use App\Tests\AbstractWebTestCase;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+
+final class QaProbe3Test extends AbstractWebTestCase
+{
+    private const PFAD = self::LOCALE.'/app';
+
+    /** Jeder Weg, der eine Mail auslöst, muss Kontingent kosten. */
+    public function testJederMailwegKostetKontingent(): void
+    {
+        $client = static::createClient();
+        $f = $client->getContainer()->get('limiter.app_waitlist');
+        $em = $client->getContainer()->get(EntityManagerInterface::class);
+
+        $faelle = [
+            'neue Adresse' => static function (self $t, KernelBrowser $c): void {
+                $t->absenden($c, 'neu@example.lu');
+            },
+            'abgelaufene Dublette' => function (self $t, KernelBrowser $c) use ($em): void {
+                $e = $t->eintrag($c, 'abgelaufen@example.lu');
+                $em->getConnection()->executeStatement(
+                    'UPDATE app_waitlist_entry SET created_at = :d WHERE id = :id',
+                    ['d' => (new \DateTimeImmutable('-8 days'))->format('Y-m-d H:i:s'), 'id' => $e->getId()],
+                );
+                $t->absenden($c, 'abgelaufen@example.lu');
+            },
+            'bestaetigte Dublette' => function (self $t, KernelBrowser $c) use ($em): void {
+                $e = $t->eintrag($c, 'fertig@example.lu');
+                $e->confirm();
+                $em->flush();
+                $t->absenden($c, 'fertig@example.lu');
+            },
+            'Honeypot' => static function (self $t, KernelBrowser $c): void {
+                $crawler = $c->request('GET', self::PFAD);
+                $form = $t->formWithField($crawler, 'app_waitlist[email]');
+                $form['app_waitlist[email]'] = 'bot@example.lu';
+                $form['app_waitlist[platform]']->select('ios');
+                $form['app_waitlist[consent]']->tick();
+                $form['app_waitlist[website]'] = 'spam';
+                $c->submit($form);
+            },
+        ];
+
+        foreach ($faelle as $name => $fall) {
+            $vor = $f->create('127.0.0.1')->consume(0)->getRemainingTokens();
+            $fall($this, $client);
+            $nach = $f->create('127.0.0.1')->consume(0)->getRemainingTokens();
+            $mails = \count(self::getMailerMessages());
+
+            fwrite(\STDERR, sprintf(
+                "[LIMIT] %-22s Mails %d · Kontingent -%d %s\n",
+                $name,
+                $mails,
+                $vor - $nach,
+                ($mails > 0 && $vor === $nach) ? ' ⚠ MAIL OHNE DECKEL' : '',
+            ));
+        }
+
+        self::assertTrue(true);
+    }
+
+    public function absenden(KernelBrowser $client, string $email): void
+    {
+        $crawler = $client->request('GET', self::PFAD);
+        $form = $this->formWithField($crawler, 'app_waitlist[email]');
+        $form['app_waitlist[email]'] = $email;
+        $form['app_waitlist[platform]']->select('ios');
+        $form['app_waitlist[consent]']->tick();
+        $client->submit($form);
+    }
+
+    public function eintrag(KernelBrowser $client, string $email): AppWaitlistEntry
+    {
+        $em = $client->getContainer()->get(EntityManagerInterface::class);
+        $e = new AppWaitlistEntry();
+        $e->setEmail($email);
+        $e->setPlatform(AppPlatform::IOS);
+        $e->setLocale('de');
+        $e->generateConfirmationToken();
+        $em->persist($e);
+        $em->flush();
+
+        return $e;
+    }
+}
