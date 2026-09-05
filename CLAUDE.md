@@ -1212,6 +1212,17 @@ lief sie bei jedem Deploy automatisch mit; jetzt ist sie eine Zeile in einem
 Coolify-Feld, die jemand gesetzt haben muss. Ein Deploy mit neuer Entity und ohne
 Migration meldet grün und wirft danach bei jeder betroffenen Seite einen 500er.
 
+**Wo das läuft:** ein VPS bei **Hostinger** (`srv1947421.hstgr.cloud`, AS47583),
+Serverstandort **Deutschland** — am 2026-09-05 gemessen: 19 ms Laufzeit,
+Geolokalisierung Düsseldorf. ⚠ Die IP liegt aus historischen Gründen in einem
+**LACNIC**-Bereich (179.x, sonst Lateinamerika); wer nur `whois` fragt, landet
+bei Brasilien und hält es für einen Drittlandtransfer. Ist keiner.
+
+⚠️ **Coolify ist die Software auf diesem Server, nicht der Anbieter.** Für das
+Verarbeitungsverzeichnis ist der Auftragsverarbeiter deshalb **Hostinger** —
+Coolify sieht die Daten nur dort, wo ohnehin die Anwendung läuft, und überträgt
+nichts an seinen Hersteller. Einzelheiten in `docs/datenschutz.md`.
+
 **Production-DB:** MariaDB — neue Migrationen bleiben deshalb frei von
 MySQL-8-only-Syntax (`CHECK`-Constraints mit JSON-Funktionen, Window-Functions in
 DDL). Lokal und in der CI läuft MySQL 8.0, der Unterschied fällt sonst erst auf

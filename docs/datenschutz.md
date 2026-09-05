@@ -234,11 +234,42 @@ Reichweite — das ist seine Handlung, nicht die der Plattform.
 
 ---
 
+### Hostinger (Hosting, seit 2026-09-02)
+
+⚠ **Der Auftragsverarbeiter ist Hostinger, nicht Coolify.** Coolify ist *selbst
+betriebene Software* auf einem eigenen Server — sie läuft dort, wo auch die Anwendung
+läuft, und überträgt nichts an ihren Hersteller. Wer sie als Verarbeiter führt, benennt
+den Falschen und übersieht den Richtigen: Der Server-Anbieter hält Anwendung, Worker
+**und Datenbank** und sieht damit alles.
+
+Bis zum 2026-09-02 lief das Projekt bei Cloudways; dieser Eintrag stand seither falsch
+im Verzeichnis und wurde am **2026-09-05** berichtigt.
+
+| | |
+|---|---|
+| **Anbieter** | Hostinger International Ltd., 61 Lordou Vironos str., 6023 Larnaca, **Zypern (EU)** |
+| **Weitere Vertragspartner laut DPA** | Hostinger UK Limited (London) und **Hostinger Global S.à r.l., 6 Avenue Pasteur, L-2310 Luxembourg** |
+| **Serverstandort** | **Deutschland** — ermittelt am 2026-09-05: Reverse DNS `srv1947421.hstgr.cloud`, AS47583 Hostinger International Limited, Geolokalisierung Düsseldorf, Laufzeit **19 ms** (Brasilien wären ~200 ms; die IP liegt aus historischen Gründen in einem LACNIC-Bereich, was in die Irre führt) |
+| **AV-Vertrag** | **Data Processing Addendum**, Anhang zu den Nutzungsbedingungen — gilt automatisch mit deren elektronischer Annahme, keine gesonderte Unterzeichnung |
+| **Gelesene Fassung** | Stand **18.08.2026**, geprüft am 2026-09-05 · <https://www.hostinger.com/legal/dpa> |
+| **Löschung nach Vertragsende** | **30 Tage** ab Beendigung |
+| **Unterauftragsverarbeiter** | AWS EMEA SARL (EU) · Google Cloud EMEA (EU) · **Cloudflare, Inc. (USA)** · MailChannels · Proofpoint · Anthropic Ireland Ltd. (Irland) · spectra tech UAB |
+| **Benachrichtigung über neue Unterauftragsverarbeiter** | vorgesehen; bei Ablehnung kann der Kunde binnen **10 Tagen** ohne Strafzahlung kündigen |
+
+⚠ **Cloudflare, Inc. verarbeitet in den USA.** Auch hier gilt also: Der Hoster selbst
+sitzt in der EU, die Kette reicht darüber hinaus. Hostinger erklärt für Übermittlungen
+außerhalb der EU/EWR den Abschluss von Standardvertragsklauseln.
+
+⚠ **Welche der drei Hostinger-Gesellschaften der Vertragspartner ist, steht in der
+Rechnung**, nicht im DPA — offen als DS-02b.
+
+---
+
 ### Weitere Verarbeiter
 
 | Dienst | Zweck | Sitz | Bemerkung |
 |---|---|---|---|
-| Coolify (Hosting) | Betrieb der Anwendung, des Messenger-Workers und der Datenbank | ⚠ nachzutragen | **Seit dem 2026-09-02**; löste Cloudways ab (Container statt SSH-Deploy, siehe `CLAUDE.md`). ⚠ Vertrag, Sitz und Serverstandort hier noch nachzutragen — bei einem Verzeichnis der Auftragsverarbeiter ist der Betreiber der Server keine Nebensache |
+| **Hostinger** (Hosting) | Betrieb der Anwendung, des Messenger-Workers und der Datenbank | Zypern (EU); Server in **Deutschland** | Siehe eigener Abschnitt unten. ⚠ **Nicht Coolify** — das ist selbst betriebene Software und sieht die Daten nur auf dem eigenen Server |
 | Sentry | Fehler-Tracking | EU (`ingest.de.sentry.io`, Frankfurt) | `send_default_pii: false` — keine IP-Adressen, Cookies, Request-Header oder Nutzerdaten. `zend.exception_ignore_args` bleibt auf `On`, damit keine Funktionsargumente (und damit keine Passwörter) in Stacktraces landen |
 | Mobilité (HAFAS) | Haltestellen in der Nähe | Luxemburg | Es gehen **Koordinaten eines Restaurants** hin, keine Nutzerdaten |
 
@@ -274,7 +305,9 @@ Feature 08. Was hier ohne Datum steht, hat niemanden, der es erzwingt.
 | **DS-01b** | **Im Brevo-Konto für Benachrichtigungen über neue Unterauftragsverarbeiter anmelden** | Ziff. 6.2 macht die Vorabinformation von einer Anmeldung über ein eigenes Formular abhängig. Ohne sie erfährt der Verantwortliche von einem neuen Unterauftragsverarbeiter **gar nichts** und kann die zehn Werktage Widerspruchsfrist nicht nutzen | **2026-09-30** | Betreiber |
 | **DS-01c** | **Prüfen, ob die gelesene DPA-Fassung noch die geltende ist** | Die vorliegende trägt den Stand **15.05.2024** — über zwei Jahre alt. Ob seither eine neue in Kraft ist, ließ sich von außen nicht feststellen; im Konto bzw. in den AGB steht das Datum | **2026-09-30** | Betreiber |
 | **DS-01d** | **Datum der AGB-Annahme festhalten** | Das DPA gilt ab Annahme der AGB — dieses Datum ist der Vertragsbeginn und gehört ins Verzeichnis. Es steht in der Kontoeröffnung bzw. der ersten Rechnung | **2026-09-30** | Betreiber |
-| **DS-02** | **Coolify: Vertrag, Sitz und Serverstandort nachtragen** | Der Hoster betreibt Anwendung, Worker **und** Datenbank — er sieht alles. Der Eintrag stand bis heute auf dem abgelösten Anbieter | **2026-09-30** | Betreiber |
+| **DS-02a** | ~~Hoster: Vertrag, Sitz und Serverstandort nachtragen~~ — **erledigt 2026-09-05.** Der Verarbeiter ist **Hostinger** (Zypern, Server in Deutschland), nicht Coolify: Letzteres ist selbst betriebene Software und überträgt nichts an seinen Hersteller. DPA gilt automatisch mit den Nutzungsbedingungen, Stand 18.08.2026, Löschfrist 30 Tage. Alles im eigenen Abschnitt oben | — | ✅ |
+| **DS-02b** | **Feststellen, welche Hostinger-Gesellschaft Vertragspartner ist** | Das DPA nennt drei: Zypern, UK und **Luxemburg**. Für die Frage, wer bei einer Auskunft oder einem Vorfall haftet und welches Recht gilt, ist das nicht gleichgültig. Steht in der Rechnung oder im Konto | **2026-09-30** | Betreiber |
+| **DS-02c** | **Prüfen, ob der Serverstandort vertraglich zugesichert ist** | Gemessen ist er Deutschland — das ist eine Momentaufnahme, keine Zusage. Ob der Tarif eine Region festschreibt oder Hostinger frei verschieben darf, steht in der Produktbeschreibung | **2026-09-30** | Betreiber |
 | **DS-03** | **`/legal` nennt Brevo als Empfänger für Werbezwecke** — nicht nur als Versanddienstleister | Offen seit Feature 04 (AK-34). Kein Kontakt geht raus, bevor die Erklärung ihn nennt | vor dem ersten Kampagnenlauf | Betreiber |
 | **DS-04** | **Öffnungs- und Klickverfolgung in Brevo entscheiden** | Standardmäßig eingeschaltet. Das PRD schließt Web-Analytics aus und begründet das mit Datensparsamkeit; ob das auch für Kampagnen gilt, ist nicht entschieden (OF-03) | vor dem ersten Kampagnenlauf | Betreiber |
 
@@ -354,6 +387,6 @@ hier ist er endgültig.
 
 | | |
 |---|---|
-| **Zu klären** | Sichert Coolify automatisch? Takt? Aufbewahrung? Liegt die Sicherung auf demselben Rechner wie die Datenbank? |
+| **Zu klären** | Zwei Ebenen, und sie werden leicht verwechselt: **Hostinger** kann den VPS als Ganzes sichern (Snapshot), **Coolify** kann die Datenbank sichern. Sichert eines von beidem? In welchem Takt, wie lange aufbewahrt, und liegt die Sicherung auf demselben Rechner wie die Datenbank? |
 | **Zu prüfen** | Eine Sicherung einmal einspielen — ein Rückweg, den niemand gegangen ist, ist eine Annahme |
 | **Frist** | 2026-09-30 |
