@@ -123,3 +123,11 @@ board:
     title_too_long: "Der Titel darf höchstens {{ limit }} Zeichen lang sein."
     description_required: "Bitte beschreibe deine Idee."
     description_too_long: "Die Beschreibung darf höchstens {{ limit }} Zeichen lang sein."
+
+# Warteliste für die mobile App (Feature 08)
+app_waitlist:
+    platform_required: "Bitte wähle aus, für welches Gerät du dich vormerken lassen möchtest."
+    email_blank: "Bitte gib deine E-Mail-Adresse an."
+    email_invalid: "Diese E-Mail-Adresse sieht nicht gültig aus."
+    email_max: "Die E-Mail-Adresse darf höchstens 180 Zeichen lang sein."
+    consent_required: "Ohne diese Zustimmung können wir dir nicht Bescheid geben."

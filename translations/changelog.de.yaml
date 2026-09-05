@@ -29,6 +29,9 @@ repo:
     link_label: "CHANGELOG.md auf GitHub öffnen"
 
 release:
+    v2026_09_05:
+        title: "Die App-Warteliste"
+        body: "Endlech.lu kommt als App aufs Telefon. Für iPhone und iPad läuft schon eine Testfassung — wer sich einträgt, bekommt den Zugang per E-Mail. Für Android ist noch nichts gebaut, und das steht auch so da: Die Vormerkung zählt mit, wenn wir entscheiden, ob wir anfangen."
     v2026_08_31:
         title: "Roadmap und Changelog"
         body: "Zwei neue Seiten zeigen, woran gearbeitet wird: Die Roadmap führt in drei Spalten auf, was in Arbeit, geplant und angedacht ist — und was bewusst nicht gebaut wird. Der Changelog erzählt, was sich zuletzt geändert hat. Ohne Termine, dafür mit einer Begründung zu jedem Vorhaben."

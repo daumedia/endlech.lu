@@ -1,0 +1,25 @@
+{#
+    Turbo-Stream: ersetzt nur das Formular, statt die ganze Seite neu zu laden.
+    Kein <turbo-frame> – "replace" adressiert eine gewöhnliche DOM-id; ein Frame
+    würde die Navigations-Semantik für alles darin ändern, ohne Nutzen.
+
+    Ohne JavaScript wird dieser Zweig nie erreicht: Der Controller liefert dann
+    einen Redirect mit Flash (AK-10, AK-11).
+
+    ⚠ Hier steht KEINE Adresse und KEINE Plattform. Der Controller rendert diese
+    Vorlage ohne Datensatz – und zwar für alle drei Fälle gleich: echte
+    Vormerkung, bereits eingetragene Adresse und Honeypot-Treffer. Eine
+    zurückgespiegelte Adresse machte die drei Fälle unterscheidbar und die
+    Warteliste von außen abfragbar (AK-15 ff.).
+#}
+<turbo-stream action="replace" target="app-waitlist-form">
+    <template>
+        {{ include('partials/_waitlist_success.html.twig', {
+            target_id: 'app-waitlist-form',
+            title: 'app_waitlist.form.success_title'|trans,
+            text: 'app_waitlist.form.success_text'|trans,
+            hint: 'app_waitlist.form.success_hint'|trans,
+            emoji: '📱'
+        }) }}
+    </template>
+</turbo-stream>

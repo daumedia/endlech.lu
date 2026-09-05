@@ -40,6 +40,7 @@ footer:
     vs: "vs. %brand%"
     roadmap: "Roadmap"
     changelog: "Changelog"
+    app: "App waiting list"
 
 cookie:
     title: "We use cookies"
@@ -83,6 +84,10 @@ home:
         heading: "Know an accessible restaurant?"
         text: "Help us expand the platform and make Luxembourg more accessible."
         button: "Suggest a Restaurant"
+    app:
+        heading: "Endlech.lu as an app"
+        text: "A test build is running for iPhone and iPad; for Android we are gathering demand. Sign up and we will let you know."
+        cta: "Join the waiting list"
 
 opening_hours:
     title: "Opening Hours"
@@ -642,6 +647,15 @@ admin:
             created: "Received"
             consent: "Consent"
             confirmed: "Confirmed"
+            platform: "Platform"
+            beta_link_sent: "Sent on"
+            self_confirmed: "Self-confirmed"
+        source_app: "App"
+        beta_heading: "Beta access"
+        beta_not_sent: "Not sent yet."
+        beta_no_build: "There is currently no beta for %platform% — nothing will go out until a build exists."
+        self_confirmed_missing: "Not confirmed yet"
+        self_confirmed_hint: "Confirmed may stem from a status change in the admin area. Only Self-confirmed proves that the address belongs to the person who signed up — and only then may marketing go out."
 
 board:
     title: "Ideas for Endlech.lu"
@@ -787,6 +801,9 @@ flash:
     delete_last_admin: "You are the only account with admin rights. Create a second one first."
     export_rate_limited: "Too many downloads. Please try again later."
 
+    app_waitlist_submitted: "Almost there! Please confirm the link in your email."
+    app_waitlist_email_failed: "Your entry is saved, but the confirmation email could not be sent. Please get in touch with us."
+    app_waitlist_rate_limited: "You have submitted several entries in a short time. Please try again in an hour."
 email:
     waitlist_revoke_hint: 'Not interested after all?'
     waitlist_revoke_link: 'Unsubscribe here'
@@ -864,6 +881,25 @@ email:
     account_deleted_text: "Your account is deleted. Your details, your profile picture and your passkeys are gone."
     account_deleted_kept: "Restaurants you submitted stay in the database — with no link to you. Thank you for contributing them."
 
+    app_confirm_subject: "Confirm your spot for the Endlech.lu app"
+    app_beta_subject: "Your Endlech.lu app beta is ready"
+    app_soon_subject: "You are on the list for the Endlech.lu app"
+    app_confirm_title: "One click to go"
+    app_confirm_greeting: "Hello,"
+    app_confirm_text: "you would like to hear from us once the Endlech.lu app is available. Please confirm your email address."
+    app_confirm_button: "Confirm entry"
+    app_confirm_platform: "Your choice: %platform%"
+    app_confirm_note: "If you did not sign up, simply ignore this email. Without your confirmation nothing happens."
+    app_confirm_expiry: "The link is valid for seven days."
+    app_confirm_fallback: "If the button does not work, open this address:"
+    app_beta_title: "You are on the list"
+    app_beta_greeting: "Hello,"
+    app_beta_intro: "your address is confirmed — you are on the waiting list for the Endlech.lu app. We will write as soon as there is news."
+    app_beta_text: "For iPhone and iPad you can install the test build via TestFlight right away:"
+    app_beta_button: "Open the test build"
+    app_beta_fallback: "If the button does not work, open this address:"
+    app_beta_link_dead: "Link no longer working? Then the test slots are currently full or expired — drop us a line and we will get back to you."
+    app_soon_text: "For Android nothing has been built yet. You will hear from us as soon as that changes — not before."
 ordering_platform:
     uber_eats: "Uber Eats"
     deliveroo: "Deliveroo"
@@ -1439,6 +1475,13 @@ open:
         metrics_json: "Figures as JSON"
         licence: "The dataset is published under"
         privacy_note: "Email addresses and phone numbers are deliberately excluded: a bulk export of those would be a mailing list, not an accessibility dataset."
+    app_waitlist:
+        heading: "App waiting list"
+        intro: "How many people want an app — and for which platform. The figure is evidence of demand, not a commitment to a date, and it only appears once it is meaningful. Only self-confirmed addresses are counted."
+        total: "Entries"
+        total_hint: "Self-confirmed addresses only."
+        ios: "of which iOS"
+        android: "of which Android"
 
 api:
     token_invalid: "The token is invalid. Please sign in again."
@@ -1501,3 +1544,62 @@ accessibility_statement:
     report_error: "The report could not be sent. Please try again later."
     report_rate_limited: "Too many reports. Please try again in %minutes% minutes."
     email_subject: "New barrier report on Endlech.lu"
+
+# Warteliste für die mobile App (Feature 08)
+app_waitlist:
+    meta_title: "Endlech.lu as an app"
+    hero:
+        eyebrow: "On the go"
+        heading: "Endlech.lu as an app on your phone"
+        text: "You can already add the website to your home screen, where it behaves like an app. A native app is coming on top of that — for iPhone and iPad a test build is already running."
+        cta: "Join the waiting list"
+    status:
+        title: "Where we stand"
+        subtitle: "Honestly, without a date: for one platform there is something to try, for the other there is nothing yet."
+    card:
+        ios:
+            title_open: "Test build running"
+            title_closed: "Test build in preparation"
+            text_open: "For iPhone and iPad there is a test build via TestFlight. We will send you the access link once you have confirmed your address."
+            text_closed: "A test build for iPhone and iPad is in the works. We will write to you as soon as it opens."
+        android:
+            title: "Nothing built yet"
+            text: "For Android there is neither an app nor a test build — and we will not tell you when there will be. Your entry counts when we decide whether to start."
+    form:
+        platform: "Which device?"
+        email: "Email address"
+        consent: "Email me as soon as it goes live."
+        honeypot: "Website (please leave empty)"
+        title: "Get on the list"
+        subtitle: "We only need your email address and the platform. Nothing else."
+        error_summary: "{1}One field still needs your attention.|]1,Inf[ %count% fields still need your attention."
+        email_help: "This is where the confirmation and later the access go."
+        privacy_note: "How we handle your address is explained in the"
+        privacy_link: "privacy section"
+        submit: "Get on the list"
+        success_title: "Almost there"
+        success_text: "We have sent you an email. Confirm the link in it and you are on the list."
+        success_hint: "Nothing arrived? Check your spam folder."
+    platform_hint:
+        ios: "Test build available — access by email after confirmation."
+        android: "Nothing built yet. Your entry counts as demand."
+    confirm:
+        title: "Confirm your entry"
+        revoke_title: "Entry withdrawn"
+        back: "To the app page"
+        success_heading: "You are on the list"
+        success_text: "Your address is confirmed. We have sent you a second email explaining what happens next for your platform."
+        already_heading: "You had already done this"
+        already_text: "This entry is already confirmed. There is nothing more for you to do."
+        expired_heading: "This link has expired"
+        expired_text: "Confirmation links are valid for seven days. After that they can no longer be redeemed."
+        revoked_heading: "You are no longer on the list"
+        revoked_text: "Your entry has been deleted. We will not write to you about this again."
+        invalid_heading: "This link leads nowhere"
+        invalid_text: "We cannot find an entry for this link. It may have been copied incompletely."
+        expired_again_hint: "You can sign up again at any time:"
+        expired_again_link: "Sign up again"
+
+app_platform:
+    ios: "iPhone or iPad"
+    android: "Android"

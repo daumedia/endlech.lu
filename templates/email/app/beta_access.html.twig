@@ -1,0 +1,108 @@
+{% extends 'email/base.html.twig' %}
+
+{#
+    Zweite Mail der App-Warteliste: die nach dem eingelösten Bestätigungsklick
+    (Feature 08 / AK-21 bis AK-24).
+
+    Kontext: entry, revokeUrl, testflightUrl
+    (aus WaitlistConfirmationService::notifyRequester; `testflightUrl` reicht
+    AppWaitlistController::sendBetaAccess durch — bereits auf `null` gesetzt,
+    wenn die Plattform keine Beta hat oder der Parameter leer ist).
+
+    Drei Zweige, und der dritte ist der, den man vergisst:
+
+      a) Beta vorhanden UND Link gesetzt   → Knopf mit dem TestFlight-Link (AK-22)
+      b) keine Beta (Android)              → Hinweis, kein Link (AK-23)
+      c) Beta vorhanden, aber Link LEER    → dieselbe Mail ohne Beta-Abschnitt (AK-24)
+
+    ⚠ Zweig (c) ist kein Sonderfall, sondern der Regelfall jeder Umgebung ohne
+    gesetzten `APP_TESTFLIGHT_URL` — lokal, in der Testsuite und auf Production
+    an jedem Tag, an dem die Beta geschlossen ist. Er darf weder einen toten
+    Knopf noch eine leere Adresse noch einen Fehler erzeugen; die Bestätigung
+    selbst bleibt in jedem Fall erfolgreich.
+
+    Deshalb trägt der Einstieg die vollständige Aussage („du stehst auf der
+    Liste, wir schreiben dir"): So ist die Mail auch ohne jeden Zusatz eine
+    ganze Mail und kein Rumpf.
+#}
+
+{% block title %}{{ 'email.app_beta_title'|trans }}{% endblock %}
+
+{% block body %}
+    <h2 style="margin: 0 0 16px; color: #111827; font-size: 20px; font-weight: 700;">
+        {{ 'email.app_beta_greeting'|trans }}
+    </h2>
+
+    <p style="margin: 0 0 24px; color: #6b7280; font-size: 14px; line-height: 1.6;">
+        {{ 'email.app_beta_intro'|trans }}
+    </p>
+
+    {#
+        `hasBeta()` statt einer Abfrage auf `ios`: Die Frage wird an vier
+        Stellen gestellt, und vier verstreute Plattform-Vergleiche laufen beim
+        ersten Android-Build auseinander. Die Null-Prüfung schützt das Rendern
+        der Mail — der PHP-Typ ist nullable, auch wenn die Spalte es nicht ist.
+    #}
+    {% set hat_beta = entry.platform is not null and entry.platform.hasBeta %}
+    {% set beta_link = testflightUrl|default(null) %}
+
+    {% if hat_beta and beta_link %}
+        {# (a) AK-22 — der Zugang liegt bereit. #}
+        <p style="margin: 0 0 24px; color: #6b7280; font-size: 14px; line-height: 1.6;">
+            {{ 'email.app_beta_text'|trans }}
+        </p>
+
+        <table role="presentation" style="width: 100%; border: 0;">
+            <tr>
+                <td style="text-align: center; padding: 8px 0 24px;">
+                    <a href="{{ beta_link }}" style="display: inline-block; background-color: #7c3aed; color: #ffffff; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 14px;">
+                        {{ 'email.app_beta_button'|trans }}
+                    </a>
+                </td>
+            </tr>
+        </table>
+
+        <p style="margin: 0 0 16px; color: #9ca3af; font-size: 12px;">
+            {{ 'email.app_beta_fallback'|trans }}<br>
+            <a href="{{ beta_link }}" style="color: #7c3aed; word-break: break-all;">{{ beta_link }}</a>
+        </p>
+
+        {#
+            OF-04, entschieden am 2026-09-04: Ein öffentlicher TestFlight-Link
+            fasst höchstens 10.000 Tester und kann ablaufen. Ist er voll, führt
+            er ins Leere — und **die Anwendung kann das nicht erkennen**: Apple
+            bietet dafür keine Abfrage, und ein toter Link antwortet nicht
+            anders als ein lebender.
+
+            Deshalb gibt es dazu bewusst kein Akzeptanzkriterium, sondern diesen
+            Satz: Der Empfänger ist der Einzige, der den Fall sieht, also ist er
+            der einzige Weg, von dem der Betreiber je davon erfährt. Ohne ihn ist
+            ein Interessent still verloren.
+        #}
+        <p style="margin: 0; color: #9ca3af; font-size: 12px; line-height: 1.6;">
+            {{ 'email.app_beta_link_dead'|trans }}
+        </p>
+    {% elseif not hat_beta %}
+        {# (b) AK-23 — für Android ist nichts gebaut. Kein Knopf, keine Adresse,
+           und ausdrücklich gesagt, dass wir uns melden: Ohne diesen Satz wäre
+           die Mail für Android-Nutzer eine Bestätigung ohne Aussage. #}
+        <p style="margin: 0; color: #6b7280; font-size: 14px; line-height: 1.6;">
+            {{ 'email.app_soon_text'|trans }}
+        </p>
+    {% endif %}
+    {# (c) AK-24 — kein else-Zweig, und das ist der Punkt: Ist die Plattform in
+       der Beta, der Link aber nicht gesetzt, bleibt der Abschnitt schlicht
+       weg. Kein Knopf ohne Ziel, kein `href=""`, keine Ausnahme. #}
+
+    {# BF-37 / AK-30: Auch diese Mail trägt den Rückweg — nicht nur die erste.
+       Ein Widerruf, der das Wiederfinden einer älteren Mail voraussetzt, ist
+       nach Art. 7 Abs. 3 DSGVO nicht „ebenso einfach" wie die Einwilligung.
+       `revokeUrl` ist null, wenn der Token fehlt; ein Link mit leerem
+       Platzhalter liefe zwangsläufig auf „Link ungültig". #}
+    {% if revokeUrl %}
+        <p style="margin: 24px 0 0; color: #9ca3af; font-size: 12px; line-height: 1.6;">
+            {{ 'email.waitlist_revoke_hint'|trans }}
+            <a href="{{ revokeUrl }}" style="color: #6b7280; text-decoration: underline;">{{ 'email.waitlist_revoke_link'|trans }}</a>
+        </p>
+    {% endif %}
+{% endblock %}

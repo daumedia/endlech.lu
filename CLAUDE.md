@@ -652,6 +652,136 @@ Gezählt wird **je Sprache**: Französisch braucht regelmäßig 15–20 % mehr W
 Deutsch, und ein deutscher Text, der mit 28 Wörtern gerade passt, sprengt die Grenze
 in der Übersetzung.
 
+## Warteliste für die mobile App (`/app`, Feature 08)
+
+Dritte Warteliste neben Partnern (B14) und Organisationen (B15), unter
+`/{_locale}/app` plus sprachfreier Weiterleitung `/app`. Erfasst werden **nur**
+E-Mail-Adresse und Plattform (`AppPlatform`: `ios` | `android`). Teilt sich
+`WaitlistConfirmationService`, `WaitlistEntryInterface`, `WaitlistRequestHelper`
+und `WaitlistStatus` mit den beiden anderen.
+
+⚠️ **Der TestFlight-Link steht in der ZWEITEN Mail, nicht in der Bestätigungsmail.**
+Stünde er in der ersten, hätte der Bestätigungsklick keinen Grund mehr — die Liste
+bliebe größtenteils auf `pending`, und damit gäbe es weder Marketing-Kontakt noch
+belegte Einwilligung. Zweitens schickte wer eine fremde Adresse einträgt, dem
+Fremden den Beta-Zugang.
+
+⚠️ **Betreff und Rumpf der zweiten Mail hängen an DERSELBEN Bedingung**
+(`hasBeta() && '' !== $testflightUrl`). Die Bedingung allein aus `hasBeta()`
+abzuleiten war der erste Anlauf und falsch: Bei iOS mit leerem
+`app.testflight_url` ginge „Deine Beta ist da" hinaus, während der Rumpf korrekt
+keinen Beta-Abschnitt trägt. Lokal und in der Testsuite ist genau das der
+Regelfall, weil der Parameter dort leer ist.
+
+⚠️ **`hasBeta()` gehört an `AppPlatform`, nicht ins Template.** Die Frage wird an
+vier Stellen gestellt (Hinweis neben der Auswahl, zweite Mail, deren Betreff,
+Verwaltungsliste). Vier verstreute `platform == 'ios'`-Abfragen laufen beim ersten
+Android-Build auseinander.
+
+⚠️ **Unique-Index auf `email` — anders als bei B14/B15.** Dort legt jeder Submit
+eine weitere Zeile an. Hier gilt „eine Adresse, ein Eintrag", und eine Prüfung
+allein im Controller verliert das Wettrennen zweier Tabs. Die Antwort auf eine
+Dublette ist **identisch** zum Erfolg (Anti-Enumeration wie in
+`Api\V1\AuthController::register()`) — mit einer Ausnahme: Ist der bestehende
+Eintrag `pending` und sein Token abgelaufen, geht eine **neue** Mail mit neuem
+Token hinaus. Ohne diesen Zweig wäre der Vorgang eine Sackgasse, weil der Index
+einen zweiten Eintrag verhindert.
+
+⚠️ **Der Aufräumlauf hängt an ZWEI Wegen**, nicht an einem Cron: ein Eintrag im
+Zeitplan `marketing` (täglich 03:40) **und** `sweepOncePerDay()` beim Öffnen von
+`/admin/warteliste`. Grund ist der Bestand — auf Produktion fehlten schon zweimal
+geplante Läufe, `app:metrics:snapshot` hat deshalb nie einen Snapshot geschrieben.
+Gelöscht wird nach **`selfConfirmedAt IS NULL`**, nicht nach `status = pending`
+(BF-89: ein weitergesetzter Eintrag entginge sonst dem Lauf).
+
+⚠️ **Der Zeitplan heißt `marketing` und trägt jetzt zwei Aufgaben.** Ein dritter
+Zeitplan bräuchte einen dritten Transport im `messenger:consume`-Befehl, und der
+steht an drei Stellen: `worker`-Stage des Dockerfiles, diese Datei und Coolifys
+Startbefehl. Die dritte zieht niemand automatisch nach. `processOnlyLastMissedRun(true)`
+passt für beide Aufgaben — sie arbeiten einen Bestand ab, keinen Zeitpunkt.
+
+⚠️ **Drei Stellen im Bestand mussten mitziehen**, sonst wirkt das Feature lautlos
+nur halb: `MarketingOrigin::APP` samt `originOf()` (sonst fiele die Quelle in den
+`ACCOUNT`-Zweig — der Bestand sagte den Fall selbst voraus), die Klassenliste in
+`MarketingContactRegistry::sourcesFor()` (**ohne sie greift der Widerruf nicht bis
+Brevo durch**, BF-84) und die Zeilennormalisierung in `AdminWaitlistController`.
+
+⚠️ **Der Quellen-Filter der Verwaltungsliste arbeitete mit Negationen.** Bei zwei
+Werten äquivalent zum positiven Vergleich, bei dreien nicht mehr: `?source=app`
+lieferte weiterhin Partner- **und** Organisationszeilen. Umgestellt auf einmalige
+Normalisierung plus positiven Vergleich; alle drei Zeilenarten führen seither
+**dieselbe Schlüsselmenge** (`platform => null` bei den beiden anderen), weil
+`strict_variables: true` im Test aus einem fehlenden Schlüssel keinen `null`,
+sondern einen Laufzeitfehler macht.
+
+⚠️ **Kontolöschung nimmt die App-Vormerkung mit — abweichend von B14/B15.**
+Dort bleiben Einträge beim Kontolöschen ausdrücklich stehen (BF-84: eine
+eigenständige Wartelisten-Einwilligung hängt nicht am Konto). Für die
+App-Warteliste ist am 2026-09-04 anders entschieden worden. Damit verhalten sich
+drei Wartelisten in derselben Lage unterschiedlich; **OF-08** in
+`features/08-app-warteliste/spec.md` hält die Frage offen. Das `flush()` direkt
+nach dem `remove()` ist dabei Pflicht: `scheduleRemoval()` sucht die Quellen über
+eine Abfrage, und Doctrine liefert eine bloß vorgemerkte Löschung weiterhin aus
+dem Identity Map mit.
+
+⚠️ **Die Kennzahl auf `/open` erscheint erst ab 50 selbst bestätigten
+Vormerkungen — strukturell, nicht kosmetisch.** Unterhalb der Schwelle fehlen die
+drei Schlüssel im Ergebnis-Array. Lägen sie darin und wären nur im Template
+verborgen, wären sie über `/open.json` abrufbar (dieselbe Konstruktion wie die
+Quartalssperre der Finanzen). Die Schwelle steht als
+`OpenStatsService::APP_WAITLIST_MIN`, nicht im Template und nicht im Prüflauf.
+
+⚠️ **Ein neuer Token braucht eine neue Frist** (BF-117). `isExpired()` misst an
+`createdAt`, eine eigene Ablaufspalte gibt es bewusst nicht — wer nur
+`generateConfirmationToken()` ruft, verschickt einen Link, der im selben Augenblick
+wieder abgelaufen ist (gemessen: HTTP 410 beim ersten Aufruf). Dafür gibt es
+`AppWaitlistEntry::renewConfirmationWindow()`. `consentAt` wandert dabei **nicht**
+mit: Neu ist die Frist, nicht die Einwilligung.
+
+⚠️ **Jeder `return` zwischen `isAllowed()` und `consume()` ist ein ungedeckelter Weg**
+(BF-118). Die Konvention „erst verbrauchen, wenn die Handlung stattfindet" (BF-11) hat
+diese Kehrseite: Der Dublettenzweig kehrte vor dem Verbrauch zurück und verschickte
+trotzdem eine Mail — fünf Absendevorgänge auf eine fremde Adresse ergaben fünf Mails bei
+unverändertem Kontingent. Der Fehler ist unsichtbar, weil der Limiter konfiguriert,
+verdrahtet und von `LimiterCoverageTest` bestätigt ist; er greift nur auf einem Weg nicht.
+
+⚠️ **Die E-Mail-Prüfung läuft hier mit `Email::VALIDATION_MODE_STRICT`** (BF-119). Der
+HTML5-Default lässt Adressen durch, die `Mime\Address` nach RFC 2822 ablehnt — und weil
+`register()` **vor** dem Versand speichert, blieb bei einem 500er eine Zeile stehen.
+⚠️ **B14, B15 und B01 nutzen weiterhin den Default** und haben denselben Fehler
+(nachgestellt am Partner-Formular); BF-119 steht dafür offen.
+
+⚠️ **Kein Verzeichnis `public/app` anlegen** — sonst wiederholt sich BF-100 auf
+einer neuen Adresse. `RouteDirectoryCollisionTest` prüft die Ursache projektweit.
+
+**Keine interne Meldung ans Team** — anders als B14/B15. Dort muss ein Mensch
+zurückrufen; hier läuft der Zugang über den Link. Eine Mail je Vormerkung
+entwertete die beiden Meldungen, die tatsächlich eine Handlung verlangen.
+
+⚠️ **Bestätigte Vormerkungen haben keine Frist** (OF-01, 2026-09-04). Der
+30-Tage-Lauf greift ausschließlich bei nie bestätigten. Entschieden wurde, dass
+die Liste eine Veröffentlichung überlebt — nach iOS kommt Android, nach dem
+ersten Build ein Update. Folge: **Der Abmeldelink ist der einzige Weg hinaus**
+und damit kein Komfort, sondern tragende Funktion. Wer ihn aus einer Mailvorlage
+entfernt, nimmt Art. 7 Abs. 3 DSGVO mit.
+
+⚠️ **Der Hinweis auf einen toten TestFlight-Link steht NUR im Zweig mit Link**
+(`email.app_beta_link_dead`, OF-04). Ohne Link gibt es keinen toten Link, und der
+Satz wäre dort eine Warnung vor etwas, das gar nicht angeboten wurde. Er existiert,
+weil ein voller oder abgelaufener Link von außen **nicht erkennbar** ist: Apple
+bietet keine Abfrage, und ein voller Link antwortet wie ein offener. Der Empfänger
+ist der Einzige, der den Fall sieht.
+
+**Konfiguration:** `APP_TESTFLIGHT_URL` (leer in `.env`, echter Wert nur in
+`.env.local` und auf dem Server) → Parameter `app.testflight_url`. Leer heißt
+lautlos aus: Die zweite Mail geht dann ohne Beta-Abschnitt hinaus. Limiter
+`app_waitlist` (10/Stunde je IP, `when@test` auf 10000) — **eigenes Kontingent**,
+nicht `partner_waitlist` mitbenutzt (BF-38). Großzügiger als die anderen beiden,
+weil sich hier Privatpersonen vom Telefon aus eintragen und Mobilfunk-NAT viele
+Besucher auf dieselbe Adresse legt.
+
+**Migration:** `Version20260904120000`.
+
 ## Cookie-Consent-Banner (Issue #82)
 DSGVO-Banner, das beim ersten Besuch unten erscheint und die Wahl (`accepted`/`declined`) 365 Tage im Cookie `cookie_consent` speichert. Keine Entity/Migration/Backend-Änderung — rein clientseitig.
 Stimulus: `assets/controllers/cookie_consent_controller.ts` — `connect()` zeigt das Banner, wenn kein `cookie_consent`-Cookie existiert; `accept()`/`decline()` setzen den Cookie (`path=/; max-age=365d; samesite=lax`, `secure` nur bei HTTPS — Muster aus `csrf_protection_controller.ts`) und blenden aus. Values: `cookieName` (default `cookie_consent`), `lifetime` (default 365). Cross-Element-Kommunikation idiomatisch über Fenster-Event: der Footer-Link ist eine eigene Controller-Instanz (`<li data-controller="cookie-consent">`), sein `openSettings()` stößt `this.dispatch('open')` an; die Banner-Instanz fängt es über den `@window`-Descriptor (`data-action="cookie-consent:open@window->cookie-consent#reopen"`) ab und zeigt das Banner (`reopen()`). Beide `reopen()`/`connect()` sind via `hasBannerTarget` abgesichert.
@@ -1420,6 +1550,33 @@ die Zeile hinter TLS-Terminierung das Schema nicht — erzeugte URLs stünden au
 
 Am Konto zählende Limiter (`password_change`) sind davon unberührt — das ist der
 zweite Grund für diese Unterscheidung.
+
+⚠️ **Woran man den fehlenden Wert erkennt — die Symptome zeigen nicht auf die
+Ursache.** Am 2026-09-02 auf Production gemessen, nachdem die Variable beim Umzug
+nicht mitgekommen war:
+
+```
+Mixed Content: The page at 'https://endlech.lu/de/login' was loaded over HTTPS,
+but requested an insecure resource 'http://endlech.lu/de/login'.
+TypeError: Failed to fetch   (turbo)
+```
+
+Der Browser blockt, Turbo meldet einen Netzwerkfehler, und der Anmeldeknopf tut
+schlicht nichts. Das sieht nach einem JavaScript-Problem aus und ist keines. Schnell
+nachweisbar von außen:
+
+```bash
+curl -sI https://endlech.lu/ | grep -i location   # http:// = Wert fehlt
+```
+
+Nachgestellt mit demselben Bild, nur die Variable unterschiedlich, Request mit
+`X-Forwarded-Proto: https`: leer → `location: http://…`, `private_ranges` →
+`location: https://…`. Das Schlüsselwort ist von Symfony anerkannt
+(`FrameworkExtension`-Konfiguration und `Request::setTrustedProxies()`).
+
+**Kein Repo-Fix möglich:** Ein Default `private_ranges` in `.env` wäre für jeden
+falsch, der ohne Proxy betreibt — dort übernähme die Anwendung dann Client-Adressen
+aus gefälschten `X-Forwarded-For`-Headern. Der Wert gehört in die Umgebung.
 
 ## Fehler-Tracking (Sentry)
 

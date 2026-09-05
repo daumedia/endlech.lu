@@ -3,9 +3,11 @@
 namespace App\Open;
 
 use App\Entity\Restaurant;
+use App\Enum\AppPlatform;
 use App\Enum\Canton;
 use App\Enum\FinanceCategory;
 use App\Enum\FinanceType;
+use App\Repository\AppWaitlistEntryRepository;
 use App\Repository\FinanceEntryRepository;
 use App\Repository\RestaurantRepository;
 use Psr\Cache\CacheItemPoolInterface;
@@ -32,6 +34,24 @@ final class OpenStatsService
      */
     public const int TTL = 3600;
 
+    /**
+     * Ab dieser Zahl bestätigter Vormerkungen erscheint die App-Warteliste
+     * überhaupt in den veröffentlichten Zahlen (AK-37/AK-38).
+     *
+     * Eine niedrige Zahl in den ersten Wochen wirkt gegen das Vorhaben: „7
+     * Interessenten" liest sich als Beleg, dass niemand darauf wartet, und
+     * genau davon soll die Seite jemanden nicht abbringen. Erst eine dreistellige
+     * Größenordnung trägt eine Aussage. Dasselbe Muster wie die Quartalssperre
+     * der Einnahmen weiter unten – und aus demselben Grund **strukturell**:
+     * Unterhalb der Schwelle stehen die Schlüssel gar nicht erst im Array
+     * (siehe `appWaitlistCounts()`).
+     *
+     * ⚠ Die Zahl steht hier und nicht im Template und nicht im Prüflauf. Ein
+     * Prüflauf mit eigener Zahl prüft gegen sich selbst; ein Template mit
+     * eigener Zahl verbirgt Werte, die über /open.json trotzdem herauskämen.
+     */
+    public const int APP_WAITLIST_MIN = 50;
+
     private const string KEY_PLATFORM = 'open_stats.platform';
     private const string KEY_IMPACT = 'open_stats.impact';
     private const string KEY_FINANCE = 'open_stats.finance';
@@ -39,6 +59,7 @@ final class OpenStatsService
     public function __construct(
         private readonly RestaurantRepository $restaurantRepository,
         private readonly FinanceEntryRepository $financeRepository,
+        private readonly AppWaitlistEntryRepository $appWaitlistRepository,
         private readonly CantonResolver $cantonResolver,
         #[Autowire(service: 'cache.open_stats')]
         private readonly CacheInterface&CacheItemPoolInterface $cache,
@@ -193,6 +214,52 @@ final class OpenStatsService
             'scoreDistribution' => $distribution,
             'byCanton' => $this->cantonRows($cantons),
             'byCommune' => $this->communeRows($communes),
+            // Drei Schlüssel – oder keiner. Siehe `appWaitlistCounts()`.
+            ...$this->appWaitlistCounts(),
+        ];
+    }
+
+    /**
+     * Die bestätigten Vormerkungen der App-Warteliste – aber erst ab
+     * `APP_WAITLIST_MIN` (AK-37/AK-38).
+     *
+     * ⚠ **Unterhalb der Schwelle fehlen die drei Schlüssel im Array, sie werden
+     * nicht im Template verborgen.** Dieselbe Struktur geht in die Vorlage und
+     * nach /open.json; eine Zahl, die nur die Vorlage hinter einer Bedingung
+     * versteckt, stünde dort trotzdem offen (AK-39) – genau die Konstruktion,
+     * die bei der Quartalssperre der Finanzen bewusst vermieden wurde.
+     *
+     * ⚠ **Gezählt wird nur, was der Eintragende selbst bestätigt hat**
+     * (`AppWaitlistEntryRepository::countConfirmedByPlatform()` prüft
+     * `selfConfirmedAt`). Eine Zahl, die unbestätigte Vormerkungen mitnimmt,
+     * wäre über das Formular beliebig aufblasbar – und sie steht auf einer
+     * Transparenzseite.
+     *
+     * Maßgeblich ist die **Gesamtzahl**: Nimmt sie die Schwelle, werden beide
+     * Plattformzahlen gezeigt, auch eine kleine (OF-02). Eine Aufteilung, bei
+     * der eine der beiden Zahlen fehlt, wäre keine Aufteilung.
+     *
+     * @return array{}|array{appWaitlistTotal: int, appWaitlistIos: int, appWaitlistAndroid: int}
+     */
+    private function appWaitlistCounts(): array
+    {
+        $counts = $this->appWaitlistRepository->countConfirmedByPlatform();
+
+        $ios = (int) ($counts[AppPlatform::IOS->value] ?? 0);
+        $android = (int) ($counts[AppPlatform::ANDROID->value] ?? 0);
+        // Summe der beiden ausgewiesenen Zahlen, nicht `array_sum($counts)`:
+        // Die Gesamtzahl muss zu der Aufteilung passen, die daneben steht. Wer
+        // `AppPlatform` um einen dritten Fall erweitert, kommt hier vorbei.
+        $total = $ios + $android;
+
+        if ($total < self::APP_WAITLIST_MIN) {
+            return [];
+        }
+
+        return [
+            'appWaitlistTotal' => $total,
+            'appWaitlistIos' => $ios,
+            'appWaitlistAndroid' => $android,
         ];
     }
 

@@ -29,6 +29,9 @@ final readonly class ChangelogRegistry
     public function notes(): array
     {
         return [
+            // Feature 08: eine neue öffentliche Seite unter /app. Ein Gast
+            // sieht sie — deshalb SHOWN mit Text in allen vier changelog.*.yaml.
+            new ReleaseNote('2026.09.05', new \DateTimeImmutable('2026-09-05'), ReleaseVisibility::SHOWN),
             // Rein technisch: Container-Image, /health und trusted_proxies.
             // Ein Gast der Website merkt davon nichts — deshalb SILENT und
             // kein Text in den vier changelog.*.yaml.

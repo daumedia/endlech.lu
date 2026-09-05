@@ -758,11 +758,70 @@ griffe der Unique-Index nicht. `getMonthKey()` liefert `Y-m` für Achsen und JSO
 
 ---
 
+### AppWaitlistEntry
+
+`src/Entity/AppWaitlistEntry.php` · Tabelle `app_waitlist_entry` · `AppWaitlistEntryRepository`
+
+Vormerkung für die mobile App (Feature 08) — die **dritte** Warteliste neben
+Partnern und Organisationen und die schmalste. Erfasst werden nur die Adresse
+und die gewählte Plattform. Implementiert `App\Waitlist\WaitlistEntryInterface`.
+
+| Property | Spalte | Typ | Null | Unique | Anmerkung |
+|---|---|---|---|---|---|
+| `id` | `id` | `integer` PK | – | – | |
+| `email` | `email` | `varchar(180)` | nein | **ja** | ⚠ Unique — anders als bei den beiden anderen Wartelisten. `setEmail()` normalisiert auf Kleinschreibung ohne Randleerzeichen |
+| `platform` | `platform` | `varchar(20)` | nein | – | `AppPlatform` |
+| `status` | `status` | `varchar(20)` | nein | – | `WaitlistStatus`, Default `pending` |
+| `confirmationToken` | `confirmation_token` | `varchar(64)` | ja | **ja** | Double-Opt-In **und** Abmeldetoken |
+| `confirmedAt` | `confirmed_at` | `datetime` | ja | – | ⚠ zweideutig wie in B14/B15 |
+| `selfConfirmedAt` | `self_confirmed_at` | `datetime` | ja | – | Selbstbestätigung; setzt allein `confirm()` (BF-89) |
+| `consentAt` | `consent_at` | `datetime` | nein | – | DSGVO-Nachweis, im Konstruktor gesetzt |
+| `marketingConsentAt` | `marketing_consent_at` | `datetime` | ja | – | Werbe-Einwilligung; `null` = keine |
+| `betaLinkSentAt` | `beta_link_sent_at` | `datetime` | ja | – | wann die zweite Mail hinausging; beantwortet „ich habe nichts bekommen" |
+| `locale` | `locale` | `varchar(5)` | nein | – | |
+| `source` | `source` | `varchar(60)` | ja | – | UTM-Quelle oder Referrer-Host |
+| `createdAt` / `updatedAt` | `created_at` / `updated_at` | `datetime` | nein | – | `createdAt` trägt zugleich die 7-Tage-Frist |
+
+**Relationen: keine.** Auch kein Fremdschlüssel auf `User` — die Seite ist
+öffentlich, die meisten Interessenten haben kein Konto, und die Adresse ist der
+einzige Anker, der immer trägt.
+
+**Indizes:** `UNIQ_APP_WAITLIST_EMAIL`, `UNIQ_APP_WAITLIST_TOKEN`,
+`IDX_app_waitlist_status_created` — alle drei **im Mapping benannt**, sonst
+erfindet Doctrine Hash-Namen und `doctrine:schema:validate` meldet bei jedem Lauf
+eine Abweichung.
+
+> **Warum der Unique-Index auf `email` der Unterschied ist.** Bei B14 und B15
+> legt jeder Submit eine weitere Zeile an. Hier ist „eine Adresse, ein Eintrag"
+> ein Akzeptanzkriterium — und eine Prüfung allein im Controller verliert das
+> Wettrennen zweier gleichzeitiger Absendevorgänge aus zwei Tabs.
+>
+> **`getDisplayName()` liefert das Plattform-Label, `getContactName()` einen
+> leeren String.** Das Interface verlangt beide; ein Namensfeld nur zu ihrer
+> Erfüllung wären erhobene Daten ohne Zweck.
+
+---
+
 ## Enum-Referenz
 
 Elf Enums, alle `string`-backed, alle in `src/Enum/`. Das wiederkehrende Muster:
 `transKey()` liefert den Übersetzungsschlüssel, `label()` den übersetzten Text,
 `emoji()` ein Symbol, `badgeClasses()` die Tailwind-Farben für ein Abzeichen.
+
+### AppPlatform
+
+Werte: `ios` · `android`
+Methoden: `transKey()`, `label()`, `emoji()`, `badgeClasses()`, `hasBeta()`, `values()`
+
+Die beiden Plattformen der App-Warteliste (Feature 08). Sie sind heute
+**nicht gleichwertig**: Für iOS läuft eine TestFlight-Beta, für Android ist
+nichts gebaut.
+
+> ⚠ **`hasBeta()` gehört an den Enum, nicht ins Template.** Die Frage wird an
+> vier Stellen gestellt — Hinweis neben der Auswahl, zweite Mail, deren
+> Betreffzeile, Verwaltungsliste. Vier verstreute `platform == 'ios'`-Abfragen
+> laufen beim ersten Android-Build auseinander, und dann steht an einer davon
+> weiterhin „noch nichts gebaut".
 
 ### TriState
 
@@ -801,6 +860,7 @@ Vorprüfung dazwischenliegt.
 | `COMPANY` | `company` | Unternehmen |
 | `ASSOCIATION` | `association` | Verein |
 | `ACCOUNT` | `account` | Nutzerkonto |
+| `APP` | `app` | App-Warteliste (Feature 08) |
 
 Methoden: `transKey()`, `label()`, `brevoValue()`, `fromOrganisationType()`
 
@@ -1048,6 +1108,25 @@ Bekommt zusätzlich die `RequestStack` injiziert, um den Gerätenamen zu raten.
 verwirft unbekannte Werte über `tryFrom()` — ein leeres Ergebnis statt einer
 Exception.
 
+### AppWaitlistEntryRepository
+
+Konstante `STALE_AFTER = '-30 days'` — die Frist, nach der nie selbst bestätigte
+Vormerkungen fallen.
+
+| Methode | Zweck |
+|---|---|
+| `findOneByConfirmationToken()` | Einlösen und Widerruf |
+| `findOneByEmail()` | Dublettenzweig und Löschkaskade — sucht mit derselben Normalisierung, mit der `setEmail()` schreibt |
+| `findFiltered()` | Verwaltungsliste |
+| `countConfirmedByPlatform()` | Kennzahl auf `/open`; zählt an `selfConfirmedAt`, nicht am Status |
+| `countByStatus()` | Filter-Pillen |
+| `deleteStaleUnconfirmed()` | Aufräumlauf, eine einzige DQL-Anweisung |
+
+> ⚠ **`deleteStaleUnconfirmed()` prüft `selfConfirmedAt IS NULL`, nicht
+> `status = pending`.** Ein vom Admin weitergesetzter Eintrag steht nicht mehr
+> auf `pending` und entginge dem Lauf — obwohl nie jemand bestätigt hat und
+> damit keine Einwilligung vorliegt (dieselbe Zweideutigkeit wie BF-89).
+
 ### Ohne eigene Methoden
 
 `OpeningHourRepository`, `OrderingOptionRepository`
@@ -1150,3 +1229,9 @@ jemand gegen den Code gehalten haben.
 > **`doctrine:migrations:diff` schlägt in diesem Projekt regelmäßig
 > Index-Umbenennungen aus Altlasten vor.** Migrationen deshalb von Hand schreiben
 > und den Vorschlag nur als Anhaltspunkt nehmen.
+
+**`Version20260904120000`** (2026-09-04) — `app_waitlist_entry` für Feature 08.
+Von Hand geschrieben, ohne `COMMENT '(DC2Type:…)'`-Zusätze: Doctrine 3 schreibt
+sie nicht mehr, ältere Tabellen tragen sie noch und erzeugen dadurch das
+beschriebene Diff-Rauschen. Eine neue Tabelle vergrößert es nicht — nachgeprüft:
+`doctrine:schema:update --dump-sql` nennt `app_waitlist_entry` nicht.

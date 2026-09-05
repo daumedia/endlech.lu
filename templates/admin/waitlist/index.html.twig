@@ -3,9 +3,18 @@
 {% block admin_title %}{{ 'admin.waitlist.title'|trans }}{% endblock %}
 
 {#
-    Kombinierte Liste beider Wartelisten. Der Controller normalisiert Partner-
-    und Organisationseinträge zu einheitlichen Zeilen, damit hier keine
-    Entity-Fallunterscheidung nötig ist.
+    Kombinierte Liste aller drei Wartelisten. Der Controller normalisiert
+    Partner-, Organisations- und App-Einträge zu einheitlichen Zeilen, damit
+    hier keine Entity-Fallunterscheidung nötig ist.
+
+    ⚠ Jede Zeilenart führt DIESELBE Schlüsselmenge (auch die für sie leeren
+    Schlüssel). Auf `row.platform` darf deshalb überall zugegriffen werden;
+    unter `strict_variables: true` wäre ein fehlender Schlüssel kein „null",
+    sondern ein Laufzeitfehler.
+
+    ⚠ Die E-Mail-Adresse steht in der Zeile, wird aber NICHT angezeigt — sie
+    dient allein dem Nachschlagen des Brevo-Sync-Zustands. Bei App-Zeilen wiegt
+    das schwerer als bei den anderen: dort IST die Adresse der ganze Datensatz.
 #}
 {% macro filter_link(label, params, active, count) %}
     <a href="{{ path('admin_waitlist_index', params) }}"
@@ -49,9 +58,14 @@
     <div class="space-y-3 mb-6">
         <nav class="flex flex-wrap items-center gap-2" aria-label="{{ 'admin.waitlist.filter_source'|trans }}">
             <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider mr-1">{{ 'admin.waitlist.filter_source'|trans }}</span>
-            {{ ui.filter_link('admin.waitlist.filter_all'|trans, {sort: sort, status: activeStatus ? activeStatus.value : null}, activeSource is null and activeType is null, partnerTotal + organisationTotal) }}
+            {# ⚠ Die Zahl an „Alle" MUSS alle drei Quellen zusammenzählen. Stand
+               hier nur die Summe zweier Wartelisten, wäre sie kleiner als die
+               Liste darunter lang ist — und niemand wüsste, welche der beiden
+               Zahlen stimmt. #}
+            {{ ui.filter_link('admin.waitlist.filter_all'|trans, {sort: sort, status: activeStatus ? activeStatus.value : null}, activeSource is null and activeType is null, partnerTotal + organisationTotal + appTotal) }}
             {{ ui.filter_link('admin.waitlist.source_partner'|trans, {source: 'partner', sort: sort, status: activeStatus ? activeStatus.value : null}, activeSource == 'partner', partnerTotal) }}
             {{ ui.filter_link('admin.waitlist.source_organisation'|trans, {source: 'organisation', sort: sort, status: activeStatus ? activeStatus.value : null}, activeSource == 'organisation' and activeType is null, organisationTotal) }}
+            {{ ui.filter_link('admin.waitlist.source_app'|trans, {source: 'app', sort: sort, status: activeStatus ? activeStatus.value : null}, activeSource == 'app', appTotal) }}
         </nav>
 
         <nav class="flex flex-wrap items-center gap-2" aria-label="{{ 'admin.waitlist.filter_type'|trans }}">
@@ -103,10 +117,22 @@
                     {% for row in rows %}
                         <tr class="hover:bg-gray-50 transition">
                             <td class="px-4 py-3 text-gray-500 whitespace-nowrap">{{ row.createdAt|date('d.m.Y') }}</td>
+                            {#
+                                Die Quelle wird über `row.kind` entschieden, nicht
+                                über das Vorhandensein anderer Felder. Bis zur
+                                dritten Zeilenart stand hier „Typ gesetzt →
+                                Organisation, sonst Partner"; eine App-Zeile führt
+                                keinen Typ und wäre darüber als Restaurant
+                                ausgewiesen worden.
+                            #}
                             <td class="px-4 py-3">
-                                {% if row.type %}
+                                {% if row.kind == 'organisation' and row.type %}
                                     <span class="{{ row.type.badgeClasses }} text-xs font-bold px-2 py-0.5 rounded-full whitespace-nowrap">
                                         {{ row.type.emoji }} {{ row.type.transKey|trans }}
+                                    </span>
+                                {% elseif row.kind == 'app' %}
+                                    <span class="bg-gray-100 text-gray-700 text-xs font-bold px-2 py-0.5 rounded-full whitespace-nowrap">
+                                        📱 {{ 'admin.waitlist.source_app'|trans }}
                                     </span>
                                 {% else %}
                                     <span class="bg-gray-100 text-gray-700 text-xs font-bold px-2 py-0.5 rounded-full whitespace-nowrap">
@@ -114,13 +140,42 @@
                                     </span>
                                 {% endif %}
                             </td>
+                            {#
+                                AK-35: Bei einer App-Vormerkung IST der Name die
+                                Plattform (`AppWaitlistEntry::getDisplayName()`) —
+                                sie steht deshalb als Abzeichen statt als
+                                Fließtext, und würde sonst zweimal in derselben
+                                Zeile stehen.
+
+                                Form und Größe kommen aus dem Template, die Farbe
+                                aus `AppPlatform::badgeClasses()`. Dasselbe Muster
+                                wie bei `WaitlistStatus` und `OrganisationType`:
+                                Eine hier ausgeschriebene Farbe liefe beim
+                                nächsten Plattformfall auseinander.
+                            #}
                             <td class="px-4 py-3 font-semibold text-gray-800">
-                                {{ row.name }}
+                                {% if row.platform %}
+                                    <span class="{{ row.platform.badgeClasses }} text-xs font-bold px-2 py-0.5 rounded-full whitespace-nowrap">
+                                        {{ row.platform.emoji }} {{ row.platform.label }}
+                                    </span>
+                                {% else %}
+                                    {{ row.name }}
+                                {% endif %}
                                 {% if row.detail %}
                                     <span class="block text-xs font-normal text-gray-500">{{ row.detail }}</span>
                                 {% endif %}
                             </td>
-                            <td class="px-4 py-3 text-gray-600 hidden md:table-cell">{{ row.contact }}</td>
+                            {# App-Zeilen führen keinen Ansprechpartner — und
+                               erfinden auch keinen (siehe AppWaitlistEntry). Der
+                               Gedankenstrich ist Zeichensetzung für Sehende und
+                               bleibt aus der Vorlesereihenfolge. #}
+                            <td class="px-4 py-3 text-gray-600 hidden md:table-cell">
+                                {%- if row.contact is empty -%}
+                                    <span class="text-gray-400" aria-hidden="true">{{ 'marketing.admin.not_applicable'|trans }}</span>
+                                {%- else -%}
+                                    {{ row.contact }}
+                                {%- endif -%}
+                            </td>
                             <td class="px-4 py-3">
                                 <span class="{{ row.status.badgeClasses }} text-xs font-bold px-2 py-0.5 rounded-full whitespace-nowrap">
                                     {{ row.status.emoji }} {{ row.status.transKey|trans }}

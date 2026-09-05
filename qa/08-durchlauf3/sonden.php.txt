@@ -1,0 +1,176 @@
+<?php
+
+namespace App\Tests\Functional\Controller;
+
+use App\Entity\AppWaitlistEntry;
+use App\Enum\AppPlatform;
+use App\Repository\AppWaitlistEntryRepository;
+use App\Tests\AbstractWebTestCase;
+use App\Waitlist\StaleAppWaitlistCleaner;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+
+/** QA-Sonden, dritter Durchlauf: die BF-122-Reparatur. */
+final class QaProbe4Test extends AbstractWebTestCase
+{
+    private const PFAD = self::LOCALE.'/app';
+
+    /**
+     * SONDE D — Stimmt die Annahme „consentAt liegt nie später als createdAt"?
+     * Am echten Anlageweg gemessen, nicht am Konstruktor allein.
+     */
+    public function testSondeDReihenfolgeDerZeitstempel(): void
+    {
+        $client = static::createClient();
+        $this->absenden($client, 'stempel@example.lu');
+
+        $zeile = $client->getContainer()->get(EntityManagerInterface::class)
+            ->getConnection()->fetchAssociative(
+                'SELECT created_at, consent_at FROM app_waitlist_entry WHERE email = :e',
+                ['e' => 'stempel@example.lu'],
+            );
+
+        fwrite(\STDERR, sprintf(
+            "\n[SONDE D] createdAt %s · consentAt %s → consentAt %s\n",
+            $zeile['created_at'],
+            $zeile['consent_at'],
+            $zeile['consent_at'] < $zeile['created_at'] ? 'FRÜHER'
+                : ($zeile['consent_at'] === $zeile['created_at'] ? 'GLEICH' : '⚠ SPÄTER'),
+        ));
+
+        self::assertTrue(true);
+    }
+
+    /**
+     * SONDE E — Der vollständige Missbrauchsweg aus BF-122, jetzt über HTTP
+     * statt über die Entity: Erstkontakt vor 29 Tagen, erneut eintragen,
+     * Aufräumlauf an Tag 31.
+     */
+    public function testSondeEMissbrauchswegUeberHttp(): void
+    {
+        $client = static::createClient();
+        $repo = $client->getContainer()->get(AppWaitlistEntryRepository::class);
+
+        $entry = $this->eintrag($client, 'ueberhttp@example.lu');
+        $this->altern($client, $entry, '-29 days');
+
+        $this->absenden($client, 'ueberhttp@example.lu');   // erneuert Frist und Token
+
+        $geloescht = $client->getContainer()->get(StaleAppWaitlistCleaner::class)
+            ->sweep(new \DateTimeImmutable('+2 days'));
+
+        fwrite(\STDERR, sprintf(
+            "[SONDE E] Lauf an Tag 31: %d gelöscht · Eintrag: %s\n",
+            $geloescht,
+            null === $repo->findOneByEmail('ueberhttp@example.lu') ? 'weg ✓' : '⚠ NOCH DA',
+        ));
+
+        self::assertTrue(true);
+    }
+
+    /**
+     * SONDE F — Zehn Erneuerungsrunden über HTTP. Hält irgendetwas den Eintrag
+     * doch am Leben?
+     */
+    public function testSondeFZehnRunden(): void
+    {
+        $client = static::createClient();
+        $repo = $client->getContainer()->get(AppWaitlistEntryRepository::class);
+        $em = $client->getContainer()->get(EntityManagerInterface::class);
+
+        $entry = $this->eintrag($client, 'zehnmal@example.lu');
+        $this->altern($client, $entry, '-29 days');
+
+        for ($runde = 1; $runde <= 10; ++$runde) {
+            $this->absenden($client, 'zehnmal@example.lu');
+            // Der Angreifer wartet acht Tage, damit der Zweig erneut greift —
+            // ohne consentAt anzufassen, denn das kann er nicht.
+            $em->getConnection()->executeStatement(
+                'UPDATE app_waitlist_entry SET created_at = :d WHERE email = :e',
+                ['d' => (new \DateTimeImmutable('-8 days'))->format('Y-m-d H:i:s'), 'e' => 'zehnmal@example.lu'],
+            );
+        }
+
+        $geloescht = $client->getContainer()->get(StaleAppWaitlistCleaner::class)
+            ->sweep(new \DateTimeImmutable('+2 days'));
+
+        fwrite(\STDERR, sprintf(
+            "[SONDE F] nach 10 Runden · Lauf an Tag 31: %d gelöscht · Eintrag: %s\n",
+            $geloescht,
+            null === $repo->findOneByEmail('zehnmal@example.lu') ? 'weg ✓' : '⚠ NOCH DA',
+        ));
+
+        self::assertTrue(true);
+    }
+
+    /** SONDE G — Kommt BF-117 zurück? Der erneuerte Link muss weiter tragen. */
+    public function testSondeGBf117NichtZurueck(): void
+    {
+        $client = static::createClient();
+        $repo = $client->getContainer()->get(AppWaitlistEntryRepository::class);
+
+        $entry = $this->eintrag($client, 'nochda@example.lu');
+        $this->altern($client, $entry, '-8 days');
+
+        $this->absenden($client, 'nochda@example.lu');
+
+        $em = $client->getContainer()->get(EntityManagerInterface::class);
+        $em->clear();                                   // Identity Map leeren
+        $frisch = $repo->findOneByEmail('nochda@example.lu');
+        $token = $frisch?->getConfirmationToken();
+
+        $client->request('GET', self::LOCALE.'/app/confirmation/'.$token);
+
+        // ⚠ Direkt aus der Datenbank lesen, nicht über das Repository: Ein
+        // Objekt aus dem Identity Map zeigt den Stand VOR dem Request.
+        $roh = $em->getConnection()->fetchAssociative(
+            'SELECT self_confirmed_at, status FROM app_waitlist_entry WHERE email = :e',
+            ['e' => 'nochda@example.lu'],
+        );
+
+        fwrite(\STDERR, sprintf(
+            "[SONDE G] erneuerter Link: HTTP %d · selfConfirmedAt in der DB: %s · Status: %s\n",
+            $client->getResponse()->getStatusCode(),
+            $roh['self_confirmed_at'] ?? 'NULL',
+            $roh['status'] ?? '?',
+        ));
+
+        self::assertTrue(true);
+    }
+
+    // -- Hilfen
+
+    private function absenden(KernelBrowser $client, string $email): void
+    {
+        $crawler = $client->request('GET', self::PFAD);
+        $form = $this->formWithField($crawler, 'app_waitlist[email]');
+        $form['app_waitlist[email]'] = $email;
+        $form['app_waitlist[platform]']->select('ios');
+        $form['app_waitlist[consent]']->tick();
+        $client->submit($form);
+    }
+
+    private function eintrag(KernelBrowser $client, string $email): AppWaitlistEntry
+    {
+        $em = $client->getContainer()->get(EntityManagerInterface::class);
+        $e = new AppWaitlistEntry();
+        $e->setEmail($email);
+        $e->setPlatform(AppPlatform::IOS);
+        $e->setLocale('de');
+        $e->generateConfirmationToken();
+        $em->persist($e);
+        $em->flush();
+
+        return $e;
+    }
+
+    private function altern(KernelBrowser $client, AppWaitlistEntry $e, string $v): void
+    {
+        $em = $client->getContainer()->get(EntityManagerInterface::class);
+        $em->getConnection()->executeStatement(
+            'UPDATE app_waitlist_entry SET created_at = :d, consent_at = :d WHERE id = :id',
+            ['d' => (new \DateTimeImmutable($v))->format('Y-m-d H:i:s'), 'id' => $e->getId()],
+        );
+        $em->refresh($e);
+    }
+}
