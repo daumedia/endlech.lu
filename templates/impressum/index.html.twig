@@ -21,6 +21,45 @@
                 {{ operator_name }}{% if operator_address is not empty %}<br>
                 {{ operator_address|nl2br }}{% endif %}
             </p>
+            {#
+                Art. 5 der Loi du 14 août 2000 relative au commerce électronique
+                verlangt neben Anschrift und Kontaktdaten ausdrücklich die
+                Handelsregisternummer, die Ermächtigung zur Ausübung der
+                Tätigkeit **samt der Behörde, die sie erteilt hat**, und — falls
+                vorhanden — die MwSt-Nummer.
+
+                ⚠ Jede Zeile steht unter `is not empty`: Die MwSt-Nummer ist
+                noch nicht vergeben, und eine Beschriftung ohne Wert sähe aus
+                wie ein Fehler. Sobald der Parameter gefüllt ist, erscheint sie
+                ohne Codeänderung.
+            #}
+            {% if operator_rcs is not empty or operator_authorisation is not empty or operator_vat is not empty %}
+                <dl class="text-gray-700 leading-relaxed mt-3 space-y-1">
+                    {% if operator_rcs is not empty %}
+                        <div>
+                            <dt class="inline font-semibold">{{ 'legal.rcs_label'|trans }}</dt>
+                            <dd class="inline">{{ operator_rcs }}</dd>
+                        </div>
+                    {% endif %}
+                    {% if operator_authorisation is not empty %}
+                        <div>
+                            <dt class="inline font-semibold">{{ 'legal.authorisation_label'|trans }}</dt>
+                            <dd class="inline">{{ operator_authorisation }}</dd>
+                        </div>
+                        <div>
+                            <dt class="inline font-semibold">{{ 'legal.authority_label'|trans }}</dt>
+                            <dd class="inline">{{ 'legal.authority_value'|trans }}</dd>
+                        </div>
+                    {% endif %}
+                    {% if operator_vat is not empty %}
+                        <div>
+                            <dt class="inline font-semibold">{{ 'legal.vat_label'|trans }}</dt>
+                            <dd class="inline">{{ operator_vat }}</dd>
+                        </div>
+                    {% endif %}
+                </dl>
+            {% endif %}
+
             {% if operator_responsible is not empty %}
                 <p class="text-gray-700 leading-relaxed mt-3">
                     {{ 'legal.responsible_label'|trans }}<br>

@@ -26,6 +26,30 @@ eine Lücke in der Erklärung — nicht in dieser Datei.
 
 ---
 
+## Verantwortlicher
+
+| | |
+|---|---|
+| **Verantwortlicher** (Art. 4 Nr. 7 DSGVO) | **DAUMEDIA S.A.R.L.-S** |
+| **Sitz** | 13, rue de la Fontaine, L-3768 Tétange, Luxemburg |
+| **Handelsregister** | RCS Luxembourg **B311765** (Gründung 27.07.2026, Eintragung 02.09.2026) |
+| **Handelsermächtigung** | 10199120/0, erteilt vom Ministère de l’Économie |
+| **Vertreten durch** | Michael Ferreira Rodrigues, Geschäftsführer |
+| **Kontakt** | `info@endlech.lu` |
+
+⚠ **Wechsel des Verantwortlichen am 2026-09-05.** Bis dahin verarbeitete Michael
+Ferreira die Daten als **Privatperson**; seit der Eintragung der Gesellschaft ist sie
+es. Das ist kein Formalium: Betroffenenrechte richten sich ab jetzt gegen die
+S.à r.l.-S, und sie haftet für die Verarbeitung.
+
+⚠ **Für die bereits erhobenen Daten ändert sich die Rechtsgrundlage nicht** — die
+Einwilligungen gelten dem Angebot „Endlech.lu", das unverändert weiterbetrieben wird.
+Ob der Übergang eine Information der Betroffenen erfordert, ist eine Frage, die
+fachlicher Rat beantworten sollte; sie steht als **DS-05** unten.
+
+⚠ **Keine MwSt-Nummer.** Die Gründungsurkunde nennt keine. Sobald sie vergeben ist,
+gehört sie in `app.operator_vat` — das Impressum blendet die Zeile dann von selbst ein.
+
 ## Auftragsverarbeiter
 
 ### Brevo (Sendinblue SAS)
@@ -330,6 +354,7 @@ Feature 08. Was hier ohne Datum steht, hat niemanden, der es erzwingt.
 | **DS-03b** | ~~Widersprüchliche Angabe zum selben Verarbeiter~~ — **behoben 2026-09-05.** `legal.mail_text` nannte „Sendinblue GmbH, Köln", `legal.marketing_text` im selben Abschnitt „Brevo SA, Frankreich". Vertragspartner ist Brevo SA, Paris (so auch im DPA). Berichtigt in vier Sprachen | — | ✅ |
 | **DS-03c** | ~~Der Hoster fehlte in der Erklärung~~ — **behoben 2026-09-05.** Neuer Abschnitt `legal.hosting_*`: Hostinger, Zypern, Server in Deutschland. ⚠ Er hält Anwendung, Worker **und** Datenbank — Art. 13 Abs. 1 lit. e verlangt seine Nennung so gut wie die von Brevo. BF-65 hatte drei Empfänger nachgetragen und den Hoster übersehen | — | ✅ |
 | **DS-03d** | ~~Kein Hinweis auf Drittlandsübermittlung~~ — **behoben 2026-09-05.** Neuer Abschnitt `legal.transfer_*`: Alle unmittelbaren Empfänger sitzen in der EU, ihre Unterauftragsverarbeiter nicht durchgängig (Datadog USA bei Brevo, Cloudflare bei beiden). Art. 13 Abs. 1 lit. f | — | ✅ |
+| **DS-05** | **Klären, ob der Wechsel des Verantwortlichen eine Information der Betroffenen erfordert** | Bis zum 2026-09-05 war der Verantwortliche eine Privatperson, seither die S.à r.l.-S. Die Verarbeitung läuft unverändert weiter, aber die Stelle, gegen die sich Betroffenenrechte richten, ist eine andere. ⚠ Das ist eine Rechtsfrage, keine technische — sie gehört jemandem mit fachlicher Qualifikation vorgelegt | **2026-09-30** | Betreiber |
 | **DS-04** | **Anonyme Nachverfolgung in Brevo einschalten** — Konto → Settings → Default settings → Tracking → „Anonymous email tracking" auf **Yes**, dann oben rechts speichern | **Entschieden am 2026-09-05.** ⚠ Die Frist war als „vor dem ersten Kampagnenlauf" notiert und damit zu spät angesetzt: Brevo verfolgt auch **Transaktionsmails**, und die laufen seit dem ersten Tag. Es geht also nicht um eine künftige Kampagne, sondern um Bestätigungsmails, die bereits verschickt wurden | **sofort** | Betreiber |
 
 ⚠ **DS-01 und DS-02 sind keine Formalien.** Beide betreffen Verarbeiter, die bereits

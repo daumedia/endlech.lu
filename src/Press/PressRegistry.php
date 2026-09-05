@@ -20,10 +20,15 @@ final readonly class PressRegistry
     /**
      * Anzeigename des Gründers in Zitaten und im Personenabschnitt.
      *
-     * Der vollständige Name, seit VB-03 am 2026-08-30 entschieden ist. Er deckt
-     * sich mit `app.operator_name`; die Website selbst nennt in
-     * `about.founder_bio` weiterhin nur den Vornamen, was dort passt und hier
-     * nicht: Ein Zitat ohne Nachnamen ist für eine Redaktion nicht zitierfähig.
+     * Der vollständige Name, seit VB-03 am 2026-08-30 entschieden ist. Die
+     * Website selbst nennt in `about.founder_bio` weiterhin nur den Vornamen,
+     * was dort passt und hier nicht: Ein Zitat ohne Nachnamen ist für eine
+     * Redaktion nicht zitierfähig.
+     *
+     * ⚠ **Deckt sich seit dem 2026-09-05 NICHT mehr mit `app.operator_name`.**
+     * Betreiber ist seither die DAUMEDIA S.A.R.L.-S, Gründer und Zitatgeber
+     * bleibt die Person. Eine Gesellschaft sagt keine Sätze — wer das hier
+     * angleicht, setzt einen Firmennamen unter ein persönliches Zitat.
      */
     public const string FOUNDER_NAME = 'Michael Ferreira';
 

@@ -35,19 +35,40 @@ parameters:
     app.contact_email: '%env(string:default:app.contact_email_fallback:CONTACT_EMAIL)%'
     app.contact_email_fallback: 'info@endlech.lu'
 
-    # --- Presse-Kit (Feature 05) ---
-    # VB-03 erfüllt am 2026-08-30. ⚠ `app.operator_address` bleibt **absichtlich leer**
-    # (OF-04): Es wird keine Anschrift veröffentlicht, erreichbar ist der Betreiber über
-    # den Pressekontakt. Die Zeile „Anschrift" entfällt dadurch im Faktenblatt; kommt
-    # später eine c/o- oder Postfachadresse, erscheint sie ohne Codeänderung wieder.
+    # --- Betreiberangaben (Impressum /legal und Faktenblatt /presse) ---
+    #
+    # Seit dem 2026-09-05: **DAUMEDIA S.A.R.L.-S**, eingetragen im RCS Luxembourg
+    # unter B311765 (Gründung 27.07.2026, Eintragung 02.09.2026). Betreiber ist
+    # damit die Gesellschaft, nicht mehr die Privatperson — das gilt auch
+    # datenschutzrechtlich: Verantwortlicher nach Art. 4 Nr. 7 DSGVO ist ab
+    # sofort die S.à r.l.-S.
+    #
+    # ⚠ **`app.operator_address` ist jetzt gefüllt** — die frühere Entscheidung,
+    # keine Anschrift zu veröffentlichen (VB-03/OF-04, 2026-08-30), ist damit
+    # überholt: Art. 5 der luxemburgischen Loi du 14 août 2000 relative au
+    # commerce électronique verlangt die geografische Anschrift, und der Sitz
+    # steht im RCS ohnehin öffentlich. ⚠ Sitz und Wohnsitz des Geschäftsführers
+    # sind dieselbe Adresse — bei einer S.à r.l.-S der Regelfall, aber wer sie
+    # ändert, ändert damit eine Privatanschrift.
+    #
+    # ⚠ **`app.operator_vat` ist leer, bis die Nummer vorliegt.** Art. 5 verlangt
+    # sie nur, „falls vorhanden"; die Gründungsurkunde nennt keine. Sobald das
+    # Steueramt sie vergeben hat, hier eintragen — das Template blendet die Zeile
+    # dann von selbst ein.
+    #
     # Die Werte erscheinen an zwei Stellen zugleich — Faktenblatt auf /presse und
     # Impressum (/legal). Genau deshalb stehen sie hier und nicht in vier
     # Übersetzungskatalogen: Vier Stellen wären vier Gelegenheiten, eine Änderung
     # zu vergessen, und `CatalogueCompletenessTest` prüft Vollständigkeit, nicht
     # Gleichheit (AK-15).
-    app.operator_name: 'Michael Ferreira'
-    app.operator_address: ''
-    app.operator_responsible: 'Michael Ferreira'
+    app.operator_name: 'DAUMEDIA S.A.R.L.-S'
+    app.operator_address: "13, rue de la Fontaine\nL-3768 Tétange\nLuxemburg"
+    app.operator_responsible: 'Michael Ferreira Rodrigues'
+    # Handelsregister und Ermächtigung — Art. 5 der Loi du 14 août 2000 verlangt
+    # beide ausdrücklich, die Ermächtigung samt der Behörde, die sie erteilt hat.
+    app.operator_rcs: 'B311765'
+    app.operator_authorisation: '10199120/0'
+    app.operator_vat: ''
     # Presseadresse. ⚠ VB-02: Das Postfach muss beim Hoster eingerichtet sein und
     # gelesen werden — eine Presseadresse, die ins Leere läuft, ist schlimmer als
     # keine. Fallback-Parameter wie bei app.contact_email, damit ein leerer

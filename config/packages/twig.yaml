@@ -8,6 +8,13 @@ twig:
         operator_name: '%app.operator_name%'
         operator_address: '%app.operator_address%'
         operator_responsible: '%app.operator_responsible%'
+        # Seit der Eintragung der S.à r.l.-S (2026-09-05). Art. 5 der Loi du
+        # 14 août 2000 verlangt Handelsregisternummer, Ermächtigung und — falls
+        # vorhanden — die MwSt-Nummer. Letztere ist leer, bis sie vergeben ist;
+        # das Template blendet die Zeile dann von selbst ein.
+        operator_rcs: '%app.operator_rcs%'
+        operator_authorisation: '%app.operator_authorisation%'
+        operator_vat: '%app.operator_vat%'
         press_email: '%app.press_email%'
 
 when@test:
