@@ -40,6 +40,7 @@ footer:
     vs: "vs %brand%"
     roadmap: "Feuille de route"
     changelog: "Journal des modifications"
+    app: "Liste d’attente app"
 
 cookie:
     title: "Nous utilisons des cookies"
@@ -83,6 +84,10 @@ home:
         heading: "Vous connaissez un restaurant accessible ?"
         text: "Aidez-nous à élargir la plateforme et à rendre le Luxembourg plus accessible."
         button: "Proposer un restaurant"
+    app:
+        heading: "Endlech.lu en application"
+        text: "Une version de test tourne pour iPhone et iPad ; pour Android, nous mesurons la demande. Inscrivez-vous et nous vous préviendrons."
+        cta: "Rejoindre la liste"
 
 opening_hours:
     title: "Horaires d'ouverture"
@@ -642,6 +647,15 @@ admin:
             created: "Reçue le"
             consent: "Consentement"
             confirmed: "Confirmée le"
+            platform: "Plateforme"
+            beta_link_sent: "Envoyé le"
+            self_confirmed: "Confirmé par la personne"
+        source_app: "App"
+        beta_heading: "Accès bêta"
+        beta_not_sent: "Pas encore envoyé."
+        beta_no_build: "Il n’y a actuellement pas de bêta pour %platform% — rien ne partira tant qu’une version n’existe pas."
+        self_confirmed_missing: "Pas encore confirmé"
+        self_confirmed_hint: "Confirmé peut provenir d’un changement de statut dans l’administration. Seul Confirmé par la personne prouve que l’adresse appartient à qui s’est inscrit — et seulement alors une communication peut partir."
 
 board:
     title: "Idées pour Endlech.lu"
@@ -787,6 +801,9 @@ flash:
     delete_last_admin: "Vous êtes le seul compte disposant de droits d’administration. Créez-en d’abord un second."
     export_rate_limited: "Trop de téléchargements. Merci de réessayer plus tard."
 
+    app_waitlist_submitted: "Presque fini ! Merci de confirmer le lien dans votre e-mail."
+    app_waitlist_email_failed: "Votre inscription est enregistrée, mais l’e-mail de confirmation n’a pas pu être envoyé. Merci de nous contacter."
+    app_waitlist_rate_limited: "Vous avez envoyé plusieurs inscriptions en peu de temps. Merci de réessayer dans une heure."
 email:
     waitlist_revoke_hint: 'Vous ne souhaitez plus figurer sur la liste ?'
     waitlist_revoke_link: 'Se désinscrire'
@@ -864,6 +881,25 @@ email:
     account_deleted_text: "Votre compte est supprimé. Vos données personnelles, votre photo de profil et vos passkeys ont disparu."
     account_deleted_kept: "Les restaurants que vous avez proposés restent dans la base de données — sans lien avec votre personne. Merci de les avoir contribués."
 
+    app_confirm_subject: "Confirmez votre inscription à l’app Endlech.lu"
+    app_beta_subject: "Votre bêta de l’app Endlech.lu est prête"
+    app_soon_subject: "Vous êtes sur la liste pour l’app Endlech.lu"
+    app_confirm_title: "Encore un clic"
+    app_confirm_greeting: "Bonjour,"
+    app_confirm_text: "vous souhaitez être averti dès que l’application Endlech.lu sera disponible. Merci de confirmer votre adresse e-mail."
+    app_confirm_button: "Confirmer l’inscription"
+    app_confirm_platform: "Votre choix : %platform%"
+    app_confirm_note: "Si vous ne vous êtes pas inscrit, ignorez simplement cet e-mail. Sans votre confirmation, rien ne se passe."
+    app_confirm_expiry: "Le lien est valable sept jours."
+    app_confirm_fallback: "Si le bouton ne fonctionne pas, ouvrez cette adresse :"
+    app_beta_title: "Vous êtes sur la liste"
+    app_beta_greeting: "Bonjour,"
+    app_beta_intro: "votre adresse est confirmée — vous êtes sur la liste d’attente de l’application Endlech.lu. Nous vous écrirons dès qu’il y aura du nouveau."
+    app_beta_text: "Pour iPhone et iPad, vous pouvez installer la version de test via TestFlight dès maintenant :"
+    app_beta_button: "Ouvrir la version de test"
+    app_beta_fallback: "Si le bouton ne fonctionne pas, ouvrez cette adresse :"
+    app_beta_link_dead: "Le lien ne fonctionne plus ? Les places de test sont alors pleines ou expirées — écrivez-nous, nous vous répondrons."
+    app_soon_text: "Pour Android, rien n’a encore été développé. Vous aurez de nos nouvelles dès que cela changera — pas avant."
 ordering_platform:
     uber_eats: "Uber Eats"
     deliveroo: "Deliveroo"
@@ -1439,6 +1475,13 @@ open:
         metrics_json: "Chiffres en JSON"
         licence: "Le jeu de données est publié sous"
         privacy_note: "Les adresses e-mail et numéros de téléphone en sont délibérément exclus : un export groupé de ces données serait un fichier d'adresses, pas un jeu de données sur l'accessibilité."
+    app_waitlist:
+        heading: "Liste d’attente pour l’application"
+        intro: "Combien de personnes souhaitent une application — et pour quelle plateforme. Ce chiffre atteste une demande, il n’engage aucune date, et n’apparaît qu’à partir d’un volume significatif. Seules les adresses confirmées par leur titulaire sont comptées."
+        total: "Inscriptions"
+        total_hint: "Uniquement les adresses confirmées par leur titulaire."
+        ios: "dont iOS"
+        android: "dont Android"
 
 api:
     token_invalid: "Le jeton n’est pas valide. Veuillez vous reconnecter."
@@ -1501,3 +1544,62 @@ accessibility_statement:
     report_error: "Le signalement n'a pas pu être envoyé. Veuillez réessayer plus tard."
     report_rate_limited: "Trop de signalements. Veuillez réessayer dans %minutes% minutes."
     email_subject: "Nouveau signalement d'obstacle sur Endlech.lu"
+
+# Warteliste für die mobile App (Feature 08)
+app_waitlist:
+    meta_title: "Endlech.lu en application"
+    hero:
+        eyebrow: "En déplacement"
+        heading: "Endlech.lu en application sur votre téléphone"
+        text: "Le site peut déjà être ajouté à l’écran d’accueil, où il se comporte comme une application. Une vraie application viendra s’y ajouter — pour iPhone et iPad, une version de test tourne déjà."
+        cta: "Rejoindre la liste"
+    status:
+        title: "Où nous en sommes"
+        subtitle: "Honnêtement, sans date : pour une plateforme il y a quelque chose à essayer, pour l’autre rien encore."
+    card:
+        ios:
+            title_open: "Version de test disponible"
+            title_closed: "Version de test en préparation"
+            text_open: "Pour iPhone et iPad, une version de test est disponible via TestFlight. Nous vous enverrons le lien dès que vous aurez confirmé votre adresse."
+            text_closed: "Une version de test pour iPhone et iPad est en préparation. Nous vous écrirons dès qu’elle sera ouverte."
+        android:
+            title: "Rien de développé"
+            text: "Pour Android, il n’y a ni application ni version de test — et nous ne vous dirons pas quand il y en aura. Votre inscription compte au moment de décider si nous commençons."
+    form:
+        platform: "Pour quel appareil ?"
+        email: "Adresse e-mail"
+        consent: "Je souhaite être averti par e-mail dès que c’est disponible."
+        honeypot: "Site web (laisser vide)"
+        title: "S’inscrire"
+        subtitle: "Nous avons seulement besoin de votre adresse e-mail et de la plateforme. Rien d’autre."
+        error_summary: "{1}Un champ demande encore votre attention.|]1,Inf[ %count% champs demandent encore votre attention."
+        email_help: "C’est là que partiront la confirmation puis l’accès."
+        privacy_note: "La façon dont nous traitons votre adresse est expliquée dans la"
+        privacy_link: "section vie privée"
+        submit: "S’inscrire"
+        success_title: "Presque terminé"
+        success_text: "Nous vous avons envoyé un e-mail. Confirmez le lien qu’il contient et vous serez sur la liste."
+        success_hint: "Rien reçu ? Vérifiez vos courriers indésirables."
+    platform_hint:
+        ios: "Version de test disponible — accès par e-mail après confirmation."
+        android: "Rien de développé. Votre inscription compte comme demande."
+    confirm:
+        title: "Confirmer l’inscription"
+        revoke_title: "Inscription retirée"
+        back: "Vers la page de l’application"
+        success_heading: "Vous êtes sur la liste"
+        success_text: "Votre adresse est confirmée. Nous vous avons envoyé un second e-mail expliquant la suite pour votre plateforme."
+        already_heading: "C’était déjà fait"
+        already_text: "Cette inscription est déjà confirmée. Vous n’avez rien de plus à faire."
+        expired_heading: "Ce lien a expiré"
+        expired_text: "Les liens de confirmation sont valables sept jours. Passé ce délai, ils ne peuvent plus être utilisés."
+        revoked_heading: "Vous n’êtes plus sur la liste"
+        revoked_text: "Votre inscription a été supprimée. Nous ne vous écrirons plus à ce sujet."
+        invalid_heading: "Ce lien ne mène nulle part"
+        invalid_text: "Nous ne trouvons aucune inscription pour ce lien. Il a peut-être été copié de façon incomplète."
+        expired_again_hint: "Vous pouvez vous réinscrire à tout moment :"
+        expired_again_link: "Se réinscrire"
+
+app_platform:
+    ios: "iPhone ou iPad"
+    android: "Android"

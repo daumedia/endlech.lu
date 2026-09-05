@@ -1,0 +1,51 @@
+{#
+    Plattformwahl der App-Warteliste als Segmented Control (Feature 08).
+
+    Parameter:
+      field     – das ChoiceType-Feld (expanded, multiple: false, placeholder: false)
+      platforms – Map value → AppPlatform-Case, für Emoji und Hinweistext
+
+    Anders als _tristate_field trägt jedes Segment einen eigenen Hinweis: Für iOS
+    läuft eine Beta, für Android ist nichts gebaut, und genau das soll jemand
+    LESEN, bevor er absendet — nicht erst in der Bestätigungsmail (AK-05, AK-06).
+
+    ⚠ Die Radios bleiben echte Inputs (`peer sr-only`, nicht `hidden`): Ein
+    hidden-Input ist für Tastatur und Screenreader nicht vorhanden. sr-only nimmt
+    ihn nur optisch heraus, der Fokus wird über peer-focus-visible am sichtbaren
+    Segment dargestellt (AK-56).
+
+    ⚠ Die Hinweise stehen im Markup und nicht in einem Stimulus-Controller. Ohne
+    JavaScript sind damit BEIDE sichtbar — das ist gewollt: Wer die Seite ohne
+    Skripte bedient, liest die Lage für beide Plattformen, statt gar keine.
+#}
+<fieldset class="rounded-lg">
+    {# Ein fieldset trägt seine Beschriftung im legend – form_label() erzeugte
+       ein <label>, das auf keines der Radios zeigen kann. #}
+    <legend class="block mb-1 text-sm font-semibold text-gray-900">{{ field.vars.label|trans }}</legend>
+    <p class="mb-2 text-xs text-gray-700">{{ 'form.required_field'|trans }}</p>
+
+    <div class="grid gap-3 sm:grid-cols-2">
+        {% for choice in field %}
+            {% set platform = platforms[choice.vars.value] ?? null %}
+            <label class="cursor-pointer block">
+                {{ form_widget(choice, {'attr': {'class': 'peer sr-only'}}) }}
+                <span class="block h-full rounded-lg border border-gray-500 bg-white p-4 motion-safe:transition
+                             hover:bg-gray-50
+                             peer-checked:border-cyan-700 peer-checked:bg-cyan-50 peer-checked:ring-2 peer-checked:ring-cyan-700
+                             peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-cyan-700">
+                    <span class="flex items-center gap-2 font-semibold text-gray-900">
+                        {% if platform %}<span aria-hidden="true">{{ platform.emoji }}</span>{% endif %}
+                        {{ choice.vars.label|trans }}
+                    </span>
+                    {% if platform %}
+                        <span class="mt-1 block text-sm text-gray-700">
+                            {{ ('app_waitlist.platform_hint.' ~ platform.value)|trans }}
+                        </span>
+                    {% endif %}
+                </span>
+            </label>
+        {% endfor %}
+    </div>
+
+    <div class="mt-1 text-sm font-semibold text-red-700">{{ form_errors(field) }}</div>
+</fieldset>

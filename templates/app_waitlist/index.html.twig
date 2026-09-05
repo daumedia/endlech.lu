@@ -1,0 +1,277 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'app_waitlist.meta_title'|trans }} – Endlech.lu{% endblock %}
+
+{#
+    Warteliste für die mobile App (Feature 08).
+
+    Aufbau wie die übrigen Außenseiten (Partner, Organisationen, Open): Hero-Band
+    im Verlauf, danach Sektionsbänder mit wechselnder Fläche, `motion-safe:transition`,
+    `focus:outline-2` und `min-h-[48px]` auf allen Aktionen.
+
+    Genau ein <h1> (im Hero) – base.html.twig bringt keins mit. Jede Sektion
+    beginnt mit <h2>, die Statuskarten nutzen <h3>.
+
+    ⚠ Nirgends steht eine Funktionsliste der App. Was sie können wird, ist nicht
+    entschieden; eine erfundene Liste wäre ein Versprechen, das die Vormerkung
+    einlösen müsste. Der Hero sagt stattdessen, was heute schon geht: Die PWA
+    deckt den mobilen Fall ab, die App kommt zusätzlich.
+
+    Vier Zustände (AK-01, AK-10, AK-12):
+      leer    – Normalzustand, kein Segment vorgewählt (placeholder: false im FormType)
+      ladend  – siehe Kommentar am Absendeknopf
+      Fehler  – Feldfehler aus _form_field/_platform_field + autofocus auf dem
+                ERSTEN fehlerhaften Feld, Muster aus partner/_form.html.twig
+      gefüllt – Turbo-Stream (success.stream.html.twig) bzw. Flash nach Redirect
+#}
+{% block body %}
+
+{# Map value → AppPlatform-Case, für _platform_field und die Statuskarten.
+   Die Cases kommen aus dem Formular selbst (ChoiceView::$data), damit hier
+   keine zweite Liste der Plattformen entsteht, die auseinanderlaufen kann.
+   Idiom wie in organisation/_form.html.twig. #}
+{% set platforms = {} %}
+{% for choice in form.platform.vars.choices %}
+    {% set platforms = platforms|merge({(choice.value): choice.data}) %}
+{% endfor %}
+
+{# === 1 · HERO ============================================================ #}
+<section class="bg-linear-to-r from-cyan-700 to-purple-800 text-white py-20">
+    <div class="container mx-auto px-4 max-w-3xl text-center">
+        <p class="inline-block bg-white/20 text-white text-sm font-semibold px-4 py-1.5 rounded-full mb-6">
+            {{ 'app_waitlist.hero.eyebrow'|trans }}
+        </p>
+
+        <h1 class="text-3xl md:text-5xl font-bold mb-5 leading-tight">
+            {{ 'app_waitlist.hero.heading'|trans }}
+        </h1>
+
+        <p class="text-lg text-cyan-50 leading-relaxed mb-8">
+            {{ 'app_waitlist.hero.text'|trans }}
+        </p>
+
+        <a href="#vormerken"
+           class="inline-block min-h-[48px] bg-white text-cyan-900 font-bold px-8 py-3 rounded-full shadow-lg hover:shadow-xl hover:bg-cyan-50 motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-white">
+            {{ 'app_waitlist.hero.cta'|trans }}
+        </a>
+    </div>
+</section>
+
+{# === 2 · STAND JE PLATTFORM =============================================
+   Zwei Karten nebeneinander, und sie sind bewusst NICHT gleichwertig
+   formuliert: Für iOS läuft eine Beta, für Android ist nichts gebaut. Wer das
+   erst in der Bestätigungsmail liest, hat sich unter falscher Annahme
+   eingetragen.
+
+   ⚠ Die iOS-Karte hängt an `betaOffen` (der Controller setzt es aus
+   %app.testflight_url%). Ohne konfigurierten Link gibt es keine Beta, in die
+   jemand hineinkann – dann darf hier auch nicht „Beta läuft" stehen. #}
+{% set cards = [
+    {
+        platform: platforms.ios,
+        title: betaOffen ? 'app_waitlist.card.ios.title_open' : 'app_waitlist.card.ios.title_closed',
+        text:  betaOffen ? 'app_waitlist.card.ios.text_open'  : 'app_waitlist.card.ios.text_closed'
+    },
+    {
+        platform: platforms.android,
+        title: 'app_waitlist.card.android.title',
+        text:  'app_waitlist.card.android.text'
+    }
+] %}
+
+<section class="bg-white py-16">
+    <div class="container mx-auto px-4">
+        <h2 class="text-2xl md:text-3xl font-bold text-center text-gray-900 mb-3">
+            {{ 'app_waitlist.status.title'|trans }}
+        </h2>
+        <p class="text-center text-gray-700 mb-10">{{ 'app_waitlist.status.subtitle'|trans }}</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            {% for card in cards %}
+                <div class="flex h-full flex-col rounded-xl border border-gray-300 bg-white p-6 shadow-sm">
+                    {# Der Produktname steht als Abzeichen, nicht als Überschrift:
+                       „iOS" und „Android" werden nicht übersetzt, deshalb kommen
+                       sie aus dem Enum und nicht aus dem Katalog. #}
+                    <p class="mb-4 inline-flex w-fit items-center gap-2 rounded-full px-3 py-1 text-sm font-semibold {{ card.platform.badgeClasses }}">
+                        <span aria-hidden="true">{{ card.platform.emoji }}</span>
+                        {{ card.platform.label }}
+                    </p>
+
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">{{ card.title|trans }}</h3>
+
+                    <p class="text-gray-700 text-sm leading-relaxed">{{ card.text|trans }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{# === 3 · VORMERKUNG ====================================================== #}
+<section id="vormerken" class="bg-gray-50 py-16 scroll-mt-24">
+    <div class="container mx-auto px-4 max-w-2xl">
+        <h2 class="text-2xl md:text-3xl font-bold text-center text-gray-900 mb-3">
+            {{ 'app_waitlist.form.title'|trans }}
+        </h2>
+        <p class="text-center text-gray-700 mb-8">{{ 'app_waitlist.form.subtitle'|trans }}</p>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 md:p-8">
+            {# Erstes fehlerhaftes Feld ermitteln – es bekommt `autofocus` und
+               damit den Fokus ohne eine Zeile JavaScript (der Browser fokussiert
+               [autofocus] beim Rendern der 422-Antwort; Turbo tut nach einem
+               Render dasselbe). Muster aus partner/_form.html.twig.
+
+               Der Honeypot steht bewusst NICHT in der Reihenfolge: Er trägt kein
+               Constraint und kann deshalb nie fehlerhaft sein. #}
+            {% set field_order = ['platform', 'email', 'consent', 'marketingConsent'] %}
+            {% set first_error_field = null %}
+            {% set error_count = form.vars.errors|length %}
+            {% for name in field_order %}
+                {% if first_error_field is null and form[name].vars.errors|length > 0 %}
+                    {% set first_error_field = name %}
+                {% endif %}
+                {% set error_count = error_count + form[name].vars.errors|length %}
+            {% endfor %}
+
+            {# form_start bekommt bewusst KEIN action: So postet das Formular auf
+               die aktuelle URL inklusive Query-String – nur dadurch überlebt
+               ?utm_source=… den Absendevorgang und landet in der Attribution
+               (WaitlistRequestHelper::resolveSource).
+
+               ⚠ Die id ist das Ziel des Turbo-Streams und muss wörtlich
+               `app-waitlist-form` heißen – success.stream.html.twig adressiert
+               genau diesen Wert. #}
+            <div id="app-waitlist-form">
+                {{ form_start(form, {'attr': {'class': 'space-y-6', 'novalidate': 'novalidate'}}) }}
+
+                    {# Live-Region: immer im DOM, damit eine spätere Einfügung als
+                       Update gemeldet wird. Tragend ist aber der Fokussprung –
+                       das fokussierte Feld trägt seine Meldung über
+                       aria-describedby. #}
+                    <div aria-live="polite" role="status">
+                        {% if error_count > 0 %}
+                            <div class="border-l-4 border-red-700 bg-red-50 px-4 py-3 rounded-r-lg">
+                                <p class="text-sm font-bold text-red-800">
+                                    {{ 'app_waitlist.form.error_summary'|trans({'%count%': error_count}) }}
+                                </p>
+                                {% if form.vars.errors|length > 0 %}
+                                    <ul class="mt-2 text-sm text-red-800 list-disc list-inside">
+                                        {% for error in form.vars.errors %}
+                                            <li>{{ error.message }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    {# Plattformwahl als Segmented Control.
+
+                       ⚠ Der `autofocus` sitzt am Wrapper und nicht am Feld:
+                       _platform_field rendert ein <fieldset> mit zwei Radios und
+                       nimmt keinen autofocus-Parameter entgegen. Ein
+                       tabindex="-1"-Wrapper ist der Weg, der ohne Änderung am
+                       geteilten Partial auskommt; der Fokus landet auf der
+                       Gruppe, Legende und Fehlermeldung stehen darin. #}
+                    <div{% if first_error_field == 'platform' %} tabindex="-1" autofocus{% endif %}>
+                        {{ include('partials/_platform_field.html.twig', {
+                            field: form.platform,
+                            platforms: platforms
+                        }) }}
+                    </div>
+
+                    {{ include('partials/_form_field.html.twig', {
+                        field: form.email,
+                        help: 'app_waitlist.form.email_help'|trans,
+                        autofocus: first_error_field == 'email'
+                    }) }}
+
+                    {# Honeypot: für Menschen unsichtbar, für Screenreader und
+                       Tastatur ausgeblendet – nur Bots füllen ihn aus.
+                       aria-hidden und tabindex="-1" gehören zusammen: ein
+                       fokussierbares aria-hidden-Element wäre ein ARIA-Verstoß
+                       (das tabindex setzt AppWaitlistType am Feld selbst).
+                       Kein display:none, das überspringen manche Bots gezielt. #}
+                    <div aria-hidden="true" class="absolute w-px h-px -left-[9999px] overflow-hidden">
+                        {{ form_label(form.website) }}
+                        {{ form_widget(form.website) }}
+                    </div>
+
+                    {# Einwilligung: unangehakt per Default (CheckboxType-Standard),
+                       Zweck ausformuliert. Der Datenschutz-Link steht bewusst
+                       NEBEN dem Label und nicht darin – ein Link im Label würde
+                       beim Klick die Checkbox togglen. #}
+                    <div class="rounded-xl border border-gray-300 bg-gray-50 p-4 space-y-2">
+                        <div class="flex items-start gap-3">
+                            {{ form_widget(form.consent, {'attr': {
+                                'class': 'mt-0.5 w-5 h-5 shrink-0 rounded border-gray-500 text-cyan-700 focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700',
+                                'aria-describedby': form.consent.vars.id ~ '_error',
+                                'aria-invalid': form.consent.vars.errors|length > 0 ? 'true' : false,
+                                'autofocus': first_error_field == 'consent' ? true : false,
+                            }}) }}
+                            {{ form_label(form.consent, null, {'label_attr': {'class': 'text-sm text-gray-900 leading-relaxed cursor-pointer'}}) }}
+                        </div>
+
+                        <p id="{{ form.consent.vars.id }}_error" class="text-sm font-semibold text-red-700">
+                            {%- for error in form.consent.vars.errors %}{{ error.message }}{% endfor -%}
+                        </p>
+
+                        {# Werbe-Einwilligung (Feature 04), im selben Kasten direkt
+                           unter dem Pflicht-Häkchen – die beiden lesen sich dadurch
+                           als Paar. Bewusst OHNE Pflicht-/Optional-Zeile: Das Feld
+                           ist freiwillig (Koppelungsverbot), eine Markierung
+                           suggerierte das Gegenteil.
+
+                           Kein Include von _form_field.html.twig: Das Partial setzt
+                           das Label ÜBER das Widget und gibt ihm die
+                           Textfeld-Klassenkette – für eine Checkbox beides falsch.
+
+                           ⚠ aria-invalid ist 'true' oder false, nie null: In `attr`
+                           unterdrückt nur `false` das Attribut, `null` renderte
+                           aria-invalid="" – Screenreader lesen das als „ungültig". #}
+                        <div class="flex items-start gap-3">
+                            {{ form_widget(form.marketingConsent, {'attr': {
+                                'class': 'mt-0.5 w-5 h-5 shrink-0 rounded border-gray-500 text-cyan-700 focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700',
+                                'aria-describedby': form.marketingConsent.vars.id ~ '_help ' ~ form.marketingConsent.vars.id ~ '_error',
+                                'aria-invalid': form.marketingConsent.vars.errors|length > 0 ? 'true' : false,
+                            }}) }}
+                            <span class="min-w-0">
+                                {{ form_label(form.marketingConsent, null, {'label_attr': {'class': 'block text-sm text-gray-900 leading-relaxed cursor-pointer'}}) }}
+                                {# Der Schlüssel steht im FormType ('help' => 'marketing.consent.help');
+                                   hier wird er nur übersetzt, damit er nicht doppelt gepflegt wird. #}
+                                <span id="{{ form.marketingConsent.vars.id }}_help" class="mt-0.5 block text-xs text-gray-700">
+                                    {{ form.marketingConsent.vars.help|trans }}
+                                </span>
+                            </span>
+                        </div>
+
+                        <p id="{{ form.marketingConsent.vars.id }}_error" class="text-sm font-semibold text-red-700">
+                            {%- for error in form.marketingConsent.vars.errors %}{{ error.message }}{% endfor -%}
+                        </p>
+
+                        <p class="text-xs text-gray-700">
+                            {{ 'app_waitlist.form.privacy_note'|trans }}
+                            <a href="{{ path('app_impressum') }}#datenschutz"
+                               class="font-semibold text-cyan-800 underline rounded focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700">
+                                {{ 'app_waitlist.form.privacy_link'|trans }}
+                            </a>
+                        </p>
+                    </div>
+
+                    {# Ladezustand: hier steht bewusst nichts Eigenes – wie in
+                       partner/_form.html.twig. Turbo setzt beim Absenden von sich
+                       aus `aria-busy` auf das Formular und `disabled` auf diesen
+                       Knopf und nimmt es nach der Antwort zurück; ein
+                       handgeschriebener Zustand liefe daneben her und wäre ohne
+                       JavaScript ohnehin wirkungslos. #}
+                    <button type="submit"
+                            class="w-full md:w-auto min-h-[48px] bg-cyan-700 hover:bg-cyan-800 text-white font-bold px-8 py-3 rounded-full shadow-md hover:shadow-lg motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700 cursor-pointer">
+                        {{ 'app_waitlist.form.submit'|trans }}
+                    </button>
+
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

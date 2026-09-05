@@ -40,6 +40,7 @@ footer:
     vs: "vs. %brand%"
     roadmap: "Roadmap"
     changelog: "Changelog"
+    app: "App-Waardelëscht"
 
 cookie:
     title: "Mir benotzen Cookien"
@@ -83,6 +84,10 @@ home:
         heading: "Kenns du e barrierefrät Restaurant?"
         text: "Hëllef eis, d'Plattform ze erweideren an d'Lëtzebuerg méi barrierefrä ze maachen."
         button: "Restaurant virschloen"
+    app:
+        heading: "Endlech.lu als App"
+        text: "Fir iPhone an iPad leeft eng Testversioun, fir Android sammele mir de Bedarf. Mellt Iech un, da soe mir Bescheed."
+        cta: "Op d’Waardelëscht"
 
 opening_hours:
     title: "Öffnungszäiten"
@@ -642,6 +647,15 @@ admin:
             created: "Erakomm"
             consent: "Zoustëmmung"
             confirmed: "Bestätegt"
+            platform: "Plattform"
+            beta_link_sent: "Verschéckt den"
+            self_confirmed: "Selwer confirméiert"
+        source_app: "App"
+        beta_heading: "Beta-Zougang"
+        beta_not_sent: "Nach net verschéckt."
+        beta_no_build: "Fir %platform% gëtt et de Moment keng Beta — hei geet eréischt eppes eraus, wann e Build existéiert."
+        self_confirmed_missing: "Nach net confirméiert"
+        self_confirmed_hint: "Confirméiert kann aus engem Statuswiessel an der Verwaltung kommen. Nëmme Selwer confirméiert beleet, datt d’Adress deem gehéiert, deen ugemellt ass — an nëmmen domat dierf Reklamm erausgoen."
 
 board:
     title: "Iddie fir Endlech.lu"
@@ -787,6 +801,9 @@ flash:
     delete_last_admin: "Du bass dat eenzegt Kont mat Verwaltungsrechter. Leet fir d éischt en zweet un."
     export_rate_limited: "Ze vill Downloads. Probéier w.e.g. méi spéit nach eng Kéier."
 
+    app_waitlist_submitted: "Bal fäerdeg! Confirméiert wgl. de Link an Ärer E-Mail."
+    app_waitlist_email_failed: "Är Umeldung ass gespäichert, mä d’Confirmatiouns-Mail konnt net verschéckt ginn. Mellt Iech wgl. bei eis."
+    app_waitlist_rate_limited: "Dir hutt a kuerzer Zäit méi Umeldunge geschéckt. Probéiert et wgl. an enger Stonn nach eng Kéier."
 email:
     waitlist_revoke_hint: 'Du wëlls dach net op der Lëscht stoen?'
     waitlist_revoke_link: 'Hei ofmellen'
@@ -864,6 +881,25 @@ email:
     account_deleted_text: "Däi Kont ass geläscht. Deng Stammdonnéeën, däi Profilbild an deng Passkeys sinn ewech."
     account_deleted_kept: "Restauranten, déis du agereecht hues, bleiwen an der Datebank — ouni Bezuch zu denger Persoun. Merci, datts du se bäigedroen hues."
 
+    app_confirm_subject: "Confirméiert Är Umeldung fir d’Endlech.lu-App"
+    app_beta_subject: "Är Beta vun der Endlech.lu-App ass do"
+    app_soon_subject: "Dir stitt op der Lëscht fir d’Endlech.lu-App"
+    app_confirm_title: "Nach ee Klick"
+    app_confirm_greeting: "Moien,"
+    app_confirm_text: "Dir wëllt Bescheed kréien, soubal et d’Endlech.lu-App gëtt. Confirméiert wgl. kuerz Är E-Mail-Adress."
+    app_confirm_button: "Umeldung confirméieren"
+    app_confirm_platform: "Är Auswiel: %platform%"
+    app_confirm_note: "Wann Dir Iech net ugemellt hutt, ignoréiert dës Mail einfach. Ouni Är Confirmatioun geschitt näischt."
+    app_confirm_expiry: "De Link gëllt siwen Deeg."
+    app_confirm_fallback: "Falls de Knäppchen net funktionéiert, maacht dës Adress op:"
+    app_beta_title: "Dir stitt op der Lëscht"
+    app_beta_greeting: "Moien,"
+    app_beta_intro: "Är Adress ass confirméiert — Dir stitt op der Waardelëscht fir d’Endlech.lu-App. Mir schreiwen Iech, soubal et eppes Neies gëtt."
+    app_beta_text: "Fir iPhone an iPad kënnt Dir d’Testversioun ab elo iwwer TestFlight installéieren:"
+    app_beta_button: "Testversioun opmaachen"
+    app_beta_fallback: "Falls de Knäppchen net funktionéiert, maacht dës Adress op:"
+    app_beta_link_dead: "De Link funktionéiert net méi? Da sinn d’Testplazen de Moment voll oder ofgelaf — schreift eis kuerz, mir mellen eis."
+    app_soon_text: "Fir Android ass nach näischt gebaut. Soubal sech dat ännert, héiert Dir vun eis — virdrun net."
 ordering_platform:
     uber_eats: "Uber Eats"
     deliveroo: "Deliveroo"
@@ -1439,6 +1475,13 @@ open:
         metrics_json: "Zuelen als JSON"
         licence: "Den Datesaz steet ënner"
         privacy_note: "E-Mail-Adressen an Telefonsnummere sinn bewosst net dran: E Sammelofzuch dovunner wier eng Adresslëscht, kee Barrièrefräiheets-Datesaz."
+    app_waitlist:
+        heading: "Waardelëscht fir d’App"
+        intro: "Wéi vill Leit sech eng App wënschen — a fir wéi eng Plattform. D’Zuel ass e Bedarfsnowäis, keng Terminzousoen, an erschéngt eréischt ab enger aussagekräfteger Mass. Gezielt gi just Adressen, déi selwer confirméiert goufen."
+        total: "Umeldungen"
+        total_hint: "Nëmme selwer confirméiert Adressen."
+        ios: "dovunner iOS"
+        android: "dovunner Android"
 
 api:
     token_invalid: "D’Token ass ongëlteg. Mell dech w.e.g. nach eng Kéier un."
@@ -1501,3 +1544,62 @@ accessibility_statement:
     report_error: "D'Meldung konnt net geschéckt ginn. Probéiert w.e.g. méi spéit nach eng Kéier."
     report_rate_limited: "Ze vill Meldungen. Probéiert w.e.g. an %minutes% Minutten nach eng Kéier."
     email_subject: "Nei Barrière-Meldung op Endlech.lu"
+
+# Warteliste für die mobile App (Feature 08)
+app_waitlist:
+    meta_title: "Endlech.lu als App"
+    hero:
+        eyebrow: "Fir ënnerwee"
+        heading: "Endlech.lu als App um Telefon"
+        text: "D’Websäit léisst sech schonn haut op den Startbildschierm setzen a funktionéiert do wéi eng App. Eng richteg App kënnt derbäi — fir iPhone an iPad leeft schonn eng Testversioun."
+        cta: "Op d’Waardelëscht"
+    status:
+        title: "Wou mir stinn"
+        subtitle: "Éierlech, ouni Datum: Fir déi eng Plattform gëtt et eppes zum Ausprobéieren, fir déi aner nach näischt."
+    card:
+        ios:
+            title_open: "Testversioun leeft"
+            title_closed: "Testversioun a Virbereedung"
+            text_open: "Fir iPhone an iPad gëtt et eng Testversioun iwwer TestFlight. De Link schécke mir Iech, soubal Dir Är Adress confirméiert hutt."
+            text_closed: "Eng Testversioun fir iPhone an iPad ass an Aarbecht. Mir schreiwen Iech, soubal se op ass."
+        android:
+            title: "Nach näischt gebaut"
+            text: "Fir Android gëtt et weder App nach Testversioun — a mir soen Iech och net, wéini et se gëtt. Är Umeldung zielt mat, wa mir décidéieren, ob mir ufänken."
+    form:
+        platform: "Fir wéint Apparat?"
+        email: "E-Mail-Adress"
+        consent: "Ech wëll per E-Mail informéiert ginn, soubal et lassgeet."
+        honeypot: "Websäit (wgl. eidel loossen)"
+        title: "Umellen"
+        subtitle: "Mir brauchen nëmmen Är E-Mail-Adress an d’Plattform. Soss näischt."
+        error_summary: "{1}Ee Feld brauch nach Är Opmierksamkeet.|]1,Inf[ %count% Felder brauchen nach Är Opmierksamkeet."
+        email_help: "Do hin geet d’Confirmatioun a spéider den Zougang."
+        privacy_note: "Wéi mir mat Ärer Adress ëmginn, steet am"
+        privacy_link: "Dateschutz-Abschnitt"
+        submit: "Umellen"
+        success_title: "Bal fäerdeg"
+        success_text: "Mir hunn Iech eng E-Mail geschéckt. Confirméiert de Link dran, dann stitt Dir op der Lëscht."
+        success_hint: "Näischt ukomm? Kuckt am Spam-Dossier no."
+    platform_hint:
+        ios: "Testversioun disponibel — Zougang per Mail no der Confirmatioun."
+        android: "Nach näischt gebaut. Är Umeldung zielt als Bedarf."
+    confirm:
+        title: "Umeldung confirméieren"
+        revoke_title: "Umeldung zréckgezunn"
+        back: "Op d’App-Säit"
+        success_heading: "Dir stitt op der Lëscht"
+        success_text: "Är Adress ass confirméiert. Mir hunn Iech eng zweet Mail geschéckt — do steet, wéi et fir Är Plattform weidergeet."
+        already_heading: "Dat hat Dir scho gemaach"
+        already_text: "Dës Umeldung ass scho confirméiert. Dir musst näischt weider maachen."
+        expired_heading: "Dëse Link ass ofgelaf"
+        expired_text: "Confirmatiouns-Linke gëllen siwen Deeg. Duerno kann een se net méi anléisen."
+        revoked_heading: "Dir stitt net méi op der Lëscht"
+        revoked_text: "Är Umeldung ass geläscht. Mir schreiwen Iech zu dësem Thema net méi."
+        invalid_heading: "Dëse Link féiert an d’Eidelt"
+        invalid_text: "Mir fanne keng Umeldung zu dësem Link. Vläicht ass en net vollstänneg kopéiert ginn."
+        expired_again_hint: "Dir kënnt Iech zu all Moment nei umellen:"
+        expired_again_link: "Elo nei umellen"
+
+app_platform:
+    ios: "iPhone oder iPad"
+    android: "Android"

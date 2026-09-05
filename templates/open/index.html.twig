@@ -101,6 +101,47 @@
             {% endif %}
         </div>
 
+        {# --- App-Warteliste (Feature 08) ---
+           ⚠ Geprüft wird `is defined`, NICHT ein Vergleich gegen 0 und keine
+           eigene Schwellenzahl: Unterhalb von `OpenStatsService::APP_WAITLIST_MIN`
+           stehen die drei Schlüssel gar nicht erst im Array. Die Entscheidung
+           fällt dort und nur dort — eine Zahl, die bloß das Template hinter einer
+           Bedingung verbirgt, wäre über /open.json trotzdem abrufbar (AK-37/AK-39),
+           und eine zweite Schwelle hier liefe irgendwann gegen die erste. #}
+        {% if platform.appWaitlistTotal is defined %}
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold text-gray-900 mb-1">{{ 'open.app_waitlist.heading'|trans }}</h3>
+                <p class="text-sm text-gray-600 mb-4 max-w-3xl">{{ 'open.app_waitlist.intro'|trans }}</p>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    {{ include('open/_metric.html.twig', {
+                        emoji: '📱',
+                        value: platform.appWaitlistTotal|format_number,
+                        label: 'open.app_waitlist.total'|trans,
+                        hint: 'open.app_waitlist.total_hint'|trans
+                    }) }}
+                    {# ⚠ Die beiden Kacheln tragen bewusst KEINEN Hinweistext wie
+                       „Beta läuft" / „noch nichts gebaut". Diese Aussage hängt an
+                       `AppPlatform::hasBeta()` und steht bereits an vier Stellen;
+                       eine fünfte, die nur im Katalog lebt, liefe beim ersten
+                       Android-Build als einzige nicht mit. Die Aufteilung sagt die
+                       Zahl, nicht der Text. #}
+                    {{ include('open/_metric.html.twig', {
+                        emoji: '🍏',
+                        value: platform.appWaitlistIos|format_number,
+                        suffix: '/ ' ~ platform.appWaitlistTotal|format_number,
+                        label: 'open.app_waitlist.ios'|trans
+                    }) }}
+                    {{ include('open/_metric.html.twig', {
+                        emoji: '🤖',
+                        value: platform.appWaitlistAndroid|format_number,
+                        suffix: '/ ' ~ platform.appWaitlistTotal|format_number,
+                        label: 'open.app_waitlist.android'|trans
+                    }) }}
+                </div>
+            </div>
+        {% endif %}
+
         {# --- Punkteverteilung --- #}
         <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm mb-6 break-inside-avoid">
             <h3 class="text-lg font-semibold text-gray-900 mb-1">{{ 'open.platform.distribution_heading'|trans }}</h3>

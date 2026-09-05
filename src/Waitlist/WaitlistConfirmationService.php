@@ -245,4 +245,101 @@ final class WaitlistConfirmationService
             // Der Eintrag ist bereits bestätigt und gespeichert.
         }
     }
+
+    /**
+     * Die **zweite** Mail an den Interessenten – die nach der eingelösten
+     * Bestätigung (Feature 08 / AK-21).
+     *
+     * Sie steht hier und nicht im Controller, obwohl sie heute nur einen
+     * Aufrufer hat: Sprache, Abmeldelink und Ausnahmebehandlung sind in diesem
+     * Dienst bereits entschieden. Eine zweite Fassung im Controller liefe von
+     * dieser irgendwann auseinander – und zwar lautlos, weil beide Wege
+     * weiterhin eine Mail verschicken.
+     *
+     * Anders als `notifyTeam()` geht sie an den Anmelder und deshalb in
+     * **seiner** Sprache; anders als `register()` erzeugt sie keinen Token und
+     * fasst den Eintrag nicht an.
+     *
+     * ⚠ BF-10: `->locale()` und der Betreff in derselben Sprache. Ein
+     * Messenger-Worker hat keine Anfrage und damit keine Sprache – er nähme
+     * `default_locale` (lb), und ein französischsprachiger Interessent bekäme
+     * seinen Beta-Zugang auf Luxemburgisch. Ausführlich begründet in
+     * `register()`.
+     *
+     * ⚠ **Der Abmeldelink gehört auch in diese Mail** (BF-37, AK-30). Jede
+     * Mail trägt den Rückweg, nicht nur die erste: Ein Widerruf, der das
+     * Wiederfinden einer älteren Mail voraussetzt, ist nach Art. 7 Abs. 3
+     * DSGVO nicht „ebenso einfach" wie die Einwilligung.
+     *
+     * ⚠ **`betaLinkSentAt` setzt der Aufrufer.** Das Interface kennt das Feld
+     * nicht, und es aufzunehmen zwänge B14 und B15 zu einem Feld, das sie
+     * nicht haben. Der Rückgabewert ist die Grundlage dafür.
+     *
+     * ⚠ „Versendet" heißt bei asynchronem Transport **„in die Warteschlange
+     * gelegt"**, nicht „zugestellt". Mehr ist an dieser Stelle nicht
+     * feststellbar; wer den tatsächlichen Ausgang sucht, findet ihn im Worker
+     * bzw. in `messenger:failed:show`.
+     *
+     * Die Transport-Ausnahme wird geschluckt wie in `notifyTeam()`: Der
+     * Eintrag ist zu diesem Zeitpunkt bereits bestätigt und gespeichert. Eine
+     * gescheiterte Mail darf die Bestätigung nicht nachträglich kaputt machen –
+     * der Nutzer hat alles richtig gemacht.
+     *
+     * Kein `$subjectParams` wie bei `register()`/`notifyTeam()`: Diese Betreffe
+     * tragen keine Platzhalter. Der Unterschied zwischen „Beta läuft" und
+     * „noch nichts gebaut" steckt im **Schlüssel**, den der Aufrufer aus
+     * `AppPlatform::hasBeta()` ableitet – nicht in einem Platzhalter darin.
+     *
+     * @param string               $emailTemplate Twig-Template der Mail
+     * @param string               $subjectKey    Übersetzungsschlüssel der Betreffzeile
+     * @param string|null          $revokeRoute   Route des Abmeldewegs (Token als {token})
+     * @param array<string, mixed> $context       zusätzliche Template-Werte, etwa der
+     *                                            TestFlight-Link aus `app.testflight_url`
+     *
+     * @return bool false, wenn der Versand scheiterte – die Bestätigung bleibt
+     *              davon unberührt
+     */
+    public function notifyRequester(
+        WaitlistEntryInterface $entry,
+        string $emailTemplate,
+        string $subjectKey,
+        ?string $revokeRoute = null,
+        array $context = [],
+    ): bool {
+        $locale = $entry->getLocale();
+        $token = $entry->getConfirmationToken();
+
+        // ⚠ Ohne Token kein Abmeldelink. `generate()` erzeugte sonst eine
+        // Adresse mit leerem Platzhalter, die zwangsläufig auf „Link ungültig"
+        // läuft – ein Rückweg, der nirgends hinführt, ist schlimmer als
+        // sichtbar keiner. Genau dafür bleibt der Token nach der Bestätigung
+        // stehen.
+        $revokeUrl = null === $revokeRoute || null === $token ? null : $this->urlGenerator->generate(
+            $revokeRoute,
+            ['token' => $token, '_locale' => $locale],
+            UrlGeneratorInterface::ABSOLUTE_URL,
+        );
+
+        $email = (new TemplatedEmail())
+            ->to($entry->getEmail())
+            ->subject($this->translator->trans($subjectKey, [], null, $locale))
+            ->locale($locale)
+            ->htmlTemplate($emailTemplate)
+            // ⚠ Die festen Schlüssel stehen **hinter** `$context`, anders als in
+            // `notifyTeam()`: Ein Aufrufer darf den Abmeldelink nicht aus
+            // Versehen überschreiben – AK-30 hinge sonst an der Sorgfalt jedes
+            // künftigen Aufrufs statt an dieser Zeile.
+            ->context(array_merge($context, [
+                'entry' => $entry,
+                'revokeUrl' => $revokeUrl,
+            ]));
+
+        try {
+            $this->mailer->send($email);
+        } catch (TransportExceptionInterface) {
+            return false;
+        }
+
+        return true;
+    }
 }

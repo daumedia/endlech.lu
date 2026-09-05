@@ -40,6 +40,7 @@ footer:
     vs: "vs. %brand%"
     roadmap: "Roadmap"
     changelog: "Changelog"
+    app: "App-Warteliste"
 
 cookie:
     title: "Wir verwenden Cookies"
@@ -83,6 +84,10 @@ home:
         heading: "Kennst du ein barrierefreies Restaurant?"
         text: "Hilf uns, die Plattform zu erweitern und Luxemburg barrierefreier zu machen."
         button: "Restaurant vorschlagen"
+    app:
+        heading: "Endlech.lu als App"
+        text: "Für iPhone und iPad läuft eine Testfassung, für Android sammeln wir gerade den Bedarf. Trag dich ein, dann sagen wir Bescheid."
+        cta: "Auf die Warteliste"
 
 opening_hours:
     title: "Öffnungszeiten"
@@ -642,6 +647,15 @@ admin:
             created: "Eingegangen"
             consent: "Einwilligung"
             confirmed: "Bestätigt"
+            platform: "Plattform"
+            beta_link_sent: "Versendet am"
+            self_confirmed: "Selbst bestätigt"
+        source_app: "App"
+        beta_heading: "Beta-Zugang"
+        beta_not_sent: "Noch nicht versendet."
+        beta_no_build: "Für %platform% gibt es derzeit keine Beta — hier geht erst etwas hinaus, wenn ein Build existiert."
+        self_confirmed_missing: "Noch nicht bestätigt"
+        self_confirmed_hint: "Bestätigt kann aus einem Statuswechsel in der Verwaltung stammen. Nur Selbst bestätigt belegt, dass die Adresse dem gehört, der eingetragen ist — und nur damit darf Werbung hinausgehen."
 
 board:
     title: "Ideen für Endlech.lu"
@@ -787,6 +801,9 @@ flash:
     delete_last_admin: "Du bist das einzige Konto mit Verwaltungsrechten. Lege erst ein zweites an."
     export_rate_limited: "Zu viele Downloads. Bitte versuche es später erneut."
 
+    app_waitlist_submitted: "Fast geschafft! Bitte bestätige den Link in deiner E-Mail."
+    app_waitlist_email_failed: "Deine Vormerkung ist gespeichert, aber die Bestätigungsmail konnte nicht versendet werden. Bitte melde dich bei uns."
+    app_waitlist_rate_limited: "Du hast in kurzer Zeit mehrere Vormerkungen abgeschickt. Bitte versuche es in einer Stunde erneut."
 email:
     waitlist_revoke_hint: 'Du willst doch nicht auf der Liste stehen?'
     waitlist_revoke_link: 'Hier abmelden'
@@ -864,6 +881,25 @@ email:
     account_deleted_text: "Dein Konto ist gelöscht. Deine Stammdaten, dein Profilbild und deine Passkeys sind weg."
     account_deleted_kept: "Restaurants, die du eingereicht hast, bleiben in der Datenbank — ohne Bezug zu deiner Person. Danke, dass du sie beigetragen hast."
 
+    app_confirm_subject: "Bestätige deine Vormerkung für die Endlech.lu-App"
+    app_beta_subject: "Deine Beta der Endlech.lu-App ist da"
+    app_soon_subject: "Du stehst auf der Liste für die Endlech.lu-App"
+    app_confirm_title: "Nur noch ein Klick"
+    app_confirm_greeting: "Hallo,"
+    app_confirm_text: "du möchtest Bescheid bekommen, sobald es die Endlech.lu-App gibt. Bestätige dafür bitte kurz deine E-Mail-Adresse."
+    app_confirm_button: "Vormerkung bestätigen"
+    app_confirm_platform: "Deine Auswahl: %platform%"
+    app_confirm_note: "Wenn du dich nicht vorgemerkt hast, ignoriere diese Mail einfach. Ohne deine Bestätigung passiert nichts."
+    app_confirm_expiry: "Der Link gilt sieben Tage."
+    app_confirm_fallback: "Falls der Knopf nicht funktioniert, öffne diese Adresse:"
+    app_beta_title: "Du stehst auf der Liste"
+    app_beta_greeting: "Hallo,"
+    app_beta_intro: "deine Adresse ist bestätigt — du stehst auf der Warteliste für die Endlech.lu-App. Wir schreiben dir, sobald es etwas Neues gibt."
+    app_beta_text: "Für iPhone und iPad kannst du die Testfassung ab sofort über TestFlight installieren:"
+    app_beta_button: "Testfassung öffnen"
+    app_beta_fallback: "Falls der Knopf nicht funktioniert, öffne diese Adresse:"
+    app_beta_link_dead: "Der Link funktioniert nicht mehr? Dann sind die Testplätze gerade voll oder abgelaufen — schreib uns kurz, wir melden uns."
+    app_soon_text: "Für Android ist noch nichts gebaut. Sobald sich das ändert, hörst du von uns — vorher nicht."
 ordering_platform:
     uber_eats: "Uber Eats"
     deliveroo: "Deliveroo"
@@ -1439,6 +1475,13 @@ open:
         metrics_json: "Kennzahlen als JSON"
         licence: "Der Datensatz steht unter"
         privacy_note: "E-Mail-Adressen und Telefonnummern sind bewusst nicht enthalten: Ein Sammelabzug davon wäre eine Adressliste, kein Barrierefreiheits-Datensatz."
+    app_waitlist:
+        heading: "Warteliste für die App"
+        intro: "Wie viele Menschen sich eine App wünschen — und für welche Plattform. Die Zahl ist ein Bedarfsnachweis, keine Terminzusage, und erscheint erst ab einer aussagekräftigen Menge. Gezählt werden nur Adressen, die selbst bestätigt wurden."
+        total: "Vormerkungen"
+        total_hint: "Nur selbst bestätigte Adressen."
+        ios: "davon iOS"
+        android: "davon Android"
 
 api:
     token_invalid: "Das Token ist ungültig. Bitte melde dich erneut an."
@@ -1501,3 +1544,62 @@ accessibility_statement:
     report_error: "Die Meldung konnte nicht gesendet werden. Bitte versuchen Sie es später erneut."
     report_rate_limited: "Zu viele Meldungen. Bitte versuchen Sie es in %minutes% Minuten erneut."
     email_subject: "Neue Barriere-Meldung auf Endlech.lu"
+
+# Warteliste für die mobile App (Feature 08)
+app_waitlist:
+    meta_title: "Endlech.lu als App"
+    hero:
+        eyebrow: "Für unterwegs"
+        heading: "Endlech.lu als App auf dem Telefon"
+        text: "Die Website lässt sich schon heute zum Startbildschirm hinzufügen und funktioniert dort wie eine App. Eine echte App kommt zusätzlich — für iPhone und iPad läuft bereits eine Testfassung."
+        cta: "Auf die Warteliste"
+    status:
+        title: "Wo wir gerade stehen"
+        subtitle: "Ehrlich, ohne Termin: Für die eine Plattform gibt es etwas zum Ausprobieren, für die andere noch nichts."
+    card:
+        ios:
+            title_open: "Testfassung läuft"
+            title_closed: "Testfassung in Vorbereitung"
+            text_open: "Für iPhone und iPad gibt es eine Testfassung über TestFlight. Den Zugangslink schicken wir dir, sobald du deine Adresse bestätigt hast."
+            text_closed: "Für iPhone und iPad ist eine Testfassung in Arbeit. Wir schreiben dir, sobald sie offen ist."
+        android:
+            title: "Noch nichts gebaut"
+            text: "Für Android gibt es weder App noch Testfassung — und wir sagen dir auch nicht, wann es sie gibt. Deine Vormerkung zählt mit, wenn wir entscheiden, ob wir anfangen."
+    form:
+        platform: "Für welches Gerät?"
+        email: "E-Mail-Adresse"
+        consent: "Ich möchte per E-Mail benachrichtigt werden, sobald es losgeht."
+        honeypot: "Website (bitte frei lassen)"
+        title: "Vormerken lassen"
+        subtitle: "Wir brauchen nur deine E-Mail-Adresse und die Plattform. Sonst nichts."
+        error_summary: "{1}Ein Feld braucht noch deine Aufmerksamkeit.|]1,Inf[ %count% Felder brauchen noch deine Aufmerksamkeit."
+        email_help: "Hierhin geht die Bestätigung und später der Zugang."
+        privacy_note: "Wie wir mit deiner Adresse umgehen, steht im"
+        privacy_link: "Datenschutzabschnitt"
+        submit: "Vormerken lassen"
+        success_title: "Fast geschafft"
+        success_text: "Wir haben dir eine E-Mail geschickt. Bestätige den Link darin, dann stehst du auf der Liste."
+        success_hint: "Nichts angekommen? Sieh im Spam-Ordner nach."
+    platform_hint:
+        ios: "Testfassung verfügbar — Zugang per Mail nach der Bestätigung."
+        android: "Noch nichts gebaut. Deine Vormerkung zählt als Bedarf."
+    confirm:
+        title: "Vormerkung bestätigen"
+        revoke_title: "Vormerkung zurückgezogen"
+        back: "Zur App-Seite"
+        success_heading: "Du stehst auf der Liste"
+        success_text: "Deine Adresse ist bestätigt. Wir haben dir eine zweite Mail geschickt — dort steht, wie es für deine Plattform weitergeht."
+        already_heading: "Das hattest du schon erledigt"
+        already_text: "Diese Vormerkung ist bereits bestätigt. Du musst nichts weiter tun."
+        expired_heading: "Dieser Link ist abgelaufen"
+        expired_text: "Bestätigungslinks gelten sieben Tage. Danach ist der Vorgang nicht mehr einlösbar."
+        revoked_heading: "Du stehst nicht mehr auf der Liste"
+        revoked_text: "Deine Vormerkung ist gelöscht. Wir schreiben dir zu diesem Thema nicht mehr."
+        invalid_heading: "Dieser Link führt ins Leere"
+        invalid_text: "Wir können zu diesem Link keine Vormerkung finden. Vielleicht ist er unvollständig kopiert worden."
+        expired_again_hint: "Du kannst dich jederzeit neu vormerken lassen:"
+        expired_again_link: "Jetzt neu vormerken"
+
+app_platform:
+    ios: "iPhone oder iPad"
+    android: "Android"

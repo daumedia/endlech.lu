@@ -181,6 +181,29 @@
         </div>
     </section>
 
+    {# === HINWEISBAND: APP-WARTELISTE (Feature 08) ===
+       Bewusst ein ruhiger Streifen und kein zweiter Hero: Der Handlungsaufruf
+       darunter ist der der Seite, dieses Band ist ein Hinweis daneben.
+       bg-gray-50, weil die Sektion darüber weiß ist — zwei gleiche Flächen
+       dürfen nicht aneinanderstoßen.
+       ⚠ KEIN Store-Abzeichen. Es gibt keine veröffentlichte App; ein „Im App
+       Store laden" wäre ein Versprechen ohne Deckung (Nicht im Scope). #}
+    <section class="bg-gray-50 border-y border-gray-200 py-10" aria-labelledby="home-app-heading">
+        <div class="container mx-auto px-4 max-w-4xl flex flex-col gap-6 md:flex-row md:items-center">
+            <p class="w-12 h-12 shrink-0 bg-cyan-50 rounded-2xl flex items-center justify-center text-3xl" aria-hidden="true">📱</p>
+
+            <div class="grow">
+                <h2 id="home-app-heading" class="text-xl md:text-2xl font-bold text-gray-800">{{ 'home.app.heading'|trans }}</h2>
+                <p class="mt-1 text-sm text-gray-600">{{ 'home.app.text'|trans }}</p>
+            </div>
+
+            <a href="{{ path('app_app_waitlist') }}"
+               class="inline-flex items-center justify-center min-h-[48px] shrink-0 bg-cyan-700 hover:bg-cyan-800 text-white font-bold px-6 py-3 rounded-full shadow-sm hover:shadow-md motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700">
+                {{ 'home.app.cta'|trans }}
+            </a>
+        </div>
+    </section>
+
     {# === CTA BANNER === #}
     <section class="bg-linear-to-r from-purple-700 to-cyan-600 py-16">
         <div class="container mx-auto px-4 text-center">

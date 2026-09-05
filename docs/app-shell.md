@@ -200,7 +200,7 @@ Fußzeile auf kurzen Seiten unten bleibt.
 | 1 | Wortmarke, `footer.tagline`, GitHub-Link (`target="_blank"`, `rel="noopener noreferrer"`) |
 | 2 | `footer.links` — elf Einträge, siehe unten |
 | 3 | `footer.comparisons` — je ein Link pro Vergleich plus `footer.all_comparisons` (Feature 03) |
-| 4 | `footer.contact_title`, `footer.help_improve`, `mailto:support@endlech.lu` — darunter, abgesetzt durch `border-t`, `footer.roadmap` und `footer.changelog` (Feature 07) |
+| 4 | `footer.contact_title`, `footer.help_improve`, `mailto:support@endlech.lu` — darunter, abgesetzt durch `border-t`, **drei Einträge**: `footer.roadmap` und `footer.changelog` (Feature 07) sowie `footer.app` → `app_app_waitlist` (Feature 08) |
 
 Die Linkliste (Spalte 2), **elf Einträge**: Restaurants suchen · Restaurant
 vorschlagen · Kriterien · Partner · Organisationen · Open · Impressum ·
@@ -224,7 +224,21 @@ Spalte 2 trägt bereits elf Einträge, und Feature 03 hat aus genau diesem Grund
 Spalte 3 aufgemacht. Eine **fünfte** Spalte bräche das `lg:grid-cols-4`-Raster —
 und die Kopfzeile hat mit **BF-80** ohnehin eine offene Umbruchlücke zwischen
 768 px und 1000 px; kein Feature sollte sie nebenbei vergrößern. Spalte 4 war die
-dünnste und trägt die zwei Einträge, ohne dass sich etwas verschiebt.
+dünnste und trägt die Einträge, ohne dass sich etwas verschiebt.
+
+**Feature 08 hat den abgesetzten Block auf drei Einträge erweitert**: `footer.app`
+verweist auf `/app` (Route `app_app_waitlist`, Warteliste für die native App).
+Dieselbe Begründung wie oben — nicht als **zwölfter** Eintrag in Spalte 2 und nicht
+als fünfte Spalte. Wer hier einen vierten Eintrag ergänzt, prüft vorher, ob Spalte 4
+noch die dünnste ist; ab etwa fünf Einträgen kippt das Verhältnis zu Spalte 3.
+
+Zum Feature gehört außerdem ein **Hinweisband auf der Startseite**
+(`templates/home/index.html.twig`, zwischen „Warum Endlech.lu?" und dem
+Handlungsaufruf): `bg-gray-50 border-y`, ein Emoji-Feld, zwei Zeilen Text und ein
+Knopf auf `app_app_waitlist`. Es liegt bewusst **außerhalb** der Shell — es ist
+Inhalt der Startseite und steht nicht auf jeder Seite. ⚠ **Kein Store-Abzeichen:**
+Es gibt keine veröffentlichte App, „Im App Store laden" wäre ein Versprechen ohne
+Deckung.
 
 ⚠ **Die Fußzeile überschreibt ihre vier Spalten mit `<h4>`.** Da die letzte
 Inhaltsüberschrift jeder Seite eine `h2` ist, springt die Überschriftenkette

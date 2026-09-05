@@ -1,0 +1,163 @@
+<?php
+
+namespace App\Tests\Functional\Controller;
+
+use App\Entity\AppWaitlistEntry;
+use App\Enum\AppPlatform;
+use App\Repository\AppWaitlistEntryRepository;
+use App\Tests\AbstractWebTestCase;
+use App\Waitlist\StaleAppWaitlistCleaner;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+
+/** QA-Sonden, zweiter Durchlauf: Nebenwirkungen der Reparaturen. */
+final class QaProbe2Test extends AbstractWebTestCase
+{
+    private const PFAD = self::LOCALE.'/app';
+
+    /**
+     * SONDE A — Hält das Zurücksetzen von `createdAt` einen nie bestätigten
+     * Eintrag über die 30-Tage-Frist hinaus am Leben?
+     *
+     * `deleteStaleUnconfirmed()` misst an derselben Spalte wie `isExpired()`.
+     */
+    public function testSondeAAufraeumfristUmgehbar(): void
+    {
+        $client = static::createClient();
+        $repo = $client->getContainer()->get(AppWaitlistEntryRepository::class);
+        $cleaner = $client->getContainer()->get(StaleAppWaitlistCleaner::class);
+
+        $entry = $this->eintrag($client, 'dauergast@example.lu');
+
+        // 29 Tage alt: noch nicht fällig, aber der Token ist längst abgelaufen.
+        $this->altern($client, $entry, '-29 days');
+        fwrite(\STDERR, sprintf(
+            "\n[SONDE A] Tag 29 · vor dem erneuten Eintragen: createdAt %s\n",
+            $repo->findOneByEmail('dauergast@example.lu')?->getCreatedAt()->format('Y-m-d'),
+        ));
+
+        // Jemand trägt dieselbe Adresse erneut ein — der Ablauf-Zweig greift.
+        $this->absenden($client, 'dauergast@example.lu');
+
+        $nachher = $repo->findOneByEmail('dauergast@example.lu');
+        fwrite(\STDERR, sprintf(
+            "[SONDE A] nach dem erneuten Eintragen: createdAt %s (heute: %s)\n",
+            $nachher?->getCreatedAt()->format('Y-m-d'),
+            (new \DateTimeImmutable())->format('Y-m-d'),
+        ));
+
+        // Der Aufräumlauf zwei Tage später — Tag 31 seit der ERSTEN Eintragung.
+        $geloescht = $cleaner->sweep(new \DateTimeImmutable('+2 days'));
+
+        fwrite(\STDERR, sprintf(
+            "[SONDE A] Aufräumlauf an Tag 31: %d gelöscht · Eintrag noch da: %s\n",
+            $geloescht,
+            null !== $repo->findOneByEmail('dauergast@example.lu') ? 'JA — AK-47 umgangen' : 'nein',
+        ));
+
+        self::assertTrue(true);
+    }
+
+    /**
+     * SONDE B — Lehnt der strict-Modus Adressen ab, die ein echter Nutzer hat?
+     */
+    public function testSondeBStrictModusGegenEchteAdressen(): void
+    {
+        $client = static::createClient();
+
+        $echte = [
+            'max.mustermann@example.lu',
+            'max+beta@example.lu',
+            'max@mail.sub.example.lu',
+            'MAX@EXAMPLE.LU',
+            "o'brien@example.lu",
+            'jean-luc@télécom.lu',
+            'max@example.photography',
+            'a@b.lu',
+        ];
+
+        foreach ($echte as $adresse) {
+            $this->absendenMit($client, $adresse);
+            fwrite(\STDERR, sprintf(
+                "[SONDE B] %-32s → HTTP %d%s\n",
+                $adresse,
+                $client->getResponse()->getStatusCode(),
+                422 === $client->getResponse()->getStatusCode() ? '  ⚠ ABGEWIESEN' : '',
+            ));
+        }
+
+        self::assertTrue(true);
+    }
+
+    /**
+     * SONDE C — Fängt der try/catch aus BF-121 auch eine Token-Kollision ab und
+     * meldet dann fälschlich Erfolg?
+     */
+    public function testSondeCTokenKollision(): void
+    {
+        $client = static::createClient();
+        $em = $client->getContainer()->get(EntityManagerInterface::class);
+        $repo = $client->getContainer()->get(AppWaitlistEntryRepository::class);
+
+        // Ein Eintrag mit bekanntem Token …
+        $vorhanden = $this->eintrag($client, 'tokenA@example.lu');
+        $token = $vorhanden->getConfirmationToken();
+
+        // … und eine NEUE Adresse, deren Vorgang zufällig denselben Token zöge.
+        // Nachgestellt, indem die Kollision direkt provoziert wird.
+        try {
+            $em->getConnection()->executeStatement(
+                'INSERT INTO app_waitlist_entry (email, platform, status, confirmation_token, consent_at, locale, created_at, updated_at)
+                 VALUES (:e, :p, :s, :t, NOW(), :l, NOW(), NOW())',
+                ['e' => 'tokenB@example.lu', 'p' => 'ios', 's' => 'pending', 't' => $token, 'l' => 'de'],
+            );
+            fwrite(\STDERR, "[SONDE C] Token-Kollision wurde NICHT verhindert\n");
+        } catch (\Throwable $e) {
+            fwrite(\STDERR, sprintf("[SONDE C] Token-Kollision → %s (Index greift)\n", (new \ReflectionClass($e))->getShortName()));
+        }
+
+        fwrite(\STDERR, sprintf("[SONDE C] Einträge: %d\n", $repo->count([])));
+        self::assertTrue(true);
+    }
+
+    // -- Hilfen
+
+    private function absenden(KernelBrowser $c, string $e): void
+    {
+        $this->absendenMit($c, $e);
+    }
+
+    private function absendenMit(KernelBrowser $client, string $email): void
+    {
+        $crawler = $client->request('GET', self::PFAD);
+        $form = $this->formWithField($crawler, 'app_waitlist[email]');
+        $form['app_waitlist[email]'] = $email;
+        $form['app_waitlist[platform]']->select('ios');
+        $form['app_waitlist[consent]']->tick();
+        $client->submit($form);
+    }
+
+    private function eintrag(KernelBrowser $client, string $email): AppWaitlistEntry
+    {
+        $em = $client->getContainer()->get(EntityManagerInterface::class);
+        $e = new AppWaitlistEntry();
+        $e->setEmail($email);
+        $e->setPlatform(AppPlatform::IOS);
+        $e->setLocale('de');
+        $e->generateConfirmationToken();
+        $em->persist($e);
+        $em->flush();
+
+        return $e;
+    }
+
+    private function altern(KernelBrowser $client, AppWaitlistEntry $e, string $v): void
+    {
+        $em = $client->getContainer()->get(EntityManagerInterface::class);
+        $em->getConnection()->executeStatement(
+            'UPDATE app_waitlist_entry SET created_at = :d WHERE id = :id',
+            ['d' => (new \DateTimeImmutable($v))->format('Y-m-d H:i:s'), 'id' => $e->getId()],
+        );
+        $em->refresh($e);
+    }
+}

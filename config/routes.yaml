@@ -89,6 +89,26 @@ app_changelog_redirect:
         _locale: lb
         permanent: false
 
+# Locale-freier Kurzlink auf die App-Warteliste (Feature 08).
+# Dieselbe Begründung wie bei /open, /vergleich, /presse und /roadmap: Die kurze
+# Adresse steht in Beiträgen und wird abgetippt; sie darf nicht an einer
+# Sprachwahl scheitern.
+#
+# ⚠ **Nicht permanent.** Ein 301 bliebe in fremden Browsern stehen — das war der
+# teure Teil von BF-100, nicht die Schleife selbst.
+#
+# ⚠ **Es darf kein Verzeichnis `public/app` entstehen.** Apaches mod_dir schickte
+# /app sonst per 301 auf /app/, während Symfony zurückschickt — eine Schleife, die
+# lokal unsichtbar bleibt, weil der Entwicklungsserver kein mod_dir hat.
+# RouteDirectoryCollisionTest prüft genau diese Ursache projektweit.
+app_app_waitlist_redirect:
+    path: /app
+    controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController
+    defaults:
+        route: app_app_waitlist
+        _locale: lb
+        permanent: false
+
 # Alle Controller mit /{_locale} Prefix (inkl. Admin)
 # Ausnahmen: Api/V1 und Controller/Open werden separat ohne Locale-Prefix
 # importiert.

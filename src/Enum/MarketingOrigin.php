@@ -13,8 +13,8 @@ namespace App\Enum;
  * Vertriebsmerkmal und einer besonderen Kategorie nach Art. 9 DSGVO.
  *
  * Die Werte decken sich absichtlich mit `OrganisationType` (commune, company,
- * association) und ergänzen sie um die beiden Quellen, die dort keine
- * Entsprechung haben: die Partner-Warteliste und das Nutzerkonto.
+ * association) und ergänzen sie um die Quellen, die dort keine Entsprechung
+ * haben: die Partner-Warteliste, das Nutzerkonto und die App-Warteliste.
  */
 enum MarketingOrigin: string
 {
@@ -23,6 +23,7 @@ enum MarketingOrigin: string
     case COMPANY = 'company';
     case ASSOCIATION = 'association';
     case ACCOUNT = 'account';
+    case APP = 'app';
 
     public function transKey(): string
     {
@@ -37,6 +38,7 @@ enum MarketingOrigin: string
             self::COMPANY => 'Unternehmen',
             self::ASSOCIATION => 'Verein',
             self::ACCOUNT => 'Nutzerkonto',
+            self::APP => 'App-Warteliste',
         };
     }
 
