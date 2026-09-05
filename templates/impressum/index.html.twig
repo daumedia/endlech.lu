@@ -66,6 +66,20 @@
            Die Betroffenenrechte stehen jetzt hier, weil es sie jetzt gibt
            (Feature 01). Vorher wäre ein Text, der sie nennt, schlechter gewesen
            als einer, der schweigt. #}
+        {# Der Hoster stand nie in dieser Erklärung — dabei hält er Anwendung,
+           Worker UND Datenbank und sieht damit jedes Datum, das das Projekt
+           speichert. Art. 13 Abs. 1 lit. e verlangt seine Nennung genauso wie
+           die von Brevo (BF-65 hatte das für die anderen drei aufgedeckt, den
+           Hoster aber übersehen). Ergänzt am 2026-09-05.
+
+           ⚠ Genannt wird Hostinger, NICHT Coolify: Letzteres ist selbst
+           betriebene Software auf demselben Server und überträgt nichts an
+           seinen Hersteller. #}
+        <h3 class="text-base font-semibold text-gray-700 mb-2">{{ 'legal.hosting_title'|trans }}</h3>
+        <p class="text-gray-600 leading-relaxed mb-4">
+            {{ 'legal.hosting_text'|trans }}
+        </p>
+
         <h3 class="text-base font-semibold text-gray-700 mb-2">{{ 'legal.error_tracking_title'|trans }}</h3>
         <p class="text-gray-600 leading-relaxed mb-4">
             {{ 'legal.error_tracking_text'|trans }}
@@ -93,6 +107,18 @@
         <h3 class="text-base font-semibold text-gray-700 mb-2">{{ 'legal.transit_title'|trans }}</h3>
         <p class="text-gray-600 leading-relaxed mb-4">
             {{ 'legal.transit_text'|trans }}
+        </p>
+
+        {# Art. 13 Abs. 1 lit. f: Ein Hinweis auf die Drittlandsübermittlung
+           fehlte vollständig. Alle unmittelbaren Empfänger sitzen in der EU —
+           ihre Unterauftragsverarbeiter aber nicht durchgängig (Brevo nutzt
+           Datadog in den USA, Hostinger und Brevo beide Cloudflare). Die
+           Übermittlung ist abgesichert, aber sie findet statt, und eine
+           Erklärung, die davon schweigt, ist unvollständig. Ergänzt am
+           2026-09-05 nach Lektüre beider Auftragsverarbeitungsverträge. #}
+        <h3 class="text-base font-semibold text-gray-700 mb-2">{{ 'legal.transfer_title'|trans }}</h3>
+        <p class="text-gray-600 leading-relaxed mb-4">
+            {{ 'legal.transfer_text'|trans }}
         </p>
 
         <h3 class="text-base font-semibold text-gray-700 mb-2">{{ 'legal.rights_title'|trans }}</h3>

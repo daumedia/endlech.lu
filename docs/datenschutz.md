@@ -284,8 +284,10 @@ Das ist AK-34 aus Feature 04 und keine Nacharbeit:
       Annahme; die Kernpunkte (Löschfrist 100 Tage, Unterauftragsverarbeiter samt
       Serverstandorten, Widerspruchsrecht) stehen jetzt oben. Offen bleiben DS-01b bis
       DS-01d — Anmeldung zu den Benachrichtigungen, Fassungsprüfung, Datum der Annahme
-- [ ] **`/legal` nennt Brevo als Empfänger für Werbezwecke** — nicht nur als
-      Versanddienstleister
+- [x] ~~**`/legal` nennt Brevo als Empfänger für Werbezwecke**~~ — **am 2026-09-05
+      festgestellt: war bereits erfüllt.** Der Abschnitt steht seit Feature 04; der
+      offene Punkt war überholt. Beim Nachsehen fielen allerdings drei andere Lücken
+      derselben Erklärung auf, alle behoben — siehe DS-03b bis DS-03d
 - [x] ~~**OF-01 beantwortet** (Datenschutzstufe des Projekts)~~ — **am 2026-08-30
       auf Stufe B festgelegt**, siehe oben
 
@@ -308,7 +310,10 @@ Feature 08. Was hier ohne Datum steht, hat niemanden, der es erzwingt.
 | **DS-02a** | ~~Hoster: Vertrag, Sitz und Serverstandort nachtragen~~ — **erledigt 2026-09-05.** Der Verarbeiter ist **Hostinger** (Zypern, Server in Deutschland), nicht Coolify: Letzteres ist selbst betriebene Software und überträgt nichts an seinen Hersteller. DPA gilt automatisch mit den Nutzungsbedingungen, Stand 18.08.2026, Löschfrist 30 Tage. Alles im eigenen Abschnitt oben | — | ✅ |
 | **DS-02b** | **Feststellen, welche Hostinger-Gesellschaft Vertragspartner ist** | Das DPA nennt drei: Zypern, UK und **Luxemburg**. Für die Frage, wer bei einer Auskunft oder einem Vorfall haftet und welches Recht gilt, ist das nicht gleichgültig. Steht in der Rechnung oder im Konto | **2026-09-30** | Betreiber |
 | **DS-02c** | **Prüfen, ob der Serverstandort vertraglich zugesichert ist** | Gemessen ist er Deutschland — das ist eine Momentaufnahme, keine Zusage. Ob der Tarif eine Region festschreibt oder Hostinger frei verschieben darf, steht in der Produktbeschreibung | **2026-09-30** | Betreiber |
-| **DS-03** | **`/legal` nennt Brevo als Empfänger für Werbezwecke** — nicht nur als Versanddienstleister | Offen seit Feature 04 (AK-34). Kein Kontakt geht raus, bevor die Erklärung ihn nennt | vor dem ersten Kampagnenlauf | Betreiber |
+| **DS-03a** | ~~`/legal` nennt Brevo als Empfänger für Werbezwecke~~ — **war bereits erfüllt**, festgestellt 2026-09-05. Der Abschnitt `legal.marketing_*` steht seit Feature 04 und nennt Zweck, übermittelte Felder, Rechtsgrundlage, Freiwilligkeit und Widerruf. Der offene Punkt war überholt | — | ✅ |
+| **DS-03b** | ~~Widersprüchliche Angabe zum selben Verarbeiter~~ — **behoben 2026-09-05.** `legal.mail_text` nannte „Sendinblue GmbH, Köln", `legal.marketing_text` im selben Abschnitt „Brevo SA, Frankreich". Vertragspartner ist Brevo SA, Paris (so auch im DPA). Berichtigt in vier Sprachen | — | ✅ |
+| **DS-03c** | ~~Der Hoster fehlte in der Erklärung~~ — **behoben 2026-09-05.** Neuer Abschnitt `legal.hosting_*`: Hostinger, Zypern, Server in Deutschland. ⚠ Er hält Anwendung, Worker **und** Datenbank — Art. 13 Abs. 1 lit. e verlangt seine Nennung so gut wie die von Brevo. BF-65 hatte drei Empfänger nachgetragen und den Hoster übersehen | — | ✅ |
+| **DS-03d** | ~~Kein Hinweis auf Drittlandsübermittlung~~ — **behoben 2026-09-05.** Neuer Abschnitt `legal.transfer_*`: Alle unmittelbaren Empfänger sitzen in der EU, ihre Unterauftragsverarbeiter nicht durchgängig (Datadog USA bei Brevo, Cloudflare bei beiden). Art. 13 Abs. 1 lit. f | — | ✅ |
 | **DS-04** | **Öffnungs- und Klickverfolgung in Brevo entscheiden** | Standardmäßig eingeschaltet. Das PRD schließt Web-Analytics aus und begründet das mit Datensparsamkeit; ob das auch für Kampagnen gilt, ist nicht entschieden (OF-03) | vor dem ersten Kampagnenlauf | Betreiber |
 
 ⚠ **DS-01 und DS-02 sind keine Formalien.** Beide betreffen Verarbeiter, die bereits
