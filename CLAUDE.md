@@ -1177,9 +1177,20 @@ Das `.github/`-Verzeichnis enthält außerdem Issue-Templates (Bug Reports, Feat
 
 ## Deployment (CD)
 
-**Ein Merge nach `master` ist der Deploy.** Coolify beobachtet den Zweig, baut aus
-dem `Dockerfile` und tauscht den Container. Zwei Ressourcen aus derselben Datei:
-die Anwendung (`--target runtime`) und der Messenger-Worker (`--target worker`).
+**Ein Merge nach `master` ist die Voraussetzung für den Deploy — nicht der Deploy
+selbst.** Coolify **beobachtet den Zweig nicht**: Das Ausrollen wird in der
+Oberfläche von Hand angestoßen. Danach baut es aus dem `Dockerfile` und tauscht
+den Container. Zwei Ressourcen aus derselben Datei: die Anwendung
+(`--target runtime`) und der Messenger-Worker (`--target worker`).
+
+⚠️ **Bis zum 2026-09-05 stand hier „Coolify beobachtet den Zweig".** Das war
+falsch und fiel erst beim Ausliefern von Feature 08 auf: Nach dem Push passierte
+zehn Minuten lang nichts, und die Ursache sah aus wie ein fehlgeschlagener Build.
+Wer den Satz glaubt, wartet auf ein Ereignis, das niemand ausgelöst hat.
+
+**Nach dem Merge also: in Coolify das Ausrollen starten.** Der Container-Tausch
+dauert danach rund drei Minuten; ob er durch ist, zeigt die Versionsangabe in der
+Fußzeile.
 
 ⚠️ **Seit dem 2026-09-02 gibt es keinen SSH-Deploy mehr.** `.github/workflows/cd.yml`
 und `.github/deploy.sh` sind entfernt, Cloudways ist abgelöst. Wer in älteren

@@ -1574,6 +1574,20 @@ ein eigenes Vorhaben — entweder die Funktion bauen oder die Texte anpassen —
 in Feature `07`**; hier ist bewusst keine Feature-Zeile dafür angelegt worden, weil das
 eine neue Anforderung wäre und Michaels Entscheidung braucht.
 
+**2026-09-05 · Feature `08` ausgeliefert** — `v2026.09.05`, auf Produktion nachgeprüft.
+`/app` leitet sprachfrei weiter, die Seite lädt in allen vier Sprachen ohne rohe
+Schlüssel, das Formular trägt beide Plattform-Radios und den Honeypot, `/open.json`
+liest die neue Tabelle (also ist die Migration durch), und die Verwaltungsroute weist
+anonyme Aufrufe ab.
+
+⚠ **Dabei hat sich eine Aussage in `CLAUDE.md` als falsch erwiesen:** Coolify beobachtet
+`master` **nicht** — das Ausrollen wird von Hand angestoßen. Nach dem Push geschah zehn
+Minuten lang nichts, und das sah aus wie ein fehlgeschlagener Build. Korrigiert.
+
+⚠ **Ein Punkt der Nachprüfung steht aus:** ein echter Absendevorgang mit Mailversand.
+Er legt einen echten Datensatz an und verschickt eine echte Mail — das gehört dem
+Betreiber, nicht einem automatisierten Durchgang.
+
 **2026-09-05 · Feature `08` abgenommen** (dritter QA-Durchlauf): 58 von 58 Kriterien,
 **kein offener Befund**. BF-122 ist behoben und über vier Sonden gegengeprüft — darunter
 der vollständige Missbrauchsweg über HTTP und zehn Erneuerungsrunden. Keine der sechs
@@ -1632,7 +1646,7 @@ AK-49 verlangt ausdrücklich den *Aufruf* des Aufräumlaufs, nicht bloß seine E
 | 05 | Presse-Kit | P2 | **deployed** | B13, B16, B24, 02, 03 | 2026-08-30 · live in v2026.08.30.1, auf Produktion nachgeprüft |
 | 06 | Community Feedback Board | P1 | **deployed** | B01, B02, B19, B21, B24, 01, 02 | 2026-08-31 · live in v2026.08.31, auf Produktion nachgeprüft |
 | 07 | Öffentliche Roadmap und Changelog | P2 | **deployed** | 06, B13, B16, B24, 02, 03, 05 | 2026-08-31 · live in v2026.08.31, auf Produktion nachgeprüft |
-| 08 | Warteliste für die mobile App (iOS-Beta / Android) | P1 | **approved** | B14, B22, B24, 02, 04 | 2026-09-05 · QA³: 58/58, **kein offener Befund** |
+| 08 | Warteliste für die mobile App (iOS-Beta / Android) | P1 | **deployed** | B14, B22, B24, 02, 04 | 2026-09-05 · live in v2026.09.05, auf Produktion nachgeprüft |
 | B01 | Registrierung & E-Mail-Bestätigung | P0 | **approved** | — | 2026-08-23 · QA³: 17/20, nur mittlere Befunde offen |
 | B02 | Anmeldung mit Passwort | P0 | **approved** | B01 | 2026-08-24 · QA²: 16/17, repariert |
 | B03 | Passkey-Anmeldung & -Verwaltung | P0 | **deployed** | B01, B02 | 2026-08-29 · ENDLECH-6 live in v2026.08.29.1, auf Produktion belegt (302 statt 400) |
