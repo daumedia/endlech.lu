@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Einstiegsschema für die Sitemap-Prüfung (Feature 10, AK-01).
+
+  Deklariert das Sprachverweis-Element xhtml:link, wie Google es für Sitemaps
+  beschreibt (developers.google.com/search/docs/specialty/international/localized-versions),
+  und bindet das unveränderte sitemap.xsd ein. Ohne diese Deklaration verwirft
+  sitemap.xsd jedes xhtml:link, weil fremde Elemente dort streng geprüft werden.
+-->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://www.w3.org/1999/xhtml"
+            xmlns="http://www.w3.org/1999/xhtml"
+            elementFormDefault="qualified">
+
+  <xsd:import namespace="http://www.sitemaps.org/schemas/sitemap/0.9"
+              schemaLocation="sitemap.xsd"/>
+
+  <xsd:element name="link">
+    <xsd:complexType>
+      <!-- Nur die Form, die Google für Sprachfassungen vorsieht. -->
+      <xsd:attribute name="rel" use="required">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="alternate"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:attribute>
+      <xsd:attribute name="hreflang" use="required">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:pattern value="x-default|[a-z]{2,3}(-[A-Za-z]{2,4})?"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:attribute>
+      <xsd:attribute name="href" use="required">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:anyURI">
+            <xsd:minLength value="12"/>
+            <xsd:maxLength value="2048"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:attribute>
+    </xsd:complexType>
+  </xsd:element>
+</xsd:schema>

@@ -365,6 +365,7 @@ Autowiring and autoconfiguration are enabled by default in `config/services.yaml
 | `api_v1_me`           | `/api/v1/me` (GET) | `Api\V1\MeController::me()` |
 | `api_v1_me_submissions`| `/api/v1/me/submissions` (GET) | `Api\V1\MeController::submissions()` |
 | `app.swagger_ui`      | `/api/docs`    | NelmioApiDoc Swagger-UI |
+| `app_sitemap`         | `/sitemap.xml` (locale-frei) | `Seo\SitemapController::sitemap()` (Feature 10) |
 
 **Wichtig:** Die `/api/v1/`-Routen sind **locale-frei** (kein `/{_locale}`-Prefix). `config/routes.yaml` importiert `src/Controller/Api/V1/` in einem eigenen Block und `exclude`t es am `controllers`-Loader. Genauso ist `src/Controller/Open/` locale-frei importiert (Block `open_data`) – `exclude` am `controllers`-Loader ist deshalb eine **Liste** mit zwei Einträgen. Die HTML-Seite `/open` liegt dagegen unter `/{_locale}`; die sprachfreie Route `app_open_redirect` leitet auf sie um. Der ältere `CuisineApiController` (`/api/cuisines`) liegt weiterhin UNTER `/{_locale}` (also real `/{_locale}/api/cuisines`).
 
@@ -1277,6 +1278,86 @@ Warnung im Protokoll (`Puls an den externen Wächter nicht zustellbar`) ist der 
 Unterschied zwischen den beiden Fällen — erscheint sie, war der Worker am Leben und nur
 der Weg versperrt.
 
+## Sitemap, robots.txt und maßgebliche Adressen (Feature 10)
+
+`/sitemap.xml` (Route, sprachfrei), `public/robots.txt` (statische Datei), der canonical-Verweis
+und die Sprachverweise im Seitenkopf sowie `X-Robots-Tag: noindex` auf den Ausschlusswegen.
+Spezifikation, Entwurf und Plan unter `features/10-sitemap-robots/`.
+
+⚠️ **Das Seitenverzeichnis `App\Seo\SeoRegistry` ist die EINZIGE Quelle.** Es kennt drei Klassen:
+angeboten (21 feste Seiten plus Restaurant-Detailseiten), ausgeschlossen (16 Wege) und bewusst
+keins von beidem (z. B. einzelne Board-Ideen). **Wer eine öffentliche Seite anlegt, ordnet sie
+dort ein** — `SeoRouteCoverageTest` wird rot, solange eine öffentliche GET-Route unter dem
+Sprachpräfix in keiner Klasse steht. Die Tabelle der festen Seiten in der Spec zieht mit;
+`SeoRegistryTest` hält die Zahl 21 ausgeschrieben fest, damit eine stille 22 auffällt.
+
+⚠️ **Alle Adressen lauten fest auf `https://endlech.lu`** (`app.canonical_base_url`) — nicht aus
+der Anfrage, nicht aus `DEFAULT_URI`. Aus der Anfrage: `www.endlech.lu` liefert jede Seite mit 200
+(gemessen am 2026-09-12, OF-03), und eine zwischengespeicherte Sitemap hielte eine Stunde lang den
+Host des ersten Abrufers fest. Aus `DEFAULT_URI`: steht in `.env` auf `http://localhost`; eine in
+Coolify vergessene Variable kündigte Google `localhost` an. **Auch im Test** lauten diese Adressen
+auf `https://endlech.lu`.
+
+⚠️ **Folge für Prüfläufe, die „keine fremde Ressource" prüfen:** canonical- und Sprachverweise
+sind absolut und zeigen nicht auf den Testhost. Sie laden nichts und werden über ihre `rel`-Art
+ausgenommen, **nicht** über den Host (so in `ComparisonControllerTest` und `PressEdgeCaseTest`).
+Wer so einen Prüflauf neu schreibt und über den Host ausnimmt, bekommt ihn rot.
+
+⚠️⚠️ **`SitemapGenerator` fängt keinen Datenbankfehler ab — das ist die tragende Eigenschaft
+(AK-11).** Der naheliegende „robuste" `try`/`catch`, der bei scheiternder Abfrage nur die festen
+Seiten ausliefert, liefert Google eine Sitemap ohne Restaurantseiten. Das liest sich als „diese
+Seiten gibt es nicht mehr". Eine ungefangene Ausnahme wird zur 5xx („später nochmal"), und
+`CacheInterface::get()` speichert dann nichts. Gegenprobe beim Bau gefahren: Mit dem `try`/`catch`
+wird `SitemapGeneratorTest` rot.
+
+⚠️ **50 Minuten Speicher plus `max-age=600` — die Summe ist die Zusage.** Server-Speicher
+(`cache.sitemap`, 3000 s) und HTTP-Speicher addieren sich; AK-08/AK-09 versprechen „binnen 60
+Minuten". `SitemapControllerTest` liest den **Produktionswert** aus `cache.yaml` und prüft
+`3000 + 600 ≤ 3600`. Wer eine Zahl ändert, ändert die andere mit.
+
+⚠️ **Die robots.txt ist eine statische Datei, keine Route.** Eine 5xx-Antwort darauf lässt Google
+zwölf Stunden lang nicht crawlen; der Webserver liefert die Datei ohne PHP aus. Der Symfony-
+Testclient erreicht sie deshalb nicht — `RobotsTxtTest` liest die Datei und wertet die Regeln aus,
+ob sie ausgeliefert wird, zeigt nur ein Abruf gegen einen laufenden Server.
+
+⚠️ **Keine Platzhalter (`*`, `$`) in der robots.txt.** Google versteht sie, aber ohne sie ist die
+Auswertung eine reine Präfixprüfung, die `RobotsTxtTest` exakt nachbildet. Sperren stehen je
+Sprache ausgeschrieben.
+
+⚠️⚠️ **Die Ausschlusswege NIE in der robots.txt sperren.** Ihr `noindex` steht in einer
+Kopfzeile, und die liest eine Suchmaschine nur, wenn sie die Seite abrufen darf. Gesperrt, könnte
+die Adresse ohne Inhalt in den Ergebnissen erscheinen — das Gegenteil des Gewollten
+(developers.google.com/search/docs/crawling-indexing/block-indexing).
+
+⚠️ **Ausschluss als Kopfzeile `X-Robots-Tag`, nicht als Meta-Element** (OF-04). Zwei der Wege —
+Bestätigung einer E-Mail-Adresse und eines Adresswechsels — rendern nie eine Seite, sie leiten nur
+weiter.
+
+⚠️ **Symfony setzt `X-Robots-Tag: noindex` im Debug-Modus auf JEDE Antwort**
+(`framework.disallow_search_engine_index`, Vorgabe `%kernel.debug%`). Im `when@test`-Block steht
+deshalb `disallow_search_engine_index: false` — ohne die Zeile wäre der Prüflauf für die sechzehn
+Ausschlusswege auch ohne `SeoRobotsHeaderSubscriber` grün, und „keine Sitemap-Seite trägt
+noindex" im Test nie erfüllbar. Beim Bau genau so gemessen. **Lokal im Entwicklungsbetrieb trägt
+deshalb jede Seite `noindex`** — dort ist die Kopfzeile nicht aussagekräftig; in Produktion ist sie
+auf gewöhnlichen Seiten nachweislich nicht vorhanden.
+
+⚠️ **Die Schema-Prüfung braucht zwei Dateien** (`tests/Fixtures/Sitemap/`). `sitemap.xsd` prüft
+fremde Elemente streng; gegen sie allein fällt jede korrekte Sitemap mit Sprachverweisen durch
+(beim Bau nachgestellt). Geprüft wird gegen `sitemap-mit-sprachverweisen.xsd`, das beides kennt.
+
+⚠️ **Von den Abfrageparametern überlebt nur `page` als ganze Zahl ab 2** — für canonical UND
+Sprachverweise (Google: Folgeseiten nicht auf Seite 1 kanonisieren). `?page=abc` beantwortet die
+Restaurantliste schon vorher mit 400; eine Seite mit Verweis entsteht dort gar nicht (OF-06).
+
+**Deckel `sitemap`** (60 je Stunde je Adresse) im `RouteRateLimitSubscriber`, eigenes Kontingent —
+nicht das des Datensatzes. Greift vor dem Controller, also auch bei gespeicherter Fassung.
+
+⚠️ **Kein Verzeichnis `public/sitemap` und keine Datei `public/sitemap.xml` anlegen** — die Datei
+würde die Route verdecken und die Sitemap einfrieren; ein Verzeichnis wiederholte BF-100.
+
+⚠️ **Die Route `app_sitemap` liegt in einem eigenen Block `seo`** in `config/routes.yaml`
+samt Eintrag in der `exclude`-Liste — dasselbe Muster wie `Open/`, `Health/`, `Marketing/`.
+
 ## Deployment (CD)
 
 **Ein Merge nach `master` ist die Voraussetzung für den Deploy — nicht der Deploy
@@ -1812,6 +1893,8 @@ aus gefälschten `X-Forwarded-For`-Headern. Der Wert gehört in die Umgebung.
 | `Dockerfile`          | Produktions-Image, Stages `runtime` und `worker` |
 | `bin/sicherung-pruefen.sh` | BE-03: spielt eine Sicherung in einen Wegwerf-Container ein und urteilt |
 | `src/Command/WorkerPulseCommand.php` | BE-01: Puls an Uptime Kuma; sein Ausbleiben ist die Meldung |
+| `src/Seo/SeoRegistry.php` | Feature 10: einzige Quelle für Sitemap, canonical und Ausschluss |
+| `public/robots.txt` | Feature 10: statisch, ohne Platzhalter; Ausschlusswege nie sperren |
 | `importmap.php`       | Symfony AssetMapper module mapping         |
 | `.editorconfig`       | Editor formatting rules                    |
 | `docs/`               | Datenmodell-, Design-System- und PRD-Referenz |

@@ -102,14 +102,30 @@ Das `viewport-fit=cover` ist die Voraussetzung dafür, dass
 | `apple-mobile-web-app-title` | `Endlech.lu` |
 | `apple-touch-icon` | `icons/icon-180.png`, dazu 152/144/120/114/76/72/60/57 per Twig-Schleife |
 
-**hreflang:** Für jede der vier Sprachen ein `<link rel="alternate">` plus
-`x-default` auf `lb`. Erzeugt aus dem aktuellen Routennamen und seinen Parametern;
-übersprungen für `app_root`, weil diese Route selbst nur weiterleitet.
+**Suchmaschinen-Auszeichnung** (Feature 10). Drei Angaben, alle aus derselben Quelle —
+dem Seitenverzeichnis `App\Seo\SeoRegistry` und dem Adressbildner `App\Seo\SeoUrlBuilder`:
 
-⚠️ Die hreflang-Schleife ruft `url(_current_route, …)` für jede Sprache. Auf einer
-Route, deren Parameter sich nicht mit einem anderen `_locale` auflösen lassen, würde
-das werfen — im Bestand tritt der Fall nicht auf, weil alle Web-Routen denselben
-Präfix teilen.
+| Angabe | Wo | Für welche Seiten |
+|---|---|---|
+| `<link rel="canonical">` | Block `canonical` in `base.html.twig`, Funktion `seo_canonical_url()` | nur Seiten aus dem Verzeichnis (21 feste plus Restaurant-Detailseiten) |
+| `<link rel="alternate" hreflang>` | `base.html.twig`, Funktion `seo_alternate_urls()` | jede Seite mit Route außer `app_root`; vier Sprachen plus `x-default` auf `lb` |
+| `X-Robots-Tag: noindex` | Antwortkopfzeile, `SeoRobotsHeaderSubscriber` | die 16 Ausschlusswege (Anmelden, Passwort, Bestätigungen, Abmeldelinks, Dankeseiten, Einreichformulare) |
+
+⚠️ **Alle Adressen lauten auf `https://endlech.lu`**, auch lokal und im Test — der Host kommt
+aus `app.canonical_base_url`, nicht aus der Anfrage. `www.endlech.lu` liefert jede Seite mit 200
+(OF-03 in `features/10-sitemap-robots/spec.md`); aus der Anfrage gebaut, nennte eine Seite dort
+`www` als maßgeblich.
+
+⚠️ **Von der Abfragezeichenfolge überlebt nur `page` als ganze Zahl ab 2** — in canonical und
+Sprachverweisen gleichermaßen (`/de/restaurants?page=2&sort=name` → `…/de/restaurants?page=2`).
+Keine andere Eingabe des Aufrufers erreicht einen Verweis (BF-110 bleibt gewahrt).
+
+⚠️ **Keine Vorlage füllt den Block `canonical` selbst.** Bis Feature 10 taten es fünf, mit einer
+Adresse aus der Anfrage. Eine neue öffentliche Seite gehört ins Seitenverzeichnis — sonst wird
+`SeoRouteCoverageTest` rot.
+
+Dazu gehören `/sitemap.xml` (Route) und `/robots.txt` (statische Datei unter `public/`), siehe
+`CLAUDE.md`, Abschnitt „Sitemap, robots.txt und maßgebliche Adressen".
 
 ---
 
@@ -248,10 +264,10 @@ seitenweit von h2 auf h4 — ein Screenreader meldet eine Ebene, zu der es keine
 Die Reparatur wäre eine Zeile hier, betrifft aber jede Seite und steht als OF-10
 in `features/07-roadmap-changelog/spec.md`.
 
-⚠ **Der `hreflang`-Block spiegelt die Abfragezeichenfolge.**
-`/de/roadmap?stage=secret` erzeugt `<link rel="alternate" href="/lb/roadmap?stage=secret">`
-— auf jeder Seite. Escaped, also kein XSS (nachgemessen), aber eine Eingabe des
-Aufrufers erscheint in der Antwort. Steht als OF-09 ebenda.
+~~⚠ **Der `hreflang`-Block spiegelt die Abfragezeichenfolge.**~~ **Überholt.** Am 2026-09-12
+nachgemessen, dass der Block die Abfrage **nicht** spiegelt (BF-110,
+`QueryParameterReflexionTest`); seit Feature 10 kommen die Verweise aus dem Adressbildner, und von
+der Abfrage überlebt nur eine geprüfte Seitenzahl ab 2.
 
 **Spalte 3 kommt aus einer Twig-Erweiterung**, nicht aus dem Controller:
 `comparison_competitors()` in `src/Twig/ComparisonExtension.php`. Die Fußzeile wird

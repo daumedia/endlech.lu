@@ -17,10 +17,6 @@
     <meta name="description" content="{{ (p ~ 'meta_description')|trans({}, 'comparison') }}">
 {% endblock %}
 
-{% block canonical %}
-    <link rel="canonical" href="{{ url('app_comparison_show', {'slug': page.competitor.slug}) }}">
-{% endblock %}
-
 {% block body %}
     {# === 1 · KOPFBAND ===================================================== #}
     <section class="bg-linear-to-r from-cyan-700 to-purple-800 text-white py-20">

@@ -46,6 +46,23 @@ parameters:
     # den Alarm abschalten, nicht bloß mitlesen.
     app.uptime_push_url: '%env(string:default::APP_UPTIME_PUSH_URL)%'
 
+    # Die Hauptadresse der Plattform, wie Suchmaschinen sie kennen sollen (Feature 10).
+    # Aus ihr entstehen die Einträge der Sitemap, der canonical-Verweis und die
+    # Sprachverweise im Seitenkopf.
+    #
+    # ⚠ **Fest eingetragen, bewusst OHNE Umgebungsvariable und NICHT aus der Anfrage.**
+    # Aus der Anfrage: `www.endlech.lu` liefert jede Seite mit 200 (gemessen am
+    # 2026-09-12, OF-03) — die Seiten nennten dort `www` als maßgeblich, und eine
+    # zwischengespeicherte Sitemap hielte eine Stunde lang fest, über welchen Host der
+    # erste Abrufer kam. Aus `DEFAULT_URI`: steht in `.env` auf `http://localhost` und
+    # müsste in Coolify gesetzt sein; eine vergessene Variable kündigte Google dann
+    # lautlos `localhost` an (dieselbe Lehre wie `TRUSTED_PROXIES`). Die Hauptadresse
+    # ist eine Eigenschaft des Produkts, keine Einstellung der Umgebung — auch lokal und
+    # im Test lauten diese Adressen deshalb auf `https://endlech.lu`.
+    #
+    # Ohne abschließenden Schrägstrich: Pfade beginnen selbst mit `/`.
+    app.canonical_base_url: 'https://endlech.lu'
+
     # --- Betreiberangaben (Impressum /legal und Faktenblatt /presse) ---
     #
     # Seit dem 2026-09-05: **DAUMEDIA S.A.R.L.-S**, eingetragen im RCS Luxembourg

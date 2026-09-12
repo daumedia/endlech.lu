@@ -1,0 +1,25 @@
+{#
+   Sitemap (Feature 10). Erzeugt von App\Seo\SitemapGenerator.
+
+   ⚠ Die XML-Deklaration muss das ERSTE Zeichen der Ausgabe sein. Das `-` am Ende dieses
+   Kommentars schneidet den Zeilenumbruch davor weg; ohne ihn beginnt die Datei mit einem
+   Leerzeichen, und ein strenger Parser verwirft sie.
+
+   ⚠ Kein <lastmod>, <priority>, <changefreq> (AK-07). Ergänzt jemand eines davon, wird
+   SitemapGeneratorTest rot — und das ist Absicht.
+
+   Format der Sprachverweise nach
+   developers.google.com/search/docs/specialty/international/localized-versions:
+   jeder Eintrag nennt alle Fassungen, sich selbst eingeschlossen.
+-#}
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+{% for entry in entries %}
+  <url>
+    <loc>{{ entry.loc }}</loc>
+{% for hreflang, href in entry.alternates %}
+    <xhtml:link rel="alternate" hreflang="{{ hreflang }}" href="{{ href }}"/>
+{% endfor %}
+  </url>
+{% endfor %}
+</urlset>
