@@ -19,10 +19,6 @@
     <meta name="description" content="{{ 'meta_description'|trans({}, 'changelog') }}">
 {% endblock %}
 
-{% block canonical %}
-    <link rel="canonical" href="{{ url('app_changelog_index') }}">
-{% endblock %}
-
 {% macro entry(item, domain) %}
     {% if item.version is defined %}
         <article class="rounded-xl border border-gray-200 bg-white p-5">

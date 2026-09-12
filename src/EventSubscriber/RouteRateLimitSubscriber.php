@@ -30,6 +30,11 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  * liefen ungebremst durch. Der Deckel ist bewusst weit — ein Admin ändert legitim
  * viel; er fängt die Schleife ab, nicht die Arbeit.
  *
+ * ⚠ **Sitemap (Feature 10).** Bei abgelaufener Fassung lädt ein Abruf den gesamten
+ * Bestand. Eigenes Kontingent, nicht das des Datensatzes: Wer den Datensatz holt, soll sich
+ * damit nicht die Sitemap sperren. Der Deckel greift VOR dem Controller, also auch dann, wenn
+ * eine gespeicherte Fassung vorliegt (EC-04).
+ *
  * ⚠ **Offene Datenendpunkte (BF-42).** Zwölf Abrufe, zwölfmal 200, und jeder lädt
  * den GESAMTEN Bestand. Das ist der Fall, den der Wortlaut der Konvention zuerst
  * nicht erfasste: Er löst keine Mail aus und prüft kein Geheimnis — er ist nur
@@ -45,6 +50,8 @@ final readonly class RouteRateLimitSubscriber implements EventSubscriberInterfac
         private RateLimiterFactoryInterface $adminWriteLimiter,
         #[Autowire(service: 'limiter.open_dataset')]
         private RateLimiterFactoryInterface $openDatasetLimiter,
+        #[Autowire(service: 'limiter.sitemap')]
+        private RateLimiterFactoryInterface $sitemapLimiter,
         private TokenStorageInterface $tokenStorage,
     ) {
     }
@@ -68,6 +75,12 @@ final readonly class RouteRateLimitSubscriber implements EventSubscriberInterfac
 
         if (str_starts_with($pfad, '/passkey/')) {
             $this->deckeln($this->passkeyLimiter, $request->getClientIp());
+
+            return;
+        }
+
+        if ('/sitemap.xml' === $pfad) {
+            $this->deckeln($this->sitemapLimiter, $request->getClientIp());
 
             return;
         }

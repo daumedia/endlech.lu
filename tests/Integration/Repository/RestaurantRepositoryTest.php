@@ -317,4 +317,47 @@ final class RestaurantRepositoryTest extends KernelTestCase
     {
         self::assertLessThanOrEqual(3, \count($this->repo->findRecent(3)));
     }
+
+    /** Feature 10, AK-02 · jede Restaurantnummer genau einmal, aufsteigend, als ganze Zahl. */
+    public function testFindAllIdsAscendingListetDenGanzenBestand(): void
+    {
+        $ids = $this->repo->findAllIdsAscending();
+        $bestand = (int) $this->em->createQuery('SELECT COUNT(r.id) FROM '.Restaurant::class.' r')->getSingleScalarResult();
+
+        self::assertCount($bestand, $ids);
+        self::assertGreaterThanOrEqual(11, \count($ids), 'Fixture-Bestand');
+        self::assertContainsOnlyInt($ids);
+        $sortiert = $ids;
+        sort($sortiert);
+        self::assertSame($sortiert, $ids);
+        self::assertSame($ids, array_values(array_unique($ids)));
+    }
+
+    /** Feature 10, AK-08 · Ein neu angelegtes Restaurant erscheint sofort in der Abfrage. */
+    public function testFindAllIdsAscendingKenntEinNeuesRestaurant(): void
+    {
+        $vorher = $this->repo->findAllIdsAscending();
+        $neu = $this->newRestaurant('Sitemap-Probe');
+        $this->persist($neu);
+
+        $nachher = $this->repo->findAllIdsAscending();
+        self::assertNotContains($neu->getId(), $vorher, 'Gegenprobe: Die Nummer darf vorher nicht existieren.');
+        self::assertContains($neu->getId(), $nachher);
+        self::assertCount(\count($vorher) + 1, $nachher);
+    }
+
+    /** Feature 10, AK-09, AK-10 · Nach dem Löschen fehlt die Nummer; ohne Bestand kommt eine leere Liste. */
+    public function testFindAllIdsAscendingOhneBestand(): void
+    {
+        $ids = $this->repo->findAllIdsAscending();
+        $erstes = $this->em->find(Restaurant::class, $ids[0]);
+        self::assertNotNull($erstes);
+        $this->em->remove($erstes);
+        $this->em->flush();
+
+        self::assertNotContains($ids[0], $this->repo->findAllIdsAscending());
+
+        $this->em->getConnection()->executeStatement('DELETE FROM restaurant');
+        self::assertSame([], $this->repo->findAllIdsAscending());
+    }
 }

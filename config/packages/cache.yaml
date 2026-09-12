@@ -71,6 +71,21 @@ framework:
                 adapter: cache.adapter.filesystem
                 default_lifetime: 3600
 
+            # Die fertig erzeugte Sitemap (/sitemap.xml, Feature 10).
+            #
+            # ⚠ **50 Minuten, nicht 60 — und das ist Rechnung, keine Vorliebe.** Die
+            # Antwort trägt zusätzlich `Cache-Control: max-age=600`. Beide Speicher
+            # addieren sich: Wird eine Fassung kurz vor ihrem Ablauf ausgeliefert, liegt
+            # sie danach noch zehn Minuten bei einem Zwischenhändler. 3000 + 600 = 3600 s
+            # hält die Zusage aus AK-08/AK-09 („binnen 60 Minuten") auch dann ein; mit
+            # zweimal 3600 wären es bis zu zwei Stunden. SitemapControllerTest prüft die
+            # Summe — wer eine der beiden Zahlen ändert, bekommt dort einen roten Lauf.
+            #
+            # Kein Verwerfen bei Änderungen: Die Spec verlangt 60 Minuten, nicht sofort.
+            cache.sitemap:
+                adapter: cache.adapter.filesystem
+                default_lifetime: 3000
+
 when@test:
     framework:
         cache:
@@ -103,3 +118,9 @@ when@test:
                 cache.roadmap:
                     adapter: cache.adapter.array
                     default_lifetime: 3600
+
+                # Gleiche Begründung: Ein Test, der Restaurants löscht und danach die
+                # Sitemap abruft, sähe sonst die Fassung eines früheren Tests.
+                cache.sitemap:
+                    adapter: cache.adapter.array
+                    default_lifetime: 3000

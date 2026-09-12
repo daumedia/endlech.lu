@@ -229,7 +229,20 @@ final class ComparisonControllerTest extends AbstractWebTestCase
             );
         }
 
-        preg_match_all('/<link[^>]+href\s*=\s*"([^"]+)"/i', $html, $links);
+        preg_match_all('/<link[^>]+>/i', $html, $linkElemente);
+        $links = [1 => []];
+        foreach ($linkElemente[0] as $element) {
+            // ⚠ Feature 10: canonical- und Sprachverweise laden nichts nach — sie nennen nur die
+            // Adresse, unter der Suchmaschinen die Seite kennen, und die lautet absolut auf
+            // https://endlech.lu. Geprüft wird hier weiterhin jede Ressource, die ein Browser
+            // tatsächlich lädt (Stylesheet, Icon, Manifest).
+            if (preg_match('/\brel\s*=\s*"(canonical|alternate)"/i', $element)) {
+                continue;
+            }
+            if (preg_match('/\bhref\s*=\s*"([^"]+)"/i', $element, $h)) {
+                $links[1][] = $h[1];
+            }
+        }
 
         foreach ($links[1] as $href) {
             if (preg_match('#^https?://#i', $href) && !str_contains($href, 'localhost')) {

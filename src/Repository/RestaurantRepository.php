@@ -270,6 +270,28 @@ class RestaurantRepository extends ServiceEntityRepository
     }
 
     /**
+     * Alle Restaurantnummern, aufsteigend — für die Sitemap (Feature 10).
+     *
+     * ⚠ **Nur die Nummer, ohne Entität und ohne Beziehungen.** `findAllForExport()` lädt jedes
+     * Restaurant vollständig samt Küchen, um am Ende eine Zahl zu brauchen; bei abgelaufener
+     * Sitemap-Fassung liefe das für jeden Abruf. Formuliert ohne natives SQL, damit MariaDB auf
+     * Produktion dieselbe Abfrage versteht wie MySQL lokal (Stack-Profil § 6).
+     *
+     * @return list<int>
+     */
+    public function findAllIdsAscending(): array
+    {
+        return array_map(
+            static fn (mixed $id): int => (int) $id,
+            $this->createQueryBuilder('r')
+                ->select('r.id')
+                ->orderBy('r.id', 'ASC')
+                ->getQuery()
+                ->getSingleColumnResult(),
+        );
+    }
+
+    /**
      * Vollständiger Datensatz für den offenen CSV-/JSON-Export unter CC-BY.
      *
      * @return Restaurant[]
