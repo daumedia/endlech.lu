@@ -7,6 +7,7 @@ namespace App\Tests\Functional\Controller;
 use App\Press\PressPackage;
 use App\Tests\AbstractWebTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Symfony\Component\DomCrawler\Crawler;
 
 /**
  * Randfälle und Querschnittsregeln der Presseseite (Feature 05).
@@ -74,8 +75,17 @@ final class PressEdgeCaseTest extends AbstractWebTestCase
         $crawler = $client->request('GET', self::LOCALE.'/presse');
         $main = $crawler->filter('main');
 
-        self::assertCount(0, $main->filter('[data-controller]'), 'Ein Teil der Seite hängt an einem Stimulus-Controller.');
-        self::assertCount(0, $main->filter('[data-action]'), 'Ein Bedienelement hängt an einem JavaScript-Ereignis.');
+        // ⚠ Ausgenommen ist genau der Messauslöser der Nutzungsmessung (Feature 11) am Download des
+        // Presse-Kits. Er ergänzt einen Klick um einen Zählaufruf und trägt keine Funktion: Der Link
+        // ist ein gewöhnlicher Download und funktioniert ohne JavaScript unverändert. Jede ANDERE
+        // Anbindung bleibt rot — Gegenprobe beim Bau gefahren.
+        $messung = static fn (Crawler $k): bool => 'usage-event' === $k->attr('data-controller')
+            && 'click->usage-event#track' === $k->attr('data-action');
+        $controller = array_filter($main->filter('[data-controller]')->each(static fn (Crawler $k): bool => !$messung($k)));
+        $aktionen = array_filter($main->filter('[data-action]')->each(static fn (Crawler $k): bool => !$messung($k)));
+
+        self::assertCount(0, $controller, 'Ein Teil der Seite hängt an einem Stimulus-Controller.');
+        self::assertCount(0, $aktionen, 'Ein Bedienelement hängt an einem JavaScript-Ereignis.');
         self::assertCount(0, $main->filter('script'), 'Im Hauptbereich steht ein Skript.');
         self::assertCount(0, $main->filter('details'), 'Ein Inhalt steckt hinter einem Aufklappelement (AK-09).');
     }

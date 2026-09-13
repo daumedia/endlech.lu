@@ -1,0 +1,17 @@
+# QA Feature 11 · Sperre der Weiterleitung in FrankenPHP (Nachprüfung BF-149, Annahme aus dem Abschlussbericht)
+# Image dunglas/frankenphp:1-php8.4 — FrankenPHP v1.12.7 PHP 8.4.25, nproc 16, Klassikbetrieb
+# Aufbau: qa/11/frankenphp-sperre.php als /app/public/index.php, vendor/ des Projekts schreibgeschützt eingehängt; je Runde sechs curl im Hintergrund
+== Runde 1: sechs gleichzeitige Anfragen
+belegt pid=1 0.12s
+belegt pid=1 0.12s
+belegt pid=1 0.12s
+belegt pid=1 0.12s
+belegt pid=1 0.12s
+platz pid=1 2.00s
+== Runde 2: sechs gleichzeitige Anfragen
+belegt pid=1 0.12s
+belegt pid=1 0.12s
+belegt pid=1 0.12s
+belegt pid=1 0.12s
+belegt pid=1 0.12s
+platz pid=1 2.00s

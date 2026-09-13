@@ -66,9 +66,6 @@ item:
     android_and_logins:
         title: "Android app, Google and Apple sign-in"
         reason: "Noted because it was asked for. None of the three has been justified or prioritised so far."
-    usage_analytics:
-        title: "Measuring use without tracking"
-        reason: "How many people open a page and leave before submitting is currently unknown. Only a cookie-free option that collects no personal data is on the table — otherwise this stays unbuilt."
 
 shelved_item:
     passkey_conditional_ui:

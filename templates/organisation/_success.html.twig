@@ -12,6 +12,7 @@
 
 {{ include('partials/_waitlist_success.html.twig', {
     target_id: 'organisation-waitlist-form',
+    messliste: 'organisation',
     emoji: type_key == 'association' ? '🤲' : '📬',
     title: ('organisation.success.' ~ type_key ~ '_title')|trans,
     text: entry

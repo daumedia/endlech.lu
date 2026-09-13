@@ -44,6 +44,21 @@ final class SecurityHeadersSubscriberTest extends TestCase
     }
 
     /**
+     * Feature 11, AK-24 · Zählskript und Zählaufrufe laufen über endlech.lu selbst — die Richtlinie
+     * bleibt deshalb bei `'self'`. Wer hier eine Fremddomain einträgt, um ein Skript von einem
+     * anderen Host zu laden, legt den Standort des zweiten VPS offen, den die Weiterleitung
+     * verbergen soll (Entwurf, Entscheidung 1).
+     */
+    public function testSkriptUndVerbindungenNurVonDerEigenenHerkunft(): void
+    {
+        $csp = (string) $this->schicke(new Response('<html></html>'))->headers->get('Content-Security-Policy-Report-Only');
+
+        self::assertMatchesRegularExpression("/(^|; )script-src 'self';/", $csp);
+        self::assertMatchesRegularExpression("/(^|; )connect-src 'self';/", $csp);
+        self::assertStringNotContainsString('http', $csp);
+    }
+
+    /**
      * JSON braucht weder Rahmen- noch Inhaltsrichtlinie — `nosniff` dagegen
      * sehr wohl, gerade bei den offenen Daten-Endpunkten.
      */

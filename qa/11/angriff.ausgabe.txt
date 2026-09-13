@@ -1,0 +1,42 @@
+── 5 · Personendaten an Umami: unterschobene Kopfzeilen und Felder
+✅ AK-04 · HTTP 200 · am Eingang angekommene Kopfzeilen: accept,accept-encoding,content-length,content-type,host,user-agent,x-endlech-client-ip
+✅ AK-04 · Besucher-IP am Eingang: 127.0.0.1 (unterschoben waren 203.0.113.9–.12)
+✅ AK-21 · weitergereichter Payload: {'website': '6f829d53-058d-4a2c-b52c-522ba86684f7', 'hostname': 'endlech.lu', 'url': '/de/angriff-kopf', 'referrer': 'https://mail.example.lu/'}
+✅ AK-02 · Umami speichert Herkunft (Domain|Pfad|Abfrage): mail.example.lu|/|
+✅ AK-04 · Land der Sitzung trotz unterschobenem cf-ipcountry: US → gespeichert: ∅
+── 7 · Eingaben: Verstöße werden abgewiesen, nichts erreicht den Eingang
+✅ AK-06 · Verwaltungspfad → HTTP 400, am Eingang: 0
+✅ AK-06 · Profilpfad → HTTP 400, am Eingang: 0
+✅ AK-07 · Token-Link → HTTP 400, am Eingang: 0
+✅ AK-09 · www.endlech.lu → HTTP 400, am Eingang: 0
+✅ AK-09 · fremde Website-Kennung → HTTP 400, am Eingang: 0
+✅ AK-17 · E-Mail in Ereignisdaten → HTTP 400, am Eingang: 0
+✅ AK-13 · Ortstext im Filter → HTTP 400, am Eingang: 0
+✅ AK-12 · Telefonnummer als Kontaktweg → HTTP 400, am Eingang: 0
+✅ AK-21 · Typ identify → HTTP 400, am Eingang: 0
+✅ AK-03 · kaputtes JSON → HTTP 400, am Eingang: 0
+✅ AK-03 · Schachtelung tiefer als 16 → HTTP 400, am Eingang: 0
+✅ AK-03 · Rumpf über 8 KB → HTTP 413, am Eingang: 0
+✅ AK-22 · Sec-GPC: 1 → HTTP 204, am Eingang: 0
+✅ AK-22 · DNT: 1 → HTTP 204, am Eingang: 0
+✅ AK-03 · Markup in Titel und Pfad: HTTP 200 — wird als Text weitergereicht (Umami speichert Text, keine Ausgabe in der Anwendung)
+── 3 · Zugriffsregeln: nur der Zählweg führt zu Umami
+✅ AK-25 · GET /api/send → HTTP 405
+✅ AK-25 · GET /api/send/login → HTTP 404
+✅ AK-25 · POST /api/auth/login → HTTP 404
+✅ AK-25 · GET /api/websites → HTTP 404
+✅ AK-25 · GET /api/heartbeat → HTTP 404
+✅ AK-25 · GET /script.js → HTTP 404
+✅ AK-25 · GET /login → HTTP 404
+── 6 · Schlüsselbindung: Eingang mit fremdem Zertifikat
+✅ AK-24 · fremdes Zertifikat: HTTP 202 / 202, beim Eingang angekommen: 0 (TLS-Handschlag abgebrochen, Unterbrecher greift)
+✅ AK-24 · richtiges Zertifikat, Unterbrecher geleert: HTTP 200
+── 4 · Personendaten und Zieladresse im Protokoll der Anwendung
+✅ AK-30 · Anwendungsprotokoll: Zieladresse, unterschobene IPs, Herkunft, Kennung → 0 Treffer
+ℹ️  Warnungen der Weiterleitung im Serverprotokoll: 0 (erwartet 0 — action_level: error)
+── 3 · Deckel: 300 je Stunde, danach funktioniert die Seite weiter
+✅ AK-27 · erster 429 bei Aufruf 301 · /de/restaurants danach: 200 · Set-Cookie auf der 429: 0
+── 6 · Geheimnisse im Repository
+✅ AK-24 · Schlüsselbindung, gesetzter Zähl-Eingang oder anderer Rechnername im Repository: keine
+
+32 bestanden, 0 durchgefallen

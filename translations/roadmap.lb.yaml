@@ -66,9 +66,6 @@ item:
     android_and_logins:
         title: "Android-App, Google- an Apple-Umeldung"
         reason: "Notéiert, well dono gefrot gouf. Keen vun den dräi Punkten ass bis elo begrënnt oder agerangéiert."
-    usage_analytics:
-        title: "Notzung moossen, ouni ze verfollegen"
-        reason: "Wéi vill Leit eng Säit opmaachen a virum Ofschécken erëm fortginn, ass haut onbekannt. A Fro kënnt just e Wee ouni Cookies an ouni perséinlech Daten — soss gëtt et net gebaut."
 
 shelved_item:
     passkey_conditional_ui:

@@ -331,6 +331,34 @@ Rechnung**, nicht im DPA — offen als DS-02b.
 
 ---
 
+### Nutzungsmessung (Feature 11, gebaut 2026-09-13, noch nicht ausgeliefert)
+
+**Kein neuer Auftragsverarbeiter.** Umami ist selbst betriebene Software auf einem **zweiten VPS bei
+Hostinger** — im selben Konto wie die Anwendung, der Auftragsverarbeitungsvertrag oben gilt.
+Serverstandort laut Betreiber **Deutschland** (Angabe 2026-09-13; die Messung wie am 2026-09-05 steht
+als Betriebsschritt T01 aus). Derselbe VPS trägt Uptime Kuma (BE-01).
+
+⚠ **Rechnername und Adresse des zweiten VPS stehen hier bewusst nicht** — wie bei BE-01. Wer weiß, wo
+die Überwachung steht, kann sie gezielt lahmlegen. Deshalb laufen Skript und Zählaufrufe **über
+endlech.lu** (`/zaehler.js`, `POST /api/send`), und die Umami-Oberfläche ist nur per SSH-Tunnel
+erreichbar. `APP_UMAMI_UPSTREAM` gehört in kein Protokoll und in keine Unterlage.
+
+| | |
+|---|---|
+| **Zweck** | Welche Seiten gelesen werden, woher Besucher kommen, wo sie Suche und Wartelisten abbrechen; Nachmessung des Growth-Loops |
+| **Rechtsgrundlage (Text in `/legal`)** | berechtigtes Interesse, Art. 6 Abs. 1 lit. f DSGVO — ⚠ **vor dem Deploy in `/sdd-betrieb` zu prüfen** (OF-01 der Spec), keine Rechtsauskunft |
+| **Einwilligung** | keine; Banner unverändert (kein Cookie). Widerspruch: „Do Not Track", „Global Privacy Control", Schalter in `/legal` (Browserspeicher) |
+| **Gespeichert** | Sitzung: Kennung (wechselt täglich, `SALT_ROTATION=day`), Browser, Betriebssystem, Gerät, Bildschirmgröße, Sprache, **Land**. Seitenaufruf/Ereignis: Pfad ohne Abfrage, Seitentitel, Herkunftsdomain, Ereignisname mit Katalogfeldern |
+| **Nicht gespeichert** | IP-Adresse (nur beim Eingang für Land und Sitzungskennung), Region, Stadt (Länderdatenbank), Abfrage, Herkunftspfad, Cookies, Kontokennung, Formularinhalte |
+| **Nicht gemessen** | Verwaltung, Profil, jede Seite mit Token in der Adresse; lokal, Test, `www.endlech.lu`; bekannte Bots |
+| **Aufbewahrung** | **unbegrenzt**, Begründung: langfristiger Vergleich der Reichweite (Decision Log #12 der Spec). ⚠ Mit OF-01 in `/sdd-betrieb` zu prüfen |
+| **Kontolöschung / Auskunft** | kein Kontobezug — nichts zu löschen, nichts zuzuordnen |
+| **Zugriff** | Betreiber (Umami-Konto mit 2FA) und Growth-Loop (nur lesend), beide per SSH-Tunnel |
+| **Übertragung zwischen den Servern** | TLS mit selbst signiertem Zertifikat und Schlüsselbindung; Eingang per Firewall nur für den Anwendungs-VPS |
+| **Unterlagen** | `features/11-nutzungsmessung/` (Spec, Entwurf, Plan) |
+
+---
+
 ### Weitere Verarbeiter
 
 | Dienst | Zweck | Sitz | Bemerkung |
@@ -470,13 +498,13 @@ Stand 2026-09-12. Was hier fehlt, meldet seinen Ausfall nicht selbst.
 | Bereich | Zustand | Wo |
 |---|---|---|
 | Fehler-Tracking | **läuft** — Sentry, EU-Region (`ingest.de.sentry.io`), nur `prod`, `send_default_pii: false`. DSN in Coolify gesetzt (Betreiber bestätigt 2026-09-05) | `config/packages/sentry.yaml` |
-| Rate Limits | **läuft** — 21 Limiter, jeder verdrahtet und mit `when@test`-Override; `LimiterCoverageTest` färbt rot, sobald einer davon fehlt | `config/packages/framework.yaml` |
+| Rate Limits | **läuft** — 23 Limiter (Stand 2026-09-13, zuletzt `usage_collect` für den Zählweg aus Feature 11), jeder verdrahtet und mit `when@test`-Override; `LimiterCoverageTest` färbt rot, sobald einer davon fehlt | `config/packages/framework.yaml` |
 | Protokollierung | **läuft** — `prod` schreibt nach `stderr`, `!doctrine` und `!request` ausgeschlossen, damit keine Bestätigungstoken im Hoster-Log landen (BF-23) | `config/packages/monolog.yaml` |
 | Lebendigkeitsprüfung | **läuft** — `/health`, sprachfrei, bewusst **ohne** Datenbankabfrage | `src/Controller/Health/` |
 | **Messenger-Worker** | **überwacht seit 2026-09-05** — `app:messenger:watch` meldet einen Rückstau per Mail, täglich aus dem `marketing`-Zeitplan | siehe unten |
 | **Uptime von außen** | **läuft seit 2026-09-12** — Uptime Kuma auf einem **zweiten VPS**, zwei Prüfungen: `/health` und ein Puls des Messenger-Consumers. `/open.json` bewusst nicht (Entscheidung 2026-09-12) (BE-01) | siehe unten |
 | **Messenger-Consumer, Totalausfall** | **läuft seit 2026-09-12, Alarm ausgelöst** — `app:worker:pulse` meldet alle fünf Minuten nach außen; bleibt der Puls aus, schlägt Kuma an | `src/Command/WorkerPulseCommand.php` |
-| Produktanalyse | **entschieden am 2026-09-12** — steht als Vorhaben `usage_analytics` in der Spalte „Angedacht" auf `/roadmap`, nicht mehr als Betriebslücke (BE-02) | `src/Roadmap/RoadmapRegistry.php` |
+| Produktanalyse | **gebaut als Feature 11 (2026-09-13), noch nicht ausgeliefert** — Umami, selbst betrieben auf dem zweiten VPS, Zählweg über endlech.lu; der Roadmap-Eintrag `usage_analytics` ist entfernt (BE-02) | `features/11-nutzungsmessung/`, Abschnitt „Nutzungsmessung“ oben |
 | Sicherungen der Datenbank | **Rückweg prüfbar seit 2026-09-12**, die Sicherung selbst weiter ungeklärt: ob Coolify sichert und wie oft, ist nicht dokumentiert (BE-03) | `bin/sicherung-pruefen.sh` |
 
 ### BE-01 · Uptime-Prüfung von außen — eingerichtet und ausgelöst (2026-09-12)
@@ -637,7 +665,12 @@ Alarme mehr, und das fällt nicht auf — dieselbe Bauartgrenze wie beim
 billigen Wege: eine zweite, sehr kleine Prüfung anderswo auf die Kuma-Oberfläche, oder
 ein wöchentlicher Blick. Nicht entschieden, aber benannt.
 
-### BE-02 · Produktanalyse — am 2026-09-12 auf die Roadmap gesetzt
+### BE-02 · Produktanalyse — am 2026-09-12 auf die Roadmap gesetzt, am 2026-09-13 als Feature 11 gebaut
+
+> **Stand 2026-09-13:** Umgesetzt als Feature 11 mit Umami, selbst betrieben — der Weg aus der
+> ersten Zeile der Vorarbeit-Tabelle unten. Beschreibung im Abschnitt „Nutzungsmessung (Feature 11)"
+> unter den Auftragsverarbeitern. Der Roadmap-Eintrag ist mit dem Bau entfernt; ausgeliefert ist
+> noch nichts.
 
 Ein Analyse-Skript im Frontend ist eine **Produktänderung**: Es berührt die App-Hülle,
 den Datenschutzabschnitt in `/legal` und — je nach Wahl — das Einwilligungsbanner. Es

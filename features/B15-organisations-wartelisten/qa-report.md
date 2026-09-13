@@ -318,3 +318,47 @@ als B14 und B15: eigener Controller, eigener Mailversand, Anti-Enumeration mit
 Timing-Angleich. Danach können alle drei zusammen ausgeliefert werden.
 
 ⚠ Bis dahin bleibt BF-119 auf Produktion aktiv — auf **allen drei** Wegen.
+
+---
+
+# Nachtrag aus QA Feature 11 — 2026-09-13
+
+Stand: 2026-09-13 · Vorstufe: `deployed` → **`review`** · kein eigener Durchlauf von B15, sondern ein Fund beim
+Prüfen der Nutzungsmessung (Feature 11, AK-15), der B15 betrifft.
+
+## Fazit
+
+**Production-ready: nein** — ein hoher Befund, der **auf der Produktion aktiv ist**.
+
+## Fehler
+
+### BF-151 · Eintragen von den Zielgruppenseiten endet in einer 405-Fehlerseite — hoch
+
+**Betrifft:** AK-03 (Zielgruppenseite mit vorgewähltem Typ — die Seite erscheint, ihr Formular funktioniert
+nicht) und AK-09 (eine gültige Anmeldung bekommt die typspezifische Mail — von hier aus entsteht keine).
+**Reproduktion:**
+1. `/de/organisationen/gemeinden`, `…/unternehmen` oder `…/vereine` im Browser öffnen, Organisation, Kontakt,
+   E-Mail und Einwilligung ausfüllen, absenden (`qa/11/wartelisten-browser.mjs`, Ausgabe daneben).
+2. `tests/Functional/Controller/Qa11ZielgruppenFormularTest.php` ohne `markTestSkipped`: drei Fälle rot mit
+   „Failed asserting that 405 is not identical to 405".
+**Erwartet:** wie auf `/de/organisationen` — Weiterleitung, Eintrag gespeichert, Bestätigungsmail.
+**Tatsächlich:** `POST /de/organisationen/<slug>` → **405**, sichtbar „Oops! An Error Occurred — The server returned
+a "405 Method Not Allowed"", **0** Einträge, die eingegebenen Daten sind weg. `form_start()` setzt kein `action`,
+der Browser schickt an die aktuelle Adresse, und `app_organisations_type` kennt nur GET; `app_organisations_submit`
+liegt unter `/organisationen`.
+**Produktion:** nur lesend geprüft — `GET https://endlech.lu/de/organisationen/gemeinden` (200) rendert dasselbe
+Formular ohne `action`; `master` trägt dieselben Routen. Kein POST an die Produktion. Sentry meldet es nicht,
+405 steht in `ignore_exceptions`. ⚠ Seit Feature 10 stehen die drei Seiten in der Sitemap — der Weg, auf dem
+Gemeinden aus der Suche heraus ankommen, ist genau der kaputte.
+**Warum drei Durchläufe es nicht sahen:** Alle Absende-Tests in `OrganisationControllerTest` holen das Formular
+von der Übersicht, wo die aktuelle Adresse zufällig die POST-Route ist; die Zielgruppenseiten werden nur per GET
+geprüft (Überschrift, vorgewählter Typ, Teaser). Der erste Durchlauf dieses Berichts prüfte AK-03 als bestanden —
+richtig für das, was dort steht, und blind für das Formular darunter.
+**Ort:** `templates/organisation/_form.html.twig:33`, `src/Controller/OrganisationController.php` (`type()`).
+**Vorschlag:** Das Formular ausdrücklich an `app_organisations_submit` richten; der Prüflauf holt es von jeder
+Zielgruppenseite (die Reproduktion tut das bereits).
+
+## Nächster Schritt
+
+**`/sdd-build B15 BF-151 beheben`**, danach `/sdd-qa B15` und Auslieferung. Laut Prüfregel für Bestandsfeatures
+geht das vor dem nächsten Feature.

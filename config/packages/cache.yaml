@@ -86,6 +86,15 @@ framework:
                 adapter: cache.adapter.filesystem
                 default_lifetime: 3000
 
+            # Merker des Unterbrechers der Nutzungsmessung (Feature 11).
+            #
+            # Scheitert eine Weiterleitung an Umami, wird 60 Sekunden lang nichts mehr
+            # weitergeleitet. Ohne Merker hielte bei ausgefallenem zweitem VPS jeder
+            # Zählaufruf einen PHP-Prozess bis zum Zeitlimit fest.
+            cache.usage:
+                adapter: cache.adapter.filesystem
+                default_lifetime: 60
+
 when@test:
     framework:
         cache:
@@ -124,3 +133,9 @@ when@test:
                 cache.sitemap:
                     adapter: cache.adapter.array
                     default_lifetime: 3000
+
+                # Gleiche Begründung: Ein Unterbrecher aus einem früheren Test ließe
+                # jede spätere Weiterleitung ins Leere laufen.
+                cache.usage:
+                    adapter: cache.adapter.array
+                    default_lifetime: 60

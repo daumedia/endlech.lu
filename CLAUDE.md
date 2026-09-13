@@ -366,6 +366,7 @@ Autowiring and autoconfiguration are enabled by default in `config/services.yaml
 | `api_v1_me_submissions`| `/api/v1/me/submissions` (GET) | `Api\V1\MeController::submissions()` |
 | `app.swagger_ui`      | `/api/docs`    | NelmioApiDoc Swagger-UI |
 | `app_sitemap`         | `/sitemap.xml` (locale-frei) | `Seo\SitemapController::sitemap()` (Feature 10) |
+| `app_usage_collect`   | `/api/send` (POST, locale-frei) | `Usage\CollectController` (Feature 11, Zählweg zu Umami) |
 
 **Wichtig:** Die `/api/v1/`-Routen sind **locale-frei** (kein `/{_locale}`-Prefix). `config/routes.yaml` importiert `src/Controller/Api/V1/` in einem eigenen Block und `exclude`t es am `controllers`-Loader. Genauso ist `src/Controller/Open/` locale-frei importiert (Block `open_data`) – `exclude` am `controllers`-Loader ist deshalb eine **Liste** mit zwei Einträgen. Die HTML-Seite `/open` liegt dagegen unter `/{_locale}`; die sprachfreie Route `app_open_redirect` leitet auf sie um. Der ältere `CuisineApiController` (`/api/cuisines`) liegt weiterhin UNTER `/{_locale}` (also real `/{_locale}/api/cuisines`).
 
@@ -1365,6 +1366,72 @@ würde die Route verdecken und die Sitemap einfrieren; ein Verzeichnis wiederhol
 ⚠️ **Die Route `app_sitemap` liegt in einem eigenen Block `seo`** in `config/routes.yaml`
 samt Eintrag in der `exclude`-Liste — dasselbe Muster wie `Open/`, `Health/`, `Marketing/`.
 
+## Nutzungsmessung (Feature 11, Umami selbst betrieben)
+
+Cookielose Messung mit **Umami auf dem zweiten VPS** (neben Uptime Kuma). Der Browser sieht den VPS
+nie: Das Zählskript liegt als `public/zaehler.js` im Repository, die Zählaufrufe gehen an
+`POST /api/send` auf endlech.lu, und die Anwendung reicht sie **geprüft und gekürzt** weiter.
+Spec, Entwurf und Plan unter `features/11-nutzungsmessung/`, Verarbeitungseintrag in
+`docs/datenschutz.md`.
+
+⚠️⚠️ **`APP_UMAMI_UPSTREAM` verrät den Standort der Überwachung.** Nie ins Repository, in kein
+Protokoll, in keine Fehlermeldung — dieselbe Behandlung wie `APP_UPTIME_PUSH_URL`. Deshalb benutzt
+`UmamiForwarder` den Dienst `app.usage.umami_client` mit **`autoconfigure: false`**: Mit
+Autokonfiguration bekäme der Client über `LoggerAwareInterface` den Logger, und der Kanal
+`http_client` schriebe bei einem Fehler die Adresse ins Protokoll. Geloggt wird nur die
+Ausnahme**klasse**; `UmamiForwarderTest` ist mit `getMessage()` gegengeprüft rot.
+
+⚠️ **Die Weiterleitung ist die Grenze, nicht die Tracker-Optionen.** `data-exclude-search`,
+`data-domains`, `data-do-not-track` gelten nur für ehrliche Browser. `CollectPayloadNormalizer`
+wiederholt jede Inhaltsregel (Pfad ohne Abfrage, Herkunft nur als Domain, keine Verwaltungs-,
+Profil- oder Token-Pfade, nur `endlech.lu`, `id`/`tag` entfernt) und lässt Ereignisse nur aus
+`UsageEventCatalogue` durch. **Wer ein Ereignis ergänzt, trägt es dort ein** und prüft, ob sein Wert
+eine Person beschreiben kann. Die Filterschlüssel gleicht `UsageEventCatalogueTest` gegen das
+Filterformular ab.
+
+⚠️ **Die Pfadregeln stehen ein zweites Mal in `assets/usage/before_send.ts`, und das ist Absicht.**
+Turbo Drive tauscht beim Navigieren nur den Seiteninhalt: Ein einmal geladener Tracker bliebe auf
+dem Weg nach `/de/admin` aktiv und zählt 300 ms nach jedem `pushState`. Turbo ruft `pushState` schon
+zu Beginn eines Seitenwechsels — eine Markierung im neuen Seiteninhalt käme womöglich zu spät. Die
+Adresse steht dagegen im Zählaufruf selbst.
+
+⚠️ **Eigene Auslöser (`usage_event_controller.ts`) statt `data-umami-event`.** Umamis Klick-Attribute
+halten bei Links ohne `target="_blank"` die Navigation an, bis der Zählaufruf fertig ist — bei `tel:`
+und `mailto:` wartete der Besucher auf die Messung.
+
+⚠️ **Wer Umami auf dem VPS aktualisiert, ersetzt `public/zaehler.js` und `app.umami_tracker_version`
+mit.** Entnommen aus dem Container-Image (`/app/public/script.js`), inhaltlich unverändert;
+`TrackerFileTest` prüft Version, Zählweg und die Eigenschaften, auf die sich die Messung verlässt
+(`umami.disabled`, `before-send`, `do-not-track` …).
+
+⚠️ **Kein Verzeichnis `public/api` anlegen** — BF-100. Der Zählweg ist eine Route in einem eigenen
+Block `usage` in `config/routes.yaml`, mit Firewall `usage` (`security: false`) und `stateless: true`,
+dasselbe Muster wie `/health`.
+
+**Deckel `usage_collect`:** 300 je Stunde je Adresse, Zweig im `RouteRateLimitSubscriber`. **Unterbrecher:**
+nach einem Fehlschlag 60 s lang keine Weiterleitung (Pool `cache.usage`), damit ein toter VPS keine
+PHP-Prozesse festhält. `.env.test` trägt eine Platzhalter-Kennung, damit das Skript im Test gerendert
+wird; der Zähl-Eingang bleibt leer.
+
+⚠️⚠️ **Höchstens eine Weiterleitung zur Zeit** (Sperre `umami-weiterleitung`, BF-149). Der Unterbrecher
+greift erst **nach** einem Fehlschlag; bis dahin wartete jede gleichzeitige Anfrage selbst bis zum
+Zeitlimit — gemessen gegen einen Eingang, der nie antwortet: sechs Zählaufrufe je 2,1–3,7 s, die
+Restaurantliste daneben 1,8 s bis zum ersten Byte, weil die PHP-Prozesse belegt waren. Wer den Platz nicht
+binnen 100 ms bekommt, wird **nicht gezählt**. Der Preis ist gemessen: Bei gesundem Eingang gehen von sechs
+exakt gleichzeitigen Aufrufen 0–1 verloren, bei 50 ms Abstand keiner. **Wer die Sperre für „Durchsatz"
+entfernt, holt BF-149 zurück**; ein kürzeres Zeitlimit allein hilft nicht, es verkürzt nur jede der vielen
+Wartezeiten. Ein Zeitlimit begrenzt die Wartezeit eines Aufrufs, nicht die Summe gleichzeitiger.
+
+⚠️ **Trichterschritte in `growth/config.json`: `*` nur am Anfang oder Ende** (BF-150). Umami 3.3.1 ersetzt
+genau diese Sterne durch `%`; ein Stern in der Mitte bleibt ein wörtliches Zeichen. `/*/restaurants` zählte
+gegen eine echte Instanz **null**, `*/restaurants` trifft jede Sprache. `GrowthTrichterTest` bildet Umamis
+Abgleich nach und hält jeden Schritt gegen die Routen aller vier Sprachen; die Tabelle in `design.md` steht
+bis zur Entscheidung über OF-07 noch in der falschen Form.
+
+⚠️ **`PressEdgeCaseTest` nimmt den Messauslöser am Presse-Kit ausdrücklich aus** — die Seite braucht
+weiterhin kein JavaScript; der Link ist ein gewöhnlicher Download. Jede andere Stimulus-Anbindung im
+Hauptbereich bleibt rot.
+
 ## Deployment (CD)
 
 **Ein Merge nach `master` ist die Voraussetzung für den Deploy — nicht der Deploy
@@ -1902,6 +1969,8 @@ aus gefälschten `X-Forwarded-For`-Headern. Der Wert gehört in die Umgebung.
 | `src/Command/WorkerPulseCommand.php` | BE-01: Puls an Uptime Kuma; sein Ausbleiben ist die Meldung |
 | `src/Seo/SeoRegistry.php` | Feature 10: einzige Quelle für Sitemap, canonical und Ausschluss |
 | `public/robots.txt` | Feature 10: statisch, ohne Platzhalter; Ausschlusswege nie sperren |
+| `src/Usage/UsageEventCatalogue.php` | Feature 11: einzige Liste der Messereignisse; was hier fehlt, erreicht Umami nicht |
+| `public/zaehler.js` | Feature 11: Umami-Tracker in fester Version — bei jedem Umami-Update mit ersetzen |
 | `importmap.php`       | Symfony AssetMapper module mapping         |
 | `.editorconfig`       | Editor formatting rules                    |
 | `docs/`               | Datenmodell-, Design-System- und PRD-Referenz |

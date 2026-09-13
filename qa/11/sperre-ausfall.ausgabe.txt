@@ -1,0 +1,6 @@
+# QA Feature 11 · BF-152 an der laufenden Anwendung (Produktionsmodus, symfony server, Eingang gesund)
+vorher, Sperrdatei normal: 200 0.058021s
+Sperrdatei ohne Rechte (chmod 000): 500 0.032429s · Rumpf: <!DOCTYPE html><html lang="en"><head>    <meta charset="UTF-8" />    <meta n
+zweiter Aufruf: 500 0.028884s
+Rechte wiederhergestellt: 200 0.034143s
+Protokoll (neue Zeilen, Ausnahmeklassen):  2 "status":500;

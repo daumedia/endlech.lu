@@ -1,0 +1,5 @@
+Prüfpunkte: Dienst Umami, selbst betrieben, Anbieter Hostinger, Standort Deutschland, Pfad ohne Abfrage, Herkunftsdomain, Land, Sitzungskennung offen genannt, Cookies (was nicht), IP nicht gespeichert, Aufbewahrung ohne Grenze, Do Not Track, Global Privacy Control, Schalter im Abschnitt
+de: 1910 Zeichen · fehlt: nichts · „anonym"/„keine Kennung": keine
+en: 1724 Zeichen · fehlt: nichts · „anonym"/„keine Kennung": keine
+fr: 2001 Zeichen · fehlt: nichts · „anonym"/„keine Kennung": keine
+lb: 1824 Zeichen · fehlt: nichts · „anonym"/„keine Kennung": keine

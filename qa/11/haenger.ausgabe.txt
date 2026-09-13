@@ -1,0 +1,26 @@
+gesund (Eingang PID lauscht): 200 0.059764
+Hänger lauscht und schweigt: curl-Exit 28 (28 = Zeitüberschreitung)
+Phase 1 · Übergang gesund → hängend: 12 Zählaufrufe, länger als 1 s: 0 (sortiert: 202 0.09s; 202 0.09s; 202 0.09s; 202 0.09s; 202 0.09s; 202 0.09s; 202 0.09s; 202 0.09s; 202 0.10s; 202 0.10s; 202 0.10s; 202 0.10s; ) · Prozesse mit offener Sperrdatei nach 0,3 s: 0 · Seiten bis zum ersten Byte: 0.049394s 0.049405s 0.049335s 
+Phase 1b · direkt danach: 202 0.025874
+Phase 2 · Unterbrecher nach 62 s von selbst abgelaufen: 12 Zählaufrufe, länger als 1 s: 1 (sortiert: 202 0.20s; 202 0.20s; 202 0.31s; 202 0.32s; 202 0.32s; 202 0.43s; 202 0.43s; 202 0.43s; 202 0.54s; 202 0.54s; 202 0.55s; 202 2.10s; ) · Prozesse mit offener Sperrdatei nach 0,3 s: 1 · Seiten bis zum ersten Byte: 0.057687s 0.057661s 0.057678s 
+Phase 3 · Eingang wieder gesund, Unterbrecher abgelaufen: 200 0.062048
+
+## Bewertung (QA, 2026-09-13)
+Phase 2 und 3 sind belastbar: Nach echtem Ablauf des Unterbrechers wartet genau EIN Zählaufruf (2,10 s), nach 0,3 s
+hält genau ein Prozess die Sperrdatei, die übrigen elf geben nach 0,20–0,55 s auf (lokal nur drei PHP-FPM-Worker,
+sie stellen sich an); danach wird wieder gezählt (200).
+
+⚠ Phase 1 ist in diesem und dem vorigen Skriptlauf NICHT aussagekräftig: Alle zwölf Aufrufe kamen in 0,09–0,10 s
+zurück, niemand hielt die Sperre, und „direkt danach" traf den Unterbrecher — der also schon vor der Welle stand,
+obwohl das Serverprotokoll zwischen dem erfolgreichen Aufruf und der Welle keinen Zählaufruf zeigt. Ursache nicht
+restlos geklärt; in einer Einzelbeobachtung lieferte die Probe am frisch gestarteten Hänger curl-Exit 0 statt 28,
+der Portwechsel ist in diesem Aufbau also nicht zuverlässig. Für das Produkt ist der Ausgang harmlos (niemand wartet).
+
+Der Übergang gesund → hängend wurde deshalb einzeln im Vordergrund belegt, jeweils Eingang gesund (200) → beendet →
+Hänger lauscht (Prozessnummer geprüft):
+- ein Aufruf: 202 nach 2,04 s, direkt danach 202 nach 0,05 s (Unterbrecher), nach Leeren wieder 2,04 s
+- Sonde außerhalb der Anwendung (gleiche Client-Optionen): TimeoutException „Idle timeout reached" nach 2,00 s
+- Welle, jeder Aufruf in eigener Datei: genau einer 2,09 s, elf 0,19–0,76 s, Sperre nach 0,3 s von 1 Prozess
+  gehalten, Restaurantliste 0,25–0,29 s bis zum ersten Byte; direkt danach 0,04 s
+- mit Blick auf die Unterbrecher-Datei (var/share/prod/pools): vor dem Aufruf nicht gesetzt, danach gesetzt
+  (Ablauf +60 s), der Aufruf selbst 2,03 s

@@ -1,0 +1,9 @@
+== Umami-Trichter über die Auswertungsschnittstelle (lokale Instanz, Daten aus qa/11/browser-pruefung.mjs)
+Suchtrichter sprachübergreifend (AK-11, AK-14):
+    [('/*/restaurants', 0), ('filter_angewandt', 0), ('/*/restaurants/*', 0), ('kontaktweg_genutzt', 0)]
+Suchtrichter nur Deutsch (AK-05):
+    [('/de/restaurants', 1), ('filter_angewandt', 1), ('/de/restaurants/*', 1), ('kontaktweg_genutzt', 1)]
+Warteliste App (AK-15):
+    [('/*/app', 0), ('warteliste_eingetragen', 0)]
+    [('*/restaurants', 1), ('filter_angewandt', 1), ('*/restaurants/*', 1), ('kontaktweg_genutzt', 1)]
+    [('*/app', 1), ('warteliste_eingetragen', 1)]

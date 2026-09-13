@@ -376,8 +376,14 @@ JSON-Abzug fest. Ohne Snapshot zeigt `/open` **keine** Veränderungen — eine
 Veränderung gegen einen unbekannten Ausgangswert wäre erfunden.
 
 **Fehler** — Sentry, nur in `prod`, EU-Region, `send_default_pii: false`.
-**Es gibt kein Web-Analytics** (kein Google Analytics, kein Matomo, kein
-Plausible). Reichweite wird derzeit nicht gemessen.
+**Nutzung** — seit Feature 11 cookielos mit **Umami, selbst betrieben** auf einem zweiten
+Server: Seitenaufrufe ohne Suchparameter, Herkunft nur als Domain, Land, Suchtrichter (Liste →
+Filter → Detailseite → Kontaktweg), Wartelisten-Trichter und einige Engagement-Ereignisse. Kein
+Cookie, keine gespeicherte IP-Adresse, kein Kontobezug; die Sitzungskennung wechselt täglich.
+Die Bedingung dafür stand vorher öffentlich auf `/roadmap`: *„Infrage kommt nur ein Weg ohne
+Cookies und ohne Personendaten — sonst bleibt es ungebaut."* Einzelheiten in
+`features/11-nutzungsmessung/`. Die Zahlen sieht nur der Betreiber; sie dienen dem Growth-Loop
+(`growth/`), nicht als öffentliche Kennzahl.
 
 ### ▸ Vorschlag: Zielkorridore
 
@@ -587,4 +593,5 @@ Bewusste Grenzen — nicht vergessen, sondern entschieden:
 | **Bewertungen außerhalb der Gastronomie** | Geschäfte, Ämter, Arztpraxen wären dieselbe Mechanik — aber eine andere Erhebung, andere Kriterien und ein anderes Versprechen |
 | **Ausdehnung über Luxemburg hinaus** | *„100 % Luxemburg. Speziell für die Luxemburger Gastronomie. Lokal, relevant, aktuell."* Die Gemeindeliste, die Kantonszuordnung und der Rechtsrahmen sind auf das Land zugeschnitten |
 | **Dark Mode** | Nie begonnen; keine halbfertige Umsetzung im Bestand |
-| **Web-Analytics** | Keine Besucherverfolgung. Passt zur Datensparsamkeit, kostet aber jede Aussage über Reichweite |
+| **Besucherverfolgung** | Keine Cookies, kein Wiedererkennen über Tage, kein Kontobezug, keine Werbe- oder Fremd-Analysedienste. Die cookielose Nutzungsmessung (Feature 11) ist davon ausgenommen, weil sie unter genau dieser Bedingung gebaut wurde |
+| **Besucherzahlen als Zielkennzahl** | Gemessen wird seit Feature 11, aber nicht als Ziel und nicht öffentlich: Für eine Plattform, deren Nutzen darin besteht, dass jemand *nicht* umsonst hinfährt, wären Besucherzahl und Verweildauer das falsche Signal (siehe „Zielkorridore") |

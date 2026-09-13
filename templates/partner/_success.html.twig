@@ -7,6 +7,7 @@
 #}
 {{ include('partials/_waitlist_success.html.twig', {
     target_id: 'partner-waitlist-form',
+    messliste: 'partner',
     title: 'partner.form.success_title'|trans,
     text: entry
         ? 'partner.form.success_text_with_email'|trans({'%email%': entry.email})
