@@ -1,0 +1,28 @@
+✅ EC-06  1. Abruf nach leerem Speicher mit Host www.endlech.lu → 200; www im XML: False; folgender gewöhnlicher Abruf identisch: True
+✅ AK-01  GET /sitemap.xml → 200, Content-Type application/xml; charset=utf-8 (Schema separat mit PHP)
+✅ AK-02  128 <url>-Einträge, erwartet (21 + 11) × 4 = 128
+✅ AK-02  feste Einträge deckungsgleich mit der Spec-Tabelle: 84 von 84
+✅ AK-07  kein lastmod, priority, changefreq im ausgelieferten XML
+✅ AK-03  128 Adressen, davon mit falschem Anfang oder '?': 0
+✅ AK-05  Einträge ohne vollständige, sich selbst einschließende Sprachverweise: 0
+✅ AK-06  Adressen aus ausgeschlossenen Bereichen: 0
+✅ AK-22  128 Adressen (loc + hreflang), mit '@' oder Token-Muster: 0
+✅ AK-04  128 Adressen einzeln abgerufen, ohne Weiterleitung zu folgen · nicht 200: 0 []
+✅ AK-12  canonical ≠ Sitemap-Adresse: 0 []
+✅ AK-14  hreflang der Seite ≠ Sitemap-Eintrag: 0 []
+✅ AK-16  Sitemap-Seiten mit X-Robots-Tag oder noindex-Meta: 0
+✅ AK-13  /de/restaurants?sort=name → 200, canonical ['https://endlech.lu/de/restaurants']
+✅ AK-13  /de/restaurants?wheelchair=1&city=Esch → 200, canonical ['https://endlech.lu/de/restaurants']
+✅ AK-13  /de/restaurants?page=2&sort=name → 200, canonical ['https://endlech.lu/de/restaurants?page=2']
+✅ AK-13  /de/restaurants?page=1 → 200, canonical ['https://endlech.lu/de/restaurants']
+✅ AK-13  /de/restaurants?page=0 → 200, canonical ['https://endlech.lu/de/restaurants']
+✅ AK-13  /de/restaurants?page=abc → 400, canonical [] (Spec-Zeile: https://endlech.lu/de/restaurants · OF-06)
+✅ AK-15  16 Wege × 4 Sprachen = 64 Abrufe · Statuscodes {200: 20, 302: 20, 404: 24} · ohne 'X-Robots-Tag: noindex': 0 []
+✅ AK-17  GET /robots.txt → 200, text/plain; charset=utf-8, Sitemap-Zeile vorhanden, ausgeliefert = Repository: True
+✅ AK-18  22 Pfade aus Verwaltung/Profil/Schnittstelle, davon erlaubt: 0
+✅ AK-19  131 Pfade (alle Sitemap-Adressen + offene Daten), davon gesperrt: 0
+✅ AK-20  64 Ausschlusswege, davon gesperrt: 0
+✅ AK-21  Regeln: 13, keine Sperre der ganzen Seite
+✅ AK-23  62 Abrufe in diesem Lauf · davor 60× 200 · erster 429 bei Nr. 61, Retry-After 3594 s · Set-Cookie auf gedeckelten Antworten: False · /open/dataset.json danach: 200
+
+26 von 26 Prüfungen bestanden

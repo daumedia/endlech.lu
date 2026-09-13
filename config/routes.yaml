@@ -121,6 +121,7 @@ controllers:
             - '../src/Controller/Open/'
             - '../src/Controller/Marketing/'
             - '../src/Controller/Health/'
+            - '../src/Controller/Seo/'
     type: attribute
     prefix: /{_locale}
     requirements:
@@ -165,4 +166,19 @@ health:
     resource:
         path: ../src/Controller/Health/
         namespace: App\Controller\Health
+    type: attribute
+
+# Sitemap (Feature 10) – sprachfrei, weil eine Sitemap im Wurzelverzeichnis stehen muss,
+# um die ganze Herkunft abzudecken. Ein Sprachpräfix machte daraus vier Sitemaps, von denen
+# jede nur ihre eigene Sprache abdeckte.
+#
+# ⚠ Die robots.txt ist KEINE Route, sondern die statische Datei public/robots.txt: Eine
+# 5xx-Antwort darauf lässt Google zwölf Stunden lang nicht mehr crawlen, und eine Datei, die
+# der Webserver ohne PHP ausliefert, kann an keiner Datenbankstörung scheitern.
+#
+# Es darf kein Verzeichnis `public/sitemap` entstehen – sonst wiederholt sich BF-100.
+seo:
+    resource:
+        path: ../src/Controller/Seo/
+        namespace: App\Controller\Seo
     type: attribute

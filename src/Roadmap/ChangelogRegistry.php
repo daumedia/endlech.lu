@@ -29,6 +29,10 @@ final readonly class ChangelogRegistry
     public function notes(): array
     {
         return [
+            // SILENT. Ein Gast sieht von Sitemap, robots.txt und canonical-Verweisen nichts —
+            // sie wirken nur in Suchmaschinen. Ein Eintrag „wir sind besser auffindbar" wäre
+            // eine Behauptung, die erst die Search Console belegen kann (AK-24, AK-25).
+            new ReleaseNote('2026.09.13', new \DateTimeImmutable('2026-09-13'), ReleaseVisibility::SILENT),
             // SILENT. Ein Gast bemerkt genau eine Sache: eine neue Karte in der Spalte
             // „Angedacht" auf /roadmap. Die Roadmap ist selbst der Ort, an dem dieses
             // Vorhaben mitgeteilt wird — ein Changelog-Eintrag „wir denken über

@@ -40,10 +40,16 @@ final class PressEdgeCaseTest extends AbstractWebTestCase
                     continue;
                 }
 
+                // Die Sprachverweise und die kanonische Adresse laden nichts. ⚠ Seit
+                // Feature 10 zeigen sie auf die feste Hauptadresse https://endlech.lu und
+                // nicht mehr auf den Host der Anfrage — ausgenommen werden sie deshalb
+                // über ihre Art, nicht mehr über den Host.
+                if ('link' === $tag && \in_array(strtolower($knoten->getAttribute('rel')), ['canonical', 'alternate'], true)) {
+                    continue;
+                }
+
                 $host = parse_url($wert, \PHP_URL_HOST);
-                // Relativ oder eigener Host = keine fremde Verbindung. Die
-                // Sprachverweise und die kanonische Adresse stehen absolut und
-                // zeigen auf uns selbst — sie laden ohnehin nichts.
+                // Relativ oder eigener Host = keine fremde Verbindung.
                 if (null === $host || false === $host || $host === $eigenerHost) {
                     continue;
                 }

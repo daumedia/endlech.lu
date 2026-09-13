@@ -1,0 +1,8 @@
+Sitemap: 128 Einträge
+Abrufe: 384 Sitemap-Seiten mit Abfrage (360 nicht blätternd, 20 blätternd mit Seite), 20 Ausschlusswege
+Beobachtung · /de/restaurants?page=3 → 404, canonical []
+Beobachtung · /de/restaurants?page=99 → 404, canonical []
+Beobachtung · /de/community/ideen?page=2 → 200, canonical ['https://endlech.lu/de/community/ideen?page=2']
+Beobachtung · /de/community/ideen?page=99 → 200, canonical ['https://endlech.lu/de/community/ideen?page=99']
+
+✅ BF-147: keine Abweichung

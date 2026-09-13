@@ -1,0 +1,30 @@
+# robots.txt für endlech.lu (Feature 10)
+#
+# Statische Datei, keine Route: Eine 5xx-Antwort auf die robots.txt lässt Google zwölf Stunden
+# lang nicht mehr crawlen. Diese Datei liefert der Webserver aus, ohne dass PHP läuft.
+#
+# Bewusst OHNE Platzhalter (* und $): Die Regeln sind reine Präfixe, und RobotsTxtTest wertet
+# sie exakt so aus. Die Sperren stehen je Sprache ausgeschrieben.
+#
+# ⚠ NICHT gesperrt werden Anmelde-, Passwort-, Bestätigungs-, Abmelde- und Dankeseiten. Sie
+# tragen die Kopfzeile X-Robots-Tag: noindex — und die liest eine Suchmaschine nur, wenn sie die
+# Seite abrufen darf. Eine Sperre hier machte den Ausschluss unwirksam.
+#
+# ⚠ Eine Sperre ist keine Zugriffsregel. Verwaltung und Profil schützt die Anmeldung.
+
+User-agent: *
+Disallow: /api/
+Disallow: /lb/admin
+Disallow: /de/admin
+Disallow: /fr/admin
+Disallow: /en/admin
+Disallow: /lb/profile
+Disallow: /de/profile
+Disallow: /fr/profile
+Disallow: /en/profile
+Disallow: /lb/api/
+Disallow: /de/api/
+Disallow: /fr/api/
+Disallow: /en/api/
+
+Sitemap: https://endlech.lu/sitemap.xml

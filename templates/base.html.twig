@@ -5,12 +5,24 @@
     <title>{% block title %}Endlech.lu{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
-    {# Kurzbeschreibung und kanonische Adresse (Feature 03).
-       Standardmäßig leer — bislang füllt sie nur der Vergleichsbereich. Für alle
-       übrigen Seiten nachzurüsten wäre ein eigenes Feature; die Blöcke hier
-       ändern an keiner bestehenden Seite etwas. #}
+    {# Kurzbeschreibung (Feature 03) und kanonische Adresse (Feature 10).
+
+       Die kanonische Adresse kommt aus dem Seitenverzeichnis (App\Seo\SeoRegistry):
+       Jede Seite, die in der Sitemap steht, nennt hier genau die Adresse, unter der sie
+       dort steht (AK-12) — alle übrigen nennen keine. Von den Abfrageparametern bleibt
+       nur eine Seitenzahl ab 2 (AK-13).
+
+       ⚠ Keine Vorlage füllt diesen Block mehr selbst. Bis Feature 10 taten es fünf,
+       mit einer Adresse aus der Anfrage — auf `www.endlech.lu` also mit dem falschen
+       Host. Wer den Block in einer Vorlage wieder überschreibt, baut eine zweite
+       Quelle, die mit der Sitemap auseinanderlaufen kann. #}
     {% block meta_description %}{% endblock %}
-    {% block canonical %}{% endblock %}
+    {% block canonical %}
+        {%- set _seo_canonical = seo_canonical_url() -%}
+        {%- if _seo_canonical %}
+    <link rel="canonical" href="{{ _seo_canonical }}">
+        {%- endif %}
+    {% endblock %}
 
     {# Favicon.
        ⚠ Browser fragen `/favicon.ico` beim ersten Besuch **von sich aus** an, auch
@@ -35,15 +47,18 @@
         <link rel="apple-touch-icon" sizes="{{ size }}x{{ size }}" href="{{ asset('icons/icon-' ~ size ~ '.png') }}">
     {% endfor %}
 
-    {# hreflang-Tags für SEO #}
-    {% set _current_route = app.request.attributes.get('_route') %}
-    {% set _current_params = app.request.attributes.get('_route_params', {}) %}
-    {% if _current_route and _current_route != 'app_root' %}
-        {% for locale in ['lb', 'de', 'fr', 'en'] %}
-            <link rel="alternate" hreflang="{{ locale }}" href="{{ url(_current_route, _current_params|merge({'_locale': locale})) }}">
-        {% endfor %}
-        <link rel="alternate" hreflang="x-default" href="{{ url(_current_route, _current_params|merge({'_locale': 'lb'})) }}">
-    {% endif %}
+    {# Sprachverweise (hreflang).
+
+       Aus demselben Adressbildner wie die Sitemap (Feature 10) — deshalb nennen Seite
+       und Sitemap-Eintrag dieselben vier Fassungen und dieselbe Vorgabe `lb` (AK-14).
+       Der Host kommt nicht mehr aus der Anfrage, sondern aus `app.canonical_base_url`.
+
+       ⚠ BF-110 bleibt gewahrt: Die Adressen stammen aus den Routenvariablen. Von der
+       Abfragezeichenfolge überlebt ausschliesslich eine Seitenzahl ab 2, und die nur als
+       geprüfte ganze Zahl — keine Eingabe des Aufrufers erreicht einen Verweis. #}
+    {% for _hreflang, _href in seo_alternate_urls() %}
+        <link rel="alternate" hreflang="{{ _hreflang }}" href="{{ _href }}">
+    {% endfor %}
 
     {# Hier laden wir CSS/JS via Webpack Encore #}
     {% block stylesheets %}

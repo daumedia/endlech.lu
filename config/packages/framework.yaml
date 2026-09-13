@@ -154,6 +154,15 @@ framework:
             policy: 'sliding_window'
             limit: 60
             interval: '1 hour'
+        # Sitemap (Feature 10, AK-23). Dieselbe Zahl wie der Datensatz, aber ein EIGENES
+        # Kontingent: Wer den Datensatz 60-mal holt, soll sich damit nicht die Sitemap
+        # sperren (dasselbe Muster wie BF-38). Bei abgelaufener Fassung lädt ein Abruf den
+        # Bestand — genau der Fall der Konvention in CLAUDE.md. Kein Crawler erreicht 60 je
+        # Stunde; Google liest eine Sitemap höchstens einige Male am Tag.
+        sitemap:
+            policy: 'sliding_window'
+            limit: 60
+            interval: '1 hour'
         # Schreibvorgänge im Verwaltungsbereich (BF-35): großzügig, weil ein Admin
         # legitim viel ändert. Der Deckel fängt die Schleife ab, nicht die Arbeit.
         admin_write:
@@ -221,6 +230,14 @@ when@test:
         test: true
         session:
             storage_factory_id: session.storage.factory.mock_file
+        # ⚠ Feature 10: Symfony setzt `X-Robots-Tag: noindex` auf JEDE Antwort, solange der
+        # Kernel im Debug-Modus läuft (`disallow_search_engine_index`, Vorgabe `%kernel.debug%`) —
+        # und der Testbetrieb läuft im Debug-Modus. Damit wäre der Prüflauf für AK-15 („diese
+        # sechzehn Wege tragen noindex") auch OHNE `SeoRobotsHeaderSubscriber` grün, und AK-16
+        # („keine Sitemap-Seite trägt es") im Test nie erfüllbar. Beim Bau am 2026-09-12 genau so
+        # gemessen. Abgeschaltet verhält sich der Test wie Produktion, wo der Debug-Modus aus und
+        # die Kopfzeile auf gewöhnlichen Seiten nachweislich nicht vorhanden ist.
+        disallow_search_engine_index: false
         # In Tests großzügig, um Flakiness durch Limits zu vermeiden.
         rate_limiter:
             api_anonymous:
@@ -276,6 +293,10 @@ when@test:
                 limit: 10000
                 interval: '1 hour'
             open_dataset:
+                policy: 'sliding_window'
+                limit: 10000
+                interval: '1 hour'
+            sitemap:
                 policy: 'sliding_window'
                 limit: 10000
                 interval: '1 hour'
