@@ -2,10 +2,46 @@
 
 Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
-![Version](https://img.shields.io/badge/version-2026.09.12.3-blue)
+![Version](https://img.shields.io/badge/version-2026.09.13-blue)
 ![Status](https://img.shields.io/badge/status-beta-green)
 
 ## [Unreleased]
+
+## [2026.09.13] – Sitemap und robots.txt (Feature 10)
+
+Die Google Search Console war für `endlech.lu` eingerichtet, aber `robots.txt` antwortete mit 404,
+und eine Sitemap gab es nicht. **Für Besucher ändert sich nichts Sichtbares**; die Wirkung zeigt sich
+in Suchmaschinen.
+
+⚠ **Keine Migration, keine neue Umgebungsvariable.** Nur die Anwendung muss ausgerollt werden; der
+Worker ist unberührt, ein Rollout schadet ihm aber nicht.
+
+⚠ **Nach dem Ausrollen:** In der Search Console (`sc-domain:endlech.lu`) die Sitemap
+`https://endlech.lu/sitemap.xml` einreichen und den robots.txt-Bericht öffnen (T17, T18). Erst dann
+sind AK-24 und AK-25 belegt.
+
+- **`/sitemap.xml`** (sprachfrei): 21 feste Seiten und alle Restaurant-Detailseiten, jeweils in vier
+  Sprachen mit Sprachverweisen und `x-default` auf Luxemburgisch. 50 Minuten gespeichert plus
+  `max-age=600` — ein neues Restaurant steht binnen einer Stunde darin. Deckel 60 Abrufe je Stunde je
+  Adresse. Ein Datenbankfehler wird bewusst **nicht** abgefangen: lieber eine 5xx („später nochmal")
+  als eine Sitemap ohne Restaurantseiten („die gibt es nicht mehr").
+- **`public/robots.txt`**: sperrt `/api/` sowie Verwaltung, Profil und Schnittstelle je Sprache, nennt
+  die Sitemap. Statisch, ohne Platzhalter.
+- **canonical-Verweis auf jeder angebotenen Seite**, fest auf `https://endlech.lu` — nicht aus der
+  Anfrage, weil `www.endlech.lu` jede Seite mit 200 ausliefert (OF-03). Sprachverweise aus derselben
+  Quelle. Sortier- und Filterparameter entfallen; die Seitenzahl bleibt nur auf Restaurantliste und
+  Board-Übersicht (BF-147, in der QA gefunden und vor dem Deploy behoben).
+- **`X-Robots-Tag: noindex`** auf 16 Ausschlusswegen (Anmeldung, Registrierung, Bestätigungs- und
+  Abmeldelinks, Formulare und Dankeseiten). Diese Wege stehen bewusst **nicht** in der robots.txt, sonst
+  läse Google das `noindex` nie.
+- **`App\Seo\SeoRegistry`** ist die einzige Quelle für alle drei; `SeoRouteCoverageTest` wird rot,
+  sobald eine öffentliche Route keiner Klasse zugeordnet ist.
+- **`LocaleSubscriber`** fasst auch bei der Fehler-Unteranfrage einer zustandslosen Route die Sitzung
+  nicht mehr an — aufgefallen am 429 der Sitemap.
+
+QA: 23 von 25 Kriterien bestanden, AK-24/25 nach dem Deploy; Nachprüfung BF-147 mit 384 Abrufen ohne
+Abweichung. Offen und nicht blockierend: BF-148 (Satz in EC-05), OF-05 bis OF-08. Einzelheiten in
+`features/10-sitemap-robots/qa-report.md`.
 
 ## [2026.09.12.3] – Betrieb und Nachsorge: Worker-Puls und Sicherungsprüfung (BE-01, BE-02, BE-03)
 
