@@ -1349,6 +1349,13 @@ fremde Elemente streng; gegen sie allein fällt jede korrekte Sitemap mit Sprach
 Sprachverweise (Google: Folgeseiten nicht auf Seite 1 kanonisieren). `?page=abc` beantwortet die
 Restaurantliste schon vorher mit 400; eine Seite mit Verweis entsteht dort gar nicht (OF-06).
 
+⚠️⚠️ **Und nur auf Seiten, die blättern** — `SeoRegistry::PAGINATED_ROUTES` (Restaurantliste,
+Board-Übersicht). Bis BF-147 galt die Regel für jede Seite: `/de/about?page=2` nannte sich selbst
+maßgeblich, und jeder verlinkte Seitenparameter erzeugte eine Dublette, die sich selbst kanonisiert.
+Die Prüfläufe des Baus deckten nur die Restaurantliste ab und blieben grün. **Wer eine blätternde
+Seite anlegt, trägt sie dort ein** — `SeoRouteCoverageTest` gleicht die Liste mit den
+Controller-Methoden ab, die `page` aus der Abfrage lesen, und wird in beide Richtungen rot.
+
 **Deckel `sitemap`** (60 je Stunde je Adresse) im `RouteRateLimitSubscriber`, eigenes Kontingent —
 nicht das des Datensatzes. Greift vor dem Controller, also auch bei gespeicherter Fassung.
 

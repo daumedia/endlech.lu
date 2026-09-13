@@ -79,6 +79,56 @@ final class SeoRouteCoverageTest extends KernelTestCase
         self::assertSame([], $mehrfach);
     }
 
+    /**
+     * BF-147 · Die Liste der blätternden Seiten stimmt mit den Controllern überein, die `page`
+     * aus der Abfrage lesen — in beide Richtungen.
+     *
+     * ⚠ **Ohne diesen Abgleich veraltete die Liste lautlos.** Eine neue blätternde Seite ohne
+     * Eintrag verwiese mit Seite 2 auf Seite 1; ein Eintrag für eine Seite, die nicht mehr
+     * blättert, brächte die Dubletten aus BF-147 zurück. Geprüft wird am Quelltext der
+     * Controller-Methode, weil das die Stelle ist, an der die Seitenzahl wirklich hereinkommt.
+     */
+    public function testBlaetterndeSeitenStimmenMitDenControllernUeberein(): void
+    {
+        self::bootKernel();
+        /** @var RouterInterface $router */
+        $router = static::getContainer()->get('router');
+        $collection = $router->getRouteCollection();
+
+        $r = new SeoRegistry();
+        $angeboten = array_unique([
+            ...array_map(static fn (IndexablePage $p): string => $p->route, $r->fixedPages()),
+            SeoRegistry::RESTAURANT_ROUTE,
+        ]);
+
+        $lesenSeitenzahl = [];
+        foreach (array_keys($this->oeffentlicheRouten()) as $name) {
+            if (!\in_array($name, $angeboten, true)) {
+                continue;
+            }
+            $controller = (string) $collection->get($name)?->getDefault('_controller');
+            if (!str_contains($controller, '::')) {
+                continue;
+            }
+            [$klasse, $methode] = explode('::', $controller, 2);
+            if (!method_exists($klasse, $methode)) {
+                continue;
+            }
+            $m = new \ReflectionMethod($klasse, $methode);
+            $zeilen = \array_slice(file((string) $m->getFileName()), $m->getStartLine() - 1, $m->getEndLine() - $m->getStartLine() + 1);
+            if (1 === preg_match('/->query->(?:getInt|get|all)\(\s*[\'"]page[\'"]/', implode('', $zeilen))) {
+                $lesenSeitenzahl[] = $name;
+            }
+        }
+
+        $liste = $r->paginatedRoutes();
+        sort($lesenSeitenzahl);
+        sort($liste);
+
+        self::assertNotSame([], $lesenSeitenzahl, 'Vorbedingung: Mindestens die Restaurantliste liest `page`.');
+        self::assertSame($lesenSeitenzahl, $liste, 'SeoRegistry::PAGINATED_ROUTES weicht von den Controllern ab, die `page` lesen.');
+    }
+
     /** Ein Tippfehler im Verzeichnis wäre sonst eine Route, die es nicht gibt — und nichts würde rot. */
     public function testJederEingetrageneNameIstEineRoute(): void
     {

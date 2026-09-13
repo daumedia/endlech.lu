@@ -25,6 +25,11 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * maßgebliche Adressen. Die Regel gilt für canonical UND Sprachverweise gleichermaßen;
  * nennte Seite 2 sich selbst maßgeblich und verwiese in den Sprachen auf Seite 1,
  * widersprächen sich beide.
+ *
+ * ⚠ **Welche Seiten blättern, entscheidet nicht dieser Dienst**, sondern
+ * `SeoRegistry::isPaginatedRoute()`; `SeoExtension` übergibt die Abfrage nur dort (BF-147).
+ * Wer hier eine Abfrage für eine Seite übergibt, die nicht blättert, erzeugt wieder eine
+ * Dublette, die sich selbst kanonisiert.
  */
 final readonly class SeoUrlBuilder
 {

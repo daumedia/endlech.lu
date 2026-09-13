@@ -334,3 +334,64 @@ mit `Retry-After`; `/open/dataset.json` zugleich 200; `/de/sitemap.xml` 404.
 - `lint:container` ist seit vor diesem Bau rot (WebAuthn-Alias), `doctrine:schema:validate` ebenfalls.
 - Auf diesem Rechner belegt der Container eines anderen Projekts Port 3306; die Entwicklungs-DB
   `endlech` ist darüber nicht erreichbar. Der Serverabruf lief deshalb gegen `endlech_test`.
+
+## Fehlerauftrag BF-147 (`sdd-build`, 2026-09-13)
+
+Eingang: Fehlerauftrag aus `qa-report.md`. Das Feature stand auf `approved`; der Betreiber hat
+entschieden, BF-147 vor dem Deploy zu beheben, und den Status dafür zurücknehmen lassen. Branch
+`fix/bf-147-seitenzahl` von `main` (nach Merge von #125).
+
+### 1 · Behoben
+
+- **BF-147** — Die Seitenzahl bleibt nur noch auf Seiten, die blättern.
+  `SeoRegistry::PAGINATED_ROUTES` (`app_restaurant_index`, `app_board_index`) mit
+  `isPaginatedRoute()`; `SeoExtension` reicht die Abfrage nur für diese Routen an den Adressbildner
+  weiter. `SeoUrlBuilder` bleibt unverändert, sein Docblock nennt jetzt, wer entscheidet.
+  - Reproduktion `Qa10SitemapBestandTest::testBf147SeitenzahlNurAufSeitenDieBlaettern`: **vor** der
+    Reparatur ohne Überspringen ausgeführt → rot (`…/de/about?page=2`), danach grün.
+  - Neu: `SeoExtensionTest::testSeiteOhneBlaetternVerliertDieSeitenzahl` (Über-uns, Detailseite,
+    Sprachverweise einer ausgeschlossenen Seite) und `::testBoardUebersichtBehaeltIhreSeitenzahl`.
+  - Neu: `SeoRouteCoverageTest::testBlaetterndeSeitenStimmenMitDenControllernUeberein` — gleicht die
+    Liste mit den Controller-Methoden angebotener Routen ab, die `page` aus der Abfrage lesen.
+  - **Gegenproben gefahren:** Reparatur in `SeoExtension` entfernt → beide BF-147-Läufe rot; Board aus
+    der Liste genommen → Abgleich und Board-Lauf rot. Danach wiederhergestellt.
+
+### 2 · Nicht behoben
+
+- **BF-148** — liegt in `spec.md` (EC-05), die `sdd-build` außerhalb der offenen Fragen nicht ändert.
+  Als **OF-08** an den Betreiber übergeben.
+- **Board-Übersicht jenseits der letzten Seite** (`?page=99` → leere Seite, 200, nennt sich selbst):
+  Verhalten des Boards, nicht dieses Features — Teil von **OF-07**.
+
+### 3 · Getroffene Annahmen
+
+- **Die Board-Übersicht behält ihre Seitenzahl.** AK-13 nennt nur die Restaurantliste, und
+  `design.md` Entscheidung 11 nimmt an, keine andere Seite blättere. Das Board liest aber `page`, und
+  der Grund der Regel (Google: Folgeseiten nicht auf Seite 1 kanonisieren) gilt dort genauso. So
+  verhielt es sich auch vor der Reparatur, und der Vorschlag im QA-Bericht nennt es ausdrücklich.
+  Festgehalten als **OF-07**; entscheidet der Betreiber anders, ist es ein Eintrag weniger in der Liste.
+
+### 4 · Systemweite Änderungen
+
+- `CLAUDE.md` und `docs/app-shell.md`: Die Seitenzahl-Regel gilt nur auf blätternden Seiten, mit
+  Verweis auf die Liste und den Abgleich.
+- `features/befunde.md`: Status von BF-147 („behoben auf Branch, QA ausstehend") und BF-148 („als
+  OF-08 übergeben"). Verschoben nach *Behoben* wird erst mit der Auslieferung.
+- `features/index.md`: Status `building`.
+
+### 5 · Verifikation
+
+| Befehl | Ergebnis |
+|---|---|
+| `php bin/phpunit` | **1194 Tests grün**, 10 übersprungen (vorher 1191/11: +3 neue, Reproduktion nicht mehr übersprungen) |
+| `php bin/console lint:twig templates/` | OK, 127 Dateien |
+| `php bin/console doctrine:schema:validate` | Mapping OK; Datenbankteil wie vor dem Bau |
+| `php bin/console lint:container` | rot wie vor dem Bau (WebAuthn-Alias), am gestashten Stand gegengeprüft |
+| `make fix-check` | ⚠ **nicht ausführbar** — das Ziel gibt es im Makefile nicht, und `vendor/bin/php-cs-fixer` ist nicht installiert (`make fix` verweist ebenfalls ins Leere). Ersatzweise `php -l` auf allen sechs geänderten Dateien: fehlerfrei |
+
+⚠ **Die Testdatenbank war beim Start nicht erreichbar**: beide MySQL-Container waren beendet
+(Neustart von Docker). `mika-database-1`, der auf diesem Rechner Port 3306 hält und `endlech_test`
+trägt, wurde wieder gestartet. Die 26 zunächst roten Läufe (13 Fehler mit `Connection refused`,
+13 Fehlschläge) waren nach dem Start ohne weitere Änderung grün.
+
+Übergabe: `/sdd-qa 10`.

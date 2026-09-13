@@ -82,7 +82,9 @@ final class SeoExtension extends AbstractExtension
             'route' => $route,
             'parameters' => $parameter,
             'locale' => $locale,
-            'query' => $request->query->all(),
+            // ⚠ Nur blätternde Seiten reichen ihre Abfrage weiter (BF-147). Sonst behielte der
+            // Adressbildner `page` auch dort, wo die Seitenzahl keine eigene Seite ist.
+            'query' => $this->registry->isPaginatedRoute($route) ? $request->query->all() : [],
         ];
     }
 }
