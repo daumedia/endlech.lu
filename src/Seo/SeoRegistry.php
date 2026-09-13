@@ -63,6 +63,22 @@ final readonly class SeoRegistry
     ];
 
     /**
+     * Angebotene Seiten, die blättern — nur dort bleibt `page` im canonical-Verweis und in den
+     * Sprachverweisen (AK-13).
+     *
+     * ⚠ **Die Regel galt vorher für jede Seite** (BF-147): `/de/about?page=2` erklärte sich selbst
+     * zur maßgeblichen Adresse, und jeder verlinkte Seitenparameter erzeugte eine Dublette, die
+     * sich selbst kanonisiert. `SeoRegistryTest` gleicht die Liste mit den Controllern ab, die
+     * `page` tatsächlich lesen — eine neue blätternde Seite ohne Eintrag hier wird rot.
+     *
+     * @var list<string>
+     */
+    private const array PAGINATED_ROUTES = [
+        'app_restaurant_index',
+        'app_board_index',
+    ];
+
+    /**
      * Öffentliche Routen, die bewusst **weder** angeboten **noch** ausgeschlossen werden.
      *
      * Diese dritte Liste gibt es, damit `SeoRouteCoverageTest` eine neue Route von einer
@@ -147,6 +163,18 @@ final readonly class SeoRegistry
         }
 
         return false;
+    }
+
+    /** Blättert diese Seite, sodass ihre Seitenzahl eine eigene Adresse ist? */
+    public function isPaginatedRoute(string $route): bool
+    {
+        return \in_array($route, self::PAGINATED_ROUTES, true);
+    }
+
+    /** @return list<string> */
+    public function paginatedRoutes(): array
+    {
+        return self::PAGINATED_ROUTES;
     }
 
     /** @return list<string> */

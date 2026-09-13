@@ -62,6 +62,33 @@ final class SeoExtensionTest extends KernelTestCase
         self::assertSame('https://endlech.lu/lb/restaurants?page=2', $e->alternateUrls()['x-default']);
     }
 
+    /**
+     * BF-147 · Eine Seite, die nicht blättert, verliert die Seitenzahl — in canonical UND
+     * Sprachverweisen, auch auf der Detailseite und auf einer ausgeschlossenen Seite.
+     */
+    public function testSeiteOhneBlaetternVerliertDieSeitenzahl(): void
+    {
+        $ueber = $this->erweiterung('app_about', ['_locale' => 'de'], ['page' => '2']);
+        self::assertSame('https://endlech.lu/de/about', $ueber->canonicalUrl());
+        self::assertSame('https://endlech.lu/fr/about', $ueber->alternateUrls()['fr']);
+        self::assertSame('https://endlech.lu/lb/about', $ueber->alternateUrls()['x-default']);
+
+        $detail = $this->erweiterung('app_restaurant_show', ['_locale' => 'de', 'id' => 1], ['page' => '7']);
+        self::assertSame('https://endlech.lu/de/restaurants/1', $detail->canonicalUrl());
+
+        $anmeldung = $this->erweiterung('app_login', ['_locale' => 'de'], ['page' => '2']);
+        self::assertSame('https://endlech.lu/en/login', $anmeldung->alternateUrls()['en']);
+    }
+
+    /** BF-147 · Die Board-Übersicht blättert ebenfalls — dort bleibt die Seitenzahl wie auf der Restaurantliste. */
+    public function testBoardUebersichtBehaeltIhreSeitenzahl(): void
+    {
+        $e = $this->erweiterung('app_board_index', ['_locale' => 'de'], ['page' => '3', 'sort' => 'new']);
+
+        self::assertSame('https://endlech.lu/de/community/ideen?page=3', $e->canonicalUrl());
+        self::assertSame('https://endlech.lu/en/community/ideen?page=3', $e->alternateUrls()['en']);
+    }
+
     public function testOhneAnfrageOderRouteNichts(): void
     {
         $e = $this->erweiterung(null);

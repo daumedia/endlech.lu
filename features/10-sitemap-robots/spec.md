@@ -279,6 +279,18 @@ bekommt einen roten Prüflauf — so ist es gewollt.
   die Seite nicht beobachtbar. `?page=0` und `?page=1` liefern dagegen 200 und verhalten sich wie
   beschrieben. Vorschlag: `?page=abc` aus der Beispielzeile streichen oder als „antwortet mit 400,
   ohne Verweis" führen. — Betreiber, bei der QA.
+- **OF-07** · **Auch die Board-Übersicht blättert** — `design.md` Entscheidung 11 nimmt an, keine
+  andere Seite als die Restaurantliste kenne einen Seitenparameter; `BoardController::index()` liest
+  aber `page`. Beim Beheben von BF-147 am 2026-09-13 behält die Board-Übersicht deshalb ihre
+  Seitenzahl wie die Restaurantliste (so verhielt sie sich auch vorher). AK-13 nennt nur die
+  Restaurantliste. ⚠ Die Board-Übersicht antwortet auf eine Seitenzahl jenseits der letzten Seite mit
+  einer **leeren Seite und 200**, die sich selbst für maßgeblich erklärt (die Restaurantliste mit 404)
+  — ein Verhalten des Boards, nicht dieses Features. Zu entscheiden: AK-13 um die Board-Übersicht
+  ergänzen, und ob das Board dort wie die Liste 404 liefern soll. — Betreiber.
+- **OF-08** · **EC-05 beschreibt die Restaurantliste falsch** (BF-148). „Eine Seitenzahl jenseits der
+  letzten Seite nennt sich ebenfalls selbst" — gemessen antwortet die Liste mit **404** und nennt
+  nichts. Vorschlag: den Satz durch „antwortet mit 404, ohne Verweis" ersetzen. `sdd-build` darf die
+  Spec außerhalb dieses Abschnitts nicht ändern. — Betreiber.
 
 ## Decision Log
 

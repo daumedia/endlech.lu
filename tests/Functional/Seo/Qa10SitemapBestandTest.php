@@ -85,20 +85,16 @@ final class Qa10SitemapBestandTest extends WebTestCase
     }
 
     /**
-     * Befund BF-147 (QA Feature 10) — **Reproduktion, übersprungen bis zur Behebung.**
+     * Befund BF-147 (QA Feature 10).
      *
      * Die Seitenzahl-Regel aus AK-13 gilt laut `design.md` (Entscheidung 11) nur für die
-     * Restaurantliste. Umgesetzt ist sie für jede Seite: `/de/about?page=2` erklärt sich selbst
+     * Restaurantliste. Umgesetzt war sie für jede Seite: `/de/about?page=2` erklärte sich selbst
      * zur maßgeblichen Adresse, obwohl die Seite nicht blättert und inhaltlich `/de/about` ist.
-     * Jeder, der eine solche Adresse verlinkt, erzeugt damit eine sich selbst kanonisierende
+     * Jeder, der eine solche Adresse verlinkt, erzeugte damit eine sich selbst kanonisierende
      * Dublette jeder Seite aus der Sitemap.
-     *
-     * `sdd-build`: die Zeile mit `markTestSkipped` entfernen, sobald behoben.
      */
     public function testBf147SeitenzahlNurAufSeitenDieBlaettern(): void
     {
-        self::markTestSkipped('BF-147 offen — Reproduktion für sdd-build, siehe features/10-sitemap-robots/qa-report.md');
-
         $client = static::createClient();
         $canonical = static function (Crawler $c): ?string {
             $k = $c->filter('link[rel="canonical"]');
@@ -116,5 +112,44 @@ final class Qa10SitemapBestandTest extends WebTestCase
 
         // Die Restaurantliste blättert — dort bleibt die Seitenzahl (AK-13).
         self::assertSame('https://endlech.lu/de/restaurants?page=2', $canonical($client->request('GET', '/de/restaurants?page=2')));
+    }
+
+    /**
+     * Nachprüfung BF-147 (QA 2026-09-13) · über HTTP, nicht über die Erweiterung: Die Detailseite
+     * verliert die Seitenzahl auch in den Sprachverweisen, die Board-Übersicht behält sie (OF-07),
+     * und auf einer ausgeschlossenen Seite trägt kein Sprachverweis eine Abfrage.
+     */
+    public function testBf147DetailseiteBoardUndAusschlussUeberHttp(): void
+    {
+        $client = static::createClient();
+        $verweise = static function (Crawler $c): array {
+            $v = [];
+            $c->filter('link[rel="alternate"][hreflang]')->each(static function (Crawler $k) use (&$v): void {
+                $v[(string) $k->attr('hreflang')] = (string) $k->attr('href');
+            });
+            $k = $c->filter('link[rel="canonical"]');
+
+            return ['canonical' => $k->count() ? $k->attr('href') : null, 'sprachen' => $v];
+        };
+
+        $id = (int) $client->getContainer()->get(EntityManagerInterface::class)
+            ->getConnection()->fetchOne('SELECT MIN(id) FROM restaurant');
+        $detail = $verweise($client->request('GET', "/de/restaurants/$id?page=7"));
+        self::assertResponseIsSuccessful();
+        self::assertSame("https://endlech.lu/de/restaurants/$id", $detail['canonical']);
+        self::assertSame("https://endlech.lu/fr/restaurants/$id", $detail['sprachen']['fr'] ?? null);
+
+        $board = $verweise($client->request('GET', '/de/community/ideen?page=2&sort=newest'));
+        self::assertResponseIsSuccessful();
+        self::assertSame('https://endlech.lu/de/community/ideen?page=2', $board['canonical']);
+        self::assertSame('https://endlech.lu/lb/community/ideen?page=2', $board['sprachen']['x-default'] ?? null);
+
+        $anmeldung = $verweise($client->request('GET', '/de/login?page=2'));
+        self::assertResponseIsSuccessful();
+        self::assertNull($anmeldung['canonical']);
+        self::assertCount(5, $anmeldung['sprachen']);
+        foreach ($anmeldung['sprachen'] as $href) {
+            self::assertStringNotContainsString('?', $href);
+        }
     }
 }

@@ -23,6 +23,6 @@
 ✅ AK-19  131 Pfade (alle Sitemap-Adressen + offene Daten), davon gesperrt: 0
 ✅ AK-20  64 Ausschlusswege, davon gesperrt: 0
 ✅ AK-21  Regeln: 13, keine Sperre der ganzen Seite
-✅ AK-23  62 Abrufe in diesem Lauf · davor 60× 200 · erster 429 bei Nr. 61, Retry-After 3593 s · Set-Cookie auf gedeckelten Antworten: False · /open/dataset.json danach: 200
+✅ AK-23  62 Abrufe in diesem Lauf · davor 60× 200 · erster 429 bei Nr. 61, Retry-After 3594 s · Set-Cookie auf gedeckelten Antworten: False · /open/dataset.json danach: 200
 
 26 von 26 Prüfungen bestanden

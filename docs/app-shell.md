@@ -116,8 +116,10 @@ aus `app.canonical_base_url`, nicht aus der Anfrage. `www.endlech.lu` liefert je
 (OF-03 in `features/10-sitemap-robots/spec.md`); aus der Anfrage gebaut, nennte eine Seite dort
 `www` als maßgeblich.
 
-⚠️ **Von der Abfragezeichenfolge überlebt nur `page` als ganze Zahl ab 2** — in canonical und
-Sprachverweisen gleichermaßen (`/de/restaurants?page=2&sort=name` → `…/de/restaurants?page=2`).
+⚠️ **Von der Abfragezeichenfolge überlebt nur `page` als ganze Zahl ab 2, und nur auf Seiten, die
+blättern** (Restaurantliste, Board-Übersicht; `SeoRegistry::PAGINATED_ROUTES`, BF-147) — in canonical
+und Sprachverweisen gleichermaßen (`/de/restaurants?page=2&sort=name` → `…/de/restaurants?page=2`,
+aber `/de/about?page=2` → `…/de/about`).
 Keine andere Eingabe des Aufrufers erreicht einen Verweis (BF-110 bleibt gewahrt).
 
 ⚠️ **Keine Vorlage füllt den Block `canonical` selbst.** Bis Feature 10 taten es fünf, mit einer
@@ -267,7 +269,7 @@ in `features/07-roadmap-changelog/spec.md`.
 ~~⚠ **Der `hreflang`-Block spiegelt die Abfragezeichenfolge.**~~ **Überholt.** Am 2026-09-12
 nachgemessen, dass der Block die Abfrage **nicht** spiegelt (BF-110,
 `QueryParameterReflexionTest`); seit Feature 10 kommen die Verweise aus dem Adressbildner, und von
-der Abfrage überlebt nur eine geprüfte Seitenzahl ab 2.
+der Abfrage überlebt nur eine geprüfte Seitenzahl ab 2, und nur auf blätternden Seiten.
 
 **Spalte 3 kommt aus einer Twig-Erweiterung**, nicht aus dem Controller:
 `comparison_competitors()` in `src/Twig/ComparisonExtension.php`. Die Fußzeile wird
