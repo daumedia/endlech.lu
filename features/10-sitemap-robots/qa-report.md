@@ -39,6 +39,19 @@ BF-148 (niedrig) gefunden.
 | Tests neu geschrieben | 5 in `Qa10SitemapBestandTest` (1 in der Nachprüfung) + Prüfwerkzeuge `qa/10/http-pruefung.py` (26 Prüfungen) und `qa/10/bf147-nachpruefung.py` (444 Abrufe) |
 | Tests grün | **1195 von 1195**, 10 übersprungen (wie vor dem Bau; erster Durchgang 1191/11) |
 
+## Auf der Produktion (2026-09-13, `v2026.09.13`)
+
+Nach dem Ausrollen gegen `https://endlech.lu` mit denselben Werkzeugen gefahren; vollständige Ausgaben
+in `qa/10/produktion-2026-09-13.md`. Bestand dort: 3 Restaurants.
+
+| Prüfung | Ergebnis |
+|---|---|
+| Crawler-Prüfung (AK-01–07, 12–21, EC-06) | ✅ 24 von 25; Sitemap 96 = (21 + 3) × 4, Schema gültig, alle 96 Seiten 200 mit passendem canonical und Sprachverweisen, 64 Ausschlusswege mit `noindex`, robots.txt byte-gleich. ⚠ AK-13 `?page=2` → 404, weil es bei drei Restaurants keine Seite 2 gibt — mit diesem Bestand nicht belegbar, lokal bestanden |
+| BF-147 | ✅ 288 Abrufe über alle Sitemap-Seiten mit Seitenzahl und Fremdparametern ohne Abweichung; Board behält die Seitenzahl |
+| AK-23 Deckel | ✅ erster 429 beim insgesamt 61. Abruf, `Retry-After: 3308`, kein `Set-Cookie`; Datensatz danach 200 |
+| Anmeldeseite, Testdaten, `/health` | ✅ `/de/login` 200 mit beiden Anmeldewegen und `noindex`; 0 Fixture-Namen in Liste und Sitemap; `/health` 200 |
+| AK-24, AK-25 | ⚠️ weiterhin nicht prüfbar — T17/T18 in der Search Console, Betreiber |
+
 ## Nachprüfung nach dem Fehlerauftrag (2026-09-13)
 
 Geprüft wurde die Reparatur von BF-147 auf `fix/bf-147-seitenzahl` — und alles, was sie berühren
