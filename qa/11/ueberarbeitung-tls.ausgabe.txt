@@ -1,0 +1,6 @@
+Stand: 2026-09-14 20:44 · Weiterleitung mit cURL-Client, Vertrauen nur in die Wegwerf-CA
+C · richtig        (gültig für localhost): Antwort 200 · gespeichert 1
+C · falscher-name  (von der CA, aber für falsch.example): Antwort 202 · gespeichert 0
+C · selbst         (selbst signiert für localhost): Antwort 202 · gespeichert 0
+C · Protokoll: 2 Einträge · Ausnahmeklassen: Symfony\\Component\\HttpClient\\Exception\\TransportException · Umami-Adresse (39443) darin: 0 · Besucheradresse darin: 0
+C · Gegenprobe falscher Name bei abgeschalteter Prüfung im Client: Antwort 200 · gespeichert 1

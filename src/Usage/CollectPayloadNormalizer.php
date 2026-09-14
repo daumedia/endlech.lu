@@ -101,6 +101,10 @@ final readonly class CollectPayloadNormalizer
 
         // `id` (Umamis Nutzerkennung) und `tag` werden nie übernommen (AK-21) — sie stehen in
         // keiner der Zeilen oben.
+        // ⚠ Ebenso nie `ip`, `userAgent`, `timestamp`, `browser`, `os` und `device`: Umami 3.3.1 nimmt diese
+        // Felder im Zählaufruf an und stellt sie über das, was es selbst ermittelt. Vom Client übernommen, legte
+        // jeder Besucher sein Land, seine Sitzung und seinen Zeitpunkt selbst fest (AK-04, AK-40). Die
+        // Besucheradresse setzt erst `UmamiForwarder` ein — aus der Anfrage, nicht aus dem Rumpf.
         return ['type' => 'event', 'payload' => $ausgabe];
     }
 

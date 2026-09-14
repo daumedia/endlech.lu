@@ -21,6 +21,9 @@ PRUEF = {
     'Pfad ohne Abfrage': r'Suchparameter|search parameters|paramètres|Sichparameter|query',
     'Herkunftsdomain': r'Domain|domaine',
     'Land': r'\bLand\b|country|pays',
+    # Überarbeitung 2026-09-14 (Spec AK-31, Decision Log #25; Entwurf, Entscheidung 9)
+    'Region und Stadt': r'Region und (die )?Stadt|region and city|région et la ville|Regioun an d’Stad',
+    'Sitzung wechselt monatlich': r'monatlich|monthly|chaque mois|all Mount',
     'Sitzungskennung offen genannt': r'kennung|identifier|identifiant',
     'Cookies (was nicht)': r'Cookie',
     'IP nicht gespeichert': r'IP',
@@ -29,7 +32,9 @@ PRUEF = {
     'Global Privacy Control': r'Global Privacy Control',
     'Schalter im Abschnitt': r'data-controller="usage-opt-out"',
 }
-VERBOTEN = [r'\banonym', r'keine Kennung', r'no identifier', r'aucun identifiant', r'keng Kennung']
+VERBOTEN = [r'\banonym', r'keine Kennung', r'no identifier', r'aucun identifiant', r'keng Kennung',
+            # seit 2026-09-14 falsch: Umamis Vorgabe wechselt die Sitzung monatlich
+            r'täglich', r'\bdaily\b', r'chaque jour', r'all Dag']
 
 print('Prüfpunkte:', ', '.join(PRUEF))
 for sprache in ['de', 'en', 'fr', 'lb']:

@@ -1,0 +1,3 @@
+Stand: 2026-09-14 22:49 · Umami 3.3.1 hinter Traefik 3.5 (Vorgaben), Anmeldung über HTTPS
+OF-08 · 30 Fehlversuche in 3 s:  1 ; 30 401;
+OF-08 · danach richtiges Passwort: 200

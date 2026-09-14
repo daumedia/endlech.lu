@@ -11,6 +11,15 @@ B14 (28/28), B15 (27/27), B22 (30/30), B17 (25/25) — abgenommen.
 B10 (24/24 im zweiten Durchlauf), B18 (29/29), B11 (18/19, eines nicht prüfbar), B20 (19/20), B21 (20/20), B09 (18/18), B05 (24/24), **B06 (23/23 — das erste Feature ohne eigenen Befund)**, B07 (17/17, eines nicht ausgeführt), B08 (16/16) — abgenommen.
 B12 (15/15 nach der Reparatur), B13 (14/14), B16 (29/29), B24 (16/16) — abgenommen.
 
+**2026-09-14 · Feature `11`, Nachprüfung 3 (Überarbeitung „Umami über seine eigene Domain"): kein neuer Befund.**
+Geprüft gegen Umami 3.3.1 **ohne eigene Einstellungen hinter Traefik 3.5**, der `X-Forwarded-For` überschreibt: Land
+und Sitzung je Besucher stimmen, untergeschobene `ip`/`userAgent`/`timestamp`/`cf-ipcountry` bleiben wirkungslos,
+falscher Zertifikatsname und selbst signiertes Zertifikat werden abgewiesen, `mcp-umami` nennt die Adresse nirgends.
+1336 Tests grün, `code-reviewer` ohne Fund. Offen nur Betriebsschritte (T32–T34, T42–T44) und OF-08 — gemessen: **kein
+Deckel an der öffentlichen Umami-Anmeldung** (30 Fehlversuche in 3 s). Muster-Bezug: dieselbe Lehre wie bei
+`TRUSTED_PROXIES` — seit der Überarbeitung bestimmt der Wert nicht nur den Rate-Limit-Deckel, sondern auch Land und
+Sitzung in Umami.
+
 **2026-08-29 · Feature `04`, zweiter Durchlauf: 42/48 bestanden.** Fünf der sechs
 Befunde sind behoben und gegengeprüft, darunter der schwerste (BF-84). **BF-83 war nur
 zur Hälfte behoben** — fortgeführt als BF-89 (kritisch), unabhängig von Messung und

@@ -1,7 +1,142 @@
 # 11 · Nutzung messen, ohne zu verfolgen — Testbericht
 
-Stand: 2026-09-13 · Geprüft gegen `spec.md` vom 2026-09-13 · Branch `feature/11-nutzungsmessung`
-(nicht committet) · Prüfumgebung: `qa/11/umgebung.md`
+Stand: 2026-09-14 · Oben die Nachprüfung der Überarbeitung (Spec vom 2026-09-14), darunter die früheren Durchläufe
+gegen die Fassung vom 2026-09-13 · Prüfumgebungen: `qa/11/ueberarbeitung-umgebung.sh`, früher `qa/11/umgebung.md`
+
+# Nachprüfung 3 — 2026-09-14, Überarbeitung „Umami über seine eigene Domain"
+
+Vorstufe: `building` (Überarbeitung T35–T41, Spec Decision Log #23–#28) · Branch `feature/11-umami-domain`, nicht
+committet · Geprüft gegen `spec.md` Stand 2026-09-14 (AK-01 bis AK-42) · Prüfumgebung
+`qa/11/ueberarbeitung-umgebung.sh`: Anwendung im Produktionsmodus → **Traefik 3.5** → **Umami 3.3.1 ohne jede eigene
+Einstellung** (wie die Katalog-Instanz auf dem VPS) · Wegwerf-CA für die Zertifikatsfälle
+
+## Fazit
+
+**Production-ready: ja — für den Code dieser Überarbeitung, unter denselben Bedingungen wie bisher:** Die
+Betriebsschritte T32–T34 und T42 (Route, Konten mit zweitem Faktor, Zugangsdatei, Werte in Coolify) sind nicht
+erledigt; ohne sie ist die Messung ausgeschaltet, und AK-26 (auf dem echten VPS), AK-28, AK-41 und AK-35 sind nicht
+belegt. Kein Befund an der Überarbeitung. Der `code-reviewer` meldet keinen Fund mit Konfidenz ≥ 80.
+
+Der Kern trägt, und zwar gegen den Aufbau, der in Produktion wirklich steht: Umami ohne Einstellungen hinter einem
+Traefik, der `X-Forwarded-For` und `X-Real-Ip` **überschreibt** (belegt am Echo-Dienst hinter derselben
+Konfiguration). Über die Anwendung angekommen sind LU (Mamer) und FR in **zwei** Sitzungen mit Chrome/Mac OS und
+echtem Zeitpunkt — obwohl der Zählaufruf `ip: 8.8.8.8`, `userAgent: Googlebot`, `timestamp` 2001, Browser, OS, Gerät,
+`cf-ipcountry: JP` und die alte Kopfzeile `X-Endlech-Client-Ip` untergeschoben bekam. Die Zertifikatsprüfung weist
+einen falschen Namen und ein selbst signiertes Zertifikat ab und lässt das richtige durch; die Gegenprobe mit
+abgeschalteter Prüfung im Client lässt den falschen Namen durch, die Ablehnung ist also die Prüfung. `mcp-umami`
+nennt die Adresse in keiner von fünf Werkzeugantworten und meldet bei Zertifikat, Passwort und angehaltenem Umami mit
+Exit 3 ab.
+
+| | |
+|---|---|
+| Prüfläufe | **1336 Tests grün**, 10 übersprungen; `lint:yaml`, `lint:twig` grün; `lint:container` unverändert der eine WebAuthn-Fehler |
+| Anwendung → Proxy → Umami | `qa/11/ueberarbeitung-pruefung.sh` → `.ausgabe.txt` (A, B, D, E) |
+| Zertifikatsprüfung | `qa/11/ueberarbeitung-tls.php` → `.ausgabe.txt` |
+| Growth-Loop-Zugang | `qa/11/ueberarbeitung-mcp.sh` → `.ausgabe.txt` (M1–M3) |
+| `/legal` und Seitenquelltext | `qa/11/legal.py` (angepasst) → `qa/11/ueberarbeitung-legal.ausgabe.txt` |
+| Öffentliche Anmeldung | `qa/11/ueberarbeitung-anmeldung.ausgabe.txt` |
+| Code-Review | kein Fund ≥ 80; eine Beobachtung darunter (Schema von `APP_UMAMI_UPSTREAM` nicht erzwungen), siehe Hinweise |
+
+## Akzeptanzkriterien — was die Überarbeitung berührt
+
+Kriterien, deren Code und Verhalten die Überarbeitung nicht berührt (AK-05 bis AK-09, AK-11 bis AK-23, AK-25,
+AK-32 teilweise, AK-33, AK-36), stehen unverändert wie in Nachprüfung 1 und 2 — ihre Prüfläufe laufen in den 1336
+Tests mit. Unten jedes Kriterium, das die Überarbeitung geändert, neu eingeführt oder in seiner Grundlage berührt hat.
+
+| AK | Ergebnis | Nachweis |
+|---|---|---|
+| AK-01 | ✅ bestanden (lokal) | A1/A2: Seitenaufruf über die Anwendung in Umami gespeichert, sofort abfragbar. ⚠ Auf der Produktion erst nach T42 |
+| AK-02 | ✅ bestanden | A1–A3: Herkunft `google.com`, kein Pfad, keine Abfrage |
+| AK-03 | ✅ bestanden | A1–A3: `url_query` leer bei `?city=Esch&page=2` |
+| AK-04 | ✅ bestanden (lokal) | A1 **LU / LU-CA / Mamer**, A2 **FR** — mit untergeschobenem `ip: 8.8.8.8` und `cf-ipcountry: JP`; A3 XFF-Kette „8.8.8.8, 158.64.1.1" → LU; Gegenprobe D ohne `TRUSTED_PROXIES` → **kein Land** |
+| AK-40 | ✅ bestanden (lokal) | A1 und A2 mit gleichem Browser: Sitzungen `3c60ba76` und `a175472a`; A3 (dieselbe Adresse wie A1) fällt richtig in `3c60ba76`. Controller-Prüflauf `testHinterDemProxyZaehltDieAdresseDesBesuchers` grün |
+| AK-10 | ✅ bestanden | A4: Googlebot-Kennung über die Anwendung → nicht gespeichert (Umami-Vorgabe, `DISABLE_BOT_CHECK` nicht gesetzt) |
+| AK-24 | ✅ bestanden | `ueberarbeitung-legal.ausgabe.txt`: auf `/de/`, `/de/restaurants`, `/de/legal`, `/fr/organisationen/vereine` Skript nur `/zaehler.js`, Umami-Adresse 0×; CSP `default-src/script-src/connect-src 'self'` unverändert |
+| AK-26 | ⚠️ teilweise | Lokal belegt (M1): ohne Anmeldung Websites **401**, Statistik **401**, nur die Anmeldeseite (200). **Auf dem echten VPS nicht prüfbar** bis T32 — die Aussage „Port nur 127.0.0.1" stammt vom Betreiber (Docker Manager), nicht aus einer eigenen Messung |
+| AK-27 | ✅ bestanden | Code unberührt; `RouteRateLimitSubscriberTest` grün. Gilt nur für den Weg über endlech.lu (EC-08) |
+| AK-28 | ⚠️ nicht prüfbar | T33 auf dem echten VPS. Lokal nur die Gegenprobe: In der unveränderten Wegwerf-Instanz gelingt `admin`/`umami` (200) — genau deshalb ist T33 Pflicht |
+| AK-41 | ⚠️ nicht prüfbar | T33; der zweite Faktor lässt sich ohne Authenticator nicht nachstellen |
+| AK-29 | ✅ bestanden (lokal, Umami-Verhalten) | M1: Lese-Benutzer `view-only` im Team `team-view-only` sieht die Team-Website und liest Statistik (200); Website anlegen, ändern, löschen und Admin anlegen je **401**. Auf der echten Instanz: T33 |
+| AK-30 | ✅ bestanden | E: im Protokoll der Anwendung weder Umami-Adresse noch Besucheradresse; `ueberarbeitung-tls.ausgabe.txt`: bei Zertifikatsfehlern zwei Einträge, nur `TransportException`, Adresse 0×, Besucher 0× |
+| AK-42 | ✅ bestanden | M2: fünf MCP-Werkzeuge, Adresse 0×, Passwort 0×; `--check` Adresse 0×. Repository ohne Umami-Rechnernamen (Suche nur mit Zählungen), einziger Hostinger-Name der bekannte des Anwendungs-VPS |
+| AK-31 | ✅ bestanden (Text) | `legal.py` in vier Sprachen: alle Angaben inklusive „Region und Stadt" und „monatlich", keine „anonym"/„keine Kennung"/„täglich". Standort Deutschland: Angabe des Betreibers |
+| AK-32 | ⚠️ nicht prüfbar | `SHOWN`-Eintrag entsteht im Release, das die Messung scharfschaltet |
+| AK-34 | ⚠️ nicht prüfbar | Abnahme T44 nach dem Deploy |
+| AK-35 | ⚠️ teilweise | M2 gegen die Wegwerf-Instanz: `--check` Exit 0, Website gelistet. Echte Instanz, Website-Kennung in `growth/config.json`: T34, T43 |
+| AK-37 | ✅ bestanden (Zertifikatsfall neu) | TLS: falscher Name und selbst signiert → **202**, nichts gespeichert, Unterbrecher greift (zweiter Aufruf ohne Versuch); Unit-Prüfläufe für Platz, Zeitlimit, Unterbrecher grün |
+| AK-38 | — entfallen | Spec, Decision Log #26 |
+| AK-39 | ✅ bestanden | M3: Zertifikat falscher Name (`ERR_TLS_CERT_ALTNAME_INVALID`), selbst signiert (`DEPTH_ZERO_SELF_SIGNED_CERT`), falsches Passwort, Umami angehalten (Proxy 502) → „Loop 2 meldet ab", Exit 3, Adresse 0× |
+
+## Zertifikatsprüfung (Entwurf, Entscheidung 5)
+
+| Zertifikat an Traefik | Antwort der Weiterleitung | gespeichert |
+|---|---|---|
+| von der CA, für `localhost` | 200 | 1 |
+| von der CA, für `falsch.example` | 202 | 0 |
+| selbst signiert für `localhost` | 202 | 0 |
+| **Gegenprobe:** falscher Name, Prüfung im Client abgeschaltet | 200 | 1 |
+
+⚠ **Geprüft mit der echten Klasse, nicht über die laufende Anwendung.** Das cURL dieser PHP-Installation (Homebrew,
+OpenSSL 3.6) übernimmt weder `curl.cainfo` noch `SSL_CERT_FILE`/`CURL_CA_BUNDLE` — der Anwendung ließ sich die
+Wegwerf-CA ohne Codeänderung nicht unterschieben. Die Weiterleitung setzt ihre Optionen selbst; der Client bekam nur
+`cafile`. Dass die laufende Anwendung in Produktion öffentlichen Zertifikaten vertraut, zeigt die
+Nahverkehrs-Schnittstelle, die dort über geprüftes HTTPS läuft.
+
+## Sicherheitsprüfung (Angriff)
+
+| Prüfung | Ergebnis | Nachweis |
+|---|---|---|
+| Adresse, Land, Zeitpunkt oder Gerät über den Zählaufruf unterschieben | abgewehrt | A1 |
+| Adresse über `X-Forwarded-For` fälschen | abgewehrt, solange der Proxy anhängt | A3: „8.8.8.8, 158.64.1.1" → LU; Symfony nimmt die rechte, nicht vertraute Adresse |
+| Alte Kopfzeile `X-Endlech-Client-Ip` | wirkungslos | A1 |
+| Zertifikat austauschen (falscher Name, selbst signiert) | abgewiesen | Tabelle oben |
+| Umami-Adresse oder Passwort in Ausgaben, Protokoll, Repository | nicht gefunden | E, M2, M3, Repository-Suche |
+| Lese-Benutzer schreibt | abgewiesen (401) | M1 |
+| Öffentliche Anmeldung durchprobieren | **kein Deckel** — 30 Fehlversuche in 3 s, alle 401, danach richtiges Passwort 200 | `ueberarbeitung-anmeldung.ausgabe.txt` (OF-08) |
+| Zählaufrufe direkt an Umami | angenommen, ungedeckelt | hingenommen (EC-08) |
+
+## Code-Review
+
+Der `code-reviewer` hat `UmamiForwarder`, `CollectPayloadNormalizer`, `config/services.yaml`, `.env`, `.env.test`, die
+fünf geänderten Prüfläufe, `usage_text` in vier Sprachen und `mcp-umami/server.js` gelesen — **kein Fund mit
+Konfidenz ≥ 80**. ⚠ Er konnte `git diff` in seiner Umgebung nicht ausführen und hat stattdessen den vollständigen
+Stand der Dateien gegen die Entscheidungen 5, 16, 18 und 19 geprüft. Seine tragende Aussage — ohne ausdrückliche
+Optionen gelten `verify_peer`/`verify_host` = `true` (`HttpClientInterface::OPTIONS_DEFAULTS`) — ist durch die
+Zertifikatsläufe oben am Verhalten belegt. Seine einzige Beobachtung unter der Schwelle steht unter den Hinweisen.
+
+
+## Hinweise ohne Befund
+
+- **Kein Deckel an der öffentlichen Anmeldung** (OF-08, gemessen): rund zehn Versuche je Sekunde, ohne Sperre. Für
+  den Betreiber trägt der zweite Faktor (AK-41). Für `growth-loop` ohne zweiten Faktor trägt allein die Länge des
+  Passworts — T33 verlangt ein langes Zufallspasswort; im Test waren es 48 Hex-Zeichen. Ob eine Begrenzung am Proxy
+  nötig wird, bleibt `/sdd-betrieb`.
+- **`APP_UMAMI_UPSTREAM` mit `http://` würde angenommen.** Die Weiterleitung prüft das Schema nicht; ein vertippter
+  Wert schickte Besucheradressen unverschlüsselt über das Netz. Die Spec verlangt HTTPS nicht als eigenes Kriterium —
+  deshalb kein Befund; ein Satz in T42 („mit `https://`") steht bereits im Plan.
+- **Der Lese-Benutzer sieht Team-Websites nicht unter `/api/websites`**, sondern unter `/api/teams/{id}/websites`
+  (M1: 0 bzw. 1). `mcp-umami` listet sie trotzdem (M2) — kein Fehler, aber wer von Hand prüft, sucht an der falschen
+  Stelle.
+- **Prüfumgebung:** Der eingebaute PHP-Server braucht `-d variables_order=EGPCS`, sonst nimmt Symfony die leeren Werte
+  aus `.env` (erster Lauf: jeder Zählaufruf 400); Bash zerlegt JSON mit Kommas, das direkt in `echo "…$(curl -d …)…"`
+  steht (erster Lauf M1: Benutzer nicht angelegt). Beide Läufe sind verworfen und wiederholt; die Ausgaben oben sind
+  die der Wiederholung.
+
+## Nächster Schritt
+
+Status **`approved`**. Kein Befund, der das Deployment blockiert; die offenen Kriterien hängen an Betriebsschritten.
+
+1. **Betreiber, vor dem Ausrollen:** T32 (Route der Umami-Domain wieder einschalten), T33 (Voreinstellung ersetzen,
+   zweiter Faktor nur für den Betreiber, `growth-loop` nur lesend mit langem Zufallspasswort), T34 (Zugangsdatei).
+2. **`/sdd-deploy 11`** — dort T42 (Website-Kennung und `https://<Umami-Domain>` in Coolify, `APP_UMAMI_UPSTREAM_PIN`
+   entfernen), Release mit `SHOWN`-Eintrag (AK-32) und die Abnahme T44 auf der Produktion: eigenes Land, zweite
+   Adresse = zweiter Besucher, Schalter wirkt, AK-26/28/41 am echten VPS.
+3. Danach T43 (Trichter-Berichte, Website-Kennung in `growth/config.json`).
+
+Offen bei `/sdd-betrieb` vor dem Scharfschalten: OF-01 (Region und Stadt mit unbegrenzter Aufbewahrung), OF-06
+(Rechtsgrundlage), OF-08 (kein Deckel an der öffentlichen Anmeldung, Direktaufrufe an die Domain).
+
+---
 
 # Nachprüfung 2 — 2026-09-14, nach BF-152
 
