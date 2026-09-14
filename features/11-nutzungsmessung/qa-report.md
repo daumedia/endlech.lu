@@ -3,6 +3,72 @@
 Stand: 2026-09-13 · Geprüft gegen `spec.md` vom 2026-09-13 · Branch `feature/11-nutzungsmessung`
 (nicht committet) · Prüfumgebung: `qa/11/umgebung.md`
 
+# Nachprüfung 2 — 2026-09-14, nach BF-152
+
+Vorstufe: `building` (Fehlerauftrag BF-152, Feature 11 dafür von `approved` zurückgenommen) · Branch
+`feature/11-nutzungsmessung`, Reparatur nicht committet · Anwendung im Produktionsmodus mit echter Dateisperre,
+Hilfs-Eingänge „gesund" (antwortet nach 30 ms) und „hängt" (antwortet nie)
+
+## Fazit
+
+**Production-ready: ja** — mit denselben zwei Bedingungen wie in der ersten Nachprüfung (unten).
+
+BF-152 ist behoben und an der laufenden Anwendung bestätigt: Eine Sperrdatei, die sich nicht öffnen lässt, ergibt
+**202 `{}`** statt 500, der Unterbrecher greift, und nach seinem Ablauf wird wieder gezählt. Die eigentliche Gefahr
+der Reparatur lag woanders — die Sperre entsteht jetzt ohne automatische Freigabe, und ein vergessener Weg hätte den
+Platz festgehalten und still jede weitere Zählung verhindert. Das tritt nicht ein: 20 Aufrufe nacheinander, danach
+10, nach dem Sperrausfall 5 und nach dem Hänger 5 — alle angekommen. Der eine Platz aus BF-149 hält weiter: Gegen den
+hängenden Eingang wartet genau ein Aufruf 2,09 s. Kein neuer Befund.
+
+| | |
+|---|---|
+| BF-152 am laufenden Server | bestanden (`qa/11/bf152-qa.sh`, `qa/11/bf152-qa.ausgabe.txt`) |
+| Prüfläufe | 1330 Tests grün, 13 übersprungen; `lint:container` unverändert der eine WebAuthn-Fehler |
+| Code-Review | kein Fund ≥ 80 |
+| Akzeptanzkriterien | unverändert gegenüber der ersten Nachprüfung: 28 bestanden, AK-15 teilweise, 10 nicht prüfbar |
+
+## Nachprüfung der Behebung
+
+| Fall | Ergebnis | Nachweis |
+|---|---|---|
+| Gesunder Eingang, 20 Aufrufe nacheinander | ✅ 20 × 200, 20 angekommen | A1 — der Platz wird nach jedem Aufruf freigegeben |
+| 6 Aufrufe exakt gleichzeitig | ✅ 5 × 200, 1 × 202, 5 angekommen | A2 — der bekannte Preis des einen Platzes |
+| Danach 10 nacheinander | ✅ 10 × 200, 10 angekommen | A3 |
+| Sperrdatei `chmod 000` | ✅ 202 `{}` zweimal, nichts weitergeleitet, Unterbrecher gesetzt | B1 — vorher 500 mit HTML-Fehlerseite |
+| Rechte zurück, Unterbrecher aktiv | ✅ 202, nichts weitergeleitet | B2 — 60 s ohne Zählung, wie im Abschlussbericht angenommen |
+| Unterbrecher geleert, danach 1 + 5 | ✅ alle 200 und angekommen | B3, B4 — kein hängender Platz nach dem Ausfall |
+| Hängender Eingang, 12 gleichzeitig | ✅ genau einer 2,09 s, übrige 0,19–0,77 s, alle 202; Sperrdatei nach 0,3 s bei 1 Prozess offen | C1 |
+| Eingang wieder gesund, 5 nacheinander | ✅ alle 200 und angekommen | C2 — kein hängender Platz nach dem Hänger |
+| Fehler beim Freigeben | ✅ nur als Prüflauf | `UmamiForwarderTest::testFehlerBeimFreigebenBrichtNichtsAb`; an einer echten Dateisperre ließ sich ein scheiterndes `flock`-Entsperren nicht herbeiführen |
+
+**Nicht erneut gefahren:** Browserprüfung, Angriff und Trichter. Die Reparatur ändert ausschließlich Belegen und
+Freigeben der Sperre; den Weiterleitungsweg selbst belegen A, B und C an der laufenden Anwendung, die übrigen
+Kriterien tragen ihren Nachweis aus der ersten Nachprüfung.
+
+## Hinweise ohne Befund
+
+- **Das Code-Review stützt eine Aussage auf eine falsche Annahme.** Es hält einen dauerhaft gehaltenen Platz für
+  ausgeschlossen, weil FrankenPHP „Request-pro-Prozess" fahre. Gemessen ist das Gegenteil
+  (`qa/11/frankenphp-sperre.ausgabe.txt`: alle Anfragen `pid=1`, Threads eines Prozesses). Die Schlussfolgerung hält
+  vermutlich trotzdem, weil PHP die Dateihandles einer Anfrage an deren Ende schließt — **nicht gemessen**, und nur
+  relevant, wenn `release()` tatsächlich scheitert.
+- **`gc_collect_cycles()` in `testFehlerBeimFreigebenBrichtNichtsAb` bewirkt nichts** (Review, unter der Schwelle,
+  nachgelesen): Mit `autoRelease: false` bricht `Lock::__destruct()` sofort ab. Der Test prüft das `catch` in
+  `platzFreigeben()` und wird ohne Reparatur rot; nur sein Kommentar „auch über den Destruktor hinweg" beschreibt die
+  Gegenprobe, nicht den produktiven Weg.
+- **Prüfwerkzeug:** Der erste Lauf blieb an einem nackten `wait` hängen, das auf den Eingang als Kindprozess wartete —
+  dieselbe Ursache, die in der ersten Nachprüfung zwei Läufe von `qa/11/haenger.sh` stehen ließ. Im Skript vermerkt.
+- **AK-15 bleibt teilweise, bis B15 ausgeliefert ist.** BF-151 ist auf `fix/bf-151-zielgruppen-formular` behoben
+  und von der QA nachgeprüft, auf diesem Branch aber nicht enthalten.
+
+## Nächster Schritt
+
+**`/sdd-deploy B15`** zuerst (BF-151 ist auf der Produktion aktiv), danach **`/sdd-deploy 11`** — Feature 11 mit
+den Bedingungen T01–T05 vor dem Scharfschalten; beim Zusammenführen den Konflikt in `features/befunde.md` und
+`features/index.md` lösen.
+
+---
+
 # Nachprüfung — 2026-09-13, nach BF-149 und BF-150
 
 Vorstufe: `building` (Fehlerauftrag BF-149/BF-150 aus dem ersten Durchlauf unten) · Umgebung neu aufgebaut
@@ -111,6 +177,21 @@ nicht selten genug, um die Zusicherung zu brechen.
 von `forward()`.
 **Vorschlag:** Belegen und Freigeben in denselben `catch (\Throwable)` wie die Weiterleitung nehmen — Klasse
 loggen, nicht weiterleiten. Der Prüflauf braucht einen Speicher, der etwas anderes als den Konflikt wirft.
+
+**Behoben am 2026-09-13 (`sdd-build`, Branch `feature/11-nutzungsmessung`, nicht committet — Feature 11 dafür
+von `approved` über `review` auf `building` zurückgenommen):** In `UmamiForwarder::forward()` steht das Belegen im
+`try`; eine Ausnahme wird mit Klasse protokolliert, setzt den Unterbrecher und ergibt 202. Freigegeben wird in
+`platzFreigeben()` mit eigenem `catch`, und die Sperre entsteht ohne automatische Freigabe — sonst wiederholte der
+Destruktor ein gescheitertes `release()` außerhalb jedes `catch`. Nachweise:
+- Reproduktion 1: `Qa11SperrAusfallTest` läuft ohne `markTestSkipped` grün.
+- Reproduktion 2 am laufenden Server (`qa/11/sperre-ausfall-nachpruefung.ausgabe.txt`): Sperrdatei `chmod 000` →
+  **202 `{}`** statt 500; zweiter Aufruf 202 über den Unterbrecher; Rechte zurück und Unterbrecher geleert → 200.
+- Neu in `UmamiForwarderTest`: `testDefekteSperreWirdWieEinAusfallBehandelt` (202, kein Versand, nur die
+  Ausnahmeklasse im Protokoll, kein zweiter Belegversuch während des Unterbrechers) und
+  `testFehlerBeimFreigebenBrichtNichtsAb` (Antwort geht durch, Warnung protokolliert).
+- Vier Gegenproben, jede rot an der erwarteten Stelle: ohne Abfangen beim Belegen (2 Fehler), mit automatischer
+  Freigabe (1), Freigabe nicht abgefangen (1), ohne Unterbrecher bei defekter Sperre (1).
+- Volle Suite 1330 Tests grün, 13 übersprungen.
 
 ### BF-151 · Eintragen von den Zielgruppenseiten endet in einer 405-Fehlerseite — hoch (B15)
 

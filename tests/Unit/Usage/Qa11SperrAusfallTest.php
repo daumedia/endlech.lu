@@ -14,7 +14,7 @@ use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Lock\Store\InMemoryStore;
 
 /**
- * QA Feature 11 · Befund BF-152 — **Reproduktion, übersprungen bis zur Behebung.**
+ * QA Feature 11 · Befund BF-152 — Reproduktion, seit der Behebung am 2026-09-13 scharf.
  *
  * Seit BF-149 belegt `UmamiForwarder` vor jeder Weiterleitung eine Sperre. `Lock::acquire()` fängt nur den
  * erwarteten Konflikt ab („Platz belegt"); jede andere Ausnahme des Speichers — bei `FlockStore` etwa, wenn
@@ -23,14 +23,12 @@ use Symfony\Component\Lock\Store\InMemoryStore;
  * sie nicht: Der Zählaufruf endet als 500, obwohl `ForwardResult` zusichert, dass der Browser in jedem
  * Fall `202 {}` bekommt, und Sentry meldet jeden einzelnen Aufruf.
  *
- * `sdd-build`: die Zeile mit `markTestSkipped` entfernen, sobald behoben.
+ * Behoben in `UmamiForwarder::forward()` und `platzFreigeben()`; weitere Fälle in `UmamiForwarderTest`.
  */
 final class Qa11SperrAusfallTest extends TestCase
 {
     public function testBf152DefekteSperreFuehrtNichtZumServerfehler(): void
     {
-        self::markTestSkipped('BF-152 offen — Reproduktion für sdd-build, siehe features/11-nutzungsmessung/qa-report.md');
-
         $aufrufe = 0;
         $client = new MockHttpClient(static function () use (&$aufrufe): MockResponse {
             ++$aufrufe;

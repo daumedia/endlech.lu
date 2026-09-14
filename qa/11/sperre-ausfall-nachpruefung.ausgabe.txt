@@ -1,0 +1,6 @@
+# BF-152 · Nachprüfung am laufenden Server nach der Reparatur (Produktionsmodus, gesunder Eingang)
+vorher, Sperrdatei normal: 200 0.060174s
+Sperrdatei ohne Rechte (chmod 000): 202 0.027813s · Rumpf: {}
+zweiter Aufruf (Unterbrecher gesetzt): 202 0.029137s · Rumpf: {}
+Rechte wiederhergestellt, Unterbrecher noch aktiv: 202 0.024762s
+Rechte wiederhergestellt, Unterbrecher geleert: 200 0.058082s
