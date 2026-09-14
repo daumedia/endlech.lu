@@ -113,7 +113,20 @@ final readonly class UmamiForwarder
             $kopfzeilen[self::CLIENT_IP_HEADER] = $clientIp;
         }
 
-        $platz = $this->platzBelegen();
+        try {
+            $platz = $this->platzBelegen();
+        } catch (\Throwable $fehler) {
+            // ⚠ BF-152: Ein Speicher, der nicht nur „belegt" meldet, sondern scheitert (Sperrdatei nicht zu
+            // öffnen, Temp-Verzeichnis voll), wirft hier. Ungefangen wurde daraus ein 500er für jeden Zählaufruf,
+            // und Sentry meldete jeden einzelnen. Behandelt wie jeder andere Ausfall: Klasse loggen, Unterbrecher
+            // setzen — Letzteres begrenzt die Warnung auf eine je Minute statt eine je Aufruf.
+            $this->logger->warning('Nutzungsmessung: Sperre der Weiterleitung nicht verfügbar, Unterbrecher gesetzt (Feature 11).', [
+                'ausnahme' => $fehler::class,
+            ]);
+            $this->unterbrechen($unterbrecher);
+
+            return ForwardResult::notForwarded();
+        }
         if (null === $platz) {
             return ForwardResult::notForwarded();
         }
@@ -146,7 +159,7 @@ final readonly class UmamiForwarder
 
             return ForwardResult::notForwarded();
         } finally {
-            $platz->release();
+            $this->platzFreigeben($platz);
         }
 
         if ($status >= 500) {
@@ -168,7 +181,11 @@ final readonly class UmamiForwarder
     /** Belegt den einen Platz für eine Weiterleitung oder gibt nach {@see self::PLATZ_WARTEN_MS} auf. */
     private function platzBelegen(): ?LockInterface
     {
-        $platz = $this->sperren->createLock(self::PLATZ_SPERRE, self::MAX_DURATION + 1);
+        // ⚠ Ohne automatische Freigabe (BF-152): Scheitert `release()`, bleibt die Sperre als belegt markiert, und
+        // der Destruktor versuchte es beim Verlassen von `forward()` erneut — die Ausnahme käme dann außerhalb jedes
+        // `catch` heraus. Freigegeben wird ausdrücklich in `platzFreigeben()`; die Dateisperre selbst endet
+        // spätestens, wenn der Prozess die Datei schließt.
+        $platz = $this->sperren->createLock(self::PLATZ_SPERRE, self::MAX_DURATION + 1, false);
         for ($gewartet = 0; ; $gewartet += self::PLATZ_TAKT_MS) {
             if ($platz->acquire()) {
                 return $platz;
@@ -177,6 +194,18 @@ final readonly class UmamiForwarder
                 return null;
             }
             usleep(self::PLATZ_TAKT_MS * 1000);
+        }
+    }
+
+    /** Gibt den Platz frei; ein Fehler dabei kostet nichts außer einer Warnung (BF-152). */
+    private function platzFreigeben(LockInterface $platz): void
+    {
+        try {
+            $platz->release();
+        } catch (\Throwable $fehler) {
+            $this->logger->warning('Nutzungsmessung: Sperre der Weiterleitung nicht freigegeben (Feature 11).', [
+                'ausnahme' => $fehler::class,
+            ]);
         }
     }
 

@@ -1422,6 +1422,12 @@ exakt gleichzeitigen Aufrufen 0–1 verloren, bei 50 ms Abstand keiner. **Wer di
 entfernt, holt BF-149 zurück**; ein kürzeres Zeitlimit allein hilft nicht, es verkürzt nur jede der vielen
 Wartezeiten. Ein Zeitlimit begrenzt die Wartezeit eines Aufrufs, nicht die Summe gleichzeitiger.
 
+⚠️ **Die Sperre selbst kann scheitern — und wird dann wie ein Ausfall behandelt** (BF-152). `Lock::acquire()` fängt
+nur den Konflikt („belegt") ab; ein Speicher, der die Sperrdatei nicht öffnen kann, wirft weiter. Ungefangen war das
+ein 500er für jeden Zählaufruf und ein Sentry-Ereignis je Aufruf. Belegen steht deshalb im selben Muster wie die
+Weiterleitung (Klasse loggen, Unterbrecher setzen), und die Sperre entsteht **ohne automatische Freigabe**: Scheitert
+`release()`, versuchte der Destruktor es beim Verlassen von `forward()` erneut, außerhalb jedes `catch`.
+
 ⚠️ **Trichterschritte in `growth/config.json`: `*` nur am Anfang oder Ende** (BF-150). Umami 3.3.1 ersetzt
 genau diese Sterne durch `%`; ein Stern in der Mitte bleibt ein wörtliches Zeichen. `/*/restaurants` zählte
 gegen eine echte Instanz **null**, `*/restaurants` trifft jede Sprache. `GrowthTrichterTest` bildet Umamis

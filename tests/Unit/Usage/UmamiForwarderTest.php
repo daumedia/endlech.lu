@@ -10,6 +10,8 @@ use Symfony\Component\HttpClient\CurlHttpClient;
 use Symfony\Component\HttpClient\Exception\TransportException;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
+use Symfony\Component\Lock\Exception\LockAcquiringException;
+use Symfony\Component\Lock\Exception\LockStorageException;
 use Symfony\Component\Lock\Key;
 use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Lock\Store\InMemoryStore;
@@ -203,6 +205,68 @@ final class UmamiForwarderTest extends TestCase
 
         self::assertSame(202, $this->weiterleitung($client, $cache, sperren: $sperren)->forward(self::aufruf(), null, null, null)->status);
         self::assertSame(0, $aufrufe);
+    }
+
+    /**
+     * BF-152 · Ein Sperrspeicher, der scheitert statt „belegt" zu melden, wird wie ein Ausfall behandelt: 202, nur die
+     * Ausnahmeklasse im Protokoll, und der Unterbrecher verhindert, dass jeder weitere Aufruf dieselbe Warnung erzeugt.
+     * Vorher kam die `LockAcquiringException` als 500er beim Browser an.
+     */
+    public function testDefekteSperreWirdWieEinAusfallBehandelt(): void
+    {
+        $aufrufe = 0;
+        $client = new MockHttpClient(static function () use (&$aufrufe): MockResponse {
+            ++$aufrufe;
+
+            return new MockResponse('{}');
+        });
+        $belegversuche = 0;
+        $defekt = new class($belegversuche) extends InMemoryStore {
+            public function __construct(private int &$belegversuche)
+            {
+            }
+
+            public function save(Key $key): void
+            {
+                ++$this->belegversuche;
+                throw new LockStorageException('fopen('.sys_get_temp_dir().'/sf.umami-weiterleitung.lock): Permission denied, Ziel 203.0.113.77');
+            }
+        };
+        $weiterleitung = $this->weiterleitung($client, sperren: new LockFactory($defekt));
+
+        self::assertSame(202, $weiterleitung->forward(self::aufruf(), self::BESUCHER_IP, null, null)->status);
+        self::assertSame(202, $weiterleitung->forward(self::aufruf(), self::BESUCHER_IP, null, null)->status);
+
+        self::assertSame(0, $aufrufe);
+        self::assertSame(1, $belegversuche, 'Nach dem ersten Fehlschlag greift der Unterbrecher, bevor die Sperre erneut versucht wird.');
+        $text = print_r($this->protokoll, true);
+        self::assertStringContainsString(LockAcquiringException::class, (string) $text);
+        self::assertStringNotContainsString('203.0.113.77', (string) $text);
+        self::assertStringNotContainsString(self::BESUCHER_IP, (string) $text);
+    }
+
+    /**
+     * BF-152 · Scheitert das Freigeben, geht die Antwort trotzdem durch — auch über den Destruktor der Sperre hinweg.
+     *
+     * ⚠ Gegenprobe beim Bau: Mit automatischer Freigabe (`createLock(…, true)`) wird dieser Lauf rot, weil der
+     * Destruktor beim Verlassen von `forward()` erneut freigibt und die Ausnahme außerhalb jedes `catch` herauskommt.
+     */
+    public function testFehlerBeimFreigebenBrichtNichtsAb(): void
+    {
+        $client = new MockHttpClient(new MockResponse('{"cache":"t"}'));
+        $klemmt = new class extends InMemoryStore {
+            public function delete(Key $key): void
+            {
+                throw new LockStorageException('flock: unlock failed');
+            }
+        };
+
+        $ergebnis = $this->weiterleitung($client, sperren: new LockFactory($klemmt))->forward(self::aufruf(), null, null, null);
+        gc_collect_cycles();
+
+        self::assertSame(200, $ergebnis->status);
+        self::assertSame('{"cache":"t"}', $ergebnis->body);
+        self::assertStringContainsString('nicht freigegeben', (string) print_r($this->protokoll, true));
     }
 
     public function testServerfehlerSetztDenUnterbrecher(): void

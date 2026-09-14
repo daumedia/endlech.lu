@@ -473,8 +473,9 @@ Umgebung brauchte. Nichts committet.
   einer 2,06 s, fünf 0,17–0,40 s, Restaurantliste 0,06 s (`qa/11/bf149-nachpruefung.sh`). Drei neue Fälle
   in `UmamiForwarderTest`, zwei rote Gegenproben.
 - Verifikation: `php bin/phpunit` 1324 Tests, 7284 Zusicherungen, 10 übersprungen (vorher 1318/11);
-  `lint:yaml config` grün; `lint:container --env=prod` grün, im Entwicklungsbetrieb unverändert der eine
-  WebAuthn-Alias-Fehler.
+  `lint:yaml config` grün; `lint:container` unverändert mit dem einen WebAuthn-Alias-Fehler.
+  ⚠ **Berichtigt am 2026-09-13:** Hier stand „`--env=prod` grün“. Das war der Exit-Code von `tail` am Ende der
+  Pipeline, nicht der von `lint:container` — im Produktionsmodus zeigt es denselben einen Fehler.
 
 ### 2 · Offene Akzeptanzkriterien
 
@@ -514,3 +515,42 @@ Umgebung brauchte. Nichts committet.
   `bf150-nachpruefung.py` samt Ausgabe.
 - `vendor/bin/php-cs-fixer` ist nicht installiert (`make fix` scheitert) — der Codestil der geänderten
   PHP-Dateien ist deshalb nicht maschinell geprüft.
+
+## Abschlussbericht Fehlerauftrag BF-152 (`sdd-build`, 2026-09-13)
+
+Eingang: Fehlerauftrag aus `qa-report.md` (Nachprüfung). Feature 11 stand auf `approved`; auf Entscheidung des
+Betreibers über `review` auf `building` zurückgenommen. Vorher Feature 11 committet (`32e3ee5`, vom Betreiber
+erlaubt), die Reparatur selbst ist nicht committet. Parallel BF-151 (B15) auf eigenem Branch, siehe dort.
+
+### 1 · Umgesetzt
+
+Eine Sperre, die scheitert statt „belegt" zu melden, ergibt jetzt 202 `{}` statt 500: Belegen im `try` von
+`forward()` mit Klassenprotokoll und Unterbrecher, Freigeben in `platzFreigeben()` mit eigenem `catch`, Sperre ohne
+automatische Freigabe. Reproduktion aus dem Bericht scharf und grün; am laufenden Server `chmod 000` → 202. Zwei neue
+Fälle in `UmamiForwarderTest`, vier Gegenproben rot. Suite 1330 Tests grün, 13 übersprungen.
+
+### 2 · Offene Akzeptanzkriterien
+
+Keine neuen. Die zehn Instanz-Kriterien bleiben an T01–T05; AK-15 bleibt teilweise, bis BF-151 in B15 ausgeliefert
+ist.
+
+### 3 · Getroffene Annahmen
+
+- **Eine defekte Sperre setzt den Unterbrecher.** Die Warnung kommt damit höchstens einmal je Minute, und 60 s lang
+  wird nichts gezählt — auch wenn die Sperre sich sofort wieder erholt. Die Alternative (bei jedem Aufruf neu
+  versuchen) hätte bei vollem Temp-Verzeichnis je Zählaufruf eine Warnung an Sentry-Logs geschickt. Ist die Ursache
+  ein volles Dateisystem, scheitert womöglich auch das Speichern des Unterbrechers; dann gibt es eine Warnung je
+  Aufruf, aber keinen 500er (PSR-6 `save()` meldet `false`, statt zu werfen — nicht nachgestellt).
+- **Ohne automatische Freigabe bleibt keine Sperre hängen:** Die Dateisperre endet, wenn der Prozess die Datei
+  schließt; in FrankenPHP also mit dem Ende der Anfrage. Belegt ist das nur für den Normalfall (explizites
+  `release()`), nicht für einen gescheiterten.
+
+### 4 · Systemweite Änderungen
+
+- **`CLAUDE.md`**, Abschnitt Feature 11: Warnblock zur scheiternden Sperre.
+- **`features/befunde.md`**, **`features/index.md`**, **`qa-report.md`**: Behebung eingetragen.
+- **`tasks.md`**: Berichtigung einer falschen Angabe im Bericht zu BF-149 (`lint:container --env=prod`).
+- **Neue Nachweisdatei** `qa/11/sperre-ausfall-nachpruefung.ausgabe.txt`.
+- ⚠ **`features/befunde.md` und `features/index.md` sind auch auf `fix/bf-151-zielgruppen-formular` geändert**
+  (BF-151-Zeile, Status B15). Wer beide Branches nach `main` bringt, löst dort einen Konflikt in denselben Tabellen.
+
