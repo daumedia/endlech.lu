@@ -2,10 +2,36 @@
 
 Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
-![Version](https://img.shields.io/badge/version-2026.09.14-blue)
+![Version](https://img.shields.io/badge/version-2026.09.14.1-blue)
 ![Status](https://img.shields.io/badge/status-beta-green)
 
 ## [Unreleased]
+
+## [2026.09.14.1] – Nutzung messen, ohne zu verfolgen (Feature 11, ausgeschaltet)
+
+Cookielose Nutzungsmessung mit selbst betriebenem Umami — **ausgeliefert, aber nicht scharfgeschaltet.**
+Solange `APP_UMAMI_WEBSITE_ID`, `APP_UMAMI_UPSTREAM` und `APP_UMAMI_UPSTREAM_PIN` leer sind, bindet keine
+Seite ein Zählskript ein, und `POST /api/send` antwortet mit 202, ohne weiterzuleiten.
+
+⚠ **Keine Migration.** Nur die Anwendung muss ausgerollt werden; der Worker ist unberührt. Die drei neuen
+Variablen bleiben in Coolify **leer**, bis T01–T05 (zweiter VPS, Umami, Zähl-Eingang, Konten, Tunnel) erledigt
+sind — gesetzt werden sie vom Betreiber (T31), danach T29/T30.
+
+⚠ **Sofort sichtbar:** der Abschnitt „Nutzungsmessung" samt Schalter auf `/legal` in vier Sprachen, und die Karte
+„Nutzung messen, ohne zu verfolgen" verschwindet aus der Spalte „Angedacht" auf `/roadmap`.
+
+- **Zählweg über endlech.lu:** `public/zaehler.js` (Umami-Tracker in fester Version) und `POST /api/send`. Der
+  Browser sieht den zweiten VPS nie.
+- **Die Weiterleitung ist die Grenze:** `CollectPayloadNormalizer` wiederholt jede Inhaltsregel (Pfad ohne Abfrage,
+  Herkunft nur als Domain, keine Verwaltungs-, Profil- oder Token-Pfade, nur Ereignisse aus `UsageEventCatalogue`);
+  `UmamiForwarder` leitet mit Schlüsselbindung weiter, mit Unterbrecher nach einem Fehlschlag, höchstens einer
+  Weiterleitung zur Zeit (BF-149) und einer defekten Sperre als Ausfall statt 500 (BF-152).
+- **Deckel `usage_collect`:** 300 je Stunde je Adresse.
+- **Sechs Ereignisse mit eigenen Auslösern** statt `data-umami-event`: Filter angewandt, Kontaktweg genutzt (nur
+  die Art), Warteliste eingetragen, Zustimmung gegeben, Presse-Kit und Datensatz geladen; Abschaltung im Browser
+  über `/legal`; Do Not Track und Global Privacy Control werden beachtet.
+- **`growth/config.json`:** Trichterschritte mit führendem Stern — Umami versteht `*` nur am Anfang oder Ende
+  (BF-150).
 
 ## [2026.09.14] – Organisationsformular von den Zielgruppenseiten (BF-151)
 
