@@ -22,7 +22,14 @@
     {# Zustimmung — eigenes Formular, wirkt ohne JavaScript (AK-23, AK-49) #}
     <div class="shrink-0 text-center">
         {% if app.user %}
-            <form method="post" action="{{ path('app_board_vote', {id: idea.id}) }}">
+            {# Nutzungsmessung (Feature 11): Die Zustimmung ist ein Umschalter. Gemeldet wird nur das
+               Absenden an einer noch NICHT unterstützten Idee — das Zurückziehen zählt nicht (AK-18).
+               Ohne Konto- oder Ideenkennung: Der Pfad der Seite genügt. #}
+            <form method="post" action="{{ path('app_board_vote', {id: idea.id}) }}"
+                  {% if not hasVoted %}
+                  data-controller="usage-event" data-action="submit->usage-event#track"
+                  data-usage-event-name-value="zustimmung_gegeben"
+                  {% endif %}>
                 <input type="hidden" name="_token" value="{{ csrf_token('board-vote-' ~ idea.id) }}">
                 <button type="submit"
                         aria-pressed="{{ hasVoted ? 'true' : 'false' }}"

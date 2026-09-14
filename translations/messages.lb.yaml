@@ -371,6 +371,14 @@ legal:
     hosting_text: "Dës Websäit, den Hannergrondsdéngscht fir de Mailversand an d’Datebank lafen op engem Server vun Hostinger International Ltd. (Larnaca, Zypern). De Serverstanduert ass Däitschland. Hostinger verschafft domat als Optragsveraarbechter all Donnéeën, déi op dëser Säit ufalen — och d’Zougrëffsprotokoller vum Webserver. Rechtsgrondlag ass eist berechtegt Interessi um séchere Betrib vun der Websäit no Art. 6 Abs. 1 lit. f DSGVO. E Contrat iwwer d’Optragsveraarbechtung läit vir."
     error_tracking_title: "Feeleranalyse (Sentry)"
     error_tracking_text: "Fir technesch Feeler z'erkennen an ze behiewen, notze mir Sentry (Functional Software, Inc.). Wann op eiser Websäit e Feeler optrëtt, ginn technesch Uginne wéi Zäitpunkt, opgeruffe Säit a Feelermeldung u Serveren an der Europäescher Unioun (Frankfurt um Main) iwwerdroen. IP-Adressen an Notzerdate ginn dobäi net iwwerdroen. Rechtsgrondlag ass eise berechtegten Interessi un engem stabilen a séchere Betrib vun der Websäit no Art. 6 Abs. 1 lit. f DSGVO."
+    usage_title: "Notzungsmiessung (Umami, selwer bedriwwen)"
+    usage_text: "Fir ze verstoen, wéi eng Säite gelies ginn a wou Besucherinnen a Besucher d’Restaurantsich oder e Formulaire ofbriechen, moosse mir d’Notzung mat Umami. Mir bedreiwen Umami selwer op engem eegene Server bei Hostinger International Ltd.; de Server steet an Däitschland. Et geet näischt un den Hiersteller vun Umami oder un Drëtter. Erfaasst ginn: déi opgeruffe Säit ouni Sichparameteren, d’Domain vun der Säit, vun där Dir komm sidd, d’Land, Browser- an Apparatstyp, Bildschirmgréisst a Sprooch, souwéi Evenementer wéi „Filter applizéiert“ oder „Kontaktwee benotzt“ — bei Kontaktweeër nëmmen d’Aart, ni Nummer oder Adress. Fir d’Opruffer vun engem Besuch zesummenzefaassen, bildt Umami aus Merkmoler vum Besuch eng Sessiounskennung, déi all Dag wiesselt. Är IP-Adress gëtt dofir benotzt, awer net gespäichert. Et gi keng Cookien gesat, an näischt gëtt mat engem Kont oder mat Formulairesinhalter verknäppt. Verwaltung a Profil ginn net gemooss. D’Miessdonnéeë späichere mir ouni zäitlech Grenz, fir d’Reechwäit iwwer Joren ze vergläichen. Schéckt Äre Browser „Do Not Track“ oder „Global Privacy Control“, gëtt net gemooss; ouni JavaScript och net. Rechtsgrondlag ass eise berechtegten Interessi un enger Plattform, déi hir Besucherinnen a Besucher tatsächlech erreecht, no Art. 6 Abs. 1 lit. f DSGVO. Dir kënnt der Miessung zu all Moment widderspriechen:"
+    usage_switch_label: "Notzungsmiessung an dësem Browser"
+    usage_switch_on: "un"
+    usage_switch_off: "aus"
+    usage_switch_hint: "D’Astellung gëllt fir dëse Browser a gëtt a sengem Späicher ofgeluecht, net an engem Cookie. Wien de Browserspäicher eidel mécht, hieft de Widderspréch op."
+    usage_switch_unavailable: "De Schalter ass an dësem Browser net disponibel, well säi Späicher gespaart ass."
+    usage_switch_noscript: "Ouni JavaScript gëtt net gemooss — hei gëtt et näischt anzestellen."
     mail_title: "E-Mail-Versand (Brevo)"
     mail_text: "Fir de Versand vun E-Maile — Confirmatiounen, Notifikatiounen, Waardelëschten — notze mir Brevo (Brevo SA, 7 rue de Madrid, 75008 Paräis, Frankräich). Iwwerdroe ginn d’E-Mail-Adress an den Numm vum Empfänger souwéi den Inhalt vun der jeeweileger Noriicht. Rechtsgrondlag ass Art. 6 Abs. 1 lit. b DSGVO (Duerchféierung virvertraglecher Moossnamen) respektiv lit. a bei Waardelëschten-Umeldungen. E Contrat iwwer d’Optragsveraarbechtung läit vir."
     marketing_title: "Newsletter a Kampagnen (Brevo)"
@@ -389,7 +397,7 @@ legal:
     rights_how: "Auskonft, Export a Läschung mécha du selwer an dengem Profil — direkt an ouni Ufro:"
     rights_profile_link: "bei mäi Profil"
     retention_title: "Späicherdauer"
-    retention_text: "Kontdonnéeë späichere mir, soulaang de Kont besteet; no der Läschung verschwanne se direkt. Waardelëscht-Umeldunge bleiwen, bis se zréckgezu ginn oder d Programm ufänkt. Restaurant-Uginn bleiwen dauerhaft — si si Sachuginn a ginn no enger Kontläschung vun der Persoun getrennt."
+    retention_text: "Kontdonnéeë späichere mir, soulaang de Kont besteet; no der Läschung verschwanne se direkt. Waardelëscht-Umeldunge bleiwen, bis se zréckgezu ginn oder d Programm ufänkt. Restaurant-Uginn bleiwen dauerhaft — si si Sachuginn a ginn no enger Kontläschung vun der Persoun getrennt. Miessdonnéeë vun der Notzungsmiessung bleiwen ouni zäitlech Grenz; si enthalen keng IP-Adress a kee Bezuch zu engem Kont."
 
 criteria:
     score_title: "Wéi d Punktzuel entsteet"

@@ -125,6 +125,33 @@
             {{ 'legal.error_tracking_text'|trans }}
         </p>
 
+        {# Nutzungsmessung (Feature 11). ⚠ Der Text behauptet nur, was sich nachstellen lässt
+           (AK-31): keine Cookies, keine gespeicherte IP-Adresse, kein Konto, keine Formularinhalte
+           — und nennt die Sitzungskennung offen, statt „anonym" zu schreiben (OF-01). Wer an der
+           Messung etwas ändert (Umami-Einstellungen, Ereigniskatalog), prüft diesen Absatz mit.
+
+           Der Schalter ist `hidden` und wird erst per JavaScript sichtbar: Ohne JavaScript wird nicht
+           gemessen (EC-02). Er setzt kein Cookie (AK-20, AK-23). #}
+        <h3 id="nutzungsmessung" class="text-base font-semibold text-gray-700 mb-2 scroll-mt-24">{{ 'legal.usage_title'|trans }}</h3>
+        <p class="text-gray-600 leading-relaxed mb-3">
+            {{ 'legal.usage_text'|trans }}
+        </p>
+        <div class="mb-4" data-controller="usage-opt-out"
+             data-usage-opt-out-on-text-value="{{ 'legal.usage_switch_on'|trans }}"
+             data-usage-opt-out-off-text-value="{{ 'legal.usage_switch_off'|trans }}">
+            <button type="button" hidden aria-pressed="true"
+                    data-usage-opt-out-target="button" data-action="usage-opt-out#toggle"
+                    class="inline-flex items-center gap-3 min-h-[48px] rounded-full border-2 border-cyan-700 bg-white px-5 font-semibold text-cyan-800 motion-safe:transition hover:bg-cyan-50 focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700">
+                <span>{{ 'legal.usage_switch_label'|trans }}</span>
+                {# Sichtbares Zustandswort, für Screenreader ausgeblendet: Den Zustand meldet
+                   aria-pressed, und der Name eines Umschaltknopfs darf sich nicht ändern. #}
+                <span aria-hidden="true" data-usage-opt-out-target="state" class="rounded-full bg-cyan-100 px-3 py-1 text-sm">{{ 'legal.usage_switch_on'|trans }}</span>
+            </button>
+            <p hidden data-usage-opt-out-target="unavailable" class="text-gray-700">{{ 'legal.usage_switch_unavailable'|trans }}</p>
+            <noscript><p class="text-gray-700">{{ 'legal.usage_switch_noscript'|trans }}</p></noscript>
+            <p class="mt-2 text-sm text-gray-600">{{ 'legal.usage_switch_hint'|trans }}</p>
+        </div>
+
         <h3 class="text-base font-semibold text-gray-700 mb-2">{{ 'legal.mail_title'|trans }}</h3>
         <p class="text-gray-600 leading-relaxed mb-4">
             {{ 'legal.mail_text'|trans }}

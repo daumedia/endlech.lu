@@ -1,0 +1,45 @@
+# BF-149 · Nachprüfung am 2026-09-13 (Anwendung im Produktionsmodus, symfony server, Eingang hängt)
+
+## Vor der Reparatur
+== vorher: Runde 1
+seite 200 erstesByte 1.801491
+zaehl1 202 3.719632
+zaehl2 202 2.077018
+zaehl3 202 2.076934
+zaehl4 202 2.092047
+zaehl5 202 2.712678
+zaehl6 202 2.092435
+== vorher: Runde 2 (Unterbrecher abgelaufen, nachgestellt durch Leeren)
+seite 200 erstesByte 1.780212
+zaehl1 202 2.051750
+zaehl2 202 2.053275
+zaehl3 202 2.053260
+zaehl4 202 2.883794
+zaehl5 202 2.052236
+zaehl6 202 3.883982
+
+## Nach der Reparatur (ein Platz, 100 ms Wartezeit)
+== nachher: Runde 1
+seite 200 erstesByte 0.060062
+zaehl1 202 0.284079
+zaehl2 202 0.284827
+zaehl3 202 2.061582
+zaehl4 202 0.399225
+zaehl5 202 0.168087
+zaehl6 202 0.167136
+== nachher: Runde 2 (Unterbrecher abgelaufen, nachgestellt durch Leeren)
+seite 200 erstesByte 0.058118
+zaehl1 202 0.169009
+zaehl2 202 2.061483
+zaehl3 202 0.403430
+zaehl4 202 0.284193
+zaehl5 202 0.169412
+zaehl6 202 0.284910
+
+## Gegenseite: gesunder Eingang (antwortet nach 30 ms mit 200), nach der Reparatur
+Sechs Zählaufrufe exakt gleichzeitig (curl im Hintergrund), gezählt am Eingang:
+gleichzeitig, Runde 1: Antworten 6 × 200 · angekommen 6 von 6
+gleichzeitig, Runde 2: Antworten 5 × 200, 1 × 202 · angekommen 5 von 6
+gleichzeitig, Runde 3: Antworten 5 × 200, 1 × 202 · angekommen 5 von 6
+nacheinander (alle 200 ms): angekommen 20 von 20
+gestaffelt (alle 50 ms, überlappend): angekommen 20 von 20

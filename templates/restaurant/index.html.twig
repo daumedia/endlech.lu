@@ -25,7 +25,10 @@
                             <h2 class="font-bold text-lg">{{ 'filter.title'|trans }}</h2>
                         </div>
 
-                        <form method="get" action="{{ path('app_restaurant_index') }}">
+                        <form method="get" action="{{ path('app_restaurant_index') }}"
+                              {# Nutzungsmessung (Feature 11): nur die Namen gesetzter Filter, der Ort nur als Merker (AK-13). #}
+                              data-controller="usage-event" data-action="submit->usage-event#filter"
+                              data-usage-event-name-value="filter_angewandt">
                             <input type="hidden" name="sort" value="{{ sort }}">
 
                             <div class="mb-6">

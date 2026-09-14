@@ -66,9 +66,6 @@ item:
     android_and_logins:
         title: "Application Android, connexion Google et Apple"
         reason: "Noté parce que la demande a été formulée. Aucun des trois points n'est à ce jour justifié ni situé dans l'ordre des priorités."
-    usage_analytics:
-        title: "Mesurer l’usage sans suivre les visiteurs"
-        reason: "Combien de personnes ouvrent une page puis repartent avant d’envoyer reste inconnu. Seule une solution sans cookies et sans données personnelles est envisageable — sinon, cela ne sera pas construit."
 
 shelved_item:
     passkey_conditional_ui:

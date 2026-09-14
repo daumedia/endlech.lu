@@ -42,6 +42,9 @@
                 ? (package.sizeBytes / 1048576)|format_number({fraction_digit: 1}) ~ ' MB'
                 : kb|format_number ~ ' kB' %}
             <a href="{{ asset(package.publicPath) }}" download
+               {# Nutzungsmessung (Feature 11, AK-19). #}
+               data-controller="usage-event" data-action="click->usage-event#track"
+               data-usage-event-name-value="presse_kit_geladen"
                class="inline-flex items-center justify-center min-h-[48px] rounded-full bg-cyan-700 px-8 font-bold text-white shadow motion-safe:transition hover:bg-cyan-800 hover:shadow-md focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700">
                 {{ 'material.download'|trans({}, 'press') }}
                 <span class="ml-2 font-normal">({{ 'material.download_meta'|trans({'%format%': 'ZIP', '%size%': groesse}, 'press') }})</span>

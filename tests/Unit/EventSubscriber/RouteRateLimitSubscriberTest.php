@@ -29,20 +29,21 @@ final class RouteRateLimitSubscriberTest extends TestCase
         );
     }
 
-    private function abonnent(RateLimiterFactory $sitemap, RateLimiterFactory $datensatz): RouteRateLimitSubscriber
+    private function abonnent(RateLimiterFactory $sitemap, RateLimiterFactory $datensatz, ?RateLimiterFactory $zaehlweg = null): RouteRateLimitSubscriber
     {
         return new RouteRateLimitSubscriber(
             $this->fabrik('passkey', 10000),
             $this->fabrik('admin', 10000),
             $datensatz,
             $sitemap,
+            $zaehlweg ?? $this->fabrik('usage', 10000),
             $this->createStub(TokenStorageInterface::class),
         );
     }
 
-    private function abruf(RouteRateLimitSubscriber $abonnent, string $pfad): void
+    private function abruf(RouteRateLimitSubscriber $abonnent, string $pfad, string $methode = 'GET'): void
     {
-        $request = Request::create($pfad, 'GET', server: ['REMOTE_ADDR' => '198.51.100.7']);
+        $request = Request::create($pfad, $methode, server: ['REMOTE_ADDR' => '198.51.100.7']);
         $abonnent->onKernelRequest(new RequestEvent(
             $this->createStub(HttpKernelInterface::class),
             $request,
@@ -79,5 +80,27 @@ final class RouteRateLimitSubscriberTest extends TestCase
         $this->abruf($abonnent, '/sitemap.xml');
         $this->expectException(TooManyRequestsHttpException::class);
         $this->abruf($abonnent, '/open/dataset.json');
+    }
+
+    /** Feature 11, AK-27 · Der Zählweg: 300 Aufrufe frei, der 301. wird abgewiesen. */
+    public function testZaehlwegDreihundertFreiDerDreihunderteinsteWirdAbgewiesen(): void
+    {
+        $abonnent = $this->abonnent($this->fabrik('sitemap'), $this->fabrik('datensatz'), $this->fabrik('usage', 300));
+
+        for ($i = 1; $i <= 300; ++$i) {
+            $this->abruf($abonnent, '/api/send', 'POST');
+        }
+
+        try {
+            $this->abruf($abonnent, '/api/send', 'POST');
+            self::fail('Der 301. Zählaufruf innerhalb einer Stunde hätte abgewiesen werden müssen.');
+        } catch (TooManyRequestsHttpException $e) {
+            self::assertSame(429, $e->getStatusCode());
+        }
+
+        // Eigenes Kontingent: Sitemap und Datensatz bleiben erreichbar.
+        $this->abruf($abonnent, '/sitemap.xml');
+        $this->abruf($abonnent, '/open/dataset.json');
+        $this->addToAssertionCount(2);
     }
 }

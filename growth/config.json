@@ -1,0 +1,51 @@
+{
+  "site": "sc-domain:endlech.lu",
+  "name": "Endlech.lu",
+  "sprachen": [
+    "lb",
+    "de",
+    "fr",
+    "en"
+  ],
+  "themen": [
+    "barrierefreies restaurant luxemburg",
+    "rollstuhlgerecht restaurant luxemburg",
+    "restaurant accessible fauteuil roulant luxembourg",
+    "restaurant accessible luxembourg",
+    "wheelchair accessible restaurant luxembourg",
+    "barrièrefräi restaurant lëtzebuerg"
+  ],
+  "umami": {
+    "website_id": null,
+    "zeitzone": "Europe/Luxembourg",
+    "conversion_events": [
+      "*/restaurants",
+      "filter_angewandt",
+      "*/restaurants/*",
+      "kontaktweg_genutzt"
+    ],
+    "fenster_minuten": 60
+  },
+  "ignorieren": {
+    "seiten": [
+      "/admin",
+      "/api",
+      "/profile"
+    ],
+    "queries": []
+  },
+  "weitere_trichter": {
+    "warteliste_app": [
+      "*/app",
+      "warteliste_eingetragen"
+    ],
+    "warteliste_partner": [
+      "*/partner",
+      "warteliste_eingetragen"
+    ],
+    "warteliste_organisationen": [
+      "*/organisationen*",
+      "warteliste_eingetragen"
+    ]
+  }
+}

@@ -1,0 +1,36 @@
+== normal
+{"bedingung":"normal","blockiert":false,"seiten":[{"pfad":"/de/","mittel":194,"werte":[200,196,196,192,184]},{"pfad":"/de/restaurants","mittel":198,"werte":[196,196,200,196,204]},{"pfad":"/de/restaurants/1","mittel":197,"werte":[200,192,196,200,196]}]}
+== Umami angehalten
+{"bedingung":"umami-angehalten","blockiert":false,"seiten":[{"pfad":"/de/","mittel":193,"werte":[188,196,192,196,192]},{"pfad":"/de/restaurants","mittel":193,"werte":[192,188,196,192,196]},{"pfad":"/de/restaurants/1","mittel":188,"werte":[188,188,188,180,196]}]}
+{"bedingung":"umami-angehalten","funktionen":{"filterOk":true,"kontaktOk":true,"wartelisteOk":true,"jsFehler":[],"fehlermeldungImText":""}}
+== Eingang abgeschaltet
+qa/11/ladezeit.sh: line 6: 41490 Terminated: 15          node eingang.mjs eingang.key eingang.crt 39443 > eingang.log 2>&1
+{"bedingung":"eingang-aus","blockiert":false,"seiten":[{"pfad":"/de/","mittel":195,"werte":[192,192,192,200,200]},{"pfad":"/de/restaurants","mittel":196,"werte":[196,200,200,192,192]},{"pfad":"/de/restaurants/1","mittel":194,"werte":[192,196,192,192,200]}]}
+{"bedingung":"eingang-aus","funktionen":{"filterOk":true,"kontaktOk":true,"wartelisteOk":true,"jsFehler":[],"fehlermeldungImText":""}}
+== Eingang hängt (nimmt an, antwortet nie)
+{"bedingung":"eingang-haengt","blockiert":false,"seiten":[{"pfad":"/de/","mittel":362,"werte":[212,196,540,664,200]},{"pfad":"/de/restaurants","mittel":198,"werte":[192,200,200,196,204]},{"pfad":"/de/restaurants/1","mittel":194,"werte":[196,192,196,192,196]}]}
+{"bedingung":"eingang-haengt","funktionen":{"filterOk":true,"kontaktOk":true,"wartelisteOk":true,"jsFehler":[],"fehlermeldungImText":""}}
+qa/11/ladezeit.sh: line 27: 41846 Terminated: 15          node haengt.mjs > /dev/null 2>&1
+== Skript blockiert (Werbeblocker)
+{"bedingung":"skript-blockiert","blockiert":true,"seiten":[{"pfad":"/de/","mittel":211,"werte":[200,196,200,208,252]},{"pfad":"/de/restaurants","mittel":202,"werte":[204,204,196,208,200]},{"pfad":"/de/restaurants/1","mittel":198,"werte":[200,196,196,196,200]}]}
+{"bedingung":"skript-blockiert","funktionen":{"filterOk":true,"kontaktOk":true,"wartelisteOk":true,"jsFehler":[],"fehlermeldungImText":""}}
+qa/11/ladezeit.sh: line 6: 42062 Terminated: 15          node eingang.mjs eingang.key eingang.crt 39443 > eingang.log 2>&1
+{"bedingung":"deckel-erreicht","blockiert":false,"seiten":[{"pfad":"/de/","mittel":368,"werte":[364,464,312,360,340]},{"pfad":"/de/restaurants","mittel":329,"werte":[312,332,372,320,308]},{"pfad":"/de/restaurants/1","mittel":334,"werte":[320,360,324,344,324]}]}
+{"bedingung":"deckel-erreicht","funktionen":{"filterOk":true,"kontaktOk":true,"wartelisteOk":true,"jsFehler":[],"fehlermeldungImText":""}}
+
+== Nachmessung hängender Eingang (zwei Wiederholungen, siehe qa-report.md BF-149)
+Wiederholung 1: /de/ 415 [480,368,384,408,436] · /de/restaurants 363 [380,356,360,356,364] · /de/restaurants/1 401 [384,380,364,392,484]
+Wiederholung 2: /de/ [812,580,-1,656,-1] · /de/restaurants [-1,312,-1,372,-1] · /de/restaurants/1 [868,-1,-1,-1,-1]  (-1 = kein erster Inhalt beim Messzeitpunkt)
+Direktmessung: Zählaufruf allein 2,12 s, danach 0,08 s (Unterbrecher). 6 gleichzeitige Zählaufrufe 2,19–3,67 s; /de/restaurants im selben Fenster 2,04 s bis zum ersten Byte, ohne Hänger 0,10 s.
+
+== Paarweise Kontrolle (Umgebung schwankt, deshalb im Wechsel gemessen)
+   kontrolle-normal-1 [('/de/', 313), ('/de/restaurants', 342), ('/de/restaurants/1', 352)]
+   deckel-1 [('/de/', 281), ('/de/restaurants', 280), ('/de/restaurants/1', 278)]
+   kontrolle-normal-2 [('/de/', 210), ('/de/restaurants', 249), ('/de/restaurants/1', 256)]
+   deckel-2 [('/de/', 225), ('/de/restaurants', 212), ('/de/restaurants/1', 214)]
+   paar-normal-1 [('/de/', 216, [224, 216, 224, 212, 204]), ('/de/restaurants', 224, [232, 212, 236, 220, 220]), ('/de/restaurants/1', 224, [216, 224, 240, 224, 216])]
+   paar-haengt-1 [('/de/', 283, [208, 204, 196, 368, 440]), ('/de/restaurants', 209, [216, 208, 208, 204, 208]), ('/de/restaurants/1', 213, [224, 204, 216, 200, 220])]
+   paar-normal-2 [('/de/', 205, [200, 200, 204, 208, 212]), ('/de/restaurants', 206, [200, 204, 216, 204, 204]), ('/de/restaurants/1', 211, [204, 224, 212, 212, 204])]
+   paar-haengt-2 [('/de/', 278, [200, 200, 204, 256, 528]), ('/de/restaurants', 205, [212, 204, 208, 192, 208]), ('/de/restaurants/1', 210, [208, 220, 208, 212, 204])]
+   paar-normal-3 [('/de/', 209, [208, 220, 208, 204, 204]), ('/de/restaurants', 208, [196, 204, 232, 204, 204]), ('/de/restaurants/1', 211, [204, 204, 224, 200, 224])]
+   paar-haengt-3 [('/de/', 277, [204, 200, 200, 204, 576]), ('/de/restaurants', 198, [200, 204, 200, 196, 192]), ('/de/restaurants/1', 201, [204, 208, 204, 192, 196])]

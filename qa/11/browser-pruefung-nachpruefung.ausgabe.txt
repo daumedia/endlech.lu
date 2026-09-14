@@ -1,0 +1,39 @@
+# QA-Nachprüfung 2026-09-13 nach BF-149/BF-150 · qa/11/browser-pruefung.mjs erneut gefahren (frische Umami-3.3.1-Instanz)
+✅ AK-01  Seitenaufruf aus dem Browser: http://endlech.lu:8765/de/restaurants
+✅ AK-03  Zählaufruf ohne Abfrage, „Esch" im Browser-Payload: false
+✅ AK-13  Ereignis: [{"filter":"wheelchair,toilet,ort"}]
+✅ AK-11  Filter angewandt → 1 Zählaufrufe (Ereignis + Ergebnisseite)
+✅ AK-36  Detailseite per Turbo gezählt: 1 × /de/restaurants/1
+✅ AK-12  8 Kontaktwege geklickt → 8 Ereignisse: [{"art":"bestellweg","plattform":"uber_eats"},{"art":"bestellweg","plattform":"website"},{"art":"bestellweg","plattform":"phone"},{"art":"telefon"},{"art":"email"},{"art":"website"},{"art":"instagram"},{"art":"facebook"}]
+✅ AK-05  Pfade im Browser: /de/restaurants, /de/restaurants/1, /fr/restaurants, /fr/restaurants/1
+✅ AK-24  Angefragte Hosts: endlech.lu · CSP-Meldungen in der Konsole: 0
+✅ AK-08  Anmeldeseite gezählt: true
+✅ AK-21  Zählaufruf als angemeldeter Admin: Felder website,screen,language,title,hostname,url,referrer
+✅ AK-06  Turbo-Besuche Verwaltung/Profil, Zählaufrufe dorthin: 0 (zuletzt auf /de/app/abmelden/<token>)
+✅ AK-07  Turbo-Besuch einer Token-Seite ohne Zählaufruf
+✅ AK-06  Tracker lebt danach weiter und zählt /de/about: /de/about
+✅ AK-07  Direkt geöffnete Token-Seite: kein Skript, kein Zählaufruf
+✅ AK-22  GPC: Seitenaufrufe, Filter, Turbo-Besuch, Kontaktweg → 0 Zählaufrufe
+✅ AK-22  DNT: Seitenaufrufe, Filter, Turbo-Besuch, Kontaktweg → 0 Zählaufrufe
+✅ AK-23  an → aus ({"sichtbar":true,"gedrueckt":"false","wort":"aus","speicher":"1"}) · nach Neuladen aus · neuer Tab im Aus: 0 Zählaufrufe · wieder an → neuer Tab: 1
+✅ AK-20  Cookies vor/nach dem Umschalten: [PHPSESSID] / [PHPSESSID]
+✅ AK-23  Browserspeicher gesperrt: Knopf sichtbar false, Hinweis „nicht verfügbar" sichtbar true
+✅ EC-02  Ohne JavaScript: 0 Zählaufrufe
+✅ AK-16  Fehlerhafte Absendung: 0 × warteliste_eingetragen
+✅ AK-15  Erfolgreiche Eintragung: [{"liste":"app"}]
+✅ AK-17  Keine Adresse in den Zählaufrufen der Warteliste
+✅ AK-18  Zustimmen → 1 Ereignis, Zurückziehen → weiterhin 1; ohne Daten
+✅ AK-19  Presse-Kit 1 · Datensatz [{"format":"csv"},{"format":"json"}]
+✅ AK-09  Aufruf über www.endlech.lu: 0 Zählaufrufe
+✅ AK-10  Googlebot: 1 Zählaufruf(e) gesendet, in Umami gespeichert: 0
+✅ AK-03  Umami: 32 gespeicherte Aufrufe, davon mit Abfrage: 0, „Esch" gespeichert: false
+✅ AK-02  Umami, Herkunft Google: google.com /  ; google.com / 
+✅ AK-06  Umami: Pfade aus Verwaltung/Profil/Token gespeichert: 0
+✅ AK-05  Umami je Sprache /de, /fr und über alle (Muster /%/restaurants%): 4|2|6
+✅ AK-17  Umami-Ereignisdaten: filter=wheelchair,toilet,ort, art=website, art=bestellweg, plattform=website, plattform=uber_eats, art=telefon, art=email, plattform=phone, art=instagram, art=facebook, liste=app, format=json, format=csv
+✅ AK-21  Umami-Sitzungen: 1, mit distinct_id: 0
+✅ AK-31  Umami-Tabellen session/website_event/event_data: Spalten mit „ip" im Namen: 0 (Aussage „IP nicht gespeichert")
+
+Aufgeräumt: board_idea 0, board_vote 0, app_waitlist_entry 0, messenger_messages 0
+
+34 von 34 Prüfungen bestanden

@@ -68,6 +68,26 @@
     {% block javascripts %}
         {{ encore_entry_script_tags('app') }}
     {% endblock %}
+
+    {# Nutzungsmessung (Feature 11) — Umami, selbst betrieben; Skript und Zählweg auf endlech.lu.
+
+       Außerhalb des Blocks `javascripts`, damit keine Seite es beim Überschreiben verliert. Die
+       Regel, wo es fehlt (Verwaltung, Profil, Token-Seiten, ohne Website-Kennung), steht in
+       App\Usage\UsageTrackingPolicy.
+
+       ⚠ `defer` und NACH den Encore-Tags: Die Vor-Versand-Prüfung liegt im App-Bundle.
+       ⚠ Die Attribute sind Höflichkeit gegenüber ehrlichen Browsern, keine Grenze — die Grenze ist
+       die Weiterleitung /api/send. Wer hier eines entfernt, ändert nichts an dem, was Umami erreicht,
+       wohl aber an dem, was den Browser verlässt (AK-03, AK-09, AK-22). #}
+    {% if usage_tracking_enabled() %}
+        <script defer src="/zaehler.js?v={{ usage_tracker_version() }}"
+                data-website-id="{{ usage_website_id() }}"
+                data-domains="{{ usage_domain() }}"
+                data-exclude-search="true"
+                data-exclude-hash="true"
+                data-do-not-track="true"
+                data-before-send="endlechNutzungVorVersand"></script>
+    {% endif %}
 </head>
 <body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen font-sans">
 
