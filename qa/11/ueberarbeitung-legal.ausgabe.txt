@@ -1,0 +1,11 @@
+Stand: 2026-09-14 22:48 · Anwendung im Produktionsmodus, Überarbeitung vom 2026-09-14
+Prüfpunkte: Dienst Umami, selbst betrieben, Anbieter Hostinger, Standort Deutschland, Pfad ohne Abfrage, Herkunftsdomain, Land, Region und Stadt, Sitzung wechselt monatlich, Sitzungskennung offen genannt, Cookies (was nicht), IP nicht gespeichert, Aufbewahrung ohne Grenze, Do Not Track, Global Privacy Control, Schalter im Abschnitt
+de: 1938 Zeichen · fehlt: nichts · „anonym"/„keine Kennung": keine
+en: 1743 Zeichen · fehlt: nichts · „anonym"/„keine Kennung": keine
+fr: 2024 Zeichen · fehlt: nichts · „anonym"/„keine Kennung": keine
+lb: 1847 Zeichen · fehlt: nichts · „anonym"/„keine Kennung": keine
+AK-24 · /de/                       Skript /zaehler.js: 1 · Umami-Adresse (39480): 0 · Website-Kennung im Skript: 1
+AK-24 · /de/restaurants            Skript /zaehler.js: 1 · Umami-Adresse (39480): 0 · Website-Kennung im Skript: 1
+AK-24 · /de/legal                  Skript /zaehler.js: 1 · Umami-Adresse (39480): 0 · Website-Kennung im Skript: 1
+AK-24 · /fr/organisationen/vereine Skript /zaehler.js: 1 · Umami-Adresse (39480): 0 · Website-Kennung im Skript: 1
+AK-24 · CSP (Report-Only) auf /de/: default-src 'self';script-src 'self';connect-src 'self';

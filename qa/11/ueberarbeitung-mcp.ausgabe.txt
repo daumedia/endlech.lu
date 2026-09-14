@@ -1,0 +1,27 @@
+── M1 · Lese-Benutzer wie T33
+M1 · Benutzer growth-loop-qa (view-only) anlegen: 200
+M1 · Team anlegen: 200
+M1 · Website ins Team: 200
+M1 · growth-loop-qa als team-view-only: 200
+M1 · growth-loop-qa listet Websites: 200 · Anzahl 0
+M1 · growth-loop-qa listet Team-Websites: 200 · 1 Website(s)
+M1 · growth-loop-qa liest Statistik: 200
+M1 · growth-loop-qa legt Website an: 401
+M1 · growth-loop-qa ändert Website: 401
+M1 · growth-loop-qa löscht Website: 401
+M1 · growth-loop-qa legt Admin an: 401
+M1 · ohne Anmeldung (AK-26): Websites 401 · Statistik 401 · Anmeldeseite 200
+M1 · Voreinstellung admin/umami in der Wegwerf-Instanz (Gegenprobe zu AK-28, dort unverändert): 200
+── M2 · mcp-umami als growth-loop, alle Werkzeuge über MCP
+   umami_websites	ok	364 Zeichen
+   umami_stats	ok	610 Zeichen
+   umami_metrics	ok	449 Zeichen
+   umami_funnel	ok	810 Zeichen
+   umami_conversion_nach_quelle	ok	1574 Zeichen
+M2 · Umami-Adresse (localhost:39443) in den Antworten: 0 · Passwort darin: 0
+M2 · --check gesund: Exit 0 · Adresse darin: 0 · ✓ 1 Website(s) sichtbar:
+── M3 · --check bei Fehlern (Exit 3 erwartet, nie die Adresse)
+M3 · Zertifikat für falschen Namen: Exit 3 · Adresse darin: 0 · Umami ist unter der Adresse aus der Zugangsdatei nicht erreichbar (ERR_TLS_CERT_ALTNAME_INVALID).
+M3 · selbst signiertes Zertifikat: Exit 3 · Adresse darin: 0 · Umami ist unter der Adresse aus der Zugangsdatei nicht erreichbar (DEPTH_ZERO_SELF_SIGNED_CERT).
+M3 · falsches Passwort: Exit 3 · Adresse darin: 0 · Die Anmeldung von growth-loop-qa wird nicht angenommen (Passwort geändert, Benutzer gelöscht?).
+M3 · Umami angehalten (Proxy antwortet): Exit 3 · Adresse darin: 0 · Umami antwortet unter der Adresse aus der Zugangsdatei nicht (HTTP 502) — Route im Proxy oder Instanz aus?
