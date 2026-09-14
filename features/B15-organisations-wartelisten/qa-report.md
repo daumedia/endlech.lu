@@ -404,7 +404,21 @@ JavaScript aussieht — mit Turbo bleibt die Adresse stehen, während der Inhalt
 Test-Docblock begründet sich mit einer Weiterleitung, die es nicht gibt.
 
 ⚠ **Auf der Produktion ist BF-151 weiterhin aktiv** (`v2026.09.13`, lesend geprüft: Formular ohne `action`). Das
-Fazit gilt für den Fix-Branch.
+Fazit gilt für den Fix-Branch. — **Nachtrag: seit `v2026.09.14` ausgeliefert**, siehe den folgenden Abschnitt.
+
+## Auf der Produktion (2026-09-14, `v2026.09.14`)
+
+Nach dem Ausrollen gegen `https://endlech.lu`. Die vollständigen Ausgaben stehen in `qa/B15/produktion-2026-09-14.md`.
+**Auf der Produktion wurde kein Eintrag angelegt**: Jede Eintragung blieb ohne Pflichtfelder, die Anwendung
+antwortet dann mit 422 vor dem Kontingentverbrauch, also ohne Zeile, ohne Mail und ohne belegten Deckel.
+
+| Prüfung | Ergebnis |
+|---|---|
+| Formularziel | ✅ vier Sprachen × vier Seiten, jede mit `action="/{sprache}/organisationen"` und `method="post"` (vorher: drei Zielgruppenseiten ohne `action`) |
+| Absenden ohne JavaScript | ✅ `de/gemeinden`, `fr/unternehmen`, `en/vereine`, `lb/gemeinden` → **422** statt 405, je 4 markierte Felder, keine Stacktrace-Spur; alte Zieladresse weiterhin 405 |
+| Absenden mit JavaScript (Turbo) | ✅ 4 von 4 (`qa/B15/produktion-browser.mjs`): POST an die Übersicht → 422, Fehlermeldungen sichtbar, keine Fehlerseite, keine JS-Ausnahme, kein Konsolenfehler. Die Adresse bleibt auf der Zielgruppenseite stehen (bestätigt BF-153) |
+| Erreichbarkeit, Testdaten, Fehlerseite | ✅ Start, Liste, Übersicht, `/health`, Sitemap, robots.txt erreichbar; 0 QA- oder Fixture-Spuren; 404 ohne Stacktrace |
+| Nicht wiederholt | Anmeldung und ihr Deckel, da von dieser Auslieferung nicht berührt |
 
 | | |
 |---|---|
