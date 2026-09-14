@@ -2,10 +2,28 @@
 
 Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
-![Version](https://img.shields.io/badge/version-2026.09.13-blue)
+![Version](https://img.shields.io/badge/version-2026.09.14-blue)
 ![Status](https://img.shields.io/badge/status-beta-green)
 
 ## [Unreleased]
+
+## [2026.09.14] – Organisationsformular von den Zielgruppenseiten (BF-151)
+
+Vorgezogene Reparatur an einem Bestandsfeature (B15), gefunden in der QA von Feature 11.
+
+⚠ **Keine Migration, keine neue Umgebungsvariable.** Nur die Anwendung muss ausgerollt werden; der
+Worker ist unberührt.
+
+- **Eintragen von `/organisationen/gemeinden`, `…/unternehmen` und `…/vereine` funktioniert wieder.**
+  Das Formular-Partial trug kein `action`; der Browser schickte an die Zielgruppenseite, die nur GET
+  kennt, und jede Eintragung endete in einer **405-Fehlerseite** — ohne Eintrag, mit verlorenen
+  Eingaben, in allen vier Sprachen. Sentry sah es nicht (405 wird ignoriert). Das Formular schickt
+  jetzt ausdrücklich an `app_organisations_submit`.
+- **Prüfläufe schicken das Formular von jeder Seite ab**, auf der es eingebunden ist
+  (`OrganisationControllerTest`, `Qa11ZielgruppenFormularTest`); vorher holte jeder Absende-Test es von
+  der Übersicht.
+- Offen, nicht blockierend: Nach einem Eingabefehler auf einer Zielgruppenseite erscheint der Inhalt
+  der Übersicht (OF-BF151a); zwei ungenaue Texte dazu (BF-153).
 
 ## [2026.09.13] – Sitemap und robots.txt (Feature 10)
 
