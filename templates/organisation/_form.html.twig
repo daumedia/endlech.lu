@@ -10,6 +10,13 @@
 
     Der Typ-Selektor sind echte Radios in einem <fieldset>: Damit gibt es
     Pfeiltasten-Navigation und Gruppenzugehörigkeit gratis, ohne ARIA-Nachbau.
+
+    ⚠ BF-151: Das Ziel steht ausdrücklich im Formular. Das Partial hängt in der
+    Übersicht UND auf den drei Zielgruppenseiten; ohne `action` schickt der
+    Browser an die aktuelle Adresse, und nur die Übersicht ist zugleich die
+    POST-Route. Von `/organisationen/gemeinden` aus endete jede Eintragung in
+    einer 405-Fehlerseite — auf der Produktion, und kein Test sah es, weil jeder
+    Absende-Test das Formular von der Übersicht holte.
 #}
 {# Bei expanded:true ist choice.vars.data der Checked-Zustand (bool), nicht der
    Enum-Case. Deshalb eine Map value → Case, damit Emoji und Label aus dem Enum
@@ -30,7 +37,7 @@
 {% endfor %}
 
 <div id="organisation-waitlist-form">
-    {{ form_start(form, {'attr': {
+    {{ form_start(form, {'action': path('app_organisations_submit'), 'attr': {
         'class': 'space-y-6',
         'novalidate': 'novalidate',
         'data-controller': 'organisation-type',
