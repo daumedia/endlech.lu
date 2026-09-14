@@ -1,0 +1,6 @@
+✅ de/gemeinden mit JavaScript, Pflichtfelder leer · Turbo true · action /de/organisationen · POST /de/organisationen → 422 · Fehlerfelder 4 · Fehlerseite false · Adresse /de/organisationen/gemeinden · JS-Ausnahmen 0 · Konsolenfehler 0
+✅ fr/unternehmen mit JavaScript, Pflichtfelder leer · Turbo true · action /fr/organisationen · POST /fr/organisationen → 422 · Fehlerfelder 4 · Fehlerseite false · Adresse /fr/organisationen/unternehmen · JS-Ausnahmen 0 · Konsolenfehler 0
+✅ en/vereine mit JavaScript, Pflichtfelder leer · Turbo true · action /en/organisationen · POST /en/organisationen → 422 · Fehlerfelder 4 · Fehlerseite false · Adresse /en/organisationen/vereine · JS-Ausnahmen 0 · Konsolenfehler 0
+✅ lb/vereine mit JavaScript, Pflichtfelder leer · Turbo true · action /lb/organisationen · POST /lb/organisationen → 422 · Fehlerfelder 4 · Fehlerseite false · Adresse /lb/organisationen/vereine · JS-Ausnahmen 0 · Konsolenfehler 0
+
+4 von 4 bestanden

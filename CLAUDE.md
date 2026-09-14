@@ -938,6 +938,15 @@ Typspezifisch (alle nullable): `communeName`, `estimatedVenues`, `timeframe` (nu
 Weitere Enums: `OrganisationTimeframe`, `SponsorshipInterest`, `CollaborationInterest`.
 
 **Seitenstruktur:** `/organisationen` ist die Übersicht (Hero, drei Karten, Integritätsblock, Formular mit freier Typwahl). Jede Zielgruppe hat zusätzlich eine **eigene Seite** unter `/organisationen/{slug}` (`OrganisationType::slug()` → `gemeinden`, `unternehmen`, `vereine`; für ASSOCIATION bewusst „vereine", sonst hieße es `/organisationen/organisationen`). Die Inhalte liegen in `templates/organisation/_section_{type}.html.twig` und werden nur dort eingebunden – die Übersicht zeigt bewusst nur Teaser, damit derselbe Text nicht doppelt im Netz steht. Auf den Unterseiten ist der Formulartyp vorgewählt, der Selektor bleibt aber sichtbar (wer falsch gelandet ist, wechselt ohne Umweg). `_integrity.html.twig` steht auf allen vier Seiten.
+
+⚠️ **Das Formular-Partial `organisation/_form.html.twig` trägt sein Ziel ausdrücklich** (`action` →
+`app_organisations_submit`, BF-151). Es hängt in der Übersicht **und** auf den drei Zielgruppenseiten; ohne
+`action` schickt der Browser an die aktuelle Adresse, und nur die Übersicht ist zugleich die POST-Route. Bis zum
+2026-09-13 endete deshalb jede Eintragung von `/organisationen/gemeinden`, `…/unternehmen` und `…/vereine` in
+einer **405-Fehlerseite** — auf der Produktion, und Sentry sah es nicht (405 wird ignoriert). Kein Test merkte
+es, weil jeder Absende-Test das Formular von der Übersicht holte. **Wer ein Formular-Partial auf mehreren Seiten
+einbindet, gibt ihm ein Ziel und schickt es im Prüflauf von jeder dieser Seiten ab**
+(`Qa11ZielgruppenFormularTest`, `OrganisationControllerTest::testBf151JedeSeiteSchicktAnDieAbsenderoute`).
 Repository: `findByType(string $type, ?string $status = null)` (nimmt bewusst Strings aus Query-Parametern und verwirft unbekannte Werte, statt zu werfen), `findFiltered()`, `countByStatus()`, `countByType()`.
 Migration: `Version20260820100000`.
 

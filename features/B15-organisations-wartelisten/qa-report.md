@@ -358,7 +358,150 @@ richtig für das, was dort steht, und blind für das Formular darunter.
 **Vorschlag:** Das Formular ausdrücklich an `app_organisations_submit` richten; der Prüflauf holt es von jeder
 Zielgruppenseite (die Reproduktion tut das bereits).
 
+**Behoben am 2026-09-13 (`sdd-build`, Branch `fix/bf-151-zielgruppen-formular`, nicht committet):**
+`templates/organisation/_form.html.twig` setzt `action` auf `path('app_organisations_submit')` — eine Stelle für
+alle vier Seiten, die das Partial einbinden; die Sprache kommt aus der Route mit. Nachweise:
+- Reproduktion 2 aus diesem Bericht: `Qa11ZielgruppenFormularTest` läuft ohne `markTestSkipped`, drei Fälle grün
+  (Weiterleitung, Eintrag gespeichert).
+- Neu `OrganisationControllerTest::testBf151JedeSeiteSchicktAnDieAbsenderoute`: Übersicht und drei
+  Zielgruppenseiten in allen vier Sprachen tragen `action="/{sprache}/organisationen"` und `method="post"`.
+- **Gegenprobe:** Mit dem Partial ohne `action` werden alle vier rot (drei × 405, einmal fehlendes Ziel).
+- Volle Suite auf dem Fix-Branch (von `main`): 1199 Tests grün, 10 übersprungen; `lint:twig` grün.
+- ⚠ **Ein erster Prüflauf war wertlos:** Im Worktree war `vendor/` zunächst ein Symlink auf das
+  Hauptverzeichnis; PHP löst `__DIR__` zum echten Pfad auf, und der Autoloader lud `src/` und die Templates von
+  dort — Reproduktion und Gegenprobe liefen gegen den falschen Stand und sahen gleich aus. Mit kopiertem `vendor/`
+  wiederholt, Ergebnisse oben.
+- **Nicht im Auftrag, als OF-BF151a in der Spec:** Nach einem Eingabefehler auf einer Zielgruppenseite erscheint
+  die Übersicht (422 unter `/organisationen`, Fehler und Typ bleiben erhalten).
+- Reproduktion 1 (echter Browser) ist hier **nicht** wiederholt — das bleibt der QA.
+
 ## Nächster Schritt
 
 **`/sdd-build B15 BF-151 beheben`**, danach `/sdd-qa B15` und Auslieferung. Laut Prüfregel für Bestandsfeatures
 geht das vor dem nächsten Feature.
+
+---
+
+# Nachprüfung BF-151 — 2026-09-14
+
+Stand: 2026-09-14 · Vorstufe: `building` (Fehlerauftrag BF-151) · Branch `fix/bf-151-zielgruppen-formular`
+(nicht committet, Arbeitsverzeichnis `endlech-bf151`) · Anwendung aus dem Fix-Branch im Produktionsmodus,
+Test-Datenbank, Chromium headless
+
+## Fazit
+
+**Production-ready: ja** — BF-151 ist behoben und im echten Browser belegt; ein neuer, niedriger Befund in den
+Unterlagen.
+
+Die Eintragung gelingt jetzt von **allen vier Seiten in allen vier Sprachen**: 16 von 16 mit JavaScript, drei von
+drei ohne, jeweils mit Zeile in der richtigen Sprache; mit JavaScript zusätzlich je genau eine Bestätigungsmail der
+typspezifischen Vorlage.
+Typwechsel, Eingabefehler, Honeypot und Deckel verhalten sich auf den Zielgruppenseiten wie auf der Übersicht, und
+die Absende-Route weist fremde Herkunft und untergeschobene Fremdfelder weiterhin ab.
+
+**BF-153 (niedrig)** betrifft nur Text: Die neue offene Frage OF-BF151a beschreibt den Fehlerweg so, wie er ohne
+JavaScript aussieht — mit Turbo bleibt die Adresse stehen, während der Inhalt zur Übersicht wechselt —, und ein
+Test-Docblock begründet sich mit einer Weiterleitung, die es nicht gibt.
+
+⚠ **Auf der Produktion ist BF-151 weiterhin aktiv** (`v2026.09.13`, lesend geprüft: Formular ohne `action`). Das
+Fazit gilt für den Fix-Branch. — **Nachtrag: seit `v2026.09.14` ausgeliefert**, siehe den folgenden Abschnitt.
+
+## Auf der Produktion (2026-09-14, `v2026.09.14`)
+
+Nach dem Ausrollen gegen `https://endlech.lu`. Die vollständigen Ausgaben stehen in `qa/B15/produktion-2026-09-14.md`.
+**Auf der Produktion wurde kein Eintrag angelegt**: Jede Eintragung blieb ohne Pflichtfelder, die Anwendung
+antwortet dann mit 422 vor dem Kontingentverbrauch, also ohne Zeile, ohne Mail und ohne belegten Deckel.
+
+| Prüfung | Ergebnis |
+|---|---|
+| Formularziel | ✅ vier Sprachen × vier Seiten, jede mit `action="/{sprache}/organisationen"` und `method="post"` (vorher: drei Zielgruppenseiten ohne `action`) |
+| Absenden ohne JavaScript | ✅ `de/gemeinden`, `fr/unternehmen`, `en/vereine`, `lb/gemeinden` → **422** statt 405, je 4 markierte Felder, keine Stacktrace-Spur; alte Zieladresse weiterhin 405 |
+| Absenden mit JavaScript (Turbo) | ✅ 4 von 4 (`qa/B15/produktion-browser.mjs`): POST an die Übersicht → 422, Fehlermeldungen sichtbar, keine Fehlerseite, keine JS-Ausnahme, kein Konsolenfehler. Die Adresse bleibt auf der Zielgruppenseite stehen (bestätigt BF-153) |
+| Erreichbarkeit, Testdaten, Fehlerseite | ✅ Start, Liste, Übersicht, `/health`, Sitemap, robots.txt erreichbar; 0 QA- oder Fixture-Spuren; 404 ohne Stacktrace |
+| Nicht wiederholt | Anmeldung und ihr Deckel, da von dieser Auslieferung nicht berührt |
+
+| | |
+|---|---|
+| Browserprüfung | 23 von 23 (`qa/B15/zielgruppen-browser.mjs`, Ausgabe daneben) |
+| Angriff | 6 Fälle, alle wie erwartet (`qa/B15/angriff.ausgabe.txt`) |
+| Prüfläufe | 1199 Tests grün, 10 übersprungen; `lint:twig` grün |
+| Code-Review | 2 Funde ≥ 80, beide verifiziert → BF-153 |
+
+## Akzeptanzkriterien — nachgeprüft
+
+Die Reparatur ändert eine Zeile im gemeinsamen Formular-Partial. Nachgeprüft sind die Kriterien, die das Formular
+oder das Absenden berühren; die übrigen (AK-02, AK-04, AK-10, AK-12, AK-13, AK-16 bis AK-19) hängen nicht daran und
+tragen ihren Nachweis aus dem zweiten Durchlauf — die Suite, die sie abdeckt, ist grün.
+
+| AK | Ergebnis | Nachweis |
+|---|---|---|
+| AK-01 | ✅ | Übersicht in vier Sprachen: Formular mit freier Typwahl (nichts vorgewählt), Eintragung 200, Erfolgsmeldung, Zeile, Mail |
+| AK-03 | ✅ | Alle drei Zielgruppenseiten in vier Sprachen: Typ vorgewählt (`commune`/`company`/`association`), Selektor bedienbar, **Eintragung gelingt** — 200, Erfolgsmeldung, Zeile `typ\|sprache`, Adresse bleibt auf der Zielgruppenseite. Vorher 405 |
+| AK-05 | ✅ | Ohne JavaScript auf allen drei Zielgruppenseiten: alle drei Feldgruppen im Formular; Absenden → **302** auf `/de/organisationen`, Hinweis „Fast geschafft! Bitte bestätigen Sie den Link in Ihrer E-Mail.", Zeile gespeichert |
+| AK-06 | ✅ teilweise nachgeprüft | Auf `/fr/organisationen/gemeinden` Verein gewählt → Eintragung als `association\|fr` mit Vereins-Vorlage. Ausblenden, `disabled` und Ansage nicht erneut gemessen — unverändert seit dem zweiten Durchlauf |
+| AK-07 | ✅ | `estimatedVenues` bei `association`, eigene Herkunft → **422**, keine Zeile |
+| AK-08 | ✅ | Leerer Organisationsname auf `/de/organisationen/vereine` → **422**, eine Fehlermeldung, Typ bleibt `association`, Fokus auf dem fehlerhaften Feld, keine Zeile, keine Mail |
+| AK-09 | ✅ | Jede der 16 Eintragungen mit JavaScript legt genau **eine** Nachricht in `messenger_messages` ab, und sie trägt die Vorlage des Typs (`organisation/{commune,company,association}.html.twig`); beim Typwechsel liegt die Vereins-Vorlage in der Warteschlange. Ohne JavaScript ist die Mail nicht gezählt, nur die Zeile |
+| AK-11 | ✅ | Honeypot auf `/de/organisationen/unternehmen` → 200 mit Erfolgsmeldung, keine Zeile, keine Mail |
+| AK-14 | ✅ | Sechs Eintragungen von `/de/organisationen/gemeinden`: 200 × 5, dann **429** mit „Von dieser Verbindung sind in kurzer Zeit mehrere Anmeldungen eingegangen …" (eigener Schlüssel seit BF-129), 5 Zeilen |
+
+## Sicherheitsprüfung (Nachprüfung)
+
+| Prüfung | Ergebnis | Beleg |
+|---|---|---|
+| Fremde Herkunft (Origin/Referer `boese.example`) | bestanden | 422, keine Zeile |
+| Ohne Origin und Referer | bestanden | 422, keine Zeile |
+| Eigene Herkunft, Referer Zielgruppenseite | wie erwartet | 302, Zeile — der Referer von der Zielgruppenseite wird als gleiche Herkunft akzeptiert |
+| Untergeschobenes Fremdfeld | bestanden | 422 (AK-07) |
+| Alte Zieladresse / Pfad ohne Sprache | wie erwartet | `POST /de/organisationen/vereine` 405, `POST /organisationen` 404 |
+| Deckel von der Zielgruppenseite | bestanden | 429 beim sechsten Versuch (AK-14) |
+
+## Fehler
+
+### BF-153 · Zwei Texte zur Reparatur beschreiben Verhalten, das es so nicht gibt — niedrig
+
+**Betrifft:** `spec.md` OF-BF151a und den Docblock von
+`OrganisationControllerTest::testBf151JedeSeiteSchicktAnDieAbsenderoute`.
+**Gefunden:** `code-reviewer`, beide Punkte von der QA verifiziert.
+**Reproduktion:**
+1. Mit JavaScript auf `/de/organisationen/vereine` den Organisationsnamen leer lassen und absenden
+   (`qa/B15/zielgruppen-browser.mjs`, Fall 4): Antwort 422, **Adresse bleibt `/de/organisationen/vereine`**, die
+   Überschrift wechselt von „Für Organisationen und Vereine" zu „Barrierefreiheit wird sichtbar, wenn viele
+   mitziehen." (Übersicht). OF-BF151a sagt „422 unter `/organisationen`" — das gilt nur ohne JavaScript; Turbo
+   rendert eine 4xx-Antwort an Ort und Stelle, ohne die Adresse zu ändern. Adresse und Inhalt fallen damit
+   auseinander, und das trifft den Standardfall.
+2. `curl -X POST http://…/organisationen` → **404**. Der Docblock begründet die Sprachschleife mit „ein Ziel ohne
+   Sprachpräfix träfe `/organisationen` … und endete in einer Weiterleitung, die den POST verliert" — es gibt keine
+   sprachfreie Route und keine Weiterleitung.
+**Erwartet:** Die offene Frage beschreibt den Fall so, wie ein Besucher ihn erlebt; der Docblock nennt den
+tatsächlichen Grund.
+**Tatsächlich:** siehe oben. Der Test selbst ist richtig und wird ohne die Reparatur rot.
+**Ort:** `features/B15-organisations-wartelisten/spec.md` (OF-BF151a), `tests/Functional/Controller/OrganisationControllerTest.php`
+(Docblock über `testBf151JedeSeiteSchicktAnDieAbsenderoute`).
+**Vorschlag:** OF-BF151a um den Turbo-Fall ergänzen (Adresse bleibt, Inhalt wechselt, auch bei 429); im Docblock
+„endete als 404" statt „Weiterleitung".
+
+## Hinweise ohne Befund
+
+- **Kein weiteres Formular mit demselben Muster.** Das Review hat Partner- und App-Warteliste geprüft: Beide
+  Formulare haben kein `action`, liegen aber jeweils auf **einer** Seite, deren Adresse zugleich die POST-Route ist —
+  dort passt die aktuelle Adresse, und das Partner-Formular behält so bewusst `?utm_source=…`.
+- **Die Zielgruppenseiten zeigen nach der Erfolgsmeldung weiter ihre eigene Adresse** (Turbo-Stream ersetzt nur das
+  Formular) — ohne JavaScript landet der Besucher auf der Übersicht. Beides ist in Ordnung, nur uneinheitlich.
+- **Gemessen, nicht angenommen:** Chromium meldet eine Weiterleitung nicht als `responseReceived`, sondern als
+  `redirectResponse` des Folgeaufrufs. Der erste Lauf zeigte deshalb für die Eintragung ohne JavaScript 200 statt
+  302 — ein Fehler im Prüfskript, im Skript vermerkt und behoben; die Zeilen waren auch im ersten Lauf gespeichert.
+
+## Neue Prüfläufe dieser Nachprüfung
+
+| Datei | Fälle | Deckt ab |
+|---|---|---|
+| `qa/B15/zielgruppen-browser.mjs` | 23 | AK-01, 03, 05, 06, 08, 09, 11, 14 und BF-151 im echten Browser |
+| `qa/B15/angriff.ausgabe.txt` | 6 | Herkunftsprüfung, Fremdfeld, alte Zieladresse |
+
+## Nächster Schritt
+
+**`/sdd-deploy B15`** — der Fix-Branch muss nach `main` und `master`, sonst bleibt BF-151 auf der Produktion aktiv.
+BF-153 blockiert nicht; er lässt sich mit `/sdd-build B15 BF-153 beheben` vor dem Deploy mitnehmen, wenn B15 dafür
+auf `review` zurückgeht, oder danach.
+

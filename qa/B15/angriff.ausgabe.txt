@@ -1,0 +1,7 @@
+# QA B15 · Nachprüfung BF-151 · Angriff auf die Absende-Route (Produktionsmodus, Fix-Branch)
+fremde Herkunft (Origin/Referer boese.example): HTTP 422 · gespeichert 0
+ohne Origin und Referer: HTTP 422 · gespeichert 0
+eigene Herkunft, Referer Zielgruppenseite: HTTP 302 · gespeichert 1
+eigene Herkunft, Fremdfeld estimatedVenues bei Verein (AK-07): HTTP 422 · gespeichert 0
+POST /de/organisationen/vereine (alte Zieladresse): HTTP 405
+POST /organisationen (ohne Sprache): HTTP 404

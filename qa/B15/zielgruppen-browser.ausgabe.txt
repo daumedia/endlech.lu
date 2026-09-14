@@ -1,0 +1,32 @@
+── 1 · Eintragen mit JavaScript, 4 Sprachen × 4 Seiten (AK-03, AK-09, BF-151)
+✅ /de/organisationen · action /de/organisationen · POST /de/organisationen → 200 · Erfolgsmeldung true · Adresse danach /de/organisationen · Zeile commune|de · Mail +1 (Vorlage commune +1) · vorgewählt null · JS-Fehler 0
+✅ /de/organisationen/gemeinden · action /de/organisationen · POST /de/organisationen → 200 · Erfolgsmeldung true · Adresse danach /de/organisationen/gemeinden · Zeile commune|de · Mail +1 (Vorlage commune +1) · vorgewählt commune · JS-Fehler 0
+✅ /de/organisationen/unternehmen · action /de/organisationen · POST /de/organisationen → 200 · Erfolgsmeldung true · Adresse danach /de/organisationen/unternehmen · Zeile company|de · Mail +1 (Vorlage company +1) · vorgewählt company · JS-Fehler 0
+✅ /de/organisationen/vereine · action /de/organisationen · POST /de/organisationen → 200 · Erfolgsmeldung true · Adresse danach /de/organisationen/vereine · Zeile association|de · Mail +1 (Vorlage association +1) · vorgewählt association · JS-Fehler 0
+✅ /en/organisationen · action /en/organisationen · POST /en/organisationen → 200 · Erfolgsmeldung true · Adresse danach /en/organisationen · Zeile commune|en · Mail +1 (Vorlage commune +1) · vorgewählt null · JS-Fehler 0
+✅ /en/organisationen/gemeinden · action /en/organisationen · POST /en/organisationen → 200 · Erfolgsmeldung true · Adresse danach /en/organisationen/gemeinden · Zeile commune|en · Mail +1 (Vorlage commune +1) · vorgewählt commune · JS-Fehler 0
+✅ /en/organisationen/unternehmen · action /en/organisationen · POST /en/organisationen → 200 · Erfolgsmeldung true · Adresse danach /en/organisationen/unternehmen · Zeile company|en · Mail +1 (Vorlage company +1) · vorgewählt company · JS-Fehler 0
+✅ /en/organisationen/vereine · action /en/organisationen · POST /en/organisationen → 200 · Erfolgsmeldung true · Adresse danach /en/organisationen/vereine · Zeile association|en · Mail +1 (Vorlage association +1) · vorgewählt association · JS-Fehler 0
+✅ /fr/organisationen · action /fr/organisationen · POST /fr/organisationen → 200 · Erfolgsmeldung true · Adresse danach /fr/organisationen · Zeile commune|fr · Mail +1 (Vorlage commune +1) · vorgewählt null · JS-Fehler 0
+✅ /fr/organisationen/gemeinden · action /fr/organisationen · POST /fr/organisationen → 200 · Erfolgsmeldung true · Adresse danach /fr/organisationen/gemeinden · Zeile commune|fr · Mail +1 (Vorlage commune +1) · vorgewählt commune · JS-Fehler 0
+✅ /fr/organisationen/unternehmen · action /fr/organisationen · POST /fr/organisationen → 200 · Erfolgsmeldung true · Adresse danach /fr/organisationen/unternehmen · Zeile company|fr · Mail +1 (Vorlage company +1) · vorgewählt company · JS-Fehler 0
+✅ /fr/organisationen/vereine · action /fr/organisationen · POST /fr/organisationen → 200 · Erfolgsmeldung true · Adresse danach /fr/organisationen/vereine · Zeile association|fr · Mail +1 (Vorlage association +1) · vorgewählt association · JS-Fehler 0
+✅ /lb/organisationen · action /lb/organisationen · POST /lb/organisationen → 200 · Erfolgsmeldung true · Adresse danach /lb/organisationen · Zeile commune|lb · Mail +1 (Vorlage commune +1) · vorgewählt null · JS-Fehler 0
+✅ /lb/organisationen/gemeinden · action /lb/organisationen · POST /lb/organisationen → 200 · Erfolgsmeldung true · Adresse danach /lb/organisationen/gemeinden · Zeile commune|lb · Mail +1 (Vorlage commune +1) · vorgewählt commune · JS-Fehler 0
+✅ /lb/organisationen/unternehmen · action /lb/organisationen · POST /lb/organisationen → 200 · Erfolgsmeldung true · Adresse danach /lb/organisationen/unternehmen · Zeile company|lb · Mail +1 (Vorlage company +1) · vorgewählt company · JS-Fehler 0
+✅ /lb/organisationen/vereine · action /lb/organisationen · POST /lb/organisationen → 200 · Erfolgsmeldung true · Adresse danach /lb/organisationen/vereine · Zeile association|lb · Mail +1 (Vorlage association +1) · vorgewählt association · JS-Fehler 0
+── 2 · Eintragen ohne JavaScript (AK-05, BF-151)
+✅ /de/organisationen/gemeinden ohne JS · POST /de/organisationen → 302 · Adresse danach /de/organisationen · Zeile commune|de · alle drei Feldgruppen im Formular true,true,true · Hinweis „Fast geschafft! Bitte bestätigen Sie den Link in Ihrer E-Mail."
+✅ /de/organisationen/unternehmen ohne JS · POST /de/organisationen → 302 · Adresse danach /de/organisationen · Zeile company|de · alle drei Feldgruppen im Formular true,true,true · Hinweis „Fast geschafft! Bitte bestätigen Sie den Link in Ihrer E-Mail."
+✅ /de/organisationen/vereine ohne JS · POST /de/organisationen → 302 · Adresse danach /de/organisationen · Zeile association|de · alle drei Feldgruppen im Formular true,true,true · Hinweis „Fast geschafft! Bitte bestätigen Sie den Link in Ihrer E-Mail."
+── 3 · Typwechsel auf der Zielgruppenseite (AK-03, AK-06)
+✅ /fr/organisationen/gemeinden → Verein gewählt · POST /fr/organisationen → 200 · Zeile association|fr
+── 4 · Eingabefehler auf der Zielgruppenseite (AK-08, OF-BF151a)
+✅ /de/organisationen/vereine mit leerem Organisationsnamen · POST → 422 · Fehlermeldungen 1 · Typ bleibt association · Fokus organisation_waitlist[organisationName] · Adresse /de/organisationen/vereine · Überschrift vorher „Für Organisationen und Vereine" → nachher „Barrierefreiheit wird sichtbar, wenn viele mitziehen." · keine Zeile, keine Mail
+── 5 · Honeypot von der Zielgruppenseite (AK-11)
+✅ /de/organisationen/unternehmen mit gefülltem Honeypot · POST → 200 · Erfolgsmeldung true · Zeile — · Mail +0
+── 6 · Deckel von der Zielgruppenseite (Missbrauchsschutz)
+✅ 6 Eintragungen von /de/organisationen/gemeinden · Antworten [200,200,200,200,200,429] · gespeichert 5 · Meldung „Von dieser Verbindung sind in kurzer Zeit mehrere Anmeldungen eingegangen. Bitte versuchen Sie es in einer Stunde erneut."
+
+Aufgeräumt: Zeilen 0, Nachrichten 0
+23 von 23 Prüfungen bestanden

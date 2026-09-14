@@ -7,7 +7,7 @@ use App\Tests\AbstractWebTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
- * QA Feature 11 · Befund BF-151 (B15) — **Reproduktion, übersprungen bis zur Behebung.**
+ * QA Feature 11 · Befund BF-151 (B15) — Reproduktion, seit der Behebung am 2026-09-13 scharf.
  *
  * Das Formular auf den Zielgruppenseiten `/{locale}/organisationen/{gemeinden|unternehmen|vereine}` trägt kein
  * `action`. Ein Browser schickt es deshalb an die Zielgruppenseite selbst — die kennt nur GET, die POST-Route
@@ -19,7 +19,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
  * (`/organisationen`), wo die aktuelle Adresse zufällig die POST-Route ist. Der Testclient schickt ein Formular
  * ohne `action` wie ein Browser an die Adresse, von der es kam — dieser Lauf holt es deshalb von der Zielgruppenseite.
  *
- * `sdd-build`: die Zeile mit `markTestSkipped` entfernen, sobald behoben.
+ * Behoben in `templates/organisation/_form.html.twig` (`action` ausdrücklich auf `app_organisations_submit`).
  */
 final class Qa11ZielgruppenFormularTest extends AbstractWebTestCase
 {
@@ -34,8 +34,6 @@ final class Qa11ZielgruppenFormularTest extends AbstractWebTestCase
     #[DataProvider('zielgruppen')]
     public function testBf151AbsendenVonDerZielgruppenseite(string $slug, string $typ): void
     {
-        self::markTestSkipped('BF-151 offen — Reproduktion für sdd-build, siehe features/11-nutzungsmessung/qa-report.md');
-
         $client = static::createClient();
         $crawler = $client->request('GET', self::LOCALE.'/organisationen/'.$slug);
         $adresse = 'qa11-'.$slug.'@example.lu';

@@ -84,6 +84,30 @@ final class OrganisationControllerTest extends AbstractWebTestCase
         self::assertResponseStatusCodeSame(404);
     }
 
+    /**
+     * BF-151 · Übersicht und alle drei Zielgruppenseiten schicken in jeder Sprache an die POST-Route.
+     *
+     * Geprüft wird das gerenderte `action`, nicht das Absenden: Der Absende-Weg von den Zielgruppenseiten steht in
+     * `Qa11ZielgruppenFormularTest`. Dieser Lauf deckt die übrigen Sprachen ab — ein Ziel ohne Sprachpräfix träfe
+     * `/organisationen` ohne `/{_locale}` und endete in einer Weiterleitung, die den POST verliert.
+     */
+    public function testBf151JedeSeiteSchicktAnDieAbsenderoute(): void
+    {
+        $client = static::createClient();
+
+        foreach (['de', 'en', 'fr', 'lb'] as $sprache) {
+            foreach (['', '/gemeinden', '/unternehmen', '/vereine'] as $seite) {
+                $crawler = $client->request('GET', '/'.$sprache.'/organisationen'.$seite);
+                self::assertResponseIsSuccessful();
+
+                $formular = $crawler->filter('form[name="organisation_waitlist"]');
+                self::assertCount(1, $formular, "/{$sprache}/organisationen{$seite}");
+                self::assertSame('/'.$sprache.'/organisationen', $formular->attr('action'), "/{$sprache}/organisationen{$seite}");
+                self::assertSame('post', strtolower((string) $formular->attr('method')));
+            }
+        }
+    }
+
     public function testOverviewLinksToAllTypePages(): void
     {
         $client = static::createClient();

@@ -168,6 +168,14 @@ Alles aus B14 gilt hier gleichermaßen — der Unterbau ist derselbe:
 
 ## Offene Fragen
 
+- **OF-BF151a** · **Nach einem Eingabefehler auf einer Zielgruppenseite erscheint die Übersicht** (beim Beheben
+  von BF-151 am 2026-09-13 aufgefallen). Seit das Formular ausdrücklich an `app_organisations_submit` schickt,
+  kommt die Eintragung von `/organisationen/vereine` an; fehlt ein Pflichtfeld, antwortet `submit()` mit
+  `renderLandingPage()` — **422 unter `/organisationen`**, Fehlermeldungen und vorgewählter Typ bleiben erhalten,
+  der ausführliche Zielgruppentext aber nicht (gemessen: Überschrift wechselt von „Für Organisationen und Vereine"
+  zur Übersicht). Vorher endete derselbe Weg in einer 405-Fehlerseite, es ist also eine Verbesserung, keine
+  Verschlechterung. Offen ist, ob der Fehlerfall die Zielgruppenseite erneut rendern soll — das wäre neues
+  Verhalten und steht nicht im Auftrag. — Betreiber.
 - **OF-BF119a** · Fünf weitere `new Email(...)` stehen weiterhin im HTML5-Default —
   `ProfileType`, `PasswordResetRequestType`, `AccessibilityReportType`,
   `RestaurantSuggestionType`, `RestaurantType`. Die ersten drei lösen einen Mailversand
