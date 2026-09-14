@@ -13,7 +13,7 @@ Vollständige Ausgaben in `qa/11/produktion-2026-09-14.md`.
 | Messregel (AK-06, AK-07, AK-08), Zählweg (AK-22, AK-25), Skript (AK-24) | ✅ wie lokal |
 | `/legal` vier Sprachen (AK-31), Changelog (AK-32), Roadmap | ✅ Region/Stadt, monatlich, Eintrag in de und fr sichtbar, Roadmap-Karte entfernt |
 | Deckel (AK-27), Seiten bei erschöpftem Deckel (AK-37) | ✅ 429 ab dem 299. Aufruf innerhalb der Stunde; Seiten 200 in unter 0,2 s |
-| AK-04, AK-40, AK-34 in Umami | ⚠️ Abnahme T44 beim Betreiber |
+| AK-04, AK-40, AK-34 in Umami | ✅ Abnahme T44 vom Betreiber bestätigt (2026-09-14): eigener Besuch mit eigenem Land, Schalter wirkt |
 | AK-28, AK-29, AK-41, AK-35 | ⚠️ T33, T34 beim Betreiber |
 
 ⚠ **Beobachtung:** Nach jedem Neustart von Umami wird der erste Zählaufruf länger als 2 s — danach 60 s keine Zählung.
