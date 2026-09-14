@@ -23,6 +23,9 @@ repo:
     link_label: "CHANGELOG.md op GitHub opmaachen"
 
 release:
+    v2026_09_14_2:
+        title: "Mir moossen elo, wat gelies gëtt — ouni Cookien"
+        body: "Fir ze gesinn, wéi eng Säiten hëllefen a wou d’Sich ofbrécht, zielen mir Säitenopruffer an e puer Schrëtt wéi „Filter applizéiert“. Dat leeft op eisem eegene Server: keng Cookien, keng gespäichert IP-Adress, näischt, wat mat engem Kont verbonnen ass. Wien net gezielt wëll ginn, schalt et an der Dateschutzerklärung aus — oder schéckt „Do Not Track“ oder „Global Privacy Control“ aus dem Browser."
     v2026_09_12_1:
         title: "Eng eege Schrëft"
         body: "Endlech.lu huet eng eege Schrëft kritt. Bis elo huet jiddes Gerät déi Säit an där Schrëft gewisen, déi et grad zur Hand hat — elo gesäit se iwwerall gläich aus. D’Schrëft läit op eisem eegene Server: et geet dofir keng Ufro un Drëtten an keng Informatioun iwwer Iech. Behuewe ass ausserdeem e Feeler, deen d’Säit op Tablets an a klenge Fënstere säitlech verschiebbar gemaach huet, och wann et näischt zu verschiben gouf. A wien mat engem Screenreader liest, fënnt d’Rubriken elo an enger lückeloser Reiefolleg."

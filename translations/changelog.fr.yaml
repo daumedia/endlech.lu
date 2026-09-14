@@ -23,6 +23,9 @@ repo:
     link_label: "Ouvrir CHANGELOG.md sur GitHub"
 
 release:
+    v2026_09_14_2:
+        title: "Nous mesurons désormais ce qui est lu — sans cookies"
+        body: "Pour savoir quelles pages sont utiles et où la recherche s’interrompt, nous comptons les pages vues et quelques étapes comme « filtre appliqué ». Cela tourne sur notre propre serveur : pas de cookies, pas d’adresse IP conservée, rien qui soit lié à un compte. Si vous ne souhaitez pas être compté·e, désactivez-le dans la politique de confidentialité — ou envoyez « Do Not Track » ou « Global Privacy Control » depuis votre navigateur."
     v2026_09_12_1:
         title: "Une typographie qui nous appartient"
         body: "Endlech.lu a désormais sa propre typographie. Jusqu’à présent, chaque appareil affichait le site avec la police qu’il avait sous la main ; il a maintenant la même apparence partout. La police est hébergée sur notre propre serveur : aucune requête n’est adressée à un tiers et aucune information vous concernant n’est transmise. Nous avons également corrigé un défaut qui permettait de faire glisser la page latéralement sur les tablettes et dans les fenêtres étroites, alors qu’il n’y avait rien à faire glisser. Et les personnes qui utilisent un lecteur d’écran trouveront les sections dans un ordre sans rupture."
