@@ -56,4 +56,4 @@ Echte Zählaufrufe dieser Nachprüfung: vier auf `/de/` (erscheinen in Umami als
 - **T33** · Konten: Voreinstellung ersetzt, zweiter Faktor nur für den Betreiber, `growth-loop` nur lesend (AK-28, AK-29, AK-41)
 - **T34** · Zugangsdatei, `mcp-umami --check` (AK-35)
 - **T43** · Trichter-Berichte in Umami — die Website-Kennung steht jetzt in `growth/config.json`
-- **T44** · Abnahme: eigener Besuch mit eigenem Land, zweite Adresse = zweiter Besucher, Schalter in `/legal` wirkt (AK-34, AK-04, AK-40)
+- ~~**T44**~~ · **Vom Betreiber bestätigt am 2026-09-14:** eigener Besuch mit eigenem Land, Schalter in `/legal` wirkt (AK-34, AK-04, AK-40)

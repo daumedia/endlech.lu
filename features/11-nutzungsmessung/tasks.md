@@ -150,7 +150,7 @@ sind; die Überarbeitung ändert nur, wohin und wie weitergeleitet wird.
 - [ ] **T43** · In Umami die vier Trichter als Berichte anlegen, **Schritte aus `growth/config.json`**
       (führender Stern); die Website-Kennung nach `growth/config.json`; `mcp-umami --check` listet die
       Website ohne die Domain auszugeben · `AK-14, AK-35`
-- [ ] **T44** · Abnahme auf der Produktion: eigener Besuch ohne DNT binnen 5 min in Umami, **mit dem
+- [x] **T44** · *Vom Betreiber bestätigt am 2026-09-14 („T44 ok“): eigener Besuch in Umami mit eigenem Land, Schalter in `/legal` wirkt.* · Abnahme auf der Produktion: eigener Besuch ohne DNT binnen 5 min in Umami, **mit dem
       eigenen Land** (nicht dem Land des Anwendungsservers); zweiter Besuch von einer anderen Adresse mit
       demselben Browser ergibt einen zweiten Besucher; nach Ausschalten in `/legal` kein weiterer Aufruf;
       `/changelog` trägt beim Release, das die Messung scharfschaltet, den Eintrag aus
