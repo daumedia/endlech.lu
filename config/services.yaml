@@ -51,13 +51,13 @@ parameters:
     # ⚠ Leer heißt lautlos aus: ohne Website-Kennung kein Zählskript, ohne Zähl-Eingang
     # keine Weiterleitung. Lokal, im Test und in der CI bleibt beides so.
     #
-    # ⚠⚠ `app.umami_upstream` verrät den Standort der Überwachung (derselbe VPS wie Uptime
-    # Kuma). Nie ins Repository, in kein Protokoll, in keine Fehlermeldung — dieselbe
-    # Behandlung wie `app.uptime_push_url`. Der Weiterleitungsdienst benutzt deshalb einen
-    # eigenen HTTP-Client ohne Protokollierung.
+    # ⚠⚠ `app.umami_upstream` ist die Umami-Domain und führt zum VPS der Überwachung (derselbe
+    # VPS wie Uptime Kuma). Nie ins Repository, in kein Protokoll, in keine Fehlermeldung —
+    # dieselbe Behandlung wie `app.uptime_push_url`. Der Weiterleitungsdienst benutzt deshalb
+    # einen eigenen HTTP-Client ohne Protokollierung. Eine Schlüsselbindung gibt es seit dem
+    # 2026-09-14 nicht mehr: gewöhnliche Zertifikatsprüfung (Feature 11, Entscheidung 5).
     app.umami_website_id: '%env(string:default::APP_UMAMI_WEBSITE_ID)%'
     app.umami_upstream: '%env(string:default::APP_UMAMI_UPSTREAM)%'
-    app.umami_upstream_pin: '%env(string:default::APP_UMAMI_UPSTREAM_PIN)%'
 
     # Version der Datei public/zaehler.js. Hängt als ?v= am Skript (neue Fassung erreicht
     # den Browser) und wird von TrackerFileTest gegen die Kopfzeile der Datei geprüft.
@@ -195,8 +195,8 @@ services:
     # ⚠ `autoconfigure: false` ist der Punkt. Mit Autokonfiguration bekäme der Client über
     # LoggerAwareInterface den Logger, und der Kanal `http_client` schriebe bei einem Fehler
     # die Adresse des zweiten VPS ins Protokoll — also den Standort der Überwachung.
-    # ⚠ Fest der cURL-Client: nur er versteht die Schlüsselbindung `pin-sha256`
-    # (`CURLOPT_PINNEDPUBLICKEY`); der native Client wirft dort.
+    # Der cURL-Client bleibt, wie er gebaut und gemessen ist (ein Platz, Zeitlimit, Unterbrecher);
+    # die Schlüsselbindung, für die er einmal gewählt wurde, ist am 2026-09-14 entfallen.
     app.usage.umami_client:
         class: Symfony\Component\HttpClient\CurlHttpClient
         autowire: false

@@ -331,32 +331,36 @@ Rechnung**, nicht im DPA — offen als DS-02b.
 
 ---
 
-### Nutzungsmessung (Feature 11, gebaut 2026-09-13, noch nicht ausgeliefert)
+### Nutzungsmessung (Feature 11, gebaut 2026-09-13, überarbeitet 2026-09-14, noch nicht ausgeliefert)
 
 **Kein neuer Auftragsverarbeiter.** Umami ist selbst betriebene Software auf einem **zweiten VPS bei
 Hostinger** — im selben Konto wie die Anwendung, der Auftragsverarbeitungsvertrag oben gilt.
-Serverstandort laut Betreiber **Deutschland** (Angabe 2026-09-13; die Messung wie am 2026-09-05 steht
-als Betriebsschritt T01 aus). Derselbe VPS trägt Uptime Kuma (BE-01).
+Serverstandort laut Betreiber **Deutschland** (Angabe 2026-09-13). Derselbe VPS trägt Uptime Kuma (BE-01).
+Die Instanz stammt aus dem Docker-Katalog des Hosters, läuft mit Umamis Vorgaben (Version 3.3.1) und ist
+über **eine eigene Domain** erreichbar (Überarbeitung vom 2026-09-14, Spec Decision Log #23).
 
-⚠ **Rechnername und Adresse des zweiten VPS stehen hier bewusst nicht** — wie bei BE-01. Wer weiß, wo
-die Überwachung steht, kann sie gezielt lahmlegen. Deshalb laufen Skript und Zählaufrufe **über
-endlech.lu** (`/zaehler.js`, `POST /api/send`), und die Umami-Oberfläche ist nur per SSH-Tunnel
-erreichbar. `APP_UMAMI_UPSTREAM` gehört in kein Protokoll und in keine Unterlage.
+⚠ **Rechnername, Adresse und Umami-Domain stehen hier bewusst nicht** — wie bei BE-01. Skript und
+Zählaufrufe laufen **über endlech.lu** (`/zaehler.js`, `POST /api/send`); die Anwendung reicht sie geprüft
+und gekürzt an die Umami-Domain weiter. ⚠ **Seit dem 2026-09-14 ist der Standort nicht mehr verborgen,
+sondern nur nicht aus endlech.lu ableitbar:** Die Domain steht im öffentlichen DNS und ihr Zertifikat in
+öffentlichen Zertifikatslogs. `APP_UMAMI_UPSTREAM` gehört trotzdem in kein Protokoll und in keine
+Unterlage — dokumentiert wäre sonst der Weg vom Projekt zum VPS der Überwachung.
 
 | | |
 |---|---|
 | **Zweck** | Welche Seiten gelesen werden, woher Besucher kommen, wo sie Suche und Wartelisten abbrechen; Nachmessung des Growth-Loops |
-| **Rechtsgrundlage (Text in `/legal`)** | berechtigtes Interesse, Art. 6 Abs. 1 lit. f DSGVO — ⚠ **vor dem Deploy in `/sdd-betrieb` zu prüfen** (OF-01 der Spec), keine Rechtsauskunft |
+| **Rechtsgrundlage (Text in `/legal`)** | berechtigtes Interesse, Art. 6 Abs. 1 lit. f DSGVO — ⚠ **vor dem Deploy in `/sdd-betrieb` zu prüfen** (OF-01 der Spec, seit 2026-09-14 mit Region und Stadt) |
 | **Einwilligung** | keine; Banner unverändert (kein Cookie). Widerspruch: „Do Not Track", „Global Privacy Control", Schalter in `/legal` (Browserspeicher) |
-| **Gespeichert** | Sitzung: Kennung (wechselt täglich, `SALT_ROTATION=day`), Browser, Betriebssystem, Gerät, Bildschirmgröße, Sprache, **Land**. Seitenaufruf/Ereignis: Pfad ohne Abfrage, Seitentitel, Herkunftsdomain, Ereignisname mit Katalogfeldern |
-| **Nicht gespeichert** | IP-Adresse (nur beim Eingang für Land und Sitzungskennung), Region, Stadt (Länderdatenbank), Abfrage, Herkunftspfad, Cookies, Kontokennung, Formularinhalte |
+| **Gespeichert** | Sitzung: Kennung (wechselt **monatlich**, Umamis Vorgabe), Browser, Betriebssystem, Gerät, Bildschirmgröße, Sprache, **Land, Region und Stadt** (Umamis Städtedatenbank). Seitenaufruf/Ereignis: Pfad ohne Abfrage, Seitentitel, Herkunftsdomain, Ereignisname mit Katalogfeldern |
+| **Nicht gespeichert** | IP-Adresse (nur beim Eingang für Ort und Sitzungskennung), Abfrage, Herkunftspfad, Cookies, Kontokennung, Formularinhalte |
 | **Nicht gemessen** | Verwaltung, Profil, jede Seite mit Token in der Adresse; lokal, Test, `www.endlech.lu`; bekannte Bots |
-| **Aufbewahrung** | **unbegrenzt**, Begründung: langfristiger Vergleich der Reichweite (Decision Log #12 der Spec). ⚠ Mit OF-01 in `/sdd-betrieb` zu prüfen |
+| **Aufbewahrung** | **unbegrenzt**, Begründung: langfristiger Vergleich der Reichweite (Decision Log #12 der Spec). ⚠ Mit OF-01 in `/sdd-betrieb` zu prüfen — Stadt und unbegrenzte Aufbewahrung zusammen grenzen einen Besuch stärker ein als Land allein |
 | **Kontolöschung / Auskunft** | kein Kontobezug — nichts zu löschen, nichts zuzuordnen |
-| **Zugriff** | Betreiber (Umami-Konto mit 2FA) und Growth-Loop (nur lesend), beide per SSH-Tunnel |
-| **Übertragung zwischen den Servern** | TLS mit selbst signiertem Zertifikat und Schlüsselbindung; Eingang per Firewall nur für den Anwendungs-VPS |
+| **Zugriff** | Umami-Oberfläche über die Umami-Domain: Betreiber mit Passwort **und zweitem Faktor** (nur für diesen Benutzer, nicht global erzwungen), Growth-Loop mit eigenem Benutzer **nur lesend**, ohne zweiten Faktor, Zugang nur unter `~/.config/umami/`. Kein SSH-Tunnel mehr. Umami deckelt Anmeldeversuche nicht (OF-08) |
+| **Übertragung zwischen den Servern** | HTTPS an die Umami-Domain mit **gewöhnlicher Zertifikatsprüfung**; die Besucheradresse steht im Zählaufruf selbst (Feld `ip`), damit Umami hinter dem Proxy des Hosters das richtige Land und eine eigene Sitzung je Besucher bildet |
+| **Hersteller** | Das Umami-**Dashboard** lädt im Browser dessen, der es öffnet, ein Telemetrie-Bild des Herstellers (nur die Versionsnummer) und fragt nach Updates. Besucherdaten gehen darüber nicht an den Hersteller |
+| **Bekannte Grenze** | Die Zählschnittstelle der Umami-Domain ist öffentlich: Wer Domain und Website-Kennung kennt, kann an endlech.lu vorbei Zählaufrufe schicken — ohne Deckel und ohne Kürzung. Hingenommen (Spec, EC-08); Last auf dem VPS der Überwachung: OF-08 |
 | **Unterlagen** | `features/11-nutzungsmessung/` (Spec, Entwurf, Plan) |
-
 ---
 
 ### Weitere Verarbeiter
@@ -504,7 +508,7 @@ Stand 2026-09-12. Was hier fehlt, meldet seinen Ausfall nicht selbst.
 | **Messenger-Worker** | **überwacht seit 2026-09-05** — `app:messenger:watch` meldet einen Rückstau per Mail, täglich aus dem `marketing`-Zeitplan | siehe unten |
 | **Uptime von außen** | **läuft seit 2026-09-12** — Uptime Kuma auf einem **zweiten VPS**, zwei Prüfungen: `/health` und ein Puls des Messenger-Consumers. `/open.json` bewusst nicht (Entscheidung 2026-09-12) (BE-01) | siehe unten |
 | **Messenger-Consumer, Totalausfall** | **läuft seit 2026-09-12, Alarm ausgelöst** — `app:worker:pulse` meldet alle fünf Minuten nach außen; bleibt der Puls aus, schlägt Kuma an | `src/Command/WorkerPulseCommand.php` |
-| Produktanalyse | **gebaut als Feature 11 (2026-09-13), noch nicht ausgeliefert** — Umami, selbst betrieben auf dem zweiten VPS, Zählweg über endlech.lu; der Roadmap-Eintrag `usage_analytics` ist entfernt (BE-02) | `features/11-nutzungsmessung/`, Abschnitt „Nutzungsmessung“ oben |
+| Produktanalyse | **gebaut als Feature 11 (2026-09-13, überarbeitet 2026-09-14), noch nicht ausgeliefert** — Umami, selbst betrieben auf dem zweiten VPS, erreicht über eine eigene Domain, Zählweg über endlech.lu; der Roadmap-Eintrag `usage_analytics` ist entfernt (BE-02) | `features/11-nutzungsmessung/`, Abschnitt „Nutzungsmessung“ oben |
 | Sicherungen der Datenbank | **Rückweg prüfbar seit 2026-09-12**, die Sicherung selbst weiter ungeklärt: ob Coolify sichert und wie oft, ist nicht dokumentiert (BE-03) | `bin/sicherung-pruefen.sh` |
 
 ### BE-01 · Uptime-Prüfung von außen — eingerichtet und ausgelöst (2026-09-12)
@@ -670,7 +674,8 @@ ein wöchentlicher Blick. Nicht entschieden, aber benannt.
 > **Stand 2026-09-13:** Umgesetzt als Feature 11 mit Umami, selbst betrieben — der Weg aus der
 > ersten Zeile der Vorarbeit-Tabelle unten. Beschreibung im Abschnitt „Nutzungsmessung (Feature 11)"
 > unter den Auftragsverarbeitern. Der Roadmap-Eintrag ist mit dem Bau entfernt; ausgeliefert ist
-> noch nichts.
+> noch nichts. **Stand 2026-09-14:** überarbeitet — die vorhandene Katalog-Instanz über ihre eigene Domain
+> statt eigenem Zähl-Eingang und Tunnel (Spec, Decision Log #23).
 
 Ein Analyse-Skript im Frontend ist eine **Produktänderung**: Es berührt die App-Hülle,
 den Datenschutzabschnitt in `/legal` und — je nach Wahl — das Einwilligungsbanner. Es

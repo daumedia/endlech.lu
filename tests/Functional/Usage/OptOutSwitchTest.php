@@ -49,8 +49,8 @@ final class OptOutSwitchTest extends AbstractWebTestCase
         $text = $client->request('GET', self::LOCALE.'/legal')->filter('#datenschutz')->text();
 
         foreach ([
-            'Umami', 'Hostinger', 'Deutschland', 'ohne Suchparameter', 'Domain der Seite', 'das Land',
-            'Sitzungskennung', 'täglich wechselt', 'nicht gespeichert', 'keine Cookies',
+            'Umami', 'Hostinger', 'Deutschland', 'ohne Suchparameter', 'Domain der Seite', 'das Land, die Region und die Stadt',
+            'Sitzungskennung', 'monatlich wechselt', 'nicht gespeichert', 'keine Cookies',
             'ohne zeitliche Grenze', 'Do Not Track', 'Global Privacy Control', 'ohne JavaScript',
             'Browserspeicher leert',
         ] as $angabe) {
@@ -58,6 +58,8 @@ final class OptOutSwitchTest extends AbstractWebTestCase
         }
 
         self::assertStringNotContainsStringIgnoringCase('anonym', $text);
+        // Umamis Vorgabe seit 2026-09-14 (Entwurf, Entscheidung 9): monatlich, nicht mehr täglich.
+        self::assertStringNotContainsString('täglich', $text);
         self::assertStringNotContainsString('keine Kennung', $text);
     }
 }
