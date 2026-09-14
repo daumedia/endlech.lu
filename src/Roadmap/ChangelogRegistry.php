@@ -29,6 +29,12 @@ final readonly class ChangelogRegistry
     public function notes(): array
     {
         return [
+            // SILENT, ausdrückliche Betreiberentscheidung beim Ausliefern (2026-09-14) — obwohl
+            // die Reparatur merkbar ist: Eintragen von den drei Zielgruppenseiten endete bis
+            // dahin in einer 405-Fehlerseite (BF-151). Der Weg richtet sich an Gemeinden,
+            // Unternehmen und Vereine, nicht an Restaurantgäste. Nicht nachträglich auf SHOWN
+            // „korrigieren", ohne die Entscheidung neu zu stellen.
+            new ReleaseNote('2026.09.14', new \DateTimeImmutable('2026-09-14'), ReleaseVisibility::SILENT),
             // SILENT. Ein Gast sieht von Sitemap, robots.txt und canonical-Verweisen nichts —
             // sie wirken nur in Suchmaschinen. Ein Eintrag „wir sind besser auffindbar" wäre
             // eine Behauptung, die erst die Search Console belegen kann (AK-24, AK-25).
