@@ -2,10 +2,34 @@
 
 Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
-![Version](https://img.shields.io/badge/version-2026.09.14.1-blue)
+![Version](https://img.shields.io/badge/version-2026.09.14.2-blue)
 ![Status](https://img.shields.io/badge/status-beta-green)
 
 ## [Unreleased]
+
+## [2026.09.14.2] – Nutzungsmessung über die eigene Umami-Domain (Feature 11, scharf)
+
+Überarbeitung von Feature 11 und das Release, mit dem die cookielose Messung **scharfgeschaltet** wird. Ersetzt
+`v2026.09.14.1`, das nie ausgerollt wurde.
+
+⚠ **Keine Migration.** Nur die Anwendung muss ausgerollt werden; der Worker ist unberührt.
+
+⚠ **Vor dem Ausrollen, vom Betreiber:** Proxy-Route der Umami-Domain eingeschaltet, Umami-Konten eingerichtet
+(Voreinstellung ersetzt, zweiter Faktor nur für den Betreiber, Lese-Benutzer `growth-loop`), und in Coolify auf
+der **Anwendung** `APP_UMAMI_WEBSITE_ID` sowie `APP_UMAMI_UPSTREAM=https://<Umami-Domain>` gesetzt.
+**`APP_UMAMI_UPSTREAM_PIN` gibt es nicht mehr** — eine vorhandene Variable entfernen. Ohne Website-Kennung bleibt
+die Messung aus.
+
+- **Umami über seine eigene Domain** statt eigenem Zähl-Eingang, Firewall, Länderdatei und SSH-Tunnel. Der
+  zweite VPS läuft mit Umamis Vorgaben (Version 3.3.1). Skript und Zählaufrufe gehen weiter nur an endlech.lu.
+- **Besucheradresse als Feld `ip` im Zählaufruf** statt einer eigenen Kopfzeile: Hinter dem Proxy des Hosters
+  sähe Umami sonst für jeden Besucher die Adresse des Anwendungsservers — ein Land und eine Sitzung für alle.
+- **Gewöhnliche Zertifikatsprüfung** statt Schlüsselbindung; vom Browser gesetzte `ip`, `userAgent`,
+  `timestamp`, `browser`, `os`, `device` verwirft die Kürzung.
+- **`/legal` in vier Sprachen:** erfasst werden Land, Region und Stadt; die Sitzungskennung wechselt monatlich.
+- **Öffentlicher Changelog-Eintrag** in vier Sprachen (AK-32).
+- Offen bei `/sdd-betrieb`: OF-01 (Region und Stadt bei unbegrenzter Aufbewahrung), OF-06 (Rechtsgrundlage), OF-08
+  (die öffentliche Umami-Anmeldung hat keinen Deckel — gemessen).
 
 ## [2026.09.14.1] – Nutzung messen, ohne zu verfolgen (Feature 11, ausgeschaltet)
 

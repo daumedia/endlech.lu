@@ -17,7 +17,7 @@ use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Lock\Store\InMemoryStore;
 use Symfony\Component\Yaml\Yaml;
 
-/** Feature 11 · Weiterleitung an Umami — Kopfzeilen, Unterbrecher, ein Platz, Protokoll (AK-01, AK-04, AK-30, AK-37, BF-149). */
+/** Feature 11 · Weiterleitung an die Umami-Domain — Adresse im Zählaufruf, Kopfzeilen, Zertifikatsprüfung, Unterbrecher, ein Platz, Protokoll (AK-01, AK-04, AK-30, AK-37, AK-40, AK-42, BF-149). */
 final class UmamiForwarderTest extends TestCase
 {
     /** Steht nur hier im Test; eine echte Adresse gehört in kein Repository. */
@@ -42,9 +42,9 @@ final class UmamiForwarderTest extends TestCase
         };
     }
 
-    private function weiterleitung(MockHttpClient $client, ?ArrayAdapter $cache = null, string $upstream = self::UPSTREAM, string $pin = 'sha256//QUJDREVG', ?LockFactory $sperren = null): UmamiForwarder
+    private function weiterleitung(MockHttpClient $client, ?ArrayAdapter $cache = null, string $upstream = self::UPSTREAM, ?LockFactory $sperren = null): UmamiForwarder
     {
-        return new UmamiForwarder($client, $cache ?? new ArrayAdapter(), $this->protokollierer(), $sperren ?? new LockFactory(new InMemoryStore()), $upstream, $pin);
+        return new UmamiForwarder($client, $cache ?? new ArrayAdapter(), $this->protokollierer(), $sperren ?? new LockFactory(new InMemoryStore()), $upstream);
     }
 
     /** @return array{type: string, payload: array<string, mixed>} */
@@ -66,7 +66,10 @@ final class UmamiForwarderTest extends TestCase
 
         self::assertSame('POST', $gesendet['methode']);
         self::assertSame(self::UPSTREAM.'/api/send', $gesendet['url']);
-        self::assertSame(self::aufruf(), json_decode($gesendet['optionen']['body'], true));
+        // AK-04, AK-40 · Die Besucheradresse steht im Zählaufruf selbst (Entscheidung 18).
+        $erwartet = self::aufruf();
+        $erwartet['payload']['ip'] = self::BESUCHER_IP;
+        self::assertSame($erwartet, json_decode($gesendet['optionen']['body'], true));
 
         $namen = array_map(
             static fn (string $zeile): string => strtolower(explode(':', $zeile, 2)[0]),
@@ -74,12 +77,15 @@ final class UmamiForwarderTest extends TestCase
         );
         sort($namen);
         // `accept` und `content-length` ergänzt der HTTP-Client selbst; alles andere muss von hier kommen.
-        self::assertSame(['accept', 'content-length', 'content-type', 'user-agent', 'x-endlech-client-ip', 'x-umami-cache'], $namen);
-        self::assertContains('X-Endlech-Client-Ip: '.self::BESUCHER_IP, $gesendet['optionen']['headers']);
+        self::assertSame(['accept', 'content-length', 'content-type', 'user-agent', 'x-umami-cache'], $namen);
+        self::assertStringNotContainsString(self::BESUCHER_IP, implode("\n", $gesendet['optionen']['headers']), 'Die Adresse geht nicht als Kopfzeile.');
 
         self::assertSame(UmamiForwarder::TIMEOUT, (int) $gesendet['optionen']['timeout']);
         self::assertSame(UmamiForwarder::MAX_DURATION, (int) $gesendet['optionen']['max_duration']);
-        self::assertSame(['pin-sha256' => ['QUJDREVG']], $gesendet['optionen']['peer_fingerprint']);
+        // Entscheidung 5 · Gewöhnliche Zertifikatsprüfung: nichts abgeschaltet, keine Schlüsselbindung.
+        self::assertNotFalse($gesendet['optionen']['verify_peer'] ?? true);
+        self::assertNotFalse($gesendet['optionen']['verify_host'] ?? true);
+        self::assertEmpty($gesendet['optionen']['peer_fingerprint'] ?? null);
 
         self::assertSame(200, $ergebnis->status);
         self::assertSame('{"cache":"abc.def"}', $ergebnis->body);
@@ -93,8 +99,10 @@ final class UmamiForwarderTest extends TestCase
     public function testKeineKopfzeileAusDerAnfrageUndKeineUngueltigenWerte(): void
     {
         $gesendet = [];
-        $client = new MockHttpClient(static function (string $m, string $u, array $optionen) use (&$gesendet): MockResponse {
+        $rumpf = [];
+        $client = new MockHttpClient(static function (string $m, string $u, array $optionen) use (&$gesendet, &$rumpf): MockResponse {
             $gesendet = $optionen['headers'];
+            $rumpf = json_decode($optionen['body'], true);
 
             return new MockResponse('{}');
         });
@@ -105,6 +113,8 @@ final class UmamiForwarderTest extends TestCase
         foreach (['cookie', 'accept-language', 'x-forwarded-for', 'cf-', 'x-evil', 'x-endlech-client-ip', 'x-umami-cache'] as $verboten) {
             self::assertStringNotContainsString($verboten, $alles);
         }
+        // Keine gültige Adresse → kein Feld; Umami bekäme sonst einen Wert, aus dem es Land und Sitzung raten müsste.
+        self::assertArrayNotHasKey('ip', $rumpf['payload']);
     }
 
     /** AK-37 · Nach einem Fehlschlag 60 s lang keine Weiterleitung — und danach wieder. */
@@ -304,7 +314,7 @@ final class UmamiForwarderTest extends TestCase
         self::assertStringContainsString(TransportException::class, (string) $text);
     }
 
-    public function testOhneZielOderSchluesselbindungWirdNichtsGesendet(): void
+    public function testOhneZielWirdNichtsGesendet(): void
     {
         $aufrufe = 0;
         $client = new MockHttpClient(static function () use (&$aufrufe): MockResponse {
@@ -313,9 +323,23 @@ final class UmamiForwarderTest extends TestCase
             return new MockResponse('{}');
         });
 
-        self::assertSame(202, $this->weiterleitung($client, null, '', 'sha256//QUJD')->forward(self::aufruf(), null, null, null)->status);
-        self::assertSame(202, $this->weiterleitung($client, null, self::UPSTREAM, '')->forward(self::aufruf(), null, null, null)->status);
+        self::assertSame(202, $this->weiterleitung($client, null, '')->forward(self::aufruf(), self::BESUCHER_IP, null, null)->status);
         self::assertSame(0, $aufrufe);
+    }
+
+    /** AK-40 · Auch eine IPv6-Adresse geht als `ip` mit — Mobilfunk liefert sie regelmäßig. */
+    public function testIpv6AdresseGehtMit(): void
+    {
+        $rumpf = [];
+        $client = new MockHttpClient(static function (string $m, string $u, array $optionen) use (&$rumpf): MockResponse {
+            $rumpf = json_decode($optionen['body'], true);
+
+            return new MockResponse('{}');
+        });
+
+        $this->weiterleitung($client)->forward(self::aufruf(), '2001:db8::7', null, null);
+
+        self::assertSame('2001:db8::7', $rumpf['payload']['ip']);
     }
 
     public function testUngueltigeAntwortWirdNichtDurchgereicht(): void
@@ -326,8 +350,8 @@ final class UmamiForwarderTest extends TestCase
     }
 
     /**
-     * Der Dienst `app.usage.umami_client` ist der cURL-Client ohne Autokonfiguration — nur dieser
-     * versteht `pin-sha256`, und nur ohne Autokonfiguration bekommt er keinen Logger.
+     * AK-42 · Der Dienst `app.usage.umami_client` ist ein eigener Client ohne Autokonfiguration — nur so
+     * bekommt er keinen Logger, und die Umami-Domain landet nie über den Kanal `http_client` im Protokoll.
      */
     public function testClientDienstIstCurlOhneAutokonfiguration(): void
     {

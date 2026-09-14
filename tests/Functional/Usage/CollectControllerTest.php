@@ -6,11 +6,12 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Feature 11 · `POST /api/send` über HTTP — mit nachgebildetem Umami (`MockHttpClient`).
  *
- * Der Zähl-Eingang wird für diese Prüfläufe über die Umgebung gesetzt; in `.env.test` bleibt er leer,
+ * Die Umami-Domain wird für diese Prüfläufe über die Umgebung gesetzt; in `.env.test` bleibt sie leer,
  * damit kein anderer Test je etwas weiterleitet.
  */
 final class CollectControllerTest extends WebTestCase
@@ -22,16 +23,19 @@ final class CollectControllerTest extends WebTestCase
 
     protected function tearDown(): void
     {
-        foreach (['APP_UMAMI_UPSTREAM', 'APP_UMAMI_UPSTREAM_PIN'] as $name) {
+        foreach (['APP_UMAMI_UPSTREAM', 'TRUSTED_PROXIES'] as $name) {
             $_ENV[$name] = $_SERVER[$name] = '';
         }
+        // ⚠ Der Kernel setzt vertraute Proxys nur, wenn der Wert nicht leer ist, und `Request` merkt sie sich
+        // statisch. Ohne das Zurücksetzen vertraute jeder folgende Prüflauf diesem Proxy.
+        Request::setTrustedProxies([], Request::getTrustedHeaderSet());
         parent::tearDown();
     }
 
-    private function client(bool $mitZaehlEingang = true): KernelBrowser
+    private function client(bool $mitZaehlEingang = true, string $vertrauteProxys = ''): KernelBrowser
     {
-        $_ENV['APP_UMAMI_UPSTREAM'] = $_SERVER['APP_UMAMI_UPSTREAM'] = $mitZaehlEingang ? 'https://umami.test:8443' : '';
-        $_ENV['APP_UMAMI_UPSTREAM_PIN'] = $_SERVER['APP_UMAMI_UPSTREAM_PIN'] = 'sha256//QUJDREVG';
+        $_ENV['APP_UMAMI_UPSTREAM'] = $_SERVER['APP_UMAMI_UPSTREAM'] = $mitZaehlEingang ? 'https://umami.test' : '';
+        $_ENV['TRUSTED_PROXIES'] = $_SERVER['TRUSTED_PROXIES'] = $vertrauteProxys;
 
         $client = static::createClient();
         $client->disableReboot();
@@ -88,13 +92,49 @@ final class CollectControllerTest extends WebTestCase
         self::assertCount(1, $this->gesendet);
         [$methode, $url, $optionen] = $this->gesendet[0];
         self::assertSame('POST', $methode);
-        self::assertSame('https://umami.test:8443/api/send', $url);
+        self::assertSame('https://umami.test/api/send', $url);
 
         $rumpf = json_decode($optionen['body'], true);
         self::assertSame('/de/restaurants', $rumpf['payload']['url']);
         self::assertSame('https://www.google.com/', $rumpf['payload']['referrer']);
         self::assertArrayNotHasKey('id', $rumpf['payload']);
-        self::assertContains('X-Endlech-Client-Ip: 198.51.100.23', $optionen['headers']);
+        // AK-04, AK-40 · Die Adresse des Besuchers steht im Zählaufruf, nicht in einer Kopfzeile.
+        self::assertSame('198.51.100.23', $rumpf['payload']['ip']);
+        self::assertStringNotContainsString('198.51.100.23', implode("\n", $optionen['headers']));
+    }
+
+    /**
+     * AK-04, AK-40 · Hinter dem Proxy des Hosters kommt die Adresse **des Besuchers** bei Umami an, nicht die des
+     * Proxys — so wie in Produktion mit `TRUSTED_PROXIES=private_ranges`. Die Gegenprobe steht im selben Lauf:
+     * Ohne vertrauten Proxy stünde die Proxy-Adresse im Feld, und Umami legte alle Besucher in ein Land und
+     * eine Sitzung (Entwurf, Entscheidung 18).
+     */
+    public function testHinterDemProxyZaehltDieAdresseDesBesuchers(): void
+    {
+        $proxy = ['REMOTE_ADDR' => '10.0.1.7', 'HTTP_X_FORWARDED_FOR' => '158.64.1.1'];
+
+        $client = $this->client(vertrauteProxys: 'private_ranges');
+        $this->zaehle($client, kopf: $proxy);
+        self::assertResponseStatusCodeSame(200);
+        self::assertSame('158.64.1.1', json_decode($this->gesendet[0][2]['body'], true)['payload']['ip']);
+
+        self::ensureKernelShutdown();
+        Request::setTrustedProxies([], Request::getTrustedHeaderSet());
+        $this->gesendet = [];
+
+        $client = $this->client();
+        $this->zaehle($client, kopf: $proxy);
+        self::assertSame('10.0.1.7', json_decode($this->gesendet[0][2]['body'], true)['payload']['ip'], 'Gegenprobe: ohne TRUSTED_PROXIES bekäme Umami die Adresse des Proxys.');
+    }
+
+    /** Ein vom Client im Rumpf gesetztes `ip` kommt nicht an — Umami erhält die Adresse der Anfrage. */
+    public function testUntergeschobeneAdresseImRumpfWirdErsetzt(): void
+    {
+        $client = $this->client();
+        $this->zaehle($client, ['ip' => '8.8.8.8']);
+
+        self::assertResponseStatusCodeSame(200);
+        self::assertSame('198.51.100.23', json_decode($this->gesendet[0][2]['body'], true)['payload']['ip']);
     }
 
     /** @return iterable<string, array{array<string, string>}> */
@@ -139,7 +179,7 @@ final class CollectControllerTest extends WebTestCase
         self::assertSame([], $this->gesendet);
     }
 
-    /** Ohne eingerichteten Zähl-Eingang: 202, nichts gesendet — dieselbe Antwort wie bei Ausfall. */
+    /** Ohne eingerichtete Umami-Domain: 202, nichts gesendet — dieselbe Antwort wie bei Ausfall. */
     public function testOhneZaehlEingangNichtsWeitergeleitet(): void
     {
         $client = $this->client(false);

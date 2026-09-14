@@ -12,20 +12,27 @@ use Symfony\Component\Lock\LockInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
- * Reicht einen geprüften Zählaufruf an Umami auf dem zweiten VPS weiter (Feature 11).
+ * Reicht einen geprüften Zählaufruf an die Umami-Domain weiter (Feature 11).
  *
- * ⚠⚠ **Die Adresse des Zähl-Eingangs verrät, wo die Überwachung steht** (derselbe VPS wie Uptime
- * Kuma). Sie erscheint deshalb in keinem Protokoll: Der HTTP-Client ist ein eigener Dienst
+ * ⚠⚠ **Die Umami-Domain führt zum VPS der Überwachung** (derselbe VPS wie Uptime Kuma). Sie steht im
+ * öffentlichen DNS, aber der Weg von endlech.lu dorthin soll nirgends dokumentiert sein (AK-24, AK-42).
+ * Sie erscheint deshalb in keinem Protokoll: Der HTTP-Client ist ein eigener Dienst
  * **ohne Logger** (`app.usage.umami_client` in `config/services.yaml`, `autoconfigure: false`), weil
  * der Kanal `http_client` in `prod` nicht ausgeschlossen ist und `fingers_crossed` bei einer Warnung
  * den ganzen Puffer samt Adresse schreibt. Geloggt wird bei einem Fehlschlag nur die
  * **Ausnahmeklasse** — Symfonys Transport-Ausnahmen tragen die vollständige Adresse im Text.
  * Dieselbe Lehre wie beim Puls (BE-01).
  *
- * ⚠ **Kopfzeilen sind eine Positivliste.** Umami liest die Besucheradresse aus `CLIENT_IP_HEADER` und
- * ignoriert Orts-Kopfzeilen (`SKIP_LOCATION_HEADERS`). Würde die Weiterleitung `X-Forwarded-For` oder
- * `cf-ipcountry` aus der eingehenden Anfrage durchreichen, könnte ein Client Adresse und Land
- * unterschieben.
+ * ⚠⚠ **Die Besucheradresse geht als Feld `ip` im Zählaufruf mit, nicht als Kopfzeile** (Entwurf,
+ * Entscheidung 18). Die Umami-Instanz steht hinter dem Proxy des Hosters und läuft mit ihren Vorgaben; ohne
+ * `ip` nimmt sie die Adresse aus den Kopfzeilen dieses Proxys — die des Anwendungs-VPS, für jeden Besucher.
+ * Nachgestellt am 2026-09-14 an Umami 3.3.1: ohne `ip` landeten zwei verschiedene Besucher gemeinsam in
+ * Argentinien (die Adresse des Anwendungs-VPS liegt im 179er-Bereich) und in **einer** Sitzung; mit `ip` bekam
+ * jeder sein Land und seine Sitzung, und Orts-Kopfzeilen wie `cf-ipcountry` blieben wirkungslos.
+ *
+ * ⚠ **Kopfzeilen sind eine Positivliste.** Würde die Weiterleitung `X-Forwarded-For` oder `cf-ipcountry` aus der
+ * eingehenden Anfrage durchreichen, könnte ein Client Adresse und Land unterschieben. Ein vom Client im Rumpf
+ * gesetztes `ip` hat `CollectPayloadNormalizer` schon entfernt.
  *
  * ⚠ **Zeitlimit und Unterbrecher sind Pflicht** (AK-37). Ohne eigenes Zeitlimit griffe
  * `default_socket_timeout` (im Bestand mit 60 s gemessen); ohne Unterbrecher hielte bei ausgefallenem
@@ -44,9 +51,6 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  */
 final readonly class UmamiForwarder
 {
-    /** Gleich `CLIENT_IP_HEADER` in der Umgebung von Umami (Betriebsschritt T02). */
-    public const string CLIENT_IP_HEADER = 'X-Endlech-Client-Ip';
-
     public const int TIMEOUT = 2;
     public const int MAX_DURATION = 3;
     public const int BREAKER_SECONDS = 60;
@@ -62,7 +66,6 @@ final readonly class UmamiForwarder
     private const string BREAKER_KEY = 'umami_unterbrecher';
 
     private string $upstream;
-    private string $pin;
 
     public function __construct(
         #[Autowire(service: 'app.usage.umami_client')]
@@ -73,12 +76,8 @@ final readonly class UmamiForwarder
         private LockFactory $sperren,
         #[Autowire('%app.umami_upstream%')]
         string $upstream,
-        #[Autowire('%app.umami_upstream_pin%')]
-        string $pin,
     ) {
         $this->upstream = rtrim($upstream, '/');
-        // In Coolify steht der Wert wie ihn `openssl` ausgibt, mit oder ohne Präfix.
-        $this->pin = str_starts_with($pin, 'sha256//') ? substr($pin, 8) : $pin;
     }
 
     /**
@@ -87,13 +86,6 @@ final readonly class UmamiForwarder
     public function forward(array $normalized, ?string $clientIp, ?string $userAgent, ?string $cacheToken): ForwardResult
     {
         if ('' === $this->upstream) {
-            return ForwardResult::notForwarded();
-        }
-
-        // Ohne Schlüsselbindung ginge die Besucheradresse ungeprüft über das Netz — lieber nichts.
-        if ('' === $this->pin) {
-            $this->logger->warning('Nutzungsmessung: Zähl-Eingang ohne Schlüsselbindung, nichts weitergeleitet (Feature 11).');
-
             return ForwardResult::notForwarded();
         }
 
@@ -110,7 +102,7 @@ final readonly class UmamiForwarder
             $kopfzeilen['x-umami-cache'] = $cacheToken;
         }
         if (null !== $clientIp && false !== filter_var($clientIp, \FILTER_VALIDATE_IP)) {
-            $kopfzeilen[self::CLIENT_IP_HEADER] = $clientIp;
+            $normalized['payload']['ip'] = $clientIp;
         }
 
         try {
@@ -142,11 +134,9 @@ final readonly class UmamiForwarder
                 'json' => $normalized,
                 'timeout' => self::TIMEOUT,
                 'max_duration' => self::MAX_DURATION,
-                // Selbst signiertes Zertifikat: Die Kette prüft niemand, die Schlüsselbindung schon.
-                // ⚠ `pin-sha256` versteht nur der cURL-Client — deshalb ist er fest eingestellt.
-                'verify_peer' => false,
-                'verify_host' => false,
-                'peer_fingerprint' => ['pin-sha256' => [$this->pin]],
+                // ⚠ Gewöhnliche Zertifikatsprüfung (Entwurf, Entscheidung 5). Keine Schlüsselbindung: Das Zertifikat
+                // des Proxys wechselt bei jeder Erneuerung, eine Bindung bräche dann still. Und nie `verify_peer`
+                // abschalten — sonst ginge die Besucheradresse an jeden, der sich dazwischenstellt.
             ]);
             $status = $antwort->getStatusCode();
             $rumpf = $antwort->getContent(false);

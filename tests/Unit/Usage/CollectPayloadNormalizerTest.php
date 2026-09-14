@@ -110,6 +110,26 @@ final class CollectPayloadNormalizerTest extends TestCase
         self::assertSame([], array_intersect(['id', 'tag', 'unbekannt'], array_keys($ergebnis['payload'])));
     }
 
+    /**
+     * AK-04, AK-40 · Adresse, Zeitpunkt und Gerät legt nie der Client fest. Umami 3.3.1 nimmt `ip`, `userAgent`,
+     * `timestamp`, `browser`, `os` und `device` im Zählaufruf an und bevorzugt sie vor dem, was es selbst ermittelt
+     * (Entwurf, Entscheidung 18) — durchgelassen, bestimmte jeder Besucher Land und Sitzung selbst.
+     */
+    public function testAdresseZeitpunktUndGeraetVomClientEntfallen(): void
+    {
+        $ergebnis = $this->normalizer()->normalize(self::aufruf([
+            'ip' => '8.8.8.8',
+            'userAgent' => 'Googlebot/2.1',
+            'timestamp' => 1_700_000_000,
+            'browser' => 'chrome',
+            'os' => 'Mac OS',
+            'device' => 'desktop',
+        ]));
+
+        self::assertSame([], array_intersect(['ip', 'userAgent', 'timestamp', 'browser', 'os', 'device'], array_keys($ergebnis['payload'])));
+        self::assertStringNotContainsString('8.8.8.8', (string) json_encode($ergebnis));
+    }
+
     public function testTitelWirdGekuerztUndUngueltigeAngabenEntfallen(): void
     {
         $ergebnis = $this->normalizer()->normalize(self::aufruf([
@@ -143,6 +163,7 @@ final class CollectPayloadNormalizerTest extends TestCase
     public static function verstoesse(): iterable
     {
         yield 'Typ identify' => [['type' => 'identify'], 'type'];
+        yield 'Typ performance (Umami 3.3.1)' => [['type' => 'performance'], 'type'];
         yield 'fremde Website-Kennung' => [['payload' => ['website' => '11111111-1111-4111-8111-111111111111']], 'website'];
         yield 'www (AK-09)' => [['payload' => ['hostname' => 'www.endlech.lu']], 'hostname'];
         yield 'localhost (AK-09)' => [['payload' => ['hostname' => 'localhost']], 'hostname'];

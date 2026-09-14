@@ -23,6 +23,9 @@ repo:
     link_label: "Open CHANGELOG.md on GitHub"
 
 release:
+    v2026_09_14_2:
+        title: "We now measure what gets read — without cookies"
+        body: "To see which pages help and where searches are abandoned, we count page views and a few steps such as “filter applied”. It runs on our own server: no cookies, no stored IP address, nothing linked to an account. If you would rather not be counted, switch it off in the privacy policy — or send “Do Not Track” or “Global Privacy Control” from your browser."
     v2026_09_12_1:
         title: "A typeface of our own"
         body: "Endlech.lu now has its own typeface. Until today every device showed the site in whatever font it happened to have; now it looks the same everywhere. The font sits on our own server — no request goes to a third party, and nothing about you is sent along. We also fixed a defect that let the page be dragged sideways on tablets and in narrow windows, with nothing there to drag. And anyone reading with a screen reader will find the sections in unbroken order."

@@ -41,7 +41,7 @@ final class Qa11SperrAusfallTest extends TestCase
                 throw new LockStorageException('fopen(/tmp/sf.umami-weiterleitung.lock): Failed to open stream: Permission denied');
             }
         };
-        $weiterleitung = new UmamiForwarder($client, new ArrayAdapter(), new NullLogger(), new LockFactory($defekt), 'https://203.0.113.77:8443', 'sha256//QUJD');
+        $weiterleitung = new UmamiForwarder($client, new ArrayAdapter(), new NullLogger(), new LockFactory($defekt), 'https://203.0.113.77:8443');
 
         $ergebnis = $weiterleitung->forward(['type' => 'event', 'payload' => ['url' => '/de/restaurants']], null, null, null);
 

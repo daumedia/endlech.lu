@@ -29,6 +29,10 @@ final readonly class ChangelogRegistry
     public function notes(): array
     {
         return [
+            // SHOWN — das Release, das die Nutzungsmessung scharfschaltet (Feature 11, AK-32). Text aus
+            // features/11-nutzungsmessung/changelog-text.md, in derselben vorsichtigen Formulierung wie /legal:
+            // nur Nachstellbares, weder „anonym" noch „keine Kennung".
+            new ReleaseNote('2026.09.14.2', new \DateTimeImmutable('2026-09-14'), ReleaseVisibility::SHOWN),
             // SILENT, Betreiberentscheidung beim Ausliefern (2026-09-14): Die Messung ist ausgeliefert, aber
             // aus — ohne die drei APP_UMAMI_*-Variablen bindet keine Seite ein Zählskript ein. Ein Eintrag
             // „wir messen jetzt cookielos" wäre verfrüht. Angekündigt wird mit dem Release, in dem die Messung

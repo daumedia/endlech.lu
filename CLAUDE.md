@@ -1377,18 +1377,42 @@ samt Eintrag in der `exclude`-Liste — dasselbe Muster wie `Open/`, `Health/`, 
 
 ## Nutzungsmessung (Feature 11, Umami selbst betrieben)
 
-Cookielose Messung mit **Umami auf dem zweiten VPS** (neben Uptime Kuma). Der Browser sieht den VPS
-nie: Das Zählskript liegt als `public/zaehler.js` im Repository, die Zählaufrufe gehen an
-`POST /api/send` auf endlech.lu, und die Anwendung reicht sie **geprüft und gekürzt** weiter.
+Cookielose Messung mit **Umami auf dem zweiten VPS** (neben Uptime Kuma), seit dem 2026-09-14 die Instanz aus
+dem Docker-Katalog des Hosters, erreicht über **ihre eigene Domain**. Der Browser sieht diese Domain nie: Das
+Zählskript liegt als `public/zaehler.js` im Repository, die Zählaufrufe gehen an `POST /api/send` auf
+endlech.lu, und die Anwendung reicht sie **geprüft und gekürzt** per HTTPS an die Umami-Domain weiter.
 Spec, Entwurf und Plan unter `features/11-nutzungsmessung/`, Verarbeitungseintrag in
 `docs/datenschutz.md`.
 
-⚠️⚠️ **`APP_UMAMI_UPSTREAM` verrät den Standort der Überwachung.** Nie ins Repository, in kein
-Protokoll, in keine Fehlermeldung — dieselbe Behandlung wie `APP_UPTIME_PUSH_URL`. Deshalb benutzt
+⚠️⚠️ **`APP_UMAMI_UPSTREAM` ist die Umami-Domain und führt zum VPS der Überwachung.** Nie ins Repository, in
+kein Protokoll, in keine Fehlermeldung — dieselbe Behandlung wie `APP_UPTIME_PUSH_URL`. Die Domain steht zwar im
+öffentlichen DNS, dokumentiert wäre aber der Weg von endlech.lu dorthin (Spec AK-24, AK-42). Deshalb benutzt
 `UmamiForwarder` den Dienst `app.usage.umami_client` mit **`autoconfigure: false`**: Mit
 Autokonfiguration bekäme der Client über `LoggerAwareInterface` den Logger, und der Kanal
 `http_client` schriebe bei einem Fehler die Adresse ins Protokoll. Geloggt wird nur die
 Ausnahme**klasse**; `UmamiForwarderTest` ist mit `getMessage()` gegengeprüft rot.
+
+⚠️⚠️ **Die Besucheradresse geht als Feld `ip` im Zählaufruf mit — ohne sie gibt es ein Land und eine Sitzung
+für alle.** Umami läuft mit seinen Vorgaben hinter dem Proxy des Hosters; ohne `ip` nimmt es die Adresse aus den
+Kopfzeilen dieses Proxys, also die des Anwendungs-VPS. Nachgestellt am 2026-09-14 an Umami 3.3.1: zwei verschiedene
+Besucher landeten gemeinsam in **Argentinien** (die Adresse des Anwendungs-VPS liegt im 179er-Bereich) und in
+**einer** Sitzung. Eine eigene Kopfzeile wie früher (`X-Endlech-Client-Ip`) liest Umami nur mit `CLIENT_IP_HEADER`
+— eine Einstellung am VPS, die es dort nicht gibt. Vom Client im Rumpf gesetzte `ip`, `userAgent`, `timestamp`,
+`browser`, `os` und `device` entfernt `CollectPayloadNormalizer`: Umami bevorzugt sie vor dem, was es selbst
+ermittelt.
+
+⚠️ **`TRUSTED_PROXIES` bestimmt seither auch, was in Umami steht.** Fehlt der Wert, bekommt `ip` für jeden Besucher
+die Adresse des Proxys — derselbe lautlose Bruch wie beim geteilten Rate-Limit-Deckel, nur in den Zahlen.
+`CollectControllerTest::testHinterDemProxyZaehltDieAdresseDesBesuchers` hält beide Fälle fest.
+
+⚠️ **Gewöhnliche Zertifikatsprüfung, keine Schlüsselbindung** (seit 2026-09-14). Das Zertifikat des Proxys wechselt
+bei jeder Erneuerung; eine Bindung bräche dann still, und die Messung stünde ohne Fehlermeldung. `verify_peer` nie
+abschalten — sonst ginge die Besucheradresse an jeden, der sich dazwischenstellt. `APP_UMAMI_UPSTREAM_PIN` gibt es
+nicht mehr.
+
+⚠️ **Den zweiten Faktor in Umami nur für den Betreiber-Benutzer einschalten, nie global oder für das Team.**
+Erzwungen scheitert jede Anmeldung des Growth-Loops (Lese-Benutzer ohne zweiten Faktor), und Loop 2 meldet
+dauerhaft ab. Einen SSH-Tunnel gibt es seit dem 2026-09-14 nicht mehr.
 
 ⚠️ **Die Weiterleitung ist die Grenze, nicht die Tracker-Optionen.** `data-exclude-search`,
 `data-domains`, `data-do-not-track` gelten nur für ehrliche Browser. `CollectPayloadNormalizer`
@@ -1409,7 +1433,8 @@ halten bei Links ohne `target="_blank"` die Navigation an, bis der Zählaufruf f
 und `mailto:` wartete der Besucher auf die Messung.
 
 ⚠️ **Wer Umami auf dem VPS aktualisiert, ersetzt `public/zaehler.js` und `app.umami_tracker_version`
-mit.** Entnommen aus dem Container-Image (`/app/public/script.js`), inhaltlich unverändert;
+mit.** Das Image steht im Docker Manager fest auf `3.3.1` — der Katalog setzte ursprünglich `latest`, und ein
+Neustart hätte die Version still gewechselt. Entnommen aus dem Container-Image (`/app/public/script.js`), inhaltlich unverändert;
 `TrackerFileTest` prüft Version, Zählweg und die Eigenschaften, auf die sich die Messung verlässt
 (`umami.disabled`, `before-send`, `do-not-track` …).
 
@@ -1420,7 +1445,7 @@ dasselbe Muster wie `/health`.
 **Deckel `usage_collect`:** 300 je Stunde je Adresse, Zweig im `RouteRateLimitSubscriber`. **Unterbrecher:**
 nach einem Fehlschlag 60 s lang keine Weiterleitung (Pool `cache.usage`), damit ein toter VPS keine
 PHP-Prozesse festhält. `.env.test` trägt eine Platzhalter-Kennung, damit das Skript im Test gerendert
-wird; der Zähl-Eingang bleibt leer.
+wird; die Umami-Domain bleibt leer.
 
 ⚠️⚠️ **Höchstens eine Weiterleitung zur Zeit** (Sperre `umami-weiterleitung`, BF-149). Der Unterbrecher
 greift erst **nach** einem Fehlschlag; bis dahin wartete jede gleichzeitige Anfrage selbst bis zum

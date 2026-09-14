@@ -1,0 +1,26 @@
+Stand: 2026-09-14 22:43 · Umami 3.3.1 ohne eigene Einstellungen · Traefik 3.5.6
+── A · Hinter dem Proxy (TRUSTED_PROXIES=127.0.0.1): Land, Sitzung, Kürzung, untergeschobene Werte
+A1 · Besucher LU mit untergeschobenem ip/userAgent/timestamp/browser/os/device und cf-ipcountry: JP → 200
+A2 · Besucher FR, derselbe Browser → 200
+A3 · XFF-Kette „8.8.8.8, 158.64.1.1" (Client fälscht, Proxy hängt die echte Adresse an) → 200
+A4 · Googlebot-Kennung (AK-10) → 200
+   Pfad | Abfrage | Herkunft | Land | Region | Stadt | Browser | OS | Sitzung | Jahr
+   /de/qa-a-lu|∅|google.com|LU|LU-CA|Mamer|chrome|Mac OS|3c60ba76|2026
+   /fr/qa-a-fr|∅|google.com|FR|∅|∅|chrome|Mac OS|a175472a|2026
+   /de/qa-a-kette|∅|google.com|LU|LU-CA|Mamer|chrome|Mac OS|3c60ba76|2026
+   
+   /de/qa-a-bot: nicht gespeichert
+── B · Was hinter Traefik ankommt (Echo-Dienst, dieselbe Traefik-Konfiguration)
+   User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36
+   Content-Type: application/json
+   X-Forwarded-For: 192.168.32.1
+   X-Real-Ip: 192.168.32.1
+   X-Umami-Cache: abc.def.ghi
+── C · Zertifikatsprüfung: siehe qa/11/ueberarbeitung-tls.php
+── D · Ohne vertrauten Proxy (TRUSTED_PROXIES leer) — Gegenprobe zu A
+D1 · XFF 158.64.1.1, Verbindung von 127.0.0.1 → 200
+   /de/qa-d-ohne-proxy|∅|google.com||∅|∅|chrome|Mac OS|164ce18e|2026
+── E · Protokoll der Anwendung (stderr aller Läufe, 16 Zeilen)
+E1 · Umami-Adresse (localhost:39480) im Protokoll: 0
+E2 · Besucheradressen (158.64.1.1, 90.84.0.1) im Protokoll: 0
+E3 · Protokollzeilen der Messung: 0 · Ausnahmeklassen darin: 
