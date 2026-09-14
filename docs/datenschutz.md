@@ -349,17 +349,17 @@ Unterlage — dokumentiert wäre sonst der Weg vom Projekt zum VPS der Überwach
 | | |
 |---|---|
 | **Zweck** | Welche Seiten gelesen werden, woher Besucher kommen, wo sie Suche und Wartelisten abbrechen; Nachmessung des Growth-Loops |
-| **Rechtsgrundlage (Text in `/legal`)** | berechtigtes Interesse, Art. 6 Abs. 1 lit. f DSGVO — ⚠ **vor dem Deploy in `/sdd-betrieb` zu prüfen** (OF-01 der Spec, seit 2026-09-14 mit Region und Stadt) |
+| **Rechtsgrundlage (Text in `/legal`)** | berechtigtes Interesse, Art. 6 Abs. 1 lit. f DSGVO — **Betreiberentscheidung vom 2026-09-14** (OF-06 der Spec), ausdrücklich ohne fachliche Prüfung |
 | **Einwilligung** | keine; Banner unverändert (kein Cookie). Widerspruch: „Do Not Track", „Global Privacy Control", Schalter in `/legal` (Browserspeicher) |
 | **Gespeichert** | Sitzung: Kennung (wechselt **monatlich**, Umamis Vorgabe), Browser, Betriebssystem, Gerät, Bildschirmgröße, Sprache, **Land, Region und Stadt** (Umamis Städtedatenbank). Seitenaufruf/Ereignis: Pfad ohne Abfrage, Seitentitel, Herkunftsdomain, Ereignisname mit Katalogfeldern |
 | **Nicht gespeichert** | IP-Adresse (nur beim Eingang für Ort und Sitzungskennung), Abfrage, Herkunftspfad, Cookies, Kontokennung, Formularinhalte |
 | **Nicht gemessen** | Verwaltung, Profil, jede Seite mit Token in der Adresse; lokal, Test, `www.endlech.lu`; bekannte Bots |
-| **Aufbewahrung** | **unbegrenzt**, Begründung: langfristiger Vergleich der Reichweite (Decision Log #12 der Spec). ⚠ Mit OF-01 in `/sdd-betrieb` zu prüfen — Stadt und unbegrenzte Aufbewahrung zusammen grenzen einen Besuch stärker ein als Land allein |
+| **Aufbewahrung** | **unbegrenzt**, Begründung: langfristiger Vergleich der Reichweite (Decision Log #12 der Spec). **So belassen, Betreiberentscheidung vom 2026-09-14** (OF-01) — ohne fachliche Prüfung; ⚠ Stadt und unbegrenzte Aufbewahrung zusammen grenzen einen Besuch stärker ein als Land allein |
 | **Kontolöschung / Auskunft** | kein Kontobezug — nichts zu löschen, nichts zuzuordnen |
-| **Zugriff** | Umami-Oberfläche über die Umami-Domain: Betreiber mit Passwort **und zweitem Faktor** (nur für diesen Benutzer, nicht global erzwungen), Growth-Loop mit eigenem Benutzer **nur lesend**, ohne zweiten Faktor, Zugang nur unter `~/.config/umami/`. Kein SSH-Tunnel mehr. Umami deckelt Anmeldeversuche nicht (OF-08) |
+| **Zugriff** | Umami-Oberfläche über die Umami-Domain: Betreiber mit Passwort **und zweitem Faktor** (nur für diesen Benutzer, nicht global erzwungen), Growth-Loop mit eigenem Benutzer **nur lesend**, ohne zweiten Faktor, Zugang nur unter `~/.config/umami/`. Kein SSH-Tunnel mehr. Umami deckelt Anmeldeversuche nicht — **hingenommen** (OF-08, Betreiberentscheidung vom 2026-09-14) |
 | **Übertragung zwischen den Servern** | HTTPS an die Umami-Domain mit **gewöhnlicher Zertifikatsprüfung**; die Besucheradresse steht im Zählaufruf selbst (Feld `ip`), damit Umami hinter dem Proxy des Hosters das richtige Land und eine eigene Sitzung je Besucher bildet |
 | **Hersteller** | Das Umami-**Dashboard** lädt im Browser dessen, der es öffnet, ein Telemetrie-Bild des Herstellers (nur die Versionsnummer) und fragt nach Updates. Besucherdaten gehen darüber nicht an den Hersteller |
-| **Bekannte Grenze** | Die Zählschnittstelle der Umami-Domain ist öffentlich: Wer Domain und Website-Kennung kennt, kann an endlech.lu vorbei Zählaufrufe schicken — ohne Deckel und ohne Kürzung. Hingenommen (Spec, EC-08); Last auf dem VPS der Überwachung: OF-08 |
+| **Bekannte Grenze** | Die Zählschnittstelle der Umami-Domain ist öffentlich: Wer Domain und Website-Kennung kennt, kann an endlech.lu vorbei Zählaufrufe schicken — ohne Deckel und ohne Kürzung. Hingenommen (Spec, EC-08, OF-08) |
 | **Unterlagen** | `features/11-nutzungsmessung/` (Spec, Entwurf, Plan) |
 ---
 

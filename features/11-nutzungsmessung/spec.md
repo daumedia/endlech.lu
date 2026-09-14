@@ -134,6 +134,9 @@ formuliert es um.
   Betreiber den Wartelisten-Trichter auswertet, dann zählt er „Seite geöffnet" und „erfolgreich
   abgesendet" für die App-Warteliste; dasselbe gilt getrennt für `/partner` und `/organisationen`
   (samt ihrer Zielgruppenseiten).
+  *Seit 2026-09-14 benannt (OF-05, Decision Log #31):* „Erfolgreich abgesendet" zählt auch eine bereits eingetragene
+  Adresse und einen Honeypot-Treffer, weil die Erfolgsmeldung dort absichtlich gleich aussieht (Anti-Enumeration).
+  Der Trichter ist damit eine Näherung nach oben; genaue Zahlen stehen in der Verwaltung der Wartelisten.
 - **AK-16** · Angenommen ein Besucher sendet ein Wartelisten-Formular mit einem Fehler ab (z. B. leere
   E-Mail-Adresse), wenn der Betreiber den Trichter auswertet, dann zählt dieser Versuch **nicht** als
   „erfolgreich abgesendet".
@@ -326,7 +329,9 @@ VPS nicht dokumentiert ist.
   `/roadmap` und die Begründung der unbegrenzten Aufbewahrung? ⚠ **Bleibt vor dem Deploy zu tun:**
   `/sdd-betrieb` prüft die Tragfähigkeit der Zusage auf `/roadmap` und der unbegrenzten Aufbewahrung.
   Keine Rechtsauskunft in dieser Spec. ⚠ **Seit 2026-09-14 zusätzlich:** Region und Stadt statt nur Land,
-  zusammen mit der unbegrenzten Aufbewahrung (Decision Log #25). — Betreiber, vor `/sdd-deploy 11`.
+  zusammen mit der unbegrenzten Aufbewahrung (Decision Log #25). **Entschieden am 2026-09-14 (Decision Log #29):
+  so belassen** — unbegrenzte Aufbewahrung mit Land, Region und Stadt, Texte weiter vorsichtig. Betreiberentscheidung
+  ohne fachliche Prüfung; keine Rechtsauskunft in dieser Spec.
 - ~~**OF-02**~~ · **Entschieden am 2026-09-13: Deutschland.** Wird beim Systemdesign nachgemessen wie am
   2026-09-05 (Reverse DNS, ASN, Laufzeit) — Rechnername und Adresse kommen in keine öffentliche Unterlage.
 - ~~**OF-03**~~ · **Überholt am 2026-09-14** (kein Tunnel mehr, Decision Log #26). **Entschieden am 2026-09-13: Der Growth-Loop baut den Tunnel selbst** — mit eigenem
@@ -334,14 +339,14 @@ VPS nicht dokumentiert ist.
   erreichbaren VPS meldet Loop 2 ab (AK-39).
 - ~~**OF-04**~~ · **Entschieden am 2026-09-13: ja, als Kriterium** — AK-37 mit höchstens 100 ms
   Verzögerung beim ersten Inhalt, geprüft bei angehaltenem Umami.
-- **OF-05** · **„Erfolgreich eingetragen" zählt auch Dubletten und Honeypot-Treffer** (beim Bau am
+- ~~**OF-05**~~ · **Entschieden am 2026-09-14 (Decision Log #31): hingenommen, in AK-15 benannt.** **„Erfolgreich eingetragen" zählt auch Dubletten und Honeypot-Treffer** (beim Bau am
   2026-09-13 aufgefallen). Die Erfolgsmeldung der Wartelisten erscheint absichtlich auch bei einer
   bereits eingetragenen Adresse und beim Honeypot-Treffer — sonst ließe sich die Warteliste von außen
   abfragen (Anti-Enumeration, Feature 08, B14, B15). Die Messung sieht dieselbe Meldung und zählt
   deshalb auch diese Fälle. AK-15 („trägt sich erfolgreich ein") ist damit nur näherungsweise
   erfüllt. Unterscheiden ließe es sich nur serverseitig, was genau die Eigenschaft aufgäbe. Vorschlag:
   hinnehmen und in AK-15 benennen. — Betreiber.
-- **OF-06** · **Rechtsgrundlage im Text von `/legal`** (beim Bau am 2026-09-13 gesetzt). Der Absatz nennt
+- ~~**OF-06**~~ · **Entschieden am 2026-09-14 (Decision Log #30): so stehen lassen** — Betreiberentscheidung, keine geprüfte Rechtslage. **Rechtsgrundlage im Text von `/legal`** (beim Bau am 2026-09-13 gesetzt). Der Absatz nennt
   nach dem Muster der Abschnitte zu Hostinger und Sentry „berechtigtes Interesse, Art. 6 Abs. 1 lit. f
   DSGVO". Das ist eine rechtliche Einordnung, die weder Spec noch Bau treffen dürfen. Gehört mit OF-01
   vor dem Deploy in `/sdd-betrieb`. — Betreiber.
@@ -353,7 +358,7 @@ VPS nicht dokumentiert ist.
   ist berichtigt, den Entwurf darf `sdd-build` nicht ändern. Vorschlag: Tabelle auf `*/restaurants`,
   `*/restaurants/*`, `*/app`, `*/partner`, `*/organisationen*` umstellen und den Begründungssatz ersetzen.
   Wer Umamis Trichter-Bericht von Hand anlegt (T05), nimmt die berichtigte Form. — Betreiber.
-- **OF-08** · **Direkte Zählaufrufe an die Umami-Domain belasten den VPS der Überwachung** (bei der
+- ~~**OF-08**~~ · **Entschieden am 2026-09-14 (Decision Log #32): hingenommen** — Betreiber mit zweitem Faktor, `growth-loop` mit langem Zufallspasswort und nur lesend; keine Begrenzung am Proxy. Gemessen in QA Nachprüfung 3: 30 Fehlversuche in 3 s ohne Sperre. **Direkte Zählaufrufe an die Umami-Domain belasten den VPS der Überwachung** (bei der
   Überarbeitung am 2026-09-14). Entschieden ist, sie hinzunehmen (EC-08). Offen ist die Betriebsfolge: Eine
   Flut solcher Aufrufe träfe denselben VPS, auf dem Uptime Kuma die Anwendung überwacht, und könnte die
   Überwachung verlangsamen oder falsche Alarme auslösen. Dazu kommt, dass Umami Anmeldeversuche nicht
@@ -392,3 +397,7 @@ VPS nicht dokumentiert ist.
 | 26 | Zugang des Growth-Loops (ersetzt #21) | Eigener, nur lesender Benutzer, Anmeldung über die Umami-Domain, ohne zweiten Faktor | Kein Tunnel mehr; der Loop läuft unbeaufsichtigt. AK-38 entfällt, AK-39 geändert |
 | 27 | Umami-Oberfläche (ersetzt #11) | Öffentlich über die Umami-Domain; Betreiberkonto mit starkem Passwort **und** zweitem Faktor | Umami 3.3.1 deckelt Anmeldeversuche nicht (nachgesehen); der zweite Faktor macht ein erratenes Passwort wertlos. AK-26 geändert, AK-41 neu |
 | 28 | Zählaufrufe direkt an die Umami-Domain | Hingenommen | Wie bei jedem Analytics-Dienst; verfälschbare Zahlen, keine Personendaten. Verworfen: Traefik-Regel „nur der Anwendungs-VPS darf zählen" (Änderung am VPS). EC-08, Betriebsfolge OF-08 |
+| 29 | Aufbewahrung mit Region und Stadt (OF-01) | Unbegrenzt, Texte weiter vorsichtig | Betreiberentscheidung am 2026-09-14, ohne fachliche Prüfung; langfristiger Vergleich der Reichweite |
+| 30 | Rechtsgrundlage in `/legal` (OF-06) | Berechtigtes Interesse, Art. 6 Abs. 1 lit. f DSGVO, wie im Text | Betreiberentscheidung am 2026-09-14 nach dem Muster der Abschnitte zu Hostinger und Sentry; keine geprüfte Rechtslage |
+| 31 | Dubletten und Honeypot im Wartelisten-Trichter (OF-05) | Hingenommen, in AK-15 benannt | Unterscheiden gäbe die Anti-Enumeration auf; genaue Zahlen liefert die Verwaltung |
+| 32 | Kein Deckel an der öffentlichen Umami-Anmeldung, Direktaufrufe an die Domain (OF-08) | Hingenommen: zweiter Faktor für den Betreiber, langes Zufallspasswort für `growth-loop` | Keine Änderung am VPS (Decision Log #23); verworfen: rateLimit-Middleware am Proxy |
