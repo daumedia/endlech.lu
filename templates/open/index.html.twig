@@ -417,11 +417,18 @@
         <p class="text-lg text-cyan-50 leading-relaxed mb-8">{{ 'open.dataset.intro'|trans }}</p>
 
         <div class="flex flex-wrap gap-3 print:hidden">
+            {# Nutzungsmessung (Feature 11, AK-19): nur die beiden Datensätze, nicht die Kennzahlen. #}
             <a href="{{ path('app_open_dataset_csv') }}"
+               data-controller="usage-event" data-action="click->usage-event#track"
+               data-usage-event-name-value="datensatz_geladen"
+               data-usage-event-data-value="{{ {format: 'csv'}|json_encode }}"
                class="inline-flex items-center gap-2 min-h-[48px] bg-white text-cyan-900 font-bold px-6 py-3 rounded-full shadow-lg hover:shadow-xl hover:bg-cyan-50 motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-white">
                 <span aria-hidden="true">⬇</span> {{ 'open.dataset.csv'|trans }}
             </a>
             <a href="{{ path('app_open_dataset_json') }}"
+               data-controller="usage-event" data-action="click->usage-event#track"
+               data-usage-event-name-value="datensatz_geladen"
+               data-usage-event-data-value="{{ {format: 'json'}|json_encode }}"
                class="inline-flex items-center gap-2 min-h-[48px] border border-white/40 text-white font-semibold px-6 py-3 rounded-full hover:bg-white/10 motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-white">
                 <span aria-hidden="true">⬇</span> {{ 'open.dataset.json'|trans }}
             </a>

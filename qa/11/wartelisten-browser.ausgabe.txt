@@ -1,0 +1,14 @@
+✅ AK-15 · /fr/partner: Formular ok, Ereignisse [{"url":"http://endlech.lu:8765/fr/partner","data":{"liste":"partner"}}]
+✅ AK-17 · /fr/partner: keine Adresse, kein Name in 2 Zählaufrufen
+✅ AK-15 · /fr/partner: JS-Fehler []
+✅ AK-15 · /de/organisationen: Formular ok, Ereignisse [{"url":"http://endlech.lu:8765/de/organisationen","data":{"liste":"organisation"}}]
+✅ AK-17 · /de/organisationen: keine Adresse, kein Name in 2 Zählaufrufen
+✅ AK-15 · /de/organisationen: JS-Fehler []
+❌ BF-151 · /de/organisationen/gemeinden absenden → [[405,"/de/organisationen/gemeinden"]] · gespeichert 0 · Ereignisse 0 · sichtbar: „Oops! An Error Occurred The server returned a "405 Method Not Allowed". Something is broken. Please let us know what you were doing when this error occurred. We"
+❌ BF-151 · /de/organisationen/unternehmen absenden → [[405,"/de/organisationen/unternehmen"]] · gespeichert 0 · Ereignisse 0 · sichtbar: „Oops! An Error Occurred The server returned a "405 Method Not Allowed". Something is broken. Please let us know what you were doing when this error occurred. We"
+❌ BF-151 · /de/organisationen/vereine absenden → [[405,"/de/organisationen/vereine"]] · gespeichert 0 · Ereignisse 0 · sichtbar: „Oops! An Error Occurred The server returned a "405 Method Not Allowed". Something is broken. Please let us know what you were doing when this error occurred. We"
+✅ AK-15 · Umami-Trichter warteliste_partner ["*/partner","warteliste_eingetragen"] → [1,1]
+✅ AK-15 · Umami-Trichter warteliste_organisationen ["*/organisationen*","warteliste_eingetragen"] → [3,1]
+
+Aufgeräumt: partner/organisation/messenger → 0
+8 von 11 Prüfungen bestanden

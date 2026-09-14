@@ -163,6 +163,14 @@ framework:
             policy: 'sliding_window'
             limit: 60
             interval: '1 hour'
+        # Zählweg der Nutzungsmessung (Feature 11, AK-27). Ein Besucher erzeugt je Seite ein
+        # bis drei Zählaufrufe; 300 reichen für rund 100 Seiten in der Stunde, auch hinter einer
+        # geteilten Adresse. Darüber wird nichts weitergeleitet — gegen verfälschte Zahlen und
+        # gegen Last auf dem Anwendungsserver, der jeden Aufruf weiterreicht.
+        usage_collect:
+            policy: 'sliding_window'
+            limit: 300
+            interval: '1 hour'
         # Schreibvorgänge im Verwaltungsbereich (BF-35): großzügig, weil ein Admin
         # legitim viel ändert. Der Deckel fängt die Schleife ab, nicht die Arbeit.
         admin_write:
@@ -297,6 +305,10 @@ when@test:
                 limit: 10000
                 interval: '1 hour'
             sitemap:
+                policy: 'sliding_window'
+                limit: 10000
+                interval: '1 hour'
+            usage_collect:
                 policy: 'sliding_window'
                 limit: 10000
                 interval: '1 hour'

@@ -122,6 +122,7 @@ controllers:
             - '../src/Controller/Marketing/'
             - '../src/Controller/Health/'
             - '../src/Controller/Seo/'
+            - '../src/Controller/Usage/'
     type: attribute
     prefix: /{_locale}
     requirements:
@@ -181,4 +182,14 @@ seo:
     resource:
         path: ../src/Controller/Seo/
         namespace: App\Controller\Seo
+    type: attribute
+
+# Nutzungsmessung (Feature 11) – sprachfrei: Das Zählskript liegt als /zaehler.js in der
+# Wurzel und schickt an /api/send neben sich. Ein Sprachpräfix träfe den Zählweg nie.
+#
+# Es darf kein Verzeichnis `public/api` entstehen – sonst wiederholt sich BF-100.
+usage:
+    resource:
+        path: ../src/Controller/Usage/
+        namespace: App\Controller\Usage
     type: attribute

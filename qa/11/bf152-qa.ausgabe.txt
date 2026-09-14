@@ -1,0 +1,19 @@
+── A · Gesunder Eingang: wird der Platz nach jedem Aufruf wieder frei?
+A1 · 20 Aufrufe nacheinander: Antworten 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 · angekommen 20 von 20
+A2 · 6 Aufrufe gleichzeitig: Antworten  6 ; 5 200; 1 202; · angekommen 5 von 6
+A3 · danach 10 nacheinander: Antworten 200 200 200 200 200 200 200 200 200 200 · angekommen 10 von 10
+── B · Sperrdatei nicht zu öffnen (BF-152)
+B1 · Sperrdatei chmod 000: 202 0.022739 (Rumpf {}) · zweiter Aufruf 202 0.023290 · angekommen 0 · Unterbrecher gesetzt
+B2 · Rechte zurück, Unterbrecher noch aktiv: 202 0.021231 · angekommen 0
+B3 · Unterbrecher geleert: 200 0.060109 · angekommen 1
+B4 · danach 5 nacheinander: Antworten 200 200 200 200 200 · angekommen 5 von 5
+── C · Hängender Eingang: ein Platz, und danach wieder frei
+C1 · 12 gleichzeitig: länger als 1 s: 1 · Antworten  12 202; · sortiert: 0.19 0.19 0.31 0.32 0.43 0.43 0.54 0.54 0.65 0.66 0.77 2.09 s · Sperrdatei nach 0,3 s offen bei 1 Prozess(en)
+C2 · Eingang wieder gesund, Unterbrecher geleert, 5 nacheinander: Antworten 200 200 200 200 200 · angekommen 5 von 5
+
+## Bewertung (QA, 2026-09-14)
+- A2 „6 ;" sind sechs Leerzeilen aus dem Zählausdruck (je `cut` plus `echo`), keine Antworten — gezählt sind 5 × 200 und
+  1 × 202; fünf von sechs exakt gleichzeitigen Aufrufen kamen an (bekannter Preis des einen Platzes, BF-149).
+- Ein erster Lauf blieb an einem nackten `wait` hängen (wartete auf den Eingang als Kindprozess); ein zweiter zeigte in C1
+  „länger als 1 s: 3" — Einzelzeiten 0,19 … 1,01 s in Stufen von ~0,11 s plus einmal 2,09 s: zwei Aufrufe standen
+  lokal hinter drei PHP-FPM-Workern an, gewartet auf den Eingang hat auch dort nur einer.

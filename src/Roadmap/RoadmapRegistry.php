@@ -39,7 +39,6 @@ final readonly class RoadmapRegistry
             new RoadmapItem('chat_widget', RoadmapStage::CONSIDERED),
             new RoadmapItem('ai_filter', RoadmapStage::CONSIDERED),
             new RoadmapItem('android_and_logins', RoadmapStage::CONSIDERED),
-            new RoadmapItem('usage_analytics', RoadmapStage::CONSIDERED),
         ];
     }
 

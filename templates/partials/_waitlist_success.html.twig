@@ -9,12 +9,25 @@
       text      – bereits übersetzter Fließtext
       hint      – optionaler, bereits übersetzter Zusatzhinweis
       emoji     – optionales Emoji (Default 📬)
+      messliste – optional: `partner`, `organisation` oder `app`. Gesetzt, meldet die Meldung
+                  beim Erscheinen das Ereignis `warteliste_eingetragen` an die Nutzungsmessung
+                  (Feature 11, AK-15). Dieses Partial wird nur bei Erfolg gerendert — eine
+                  fehlerhafte Absendung (422) zählt deshalb nie (AK-16).
+                  ⚠ Es erscheint absichtlich auch bei einer bereits eingetragenen Adresse und
+                  beim Honeypot-Treffer (Anti-Enumeration). Die Messung kann das nicht
+                  unterscheiden, ohne genau diese Eigenschaft aufzugeben.
 
     tabindex="-1" + autofocus: Nach dem Austausch wandert der Fokus hierher –
     ohne das bliebe er am verschwundenen Absenden-Button hängen und
     Screenreader-Nutzer bekämen vom Erfolg nichts mit.
 #}
 <div id="{{ target_id }}" tabindex="-1" autofocus role="status"
+     {% if messliste is defined and messliste %}
+     data-controller="usage-event"
+     data-usage-event-name-value="warteliste_eingetragen"
+     data-usage-event-data-value="{{ {liste: messliste}|json_encode }}"
+     data-usage-event-on-connect-value="true"
+     {% endif %}
      class="rounded-2xl border-2 border-green-700 bg-green-50 p-8 text-center">
     <p class="text-4xl mb-3" aria-hidden="true">{{ emoji|default('📬') }}</p>
 

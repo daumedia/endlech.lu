@@ -1,0 +1,11 @@
+== Schritte aus growth/config.json
+✅ suche: [('*/restaurants', 2), ('filter_angewandt', 2), ('*/restaurants/*', 2), ('kontaktweg_genutzt', 2)] (erwartet [2, 2, 2, 2])
+✅ warteliste_app: [('*/app', 1), ('warteliste_eingetragen', 1)] (erwartet [1, 1])
+✅ warteliste_partner: [('*/partner', 1), ('warteliste_eingetragen', 1)] (erwartet [1, 1])
+✅ warteliste_organisationen: [('*/organisationen*', 2), ('warteliste_eingetragen', 2)] (erwartet [2, 2])
+== Ursprüngliche Schreibweise zum Vergleich
+   suche: [('/*/restaurants', 0), ('filter_angewandt', 0), ('/*/restaurants/*', 0), ('kontaktweg_genutzt', 0)]
+   warteliste_app: [('/*/app', 0), ('warteliste_eingetragen', 0)]
+   warteliste_partner: [('/*/partner', 0), ('warteliste_eingetragen', 0)]
+   warteliste_organisationen: [('/*/organisationen*', 0), ('warteliste_eingetragen', 0)]
+4 von 4 Trichtern zählen wie erwartet

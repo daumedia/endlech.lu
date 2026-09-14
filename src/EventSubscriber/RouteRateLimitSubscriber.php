@@ -35,6 +35,10 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  * damit nicht die Sitemap sperren. Der Deckel greift VOR dem Controller, also auch dann, wenn
  * eine gespeicherte Fassung vorliegt (EC-04).
  *
+ * ⚠ **Zählweg der Nutzungsmessung (Feature 11).** Jeder Aufruf wird an Umami weitergereicht; wer ihn
+ * in Schleife schickt, verfälscht die Zahlen und belastet den Server. Eigenes Kontingent, 300 je
+ * Stunde. Die Antwort ist eine 429, die der Tracker still verwirft — die Seite merkt nichts (AK-27).
+ *
  * ⚠ **Offene Datenendpunkte (BF-42).** Zwölf Abrufe, zwölfmal 200, und jeder lädt
  * den GESAMTEN Bestand. Das ist der Fall, den der Wortlaut der Konvention zuerst
  * nicht erfasste: Er löst keine Mail aus und prüft kein Geheimnis — er ist nur
@@ -52,6 +56,8 @@ final readonly class RouteRateLimitSubscriber implements EventSubscriberInterfac
         private RateLimiterFactoryInterface $openDatasetLimiter,
         #[Autowire(service: 'limiter.sitemap')]
         private RateLimiterFactoryInterface $sitemapLimiter,
+        #[Autowire(service: 'limiter.usage_collect')]
+        private RateLimiterFactoryInterface $usageCollectLimiter,
         private TokenStorageInterface $tokenStorage,
     ) {
     }
@@ -81,6 +87,12 @@ final readonly class RouteRateLimitSubscriber implements EventSubscriberInterfac
 
         if ('/sitemap.xml' === $pfad) {
             $this->deckeln($this->sitemapLimiter, $request->getClientIp());
+
+            return;
+        }
+
+        if ('/api/send' === $pfad) {
+            $this->deckeln($this->usageCollectLimiter, $request->getClientIp());
 
             return;
         }

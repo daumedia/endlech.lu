@@ -72,9 +72,6 @@ item:
     android_and_logins:
         title: "Android-App, Google- und Apple-Anmeldung"
         reason: "Notiert, weil danach gefragt wurde. Keiner der drei Punkte ist bisher begründet oder eingeordnet."
-    usage_analytics:
-        title: "Nutzung messen, ohne zu verfolgen"
-        reason: "Wie viele eine Seite öffnen und vor dem Absenden abbrechen, ist heute unbekannt. Infrage kommt nur ein Weg ohne Cookies und ohne Personendaten — sonst bleibt es ungebaut."
 
 shelved_item:
     passkey_conditional_ui:

@@ -1,4 +1,6 @@
 import './stimulus_bootstrap';
+// Nutzungsmessung (Feature 11): Vor-Versand-Prüfung, die das Zählskript über data-before-send ruft.
+import './usage/before_send';
 /*
  * Welcome to your app's main JavaScript file!
  *
