@@ -3,6 +3,24 @@
 Stand: 2026-09-14 · Oben die Nachprüfung der Überarbeitung (Spec vom 2026-09-14), darunter die früheren Durchläufe
 gegen die Fassung vom 2026-09-13 · Prüfumgebungen: `qa/11/ueberarbeitung-umgebung.sh`, früher `qa/11/umgebung.md`
 
+# Auf der Produktion — 2026-09-14, `v2026.09.14.2`
+
+Vollständige Ausgaben in `qa/11/produktion-2026-09-14.md`.
+
+| Prüfung | Ergebnis |
+|---|---|
+| Weiterleitung an Umami (AK-01) | ✅ **200 in 0,15 s** mit Sitzungs-Token — im dritten Anlauf: zuerst `APP_UMAMI_UPSTREAM` im Container leer (korrigiert), dann erster Aufruf nach Umami-Start über dem Zeitlimit |
+| Messregel (AK-06, AK-07, AK-08), Zählweg (AK-22, AK-25), Skript (AK-24) | ✅ wie lokal |
+| `/legal` vier Sprachen (AK-31), Changelog (AK-32), Roadmap | ✅ Region/Stadt, monatlich, Eintrag in de und fr sichtbar, Roadmap-Karte entfernt |
+| Deckel (AK-27), Seiten bei erschöpftem Deckel (AK-37) | ✅ 429 ab dem 299. Aufruf innerhalb der Stunde; Seiten 200 in unter 0,2 s |
+| AK-04, AK-40, AK-34 in Umami | ⚠️ Abnahme T44 beim Betreiber |
+| AK-28, AK-29, AK-41, AK-35 | ⚠️ T33, T34 beim Betreiber |
+
+⚠ **Beobachtung:** Nach jedem Neustart von Umami wird der erste Zählaufruf länger als 2 s — danach 60 s keine Zählung.
+Kein Befund (Zeitlimit gewollt, BF-149), aber ein 202 direkt nach einem Umami-Neustart ist kein Ausfall.
+
+---
+
 # Nachprüfung 3 — 2026-09-14, Überarbeitung „Umami über seine eigene Domain"
 
 Vorstufe: `building` (Überarbeitung T35–T41, Spec Decision Log #23–#28) · Branch `feature/11-umami-domain`, nicht

@@ -1,6 +1,6 @@
 # 11 · Nutzung messen, ohne zu verfolgen — Aufgabenplan
 
-Status: `building` · Stand: 2026-09-14 (Überarbeitung)
+Status: `deployed` · Stand: 2026-09-14 (Überarbeitung, live in `v2026.09.14.2`)
 
 > **Zwei Pläne in dieser Datei.** Oben der Plan für die **Überarbeitung vom 2026-09-14** (T32–T44):
 > Weiterleitung an die vorhandene Umami-Instanz über ihre eigene Domain (Spec, Decision Log #23–#28;
@@ -37,7 +37,7 @@ Schon erledigt am 2026-09-14: Umami-Port nur auf `127.0.0.1`, Image fest auf `3.
 ⚠ Umami-Domain, Rechnername und Adresse des VPS erscheinen in **keinem** Nachweis, keiner Datei und
 keinem Chat. Nachweise tragen nur das Ergebnis.
 
-- [ ] **T32** · Proxy-Route der Umami-Domain wieder einschalten: im Katalog-Projekt die Traefik-Labels
+- [x] **T32** · *Erledigt 2026-09-14: aus dem Anwendungs-Container Heartbeat 200 über IPv4, Zertifikat gültig.* · Proxy-Route der Umami-Domain wieder einschalten: im Katalog-Projekt die Traefik-Labels
       zurück, der Port bleibt `127.0.0.1`, das Image bleibt `3.3.1`. Nachweis ohne Adresse: Die Domain
       antwortet per HTTPS mit **gültigem** Zertifikat und zeigt die Anmeldeseite; die Schnittstelle
       liefert ohne Anmeldung keine Websites; die Adresse des VPS mit dem Umami-Port antwortet nicht ·
@@ -143,7 +143,7 @@ sind; die Überarbeitung ändert nur, wohin und wie weitergeleitet wird.
 
 ## Plattform — vor und nach dem Deploy (Betreiber mit Claude)
 
-- [ ] **T42** · Coolify, **Anwendung** (nicht Worker): `APP_UMAMI_WEBSITE_ID` und `APP_UMAMI_UPSTREAM`
+- [x] **T42** · *Erledigt 2026-09-14: beide Variablen im Container gesetzt (erster Anlauf `APP_UMAMI_UPSTREAM` leer, korrigiert); Weiterleitung auf der Produktion 200.* · Coolify, **Anwendung** (nicht Worker): `APP_UMAMI_WEBSITE_ID` und `APP_UMAMI_UPSTREAM`
       = `https://<Umami-Domain>`; `APP_UMAMI_UPSTREAM_PIN` nicht setzen, eine vorhandene entfernen. Ohne
       Website-Kennung bleibt die Messung aus — ein Deploy vor diesem Schritt ist gefahrlos · `AK-01` —
       Grundlage für T43, T44
