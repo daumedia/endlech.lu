@@ -331,7 +331,7 @@ Rechnung**, nicht im DPA — offen als DS-02b.
 
 ---
 
-### Nutzungsmessung (Feature 11, gebaut 2026-09-13, überarbeitet 2026-09-14, noch nicht ausgeliefert)
+### Nutzungsmessung (Feature 11, live seit 2026-09-14 in `v2026.09.14.2`)
 
 **Kein neuer Auftragsverarbeiter.** Umami ist selbst betriebene Software auf einem **zweiten VPS bei
 Hostinger** — im selben Konto wie die Anwendung, der Auftragsverarbeitungsvertrag oben gilt.
@@ -497,7 +497,7 @@ war.
 
 ## Betriebsüberwachung
 
-Stand 2026-09-12. Was hier fehlt, meldet seinen Ausfall nicht selbst.
+Stand 2026-09-14. Was hier fehlt, meldet seinen Ausfall nicht selbst.
 
 | Bereich | Zustand | Wo |
 |---|---|---|
@@ -508,8 +508,12 @@ Stand 2026-09-12. Was hier fehlt, meldet seinen Ausfall nicht selbst.
 | **Messenger-Worker** | **überwacht seit 2026-09-05** — `app:messenger:watch` meldet einen Rückstau per Mail, täglich aus dem `marketing`-Zeitplan | siehe unten |
 | **Uptime von außen** | **läuft seit 2026-09-12** — Uptime Kuma auf einem **zweiten VPS**, zwei Prüfungen: `/health` und ein Puls des Messenger-Consumers. `/open.json` bewusst nicht (Entscheidung 2026-09-12) (BE-01) | siehe unten |
 | **Messenger-Consumer, Totalausfall** | **läuft seit 2026-09-12, Alarm ausgelöst** — `app:worker:pulse` meldet alle fünf Minuten nach außen; bleibt der Puls aus, schlägt Kuma an | `src/Command/WorkerPulseCommand.php` |
-| Produktanalyse | **gebaut als Feature 11 (2026-09-13, überarbeitet 2026-09-14), noch nicht ausgeliefert** — Umami, selbst betrieben auf dem zweiten VPS, erreicht über eine eigene Domain, Zählweg über endlech.lu; der Roadmap-Eintrag `usage_analytics` ist entfernt (BE-02) | `features/11-nutzungsmessung/`, Abschnitt „Nutzungsmessung“ oben |
+| Produktanalyse | **live seit 2026-09-14** (Feature 11, `v2026.09.14.2`, auf der Produktion nachgeprüft) — Umami, selbst betrieben auf dem zweiten VPS, erreicht über eine eigene Domain, Zählweg über endlech.lu; der Roadmap-Eintrag `usage_analytics` ist entfernt (BE-02) | `features/11-nutzungsmessung/`, Abschnitt „Nutzungsmessung“ oben |
 | Sicherungen der Datenbank | **Rückweg prüfbar seit 2026-09-12**, die Sicherung selbst weiter ungeklärt: ob Coolify sichert und wie oft, ist nicht dokumentiert (BE-03) | `bin/sicherung-pruefen.sh` |
+| **Verfügbarkeit von Umami** | ⚠ **nicht überwacht** — fällt Umami aus, antwortet die Anwendung still mit 202, und niemand erfährt es (BE-04, Frist 2026-09-30) | siehe unten |
+| **Sicherung der Umami-Daten** | ⚠ **ungeklärt** — Postgres-Volume auf dem zweiten VPS, ob Hostinger den VPS sichert, ist nicht nachgesehen (BE-05, Frist 2026-09-30) | siehe unten |
+| **Alarmregel in Sentry, Zertifikatswarnung in Kuma** | **in Einrichtung seit 2026-09-14** (BE-06) | siehe unten |
+| **Umami-Updates** | regelmäßig von Hand — Image fest auf `3.3.1` (BE-07) | siehe unten |
 
 ### BE-01 · Uptime-Prüfung von außen — eingerichtet und ausgelöst (2026-09-12)
 
@@ -762,3 +766,53 @@ hier ist er endgültig.
 | **Zu prüfen** | Eine Sicherung einmal einspielen — ein Rückweg, den niemand gegangen ist, ist eine Annahme. Der Weg dafür steht jetzt: `make sicherung-pruefen DATEI=…` |
 | **Woher die Datei** | Entweder aus Coolify (Datenbank-Ressource → „Backups" → herunterladen), oder von Hand auf dem VPS: `docker exec <db-container> mariadb-dump -u… -p… --single-transaction --quick --databases endlech \| gzip > endlech-$(date +%F).sql.gz` und herunterkopieren. ⚠ **Nicht** über eine von außen erreichbare Adresse — die Datenbank ist bewusst nicht öffentlich, und das soll sie bleiben |
 | **Frist** | 2026-09-30 |
+
+### BE-04 · Ausfall von Umami melden — offen, Frist 2026-09-30
+
+Aufgenommen am 2026-09-14 (`/sdd-betrieb`, nach der Auslieferung von Feature 11). **Fällt Umami aus, bemerkt es
+niemand:** Die Weiterleitung setzt ihren Unterbrecher und antwortet dem Browser mit `202 {}` — gewollt, damit keine
+Seite wartet (AK-37), aber ohne jede Meldung. Sentry sieht nur eine Warnung je Minute im Protokoll, keine Ausnahme.
+Die Folge sind Lücken im Verlauf, die der Growth-Loop als Einbruch der Reichweite lesen würde.
+
+| | |
+|---|---|
+| **Vorschlag** | Monitor in Kuma: Typ HTTP(s), Ziel `https://<Umami-Domain>/api/heartbeat`, Takt 300 s, Retries 2, Benachrichtigungskanal **angehakt**, „Certificate Expiry Notification" an. Die Adresse steht nur in Kuma, nicht hier |
+| **Grenze** | Kuma läuft auf demselben VPS wie Umami — der Monitor meldet einen Ausfall von Umami, nicht einen Ausfall des VPS (dann schweigt auch Kuma, siehe „Wer bewacht den Wächter?" in BE-01) |
+| **Auslösen** | Umami-Container im Docker Manager kurz anhalten, Alarm abwarten, wieder starten. ⚠ Nach dem Neustart wird der erste Zählaufruf länger als 2 s dauern und 60 s lang nichts gezählt (Nachprüfung vom 2026-09-14) — kein neuer Ausfall |
+| **Frist** | 2026-09-30 |
+
+### BE-05 · Sicherung der Umami-Daten — offen, Frist 2026-09-30
+
+Aufgenommen am 2026-09-14. Die Messdaten liegen im Volume `umami-db-data` auf dem zweiten VPS. Die unbegrenzte
+Aufbewahrung ist mit dem **langfristigen Verlauf** begründet (Spec 11, Decision Log #12, #29) — ohne Sicherung
+trägt diese Begründung nur bis zum ersten Plattendefekt. Personendaten im engeren Sinn enthält die Sicherung nicht,
+wohl aber Sitzungen mit Land, Region und Stadt; sie gehört deshalb genauso geschützt abgelegt wie die Datenbank selbst.
+
+| | |
+|---|---|
+| **Zu klären** | Sichert Hostinger den zweiten VPS (hPanel → VPS → Backups: Takt, Aufbewahrung)? Wenn nein: einschalten oder eine Sicherung der Umami-Datenbank einrichten. ⚠ Letzteres ist eine Änderung am VPS — bewusst gegen Decision Log #23 abzuwägen |
+| **Zu prüfen** | Eine Sicherung einmal in eine Wegwerf-Instanz einspielen und die Website mit ihren Zahlen sehen. Ein Rückweg, den niemand gegangen ist, ist eine Annahme |
+| **Frist** | 2026-09-30 |
+
+### BE-06 · Alarmregel in Sentry und Zertifikatswarnung in Kuma — in Einrichtung seit 2026-09-14
+
+Beides stand als offene Bedingung in BE-01: Ein Datenbankausfall bleibt in Kuma grün und fällt nur über Sentry auf —
+**wenn dort eine Alarmregel weckt**; und die Zertifikatswarnung von Kuma war nie an einem Kanal geprüft.
+
+| | |
+|---|---|
+| **Sentry** | Alarmregel „neues Issue oder wieder aufgetreten" im Projekt, Umgebung **`prod`** oder „alle", Aktion E-Mail an den Betreiber. ⚠ **Nicht auf `production` filtern:** Die Umgebung ist `%kernel.environment%` (Vorgabe von `sentry-symfony`, in `sentry.yaml` nicht überschrieben) und heißt deshalb `prod` — eine Regel auf „production" weckt nie. Ausgelöst mit `php bin/console sentry:test --env=prod` im Anwendungs-Container |
+| **Kuma** | „Certificate Expiry Notification" am Monitor `/health`, Kanal angehakt; Tage 21/14/7 unter Settings → Notifications bzw. TLS-Einstellungen |
+| **Stand** | wird eingetragen, sobald beide Alarme angekommen sind |
+
+### BE-07 · Umami aktualisieren — regelmäßig, von Hand
+
+Das Image steht im Docker Manager fest auf `3.3.1`; der Hoster-Katalog setzte ursprünglich `latest`. Updates, auch
+Sicherheitsupdates, kommen deshalb **nur von Hand** — und mit jedem Update ersetzt man `public/zaehler.js` und
+`app.umami_tracker_version` im Repository (CLAUDE.md, Abschnitt „Nutzungsmessung"; `TrackerFileTest`).
+
+| | |
+|---|---|
+| **Takt** | einmal im Quartal die Veröffentlichungen von Umami ansehen (nächste Durchsicht: **2026-12**); bei einer Sicherheitsmeldung sofort |
+| **Ablauf** | Sicherung der Umami-Datenbank (BE-05) → Image-Tag erhöhen → `zaehler.js` aus dem neuen Image entnehmen, Version eintragen, Prüfläufe → Release → danach erst Umami neu starten. ⚠ Nie zurückpinnen: Neuere Versionen spielen Datenbankmigrationen ein |
+| **Offen aus Feature 11** | T33 (Konten, zweiter Faktor, Lese-Benutzer), T34 (Zugangsdatei), T43 (Trichter-Berichte) — beim Betreiber |
