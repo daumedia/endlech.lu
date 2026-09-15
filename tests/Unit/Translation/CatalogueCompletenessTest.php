@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * Die vier Kataloge müssen dieselbe Schlüsselmenge tragen.
+ * Alle Kataloge müssen dieselbe Schlüsselmenge tragen.
  *
  * Ein Schlüssel, den nur eine Sprache kennt, fällt sonst erst auf, wenn ihn
  * jemand in genau der fehlenden Sprache aufruft — dort steht dann der rohe
@@ -18,7 +18,7 @@ use Symfony\Component\Yaml\Yaml;
  */
 final class CatalogueCompletenessTest extends TestCase
 {
-    private const LOCALES = ['lb', 'de', 'fr', 'en'];
+    private const LOCALES = ['lb', 'de', 'fr', 'en', 'pt'];
 
     /**
      * Alle geprüften Domains.
@@ -85,7 +85,7 @@ final class CatalogueCompletenessTest extends TestCase
     }
 
     /**
-     * Jeder im Code verwendete Schlüssel muss in allen vier Katalogen stehen.
+     * Jeder im Code verwendete Schlüssel muss in allen Katalogen stehen.
      *
      * BF-69: Elf Schlüssel wurden verwendet und waren nirgends definiert — sie
      * standen als roher Text auf der Seite (`admin.restaurant.cancel` als

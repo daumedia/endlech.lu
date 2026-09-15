@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * Jeder Textschlüssel des Presse-Kits steht in allen vier Katalogen (Feature 05).
+ * Jeder Textschlüssel des Presse-Kits steht in allen Katalogen (Feature 05).
  *
  * ⚠ **Ohne diesen Lauf wäre AK-30 wirkungslos.** Der Scanner in
  * `CatalogueCompletenessTest` erfasst nur Literale in Vorlagen — Materialliste,
@@ -25,18 +25,18 @@ use Symfony\Component\Yaml\Yaml;
  * Der dritte Test ist der ungewöhnlichste und der wichtigste: Er hält die
  * Gesundheitsangabe aus AK-37 auf **eine** Textstelle fest. Sie im Boilerplate zu
  * wiederholen wäre naheliegend — es ist das stärkste Argument des Textes — und
- * machte den Widerruf zu einer Suche über vier Kataloge.
+ * machte den Widerruf zu einer Suche über alle Kataloge.
  */
 final class PressCatalogueTest extends TestCase
 {
-    private const LOCALES = ['lb', 'de', 'fr', 'en'];
+    private const LOCALES = ['lb', 'de', 'fr', 'en', 'pt'];
     private const DOMAIN = 'press';
 
     /** Der einzige Schlüssel, der die Angabe zur Behinderung tragen darf. */
     private const BIO_KEY = 'person.bio';
 
-    /** Wortstämme der Angabe in den vier Sprachen. */
-    private const GESUNDHEITSANGABE = '/\bSMA\d?\b|muskelatrophie|amyotrophie|muscular atrophy/iu';
+    /** Wortstämme der Angabe in allen Sprachen. */
+    private const GESUNDHEITSANGABE = '/\bSMA\d?\b|muskelatrophie|amyotrophie|muscular atrophy|atrofia muscular/iu';
 
     /**
      * Schlüssel, die **keine** Stelle im Quelltext als Literal nennt (BF-98).
@@ -65,7 +65,7 @@ final class PressCatalogueTest extends TestCase
         'facts.license_code_value', 'facts.license_data_value', 'facts.languages_value',
     ];
 
-    public function testJederSchluesselAusAppPressStehtInAllenVierKatalogen(): void
+    public function testJederSchluesselAusAppPressStehtInAllenKatalogen(): void
     {
         $verwendet = self::schluesselAusDemQuelltext();
         self::assertNotEmpty($verwendet, 'Es wurden keine Schlüssel gefunden — der Sammler greift ins Leere.');
@@ -100,7 +100,7 @@ final class PressCatalogueTest extends TestCase
         self::assertArrayHasKey('material.terms_intro', $katalog, 'Der Sammler prüft gegen einen leeren Katalog.');
     }
 
-    /** AK-08: Die Wortzahlen liegen in allen vier Sprachen in den Grenzen des Enums. */
+    /** AK-08: Die Wortzahlen liegen in allen Sprachen in den Grenzen des Enums. */
     public function testDieBeschreibungstexteHaltenIhreWortgrenzenInJederSprache(): void
     {
         foreach (self::LOCALES as $locale) {

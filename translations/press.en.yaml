@@ -41,7 +41,7 @@ facts:
     license_data: "Dataset licence"
     license_data_value: "CC BY 4.0"
     languages: "Languages"
-    languages_value: "Luxembourgish, German, French, English"
+    languages_value: "Luxembourgish, German, French, English, Portuguese"
     contact: "Press contact"
 
 material:
@@ -63,7 +63,7 @@ material:
     terms_intro: "This material belongs to Endlech.lu and may be used free of charge for editorial reporting about the platform."
     allowed_1: "Editorial reporting about Endlech.lu – free of charge and without asking first."
     allowed_2: "Scaling up and down, as long as the proportions are kept and clear space remains around the mark."
-    allowed_3: "Brand colours: cyan #0891b2 and violet #7c3aed."
+    allowed_3: "Brand colours: cyan #01b6ed and violet #7c3aed."
     allowed_4: "The standard variant on a light background, the inverted variant on a dark background."
     forbidden_1: "Distorting, rotating, cropping or adding shadows and effects."
     forbidden_2: "Recolouring, filling with gradients or adding an outline."
@@ -93,4 +93,4 @@ contact:
     section_title: "Press contact"
     email_label: "Email"
     response_time: "We usually reply within two working days."
-    interview: "Interview requests are welcome – in Luxembourgish, German, French or English."
+    interview: "Interview requests are welcome – in Luxembourgish, German, French or Portuguese; in English, in writing."

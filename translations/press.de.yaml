@@ -44,7 +44,7 @@ facts:
     license_data: "Lizenz des Datensatzes"
     license_data_value: "CC BY 4.0"
     languages: "Sprachen"
-    languages_value: "Luxemburgisch, Deutsch, Französisch, Englisch"
+    languages_value: "Luxemburgisch, Deutsch, Französisch, Englisch, Portugiesisch"
     contact: "Pressekontakt"
 
 material:
@@ -66,7 +66,7 @@ material:
     terms_intro: "Dieses Material gehört zu Endlech.lu und darf für redaktionelle Berichterstattung über die Plattform honorarfrei verwendet werden."
     allowed_1: "Redaktionelle Berichterstattung über Endlech.lu – honorarfrei und ohne Anfrage."
     allowed_2: "Vergrößern und Verkleinern, solange die Proportionen erhalten bleiben und ringsum Schutzraum frei bleibt."
-    allowed_3: "Markenfarben: Cyan #0891b2 und Violett #7c3aed."
+    allowed_3: "Markenfarben: Cyan #01b6ed und Violett #7c3aed."
     allowed_4: "Die Standardvariante auf hellem Grund, die Inversvariante auf dunklem Grund."
     forbidden_1: "Verzerren, drehen, beschneiden oder mit Schatten und Effekten versehen."
     forbidden_2: "Umfärben, mit Verläufen füllen oder eine Umrandung hinzufügen."
@@ -96,4 +96,4 @@ contact:
     section_title: "Pressekontakt"
     email_label: "E-Mail"
     response_time: "Wir antworten in der Regel innerhalb von zwei Werktagen."
-    interview: "Interviewanfragen sind willkommen – auf Luxemburgisch, Deutsch, Französisch oder Englisch."
+    interview: "Interviewanfragen sind willkommen – auf Luxemburgisch, Deutsch, Französisch oder Portugiesisch, auf Englisch schriftlich."

@@ -36,7 +36,7 @@ final class AdminLocaleController extends AbstractController
      * `https://boeswillig.example/phishing` — mit ausgerechnet dem Zugang, der ohne
      * zweite Stufe auskommt.
      */
-    #[Route('/locale/{locale}', name: 'admin_set_locale', requirements: ['locale' => 'lb|de|fr|en'])]
+    #[Route('/locale/{locale}', name: 'admin_set_locale', requirements: ['locale' => 'lb|de|fr|en|pt'])]
     public function setLocale(string $locale, Request $request): RedirectResponse
     {
         return $this->redirectToRoute(...$this->ziel($request, $locale));

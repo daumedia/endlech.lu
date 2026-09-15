@@ -27,7 +27,7 @@ final class LocaleSubscriberTest extends TestCase
         $unter = $haupt->duplicate(null, null, ['_controller' => 'error_controller', '_locale' => 'de']);
         $stack->push($unter);
 
-        return [new LocaleSubscriber($stack), new RequestEvent(
+        return [new LocaleSubscriber($stack, ['lb', 'de', 'fr', 'en', 'pt']), new RequestEvent(
             $this->createStub(HttpKernelInterface::class),
             $unter,
             HttpKernelInterface::SUB_REQUEST,
@@ -61,7 +61,7 @@ final class LocaleSubscriberTest extends TestCase
         $stack = new RequestStack();
         $stack->push($haupt);
 
-        (new LocaleSubscriber($stack))->onKernelRequest(new RequestEvent(
+        (new LocaleSubscriber($stack, ['lb', 'de', 'fr', 'en', 'pt']))->onKernelRequest(new RequestEvent(
             $this->createStub(HttpKernelInterface::class),
             $haupt,
             HttpKernelInterface::MAIN_REQUEST,

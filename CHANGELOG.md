@@ -2,10 +2,64 @@
 
 Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
-![Version](https://img.shields.io/badge/version-2026.09.14.2-blue)
+![Version](https://img.shields.io/badge/version-2026.09.15-blue)
 ![Status](https://img.shields.io/badge/status-beta-green)
 
 ## [Unreleased]
+
+## [2026.09.15] – Portugiesisch, Fußzeile nach Themen und „Restaurant vorschlagen" für Gäste
+
+Vier Änderungen (#133–#136), alle für Gäste sichtbar: die Website auf Portugiesisch, eine gegliederte Fußzeile,
+„Konto eröffnen" statt „Mitmachen" samt Wortmarke im Logo-Blau, und eine Vorschlagsseite, die sich erklärt, bevor
+sie ein Konto verlangt.
+
+⚠ **Keine Migration.** Nur die Anwendung muss ausgerollt werden; der Worker ist unberührt.
+
+### „Restaurant vorschlagen" erklärt sich, bevor es ein Konto verlangt
+
+- **Gäste landen nicht mehr sofort auf der Anmeldung.** Sie sehen, wie ein Vorschlag abläuft (fünf Schritte,
+  Ja/Nein/„Weiß nicht", Prüfung vor Veröffentlichung) und warum ein kostenloses Konto nötig ist, mit Knöpfen
+  „Konto eröffnen" und „Ich habe schon ein Konto".
+- **Nach der Anmeldung geht es beim Vorschlag weiter** (Passwort und Passkey), nicht auf der Startseite.
+- Absenden bleibt an ein bestätigtes Konto gebunden; Limiter und Moderationsweg unverändert. B11 AK-01 ersetzt.
+
+### „Konto eröffnen" und Wortmarke im Logo-Blau
+
+- **„Mitmachen" heißt jetzt „Konto eröffnen"** — Knopf in der Kopfzeile und auf der Startseite (beide führen zur
+  Registrierung). lb „Kont opmaachen", en „Create account", pt „Criar conta", fr auf der Startseite „Créer un
+  compte", in der Kopfzeile „S'inscrire" (die längere Form brach die Navigation zwischen 1024 und 1279 px auf zwei
+  Zeilen). Die Fußzeilengruppe „Mitmachen" bleibt.
+- **Text-Wortmarke „Endlech" im Blau der Bildmarke** (#01b6ed, Token `--color-brand`) in Kopf- und Fußzeile statt
+  cyan-600/cyan-400.
+- **Presse-Kit im selben Blau:** Schriftzug beider Wort-Bildmarken und die Markenfarbe in den Nutzungsbedingungen
+  auf #01b6ed (vorher #0891b2 bzw. #22d3ee, OF-11 aus Feature 05). Paket neu gepackt, `CACHE_VERSION` auf v4.
+- Registrierungsknopf mit `whitespace-nowrap`; gemessen in fünf Sprachen bei 390–1440 px ohne waagerechtes Scrollen.
+
+### Fußzeile nach Themen gegliedert
+
+- **Vier benannte Gruppen statt einer Zwölfer-Liste:** Entdecken · Mitmachen · Über Endlech · Vergleiche, dazu
+  Marke mit Kontakt. Roadmap, Changelog und App-Warteliste stehen nicht mehr ohne Überschrift unter „Kontakt".
+- **Rechtliches in eigener Leiste** unten: Impressum · Datenschutz (neu, Sprung auf `#datenschutz`) ·
+  Barrierefreiheit · Cookie-Einstellungen.
+- Wortmarke „Endlech.lu" ohne Lücke und als Link zur Startseite. Desktop-Fußzeile 359 statt 541 px hoch.
+- Ausgelagert nach `templates/partials/_footer.html.twig`; `FooterStructureTest` hält die Gliederung fest.
+
+### Portugiesisch als fünfte Sprache
+
+- **Die ganze Website auf Portugiesisch** unter `/pt/…` — europäisches Portugiesisch (pt-PT) mit höflicher
+  Anrede, für die portugiesische Gemeinschaft in Luxemburg. Sechs neue Kataloge (`messages`, `validators`,
+  `press`, `comparison`, `roadmap`, `changelog`), dieselbe Schlüsselmenge wie die übrigen vier.
+- **Sprachumschalter, Sitemap und hreflang** führen `pt` automatisch.
+  ⚠ **Keine Sprachwahl nach Browsersprache:** `/` und die Kurzlinks (`/open`, `/vergleich` …) leiten fest auf
+  `/lb/`, für jede Sprache — beim Release nachgemessen. Der zusammengeführte Stand vor diesem Release
+  behauptete anderes.
+- `LocaleSubscriber` und beide Sprachumschalter lesen die Sprachen jetzt aus `framework.enabled_locales`
+  statt aus eigenen Listen.
+- `robots.txt` sperrt `/pt/admin`, `/pt/profile`, `/pt/api/`. Presse-Paket neu gepackt
+  (Nutzungsbedingungen auch auf Portugiesisch).
+- Faktenblatt und Unternehmensseite nennen Portugiesisch in allen Sprachen unter den Plattformsprachen.
+- Presse-Kontakt: Interviews auf Luxemburgisch, Deutsch, Französisch oder Portugiesisch, auf Englisch nur
+  schriftlich (vorher „oder Englisch").
 
 ## [2026.09.14.2] – Nutzungsmessung über die eigene Umami-Domain (Feature 11, scharf)
 

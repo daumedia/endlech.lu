@@ -108,7 +108,7 @@ dem Seitenverzeichnis `App\Seo\SeoRegistry` und dem Adressbildner `App\Seo\SeoUr
 | Angabe | Wo | Für welche Seiten |
 |---|---|---|
 | `<link rel="canonical">` | Block `canonical` in `base.html.twig`, Funktion `seo_canonical_url()` | nur Seiten aus dem Verzeichnis (21 feste plus Restaurant-Detailseiten) |
-| `<link rel="alternate" hreflang>` | `base.html.twig`, Funktion `seo_alternate_urls()` | jede Seite mit Route außer `app_root`; vier Sprachen plus `x-default` auf `lb` |
+| `<link rel="alternate" hreflang>` | `base.html.twig`, Funktion `seo_alternate_urls()` | jede Seite mit Route außer `app_root`; alle Sprachen aus `enabled_locales` (lb, de, fr, en, pt) plus `x-default` auf `lb` |
 | `X-Robots-Tag: noindex` | Antwortkopfzeile, `SeoRobotsHeaderSubscriber` | die 16 Ausschlusswege (Anmelden, Passwort, Bestätigungen, Abmeldelinks, Dankeseiten, Einreichformulare) |
 
 ⚠️ **Alle Adressen lauten auf `https://endlech.lu`**, auch lokal und im Test — der Host kommt
@@ -210,89 +210,58 @@ Fußzeile auf kurzen Seiten unten bleibt.
 
 ## Fußzeile
 
-`bg-gray-900 text-gray-300 py-12 mt-12 print:hidden`, **vier Spalten**
-(`grid-cols-1 md:grid-cols-2 lg:grid-cols-4`):
+`templates/partials/_footer.html.twig`, eingebunden in `base.html.twig`.
+`bg-gray-900 text-gray-300 print:hidden`. **Seit 2026-09-15 nach Themen gegliedert**, vorher
+Feature für Feature gewachsen (eine Spalte „Links" mit zwölf ungeordneten Einträgen, Impressum
+neben Suche neben Cookie-Einstellungen, dazu eine Liste ohne Überschrift unter „Kontakt").
 
-| Spalte | Inhalt |
-|---|---|
-| 1 | Wortmarke, `footer.tagline`, GitHub-Link (`target="_blank"`, `rel="noopener noreferrer"`) |
-| 2 | `footer.links` — elf Einträge, siehe unten |
-| 3 | `footer.comparisons` — je ein Link pro Vergleich plus `footer.all_comparisons` (Feature 03) |
-| 4 | `footer.contact_title`, `footer.help_improve`, `mailto:support@endlech.lu` — darunter, abgesetzt durch `border-t`, **drei Einträge**: `footer.roadmap` und `footer.changelog` (Feature 07) sowie `footer.app` → `app_app_waitlist` (Feature 08) |
+**Raster:** `grid-cols-2 md:grid-cols-4 lg:grid-cols-12`. Markenspalte `col-span-2 md:col-span-4
+lg:col-span-4` (volle Breite bis `lg`), jede Gruppe `lg:col-span-2`. Gemessen: Desktop 1440 px
+359 px hoch (vorher 541), Tablet 900 px 591 px (vorher 778).
 
-Die Linkliste (Spalte 2), **elf Einträge**: Restaurants suchen · Restaurant
-vorschlagen · Kriterien · Partner · Organisationen · Open · Impressum ·
-Barrierefreiheit · **Presse** · Cookie-Einstellungen · **Feedback & Ideen**
-(`app_board_index`, intern).
+| Bereich | Überschrift (`h2`) | Inhalt |
+|---|---|---|
+| Marke | — / `footer.contact_title` | Wortmarke → `app_home`, `footer.tagline`; Kontakt: `footer.help_improve`, `mailto:support@endlech.lu`, GitHub (`target="_blank"`, `rel="noopener noreferrer"`) |
+| Entdecken | `footer.discover` | Restaurants suchen · Kriterien für Barrierefreiheit · App-Warteliste (Feature 08) |
+| Mitmachen | `footer.get_involved` | Restaurant vorschlagen (`footer.suggest_restaurant`) · Feedback & Ideen (Feature 06) · Für Restaurants · Für Organisationen |
+| Über Endlech | `nav.about` | Über uns (`nav.about_short`, BF-80) · Zahlen & Finanzen · Roadmap · Changelog (Feature 07) · Presse (Feature 05) |
+| Vergleiche | `footer.comparisons` | je ein Link pro Wettbewerber + `footer.all_comparisons` (Feature 03 AK-01) |
+| Rechtsleiste | `nav[aria-label=footer.legal_nav]` | Impressum · Datenschutz (`app_impressum#datenschutz`) · Barrierefreiheit (Feature 02 AK-42) · Cookie-Einstellungen |
 
-⚠ **Der Eintrag „Feedback & Ideen" zeigte bis 2026-08-30 auf
-`https://endlech.userjot.com`** — ein extern gehostetes Ideen-Board. Mit
-Feature `06` wurde er **ersetzt**, nicht ergänzt: Zwei Adressen für dieselbe
-Frage teilen Nutzer und Stimmen, und das eigene Board wäre von Anfang an halb
-leer. Der Übersetzungsschlüssel `footer.feedback` bleibt unverändert, nur das
-Ziel wechselt; `target="_blank"` und `rel` sind entfallen, weil der Verweis
-jetzt intern ist. Die Zahl der Einträge bleibt bei elf.
+⚠ **Wer einen Link ergänzt, ordnet ihn einer Gruppe zu.** Keine Liste ohne Überschrift, keine
+Rechtsseite zwischen den Inhalten — genau so war die Fußzeile unübersichtlich geworden.
+`FooterStructureTest` prüft beides.
 
-Der Eintrag „Presse" kam mit Feature 05 dazu und steht bewusst in dieser Spalte
-statt in einer eigenen: Ein einzelner Link rechtfertigt keine fünfte Spalte, und
-bei `lg:` zöge sie die Fußzeile schief.
+⚠ **Die Wortmarke ist EIN Textfluss** (`<span>Endlech</span>.lu` direkt im Link). Im alten
+`flex gap-2`-Container stand zwischen „Endlech" und „.lu" eine sichtbare Lücke.
 
-⚠ **Roadmap und Changelog stehen in Spalte 4, nicht in Spalte 2** (Feature 07).
-Spalte 2 trägt bereits elf Einträge, und Feature 03 hat aus genau diesem Grund
-Spalte 3 aufgemacht. Eine **fünfte** Spalte bräche das `lg:grid-cols-4`-Raster —
-und die Kopfzeile hat mit **BF-80** ohnehin eine offene Umbruchlücke zwischen
-768 px und 1000 px; kein Feature sollte sie nebenbei vergrößern. Spalte 4 war die
-dünnste und trägt die Einträge, ohne dass sich etwas verschiebt.
+⚠ **Links tragen `min-h-[44px] md:min-h-0`** (Projektregel für Tap-Ziele unter `md`, wie BF-144).
+Auf dem Telefon ist die Fußzeile deshalb kaum kürzer als vorher (1053 statt 1105 px), aber in
+zwei Spalten gegliedert.
 
-**Feature 08 hat den abgesetzten Block auf drei Einträge erweitert**: `footer.app`
-verweist auf `/app` (Route `app_app_waitlist`, Warteliste für die native App).
-Dieselbe Begründung wie oben — nicht als **zwölfter** Eintrag in Spalte 2 und nicht
-als fünfte Spalte. Wer hier einen vierten Eintrag ergänzt, prüft vorher, ob Spalte 4
-noch die dünnste ist; ab etwa fünf Einträgen kippt das Verhältnis zu Spalte 3.
+**Feedback & Ideen** zeigte bis 2026-08-30 auf `https://endlech.userjot.com` und wurde mit
+Feature 06 **ersetzt**, nicht ergänzt (AK-80: genau ein Rückmeldeweg, intern, ohne `_blank`).
 
-Zum Feature gehört außerdem ein **Hinweisband auf der Startseite**
-(`templates/home/index.html.twig`, zwischen „Warum Endlech.lu?" und dem
-Handlungsaufruf): `bg-gray-50 border-y`, ein Emoji-Feld, zwei Zeilen Text und ein
-Knopf auf `app_app_waitlist`. Es liegt bewusst **außerhalb** der Shell — es ist
-Inhalt der Startseite und steht nicht auf jeder Seite. ⚠ **Kein Store-Abzeichen:**
-Es gibt keine veröffentlichte App, „Im App Store laden" wäre ein Versprechen ohne
-Deckung.
+**Die Vergleiche kommen aus einer Twig-Erweiterung**, nicht aus dem Controller:
+`comparison_competitors()` in `src/Twig/ComparisonExtension.php`. Die Fußzeile wird auf *jeder*
+Seite gerendert; der erste Controller, der die Liste vergäße, lieferte eine halbe Fußzeile.
 
-⚠ **Die Fußzeile überschreibt ihre vier Spalten mit `<h4>`.** Da die letzte
-Inhaltsüberschrift jeder Seite eine `h2` ist, springt die Überschriftenkette
-seitenweit von h2 auf h4 — ein Screenreader meldet eine Ebene, zu der es keine
-übergeordnete gibt (WCAG 1.3.1). Beim Bau von Feature 07 gemessen und auf
-`/presse`, `/open`, `/about` und `/vergleich` gegengeprüft: **überall dasselbe**.
-Die Reparatur wäre eine Zeile hier, betrifft aber jede Seite und steht als OF-10
-in `features/07-roadmap-changelog/spec.md`.
+~~⚠ Die Fußzeile überschreibt ihre Spalten mit `<h4>`.~~ **Behoben (BF-109):** Gruppentitel sind
+`h2`, `HeadingOrderTest` prüft die Kette. Die Schriftgröße hängt an den Klassen.
 
-~~⚠ **Der `hreflang`-Block spiegelt die Abfragezeichenfolge.**~~ **Überholt.** Am 2026-09-12
-nachgemessen, dass der Block die Abfrage **nicht** spiegelt (BF-110,
-`QueryParameterReflexionTest`); seit Feature 10 kommen die Verweise aus dem Adressbildner, und von
-der Abfrage überlebt nur eine geprüfte Seitenzahl ab 2, und nur auf blätternden Seiten.
+**„Cookie-Einstellungen" wird auf Admin-Routen unterdrückt** — eigene `cookie-consent`-Instanz,
+stößt per `dispatch('open')` das Banner an.
 
-**Spalte 3 kommt aus einer Twig-Erweiterung**, nicht aus dem Controller:
-`comparison_competitors()` in `src/Twig/ComparisonExtension.php`. Die Fußzeile wird
-auf *jeder* Seite gerendert; über den Controller müsste jeder der rund zwanzig
-Controller die Liste mitgeben, und der erste, der es vergisst, liefert eine Seite
-mit halber Fußzeile aus.
+Zum Feature 08 gehört außerdem ein **Hinweisband auf der Startseite**
+(`templates/home/index.html.twig`), außerhalb der Shell. ⚠ **Kein Store-Abzeichen** (es gibt keine
+veröffentlichte App).
 
-⚠ **Der Umbruchpunkt ist `lg:`, nicht `md:`.** Vier Spalten in der Breite, bei der
-bisher drei standen, drückten die Linkliste auf eine unlesbare Spaltenbreite. Auf
-mittleren Breiten stehen jetzt zwei Spalten nebeneinander.
+Abschlusszeile: `© {{ 'now'|date('Y') }} Endlech.lu`, `footer.copyright` und die Version aus dem
+Twig-Global `app_version` (`app.version` in `config/services.yaml`). **Das ist die einzige
+Versionsangabe, die Besucher sehen.**
 
-⚠ Bis 2026-08-28 nannte dieser Abschnitt sieben Einträge in Spalte 2 (es waren
-zehn) und führte unter „Bekannte Lücken" einen toten Link, den es nicht mehr gab.
-Wer die Fußzeile ändert, zieht diesen Abschnitt mit — er ist zweimal
-auseinandergelaufen.
-
-**Der Punkt „Cookie-Einstellungen" wird auf Admin-Routen unterdrückt**
-(`{% if not (…_route) starts with 'admin_' %}`) — er ist eine eigene
-`cookie-consent`-Controller-Instanz und stößt per `dispatch('open')` das Banner an.
-
-Abschlusszeile: `© {{ 'now'|date('Y') }} Endlech.lu`, `footer.copyright` und die
-Version aus dem Twig-Global `app_version` (gespeist aus `app.version` in
-`config/services.yaml`). **Das ist die einzige Versionsangabe, die Besucher sehen.**
+⚠ Dieser Abschnitt ist zweimal hinter dem Template zurückgeblieben. Wer die Fußzeile ändert,
+zieht ihn mit.
 
 ---
 

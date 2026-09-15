@@ -27,12 +27,12 @@ use Symfony\Component\Yaml\Yaml;
  *
  * ⚠ **Dieser Lauf prüft zugleich zwei Akzeptanzkriterien strukturell.** AK-05
  * („kein Eintrag besteht nur aus einem Titel") und AK-29 („kein Eintrag ohne
- * Herkunft") sind erfüllt, weil `reason` hier für jeden Eintrag in vier Sprachen
+ * Herkunft") sind erfüllt, weil `reason` hier für jeden Eintrag in allen Sprachen
  * verlangt wird — ein Vorhaben ohne Begründung erreicht die Produktion nicht.
  */
 final class RoadmapCatalogueTest extends TestCase
 {
-    private const array LOCALES = ['lb', 'de', 'fr', 'en'];
+    private const array LOCALES = ['lb', 'de', 'fr', 'en', 'pt'];
 
     /**
      * @return array<string, string>

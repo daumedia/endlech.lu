@@ -16,14 +16,13 @@ nav:
     admin: "Admin"
     logout: "Log Out"
     login: "Login"
-    join: "Join Us"
+    join: "Create account"
     profile: "My Profile"
     skip_to_content: "Skip to content"
 
 footer:
     tagline: "The platform for accessible dining in Luxembourg. Together for more inclusion."
     open_source: "Open Source on GitHub"
-    links: "Links"
     search_restaurants: "Search Restaurants"
     accessibility_criteria: "Accessibility Criteria"
     partner: "For restaurants"
@@ -41,6 +40,11 @@ footer:
     roadmap: "Roadmap"
     changelog: "Changelog"
     app: "App waiting list"
+    discover: "Discover"
+    get_involved: "Get involved"
+    suggest_restaurant: "Suggest a restaurant"
+    privacy: "Privacy"
+    legal_nav: "Legal"
 
 cookie:
     title: "We use cookies"
@@ -57,7 +61,7 @@ home:
         heading: "Find Accessible Restaurants in Luxembourg"
         subtitle: "Endlech.lu helps you find restaurants that are truly accessible to everyone."
         cta_discover: "Discover Restaurants"
-        cta_join: "Join Us"
+        cta_join: "Create account"
     how_it_works:
         title: "How It Works"
         search_title: "Search"
@@ -310,6 +314,14 @@ community:
         cancel: "Cancel"
         step_incomplete: "Please answer all questions in this step."
         step_announce: "Step %current% of %total%: %title%"
+        guest:
+            how_title: "How a suggestion works"
+            answers: "For each feature you answer Yes, No or “Don’t know” – you never have to state anything you don’t know."
+            review: "We review every suggestion before the restaurant appears publicly."
+            account_title: "You need a free account for this"
+            account_text: "This keeps the list free of spam. If we don’t add a suggestion, we let you know by email; restaurants that are added show up in your profile."
+            login: "I already have an account"
+            return_hint: "After logging in, you come straight back here."
     thanks:
         title: "Thank You – Endlech.lu"
         heading: "Thank you for your suggestion!"
@@ -1277,7 +1289,7 @@ organisation:
         format_3_title: "Co-fund a municipality"
         format_3_text: "Not every municipality has a budget. You can cover the survey for a specific one."
         format_4_title: "Translations and workshops"
-        format_4_text: "The platform exists in Luxembourgish, German, French and English. Translations and training for restaurateurs cost money that does not come from membership fees."
+        format_4_text: "The platform exists in Luxembourgish, German, French, English and Portuguese. Translations and training for restaurateurs cost money that does not come from membership fees."
         exclusion_title: "Who we do not accept as a sponsor"
         exclusion_text: "So that our recommendations keep their worth, we take no money from companies that could benefit from those very recommendations:"
         exclusion_1: "Restaurant chains and businesses that are themselves rated on Endlech.lu."

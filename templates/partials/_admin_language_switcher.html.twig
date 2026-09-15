@@ -1,12 +1,11 @@
 {# Language Switcher für Admin-Bereich (session-basiert) #}
 {% set current_locale = app.request.locale %}
 
-{% set locales = {
-    'lb': 'LB',
-    'de': 'DE',
-    'fr': 'FR',
-    'en': 'EN'
-} %}
+{# Aus `framework.enabled_locales`, wie der öffentliche Umschalter. #}
+{% set locales = {} %}
+{% for _locale_code in app.enabled_locales %}
+    {% set locales = locales|merge({(_locale_code): _locale_code|upper}) %}
+{% endfor %}
 
 <div class="relative" data-controller="language-switcher"
      data-action="keydown.esc->language-switcher#closeOnEscape">

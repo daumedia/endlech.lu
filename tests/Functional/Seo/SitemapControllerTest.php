@@ -48,7 +48,7 @@ final class SitemapControllerTest extends WebTestCase
      * AK-04 · JEDE Adresse der Sitemap antwortet mit 200 — ohne Weiterleitung, ohne 404.
      *
      * Aufgerufen wird der Pfad; der Host lautet auf `https://endlech.lu` und ist im Test nicht
-     * erreichbar. Mit den Fixtures sind das 128 Abrufe.
+     * erreichbar. Mit den Fixtures sind das 160 Abrufe (32 Seiten × 5 Sprachen).
      */
     public function testJedeAdresseDerSitemapAntwortetMit200(): void
     {
@@ -56,7 +56,7 @@ final class SitemapControllerTest extends WebTestCase
         $client->request('GET', '/sitemap.xml');
         $adressen = $this->adressen((string) $client->getResponse()->getContent());
 
-        self::assertCount(128, $adressen);
+        self::assertCount(160, $adressen);
         $fehler = [];
         foreach ($adressen as $adresse) {
             self::assertStringStartsWith('https://endlech.lu/', $adresse);

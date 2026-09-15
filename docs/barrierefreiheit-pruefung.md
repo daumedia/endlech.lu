@@ -14,7 +14,7 @@ Akzeptanzkriterium fest, ob es **erfüllt**, **umgesetzt (Verifikation ausstehen
 | Strukturell (Skip-Link, Landmarks, ein H1, `lang`) | `tests/Functional/AccessibilityStructureTest` (11 Routen) | ✅ grün |
 | Meldeweg (öffentlich, Mail ohne Speicherung, Honeypot, 422) | `tests/Functional/Controller/AccessibilityControllerTest` | ✅ grün |
 | Limiter-Verdrahtung | `LimiterCoverageTest` | ✅ grün |
-| Übersetzungs-Vollständigkeit (4 Sprachen) | `CatalogueCompletenessTest` | ✅ grün |
+| Übersetzungs-Vollständigkeit (5 Sprachen) | `CatalogueCompletenessTest` | ✅ grün |
 | Gesamte Regressionsprüfung | volle PHPUnit-Suite (480 Tests) | ✅ grün |
 | Inhaltlich (Kontrast, ARIA, Alt-Texte automatisiert) | `bin/a11y-audit.mjs` (axe-core, WCAG 2.2 AA) über 12 Routen | ✅ **grün (2026-08-26)** — 31 Befunde gefunden und behoben, jetzt 0 |
 | Tastaturweg & Screenreader (manuell) | Raster von Hand | ⏳ ausstehend (QA) |
@@ -78,7 +78,7 @@ Legende: ✅ per Test belegt · 🟡 umgesetzt, Verifikation via axe/Hand ausste
 | AK-41 | Tom-Select-Ansage | 🟡 | ARIA von Haus aus + `aria-live` für Auswahl (T15); **Entfernen** nicht angesagt → OF-01 |
 | AK-42 | Footer-Link zur Erklärung | ✅ | `base.html.twig` (T08), Route registriert |
 | AK-43 | Erklärung Pflichtinhalte | ✅ | `accessibility/index.html.twig` (T10) + diese Matrix; keine gesetzliche Beschwerdestelle (Decision #13) |
-| AK-44 | Erklärung in vier Sprachen | ✅ | `accessibility_statement.*` in 4 Katalogen (`CatalogueCompletenessTest`) |
+| AK-44 | Erklärung in allen Sprachen | ✅ | `accessibility_statement.*` in 5 Katalogen (`CatalogueCompletenessTest`) |
 | AK-45 | Liste nicht zugänglicher Inhalte | ✅ | siehe Abschnitt „Bekannte Einschränkungen" unten |
 | AK-46 | Veralterungshinweis ≥ 12 Monate | ✅ | Controller-Logik (T06), Datum-gegen-heute |
 | AK-47 | Rechtslage ohne falsche Pflicht | 🟡 | freiwillige Selbstverpflichtung (T10); **Endtext-Rechtsabnahme = UA-01** |

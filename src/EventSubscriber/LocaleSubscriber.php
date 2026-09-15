@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\EventSubscriber;
 
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -11,10 +12,18 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 final class LocaleSubscriber implements EventSubscriberInterface
 {
-    private const ALLOWED_LOCALES = ['lb', 'de', 'fr', 'en'];
-
-    public function __construct(private readonly RequestStack $requests)
-    {
+    /**
+     * ⚠ Aus `framework.enabled_locales`, nicht als eigene Liste. Mit einer Konstante hier
+     * erkannte die Website eine neue Sprache (pt) im Pfad, der Erstbesuch mit
+     * `Accept-Language: pt` landete aber weiter auf Luxemburgisch.
+     *
+     * @param list<string> $allowedLocales
+     */
+    public function __construct(
+        private readonly RequestStack $requests,
+        #[Autowire('%kernel.enabled_locales%')]
+        private readonly array $allowedLocales,
+    ) {
     }
 
     public static function getSubscribedEvents(): array
@@ -51,7 +60,7 @@ final class LocaleSubscriber implements EventSubscriberInterface
         // _locale aus Route-Parameter → Session speichern
         $locale = $request->attributes->get('_locale');
 
-        if ($locale && in_array($locale, self::ALLOWED_LOCALES, true)) {
+        if ($locale && in_array($locale, $this->allowedLocales, true)) {
             $request->getSession()->set('_locale', $locale);
             $request->setLocale($locale);
 
@@ -60,7 +69,7 @@ final class LocaleSubscriber implements EventSubscriberInterface
 
         // Erstbesucher: Accept-Language Header auswerten
         if (!$request->getSession()->has('_locale')) {
-            $preferred = $request->getPreferredLanguage(self::ALLOWED_LOCALES);
+            $preferred = $request->getPreferredLanguage($this->allowedLocales);
             if ($preferred) {
                 $request->getSession()->set('_locale', $preferred);
             }

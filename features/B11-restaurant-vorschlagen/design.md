@@ -68,7 +68,7 @@ Migrationen: `Version20260320000000` (Basis), `Version20260324000000` (weitere F
 
 | Wer | Darf lesen | Darf schreiben | Erzwungen durch |
 |---|---|---|---|
-| Gast | nichts | nichts | `#[IsGranted('ROLE_USER')]` |
+| Gast | die Erklärseite `community/vorschlagen_gast.html.twig` (seit 2026-09-15) | nichts — POST → Anmeldung | `isGranted('ROLE_USER')` im Controller, `createAccessDeniedException()` für Nicht-GET |
 | angemeldet, unbestätigt | nichts | nichts | `if (!$user->isVerified())` im Controller |
 | angemeldet, bestätigt | das leere Formular | einen Vorschlag anlegen | dieselbe Methode |
 | Nutzer | **nicht** die eigenen Vorschläge | — | es gibt keine Ansicht dafür (FB-02) |

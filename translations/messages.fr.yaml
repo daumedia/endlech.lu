@@ -16,14 +16,13 @@ nav:
     admin: "Admin"
     logout: "Déconnexion"
     login: "Connexion"
-    join: "Rejoindre"
+    join: "S'inscrire"
     profile: "Mon profil"
     skip_to_content: "Aller au contenu"
 
 footer:
     tagline: "La plateforme pour la gastronomie accessible au Luxembourg. Ensemble pour plus d'inclusion."
     open_source: "Open Source sur GitHub"
-    links: "Liens"
     search_restaurants: "Rechercher des restaurants"
     accessibility_criteria: "Critères d'accessibilité"
     partner: "Pour les restaurants"
@@ -41,6 +40,11 @@ footer:
     roadmap: "Feuille de route"
     changelog: "Journal des modifications"
     app: "Liste d’attente app"
+    discover: "Découvrir"
+    get_involved: "Participer"
+    suggest_restaurant: "Proposer un restaurant"
+    privacy: "Protection des données"
+    legal_nav: "Informations légales"
 
 cookie:
     title: "Nous utilisons des cookies"
@@ -57,7 +61,7 @@ home:
         heading: "Trouver des restaurants accessibles au Luxembourg"
         subtitle: "Endlech.lu vous aide à trouver des restaurants vraiment accessibles à tous."
         cta_discover: "Découvrir les restaurants"
-        cta_join: "Rejoindre"
+        cta_join: "Créer un compte"
     how_it_works:
         title: "Comment ça marche"
         search_title: "Rechercher"
@@ -310,6 +314,14 @@ community:
         cancel: "Annuler"
         step_incomplete: "Merci de répondre à toutes les questions de cette étape."
         step_announce: "Étape %current% sur %total% : %title%"
+        guest:
+            how_title: "Comment se déroule une proposition"
+            answers: "Pour chaque critère, vous répondez par Oui, Non ou « Je ne sais pas » – vous n’avez rien à indiquer que vous ne savez pas."
+            review: "Nous vérifions chaque proposition avant que le restaurant n’apparaisse publiquement."
+            account_title: "Il vous faut pour cela un compte gratuit"
+            account_text: "La liste reste ainsi à l’abri du spam. Si nous ne retenons pas une proposition, nous vous prévenons par e-mail ; les restaurants ajoutés figurent dans votre profil."
+            login: "J’ai déjà un compte"
+            return_hint: "Après la connexion, vous revenez directement ici."
     thanks:
         title: "Merci pour votre proposition – Endlech.lu"
         heading: "Merci pour votre proposition !"
@@ -1277,7 +1289,7 @@ organisation:
         format_3_title: "Cofinancer une commune"
         format_3_text: "Toutes les communes n'ont pas de budget. Vous pouvez prendre en charge le recensement d'une commune précise."
         format_4_title: "Traductions et ateliers"
-        format_4_text: "La plateforme existe en luxembourgeois, allemand, français et anglais. Les traductions et les formations pour restaurateurs coûtent de l'argent qui ne provient pas des cotisations."
+        format_4_text: "La plateforme existe en luxembourgeois, allemand, français, anglais et portugais. Les traductions et les formations pour restaurateurs coûtent de l'argent qui ne provient pas des cotisations."
         exclusion_title: "Les sponsors que nous n'acceptons pas"
         exclusion_text: "Pour que nos recommandations gardent leur valeur, nous n'acceptons pas d'argent d'entreprises qui pourraient précisément en profiter :"
         exclusion_1: "Chaînes de restauration et établissements eux-mêmes évalués sur Endlech.lu."

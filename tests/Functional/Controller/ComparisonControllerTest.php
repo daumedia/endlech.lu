@@ -159,7 +159,7 @@ final class ComparisonControllerTest extends AbstractWebTestCase
         self::assertResponseRedirects();
         $client->followRedirect();
         self::assertResponseIsSuccessful();
-        self::assertMatchesRegularExpression('#/(lb|de|fr|en)/vergleich$#', $client->getRequest()->getUri());
+        self::assertMatchesRegularExpression('#/(lb|de|fr|en|pt)/vergleich$#', $client->getRequest()->getUri());
     }
 
     /**

@@ -23,6 +23,9 @@ repo:
     link_label: "CHANGELOG.md op GitHub opmaachen"
 
 release:
+    v2026_09_15:
+        title: "Endlech.lu gëtt et elo och op Portugisesch"
+        body: "Déi ganz Websäit gëtt et elo och op Portugisesch – fir déi vill Leit zu Lëtzebuerg, déi Portugisesch schwätzen. Dir wielt et uewen an der Sproochauswiel. Ausserdeem ass d’Fousszeil opgeraumt: D’Linke stinn a benannte Gruppen, Impressum, Dateschutz a Barrièrefräiheet an enger eegener Zeil. A wien e Restaurant virschloe wëll, gesäit elo als éischt, wéi dat ofleeft a firwat e gratis Kont dofir néideg ass, amplaz direkt virun der Umeldung ze stoen."
     v2026_09_14_2:
         title: "Mir moossen elo, wat gelies gëtt — ouni Cookien"
         body: "Fir ze gesinn, wéi eng Säiten hëllefen a wou d’Sich ofbrécht, zielen mir Säitenopruffer an e puer Schrëtt wéi „Filter applizéiert“. Dat leeft op eisem eegene Server: keng Cookien, keng gespäichert IP-Adress, näischt, wat mat engem Kont verbonnen ass. Wien net gezielt wëll ginn, schalt et an der Dateschutzerklärung aus — oder schéckt „Do Not Track“ oder „Global Privacy Control“ aus dem Browser."

@@ -41,7 +41,7 @@ facts:
     license_data: "Licence du jeu de données"
     license_data_value: "CC BY 4.0"
     languages: "Langues"
-    languages_value: "Luxembourgeois, allemand, français, anglais"
+    languages_value: "Luxembourgeois, allemand, français, anglais, portugais"
     contact: "Contact presse"
 
 material:
@@ -63,7 +63,7 @@ material:
     terms_intro: "Ce matériel appartient à Endlech.lu et peut être utilisé sans frais pour la couverture rédactionnelle de la plateforme."
     allowed_1: "Couverture rédactionnelle sur Endlech.lu – sans frais et sans demande préalable."
     allowed_2: "Agrandir et réduire, tant que les proportions sont conservées et qu'une zone de protection reste libre autour."
-    allowed_3: "Couleurs de la marque : cyan #0891b2 et violet #7c3aed."
+    allowed_3: "Couleurs de la marque : cyan #01b6ed et violet #7c3aed."
     allowed_4: "La variante standard sur fond clair, la variante inversée sur fond sombre."
     forbidden_1: "Déformer, faire pivoter, rogner ou ajouter des ombres et des effets."
     forbidden_2: "Changer les couleurs, appliquer un dégradé ou ajouter un contour."
@@ -93,4 +93,4 @@ contact:
     section_title: "Contact presse"
     email_label: "E-mail"
     response_time: "Nous répondons en général sous deux jours ouvrables."
-    interview: "Les demandes d'interview sont les bienvenues – en luxembourgeois, allemand, français ou anglais."
+    interview: "Les demandes d'interview sont les bienvenues – en luxembourgeois, allemand, français ou portugais ; en anglais, par écrit."

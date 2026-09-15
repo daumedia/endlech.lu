@@ -1,0 +1,75 @@
+meta_title: "Registo de alterações – Endlech.lu"
+meta_description: "O que mudou em Endlech.lu — resumido de forma clara, organizado por ano."
+eyebrow: "O que mudou"
+heading: "Registo de alterações"
+intro: "O que foi acrescentado a Endlech.lu — em linguagem clara, sem termos técnicos."
+
+empty:
+    title: "Ainda não há entradas"
+    body: "Ainda não há nada aqui. A versão técnica completa está disponível no repositório."
+
+year_heading: "%year%"
+
+summary:
+    title: "Construção da plataforma"
+    period: "Janeiro a março de 2026"
+    body: "Foi neste período que Endlech.lu nasceu: lista de restaurantes, páginas de detalhe, contas, formas de pagamento, estabelecimentos verificados e as primeiras informações sobre acessibilidade. Cada passo pode ser consultado no repositório."
+
+repo:
+    section_title: "Versão completa"
+    explainer: "No repositório encontra-se o registo de alterações técnico: cada entrega, incluindo as puramente internas, com correções de erros, alterações à base de dados e referências ao código-fonte. Foi escrito para programadoras e programadores e não tem comentários."
+    language_note: "Disponível apenas em alemão."
+    link_label: "Abrir CHANGELOG.md no GitHub"
+
+release:
+    v2026_09_15:
+        title: "Endlech.lu agora também em português"
+        body: "Todo o site está agora disponível em português – para as muitas pessoas no Luxemburgo que falam português. Basta escolhê-lo no seletor de idioma, no topo da página. O rodapé também foi arrumado: as ligações estão agrupadas por temas, e o aviso legal, a privacidade e a acessibilidade ficam numa linha própria. Por fim, quem quiser sugerir um restaurante vê primeiro como funciona e porque é necessária uma conta gratuita, em vez de ir parar diretamente à página de início de sessão."
+    v2026_09_14_2:
+        title: "Passámos a medir o que é lido — sem cookies"
+        body: "Para perceber que páginas ajudam e onde a pesquisa é abandonada, contamos visualizações de páginas e alguns passos, como «filtro aplicado». Tudo funciona no nosso próprio servidor: sem cookies, sem endereço IP guardado, sem nada que esteja associado a uma conta. Quem não quiser ser contabilizado pode desativar a contagem na política de privacidade — ou enviar «Do Not Track» ou «Global Privacy Control» a partir do navegador."
+    v2026_09_12_1:
+        title: "Um tipo de letra próprio"
+        body: "Endlech.lu tem agora um tipo de letra próprio. Até aqui, cada dispositivo mostrava a página com o tipo de letra que tinha à mão — agora tem o mesmo aspeto em todo o lado. O tipo de letra está no nosso próprio servidor; por isso, não é feito nenhum pedido a terceiros nem é enviada qualquer informação sobre si. Foi também corrigido um erro que permitia deslocar a página na horizontal em tablets e em janelas pequenas, embora não houvesse nada para deslocar. E quem lê com um leitor de ecrã encontra agora as secções numa ordem sem saltos."
+    v2026_09_12:
+        title: "Conta e palavra-passe mais protegidas"
+        body: "Quem elimina a sua conta tem de introduzir a palavra-passe — e essa introdução já não pode ser repetida um número ilimitado de vezes. Após três tentativas falhadas, há uma pausa de 15 minutos. O mesmo se aplica a «Esqueci-me da palavra-passe»: a página deixou de revelar se existe uma conta associada a um endereço."
+    v2026_09_11_2:
+        title: "Endereços com acentos já funcionam"
+        body: "Quem tinha um endereço de e-mail com acento ou trema no domínio — por exemplo, em télécom.lu ou bäckerei.lu — não conseguia até agora registar-se nem inscrever-se numa lista de espera: o formulário rejeitava o endereço. Isso está corrigido. Ao mesmo tempo, os formulários verificam os endereços com mais rigor, para que um endereço impossível de entregar nem sequer seja aceite."
+    v2026_09_11:
+        title: "Quem gere Endlech.lu"
+        body: "Endlech.lu passou a ser gerido por uma sociedade registada, a DAUMEDIA S.à r.l.-S, e já não por um particular. Por isso, o aviso legal indica a partir de agora a sede, o número de registo comercial e a autorização de estabelecimento. Para os seus dados, isto significa que os seus direitos de acesso, retificação e apagamento passam a ser exercidos junto da sociedade. O que mudou foi quem é responsável — não o que guardamos sobre si."
+    v2026_09_05:
+        title: "A lista de espera da app"
+        body: "Endlech.lu vai chegar ao telemóvel como app. Para iPhone e iPad já existe uma versão de teste — quem se inscrever recebe o acesso por e-mail. Para Android ainda não foi construído nada, e é isso mesmo que lá está escrito: a inscrição conta quando decidirmos se avançamos."
+    v2026_08_31:
+        title: "Roteiro e registo de alterações"
+        body: "Duas novas páginas mostram em que se está a trabalhar: o roteiro apresenta em três colunas o que está em curso, planeado e em ponderação — e o que, conscientemente, não vai ser feito. O registo de alterações conta o que mudou recentemente. Sem datas, mas com uma justificação para cada projeto."
+    v2026_08_30_2:
+        title: "Quadro de ideias"
+        body: "Um quadro público para sugestões sobre a plataforma: envie ideias, apoie as de outras pessoas, e em cada ideia fica escrito o que resultou dela — mesmo quando a resposta é não."
+    v2026_08_30:
+        title: "Página de imprensa e novidades por e-mail"
+        body: "Uma página de imprensa com textos de apresentação prontos, números atuais e logótipos para transferir. Quem estiver numa das listas de espera pode ainda inscrever-se para receber novidades por e-mail."
+    v2026_08_29:
+        title: "Páginas de comparação e acessibilidade"
+        body: "Três páginas que comparam abertamente Endlech.lu com o Google Maps, o Wheelmap e o TripAdvisor — com fonte e data de verificação para cada afirmação. Além disso, uma revisão completa para teclado, leitor de ecrã e contraste, e uma página onde se pode consultar o estado da acessibilidade."
+    v2026_08_09:
+        title: "Respostas claras em vez de caixas vazias"
+        body: "No formulário de sugestão, três respostas — Sim, Não, Não sei — substituem as antigas caixas de verificação. Antes, uma caixa vazia significava duas coisas ao mesmo tempo; em matéria de acessibilidade, a diferença é essencial."
+    v2026_06_19:
+        title: "Adicionar ao ecrã principal"
+        body: "Endlech.lu pode ser instalado no iPhone como uma app: ícone próprio, ecrã inteiro e uma página que mostra alguma coisa mesmo sem rede. Em baixo, surge uma barra de navegação ao alcance do polegar."
+    v2026_03_22:
+        title: "Horários, cozinha e paragens"
+        body: "Cada estabelecimento pode ter vários períodos por dia, e a lista pode ser filtrada por «aberto agora». Além disso, tipos de cozinha para filtrar e as paragens próximas."
+    v2026_03_17:
+        title: "Perfil e sugestões próprias"
+        body: "Um perfil próprio com foto, nome e a lista dos estabelecimentos que a própria pessoa sugeriu. Os restaurantes passam a ter uma imagem de capa."
+    v2026_03_08e:
+        title: "Fotos de cada estabelecimento"
+        body: "Várias fotos por restaurante, ampliáveis e com uma descrição que também pode ser lida por um leitor de ecrã."
+    v2026_03_08d:
+        title: "Filtros para a lista de restaurantes"
+        body: "A lista pode ser filtrada pelas características que importam: entrada sem degraus, casa de banho acessível, cães de assistência e outras."
