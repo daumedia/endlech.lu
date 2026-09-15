@@ -16,7 +16,7 @@ nav:
     admin: "Admin"
     logout: "Ofmellen"
     login: "Umellen"
-    join: "Matmaachen"
+    join: "Kont opmaachen"
     profile: "Mäi Profil"
     skip_to_content: "Zum Inhalt sprangen"
 
@@ -61,7 +61,7 @@ home:
         heading: "Barrierefräi Restauranten zu Lëtzebuerg fannen"
         subtitle: "Endlech.lu hëlleft dir, Restauranten ze fannen, déi wierklech fir jiddereen zougänglech sinn."
         cta_discover: "Restauranten entdecken"
-        cta_join: "Matmaachen"
+        cta_join: "Kont opmaachen"
     how_it_works:
         title: "Sou funktionéiert et"
         search_title: "Sichen"

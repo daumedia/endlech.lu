@@ -99,9 +99,14 @@ Gezählt über alle Templates, nach Häufigkeit der Familie:
 Die Frage stellt sich, weil cyan und purple beide wie Primärfarben auftreten. Die
 Auflösung:
 
-- **Cyan ist die Markenfarbe.** Sie trägt die Wortmarke im Header
-  (`text-cyan-600`), die `theme_color` der PWA (`#0891b2` = cyan-600), das
-  Verifikations-Abzeichen, den Navigations-Hover und alle öffentlichen Aktionen.
+- **Cyan ist die Markenfarbe.** Sie trägt die `theme_color` der PWA (`#0891b2` =
+  cyan-600), das Verifikations-Abzeichen, den Navigations-Hover und alle öffentlichen
+  Aktionen.
+- **Die Text-Wortmarke trägt das Blau der Bildmarke**, Token `--color-brand: #01b6ed`
+  (`text-brand`, `@theme` in `app.css`) — in Kopfzeile und Fußzeile. Bis 2026-09-15 stand
+  sie in `text-cyan-600` bzw. `text-cyan-400` und lag sichtbar neben dem Zeichen daneben.
+  ⚠ **Nur für die Wortmarke.** Auf Weiß erreicht #01b6ed 2,4:1 — für Text zu wenig; die
+  Wortmarke fällt als Logo unter die Ausnahme von WCAG 1.4.3, Fließtext und Links nicht.
 - **Purple ist die Aktionsfarbe des angemeldeten Bereichs.** Registrierung,
   Profil, Admin-Navigation, „Heute geöffnet"-Hervorhebung.
 - Die Wortmarke zeigt beide zusammen: `Endlech` in cyan, `.lu` in purple.
@@ -694,8 +699,8 @@ bis zu diesem Dokument nirgends festgehalten.
 
 ### Und eine Grundsatzfrage
 
-**Es gibt keinen `@theme`-Block.** Jede Farbentscheidung wird in jedem Template
-neu ausgeschrieben. Solange das System klein ist, funktioniert das; es bedeutet
+**Der `@theme`-Block trägt nur Schrift und `--color-brand`.** Jede übrige
+Farbentscheidung wird in jedem Template neu ausgeschrieben. Solange das System klein ist, funktioniert das; es bedeutet
 aber, dass eine Änderung der Markenfarbe heute ein Suchen-und-Ersetzen über 77
 Templates plus die E-Mail-Vorlage plus `manifest.webmanifest` wäre. Benannte
 Tokens (`--color-brand`, `--color-accent`) würden das auf eine Stelle

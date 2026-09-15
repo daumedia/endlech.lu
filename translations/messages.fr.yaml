@@ -16,7 +16,7 @@ nav:
     admin: "Admin"
     logout: "Déconnexion"
     login: "Connexion"
-    join: "Rejoindre"
+    join: "S'inscrire"
     profile: "Mon profil"
     skip_to_content: "Aller au contenu"
 
@@ -61,7 +61,7 @@ home:
         heading: "Trouver des restaurants accessibles au Luxembourg"
         subtitle: "Endlech.lu vous aide à trouver des restaurants vraiment accessibles à tous."
         cta_discover: "Découvrir les restaurants"
-        cta_join: "Rejoindre"
+        cta_join: "Créer un compte"
     how_it_works:
         title: "Comment ça marche"
         search_title: "Rechercher"

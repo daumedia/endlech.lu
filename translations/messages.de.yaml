@@ -16,7 +16,7 @@ nav:
     admin: "Admin"
     logout: "Abmelden"
     login: "Login"
-    join: "Mitmachen"
+    join: "Konto eröffnen"
     profile: "Mein Profil"
     skip_to_content: "Zum Inhalt springen"
 
@@ -61,7 +61,7 @@ home:
         heading: "Barrierefreie Restaurants in Luxemburg finden"
         subtitle: "Endlech.lu hilft dir, Restaurants zu finden, die wirklich für alle zugänglich sind."
         cta_discover: "Restaurants entdecken"
-        cta_join: "Mitmachen"
+        cta_join: "Konto eröffnen"
     how_it_works:
         title: "So funktioniert's"
         search_title: "Suchen"

@@ -27,7 +27,12 @@
 // Reparatur**: Die neue Positivliste verhindert, dass künftig ein Profilbild in den
 // Cache gerät — die bereits gecachten bleiben ohne einen Versionswechsel aber liegen.
 // Erst `activate` löscht den alten Cache mitsamt Inhalt.
-const CACHE_VERSION = 'endlech-v3';
+//
+// ⚠ Auf `v4` erhöht am 2026-09-15 (OF-11 aus Feature 05 entschieden): Der Schriftzug
+// „Endlech" in beiden Wort-Bildmarken unter `public/presse-kit/` trägt jetzt das Blau
+// der Bildmarke (#01b6ed) statt #0891b2 bzw. #22d3ee. Ohne diese Zahl sähe ein
+// wiederkehrender Besucher die alte Vorschau neben dem neuen Paket.
+const CACHE_VERSION = 'endlech-v4';
 const OFFLINE_URL = '/offline.html';
 
 // ⚠ BF-140: **Positivliste, keine Ausschlussliste.** Gecacht wird nur, was hier steht.

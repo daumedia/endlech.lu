@@ -7,6 +7,18 @@ Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
 ## [Unreleased]
 
+### „Konto eröffnen" und Wortmarke im Logo-Blau
+
+- **„Mitmachen" heißt jetzt „Konto eröffnen"** — Knopf in der Kopfzeile und auf der Startseite (beide führen zur
+  Registrierung). lb „Kont opmaachen", en „Create account", pt „Criar conta", fr auf der Startseite „Créer un
+  compte", in der Kopfzeile „S'inscrire" (die längere Form brach die Navigation zwischen 1024 und 1279 px auf zwei
+  Zeilen). Die Fußzeilengruppe „Mitmachen" bleibt.
+- **Text-Wortmarke „Endlech" im Blau der Bildmarke** (#01b6ed, Token `--color-brand`) in Kopf- und Fußzeile statt
+  cyan-600/cyan-400.
+- **Presse-Kit im selben Blau:** Schriftzug beider Wort-Bildmarken und die Markenfarbe in den Nutzungsbedingungen
+  auf #01b6ed (vorher #0891b2 bzw. #22d3ee, OF-11 aus Feature 05). Paket neu gepackt, `CACHE_VERSION` auf v4.
+- Registrierungsknopf mit `whitespace-nowrap`; gemessen in fünf Sprachen bei 390–1440 px ohne waagerechtes Scrollen.
+
 ### Fußzeile nach Themen gegliedert
 
 - **Vier benannte Gruppen statt einer Zwölfer-Liste:** Entdecken · Mitmachen · Über Endlech · Vergleiche, dazu
