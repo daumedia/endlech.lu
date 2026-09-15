@@ -294,6 +294,12 @@ stateless (`token_id: submit`), passt headless via Same-Origin-Referer; Custom-T
 | `app_sitemap`         | `/sitemap.xml` (locale-frei) | `Seo\SitemapController::sitemap()` (Feature 10) |
 | `app_usage_collect`   | `/api/send` (POST, locale-frei) | `Usage\CollectController` (Feature 11, Zählweg zu Umami) |
 
+⚠ **`/` und die sprachfreien Kurzlinks** (`/open`, `/vergleich`, `/presse`, `/roadmap`, `/changelog`, `/app`) leiten
+seit 2026-09-15 über `LocaleRedirectController` in die Sprache des Besuchers: Sitzung → `Accept-Language` → `lb`.
+Kein `_locale` in ihren Routenvorgaben (sonst wird `lb` in die Sitzung geschrieben), `_locale` ausdrücklich an den
+Router (Symfonys `LocaleListener` setzt den Kontext vor `LocaleSubscriber`). Im Test ist „ohne Kopfzeile" ein
+**leeres** `HTTP_ACCEPT_LANGUAGE` — der Testclient schickt sonst `en-us` mit.
+
 **Wichtig:** `/api/v1/` ist **locale-frei** (eigener `api_v1`-Block in `routes.yaml` + `exclude` am
 `controllers`-Loader). Ebenso `src/Controller/Open/` (Block `open_data`) — die `exclude`-**Liste** hat
 deshalb mehrere Einträge. Die HTML-Seite `/open` liegt unter `/{_locale}`; `app_open_redirect` leitet
