@@ -7,6 +7,27 @@ Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
 ## [Unreleased]
 
+### Ein Postfach: support@endlech.lu
+
+⚠ **Vor dem Ausrollen in Coolify prüfen:** `CONTACT_EMAIL` auf **Anwendung und Worker**. Steht dort `info@endlech.lu`
+oder fehlt die Variable in einer älteren Fassung, auf `support@endlech.lu` setzen — die Vorgabe im Image zieht nur, wenn
+die Variable nicht gesetzt ist.
+
+- **Impressum und Barrierefreiheitserklärung** nennen `support@endlech.lu` statt `info@endlech.lu`, das es nicht gibt.
+- **Vorgabe für interne Meldungen** (`CONTACT_EMAIL` in `.env`, Fallback in `services.yaml`) auf `support@endlech.lu`.
+  Daran hängen drei Mailwege: Team-Meldung bei bestätigten Wartelisten-Anmeldungen, Rückstau-Warnung von
+  `app:messenger:watch` (Worker) und Barriere-Meldungen aus `/barrierefreiheit`.
+- `docs/datenschutz.md` korrigiert; `KontaktadresseTest` wird rot, sobald `info@endlech.lu` in Templates, Katalogen,
+  Konfiguration, `src/` oder `public/` auftaucht.
+
+### Ein Violett: #9333ea
+
+- **Nutzungsbedingungen im Presse-Kit** nennen als Markenfarbe Violett #9333ea (das „.lu" der Wort-Bildmarke) statt
+  #7c3aed, in fünf Sprachen. Paket neu gepackt.
+- **E-Mail-Vorlagen** (12 Dateien): Knöpfe, Links und der Kopfverlauf in #9333ea statt #7c3aed — dasselbe purple-600
+  wie der Registrierungsknopf der Website. Weiß auf #9333ea 5,4:1.
+- Keine Bilddatei geändert, deshalb kein neuer `CACHE_VERSION`.
+
 ## [2026.09.15] – Portugiesisch, Fußzeile nach Themen und „Restaurant vorschlagen" für Gäste
 
 Vier Änderungen (#133–#136), alle für Gäste sichtbar: die Website auf Portugiesisch, eine gegliederte Fußzeile,

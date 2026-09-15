@@ -608,7 +608,8 @@ zuverlässig unterstützen. Die Farbwerte sind dieselben:
 |---|---|---|
 | Seitenhintergrund | `#f9fafb` | gray-50, wie `<body>` der Website |
 | Karte | `#ffffff`, `border-radius: 12px`, `box-shadow: 0 1px 3px rgba(0,0,0,0.1)` | `rounded-xl shadow-sm` |
-| Kopfbereich | `linear-gradient(135deg, #0891b2, #7c3aed)` | cyan-600 → violet-600 |
+| Kopfbereich | `linear-gradient(135deg, #0891b2, #9333ea)` | cyan-600 → purple-600 (seit 2026-09-15; vorher violet-600 #7c3aed) |
+| Knöpfe und Links | `#9333ea` (Knopf mit weißer Schrift, 5,4:1) | purple-600, wie der Registrierungsknopf der Website |
 | `.lu` in der Wortmarke | `#e9d5ff` | purple-200 |
 | Kleingedrucktes | `#9ca3af`, 11 px | gray-400 |
 
