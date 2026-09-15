@@ -7,6 +7,15 @@ Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
 ## [Unreleased]
 
+### Fußzeile nach Themen gegliedert
+
+- **Vier benannte Gruppen statt einer Zwölfer-Liste:** Entdecken · Mitmachen · Über Endlech · Vergleiche, dazu
+  Marke mit Kontakt. Roadmap, Changelog und App-Warteliste stehen nicht mehr ohne Überschrift unter „Kontakt".
+- **Rechtliches in eigener Leiste** unten: Impressum · Datenschutz (neu, Sprung auf `#datenschutz`) ·
+  Barrierefreiheit · Cookie-Einstellungen.
+- Wortmarke „Endlech.lu" ohne Lücke und als Link zur Startseite. Desktop-Fußzeile 359 statt 541 px hoch.
+- Ausgelagert nach `templates/partials/_footer.html.twig`; `FooterStructureTest` hält die Gliederung fest.
+
 ### Portugiesisch als fünfte Sprache
 
 ⚠ **Keine Migration.** Nur die Anwendung muss ausgerollt werden.

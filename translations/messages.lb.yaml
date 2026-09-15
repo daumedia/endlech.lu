@@ -23,7 +23,6 @@ nav:
 footer:
     tagline: "D'Plattform fir barrierefräi Gastronomie zu Lëtzebuerg. Zesumme fir méi Inklusioun."
     open_source: "Open Source op GitHub"
-    links: "Linken"
     search_restaurants: "Restauranten sichen"
     accessibility_criteria: "Critèren fir Barrierefreiheet"
     partner: "Fir Restauranten"
@@ -41,6 +40,11 @@ footer:
     roadmap: "Roadmap"
     changelog: "Changelog"
     app: "App-Waardelëscht"
+    discover: "Entdecken"
+    get_involved: "Matmaachen"
+    suggest_restaurant: "Restaurant virschloen"
+    privacy: "Dateschutz"
+    legal_nav: "Rechtleches"
 
 cookie:
     title: "Mir benotzen Cookien"

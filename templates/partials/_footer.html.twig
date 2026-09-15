@@ -1,0 +1,124 @@
+{# Fußzeile — nach Themen gegliedert statt nach Entstehung.
+
+   Bis 2026-09-15 wuchs sie Feature für Feature: eine Spalte „Links" mit zwölf Einträgen ohne
+   Ordnung (Suche neben Impressum neben Cookie-Einstellungen), darunter in „Kontakt" eine
+   Liste ohne Überschrift (Roadmap, Changelog, App). Jetzt: Marke + Kontakt, vier benannte
+   Gruppen, Rechtliches in einer eigenen Leiste darunter.
+
+   ⚠ Wer einen Link ergänzt, ordnet ihn einer Gruppe zu — keine Liste ohne Überschrift, keine
+   Rechtsseite zwischen den Inhalten.
+
+   Zusagen aus Specs, die hier hängen (Ort frei, Existenz nicht):
+   - Feature 03 AK-01: eigener Bereich „Vergleiche" mit je einem Link pro Wettbewerber + „Alle".
+   - Feature 06 AK-80: GENAU ein Rückmeldeweg, auf das eigene Board, ohne `target="_blank"`.
+   - Feature 02 AK-42: „Barrierefreiheit" auf jeder Seite. Feature 05 AK-01: „Presse".
+   - Feature 08 AK-40: App-Warteliste. Feature 07: Roadmap + Changelog.
+   - BF-80: „Über uns" steht hier, weil die Kopfnavigation es zwischen 768–1023 px nicht zeigt.
+   - B26 AK-04: Cookie-Einstellungen, aber nicht im Verwaltungsbereich.
+
+   ⚠ BF-109: Gruppentitel sind `h2`, nicht `h4` — sonst springt die Überschriftenkette jeder
+   Seite (`HeadingOrderTest`). Die Schriftgröße hängt an den Klassen, nicht am Tag. #}
+{% set _link = 'inline-flex items-center min-h-[44px] md:min-h-0 hover:text-cyan-400 motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-cyan-400' %}
+
+{% set _gruppen = [
+    {titel: 'footer.discover', links: [
+        {href: path('app_restaurant_index'), label: 'footer.search_restaurants'},
+        {href: path('app_kriterien'), label: 'footer.accessibility_criteria'},
+        {href: path('app_app_waitlist'), label: 'footer.app'},
+    ]},
+    {titel: 'footer.get_involved', links: [
+        {href: path('community_vorschlagen'), label: 'footer.suggest_restaurant'},
+        {href: path('app_board_index'), label: 'footer.feedback'},
+        {href: path('app_partner'), label: 'footer.partner'},
+        {href: path('app_organisations'), label: 'nav.organisations'},
+    ]},
+    {titel: 'nav.about', links: [
+        {href: path('app_about'), label: 'nav.about_short'},
+        {href: path('app_open'), label: 'footer.open'},
+        {href: path('app_roadmap_index'), label: 'footer.roadmap'},
+        {href: path('app_changelog_index'), label: 'footer.changelog'},
+        {href: path('app_press_index'), label: 'footer.press'},
+    ]},
+] %}
+
+<footer class="bg-gray-900 text-gray-300 pt-12 pb-8 mt-12 print:hidden">
+    <div class="container mx-auto px-4 text-sm">
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-12 gap-x-6 gap-y-10">
+
+            {# Marke und Kontakt #}
+            <div class="col-span-2 md:col-span-4 lg:col-span-4 lg:pr-8">
+                <a href="{{ path('app_home') }}" class="inline-block text-white font-bold text-lg hover:text-cyan-400 motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-cyan-400">
+                    <span class="text-cyan-400">Endlech</span>.lu
+                </a>
+                <p class="mt-3 max-w-sm text-gray-300">{{ 'footer.tagline'|trans }}</p>
+
+                <h2 class="mt-6 text-white font-bold uppercase tracking-wider text-xs">{{ 'footer.contact_title'|trans }}</h2>
+                <p class="mt-2">{{ 'footer.help_improve'|trans }}</p>
+                <ul class="mt-1">
+                    <li>
+                        <a href="mailto:support@endlech.lu" class="{{ _link }} gap-2 text-cyan-400 hover:underline">
+                            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l9 6 9-6M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                            support@endlech.lu
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://github.com/Mukaarts/endlech.lu" class="{{ _link }} gap-2 text-gray-400" target="_blank" rel="noopener noreferrer">
+                            <svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"/></svg>
+                            {{ 'footer.open_source'|trans }}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            {% for gruppe in _gruppen %}
+                <div class="lg:col-span-2">
+                    <h2 class="text-white font-bold uppercase tracking-wider text-xs mb-3">{{ gruppe.titel|trans }}</h2>
+                    <ul class="md:space-y-2">
+                        {% for link in gruppe.links %}
+                            <li><a href="{{ link.href }}" class="{{ _link }}">{{ link.label|trans }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endfor %}
+
+            {# Feature 03 AK-01: eigener Bereich mit Überschrift „Vergleiche". #}
+            <div class="lg:col-span-2">
+                <h2 class="text-white font-bold uppercase tracking-wider text-xs mb-3">{{ 'footer.comparisons'|trans }}</h2>
+                <ul class="md:space-y-2">
+                    {% for competitor in comparison_competitors() %}
+                        <li>
+                            <a href="{{ path('app_comparison_show', {'slug': competitor.slug}) }}" class="{{ _link }}">
+                                {{ 'footer.vs'|trans({'%brand%': competitor.brand}) }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                    <li><a href="{{ path('app_comparison_index') }}" class="{{ _link }}">{{ 'footer.all_comparisons'|trans }}</a></li>
+                </ul>
+            </div>
+        </div>
+
+        {# Rechtliches — eigene Leiste, nicht zwischen den Inhalten. #}
+        <div class="border-t border-gray-800 mt-10 pt-6 flex flex-col-reverse gap-4 lg:flex-row lg:items-center lg:justify-between text-xs text-gray-400">
+            <p>
+                &copy; {{ 'now'|date('Y') }} Endlech.lu
+                <span class="mx-1" aria-hidden="true">&middot;</span>
+                {{ 'footer.copyright'|trans }}
+                <span class="mx-1" aria-hidden="true">&middot;</span>
+                v{{ app_version }}
+            </p>
+            <nav aria-label="{{ 'footer.legal_nav'|trans }}">
+                <ul class="flex flex-wrap gap-x-5">
+                    <li><a href="{{ path('app_impressum') }}" class="{{ _link }}">{{ 'footer.legal'|trans }}</a></li>
+                    <li><a href="{{ path('app_impressum') }}#datenschutz" class="{{ _link }}">{{ 'footer.privacy'|trans }}</a></li>
+                    <li><a href="{{ path('app_accessibility') }}" class="{{ _link }}">{{ 'footer.accessibility_statement'|trans }}</a></li>
+                    {% if not (app.request.attributes.get('_route') starts with 'admin_') %}
+                        {# B26 EC-01: eigene Controller-Instanz, öffnet das Banner über ein Fenster-Ereignis. #}
+                        <li data-controller="cookie-consent">
+                            <button type="button" class="{{ _link }} text-left" data-action="cookie-consent#openSettings">{{ 'cookie.settings'|trans }}</button>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+</footer>
