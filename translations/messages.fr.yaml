@@ -314,6 +314,14 @@ community:
         cancel: "Annuler"
         step_incomplete: "Merci de répondre à toutes les questions de cette étape."
         step_announce: "Étape %current% sur %total% : %title%"
+        guest:
+            how_title: "Comment se déroule une proposition"
+            answers: "Pour chaque critère, vous répondez par Oui, Non ou « Je ne sais pas » – vous n’avez rien à indiquer que vous ne savez pas."
+            review: "Nous vérifions chaque proposition avant que le restaurant n’apparaisse publiquement."
+            account_title: "Il vous faut pour cela un compte gratuit"
+            account_text: "La liste reste ainsi à l’abri du spam. Si nous ne retenons pas une proposition, nous vous prévenons par e-mail ; les restaurants ajoutés figurent dans votre profil."
+            login: "J’ai déjà un compte"
+            return_hint: "Après la connexion, vous revenez directement ici."
     thanks:
         title: "Merci pour votre proposition – Endlech.lu"
         heading: "Merci pour votre proposition !"

@@ -12,12 +12,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\RateLimiter\RateLimiterFactoryInterface;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Security\Http\Util\TargetPathTrait;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route('/community')]
 final class CommunityController extends AbstractController
 {
+    use TargetPathTrait;
+
     public function __construct(
         private readonly TranslatorInterface $translator,
         // ⚠ BF-50: Am KONTO gezählt, nicht an der IP — der Weg setzt eine
@@ -30,9 +32,27 @@ final class CommunityController extends AbstractController
     }
 
     #[Route('/suggest', name: 'community_vorschlagen', methods: ['GET', 'POST'])]
-    #[IsGranted('ROLE_USER')]
     public function vorschlagen(Request $request, EntityManagerInterface $entityManager): Response
     {
+        // Gäste sehen zuerst, worum es geht (2026-09-15, ersetzt B11 AK-01). Vorher schickte
+        // `#[IsGranted('ROLE_USER')]` jeden Gast ohne ein Wort zur Anmeldung — wer auf
+        // „Restaurant vorschlagen" klickte, wusste danach weder, was gefragt wird, noch warum
+        // er ein Konto braucht.
+        //
+        // ⚠ Nur das ANSEHEN ist offen. Ein POST ohne Konto endet weiterhin an der Anmeldung:
+        // Der Weg füllt eine Moderationsschlange, die von Hand abgearbeitet wird, und sein
+        // Limiter zählt am Konto (BF-50).
+        if (!$this->isGranted('ROLE_USER')) {
+            if (!$request->isMethod('GET')) {
+                throw $this->createAccessDeniedException();
+            }
+
+            // Nach Anmeldung (Passwort oder Passkey) geht es hier weiter, nicht auf der Startseite.
+            $this->saveTargetPath($request->getSession(), 'main', $this->generateUrl('community_vorschlagen'));
+
+            return $this->render('community/vorschlagen_gast.html.twig');
+        }
+
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
 

@@ -314,6 +314,14 @@ community:
         cancel: "Cancelar"
         step_incomplete: "Responda a todas as perguntas deste passo."
         step_announce: "Passo %current% de %total%: %title%"
+        guest:
+            how_title: "Como funciona uma sugestão"
+            answers: "Para cada característica responde Sim, Não ou «Não sei» – nunca tem de indicar algo que não sabe."
+            review: "Verificamos cada sugestão antes de o restaurante aparecer publicamente."
+            account_title: "Para isso precisa de uma conta gratuita"
+            account_text: "Assim a lista fica livre de spam. Se não aceitarmos uma sugestão, avisamos por e-mail; os restaurantes aceites aparecem no seu perfil."
+            login: "Já tenho conta"
+            return_hint: "Depois de iniciar sessão, volta diretamente a esta página."
     thanks:
         title: "Obrigado pela sua sugestão – Endlech.lu"
         heading: "Obrigado pela sua sugestão!"

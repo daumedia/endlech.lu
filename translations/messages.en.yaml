@@ -314,6 +314,14 @@ community:
         cancel: "Cancel"
         step_incomplete: "Please answer all questions in this step."
         step_announce: "Step %current% of %total%: %title%"
+        guest:
+            how_title: "How a suggestion works"
+            answers: "For each feature you answer Yes, No or “Don’t know” – you never have to state anything you don’t know."
+            review: "We review every suggestion before the restaurant appears publicly."
+            account_title: "You need a free account for this"
+            account_text: "This keeps the list free of spam. If we don’t add a suggestion, we let you know by email; restaurants that are added show up in your profile."
+            login: "I already have an account"
+            return_hint: "After logging in, you come straight back here."
     thanks:
         title: "Thank You – Endlech.lu"
         heading: "Thank you for your suggestion!"
