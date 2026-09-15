@@ -23,7 +23,6 @@ nav:
 footer:
     tagline: "La plateforme pour la gastronomie accessible au Luxembourg. Ensemble pour plus d'inclusion."
     open_source: "Open Source sur GitHub"
-    links: "Liens"
     search_restaurants: "Rechercher des restaurants"
     accessibility_criteria: "Critères d'accessibilité"
     partner: "Pour les restaurants"
@@ -41,6 +40,11 @@ footer:
     roadmap: "Feuille de route"
     changelog: "Journal des modifications"
     app: "Liste d’attente app"
+    discover: "Découvrir"
+    get_involved: "Participer"
+    suggest_restaurant: "Proposer un restaurant"
+    privacy: "Protection des données"
+    legal_nav: "Informations légales"
 
 cookie:
     title: "Nous utilisons des cookies"

@@ -23,7 +23,6 @@ nav:
 footer:
     tagline: "Die Plattform für barrierefreie Gastronomie in Luxemburg. Gemeinsam für mehr Inklusion."
     open_source: "Open Source auf GitHub"
-    links: "Links"
     search_restaurants: "Restaurants suchen"
     accessibility_criteria: "Kriterien für Barrierefreiheit"
     partner: "Für Restaurants"
@@ -41,6 +40,11 @@ footer:
     roadmap: "Roadmap"
     changelog: "Changelog"
     app: "App-Warteliste"
+    discover: "Entdecken"
+    get_involved: "Mitmachen"
+    suggest_restaurant: "Restaurant vorschlagen"
+    privacy: "Datenschutz"
+    legal_nav: "Rechtliches"
 
 cookie:
     title: "Wir verwenden Cookies"
