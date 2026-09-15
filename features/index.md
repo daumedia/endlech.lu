@@ -1807,7 +1807,7 @@ AK-49 verlangt ausdrücklich den *Aufruf* des Aufräumlaufs, nicht bloß seine E
 | 02 | Barrierefreiheit der Plattform (EN 301 549 / RAWeb) | P0 | **deployed** | B01–B26 | 2026-08-29 · live in v2026.08.29 |
 | 03 | Vergleichsseiten (vs. Google Maps, Wheelmap, TripAdvisor) | P1 | **deployed** | B05, B13, B24, B16, 02 | 2026-08-29 · live in v2026.08.29, auf Produktion nachgeprüft |
 | 04 | Marketing-Kontakte in Brevo | P1 | **deployed** | B01, B14, B15, B22, 01 | 2026-08-30 · live in v2026.08.30, Migrationen durch, auf Produktion belegt |
-| 05 | Presse-Kit | P2 | **deployed** | B13, B16, B24, 02, 03 | 2026-08-30 · live in v2026.08.30.1, auf Produktion nachgeprüft |
+| 05 | Presse-Kit | P2 | **deployed** | B13, B16, B24, 02, 03 | 2026-09-15 · **OF-11 entschieden: `#01b6ed`**, live in `v2026.09.15` (#135) — Schriftzug beider Wort-Bildmarken und `material.allowed_3` in fünf Sprachen, Paket neu gepackt, `CACHE_VERSION` v4. Neu offen: Violett `#7c3aed` (Bedingungen) gegen `#9333ea` (Logo). — 2026-08-30 · live in v2026.08.30.1, auf Produktion nachgeprüft |
 | 06 | Community Feedback Board | P1 | **deployed** | B01, B02, B19, B21, B24, 01, 02 | 2026-08-31 · live in v2026.08.31, auf Produktion nachgeprüft |
 | 07 | Öffentliche Roadmap und Changelog | P2 | **deployed** | 06, B13, B16, B24, 02, 03, 05 | 2026-08-31 · live in v2026.08.31, auf Produktion nachgeprüft |
 | 09 | Produktanalyse (Plausible/Umami oder PostHog) | P2 | roadmap | 02, B26, B13 | 2026-09-12 · aus `/sdd-betrieb` — Entscheidung offen, siehe `docs/datenschutz.md` BE-02. Seit `v2026.09.12.3` öffentlich als `usage_analytics` in „Angedacht“ auf `/roadmap`, mit der Zusage „nur ohne Cookies und ohne Personendaten“ — eine Spec muss sich daran halten |
@@ -1824,7 +1824,7 @@ AK-49 verlangt ausdrücklich den *Aufruf* des Aufräumlaufs, nicht bloß seine E
 | B08 | Küchen-Typen | P1 | **deployed** | — | 2026-09-11 · war live, auditiert; Reparaturen in v2026.08.29 |
 | B09 | Restaurantfotos & Galerie | P1 | **deployed** | B20 | 2026-09-11 · war live, auditiert; Reparaturen in v2026.08.29 |
 | B10 | Haltestellen in der Nähe | P2 | **approved** | — | 2026-09-11 · QA² 24/24 — ⚠ `qa-report.md` trägt noch „Production-ready: nein" aus dem 1. Durchlauf, nicht fortgeschrieben |
-| B11 | Restaurant vorschlagen (Wizard) | P0 | **deployed** | B01 | 2026-09-11 · war live, auditiert; Reparaturen in v2026.08.29 |
+| B11 | Restaurant vorschlagen (Wizard) | P0 | **deployed** | B01 | 2026-09-15 · **AK-01 geändert, live in `v2026.09.15`** (#136): Gäste sehen eine zweispaltige Erklärseite statt sofort die Anmeldung; nach der Anmeldung zurück zum Vorschlag; Gast-POST 302 → Anmeldung (auf der Produktion nachgeprüft). — 2026-09-11 · war live, auditiert; Reparaturen in v2026.08.29 |
 | B12 | Startseite | P1 | **approved** | B05 | 2026-09-11 · QA² 15/15, BF-64 repariert — ⚠ `qa-report.md` trägt noch „Production-ready: nein" aus dem 1. Durchlauf |
 | B13 | Statische Inhaltsseiten | P2 | **deployed** | — | 2026-09-11 · war live, auditiert; Reparaturen in v2026.08.29 |
 | B14 | Partner-Warteliste | P0 | **deployed** | — | 2026-09-12 · live in `v2026.09.12.1`; BF-119 auf Produktion nachgeprüft (**422 statt 500**), dazu BF-124 bis BF-127 |
@@ -1837,7 +1837,7 @@ AK-49 verlangt ausdrücklich den *Aufruf* des Aufräumlaufs, nicht bloß seine E
 | B21 | Vorschläge prüfen (Admin) | P0 | **deployed** | B19, B11 | 2026-09-11 · war live, auditiert; Reparaturen in v2026.08.29 |
 | B22 | Wartelisten-Verwaltung (Admin) | P1 | **deployed** | B19, B14, B15 | 2026-09-11 · war live, auditiert; Reparaturen in v2026.08.29 |
 | B23 | REST-API v1 (iOS-Backend) | P0 | **deployed** | B01, B05 | 2026-09-11 · war live, auditiert; Reparaturen in v2026.08.29 |
-| B24 | Mehrsprachigkeit | P1 | **approved** | — | 2026-09-11 · QA 16/16, BF-68 bis BF-72 behoben und in v2026.08.29 live — ⚠ `qa-report.md` trägt noch „Production-ready: nein" aus dem 1. Durchlauf |
+| B24 | Mehrsprachigkeit | P1 | **approved** | — | 2026-09-15 · **Portugiesisch (pt-PT) als fünfte Sprache, live in `v2026.09.15`** (#133), auf der Produktion nachgeprüft: `/pt/…` 200 mit `lang="pt"`, Sitemap 30 Einträge je Sprache, `robots.txt` sperrt `/pt/…`. `LocaleSubscriber` und Sprachumschalter lesen `enabled_locales`. ⚠ Keine Sprachwahl nach Browsersprache — `/` leitet fest auf `/lb/`. Status bleibt `approved` (keine QA-Runde für pt). Bericht `qa/v2026.09.15/produktion-2026-09-15.md`. — 2026-09-11 · QA 16/16, BF-68 bis BF-72 behoben und in v2026.08.29 live — ⚠ `qa-report.md` trägt noch „Production-ready: nein" aus dem 1. Durchlauf |
 | B25 | PWA & mobile Navigation | P1 | **deployed** | — | 2026-09-12 · QA¹ mit sechs Befunden, alle behoben und mit `v2026.09.12.2` ausgeliefert. Auf Produktion nachgeprüft: `CACHE_VERSION=endlech-v3`, und das **ausgelieferte** `sw.js` gegen den Prüflauf gefahren — Avatar nicht gecacht, Restaurantfoto und Porträt schon, API-Wege mit und ohne Sprachpräfix unangetastet |
 | B26 | Cookie-Banner | P2 | **deployed** | — | 2026-09-12 · QA¹: **alle 11 Kriterien bestanden**, Kontraste 5,54–17,75 : 1. Der einzige Befund (BF-146) betraf die Spezifikation; **am Code wurde nichts geändert** — der Auditvermerk ist der Deploy, nicht ein Build |
 
