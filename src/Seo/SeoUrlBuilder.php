@@ -34,8 +34,9 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 final readonly class SeoUrlBuilder
 {
     /**
-     * Die Sprache für „alle übrigen Sprachen" (`x-default`). Dieselbe, auf die `/` weiterleitet
-     * (`app_root` in `config/routes.yaml`) — Seiten und Weiterleitung sagen damit dasselbe.
+     * Die Sprache für „alle übrigen Sprachen" (`x-default`). Dieselbe, auf die `/` weiterleitet, wenn
+     * weder Sitzung noch Browser eine angebotene Sprache nennen (`LocaleRedirectController`, seit
+     * 2026-09-15) — Seiten und Weiterleitung sagen damit dasselbe.
      */
     public const string X_DEFAULT_LOCALE = 'lb';
 

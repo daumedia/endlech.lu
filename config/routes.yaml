@@ -1,24 +1,25 @@
 # yaml-language-server: $schema=../vendor/symfony/routing/Loader/schema/routing.schema.json
 
 # Root-Redirect: / → /{locale}/
+#
+# ⚠ Seit 2026-09-15 leiten `/` und alle sprachfreien Kurzlinks in die Sprache des Besuchers:
+# gewählte Sprache (Sitzung) → Browsersprache → lb. `LocaleRedirectController` statt
+# Symfonys RedirectController, und KEIN `_locale` in den Vorgaben — mit `_locale: lb` hielte
+# LocaleSubscriber das für eine Wahl und schriebe Luxemburgisch in die Sitzung. Immer 302.
 app_root:
     path: /
-    controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController
+    controller: App\Controller\LocaleRedirectController
     defaults:
         route: app_home
-        _locale: lb
-        permanent: false
 
 # Locale-freier Kurzlink auf die Transparenzseite.
 # /open ist die URL, die in Fördermails, auf Visitenkarten und in Vorträgen
 # steht – sie darf nicht an einer Sprachwahl scheitern.
 app_open_redirect:
     path: /open
-    controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController
+    controller: App\Controller\LocaleRedirectController
     defaults:
         route: app_open
-        _locale: lb
-        permanent: false
 
 # Locale-freier Kurzlink auf die Vergleichsübersicht (Feature 03).
 # Dieselbe Begründung wie bei /open: Die kurze Adresse steht in Mails und
@@ -27,11 +28,9 @@ app_open_redirect:
 # nicht abgetippt.
 app_comparison_redirect:
     path: /vergleich
-    controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController
+    controller: App\Controller\LocaleRedirectController
     defaults:
         route: app_comparison_index
-        _locale: lb
-        permanent: false
 
 # Locale-freier Kurzlink auf die Presseseite (Feature 05).
 # Dieselbe Begründung wie bei /open und /vergleich: Die kurze Adresse steht in
@@ -52,11 +51,9 @@ app_comparison_redirect:
 # `ignoreAttributes` hält den Hilfsparameter aus der Zieladresse heraus.
 app_press_redirect:
     path: /presse{trailing_slash}
-    controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController
+    controller: App\Controller\LocaleRedirectController
     defaults:
         route: app_press_index
-        _locale: lb
-        permanent: false
         trailing_slash: ''
         ignoreAttributes: ['trailing_slash']
     requirements:
@@ -75,19 +72,15 @@ app_press_redirect:
 # kein mod_dir hat. RouteDirectoryCollisionTest prüft genau diese Ursache.
 app_roadmap_redirect:
     path: /roadmap
-    controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController
+    controller: App\Controller\LocaleRedirectController
     defaults:
         route: app_roadmap_index
-        _locale: lb
-        permanent: false
 
 app_changelog_redirect:
     path: /changelog
-    controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController
+    controller: App\Controller\LocaleRedirectController
     defaults:
         route: app_changelog_index
-        _locale: lb
-        permanent: false
 
 # Locale-freier Kurzlink auf die App-Warteliste (Feature 08).
 # Dieselbe Begründung wie bei /open, /vergleich, /presse und /roadmap: Die kurze
@@ -103,11 +96,9 @@ app_changelog_redirect:
 # RouteDirectoryCollisionTest prüft genau diese Ursache projektweit.
 app_app_waitlist_redirect:
     path: /app
-    controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController
+    controller: App\Controller\LocaleRedirectController
     defaults:
         route: app_app_waitlist
-        _locale: lb
-        permanent: false
 
 # Alle Controller mit /{_locale} Prefix (inkl. Admin)
 # Ausnahmen: Api/V1 und Controller/Open werden separat ohne Locale-Prefix

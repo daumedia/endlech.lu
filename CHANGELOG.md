@@ -7,6 +7,17 @@ Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
 ## [Unreleased]
 
+### `/` und Kurzlinks in der Sprache des Besuchers
+
+- **`/` leitet nicht mehr fest auf `/lb/`**, sondern in die Sprache des Besuchers: eine schon gewählte Sprache (Sitzung),
+  sonst die Browsersprache, sonst Luxemburgisch. Wer mit portugiesischem Browser `endlech.lu` öffnet, landet auf
+  `/pt/`; mit `de-LU` auf `/de/`, mit `fr-LU` auf `/fr/`.
+- **Dasselbe für die Kurzlinks** `/open`, `/vergleich`, `/presse`, `/roadmap`, `/changelog`, `/app`.
+- `LocaleRedirectController` statt Symfonys `RedirectController`; weiterhin 302, jetzt mit `Vary: Accept-Language, Cookie`.
+- ⚠ **Folge für Luxemburg:** Die meisten Browser dort sind auf Französisch, Deutsch oder Englisch eingestellt — diese
+  Besucher sehen die Seite ab jetzt in dieser Sprache statt auf Luxemburgisch. Crawler ohne Sprachangabe und
+  Browser mit nicht angebotener Sprache landen weiter auf `/lb/` (= `x-default`).
+
 ## [2026.09.15.1] – Ein Violett, ein Postfach
 
 Marke und Kontakt vereinheitlicht (#137): Presse-Kit und E-Mails im Violett des Logos, und überall

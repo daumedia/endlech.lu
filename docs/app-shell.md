@@ -71,12 +71,13 @@ bewusst sprachfrei:
 | `api_v1` | `/api/v1` | Schnittstelle für die iOS-App |
 | `open_data` | `/open.json`, `/open/dataset.*` | zitierte URLs müssen eindeutig bleiben |
 
-Dazu zwei Weiterleitungen ohne Sprache, beide `permanent: false`:
-
-- `app_root` — `/` → `app_home` mit `_locale: lb`
-- `app_open_redirect` — `/open` → `app_open` mit `_locale: lb`.
-  Begründung im Code: *„/open ist die URL, die in Fördermails, auf Visitenkarten und in
-  Vorträgen steht – sie darf nicht an einer Sprachwahl scheitern."*
+Dazu sieben Weiterleitungen ohne Sprache, alle 302 über `LocaleRedirectController`: `app_root` (`/`) und die
+Kurzlinks `/open`, `/vergleich`, `/presse`, `/roadmap`, `/changelog`, `/app`. **Seit 2026-09-15 in die Sprache des
+Besuchers:** gewählte Sprache (Sitzung) → Browsersprache (`Accept-Language`) → `lb`. Vorher fest `_locale: lb`.
+Die Antwort trägt `Vary: Accept-Language, Cookie`. ⚠ Keine der Routen darf `_locale` als Vorgabe tragen, sonst
+schreibt `LocaleSubscriber` Luxemburgisch in die Sitzung (`LocaleRedirectControllerTest`).
+Begründung für die Kurzlinks im Code: *„/open ist die URL, die in Fördermails, auf Visitenkarten und in
+Vorträgen steht – sie darf nicht an einer Sprachwahl scheitern."*
 
 Auch die Passkey-Endpunkte des WebAuthn-Bundles sind sprachfrei
 (`/passkey/login/options`, `/passkey/register`, `/.well-known/webauthn`).
