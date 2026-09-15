@@ -1,0 +1,10 @@
+✅ /pt/ @1280 · 200 · lang=pt · Scroll 0 · Knopf „Criar conta" · zwei Spalten null · Fehler 0
+✅ /pt/ @390 · 200 · lang=pt · Scroll 0 · Knopf „Criar conta" · zwei Spalten null · Fehler 0
+✅ /de/community/suggest @1280 · 200 · lang=de · Scroll 0 · Knopf „Konto eröffnen" · zwei Spalten true · Fehler 0
+✅ /de/community/suggest @390 · 200 · lang=de · Scroll 0 · Knopf „Konto eröffnen" · zwei Spalten false · Fehler 0
+✅ /fr/ @1024 · 200 · lang=fr · Scroll 0 · Knopf „S'inscrire" · zwei Spalten null · Fehler 0
+✅ /de/about @1440 · 200 · lang=de · Scroll 0 · Knopf „Konto eröffnen" · zwei Spalten null · Fehler 0
+   Fußzeile: Kontakt, Entdecken, Mitmachen, Über Endlech, Vergleiche
+✅ /lb/restaurants @390 · 200 · lang=lb · Scroll 0 · Knopf „Kont opmaachen" · zwei Spalten null · Fehler 0
+
+7 von 7 bestanden
