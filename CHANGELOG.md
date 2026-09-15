@@ -7,6 +7,14 @@ Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
 ## [Unreleased]
 
+### „Restaurant vorschlagen" erklärt sich, bevor es ein Konto verlangt
+
+- **Gäste landen nicht mehr sofort auf der Anmeldung.** Sie sehen, wie ein Vorschlag abläuft (fünf Schritte,
+  Ja/Nein/„Weiß nicht", Prüfung vor Veröffentlichung) und warum ein kostenloses Konto nötig ist, mit Knöpfen
+  „Konto eröffnen" und „Ich habe schon ein Konto".
+- **Nach der Anmeldung geht es beim Vorschlag weiter** (Passwort und Passkey), nicht auf der Startseite.
+- Absenden bleibt an ein bestätigtes Konto gebunden; Limiter und Moderationsweg unverändert. B11 AK-01 ersetzt.
+
 ### „Konto eröffnen" und Wortmarke im Logo-Blau
 
 - **„Mitmachen" heißt jetzt „Konto eröffnen"** — Knopf in der Kopfzeile und auf der Startseite (beide führen zur

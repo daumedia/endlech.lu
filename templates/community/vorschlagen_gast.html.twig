@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+
+{# Restaurant vorschlagen — was ein Gast sieht (2026-09-15).
+
+   Vorher leitete die Seite Gäste ohne ein Wort zur Anmeldung weiter. Wer auf
+   „Restaurant vorschlagen" klickte, stand vor einem Anmeldeformular und wusste weder,
+   was gefragt wird, noch warum ein Konto nötig ist. Jetzt: erst erklären, dann fragen.
+
+   ⚠ Die Zusagen hier müssen stimmen. „Wir sagen Bescheid, wenn wir nicht aufnehmen"
+   deckt `email/suggestion_rejected.html.twig`; „aufgenommene Restaurants stehen im Profil"
+   deckt `AdminSuggestionController::approve()` (setzt `submittedBy`) und die Sektion
+   „Meine Einreichungen". Wer eines davon entfernt, zieht den Text hier mit. #}
+
+{% block title %}{{ 'community.suggest.title'|trans }}{% endblock %}
+
+{% block body %}
+<div class="container mx-auto px-4 py-12 max-w-5xl">
+
+    <div class="text-center mb-10 max-w-2xl mx-auto">
+        <div class="text-5xl mb-4" aria-hidden="true">🏪</div>
+        <h1 class="text-3xl font-bold text-gray-900 mb-3">{{ 'community.suggest.heading'|trans }}</h1>
+        <p class="text-gray-600 text-lg">{{ 'community.suggest.text'|trans }}</p>
+    </div>
+
+    {# Zwei Spalten ab `md`: links der Ablauf, rechts das Konto. Die Knöpfe stehen in der
+       schmalen Karte untereinander — nebeneinander würden sie bei 768 px gequetscht. #}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <section class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8" aria-labelledby="ablauf">
+            <h2 id="ablauf" class="text-lg font-bold text-gray-900 mb-5">{{ 'community.suggest.guest.how_title'|trans }}</h2>
+
+            <ol class="space-y-3">
+                {% for i, label in {
+                    1: 'community.suggest.step_basic',
+                    2: 'community.suggest.step_accessibility',
+                    3: 'community.suggest.step_dietary_payment',
+                    4: 'community.suggest.step_contact',
+                    5: 'community.suggest.step_notes',
+                } %}
+                    <li class="flex items-center gap-3">
+                        <span class="flex items-center justify-center w-8 h-8 rounded-full text-sm font-bold bg-cyan-600 text-white" aria-hidden="true">{{ i }}</span>
+                        <span class="text-gray-700">{{ label|trans }}</span>
+                    </li>
+                {% endfor %}
+            </ol>
+
+            <ul class="mt-6 space-y-3 text-gray-600">
+                <li class="flex gap-3">
+                    <span aria-hidden="true">💬</span>
+                    <span>{{ 'community.suggest.guest.answers'|trans }}</span>
+                </li>
+                <li class="flex gap-3">
+                    <span aria-hidden="true">🔍</span>
+                    <span>{{ 'community.suggest.guest.review'|trans }}</span>
+                </li>
+            </ul>
+        </section>
+
+        <section class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 flex flex-col" aria-labelledby="konto">
+            <h2 id="konto" class="text-lg font-bold text-gray-900 mb-3">{{ 'community.suggest.guest.account_title'|trans }}</h2>
+            <p class="text-gray-600 mb-6">{{ 'community.suggest.guest.account_text'|trans }}</p>
+
+            <div class="flex flex-col gap-3">
+                <a href="{{ path('app_register') }}" class="inline-flex items-center justify-center min-h-[48px] bg-purple-600 hover:bg-purple-700 text-white font-bold px-8 py-3 rounded-full motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700">
+                    {{ 'nav.join'|trans }}
+                </a>
+                <a href="{{ path('app_login') }}" class="inline-flex items-center justify-center min-h-[48px] border-2 border-gray-300 text-gray-700 hover:border-purple-600 hover:text-purple-600 font-bold px-8 py-3 rounded-full motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700">
+                    {{ 'community.suggest.guest.login'|trans }}
+                </a>
+            </div>
+            <p class="mt-4 text-sm text-gray-500">{{ 'community.suggest.guest.return_hint'|trans }}</p>
+        </section>
+    </div>
+</div>
+{% endblock %}

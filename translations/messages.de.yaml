@@ -314,6 +314,14 @@ community:
         cancel: "Abbrechen"
         step_incomplete: "Bitte beantworte alle Fragen in diesem Schritt."
         step_announce: "Schritt %current% von %total%: %title%"
+        guest:
+            how_title: "So läuft ein Vorschlag ab"
+            answers: "Zu jedem Merkmal antwortest du mit Ja, Nein oder „Weiß nicht“ – du musst nichts angeben, was du nicht weißt."
+            review: "Wir prüfen jeden Vorschlag, bevor das Restaurant öffentlich erscheint."
+            account_title: "Dafür brauchst du ein kostenloses Konto"
+            account_text: "So bleibt die Liste frei von Spam. Nehmen wir einen Vorschlag nicht auf, sagen wir dir per E-Mail Bescheid; aufgenommene Restaurants findest du in deinem Profil."
+            login: "Ich habe schon ein Konto"
+            return_hint: "Nach der Anmeldung kommst du direkt hierher zurück."
     thanks:
         title: "Danke für deinen Vorschlag – Endlech.lu"
         heading: "Danke für deinen Vorschlag!"

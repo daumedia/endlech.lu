@@ -31,12 +31,53 @@ final class CommunityControllerTest extends AbstractWebTestCase
         ];
     }
 
-    public function testGuestIsRedirectedToLogin(): void
+    /**
+     * Gäste sehen zuerst, worum es geht (2026-09-15, ersetzt B11 AK-01). Vorher landeten
+     * sie ohne ein Wort auf der Anmeldung und wussten nicht, was sie erwartet.
+     */
+    public function testGastSiehtErklaerungStattAnmeldung(): void
+    {
+        $client = static::createClient();
+        $crawler = $client->request('GET', self::LOCALE.'/community/suggest');
+
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextContains('h1', 'Restaurant vorschlagen');
+        self::assertCount(5, $crawler->filter('main ol > li'), 'Die fünf Schritte des Assistenten stehen auf der Seite.');
+        self::assertCount(1, $crawler->filter('main a[href$="/de/register"]'));
+        self::assertCount(1, $crawler->filter('main a[href$="/de/login"]'));
+        self::assertCount(0, $crawler->filter('form[name="restaurant_suggestion"]'), 'Ohne Konto gibt es kein Formular.');
+    }
+
+    /** Nur das Ansehen ist offen: Ein Absenden ohne Konto endet an der Anmeldung. */
+    public function testGastKannNichtAbsenden(): void
+    {
+        $client = static::createClient();
+        $client->request('POST', self::LOCALE.'/community/suggest', [
+            'restaurant_suggestion' => ['name' => 'Gast-Probe', 'city' => 'Luxembourg'],
+        ]);
+
+        self::assertResponseRedirects();
+        self::assertStringEndsWith('/de/login', (string) $client->getResponse()->headers->get('Location'));
+        self::assertNull(
+            static::getContainer()->get(RestaurantSuggestionRepository::class)->findOneBy(['name' => 'Gast-Probe']),
+        );
+    }
+
+    /** Wer sich nach dem Lesen anmeldet, landet wieder beim Vorschlag, nicht auf der Startseite. */
+    public function testNachDerAnmeldungGehtEsBeimVorschlagWeiter(): void
     {
         $client = static::createClient();
         $client->request('GET', self::LOCALE.'/community/suggest');
+        $crawler = $client->request('GET', self::LOCALE.'/login');
 
-        self::assertResponseRedirects();
+        $client->submit($this->formWithField($crawler, '_password', [
+            '_username' => 'user@endlech.lu',
+            '_password' => 'user123',
+        ]));
+
+        self::assertResponseRedirects(self::LOCALE.'/community/suggest');
+        $client->followRedirect();
+        self::assertSelectorExists('form[name="restaurant_suggestion"]');
     }
 
     public function testUnverifiedUserIsRedirected(): void

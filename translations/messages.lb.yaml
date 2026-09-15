@@ -314,6 +314,14 @@ community:
         cancel: "Ofbriechen"
         step_incomplete: "Beäntwer w.e.g. all Froen an dësem Schrëtt."
         step_announce: "Schrëtt %current% vun %total%: %title%"
+        guest:
+            how_title: "Esou leeft eng Propose of"
+            answers: "Op all Merkmal äntwers du mat Jo, Neen oder „Weess net“ – du muss näischt uginn, wat s du net weess."
+            review: "Mir kontrolléieren all Propose, ier de Restaurant ëffentlech erschéngt."
+            account_title: "Dofir brauchs du e gratis Kont"
+            account_text: "Esou bleift d’Lëscht fräi vu Spam. Wa mir eng Propose net ophuelen, soe mir der per E-Mail Bescheed; opgeholl Restauranten fënns du an dengem Profil."
+            login: "Ech hu schonn e Kont"
+            return_hint: "No der Umeldung kënns du direkt heihinner zeréck."
     thanks:
         title: "Merci fir däi Virschlag – Endlech.lu"
         heading: "Merci fir däi Virschlag!"

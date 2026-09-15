@@ -31,8 +31,12 @@ die Prüfung (B21), nicht direkt auf die Seite.
 
 ## Akzeptanzkriterien
 
-- **AK-01** · Angenommen, ein Gast ruft `/{locale}/community/suggest` auf, wenn die
-  Anfrage durchläuft, dann wird er zur Anmeldung geleitet.
+- ~~**AK-01** · Angenommen, ein Gast ruft `/{locale}/community/suggest` auf, wenn die
+  Anfrage durchläuft, dann wird er zur Anmeldung geleitet.~~ **Geändert 2026-09-15 (Michael):**
+  „sonst weiß man nichts". Neu: Ein Gast sieht eine Erklärseite (fünf Schritte, Ja/Nein/Weiß
+  nicht, Prüfung vor Veröffentlichung, warum ein Konto nötig ist) mit Knöpfen zu
+  Registrierung und Anmeldung; nach der Anmeldung landet er wieder hier. Ein **Absenden**
+  ohne Konto endet weiterhin an der Anmeldung. Belegt in `CommunityControllerTest`.
 - **AK-02** · Angenommen, ein angemeldeter Nutzer ist **nicht bestätigt**, wenn er die
   Seite aufruft, dann wird er mit `flash.suggest_verify_first` auf die Hinweisseite
   geleitet — dies ist die **einzige** Stelle im Projekt, an der die
