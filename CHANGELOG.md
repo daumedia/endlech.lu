@@ -2,10 +2,18 @@
 
 Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
-![Version](https://img.shields.io/badge/version-2026.09.14.2-blue)
+![Version](https://img.shields.io/badge/version-2026.09.15-blue)
 ![Status](https://img.shields.io/badge/status-beta-green)
 
 ## [Unreleased]
+
+## [2026.09.15] – Portugiesisch, Fußzeile nach Themen und „Restaurant vorschlagen" für Gäste
+
+Vier Änderungen (#133–#136), alle für Gäste sichtbar: die Website auf Portugiesisch, eine gegliederte Fußzeile,
+„Konto eröffnen" statt „Mitmachen" samt Wortmarke im Logo-Blau, und eine Vorschlagsseite, die sich erklärt, bevor
+sie ein Konto verlangt.
+
+⚠ **Keine Migration.** Nur die Anwendung muss ausgerollt werden; der Worker ist unberührt.
 
 ### „Restaurant vorschlagen" erklärt sich, bevor es ein Konto verlangt
 
@@ -38,13 +46,13 @@ Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
 ### Portugiesisch als fünfte Sprache
 
-⚠ **Keine Migration.** Nur die Anwendung muss ausgerollt werden.
-
 - **Die ganze Website auf Portugiesisch** unter `/pt/…` — europäisches Portugiesisch (pt-PT) mit höflicher
   Anrede, für die portugiesische Gemeinschaft in Luxemburg. Sechs neue Kataloge (`messages`, `validators`,
   `press`, `comparison`, `roadmap`, `changelog`), dieselbe Schlüsselmenge wie die übrigen vier.
-- **Sprachumschalter, Sitemap und hreflang** führen `pt` automatisch; Erstbesucher mit
-  `Accept-Language: pt` landen auf Portugiesisch. Auch die iOS-API antwortet darauf portugiesisch.
+- **Sprachumschalter, Sitemap und hreflang** führen `pt` automatisch.
+  ⚠ **Keine Sprachwahl nach Browsersprache:** `/` und die Kurzlinks (`/open`, `/vergleich` …) leiten fest auf
+  `/lb/`, für jede Sprache — beim Release nachgemessen. Der zusammengeführte Stand vor diesem Release
+  behauptete anderes.
 - `LocaleSubscriber` und beide Sprachumschalter lesen die Sprachen jetzt aus `framework.enabled_locales`
   statt aus eigenen Listen.
 - `robots.txt` sperrt `/pt/admin`, `/pt/profile`, `/pt/api/`. Presse-Paket neu gepackt

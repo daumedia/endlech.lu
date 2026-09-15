@@ -29,6 +29,10 @@ final readonly class ChangelogRegistry
     public function notes(): array
     {
         return [
+            // SHOWN — jeder Gast merkt es: die Website auf Portugiesisch, eine gegliederte Fußzeile und
+            // „Restaurant vorschlagen", das sich erklärt, bevor es ein Konto verlangt. ⚠ Der Text verspricht
+            // keine Sprachwahl nach Browsersprache — `/` leitet fest auf /lb/ (beim Release nachgemessen).
+            new ReleaseNote('2026.09.15', new \DateTimeImmutable('2026-09-15'), ReleaseVisibility::SHOWN),
             // SHOWN — das Release, das die Nutzungsmessung scharfschaltet (Feature 11, AK-32). Text aus
             // features/11-nutzungsmessung/changelog-text.md, in derselben vorsichtigen Formulierung wie /legal:
             // nur Nachstellbares, weder „anonym" noch „keine Kennung".

@@ -23,6 +23,9 @@ repo:
     link_label: "Ouvrir CHANGELOG.md sur GitHub"
 
 release:
+    v2026_09_15:
+        title: "Endlech.lu existe désormais en portugais"
+        body: "Tout le site est désormais disponible en portugais – pour les nombreuses personnes au Luxembourg qui parlent portugais. Vous le choisissez en haut, dans le sélecteur de langue. Le pied de page a également été réorganisé : les liens sont regroupés sous des intitulés, et les mentions légales, la protection des données et l’accessibilité figurent sur une ligne à part. Enfin, qui souhaite proposer un restaurant voit d’abord comment cela se déroule et pourquoi un compte gratuit est nécessaire, au lieu de tomber directement sur la page de connexion."
     v2026_09_14_2:
         title: "Nous mesurons désormais ce qui est lu — sans cookies"
         body: "Pour savoir quelles pages sont utiles et où la recherche s’interrompt, nous comptons les pages vues et quelques étapes comme « filtre appliqué ». Cela tourne sur notre propre serveur : pas de cookies, pas d’adresse IP conservée, rien qui soit lié à un compte. Si vous ne souhaitez pas être compté·e, désactivez-le dans la politique de confidentialité — ou envoyez « Do Not Track » ou « Global Privacy Control » depuis votre navigateur."
