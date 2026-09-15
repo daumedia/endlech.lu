@@ -29,6 +29,10 @@ final readonly class ChangelogRegistry
     public function notes(): array
     {
         return [
+            // SILENT (Vorschlag beim Vorbereiten, 2026-09-15): Violett in Presse-Bedingungen und E-Mails, dazu die
+            // Kontaktadresse support@ statt info@. Ein Gast bemerkt höchstens die korrigierte Adresse im Impressum —
+            // eine Berichtigung, keine Neuerung. Der wichtigere Teil (interne Meldungen erreichen das Team) ist Betrieb.
+            new ReleaseNote('2026.09.15.1', new \DateTimeImmutable('2026-09-15'), ReleaseVisibility::SILENT),
             // SHOWN — jeder Gast merkt es: die Website auf Portugiesisch, eine gegliederte Fußzeile und
             // „Restaurant vorschlagen", das sich erklärt, bevor es ein Konto verlangt. ⚠ Der Text verspricht
             // keine Sprachwahl nach Browsersprache — `/` leitet fest auf /lb/ (beim Release nachgemessen).

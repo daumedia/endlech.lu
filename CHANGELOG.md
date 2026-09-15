@@ -2,16 +2,23 @@
 
 Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
-![Version](https://img.shields.io/badge/version-2026.09.15-blue)
+![Version](https://img.shields.io/badge/version-2026.09.15.1-blue)
 ![Status](https://img.shields.io/badge/status-beta-green)
 
 ## [Unreleased]
 
-### Ein Postfach: support@endlech.lu
+## [2026.09.15.1] – Ein Violett, ein Postfach
 
-⚠ **Vor dem Ausrollen in Coolify prüfen:** `CONTACT_EMAIL` auf **Anwendung und Worker**. Steht dort `info@endlech.lu`
-oder fehlt die Variable in einer älteren Fassung, auf `support@endlech.lu` setzen — die Vorgabe im Image zieht nur, wenn
-die Variable nicht gesetzt ist.
+Marke und Kontakt vereinheitlicht (#137): Presse-Kit und E-Mails im Violett des Logos, und überall
+`support@endlech.lu` statt der nicht existierenden `info@endlech.lu`.
+
+⚠ **Keine Migration.** ⚠ **Anwendung UND Worker ausrollen**, sofern `CONTACT_EMAIL` in Coolify nicht gesetzt ist: Die
+neue Vorgabe steckt im Image, und die Rückstau-Warnung von `app:messenger:watch` läuft im Worker.
+
+⚠ **Vor dem Ausrollen in Coolify prüfen:** `CONTACT_EMAIL` auf **Anwendung und Worker**. Steht dort `info@endlech.lu`,
+auf `support@endlech.lu` setzen — die Vorgabe im Image zieht nur, wenn die Variable nicht gesetzt ist.
+
+### Ein Postfach: support@endlech.lu
 
 - **Impressum und Barrierefreiheitserklärung** nennen `support@endlech.lu` statt `info@endlech.lu`, das es nicht gibt.
 - **Vorgabe für interne Meldungen** (`CONTACT_EMAIL` in `.env`, Fallback in `services.yaml`) auf `support@endlech.lu`.
