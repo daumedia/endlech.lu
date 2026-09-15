@@ -42,7 +42,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 final class PressPackageCommand extends Command
 {
     /** Sprachreihenfolge in der Bedingungsdatei — Vorgabesprache zuerst. */
-    private const array LOCALES = ['lb', 'de', 'fr', 'en'];
+    private const array LOCALES = ['lb', 'de', 'fr', 'en', 'pt'];
 
     public function __construct(
         private readonly PressRegistry $registry,

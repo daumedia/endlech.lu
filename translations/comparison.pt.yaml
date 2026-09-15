@@ -1,0 +1,271 @@
+index:
+    meta_title: "Endlech.lu em comparação"
+    meta_description: "Em que Endlech.lu se distingue do Google Maps, do Wheelmap e do TripAdvisor — com fonte e data de verificação para cada afirmação."
+    eyebrow: "Comparações"
+    heading: "Endlech.lu em comparação"
+    intro: "Para a restauração acessível no Luxemburgo, há vários sítios onde procurar. Estas páginas colocam-nos lado a lado — também onde Endlech.lu fica aquém."
+    card_cta: "Ver a comparação"
+    method_title: "Como são feitas estas comparações"
+    method_body: "Cada afirmação sobre outro serviço provém da documentação do próprio serviço e indica a data em que a verificámos. Onde algo não pode ser comprovado, não há nenhuma linha na tabela. Os nossos próprios números vêm da mesma fonte que a página de transparência."
+    method_criteria: "Os nossos critérios"
+    method_open: "Os nossos números"
+table:
+    section_title: "Característica a característica"
+    caption: "Comparação de características entre Endlech.lu e %brand%"
+    col_feature: "Característica"
+    col_own: "Endlech.lu"
+    col_theirs: "%brand%"
+verdict:
+    "yes": "Sim"
+    "no": "Não"
+    partial: "Parcialmente"
+group:
+    accessibility_data: "Dados de acessibilidade"
+    provenance: "Origem e verificação dos dados"
+    coverage: "Cobertura e atualidade"
+    openness: "Abertura e modelo de negócio"
+sources:
+    ref: "Fonte %ref%"
+    title: "Fontes"
+    intro: "Todas as informações sobre %brand% provêm da sua própria documentação."
+    checked_on: "verificado em %date%"
+fit:
+    own_title: "Endlech.lu é indicado se …"
+    theirs_title: "%brand% é indicado se …"
+    coexist: "Uma coisa não exclui a outra — a maioria das pessoas usa, de qualquer forma, mais do que uma ferramenta."
+advantages:
+    title: "Quando %brand% é a melhor escolha"
+faq:
+    title: "Perguntas frequentes"
+cta:
+    title: "Veja por si"
+    body: "Catorze filtros, doze cantões, cada informação consultável individualmente."
+    button: "Pesquisar restaurantes"
+breadcrumb:
+    label: "Está aqui"
+cross:
+    title: "Outras comparações"
+legal:
+    trademarks: "Todas as marcas mencionadas pertencem aos respetivos titulares. Endlech.lu não tem qualquer ligação a elas."
+    correction: "Alguma informação deixou de estar correta? Escreva-nos — os dados de contacto estão no aviso legal."
+    correction_link: "Ir para o aviso legal"
+
+row:
+    step_free_entrance:
+        label: "Entrada sem degraus"
+        own: "registada como característica, filtrável individualmente"
+    accessible_toilet:
+        label: "Casa de banho acessível"
+        own: "registada como característica, filtrável individualmente"
+    disabled_parking:
+        label: "Estacionamento reservado a pessoas com deficiência"
+        own: "registado como característica, filtrável individualmente"
+    door_width_cm:
+        label: "Largura da porta em centímetros"
+        own: "registada em número, onde foi medida — valor de referência 90 cm"
+    table_spacing_cm:
+        label: "Espaço entre mesas em centímetros"
+        own: "registado em número, onde foi medido — valor de referência 90 cm"
+    assistance_dogs:
+        label: "Cães de assistência bem-vindos"
+        own: "registado como característica, filtrável individualmente"
+    bright_lighting:
+        label: "Boa iluminação"
+        own: "registada como característica, filtrável individualmente"
+    changing_table:
+        label: "Fraldário"
+        own: "registado como característica, filtrável individualmente"
+    filterable:
+        label: "Filtrável por características individuais"
+        own: "catorze filtros, combináveis à vontade"
+    criteria_published:
+        label: "Critérios documentados publicamente"
+        own: "na página de critérios, incluindo a fórmula de pontuação"
+    editorial_review:
+        label: "Aprovação antes da publicação"
+        own: "cada sugestão é verificada antes de aparecer"
+    onsite_check:
+        label: "Verificação no local"
+        own: "os estabelecimentos verificados têm uma marca de verificação"
+    venues_luxembourg:
+        label: "Estabelecimentos registados no Luxemburgo"
+        own: "%figure% estabelecimentos, exclusivamente no Luxemburgo"
+    worldwide:
+        label: "Disponível em todo o mundo"
+        own: "só o Luxemburgo, e de propósito"
+    opening_hours:
+        label: "Horário de funcionamento"
+        own: "vários períodos por dia, filtro «aberto agora»"
+    route_planning:
+        label: "Percurso até ao estabelecimento"
+        own: "apenas paragens próximas"
+    open_dataset:
+        label: "Conjunto de dados de transferência livre"
+        own: "CSV e JSON sob CC BY 4.0, sem registo"
+    open_source:
+        label: "Código-fonte aberto"
+        own: "integralmente no GitHub, licença MIT"
+    paid_placement:
+        label: "Posicionamento pago possível"
+        own: "a visibilidade não está à venda"
+    own_figures_public:
+        label: "Números próprios publicados"
+        own: "registos, cobertura e finanças na página de transparência"
+    luxembourgish:
+        label: "Disponível em luxemburguês"
+        own: "sim — o luxemburguês é a língua predefinida"
+
+page:
+    google_maps:
+        meta_title: "Endlech.lu vs. Google Maps — qual é a diferença"
+        meta_description: "O Google Maps apresenta cinco informações sobre cadeiras de rodas como sim ou não. Endlech.lu regista a largura da porta e o espaço entre mesas em centímetros. Cada afirmação com fonte e data de verificação."
+        heading: "Endlech.lu vs. Google Maps"
+        subheading: "Cinco indicações de sim ou não contra centímetros medidos"
+        fit_own: "precisar de saber qual é a largura real da porta, se há espaço suficiente entre as mesas e se um cão de assistência é bem-vindo — e estiver a procurar no Luxemburgo."
+        fit_theirs: "precisar do caminho até lá, do horário atualizado, de avaliações e fotos — ou se estiver a procurar em qualquer outro lugar do mundo."
+        note:
+            step_free_entrance: "atributo «Entrada acessível a cadeiras de rodas», sim ou não"
+            accessible_toilet: "atributo «Casa de banho acessível a cadeiras de rodas», sim ou não"
+            disabled_parking: "atributo «Estacionamento acessível a cadeiras de rodas», sim ou não"
+            door_width_cm: "um metro é o limiar para o sim — o valor medido não é guardado"
+            table_spacing_cm: "atributo «Lugares sentados acessíveis a cadeiras de rodas», sem medida"
+            assistance_dogs: "os cinco atributos dizem respeito exclusivamente à cadeira de rodas"
+            bright_lighting: "não consta dos atributos de acessibilidade"
+            changing_table: "não consta dos atributos de acessibilidade"
+            filterable: "a definição «Realçar a acessibilidade» assinala lugares, mas não filtra os resultados — e só funciona em determinados países"
+            criteria_published: "os critérios de cada atributo constam da ajuda, com medidas"
+            editorial_review: "as edições são verificadas automaticamente, normalmente em cerca de dez minutos"
+            onsite_check: "não está prevista qualquer verificação no local"
+            venues_luxembourg: "250 milhões de lugares em todo o mundo; a Google não indica um número para o Luxemburgo"
+            worldwide: "220 países e territórios"
+            opening_hours: "a partir de informações dos estabelecimentos, comunicações de utilizadores e conteúdos licenciados"
+            route_planning: "a pé, de carro e de transportes públicos"
+            open_dataset: "a política da Places API proíbe o armazenamento permanente dos conteúdos"
+            paid_placement: "os anúncios aparecem como marcadores no mapa e nos resultados de pesquisa"
+        advantage:
+            "1": "Chega lá. Endlech.lu mostra paragens próximas, mas nenhum percurso — o Google Maps indica o caminho desde a sua porta até ao estabelecimento, a pé, de carro ou de transportes públicos."
+            "2": "O Google Maps existe em todo o lado. 220 países e territórios, 250 milhões de lugares. Endlech.lu termina na fronteira do país, e assim vai continuar."
+            "3": "Avaliações, fotos e horas de maior afluência. O que outros clientes escreveram e fotografaram está lá — connosco, não."
+            "4": "Horários em constante mudança. A Google atualiza-os a partir de várias fontes; só em 2025, chegaram da comunidade 80 milhões de sugestões de correção."
+        faq:
+            "1":
+                q: "Endlech.lu substitui o Google Maps?"
+                a: "Não, nem é esse o objetivo. Se procura o caminho, use o Google Maps. Se quer saber antes se consegue entrar, use Endlech.lu. A maioria das pessoas usa ambos, de qualquer forma."
+            "2":
+                q: "Porque não bastam as informações do Google Maps?"
+                a: "Porque «Entrada acessível a cadeiras de rodas: sim» não diz qual é a largura da porta. Para uma cadeira de rodas manual, um metro pode chegar; para uma cadeira de rodas elétrica com apoio de cabeça, não. Indicamos os centímetros onde os medimos — e deixamos o campo vazio onde não o fizemos."
+            "3":
+                q: "De onde vêm os vossos dados?"
+                a: "De sugestões da comunidade, que são verificadas antes da publicação, e dos nossos próprios levantamentos no local. O que vimos pessoalmente tem uma marca de verificação. O que não foi levantado conta, para nós, como não cumprido — e não como existente."
+            "4":
+                q: "Porque é que o meu estabelecimento não aparece?"
+                a: "Porque estamos apenas a começar. A Google tem vinte anos de avanço e 250 milhões de lugares; nós temos o Luxemburgo. Pode sugerir o seu estabelecimento em dois minutos — verificamos o registo antes de ele aparecer."
+        source:
+            "1": "Ajuda do Google Maps: Encontrar lugares acessíveis"
+            "2": "Ajuda do Perfil da Empresa no Google: Gerir atributos"
+            "3": "Blogue da Google: 20 anos do Google Maps"
+            "4": "Ajuda do Perfil da Empresa no Google: Editar o horário de funcionamento"
+            "5": "Google Maps Platform: Políticas da Places API"
+            "6": "Ajuda do Google Ads: Anúncios de pesquisa local"
+    wheelmap:
+        meta_title: "Endlech.lu vs. Wheelmap — qual é a diferença"
+        meta_description: "O Wheelmap avalia lugares em todo o mundo com um semáforo e um estado da casa de banho. Endlech.lu regista oito características e centímetros, só para o Luxemburgo. Ambos os conjuntos de dados são abertos."
+        heading: "Endlech.lu vs. Wheelmap"
+        subheading: "Um semáforo para o mundo contra oito características para um país"
+        fit_own: "quiser saber mais do que «consigo entrar?» — largura da porta, espaço entre mesas, cão de assistência, iluminação, horário — e estiver a procurar no Luxemburgo."
+        fit_theirs: "estiver em viagem, fora do Luxemburgo, ou procurar algo que não seja um restaurante: estação, farmácia, cinema, museu."
+        note:
+            step_free_entrance: "o semáforo: verde significa entrada e todas as divisões sem degraus; amarelo, no máximo um degrau de até 7 cm"
+            accessible_toilet: "estado próprio para a casa de banho, definível independentemente do semáforo"
+            assistance_dogs: "é perguntado ao criar um novo lugar"
+            disabled_parking: "expressamente não são mostrados — não é claro se são privados ou públicos"
+            door_width_cm: "90 cm são um critério para o estado da casa de banho, não um campo de introdução; as larguras das portas ficam como texto livre"
+            table_spacing_cm: "no interior, só é avaliada a ausência de degraus"
+            bright_lighting: "consta da norma de dados aberta A11yJSON, mas não do mapa"
+            changing_table: "consta da norma de dados aberta A11yJSON, mas não do mapa"
+            filterable: "por nível do semáforo e tipo de lugar; falta uma vista de lista, identificada pelo próprio Wheelmap como ponto em aberto"
+            criteria_published: "os critérios do semáforo, incluindo o limite de 7 cm, constam das perguntas frequentes"
+            onsite_check: "a pessoa que faz o registo verifica no local — não está prevista uma verificação pela equipa"
+            editorial_review: "sem etapa de aprovação; só as fotos são moderadas"
+            venues_luxembourg: "mais de um milhão de lugares avaliados em todo o mundo; o Wheelmap não indica um número para o Luxemburgo"
+            worldwide: "em todo o mundo, cerca de um terço dos lugares avaliados fora da Alemanha"
+            opening_hours: "não registado — para cada lugar existem o semáforo e o estado da casa de banho"
+            luxembourgish: "32 a 33 idiomas, incluindo o francês; o luxemburguês não está incluído"
+            open_dataset: "sob ODbL através do OpenStreetMap, e ainda uma interface aberta"
+            open_source: "frontend sob licença MIT no GitHub"
+            own_figures_public: "números anuais na página de transparência dos Sozialhelden"
+        advantage:
+            "1": "O Wheelmap funciona em todo o mundo e para tudo. 180 tipos de lugar em doze categorias — estação, farmácia, cinema, museu. Endlech.lu conhece restaurantes no Luxemburgo e mais nada."
+            "2": "Cada avaliação volta para o OpenStreetMap e fica lá à disposição de todos. É mais abertura do que um conjunto de dados próprio consegue oferecer."
+            "3": "Contribuir não exige conta. Sem registo, sem esperar por aprovação — está à porta, toca na cor e pronto."
+            "4": "Mais de um milhão de lugares avaliados e uma comunidade desde 2010, além de apps para iPhone e Android. Nós estamos apenas a começar."
+        faq:
+            "1":
+                q: "O Wheelmap não é o mesmo que Endlech.lu?"
+                a: "Não. O Wheelmap responde a «consigo entrar?» — em todo o mundo, para qualquer tipo de lugar, com um semáforo. Nós respondemos a «como é lá dentro?» — para restaurantes no Luxemburgo, com oito características e centímetros. O semáforo é exatamente a ferramenta certa para uma visão geral mundial; só é demasiado grosseiro para decidir se pode ir a este restaurante esta noite."
+            "2":
+                q: "Porque não constroem simplesmente com base no Wheelmap?"
+                a: "Em parte, é o que fazemos: os nossos dados são abertos, como os deles. Mas o semáforo tem três níveis e o limite de 7 cm; nós precisamos de oito características filtráveis individualmente, horários e medidas. Esses campos não existem lá — no Wheelmap, as larguras das portas ficam como texto livre num comentário."
+            "3":
+                q: "O Wheelmap também é sem fins lucrativos e aberto — então onde está a diferença?"
+                a: "Na profundidade de informação por lugar e na verificação. O Wheelmap publica de imediato o que alguém regista; connosco, cada sugestão é analisada antes da publicação, e o que verificámos pessoalmente tem uma marca. Isso é mais lento e abrange menos. Ambas são uma escolha, não uma superioridade."
+            "4":
+                q: "Qual dos dois devo usar?"
+                a: "Os dois. O Wheelmap para a visão geral e para tudo o que fica fora do Luxemburgo, Endlech.lu para os pormenores antes de ir. Recomendamos expressamente o Wheelmap — os Sozialhelden fazem isto desde 2010, e fazem-no bem."
+        source:
+            "1": "Wheelmap: Perguntas frequentes"
+            "2": "A11yJSON: norma de dados aberta dos Sozialhelden"
+            "3": "Wheelmap: Informação para a imprensa (situação em outubro de 2024)"
+            "4": "Sobre o Wheelmap"
+            "5": "Frontend do Wheelmap no GitHub"
+            "6": "Sozialhelden: Transparência"
+    tripadvisor:
+        meta_title: "Endlech.lu vs. TripAdvisor — qual é a diferença"
+        meta_description: "O TripAdvisor apresenta a acessibilidade como um visto entre «Televisão» e «Vinho e cerveja». Endlech.lu regista oito características e centímetros. Cada afirmação com fonte."
+        heading: "Endlech.lu vs. TripAdvisor"
+        subheading: "Um visto numa lista de comodidades contra oito características verificadas"
+        fit_own: "precisar de saber, antes de sair, se consegue entrar, se a casa de banho é alcançável e se um cão de assistência é bem-vindo — e estiver a procurar no Luxemburgo."
+        fit_theirs: "quiser saber se a comida é boa: avaliações, fotos, nível de preços, o que outros clientes viveram."
+        note:
+            step_free_entrance: "um visto «Acessível a cadeiras de rodas» na lista de comodidades, sem indicação daquilo a que se refere"
+            accessible_toilet: "os alojamentos têm a secção «Acessibilidade»; os restaurantes só «Cozinhas, comodidades e serviços»"
+            disabled_parking: "não consta das comodidades dos restaurantes"
+            door_width_cm: "nenhuma medida, em lado nenhum — a característica é binária"
+            table_spacing_cm: "nenhuma medida, em lado nenhum — a característica é binária"
+            assistance_dogs: "não consta das comodidades dos restaurantes"
+            bright_lighting: "não consta das comodidades dos restaurantes"
+            changing_table: "não consta das comodidades dos restaurantes"
+            filterable: "existe um filtro, mas só aparece onde a característica é comum a nível local, e não pode ser partilhado como endereço"
+            criteria_published: "nenhum artigo de ajuda explica o que o visto significa"
+            editorial_review: "o visto é colocado pelo próprio estabelecimento"
+            onsite_check: "só há verificação quando os clientes contestam — e então basta voltar a colocar o visto"
+            venues_luxembourg: "mais de nove milhões de lugares e mais de mil milhões de avaliações em todo o mundo"
+            worldwide: "mais de 40 países, mais de 20 idiomas"
+            luxembourgish: "a ajuda está disponível em 22 versões linguísticas; o luxemburguês não é uma delas"
+            open_dataset: "o armazenamento, a cópia e a indexação dos conteúdos são proibidos por contrato; o acesso é pago por registo"
+            paid_placement: "os «Tripadvisor Ads» são um produto publicitário próprio para restaurantes, faturado por clique"
+        advantage:
+            "1": "Mais de mil milhões de avaliações. Se quer saber como são a comida e o serviço, o TripAdvisor é imbatível — nós não temos nada sobre isso."
+            "2": "Fotos dos clientes, não do estabelecimento. Milhares de imagens que mostram como é na realidade."
+            "3": "Mais de 40 países e mais de 20 idiomas. Para planear férias, é o sítio certo; nós ficamos pela fronteira luxemburguesa."
+            "4": "Encontrar um restaurante que ainda não chegou à nossa lista: com mais de nove milhões de lugares registados, as probabilidades são aí bem maiores."
+        faq:
+            "1":
+                q: "Endlech.lu substitui o TripAdvisor?"
+                a: "Não. Os dois respondem a perguntas diferentes. O TripAdvisor diz-lhe se a comida é boa. Nós dizemos-lhe se consegue chegar à mesa. Quem quer saber as duas coisas precisa dos dois."
+            "2":
+                q: "O TripAdvisor também tem «Acessível a cadeiras de rodas» — isso não chega?"
+                a: "É exatamente um visto, e está na mesma lista que «Televisão» e «Vinho e cerveja». Não diz se a porta é suficientemente larga, se a casa de banho é alcançável, se há um degrau. E não conhece nenhum «não» nem nenhum «não sei» — só assinalado ou não assinalado."
+            "3":
+                q: "Quem verifica lá as informações?"
+                a: "É o próprio estabelecimento que coloca o visto. Se os clientes o contestarem nas suas avaliações, o TripAdvisor remove a característica — e o estabelecimento pode voltar a assinalá-la depois. Não está prevista uma visita ao local nem qualquer comprovativo."
+            "4":
+                q: "Porque não aproveitam simplesmente os dados de lá?"
+                a: "Porque não nos seria permitido. Os termos de utilização proíbem expressamente o armazenamento, a cópia e a indexação dos conteúdos, e o acesso é pago por registo. O nosso conjunto de dados, pelo contrário, está disponível para transferência sob CC BY 4.0."
+        source:
+            "1": "Ajuda do TripAdvisor: Atualizar comodidades e serviços"
+            "2": "Pesquisa de restaurantes do TripAdvisor, grupo de filtros «Comodidades»"
+            "3": "Relatório anual do TripAdvisor (Form 10-K, exercício de 2025)"
+            "4": "Centro de Ajuda do TripAdvisor: versões linguísticas"
+            "5": "Tripadvisor Content API: política de armazenamento em cache"
+            "6": "Ajuda do TripAdvisor: Tripadvisor Ads para restaurantes"

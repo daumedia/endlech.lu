@@ -10,12 +10,12 @@
    und der Browser navigierte auf den fremden Host. #}
 {% set query_params = app.request.query.all()|filter((wert, schluessel) => schluessel != '_locale') %}
 
-{% set locales = {
-    'lb': 'LB',
-    'de': 'DE',
-    'fr': 'FR',
-    'en': 'EN'
-} %}
+{# Aus `framework.enabled_locales` — eine eigene Liste hier lief beim Hinzufügen von pt
+   Gefahr, die neue Sprache im Umschalter zu vergessen. #}
+{% set locales = {} %}
+{% for _locale_code in app.enabled_locales %}
+    {% set locales = locales|merge({(_locale_code): _locale_code|upper}) %}
+{% endfor %}
 
 {# ⚠ BF-144: `min-h-[44px]` unter `md`. Gemessen war der Knopf auf dem Telefon
    55 × 28 px — das kleinste Ziel im mobilen Kopfbereich, und seit BF-72 ist er

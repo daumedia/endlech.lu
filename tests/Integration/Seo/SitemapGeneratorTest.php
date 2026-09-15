@@ -38,7 +38,7 @@ final class SitemapGeneratorTest extends KernelTestCase
 
         return new SitemapGenerator(
             new SeoRegistry(),
-            new SeoUrlBuilder($c->get('router'), 'https://endlech.lu', ['lb', 'de', 'fr', 'en']),
+            new SeoUrlBuilder($c->get('router'), 'https://endlech.lu', ['lb', 'de', 'fr', 'en', 'pt']),
             $repository ?? $c->get(RestaurantRepository::class),
             $c->get('twig'),
             $this->cache,
@@ -58,15 +58,15 @@ final class SitemapGeneratorTest extends KernelTestCase
         return \count(static::getContainer()->get(RestaurantRepository::class)->findAllIdsAscending());
     }
 
-    /** AK-02 · (21 + n) × 4 Einträge — mit den Fixtures 128. */
-    public function testEinundzwanzigPlusRestaurantsMalVier(): void
+    /** AK-02 · (21 + n) × 5 Einträge — mit den Fixtures 160. */
+    public function testEinundzwanzigPlusRestaurantsJeSprache(): void
     {
         $n = $this->restaurantAnzahl();
         $urls = $this->dokument($this->erzeuger()->xml())->getElementsByTagNameNS(self::NS_SITEMAP, 'url');
 
         self::assertSame(11, $n, 'Fixture-Bestand');
-        self::assertSame((21 + $n) * 4, $urls->length);
-        self::assertSame(128, $urls->length);
+        self::assertSame((21 + $n) * 5, $urls->length);
+        self::assertSame(160, $urls->length);
     }
 
     /** AK-01 · gültig gegen sitemap.xsd samt Schema für die Sprachverweise. */
@@ -86,8 +86,8 @@ final class SitemapGeneratorTest extends KernelTestCase
         self::assertStringStartsWith('<?xml version="1.0" encoding="UTF-8"?>', $this->erzeuger()->xml());
     }
 
-    /** AK-05 · vier Sprachen plus Vorgabe lb; der Eintrag führt sich selbst mit auf. */
-    public function testJederEintragNenntVierSprachenUndDieVorgabe(): void
+    /** AK-05 · fünf Sprachen plus Vorgabe lb; der Eintrag führt sich selbst mit auf. */
+    public function testJederEintragNenntAlleSprachenUndDieVorgabe(): void
     {
         $d = $this->dokument($this->erzeuger()->xml());
 
@@ -98,10 +98,10 @@ final class SitemapGeneratorTest extends KernelTestCase
                 $verweise[$link->getAttribute('hreflang')] = $link->getAttribute('href');
             }
 
-            self::assertSame(['lb', 'de', 'fr', 'en', 'x-default'], array_keys($verweise), (string) $loc);
+            self::assertSame(['lb', 'de', 'fr', 'en', 'pt', 'x-default'], array_keys($verweise), (string) $loc);
             self::assertSame($verweise['lb'], $verweise['x-default']);
-            self::assertMatchesRegularExpression('#^https://endlech\.lu/(lb|de|fr|en)/#', (string) $loc);
-            preg_match('#^https://endlech\.lu/(lb|de|fr|en)/#', (string) $loc, $m);
+            self::assertMatchesRegularExpression('#^https://endlech\.lu/(lb|de|fr|en|pt)/#', (string) $loc);
+            preg_match('#^https://endlech\.lu/(lb|de|fr|en|pt)/#', (string) $loc, $m);
             self::assertSame($loc, $verweise[$m[1]], 'Der Eintrag muss sich selbst unter seiner Sprache aufführen.');
         }
     }
@@ -140,13 +140,13 @@ final class SitemapGeneratorTest extends KernelTestCase
         }
     }
 
-    /** AK-10 · Ohne ein einziges Restaurant: die 84 Einträge der festen Seiten. */
+    /** AK-10 · Ohne ein einziges Restaurant: die 105 Einträge der festen Seiten (21 × 5 Sprachen). */
     public function testOhneRestaurantsGenauDieFestenSeiten(): void
     {
         static::getContainer()->get(EntityManagerInterface::class)->getConnection()->executeStatement('DELETE FROM restaurant');
 
         $urls = $this->dokument($this->erzeuger()->xml())->getElementsByTagNameNS(self::NS_SITEMAP, 'url');
-        self::assertSame(84, $urls->length);
+        self::assertSame(21 * 5, $urls->length);
     }
 
     /**
@@ -190,7 +190,7 @@ final class SitemapGeneratorTest extends KernelTestCase
         $waehrendDesAusfalls = $this->erzeuger($kaputt)->xml();
 
         self::assertSame($vollstaendig, $waehrendDesAusfalls);
-        self::assertSame(128, $this->dokument($waehrendDesAusfalls)->getElementsByTagNameNS(self::NS_SITEMAP, 'url')->length);
+        self::assertSame(160, $this->dokument($waehrendDesAusfalls)->getElementsByTagNameNS(self::NS_SITEMAP, 'url')->length);
     }
 
     /** AK-08, AK-09 · Einmal erzeugt, wird die Fassung wiederverwendet, bis sie abläuft. */

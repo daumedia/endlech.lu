@@ -35,8 +35,8 @@ final class Qa10SitemapBestandTest extends WebTestCase
         return $client->getContainer()->get(EntityManagerInterface::class);
     }
 
-    /** AK-10 · Ohne ein einziges Restaurant: HTTP 200 und genau die 84 Einträge der festen Seiten. */
-    public function testAk10OhneRestaurantsGenauVierundachtzigEintraege(): void
+    /** AK-10 · Ohne ein einziges Restaurant: HTTP 200 und genau die 105 Einträge der festen Seiten. */
+    public function testAk10OhneRestaurantsNurDieFestenSeitenJeSprache(): void
     {
         $client = static::createClient();
         $client->disableReboot();
@@ -44,12 +44,12 @@ final class Qa10SitemapBestandTest extends WebTestCase
 
         $eintraege = $this->eintraege($client);
 
-        self::assertCount(84, $eintraege);
+        self::assertCount(21 * 5, $eintraege);
         self::assertSame([], array_values(preg_grep('#/restaurants/\d+$#', $eintraege)));
     }
 
-    /** AK-08 · Ein neu angelegtes Restaurant steht mit seiner Detailseite in allen vier Sprachen darin. */
-    public function testAk08NeuesRestaurantInAllenVierSprachen(): void
+    /** AK-08 · Ein neu angelegtes Restaurant steht mit seiner Detailseite in allen Sprachen darin. */
+    public function testAk08NeuesRestaurantInAllenSprachen(): void
     {
         $client = static::createClient();
         $client->disableReboot();
@@ -59,13 +59,13 @@ final class Qa10SitemapBestandTest extends WebTestCase
 
         $eintraege = $this->eintraege($client);
 
-        foreach (['lb', 'de', 'fr', 'en'] as $s) {
+        foreach (['lb', 'de', 'fr', 'en', 'pt'] as $s) {
             self::assertContains("https://endlech.lu/$s/restaurants/{$neu->getId()}", $eintraege);
         }
-        self::assertCount((21 + 12) * 4, $eintraege);
+        self::assertCount((21 + 12) * 5, $eintraege);
     }
 
-    /** AK-09 · Ein gelöschtes Restaurant fällt mit allen vier Sprachfassungen heraus. */
+    /** AK-09 · Ein gelöschtes Restaurant fällt mit allen Sprachfassungen heraus. */
     public function testAk09GeloeschtesRestaurantFaelltHeraus(): void
     {
         $client = static::createClient();
@@ -81,7 +81,7 @@ final class Qa10SitemapBestandTest extends WebTestCase
 
         $nachher = $this->eintraege($client);
         self::assertSame([], array_values(preg_grep("#/restaurants/$id$#", $nachher)));
-        self::assertCount(\count($vorher) - 4, $nachher);
+        self::assertCount(\count($vorher) - 5, $nachher);
     }
 
     /**
@@ -147,7 +147,7 @@ final class Qa10SitemapBestandTest extends WebTestCase
         $anmeldung = $verweise($client->request('GET', '/de/login?page=2'));
         self::assertResponseIsSuccessful();
         self::assertNull($anmeldung['canonical']);
-        self::assertCount(5, $anmeldung['sprachen']);
+        self::assertCount(6, $anmeldung['sprachen']);
         foreach ($anmeldung['sprachen'] as $href) {
             self::assertStringNotContainsString('?', $href);
         }

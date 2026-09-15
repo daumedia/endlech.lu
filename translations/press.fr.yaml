@@ -41,7 +41,7 @@ facts:
     license_data: "Licence du jeu de données"
     license_data_value: "CC BY 4.0"
     languages: "Langues"
-    languages_value: "Luxembourgeois, allemand, français, anglais"
+    languages_value: "Luxembourgeois, allemand, français, anglais, portugais"
     contact: "Contact presse"
 
 material:
@@ -93,4 +93,4 @@ contact:
     section_title: "Contact presse"
     email_label: "E-mail"
     response_time: "Nous répondons en général sous deux jours ouvrables."
-    interview: "Les demandes d'interview sont les bienvenues – en luxembourgeois, allemand, français ou anglais."
+    interview: "Les demandes d'interview sont les bienvenues – en luxembourgeois, allemand, français ou portugais ; en anglais, par écrit."

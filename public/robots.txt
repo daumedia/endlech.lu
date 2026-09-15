@@ -18,13 +18,16 @@ Disallow: /lb/admin
 Disallow: /de/admin
 Disallow: /fr/admin
 Disallow: /en/admin
+Disallow: /pt/admin
 Disallow: /lb/profile
 Disallow: /de/profile
 Disallow: /fr/profile
 Disallow: /en/profile
+Disallow: /pt/profile
 Disallow: /lb/api/
 Disallow: /de/api/
 Disallow: /fr/api/
 Disallow: /en/api/
+Disallow: /pt/api/
 
 Sitemap: https://endlech.lu/sitemap.xml

@@ -41,7 +41,7 @@ facts:
     license_data: "Lizenz vum Datesaz"
     license_data_value: "CC BY 4.0"
     languages: "Sproochen"
-    languages_value: "Lëtzebuergesch, Däitsch, Franséisch, Englesch"
+    languages_value: "Lëtzebuergesch, Däitsch, Franséisch, Englesch, Portugisesch"
     contact: "Presskontakt"
 
 material:
@@ -93,4 +93,4 @@ contact:
     section_title: "Presskontakt"
     email_label: "E-Mail"
     response_time: "Mir äntweren normalerweis bannent zwee Aarbechtsdeeg."
-    interview: "Interviewufroe si wëllkomm – op Lëtzebuergesch, Däitsch, Franséisch oder Englesch."
+    interview: "Interviewufroe si wëllkomm – op Lëtzebuergesch, Däitsch, Franséisch oder Portugisesch, op Englesch schrëftlech."
