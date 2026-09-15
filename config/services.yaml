@@ -10,7 +10,7 @@ parameters:
 
     # Wird im Footer als `v{{ app_version }}` gerendert (twig.yaml → globals).
     # Bei jedem Release mitziehen – zusammen mit den Badges in CHANGELOG.md und README.md.
-    app.version: '2026.09.15'
+    app.version: '2026.09.15.1'
     # string:-Cast, damit ein leerer/fehlender Key zu '' (nicht null) wird – sonst
     # bricht PublicTransportService (string $apiKey) bei der Graceful-Degradation.
     app.mobiliteit_api_key: '%env(string:default::MOBILITEIT_API_KEY)%'
@@ -33,7 +33,7 @@ parameters:
     # Fallback-Parameter statt leerem Default: eine leere Empfängeradresse
     # ließe Symfony\Component\Mime\Address beim Versand werfen.
     app.contact_email: '%env(string:default:app.contact_email_fallback:CONTACT_EMAIL)%'
-    app.contact_email_fallback: 'info@endlech.lu'
+    app.contact_email_fallback: 'support@endlech.lu'
 
     # Push-Adresse des externen Wächters (BE-01, Uptime Kuma auf einem zweiten VPS).
     # Der Messenger-Consumer ruft sie alle fünf Minuten; bleibt der Ruf aus, schlägt

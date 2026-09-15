@@ -396,7 +396,9 @@ zwei Nummern für dieselbe Prüfung machen den Testbericht doppeldeutig.
 
 - ~~**OF-11** · **Zwei verschiedene Cyan-Töne im Presse-Kit.**~~ **Entschieden 2026-09-15 (Michael): `#01b6ed`,
   das Blau der Bildmarke.** Schriftzug beider Wort-Bildmarken, `material.allowed_3` in fünf Sprachen,
-  Text-Wortmarke der Website (Token `--color-brand`); Paket neu gepackt, `CACHE_VERSION` auf v4. Beim Erzeugen der Marken am
+  Text-Wortmarke der Website (Token `--color-brand`); Paket neu gepackt, `CACHE_VERSION` auf v4.
+  **Violett ebenso entschieden (2026-09-15, Michael): `#9333ea`**, das „.lu" der Wort-Bildmarke — vorher nannte
+  `material.allowed_3` `#7c3aed`. Die E-Mail-Vorlagen (Knöpfe, Links, Kopfverlauf) ziehen mit. Beim Erzeugen der Marken am
   2026-08-30 sichtbar geworden: Die Fläche der Bildmarke ist `#01b6ed` (aus
   `public/images/logo.png` ausgelesen), die Nutzungsbedingungen nennen als Markenfarbe
   dagegen `#0891b2` (cyan-600 aus dem Design-System), und der Schriftzug „Endlech" in der

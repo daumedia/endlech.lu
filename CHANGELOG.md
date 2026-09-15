@@ -2,10 +2,38 @@
 
 Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
-![Version](https://img.shields.io/badge/version-2026.09.15-blue)
+![Version](https://img.shields.io/badge/version-2026.09.15.1-blue)
 ![Status](https://img.shields.io/badge/status-beta-green)
 
 ## [Unreleased]
+
+## [2026.09.15.1] – Ein Violett, ein Postfach
+
+Marke und Kontakt vereinheitlicht (#137): Presse-Kit und E-Mails im Violett des Logos, und überall
+`support@endlech.lu` statt der nicht existierenden `info@endlech.lu`.
+
+⚠ **Keine Migration.** ⚠ **Anwendung UND Worker ausrollen**, sofern `CONTACT_EMAIL` in Coolify nicht gesetzt ist: Die
+neue Vorgabe steckt im Image, und die Rückstau-Warnung von `app:messenger:watch` läuft im Worker.
+
+⚠ **Vor dem Ausrollen in Coolify prüfen:** `CONTACT_EMAIL` auf **Anwendung und Worker**. Steht dort `info@endlech.lu`,
+auf `support@endlech.lu` setzen — die Vorgabe im Image zieht nur, wenn die Variable nicht gesetzt ist.
+
+### Ein Postfach: support@endlech.lu
+
+- **Impressum und Barrierefreiheitserklärung** nennen `support@endlech.lu` statt `info@endlech.lu`, das es nicht gibt.
+- **Vorgabe für interne Meldungen** (`CONTACT_EMAIL` in `.env`, Fallback in `services.yaml`) auf `support@endlech.lu`.
+  Daran hängen drei Mailwege: Team-Meldung bei bestätigten Wartelisten-Anmeldungen, Rückstau-Warnung von
+  `app:messenger:watch` (Worker) und Barriere-Meldungen aus `/barrierefreiheit`.
+- `docs/datenschutz.md` korrigiert; `KontaktadresseTest` wird rot, sobald `info@endlech.lu` in Templates, Katalogen,
+  Konfiguration, `src/` oder `public/` auftaucht.
+
+### Ein Violett: #9333ea
+
+- **Nutzungsbedingungen im Presse-Kit** nennen als Markenfarbe Violett #9333ea (das „.lu" der Wort-Bildmarke) statt
+  #7c3aed, in fünf Sprachen. Paket neu gepackt.
+- **E-Mail-Vorlagen** (12 Dateien): Knöpfe, Links und der Kopfverlauf in #9333ea statt #7c3aed — dasselbe purple-600
+  wie der Registrierungsknopf der Website. Weiß auf #9333ea 5,4:1.
+- Keine Bilddatei geändert, deshalb kein neuer `CACHE_VERSION`.
 
 ## [2026.09.15] – Portugiesisch, Fußzeile nach Themen und „Restaurant vorschlagen" für Gäste
 
