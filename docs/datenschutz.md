@@ -35,7 +35,7 @@ eine Lücke in der Erklärung — nicht in dieser Datei.
 | **Handelsregister** | RCS Luxembourg **B311765** (Gründung 27.07.2026, Eintragung 02.09.2026) |
 | **Handelsermächtigung** | 10199120/0, erteilt vom Ministère de l’Économie |
 | **Vertreten durch** | Michael Ferreira Rodrigues, Geschäftsführer |
-| **Kontakt** | `info@endlech.lu` |
+| **Kontakt** | `support@endlech.lu` (einzige Adresse; `info@` existiert nicht, bis 2026-09-15 falsch angegeben) |
 
 ⚠ **Wechsel des Verantwortlichen am 2026-09-05.** Bis dahin verarbeitete Michael
 Ferreira die Daten als **Privatperson**; seit der Eintragung der Gesellschaft ist sie
