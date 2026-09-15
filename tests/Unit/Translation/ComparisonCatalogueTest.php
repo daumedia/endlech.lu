@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * Jeder Textschlüssel der Vergleichsseiten steht in allen vier Katalogen.
+ * Jeder Textschlüssel der Vergleichsseiten steht in allen Katalogen.
  *
  * ⚠ **Ohne diesen Lauf wäre AK-28 wirkungslos.** Der Scanner in
  * `CatalogueCompletenessTest` erfasst nur Literale in Vorlagen — die
@@ -29,10 +29,10 @@ use Symfony\Component\Yaml\Yaml;
  */
 final class ComparisonCatalogueTest extends TestCase
 {
-    private const LOCALES = ['lb', 'de', 'fr', 'en'];
+    private const LOCALES = ['lb', 'de', 'fr', 'en', 'pt'];
     private const DOMAIN = 'comparison';
 
-    public function testJederSchluesselAusDerRegistryStehtInAllenVierKatalogen(): void
+    public function testJederSchluesselAusDerRegistryStehtInAllenKatalogen(): void
     {
         $verwendet = self::schluesselAusDerRegistry();
         self::assertNotEmpty($verwendet, 'Es wurden keine Schlüssel gefunden — die Registry ist leer oder der Sammler greift ins Leere.');

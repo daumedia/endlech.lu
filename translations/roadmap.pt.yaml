@@ -1,0 +1,93 @@
+meta_title: "Roteiro – Endlech.lu"
+meta_description: "Em que se está a trabalhar, o que vem a seguir e o que, de forma consciente, não vai ser feito. Sem datas, com justificação."
+eyebrow: "O que estamos a construir"
+heading: "Roteiro"
+intro: "Em que se está a trabalhar, o que vem a seguir — e o que decidimos conscientemente não fazer."
+no_dates_hint: "Aqui não há datas. Endlech.lu é construído a par de outra atividade profissional, e um prazo que ninguém consegue cumprir não é informação."
+
+stage:
+    in_progress:
+        title: "Em curso"
+        empty: "De momento, não se está a construir nada de novo. O que ficou pronto por último está no registo de alterações."
+    planned:
+        title: "Planeado"
+        empty: "Nada planeado em concreto — o que deveria estar aqui, quem melhor nos diz é o quadro de ideias."
+    considered:
+        title: "Em ponderação"
+        empty: "Nada mais em ponderação. As sugestões são bem-vindas no quadro de ideias."
+
+shelved:
+    section_title: "Conscientemente fora de planos"
+    section_intro: "Estes pontos não vão ser feitos — pelo menos, não desta forma. Estão aqui para que ninguém fique à espera deles."
+
+community:
+    heading: "Do quadro de ideias"
+    selection_hint: "Aqui estão as dez ideias planeadas com mais apoios. Quem apoia ideias no quadro ajuda a decidir quais delas aparecem aqui."
+    more: "{1}Há mais uma ideia planeada no quadro.|]1,Inf[Há mais %count% ideias planeadas no quadro."
+    votes: "{0}Ainda sem apoios|{1}1 apoio|]1,Inf[%count% apoios"
+    source_label: "Ideia da comunidade"
+    open_board: "Ir para o quadro de ideias"
+
+more:
+    section_title: "Saber mais"
+    changelog_label: "Registo de alterações"
+    changelog_hint: "O que foi acrescentado nas últimas semanas e meses."
+    board_label: "Quadro de ideias"
+    board_hint: "Envie a sua própria ideia ou apoie a de outra pessoa."
+
+freshness:
+    label: "Atualizado em: %date%"
+    stale: "Última atualização em %date% — passaram %days% dias desde então. Esta página pode já não estar atualizada."
+    never: "Ainda não há entradas no registo de alterações."
+
+item:
+    roadmap_changelog:
+        title: "Roteiro público e registo de alterações"
+        reason: "Esta própria página. Até agora, quem via de fora não conseguia perceber se ainda se estava a trabalhar na plataforma."
+    reviews:
+        title: "Avaliações e comentários"
+        reason: "Os clientes devem poder deixar a sua própria experiência sobre um estabelecimento, e não apenas ler as características registadas."
+    map:
+        title: "Vista de mapa"
+        reason: "As coordenadas de cada estabelecimento já existem. Falta o mapa que mostra o que há por perto."
+    favourites:
+        title: "Favoritos"
+        reason: "Guardar estabelecimentos sem ter de os procurar sempre de novo — a primeira utilidade de uma conta para além de enviar sugestões."
+    ios_app:
+        title: "App nativa para iOS"
+        reason: "A interface para isso existe desde junho. Se uma app própria compensa depende de haver conteúdo suficiente de que se precise em movimento."
+    chat_widget:
+        title: "Janela de chat"
+        reason: "Uma linha direta para perguntas que nenhum formulário cobre. Antes, é preciso esclarecer quem responde e com que rapidez."
+    ai_filter:
+        title: "Pesquisa com IA"
+        reason: "Uma pesquisa que responda a «com cadeira de rodas, sossegado, aberto ao almoço». O que exatamente deverá fazer ainda não está definido."
+    android_and_logins:
+        title: "App para Android, início de sessão com Google e Apple"
+        reason: "Anotado porque foi pedido. Nenhum dos três pontos foi, até agora, justificado ou priorizado."
+
+shelved_item:
+    passkey_conditional_ui:
+        title: "Sugestão de chave de acesso no campo de início de sessão"
+        reason: "Tecnicamente possível, mas o botão próprio para chaves de acesso cumpre a mesma função sem uma fonte de erros adicional."
+    passkey_signup:
+        title: "Criar conta com chave de acesso"
+        reason: "Uma conta precisa de um endereço de e-mail confirmado. Sem ele, não haveria forma de recuperar a conta se o dispositivo se perdesse."
+    passkey_api:
+        title: "Chaves de acesso na interface para apps"
+        reason: "A app inicia sessão com um token. Uma segunda forma de iniciar sessão não traria aí qualquer proteção adicional."
+    passkey_attestation:
+        title: "Verificação da origem das chaves de acesso"
+        reason: "Uma prova do fabricante da chave de segurança bloquearia dispositivos, sem que ninguém analisasse essas informações."
+    apple_splash:
+        title: "Ecrãs de arranque para a instalação no iPhone"
+        reason: "Uma dúzia de ficheiros de imagem por tamanho de dispositivo, para ter menos uma décima de segundo de ecrã branco."
+    pull_to_refresh:
+        title: "Puxar para atualizar"
+        reason: "A página recarrega a cada acesso. O gesto limitar-se-ia a reproduzir o que o navegador já faz."
+    push_notifications:
+        title: "Notificações push"
+        reason: "Sem um motivo que justifique uma interrupção, uma notificação push é apenas um incómodo. Quando há algo a comunicar, enviamos um e-mail."
+    mobile_audit:
+        title: "Revisão única de todas as páginas em dispositivos móveis"
+        reason: "Em vez de uma revisão única, cada nova página é verificada a 320 píxeis. Isso dura mais."

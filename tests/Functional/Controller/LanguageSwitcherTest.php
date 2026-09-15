@@ -35,7 +35,7 @@ final class LanguageSwitcherTest extends AbstractWebTestCase
 
         foreach ($links as $href) {
             self::assertMatchesRegularExpression(
-                '#^/(lb|de|fr|en)/#',
+                '#^/(lb|de|fr|en|pt)/#',
                 $href,
                 sprintf('Umschalter-Link "%s" ist kein eigener Pfad.', $href),
             );
@@ -85,9 +85,9 @@ final class LanguageSwitcherTest extends AbstractWebTestCase
     }
 
     /**
-     * Der Umschalter bietet die drei anderen Sprachen an — nicht dreimal dieselbe.
+     * Der Umschalter bietet alle anderen Sprachen an — nicht mehrmals dieselbe.
      */
-    public function testUmschalterBietetDreiVerschiedeneSprachen(): void
+    public function testUmschalterBietetAlleAnderenSprachen(): void
     {
         $client = static::createClient();
         $crawler = $client->request('GET', self::LOCALE.'/restaurants?_locale=en');
@@ -98,7 +98,7 @@ final class LanguageSwitcherTest extends AbstractWebTestCase
             $ziele[] = $treffer[1] ?? '';
         }
 
-        self::assertSame(['lb', 'fr', 'en'], $ziele);
+        self::assertSame(['lb', 'fr', 'en', 'pt'], $ziele);
     }
 
     /**

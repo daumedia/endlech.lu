@@ -22,7 +22,7 @@ use Symfony\Component\Routing\RouterInterface;
 final class RobotsTxtTest extends KernelTestCase
 {
     private const string DATEI = __DIR__.'/../../../public/robots.txt';
-    private const array SPRACHEN = ['lb', 'de', 'fr', 'en'];
+    private const array SPRACHEN = ['lb', 'de', 'fr', 'en', 'pt'];
     private const string PROBE_TOKEN = 'abababababababababababababababababababababababababababababababab';
 
     /** @return list<array{string, string}> [Allow|Disallow, Pfad] für `User-agent: *` */
@@ -72,7 +72,7 @@ final class RobotsTxtTest extends KernelTestCase
         self::assertTrue(mb_check_encoding((string) file_get_contents(self::DATEI), 'UTF-8'));
     }
 
-    /** AK-18 · Verwaltung, Profil und Schnittstelle sind in allen vier Sprachen gesperrt. */
+    /** AK-18 · Verwaltung, Profil und Schnittstelle sind in allen Sprachen gesperrt. */
     public function testVerwaltungProfilUndSchnittstelleSindGesperrt(): void
     {
         $pfade = ['/api/v1/restaurants', '/api/v1/auth/login', '/api/docs'];
@@ -99,7 +99,7 @@ final class RobotsTxtTest extends KernelTestCase
             }
         }
 
-        self::assertCount(4 + (21 + 2) * 4, $pfade);
+        self::assertCount(4 + (21 + 2) * 5, $pfade);
         foreach ($pfade as $pfad) {
             self::assertTrue($this->erlaubt($pfad), "$pfad müsste erlaubt sein");
         }

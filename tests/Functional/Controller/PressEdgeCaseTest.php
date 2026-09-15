@@ -201,7 +201,7 @@ final class PressEdgeCaseTest extends AbstractWebTestCase
     /** @return iterable<string, array{string}> */
     public static function sprachen(): iterable
     {
-        foreach (['lb', 'de', 'fr', 'en'] as $locale) {
+        foreach (['lb', 'de', 'fr', 'en', 'pt'] as $locale) {
             yield $locale => [$locale];
         }
     }

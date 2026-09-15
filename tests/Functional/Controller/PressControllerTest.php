@@ -23,7 +23,7 @@ final class PressControllerTest extends AbstractWebTestCase
     /** @return iterable<string, array{string}> */
     public static function sprachen(): iterable
     {
-        foreach (['lb', 'de', 'fr', 'en'] as $locale) {
+        foreach (['lb', 'de', 'fr', 'en', 'pt'] as $locale) {
             yield $locale => [$locale];
         }
     }
@@ -71,7 +71,7 @@ final class PressControllerTest extends AbstractWebTestCase
         $crawler = $client->request('GET', self::LOCALE.'/presse');
 
         self::assertResponseIsSuccessful();
-        foreach (['lb', 'fr', 'en'] as $locale) {
+        foreach (['lb', 'fr', 'en', 'pt'] as $locale) {
             self::assertGreaterThan(
                 0,
                 $crawler->filter('a[href="/'.$locale.'/presse"]')->count(),
@@ -110,7 +110,7 @@ final class PressControllerTest extends AbstractWebTestCase
         ));
 
         // AK-44 zweite Hälfte: die vier Sprachverweise zeigen auf die Presseseite.
-        foreach (['lb', 'de', 'fr', 'en'] as $andere) {
+        foreach (['lb', 'de', 'fr', 'en', 'pt'] as $andere) {
             self::assertGreaterThan(
                 0,
                 $crawler->filter('link[rel="alternate"][hreflang="'.$andere.'"]')->count(),

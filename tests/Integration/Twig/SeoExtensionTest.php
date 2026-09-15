@@ -29,7 +29,7 @@ final class SeoExtensionTest extends KernelTestCase
         return new SeoExtension(
             $stack,
             new SeoRegistry(),
-            new SeoUrlBuilder(static::getContainer()->get('router'), 'https://endlech.lu', ['lb', 'de', 'fr', 'en']),
+            new SeoUrlBuilder(static::getContainer()->get('router'), 'https://endlech.lu', ['lb', 'de', 'fr', 'en', 'pt']),
         );
     }
 

@@ -9,7 +9,7 @@ Artefaktpfad: `docs/`
 | **Stand** | 21. August 2026 |
 | **Version** | v2026.08.09 (Beta) |
 | **Lizenz** | MIT · offener Datensatz unter CC BY 4.0 |
-| **Sprachen** | Luxemburgisch (Vorgabe), Deutsch, Französisch, Englisch |
+| **Sprachen** | Luxemburgisch (Vorgabe), Deutsch, Französisch, Englisch, Portugiesisch (pt-PT, seit 2026-09-15) |
 
 Verwandte Dokumente: [Datenmodell](data-model.md) · [Design-System](design-system.md)
  · [App-Shell](app-shell.md) · [Feature-Inventar](../features/index.md)

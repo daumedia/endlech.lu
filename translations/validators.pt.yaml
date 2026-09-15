@@ -1,0 +1,125 @@
+restaurant:
+    door_width_range: "A largura da porta deve estar entre {{ min }} e {{ max }} cm."
+    table_spacing_range: "O espaço entre mesas deve estar entre {{ min }} e {{ max }} cm."
+    name_blank: "Introduza o nome."
+    name_max: "O nome não pode ter mais de {{ limit }} caracteres."
+    city_blank: "Introduza a localidade."
+    city_max: "A localidade não pode ter mais de {{ limit }} caracteres."
+    cuisine_blank: "Introduza o tipo de cozinha."
+    cuisine_max: "O tipo de cozinha não pode ter mais de {{ limit }} caracteres."
+    emoji_blank: "Introduza um emoji."
+    emoji_max: "O emoji não pode ter mais de {{ limit }} caracteres."
+    rating_range: "A avaliação deve estar entre {{ min }} e {{ max }}."
+    phone_max: "O número de telefone não pode ter mais de {{ limit }} caracteres."
+    email_invalid: "Introduza um endereço de e-mail válido."
+    email_max: "O e-mail não pode ter mais de {{ limit }} caracteres."
+    url_invalid: "Introduza um URL válido."
+    url_max: "O URL não pode ter mais de {{ limit }} caracteres."
+    note_blank: "A nota não pode estar vazia."
+    note_format: "Formato: \"ok:Texto\" ou \"warn:Texto\""
+    latitude_range: 'A latitude deve estar entre {{ min }} e {{ max }}.'
+    longitude_range: 'A longitude deve estar entre {{ min }} e {{ max }}.'
+    nearby_stops_note_max: 'A nota sobre transportes públicos não pode ter mais de {{ limit }} caracteres.'
+
+user:
+    email_unique: "Este endereço de e-mail já está a ser utilizado."
+    name_blank: "Introduza o seu nome."
+    name_min: "O nome deve ter pelo menos {{ limit }} caracteres."
+    email_blank: "Introduza o seu endereço de e-mail."
+    email_invalid: "Introduza um endereço de e-mail válido."
+    password_blank: "Introduza uma palavra-passe."
+    password_min: "A palavra-passe deve ter pelo menos {{ limit }} caracteres."
+
+ordering:
+    platform_blank: "Escolha uma plataforma."
+    url_blank: "Introduza um URL ou um número de telefone."
+    url_max: "O URL não pode ter mais de {{ limit }} caracteres."
+
+profile:
+    avatar_max_size: "A foto de perfil não pode ter mais de {{ limit }}."
+    avatar_mime_type: "Carregue uma imagem em formato JPG, PNG ou WebP."
+    current_password_blank: "Introduza a sua palavra-passe atual."
+    new_password_blank: "Introduza uma nova palavra-passe."
+    new_password_min: "A nova palavra-passe deve ter pelo menos {{ limit }} caracteres."
+
+suggestion:
+    door_width_range: 'A largura da porta deve estar entre {{ min }} e {{ max }} cm.'
+    table_spacing_range: 'O espaço entre mesas deve estar entre {{ min }} e {{ max }} cm.'
+    name_blank: "Introduza o nome."
+    name_max: "O nome não pode ter mais de {{ limit }} caracteres."
+    city_blank: "Introduza a localidade."
+    city_max: "A localidade não pode ter mais de {{ limit }} caracteres."
+    cuisine_blank: "Introduza o tipo de restaurante."
+    cuisine_max: "O tipo de cozinha não pode ter mais de {{ limit }} caracteres."
+    emoji_max: "O emoji não pode ter mais de {{ limit }} caracteres."
+    notes_max: "As observações não podem ter mais de {{ limit }} caracteres."
+    answer_required: "Escolha Sim, Não ou Não sei."
+    phone_max: 'O número de telefone não pode ter mais de {{ limit }} caracteres.'
+    email_invalid: 'Introduza um endereço de e-mail válido.'
+    email_max: 'O endereço de e-mail não pode ter mais de {{ limit }} caracteres.'
+    url_invalid: 'Introduza um endereço válido — começando por https://.'
+    url_max: 'O endereço não pode ter mais de {{ limit }} caracteres.'
+partner_waitlist:
+    restaurant_name_blank: "Introduza o nome do restaurante."
+    restaurant_name_max: "O nome não pode ter mais de {{ limit }} caracteres."
+    contact_name_blank: "Introduza o seu nome."
+    contact_name_max: "O seu nome não pode ter mais de {{ limit }} caracteres."
+    email_blank: "Introduza o seu endereço de e-mail."
+    email_invalid: "Introduza um endereço de e-mail válido."
+    email_max: "O endereço de e-mail não pode ter mais de {{ limit }} caracteres."
+    phone_max: "O número de telefone não pode ter mais de {{ limit }} caracteres."
+    locality_blank: "Introduza a comuna."
+    locality_max: "A comuna não pode ter mais de {{ limit }} caracteres."
+    message_max: "A sua mensagem não pode ter mais de {{ limit }} caracteres."
+    consent_required: "Aceite o tratamento dos seus dados."
+organisation_waitlist:
+    type_required: "Indique de quem se trata."
+    organisation_name_blank: "Introduza o nome da organização."
+    organisation_name_max: "O nome não pode ter mais de {{ limit }} caracteres."
+    contact_name_blank: "Introduza o seu nome."
+    contact_name_max: "O seu nome não pode ter mais de {{ limit }} caracteres."
+    contact_role_max: "A função não pode ter mais de {{ limit }} caracteres."
+    email_blank: "Introduza o seu endereço de e-mail."
+    email_invalid: "Introduza um endereço de e-mail válido."
+    email_max: "O endereço de e-mail não pode ter mais de {{ limit }} caracteres."
+    phone_max: "O número de telefone não pode ter mais de {{ limit }} caracteres."
+    website_invalid: "Introduza um endereço web válido."
+    website_max: "O endereço web não pode ter mais de {{ limit }} caracteres."
+    message_max: "A sua mensagem não pode ter mais de {{ limit }} caracteres."
+    consent_required: "Aceite o tratamento dos seus dados."
+    commune_name_max: "O nome da comuna não pode ter mais de {{ limit }} caracteres."
+    venues_range: "Indique um número entre {{ min }} e {{ max }}."
+    invalid_choice: "Esta opção não é permitida."
+    commune_only: "Este campo destina-se apenas a comunas."
+    company_only: "Esta opção destina-se apenas a empresas."
+    association_only: "Esta opção destina-se apenas a organizações."
+
+finance:
+    date_required: "Indique uma data."
+    category_required: "Escolha uma categoria."
+    amount_required: "Indique um montante."
+    amount_positive: "O montante deve ser superior a zero. A categoria determina se se trata de uma receita ou de uma despesa."
+    quantity_positive: "A quantidade deve ser, no mínimo, 1."
+    quantity_not_allowed: "Só é possível indicar uma quantidade para material das Inclusion Boxes."
+    note_max: "A nota não pode ter mais de {{ limit }} caracteres."
+
+form:
+    password_mismatch: "As palavras-passe não coincidem."
+
+accessibility:
+    report:
+        description_required: "Descreva a barreira."
+        email_invalid: "Introduza um endereço de e-mail válido."
+
+board:
+    title_required: "Dê um título à sua ideia."
+    title_too_long: "O título não pode ter mais de {{ limit }} caracteres."
+    description_required: "Descreva a sua ideia."
+    description_too_long: "A descrição não pode ter mais de {{ limit }} caracteres."
+
+app_waitlist:
+    platform_required: "Escolha o dispositivo para o qual pretende ficar em lista de espera."
+    email_blank: "Indique o seu endereço de e-mail."
+    email_invalid: "Este endereço de e-mail não parece válido."
+    email_max: "O endereço de e-mail não pode ter mais de 180 caracteres."
+    consent_required: "Sem este consentimento, não lhe podemos dar notícias."

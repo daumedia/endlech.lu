@@ -108,7 +108,7 @@ dem Seitenverzeichnis `App\Seo\SeoRegistry` und dem Adressbildner `App\Seo\SeoUr
 | Angabe | Wo | Für welche Seiten |
 |---|---|---|
 | `<link rel="canonical">` | Block `canonical` in `base.html.twig`, Funktion `seo_canonical_url()` | nur Seiten aus dem Verzeichnis (21 feste plus Restaurant-Detailseiten) |
-| `<link rel="alternate" hreflang>` | `base.html.twig`, Funktion `seo_alternate_urls()` | jede Seite mit Route außer `app_root`; vier Sprachen plus `x-default` auf `lb` |
+| `<link rel="alternate" hreflang>` | `base.html.twig`, Funktion `seo_alternate_urls()` | jede Seite mit Route außer `app_root`; alle Sprachen aus `enabled_locales` (lb, de, fr, en, pt) plus `x-default` auf `lb` |
 | `X-Robots-Tag: noindex` | Antwortkopfzeile, `SeoRobotsHeaderSubscriber` | die 16 Ausschlusswege (Anmelden, Passwort, Bestätigungen, Abmeldelinks, Dankeseiten, Einreichformulare) |
 
 ⚠️ **Alle Adressen lauten auf `https://endlech.lu`**, auch lokal und im Test — der Host kommt

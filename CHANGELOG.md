@@ -7,6 +7,23 @@ Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
 ## [Unreleased]
 
+### Portugiesisch als fünfte Sprache
+
+⚠ **Keine Migration.** Nur die Anwendung muss ausgerollt werden.
+
+- **Die ganze Website auf Portugiesisch** unter `/pt/…` — europäisches Portugiesisch (pt-PT) mit höflicher
+  Anrede, für die portugiesische Gemeinschaft in Luxemburg. Sechs neue Kataloge (`messages`, `validators`,
+  `press`, `comparison`, `roadmap`, `changelog`), dieselbe Schlüsselmenge wie die übrigen vier.
+- **Sprachumschalter, Sitemap und hreflang** führen `pt` automatisch; Erstbesucher mit
+  `Accept-Language: pt` landen auf Portugiesisch. Auch die iOS-API antwortet darauf portugiesisch.
+- `LocaleSubscriber` und beide Sprachumschalter lesen die Sprachen jetzt aus `framework.enabled_locales`
+  statt aus eigenen Listen.
+- `robots.txt` sperrt `/pt/admin`, `/pt/profile`, `/pt/api/`. Presse-Paket neu gepackt
+  (Nutzungsbedingungen auch auf Portugiesisch).
+- Faktenblatt und Unternehmensseite nennen Portugiesisch in allen Sprachen unter den Plattformsprachen.
+- Presse-Kontakt: Interviews auf Luxemburgisch, Deutsch, Französisch oder Portugiesisch, auf Englisch nur
+  schriftlich (vorher „oder Englisch").
+
 ## [2026.09.14.2] – Nutzungsmessung über die eigene Umami-Domain (Feature 11, scharf)
 
 Überarbeitung von Feature 11 und das Release, mit dem die cookielose Messung **scharfgeschaltet** wird. Ersetzt

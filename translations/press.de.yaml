@@ -44,7 +44,7 @@ facts:
     license_data: "Lizenz des Datensatzes"
     license_data_value: "CC BY 4.0"
     languages: "Sprachen"
-    languages_value: "Luxemburgisch, Deutsch, Französisch, Englisch"
+    languages_value: "Luxemburgisch, Deutsch, Französisch, Englisch, Portugiesisch"
     contact: "Pressekontakt"
 
 material:
@@ -96,4 +96,4 @@ contact:
     section_title: "Pressekontakt"
     email_label: "E-Mail"
     response_time: "Wir antworten in der Regel innerhalb von zwei Werktagen."
-    interview: "Interviewanfragen sind willkommen – auf Luxemburgisch, Deutsch, Französisch oder Englisch."
+    interview: "Interviewanfragen sind willkommen – auf Luxemburgisch, Deutsch, Französisch oder Portugiesisch, auf Englisch schriftlich."

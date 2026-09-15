@@ -22,7 +22,7 @@ final class SeoUrlBuilderTest extends KernelTestCase
     {
         self::bootKernel();
         $this->router = static::getContainer()->get('router');
-        $this->builder = new SeoUrlBuilder($this->router, 'https://endlech.lu', ['lb', 'de', 'fr', 'en']);
+        $this->builder = new SeoUrlBuilder($this->router, 'https://endlech.lu', ['lb', 'de', 'fr', 'en', 'pt']);
     }
 
     /** AK-03 · absolute Adresse, Sprachsegment direkt dahinter, Startseite mit Schrägstrich. */
@@ -59,12 +59,12 @@ final class SeoUrlBuilderTest extends KernelTestCase
         self::assertSame($erwartet, $this->builder->url('app_restaurant_index', [], 'de', $query));
     }
 
-    /** AK-05 · vier Sprachen, die Seite selbst eingeschlossen, Vorgabe Luxemburgisch. */
-    public function testSprachverweiseUmfassenAlleVierUndDieVorgabe(): void
+    /** AK-05 · alle Sprachen, die Seite selbst eingeschlossen, Vorgabe Luxemburgisch. */
+    public function testSprachverweiseUmfassenAlleSprachenUndDieVorgabe(): void
     {
         $verweise = $this->builder->alternates('app_about', []);
 
-        self::assertSame(['lb', 'de', 'fr', 'en', 'x-default'], array_keys($verweise));
+        self::assertSame(['lb', 'de', 'fr', 'en', 'pt', 'x-default'], array_keys($verweise));
         self::assertSame('https://endlech.lu/de/about', $verweise['de']);
         self::assertSame($verweise['lb'], $verweise['x-default']);
     }

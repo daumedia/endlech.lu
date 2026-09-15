@@ -95,7 +95,7 @@ final class OrganisationControllerTest extends AbstractWebTestCase
     {
         $client = static::createClient();
 
-        foreach (['de', 'en', 'fr', 'lb'] as $sprache) {
+        foreach (['de', 'en', 'fr', 'lb', 'pt'] as $sprache) {
             foreach (['', '/gemeinden', '/unternehmen', '/vereine'] as $seite) {
                 $crawler = $client->request('GET', '/'.$sprache.'/organisationen'.$seite);
                 self::assertResponseIsSuccessful();

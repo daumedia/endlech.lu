@@ -126,7 +126,7 @@ controllers:
     type: attribute
     prefix: /{_locale}
     requirements:
-        _locale: lb|de|fr|en
+        _locale: lb|de|fr|en|pt
     defaults:
         _locale: lb
 

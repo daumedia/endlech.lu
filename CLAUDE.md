@@ -111,7 +111,7 @@ nächste Schicht und kommt dort als **HTTP 500** heraus statt als Meldung.
 
 ## Konvention: Übersetzungsschlüssel werden getestet, nicht gehofft
 
-`tests/Unit/Translation/CatalogueCompletenessTest.php` prüft: (1) alle vier Kataloge tragen
+`tests/Unit/Translation/CatalogueCompletenessTest.php` prüft: (1) alle fünf Kataloge (lb, de, fr, en, pt) tragen
 **dieselbe Schlüsselmenge** (`messages` 1084+, `validators` 82+); (2) kein Wert ist leer;
 (3) **jeder im Code verwendete Schlüssel ist definiert** — 736 aus `|trans` in Templates,
 187 aus `src/Form/` (Constraint-Meldungen, `label`, `help`, `placeholder`).
@@ -120,6 +120,24 @@ nächste Schicht und kommt dort als **HTTP 500** heraus statt als Meldung.
 nur Constraint-Meldungen; zwei neue Feld-Beschriftungen standen in keinem Katalog, Test
 blieb grün. Wer den Scanner erweitert, prüft mit einem absichtlich falschen Schlüssel
 gegen, ob er rot wird. Manueller Weg: `debug:translation <locale> --only-missing`.
+
+## Konvention: Eine Sprache hinzufügen
+
+Seit 2026-09-15 fünf Sprachen: `lb` (Vorgabe), `de`, `fr`, `en`, **`pt`** (europäisches Portugiesisch,
+höfliche Anrede ohne „você", wie das französische „vous"). Maßgeblich ist
+`framework.enabled_locales` in `translation.yaml`; daraus lesen `LocaleSubscriber`, `SeoUrlBuilder`
+(Sitemap, hreflang) und beide Sprachumschalter (`app.enabled_locales`).
+
+⚠ **Diese Stellen lesen die Liste NICHT und müssen von Hand mit:** `_locale`-Requirement in
+`config/routes.yaml` und `AdminLocaleController`, `public/robots.txt` (drei Sperren je Sprache),
+`PressPackageCommand::LOCALES` **samt neu gepacktem Paket** (`make press-kit`, sonst rot in
+`PressPackageTest`), `growth/config.json`, sechs Kataloge je Sprache (`messages`, `validators`,
+`press`, `comparison`, `roadmap`, `changelog`) und die Sprachlisten in den Tests. Die Zählprüfläufe
+der Sitemap rechnen `× Sprachanzahl` (`SitemapGeneratorTest`, `RobotsTxtTest`, `Qa10SitemapBestandTest`).
+⚠ **`PressCatalogueTest::GESUNDHEITSANGABE` braucht den Wortstamm der neuen Sprache** — sonst prüft der
+Lauf die Zusage „nur in `person.bio`" für diese Sprache nicht (für pt: „atrofia muscular").
+⚠ **Ein vergessener Schlüssel fällt nicht sichtbar auf:** `fallbacks: ['de', 'en']` zeigt dann Deutsch.
+Nur `CatalogueCompletenessTest` & Co. merken es.
 
 ## Tech Stack
 
@@ -162,7 +180,7 @@ templates/               # base.html.twig; admin/, home/, email/, open/ (_metric
 assets/                  # app.ts, controllers/*.ts, controllers.json, stimulus_bootstrap.ts, styles/app.css, usage/
 migrations/              # DoctrineMigrations namespace
 tests/                   # Unit/, Integration/, Functional/ (+ AbstractWebTestCase.php im Root)
-translations/            # de, en, fr, lb
+translations/            # lb, de, fr, en, pt
 public/                  # Web root; images/platforms/ (SVG), uploads/restaurants/, uploads/avatars/ (gitignored)
 ```
 
@@ -973,7 +991,7 @@ Zwei Leseseiten: `/roadmap` in drei Spalten (In Arbeit · Geplant · Angedacht) 
 ⚠ **An keinem Roadmap-Eintrag steht ein Datum** — strukturell: `RoadmapItem` hat kein Datumsfeld. Ein gerissener
 Termin kostet mehr Glaubwürdigkeit, als eine Zahl einbringt.
 ⚠ **Der Begründungssatz gehört zum Wertobjekt.** `RoadmapItem::reasonKey()` existiert immer, `RoadmapCatalogueTest`
-verlangt ihn in vier Sprachen (AK-05, AK-29 erzwungen).
+verlangt ihn in allen Sprachen (AK-05, AK-29 erzwungen).
 ⚠ **`ReleaseVisibility` ist dreiwertig** (`SHOWN`/`SUMMARISED`/`SILENT`), nicht `bool`. Der Entwurf sah `public:
 bool` vor; das trägt die Sammelzeile für die Aufbauphase nicht — dasselbe Zwei-Bedeutungen-Muster wie BF-89.
 ⚠ **Community-Ideen werden live abgefragt, nicht kopiert** (eine zurückgezogene Idee bliebe sonst stehen). Höchstens
