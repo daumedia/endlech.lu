@@ -1,0 +1,307 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Endlech.lu · Gesamtarchitektur",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1280,
+      700
+    ],
+    "views": [
+      {
+        "id": "anfrage",
+        "label": "Seitenaufruf",
+        "focus": [
+          "browser",
+          "ios",
+          "proxy",
+          "app",
+          "db"
+        ],
+        "note": "Vom Browser oder der iOS-App über den Coolify-Proxy zur Symfony-Anwendung und in die MariaDB."
+      },
+      {
+        "id": "hintergrund",
+        "label": "Hintergrundarbeit",
+        "focus": [
+          "worker",
+          "db",
+          "brevo"
+        ],
+        "note": "Der Worker liest die Messenger-Queue aus der Datenbank und verschickt Mails über Brevo."
+      },
+      {
+        "id": "ueberwachung",
+        "label": "Überwachung",
+        "focus": [
+          "kuma",
+          "app",
+          "worker",
+          "sentry"
+        ],
+        "note": "Uptime Kuma fragt /health der Anwendung ab und erwartet den Puls des Workers; Fehler gehen an Sentry EU."
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "sentry",
+      "type": "external",
+      "label": "Sentry EU",
+      "sublabel": "Fehler · Logs",
+      "pos": [
+        560,
+        80
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "browser",
+      "type": "frontend",
+      "label": "Browser & PWA",
+      "sublabel": "5 Sprachen",
+      "pos": [
+        40,
+        260
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "proxy",
+      "type": "cloud",
+      "label": "Coolify-Proxy",
+      "sublabel": "TLS",
+      "pos": [
+        300,
+        260
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "app",
+      "type": "backend",
+      "label": "Symfony-Anwendung",
+      "sublabel": "FrankenPHP · PHP 8.4",
+      "pos": [
+        560,
+        260
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "db",
+      "type": "database",
+      "label": "MariaDB",
+      "sublabel": "Daten · Queue",
+      "pos": [
+        820,
+        260
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "ios",
+      "type": "frontend",
+      "label": "iOS-App",
+      "sublabel": "TestFlight-Beta",
+      "pos": [
+        40,
+        420
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "worker",
+      "type": "backend",
+      "label": "Messenger-Worker",
+      "sublabel": "Queue · Zeitpläne",
+      "pos": [
+        820,
+        420
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "brevo",
+      "type": "external",
+      "label": "Brevo",
+      "sublabel": "Mails · Kontakte",
+      "pos": [
+        1080,
+        420
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "umami",
+      "type": "backend",
+      "label": "Umami",
+      "sublabel": "Nutzungsmessung",
+      "pos": [
+        560,
+        580
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "kuma",
+      "type": "backend",
+      "label": "Uptime Kuma",
+      "sublabel": "Wächter",
+      "pos": [
+        820,
+        580
+      ],
+      "size": [
+        150,
+        64
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Hostinger · Deutschland · Coolify",
+      "wraps": [
+        "proxy",
+        "app",
+        "db",
+        "worker"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "Zweiter VPS",
+      "wraps": [
+        "kuma",
+        "umami"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "browser-proxy",
+      "from": "browser",
+      "to": "proxy",
+      "label": "HTTPS",
+      "variant": "emphasis"
+    },
+    {
+      "id": "ios-proxy",
+      "from": "ios",
+      "to": "proxy",
+      "label": "/api/v1 · JWT"
+    },
+    {
+      "id": "proxy-app",
+      "from": "proxy",
+      "to": "app",
+      "variant": "emphasis"
+    },
+    {
+      "id": "app-db",
+      "from": "app",
+      "to": "db",
+      "label": "SQL",
+      "variant": "emphasis"
+    },
+    {
+      "id": "worker-db",
+      "from": "worker",
+      "to": "db",
+      "label": "Queue"
+    },
+    {
+      "id": "worker-brevo",
+      "from": "worker",
+      "to": "brevo",
+      "label": "Mails · Abgleich"
+    },
+    {
+      "id": "app-umami",
+      "from": "app",
+      "to": "umami",
+      "label": "Zählaufrufe",
+      "variant": "dashed",
+      "labelDy": 140
+    },
+    {
+      "id": "kuma-app",
+      "from": "kuma",
+      "to": "app",
+      "label": "/health",
+      "variant": "dashed"
+    },
+    {
+      "id": "worker-kuma",
+      "from": "worker",
+      "to": "kuma",
+      "label": "Puls",
+      "variant": "dashed",
+      "labelDy": 60
+    },
+    {
+      "id": "app-sentry",
+      "from": "app",
+      "to": "sentry",
+      "label": "Fehler",
+      "variant": "dashed"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Hostinger (Deutschland)",
+      "items": [
+        "Coolify baut Anwendung und Worker aus einem Dockerfile",
+        "MariaDB hält Daten, Messenger-Queue und Scheduler-Merkposten",
+        "Ausrollen von Hand nach dem Merge in master"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Zweiter VPS",
+      "items": [
+        "Uptime Kuma fragt /health ab und erwartet alle 5 Minuten den Puls des Workers",
+        "Umami über eigene Domain — der Browser zählt nur über endlech.lu"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "Dritte",
+      "items": [
+        "Brevo: Transaktionsmails, Marketing-Kontakte, Webhook zurück",
+        "Sentry EU: Fehler und Logs aus Anwendung und Worker",
+        "HAFAS erhält nur Restaurant-Koordinaten"
+      ]
+    }
+  ]
+}
