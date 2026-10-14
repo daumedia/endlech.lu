@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 /**
  * QA Feature 11 · Befund BF-151 (B15) — Reproduktion, seit der Behebung am 2026-09-13 scharf.
  *
- * Das Formular auf den Zielgruppenseiten `/{locale}/organisationen/{gemeinden|unternehmen|vereine}` trägt kein
+ * Das Formular auf den Zielgruppenseiten `/{locale}/organisationen/{gemeinden|unternehmen}` trägt kein
  * `action`. Ein Browser schickt es deshalb an die Zielgruppenseite selbst — die kennt nur GET, die POST-Route
  * `app_organisations_submit` liegt unter `/{locale}/organisationen`. Gemessen im echten Browser
  * (`qa/11/wartelisten-browser.ausgabe.txt`): **405**, Symfonys Fehlerseite „Oops! An Error Occurred", keine Zeile
@@ -28,7 +28,6 @@ final class Qa11ZielgruppenFormularTest extends AbstractWebTestCase
     {
         yield 'Gemeinden' => ['gemeinden', 'commune'];
         yield 'Unternehmen' => ['unternehmen', 'company'];
-        yield 'Vereine' => ['vereine', 'association'];
     }
 
     #[DataProvider('zielgruppen')]

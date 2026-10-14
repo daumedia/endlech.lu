@@ -312,7 +312,7 @@ final class PartnerControllerTest extends AbstractWebTestCase
         $crawler = $client->request('GET', self::LOCALE . '/organisationen');
 
         $client->submit($this->formWithField($crawler, 'organisation_waitlist[email]', [
-            'organisation_waitlist[type]' => 'association',
+            'organisation_waitlist[type]' => 'company',
             'organisation_waitlist[organisationName]' => 'Verein Kontingent',
             'organisation_waitlist[contactName]' => 'Alex Muster',
             'organisation_waitlist[email]' => 'kontingent_' . uniqid() . '@verein-test.lu',

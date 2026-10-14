@@ -6,17 +6,29 @@ namespace App\Enum;
  * Art der Organisation – bestimmt Formularfelder, Validierungsgruppe,
  * Bestätigungsmail und Erfolgsmeldung.
  *
- * Die drei Typen sind kommerziell grundverschieden: COMMUNE ist ein bezahlter
- * Auftrag, COMPANY ein Sponsoring, ASSOCIATION ausdrücklich **kein**
- * Vertriebskanal – dort fließt in keine Richtung Geld. Der Beirat prüft die
- * Barrierefreiheits-Kriterien und ihre Gewichtung; genau diese Unabhängigkeit
- * wäre hinfällig, wenn sie erkauft werden könnte.
+ * Die beiden Typen sind kommerziell grundverschieden: COMMUNE ist ein bezahlter
+ * Auftrag, COMPANY steht für Unternehmen UND Vereine – Sponsoring oder eine
+ * Zusammenarbeit ohne Geld.
+ *
+ * ⚠ Bis 2026-10-14 gab es einen dritten Typ ASSOCIATION („Verein") mit einem
+ * Beirat, der über Kriterien und Gewichtung mitentscheiden sollte. Der Beirat
+ * ist gestrichen (zu viele Beteiligte, verlangsamt Entscheidungen), Vereine
+ * laufen seither unter COMPANY. Migration `Version20261014120000` hat den
+ * Bestand umgeschrieben; `/organisationen/vereine` leitet dauerhaft weiter.
  */
 enum OrganisationType: string
 {
     case COMMUNE = 'commune';
     case COMPANY = 'company';
-    case ASSOCIATION = 'association';
+
+    /**
+     * Slugs entfallener Zielgruppenseiten → Typ, dessen Seite sie ersetzt.
+     *
+     * Die Route nimmt sie weiter an und leitet dauerhaft (301) weiter, damit
+     * Lesezeichen, verlinkte Adressen und der Suchindex nicht auf einer 404
+     * enden.
+     */
+    public const LEGACY_SLUGS = ['vereine' => 'unternehmen'];
 
     public function transKey(): string
     {
@@ -27,17 +39,16 @@ enum OrganisationType: string
      * Deutscher Anzeigename — wird dort verwendet, wo kein Übersetzungskatalog
      * greift (Screenreader-Ansage, interne Meldungen).
      *
-     * ⚠ BF-39: ASSOCIATION heißt „Verein", nicht „Organisation". Letzteres ist der
+     * ⚠ BF-39: Ein Label muss sagen, wer gemeint ist — „Organisation" ist der
      * Oberbegriff der ganzen Seite und sagt einem Screenreader-Nutzer beim Wechsel
-     * des Formulartyps nichts. Beim Slug war dieselbe Verwechslung erkannt und
-     * behoben (`vereine` mit Kommentar); beim Label nicht.
+     * des Formulartyps nichts. Deshalb „Unternehmen oder Verein", nicht
+     * „Organisation".
      */
     public function label(): string
     {
         return match ($this) {
             self::COMMUNE => 'Gemeinde',
-            self::COMPANY => 'Unternehmen',
-            self::ASSOCIATION => 'Verein',
+            self::COMPANY => 'Unternehmen oder Verein',
         };
     }
 
@@ -46,22 +57,21 @@ enum OrganisationType: string
         return match ($this) {
             self::COMMUNE => '🏛️',
             self::COMPANY => '🏢',
-            self::ASSOCIATION => '🤲',
         };
     }
 
     /**
      * URL-Segment der eigenen Unterseite (/organisationen/{slug}).
      *
-     * Für ASSOCIATION bewusst „vereine" statt „organisationen" – sonst hieße
-     * die Seite /organisationen/organisationen.
+     * COMPANY behält `unternehmen`, obwohl die Seite seit 2026-10-14 auch Vereine
+     * anspricht: Die Adresse steht in Links, Sitemap und Suchindex. Die frühere
+     * Vereinsseite leitet dorthin weiter (siehe `LEGACY_SLUGS`).
      */
     public function slug(): string
     {
         return match ($this) {
             self::COMMUNE => 'gemeinden',
             self::COMPANY => 'unternehmen',
-            self::ASSOCIATION => 'vereine',
         };
     }
 
@@ -81,7 +91,6 @@ enum OrganisationType: string
         return match ($this) {
             self::COMMUNE => 'bg-cyan-100 text-cyan-800',
             self::COMPANY => 'bg-purple-100 text-purple-700',
-            self::ASSOCIATION => 'bg-teal-100 text-teal-800',
         };
     }
 

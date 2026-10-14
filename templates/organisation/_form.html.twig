@@ -2,9 +2,9 @@
     Wartelisten-Formular für Organisationen. Die id ist zugleich das Ziel des
     Turbo-Streams.
 
-    Ohne JavaScript sind alle drei typspezifischen Blöcke sichtbar und jeweils
+    Ohne JavaScript sind beide typspezifischen Blöcke sichtbar und jeweils
     beschriftet – man füllt den passenden aus, PRE_SUBMIT verwirft serverseitig
-    die Felder der nicht gewählten Typen. Mit JavaScript blendet der
+    die Felder des nicht gewählten Typs. Mit JavaScript blendet der
     Stimulus-Controller die unpassenden Blöcke aus und sagt den Wechsel in einer
     Live-Region an.
 
@@ -12,7 +12,7 @@
     Pfeiltasten-Navigation und Gruppenzugehörigkeit gratis, ohne ARIA-Nachbau.
 
     ⚠ BF-151: Das Ziel steht ausdrücklich im Formular. Das Partial hängt in der
-    Übersicht UND auf den drei Zielgruppenseiten; ohne `action` schickt der
+    Übersicht UND auf den Zielgruppenseiten; ohne `action` schickt der
     Browser an die aktuelle Adresse, und nur die Übersicht ist zugleich die
     POST-Route. Von `/organisationen/gemeinden` aus endete jede Eintragung in
     einer 405-Fehlerseite — auf der Produktion, und kein Test sah es, weil jeder
@@ -143,10 +143,13 @@
             </div>
         {% endif %}
 
+        {# Unternehmen und Vereine: Sponsoring und Zusammenarbeit ohne Geld in einem
+           Block, je als eigene Gruppe. Beide Gruppen führen „Etwas anderes" – die
+           Legende sagt, welches gemeint ist. #}
         {% if form.sponsorshipInterests is defined %}
             <div data-organisation-type-target="block" data-type="company"
                  data-label="{{ 'organisation.type.company'|trans }}"
-                 class="rounded-xl border border-purple-700 bg-purple-50/60 p-4 space-y-3">
+                 class="rounded-xl border border-purple-700 bg-purple-50/60 p-4 space-y-5">
                 <h3 class="text-sm font-bold text-purple-900">{{ 'organisation.form.block_company'|trans }}</h3>
 
                 <fieldset>
@@ -162,29 +165,25 @@
                         {% endfor %}
                     </div>
                 </fieldset>
-            </div>
-        {% endif %}
 
-        {% if form.collaborationInterests is defined %}
-            <div data-organisation-type-target="block" data-type="association"
-                 data-label="{{ 'organisation.type.association'|trans }}"
-                 class="rounded-xl border border-teal-700 bg-teal-50/60 p-4 space-y-3">
-                <h3 class="text-sm font-bold text-teal-900">{{ 'organisation.form.block_association'|trans }}</h3>
-
-                <fieldset>
-                    <legend class="text-sm font-semibold text-gray-900 mb-2">
-                        {{ 'organisation.form.collaboration_interests'|trans }}
-                    </legend>
-                    <div class="space-y-2">
-                        {% for choice in form.collaborationInterests %}
-                            <label class="flex items-start gap-3 cursor-pointer">
-                                {{ form_widget(choice, {'attr': {'class': 'mt-0.5 w-5 h-5 shrink-0 rounded border-gray-500 text-teal-700 focus:outline-2 focus:outline-offset-2 focus:outline-teal-700'}}) }}
-                                <span class="text-sm text-gray-900">{{ choice.vars.label|trans }}</span>
-                            </label>
-                        {% endfor %}
-                    </div>
-                    <p class="mt-3 text-xs text-teal-900">{{ 'organisation.form.association_no_money'|trans }}</p>
-                </fieldset>
+                {# Trennstrich am umschließenden div, nicht am fieldset: Dort setzte der
+                   Browser die Legende in den Rand, der Strich liefe durch sie hindurch. #}
+                <div class="border-t border-purple-700/30 pt-4">
+                    <fieldset>
+                        <legend class="text-sm font-semibold text-gray-900 mb-2">
+                            {{ 'organisation.form.collaboration_interests'|trans }}
+                        </legend>
+                        <div class="space-y-2">
+                            {% for choice in form.collaborationInterests %}
+                                <label class="flex items-start gap-3 cursor-pointer">
+                                    {{ form_widget(choice, {'attr': {'class': 'mt-0.5 w-5 h-5 shrink-0 rounded border-gray-500 text-purple-700 focus:outline-2 focus:outline-offset-2 focus:outline-purple-700'}}) }}
+                                    <span class="text-sm text-gray-900">{{ choice.vars.label|trans }}</span>
+                                </label>
+                            {% endfor %}
+                        </div>
+                        <p class="mt-3 text-xs text-purple-900">{{ 'organisation.form.collaboration_no_money'|trans }}</p>
+                    </fieldset>
+                </div>
             </div>
         {% endif %}
 

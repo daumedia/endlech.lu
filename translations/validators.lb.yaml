@@ -95,8 +95,7 @@ organisation_waitlist:
     # Greifen nur bei manipulierten Anfragen: Das Formular baut die Felder eines
     # fremden Typs gar nicht erst auf (PRE_SUBMIT).
     commune_only: "Dëst Feld ass just fir Gemenge virgesinn."
-    company_only: "Dës Auswiel ass just fir Betriber virgesinn."
-    association_only: "Dës Auswiel ass just fir Organisatioune virgesinn."
+    company_only: "Dës Auswiel ass just fir Betriber a Veräiner virgesinn."
 
 finance:
     date_required: "Gëff w.e.g. en Datum un."

@@ -35,7 +35,7 @@ beauftragt, ist selbst eine öffentliche Stelle und fragt nach diesem Nachweis.
 | Enthalten | Warum |
 |---|---|
 | alle öffentlichen Seiten | was Gäste und prüfende Gemeinden sehen |
-| Verwaltungsbereich `/admin` | 37 der 57 Fundstellen ohne belastbare Fokusgestaltung liegen dort; sobald Beirat oder Gemeindepersonal mitarbeiten, ist es ein Arbeitsplatz |
+| Verwaltungsbereich `/admin` | 37 der 57 Fundstellen ohne belastbare Fokusgestaltung liegen dort; sobald Gemeindepersonal mitarbeitet, ist es ein Arbeitsplatz |
 | PWA: Ersatzseite bei fehlender Verbindung, Bottom-Navigation | eigenständiges HTML außerhalb jeder Projektkonvention; dazu die auf dem Telefon fehlenden Wege |
 | E-Mail-Vorlagen | von WCAG nicht erfasst, aber jeder Kontoweg führt durch eine Mail |
 
@@ -71,8 +71,10 @@ endgültig).
   B06, B11, B20 und B23. Hier geht es ausschließlich um die Plattform.
 - **Dark Mode** — im PRD ausdrücklich ausgeschlossen.
 - **Stufe AAA und Leichte Sprache** — nicht Teil der Zusage.
-- **Test mit Betroffenen als Abnahmebedingung** — läuft über den Beirat (B15) und
-  hat eine eigene Terminlage; eine Abnahme darf nicht an fremden Kalendern hängen.
+- **Test mit Betroffenen als Abnahmebedingung** — hat eine eigene Terminlage; eine
+  Abnahme darf nicht an fremden Kalendern hängen. ⚠ Bis 2026-10-14 stand hier „läuft über
+  den Beirat (B15)". Der Beirat ist gestrichen; **einen Ort für Tests mit Betroffenen gibt
+  es seither nicht** (OF-Beirat).
 - **Native iOS-App** — existiert nicht; Kapitel 11 der Norm greift erst dann.
 - **Konformitätsgrad als Kennzahl auf `/open`** — dort bedeutet „Barrierefreiheit"
   die der Restaurants; eine zweite Bedeutung in derselben Liste wäre verwechselbar.
@@ -350,6 +352,14 @@ Alle vier am 2026-08-26 vom Betreiber entschieden (Decision Log #12–#15). Es b
   aber nicht. Der Bau darf bis dahin laufen; die Seite geht **nicht** ohne diese
   Abnahme live.
 
+Neu seit 2026-10-14:
+
+- **OF-Beirat** · Tests mit Betroffenen sollten über den Beirat (B15) laufen. Der Beirat
+  ist gestrichen (Betreiberentscheidung, zu viele Beteiligte). Bleibt es dabei, dass die
+  Plattform ohne Test mit Betroffenen auskommt, oder gibt es einen anderen Weg (einzelne
+  Testpersonen, Testtermine über einen Verein ohne Mitspracherecht)? Kein
+  Abnahmekriterium hängt daran (Decision Log #10). — Betreiber
+
 ## Decision Log
 
 | # | Frage | Entscheidung | Begründung |
@@ -363,7 +373,7 @@ Alle vier am 2026-08-26 vom Betreiber entschieden (Decision Log #12–#15). Es b
 | 7 | Rückmeldeweg | Formular, Adresse und Beschwerdestelle | Wer kein Mailprogramm eingerichtet hat, braucht das Formular; wer keins ausfüllen mag, die Adresse |
 | 8 | Was mit der Meldung geschieht | versenden, nicht speichern | Der Text ist ein Gesundheitsdatum. Was nicht gespeichert ist, kann nicht abfließen — dieselbe Begründung wie bei den Finanzposten |
 | 9 | Kontaktangabe | E-Mail freiwillig | Wer seine Behinderung offenlegen muss, um eine Barriere zu melden, meldet sie seltener |
-| 10 | Test mit Betroffenen | nicht als Abnahmekriterium | Der stärkste Nachweis, aber er hängt an fremden Terminen; Ort dafür ist der Beirat |
+| 10 | Test mit Betroffenen | nicht als Abnahmekriterium | Der stärkste Nachweis, aber er hängt an fremden Terminen; Ort dafür war der Beirat — seit 2026-10-14 gestrichen, OF-Beirat |
 | 11 | Kennzahl auf der Transparenzseite | nein | Dort bedeutet „Barrierefreiheit" die der Restaurants; zwei Bedeutungen in einer Kennzahlenliste sind eine Fehlerquelle |
 | 12 | Fremde Widgets, Vorentscheidung (OF-01) | Swagger jetzt endgültig aus dem Geltungsbereich; Küchen-Auswahlfeld und Bildergalerie durchlaufen den Prüflauf, Ersatz nur bei Durchfallen | Swagger ist mitgeliefertes Entwicklerwerkzeug ohne eigenen Code; die beiden anderen tragen echte Funktion und werden nicht auf Verdacht ersetzt (vgl. #6) |
 | 13 | Beschwerdestelle (OF-02) | keine gesetzliche Stelle nennen | Als Kleinstanbieter unterliegt die Plattform der Richtlinie für öffentliche Stellen nicht; eine dort zuständige Stelle passt nicht und wäre eine falsche Zuständigkeitsbehauptung. Nur der eigene Rückmeldeweg plus Freiwilligkeitshinweis (AK-43) |

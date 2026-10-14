@@ -276,7 +276,7 @@ stateless (`token_id: submit`), passt headless via Same-Origin-Referer; Custom-T
 | `webauthn.controller.creation.request.add_device` | `/passkey/register/options` (locale-frei) | Bundle (Anlege-Challenge) |
 | `webauthn.controller.creation.response.add_device` | `/passkey/register` (locale-frei) | Bundle (speichern) |
 | `app_partner` / `_submit` (POST) / `_confirm` | `/partner`, `/partner/confirmation/{token}` | `PartnerController` |
-| `app_organisations` / `_type` / `_submit` (POST) / `_confirm` | `/organisationen`, `/organisationen/{slug}`, `/organisationen/confirmation/{token}` | `OrganisationController` (`type` = gemeinden\|unternehmen\|vereine) |
+| `app_organisations` / `_type` / `_submit` (POST) / `_confirm` | `/organisationen`, `/organisationen/{slug}`, `/organisationen/confirmation/{token}` | `OrganisationController` (`type` = gemeinden\|unternehmen; `vereine` → 301 auf `unternehmen`) |
 | `admin_waitlist_index`  | `/admin/warteliste` | `AdminWaitlistController::index()` (beide Typen) |
 | `admin_waitlist_{partner,organisation}_{show,status}` | `/admin/warteliste/{typ}/{id}[/status]` | `AdminWaitlistController` |
 | `admin_waitlist_partner_link`| `/admin/warteliste/partner/{id}/restaurant` | `::linkRestaurant()` |
@@ -801,23 +801,35 @@ setzt für submitted-invalid selbst 422 (`AbstractController.php:473`), Turbo re
 statt leerem Default (leere Empfängeradresse würfe). Interne Mail fest auf Deutsch (`trans(…, null, 'de')`); die
 Bestätigungsmail geht im Submit-Request raus und erbt dessen Locale.
 
-## Entity: OrganisationWaitlistEntry (Gemeinden, Unternehmen, Vereine)
-Zweite Warteliste unter `/organisationen`. Drei Typen (`App\Enum\OrganisationType`), kommerziell verschieden:
-`commune` = bezahlter Auftrag, `company` = Sponsoring, `association` = **kein Vertriebskanal** (Beirat).
+## Entity: OrganisationWaitlistEntry (Gemeinden, Unternehmen und Vereine)
+Zweite Warteliste unter `/organisationen`. Zwei Typen (`App\Enum\OrganisationType`), kommerziell verschieden:
+`commune` = bezahlter Auftrag, `company` = **Unternehmen und Vereine** — Sponsoring oder Zusammenarbeit ohne Geld.
 Gemeinsame Felder: type, organisationName, contactName, contactRole, email, phone, website, message, status,
 confirmationToken, confirmedAt, consentAt, locale, source, createdAt, updatedAt. Typspezifisch (nullable):
-`communeName`, `estimatedVenues`, `timeframe` (commune) · `sponsorshipInterests` JSON (company) ·
-`collaborationInterests` JSON (association). Enums `OrganisationTimeframe`, `SponsorshipInterest`,
-`CollaborationInterest`.
+`communeName`, `estimatedVenues`, `timeframe` (commune) · `sponsorshipInterests` + `collaborationInterests` JSON
+(beide company). Enums `OrganisationTimeframe`, `SponsorshipInterest`, `CollaborationInterest`.
 
-**Seitenstruktur:** `/organisationen` = Übersicht (Hero, drei Karten, Integritätsblock, Formular mit freier
+⚠️ **Es gibt keinen Beirat und keinen Typ `association` mehr** (Entscheidung 2026-10-14: zu viele Beteiligte,
+verlangsamt Entscheidungen). Bis dahin war „Verein" ein dritter Typ mit eigener Seite, und die Seite versprach einen
+Beirat, der über Kriterien und Gewichtung mitentscheidet. Wer ihn zurückholen will, fasst eine öffentliche Zusage an,
+keine Formularoption. Migration `Version20261014120000` hat den Bestand umgeschrieben (Typ → `company`,
+`advisory_board` entfernt, `MarketingOrigin` → `company`, offene Kontakte zur Neuübertragung an Brevo). Abgesichert
+durch `OrganisationControllerTest::testKeineSeiteBietetNochEinenBeiratAn` (alle Sprachen, prüft das Wort).
+⚠️ **`/organisationen/vereine` bleibt im Routen-Requirement und leitet mit 301 auf `unternehmen`**
+(`OrganisationType::LEGACY_SLUGS`) — die Adresse war verlinkt und indexiert. Kein Sitemap-Eintrag mehr (der kommt aus
+`OrganisationType::cases()`). Der Slug `unternehmen` bleibt, obwohl die Seite auch Vereine anspricht.
+⚠️ **Beide Interessenlisten führen „Etwas anderes"** — im Formular je in eigener `<fieldset>`-Gruppe mit Legende
+(„Mit Geld oder Ihrem Team" / „Ohne Geld"). Der Trennstrich gehört an ein umschließendes `div`, nicht ans
+`fieldset` (sonst setzt der Browser die Legende in den Rand).
+
+**Seitenstruktur:** `/organisationen` = Übersicht (Hero, zwei Karten, Integritätsblock, Formular mit freier
 Typwahl). Jede Zielgruppe hat eine **eigene Seite** unter `/organisationen/{slug}` (`OrganisationType::slug()` →
-`gemeinden`, `unternehmen`, `vereine`; für ASSOCIATION bewusst „vereine"). Inhalte in
+`gemeinden`, `unternehmen`). Inhalte in
 `organisation/_section_{type}.html.twig`, nur dort eingebunden (Übersicht zeigt nur Teaser, kein Doppeltext). Auf
-Unterseiten Formulartyp vorgewählt, Selektor bleibt sichtbar. `_integrity.html.twig` auf allen vier Seiten.
+Unterseiten Formulartyp vorgewählt, Selektor bleibt sichtbar. `_integrity.html.twig` auf allen drei Seiten.
 
 ⚠️ **Das Formular-Partial `organisation/_form.html.twig` trägt sein Ziel ausdrücklich** (`action` →
-`app_organisations_submit`, BF-151). Es hängt in Übersicht **und** auf drei Zielgruppenseiten; ohne `action` schickt
+`app_organisations_submit`, BF-151). Es hängt in Übersicht **und** auf den Zielgruppenseiten; ohne `action` schickt
 der Browser an die aktuelle Adresse, und nur die Übersicht ist zugleich POST-Route. Bis 2026-09-13 endete deshalb
 jede Eintragung von `/organisationen/{gemeinden,unternehmen,vereine}` in einer **405-Fehlerseite** — auf Produktion,
 Sentry sah es nicht (405 ignoriert), kein Test merkte es (jeder Absende-Test holte das Formular von der Übersicht).
@@ -829,7 +841,7 @@ werfen), `findFiltered/countByStatus/countByType`. Migration `Version20260820100
 **Typabhängige Validierung — zwei Schichten:** (1) `validation_groups` leitet die Gruppe aus `$type` ab
 (`['Default','commune']` usw.), fremde Felder tragen in anderen Gruppen `IsNull`/`Count(max:0)`; (2) `PRE_SUBMIT`
 baut nur die Felder des **übermittelten** Typs auf → untergeschobenes Fremdfeld = **422**, nicht stilles Ignorieren.
-⚠️ **`PRE_SET_DATA` baut dagegen ALLE Blöcke auf** — Voraussetzung für JS-freie Bedienung (ohne JS alle drei
+⚠️ **`PRE_SET_DATA` baut dagegen ALLE Blöcke auf** — Voraussetzung für JS-freie Bedienung (ohne JS beide
 Feldgruppen sichtbar). Auf den aktuellen Typ eingeschränkt wäre die Seite ohne JS unbenutzbar.
 **Choices sind reine Strings, keine Enum-Cases.** Die JSON-Spalten speichern `string[]`; Enum-Cases als `choices`
 fänden Model-/Choice-Werte nicht zueinander und bräuchten einen Transformer. Array-Schlüssel = Übersetzungsschlüssel
@@ -1104,10 +1116,11 @@ Wächter nicht zustellbar`) ist der einzige Unterschied — erscheint sie, war d
 `/sitemap.xml` (Route, sprachfrei), `public/robots.txt` (statisch), canonical- + Sprachverweise im Kopf,
 `X-Robots-Tag: noindex` auf Ausschlusswegen. Spec/Entwurf/Plan unter `features/10-sitemap-robots/`.
 
-⚠️ **`App\Seo\SeoRegistry` ist die EINZIGE Quelle** — drei Klassen: angeboten (21 feste Seiten + Restaurant-
+⚠️ **`App\Seo\SeoRegistry` ist die EINZIGE Quelle** — drei Klassen: angeboten (20 feste Seiten + Restaurant-
 Detailseiten), ausgeschlossen (16 Wege), bewusst keins von beidem (z. B. Board-Ideen). **Wer eine öffentliche Seite
 anlegt, ordnet sie dort ein** — `SeoRouteCoverageTest` wird rot, solange eine öffentliche GET-Route unterm
-Sprachpräfix in keiner Klasse steht. `SeoRegistryTest` hält die 21 ausgeschrieben fest.
+Sprachpräfix in keiner Klasse steht. `SeoRegistryTest` hält die 20 ausgeschrieben fest (21 bis zum Wegfall der
+Vereinsseite am 2026-10-14).
 ⚠️ **Alle Adressen fest auf `https://endlech.lu`** (`app.canonical_base_url`) — nicht aus der Anfrage
 (`www.endlech.lu` liefert 200, gemessen 2026-09-12 OF-03; gecachte Sitemap hielte den Host des ersten Abrufers),
 nicht aus `DEFAULT_URI` (steht in `.env` auf `http://localhost`; eine vergessene Coolify-Variable kündigte Google

@@ -99,7 +99,7 @@ final class RobotsTxtTest extends KernelTestCase
             }
         }
 
-        self::assertCount(4 + (21 + 2) * 5, $pfade);
+        self::assertCount(4 + (20 + 2) * 5, $pfade);
         foreach ($pfade as $pfad) {
             self::assertTrue($this->erlaubt($pfad), "$pfad müsste erlaubt sein");
         }

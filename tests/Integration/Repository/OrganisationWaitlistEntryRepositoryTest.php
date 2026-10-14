@@ -50,12 +50,12 @@ final class OrganisationWaitlistEntryRepositoryTest extends KernelTestCase
     {
         $this->persist(OrganisationType::COMPANY, WaitlistStatus::PENDING);
         $this->persist(OrganisationType::COMPANY, WaitlistStatus::CONFIRMED);
-        $this->persist(OrganisationType::ASSOCIATION, WaitlistStatus::PENDING);
+        $this->persist(OrganisationType::COMMUNE, WaitlistStatus::PENDING);
 
         $counts = $this->repository->countByType();
 
         self::assertSame(2, $counts[OrganisationType::COMPANY->value] ?? 0);
-        self::assertSame(1, $counts[OrganisationType::ASSOCIATION->value] ?? 0);
+        self::assertSame(1, $counts[OrganisationType::COMMUNE->value] ?? 0);
     }
 
     /** @param OrganisationWaitlistEntry[] $entries @return int[] */

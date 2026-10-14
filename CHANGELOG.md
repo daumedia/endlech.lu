@@ -18,6 +18,26 @@ Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
   Besucher sehen die Seite ab jetzt in dieser Sprache statt auf Luxemburgisch. Crawler ohne Sprachangabe und
   Browser mit nicht angebotener Sprache landen weiter auf `/lb/` (= `x-default`).
 
+### Kein Beirat mehr: Vereine und Unternehmen sind eine Zielgruppe
+
+- **Der Beirat ist gestrichen.** Die Vereinsseite versprach ein Gremium, das über Kriterien, Gewichtung und
+  Methodenänderungen mitentscheidet — zu viele Beteiligte, verlangsamt jede Entscheidung. Die Kriterien legt
+  Endlech.lu allein fest.
+- **`/organisationen/unternehmen` heißt jetzt „Für Unternehmen und Vereine"** und bietet beides an: mitfinanzieren
+  (Inclusion-Boxen, Testpersonen, Gemeinde-Erhebung, Übersetzungen, Workshops) und Zusammenarbeit **ohne Geld**
+  (aggregierte Daten, gemeinsame Kommunikation, Weiterempfehlung). Neuer Kasten „Auch ohne Geld" auf der Seite.
+- **`/organisationen/vereine` leitet mit 301** auf die gemeinsame Seite; Menüpunkt „Für Vereine" entfällt, die Sitemap
+  hat einen festen Eintrag weniger (20 statt 21 Seiten).
+- Integritätsblock, Bestätigungsmail, Erfolgsmeldung und Verwaltung in allen fünf Sprachen ohne Beirat.
+- ⚠ **Migration `Version20261014120000`** (reine Datenmigration): Vereinseinträge der Warteliste → `company`,
+  „Sitz im Beirat" aus den Interessen entfernt, Marketing-Herkunft `association` → `company`. Nicht gesperrte,
+  bereits übertragene Kontakte gehen zurück auf „ausstehend", damit Brevo `ORIGIN = COMPANY` bekommt. Nicht
+  umkehrbar.
+- ⚠ **Brevo:** Ein Segment auf `ORIGIN = ASSOCIATION` bleibt danach leer.
+- **Sponsoring: Umbaufirmen sowie Hersteller und Lieferanten sind jetzt zugelassen.** Ausgeschlossen bleiben nur
+  Gastronomieketten und Betriebe, die selbst auf Endlech.lu bewertet werden; der Einleitungssatz der Regel begründet
+  das jetzt mit „Bewertungen nicht käuflich" statt mit dem Wert der Empfehlungen.
+
 ## [2026.09.15.1] – Ein Violett, ein Postfach
 
 Marke und Kontakt vereinheitlicht (#137): Presse-Kit und E-Mails im Violett des Logos, und überall

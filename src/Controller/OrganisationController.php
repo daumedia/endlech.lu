@@ -21,12 +21,16 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\Turbo\TurboBundle;
 
 /**
- * Landing Page und Warteliste für Organisationen: Gemeinden, Unternehmen und
- * Vereine.
+ * Landing Page und Warteliste für Organisationen: Gemeinden sowie Unternehmen
+ * und Vereine.
  *
- * Die drei Typen sind kommerziell grundverschieden – Gemeinden beauftragen eine
- * Erhebung, Unternehmen sponsern, Vereine sitzen im Beirat, ohne dass Geld
- * fließt. Deshalb je eigene Bestätigungsmail und eigene Erfolgsmeldung.
+ * Die beiden Typen sind kommerziell grundverschieden – Gemeinden beauftragen eine
+ * Erhebung, Unternehmen und Vereine sponsern oder arbeiten ohne Geld mit. Deshalb
+ * je eigene Bestätigungsmail und eigene Erfolgsmeldung.
+ *
+ * ⚠ Bis 2026-10-14 war „Verein" ein eigener Typ mit eigener Seite und einem
+ * Beirat. Der Beirat ist gestrichen, Vereine laufen unter COMPANY; die alte
+ * Adresse leitet weiter (`OrganisationType::LEGACY_SLUGS`).
  */
 #[Route('/organisationen')]
 final class OrganisationController extends AbstractController
@@ -57,10 +61,21 @@ final class OrganisationController extends AbstractController
     /**
      * Eigene Seite je Zielgruppe. Der Slug wird über das Enum aufgelöst; ein
      * unbekannter Slug ergibt 404 statt einer leeren Seite.
+     *
+     * ⚠ `vereine` steht weiter im Requirement, obwohl es die Seite nicht mehr
+     * gibt: Die Adresse ist verlinkt und indexiert und leitet mit 301 auf die
+     * gemeinsame Seite für Unternehmen und Vereine. Der Sitemap-Eintrag kommt
+     * aus `OrganisationType::cases()` und enthält sie deshalb nicht mehr.
      */
     #[Route('/{slug}', name: 'app_organisations_type', methods: ['GET'], requirements: ['slug' => 'gemeinden|unternehmen|vereine'])]
     public function type(string $slug): Response
     {
+        if (isset(OrganisationType::LEGACY_SLUGS[$slug])) {
+            return $this->redirectToRoute('app_organisations_type', [
+                'slug' => OrganisationType::LEGACY_SLUGS[$slug],
+            ], Response::HTTP_MOVED_PERMANENTLY);
+        }
+
         $type = OrganisationType::fromSlug($slug);
 
         if (!$type) {
@@ -126,8 +141,8 @@ final class OrganisationController extends AbstractController
         //
         // ⚠ Hier geht nichts an Brevo. Übertragen wird erst die BESTÄTIGTE
         // Adresse (AK-05), und das tut der Bestätigungs-Ablauf, nicht dieses
-        // Formular. Diese eine Stelle deckt alle vier Einstiege ab: Übersicht
-        // und die drei Zielgruppenseiten senden an dieselbe Route
+        // Formular. Diese eine Stelle deckt alle drei Einstiege ab: Übersicht
+        // und die beiden Zielgruppenseiten senden an dieselbe Route
         // (app_organisations_submit, POST /organisationen).
         if (true === $form->get('marketingConsent')->getData()) {
             $entry->setMarketingConsentAt(new \DateTimeImmutable());
@@ -198,7 +213,8 @@ final class OrganisationController extends AbstractController
 
     /**
      * Erfolgsantwort. Die Meldung ist typspezifisch – eine Gemeinde erfährt
-     * etwas über nächste Schritte und Zeitrahmen, ein Verein über den Beirat.
+     * etwas über nächste Schritte und Zeitrahmen, ein Unternehmen oder Verein,
+     * dass ein Sponsoring vorab gegen die Ausschlussregel geprüft wird.
      */
     private function successResponse(Request $request, ?OrganisationWaitlistEntry $entry): Response
     {

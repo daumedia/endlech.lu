@@ -3,7 +3,7 @@
 {% block title %}{{ 'organisation.meta_title'|trans }} – Endlech.lu{% endblock %}
 
 {#
-    Übersichtsseite. Sie führt in die drei Bereiche ein und verlinkt auf die
+    Übersichtsseite. Sie führt in die beiden Bereiche ein und verlinkt auf die
     jeweilige Unterseite – die ausführlichen Inhalte stehen dort, nicht hier
     (sonst stünde derselbe Text doppelt im Netz).
 
@@ -37,7 +37,7 @@
         </h2>
         <p class="text-center text-gray-700 mb-10">{{ 'organisation.selector.subtitle'|trans }}</p>
 
-        <ul class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        <ul class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
             {% for type in types %}
                 <li>
                     <a href="{{ path('app_organisations_type', {slug: type.slug}) }}"

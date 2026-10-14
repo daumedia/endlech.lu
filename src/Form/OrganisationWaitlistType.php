@@ -28,7 +28,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Url;
 
 /**
- * Ein Formular für alle drei Organisationstypen.
+ * Ein Formular für beide Organisationstypen (Gemeinde; Unternehmen oder Verein).
  *
  * Die typspezifischen Felder werden serverseitig in PRE_SUBMIT anhand des
  * übermittelten `type` hinzugefügt – dadurch funktioniert der Wechsel auch ohne
@@ -138,11 +138,11 @@ class OrganisationWaitlistType extends AbstractType
             // das Häkchen selbst.
             //
             // ⚠ Das Feld steht hier im typunabhängigen Teil, NICHT in
-            // addTypeSpecificFields(). Die Einwilligung gilt für Gemeinde,
-            // Unternehmen und Verein gleichermaßen, und nur an dieser Stelle ist
+            // addTypeSpecificFields(). Die Einwilligung gilt für Gemeinden,
+            // Unternehmen und Vereine gleichermaßen, und nur an dieser Stelle ist
             // sie in beiden Feldaufbauten vorhanden: beim Rendern (PRE_SET_DATA)
             // und beim Absenden (PRE_SUBMIT). Läge sie in einem der Typblöcke,
-            // wäre sie für die anderen beiden ein unerlaubtes Zusatzfeld und
+            // wäre sie für den anderen Typ ein unerlaubtes Zusatzfeld und
             // jeder Submit mit gesetztem Häkchen endete in einem 422 – genau der
             // Mechanismus, den testCrossTypeFieldsAreRejected nachweist.
             //
@@ -171,7 +171,7 @@ class OrganisationWaitlistType extends AbstractType
 
         // Beim Rendern (GET) werden ALLE typspezifischen Blöcke aufgebaut.
         // Das ist die Voraussetzung dafür, dass die Seite ohne JavaScript
-        // benutzbar ist: Wer kein JS hat, sieht alle drei Blöcke (jeweils
+        // benutzbar ist: Wer kein JS hat, sieht beide Blöcke (jeweils
         // beschriftet) und füllt den passenden aus. Mit JavaScript blendet der
         // Stimulus-Controller die unpassenden aus.
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event): void {
@@ -220,31 +220,31 @@ class OrganisationWaitlistType extends AbstractType
         }
 
         if (OrganisationType::COMPANY === $type) {
+            // Unternehmen und Vereine teilen sich einen Typ und damit beide
+            // Listen: Sponsoring und Zusammenarbeit ohne Geld. Bis 2026-10-14
+            // trug ein eigener Vereinstyp die zweite Liste (siehe OrganisationType).
+            //
             // Choices sind bewusst reine Strings statt Enum-Cases: Die Entity
             // speichert ein JSON-Array aus Strings, so passen Model- und
             // Choice-Werte ohne Transformer zusammen. Der Array-Schlüssel ist
             // der Übersetzungsschlüssel und wird als Label übersetzt.
-            $form->add('sponsorshipInterests', ChoiceType::class, [
-                'label' => 'organisation.form.sponsorship_interests',
-                'required' => false,
-                'multiple' => true,
-                'expanded' => true,
-                'choices' => self::enumChoices(SponsorshipInterest::cases()),
-                'error_bubbling' => false,
-            ]);
-
-            return;
-        }
-
-        if (OrganisationType::ASSOCIATION === $type) {
-            $form->add('collaborationInterests', ChoiceType::class, [
-                'label' => 'organisation.form.collaboration_interests',
-                'required' => false,
-                'multiple' => true,
-                'expanded' => true,
-                'choices' => self::enumChoices(CollaborationInterest::cases()),
-                'error_bubbling' => false,
-            ]);
+            $form
+                ->add('sponsorshipInterests', ChoiceType::class, [
+                    'label' => 'organisation.form.sponsorship_interests',
+                    'required' => false,
+                    'multiple' => true,
+                    'expanded' => true,
+                    'choices' => self::enumChoices(SponsorshipInterest::cases()),
+                    'error_bubbling' => false,
+                ])
+                ->add('collaborationInterests', ChoiceType::class, [
+                    'label' => 'organisation.form.collaboration_interests',
+                    'required' => false,
+                    'multiple' => true,
+                    'expanded' => true,
+                    'choices' => self::enumChoices(CollaborationInterest::cases()),
+                    'error_bubbling' => false,
+                ]);
         }
     }
 

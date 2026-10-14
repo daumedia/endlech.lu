@@ -2,6 +2,13 @@
 
 Status: `rekonstruiert` · Stand: 2026-08-23 · Stack-Profil: `symfony-doctrine`
 
+> **Geändert am 2026-10-14:** Vereine und Unternehmen zusammengelegt, Beirat gestrichen.
+> Zwei Typen statt drei — der Typ `company` trägt beide Interessenlisten
+> (`sponsorshipInterests`, `collaborationInterests`), `association`,
+> `_section_association.html.twig` und `email/organisation/association.html.twig` sind
+> entfallen, `/organisationen/vereine` leitet mit 301 auf `…/unternehmen`. Wo unten von drei
+> Typen oder Feldblöcken die Rede ist, beschreibt das den Stand davor (siehe `spec.md`).
+
 ## Überblick
 
 Ein Formulartyp mit drei Feldblöcken, deren Aufbau von zwei verschiedenen

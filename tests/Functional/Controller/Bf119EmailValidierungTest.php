@@ -193,7 +193,7 @@ final class Bf119EmailValidierungTest extends AbstractWebTestCase
         $crawler = $client->request('GET', self::LOCALE.'/organisationen');
 
         $client->submit($this->formWithField($crawler, 'organisation_waitlist[email]', [
-            'organisation_waitlist[type]' => 'association',
+            'organisation_waitlist[type]' => 'company',
             'organisation_waitlist[organisationName]' => 'Testorganisation BF119',
             'organisation_waitlist[contactName]' => 'Alex Muster',
             'organisation_waitlist[email]' => $adresse,

@@ -44,7 +44,7 @@ final class Qa10SitemapBestandTest extends WebTestCase
 
         $eintraege = $this->eintraege($client);
 
-        self::assertCount(21 * 5, $eintraege);
+        self::assertCount(20 * 5, $eintraege);
         self::assertSame([], array_values(preg_grep('#/restaurants/\d+$#', $eintraege)));
     }
 
@@ -62,7 +62,7 @@ final class Qa10SitemapBestandTest extends WebTestCase
         foreach (['lb', 'de', 'fr', 'en', 'pt'] as $s) {
             self::assertContains("https://endlech.lu/$s/restaurants/{$neu->getId()}", $eintraege);
         }
-        self::assertCount((21 + 12) * 5, $eintraege);
+        self::assertCount((20 + 12) * 5, $eintraege);
     }
 
     /** AK-09 · Ein gelöschtes Restaurant fällt mit allen Sprachfassungen heraus. */

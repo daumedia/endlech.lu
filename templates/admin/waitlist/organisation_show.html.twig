@@ -49,21 +49,16 @@
                             value: entry.timeframe ? entry.timeframe.transKey|trans : null
                         }) }}
                     </dl>
-                {% elseif entry.type.value == 'company' %}
-                    {% if entry.sponsorshipInterests|length %}
+                {% else %}
+                    {# Unternehmen und Vereine: Sponsoring (lila) und Zusammenarbeit
+                       ohne Geld (petrol) – beide Listen gehören zum selben Typ. #}
+                    {% if entry.sponsorshipInterests|length or entry.collaborationInterests|length %}
                         <ul class="flex flex-wrap gap-2">
                             {% for interest in entry.sponsorshipInterests %}
                                 <li class="bg-purple-100 text-purple-800 text-xs font-semibold px-2.5 py-1 rounded-full">
                                     {{ ('organisation.sponsorship.' ~ interest)|trans }}
                                 </li>
                             {% endfor %}
-                        </ul>
-                    {% else %}
-                        <p class="text-sm text-gray-400">{{ 'admin.waitlist.none_selected'|trans }}</p>
-                    {% endif %}
-                {% else %}
-                    {% if entry.collaborationInterests|length %}
-                        <ul class="flex flex-wrap gap-2">
                             {% for interest in entry.collaborationInterests %}
                                 <li class="bg-teal-100 text-teal-800 text-xs font-semibold px-2.5 py-1 rounded-full">
                                     {{ ('organisation.collaboration.' ~ interest)|trans }}
@@ -73,7 +68,9 @@
                     {% else %}
                         <p class="text-sm text-gray-400">{{ 'admin.waitlist.none_selected'|trans }}</p>
                     {% endif %}
-                    <p class="mt-3 text-xs text-teal-800">{{ 'admin.waitlist.association_reminder'|trans }}</p>
+                    {% if entry.collaborationInterests|length %}
+                        <p class="mt-3 text-xs text-teal-800">{{ 'admin.waitlist.collaboration_reminder'|trans }}</p>
+                    {% endif %}
                 {% endif %}
             </div>
 
