@@ -108,7 +108,7 @@ dem Seitenverzeichnis `App\Seo\SeoRegistry` und dem Adressbildner `App\Seo\SeoUr
 
 | Angabe | Wo | Für welche Seiten |
 |---|---|---|
-| `<link rel="canonical">` | Block `canonical` in `base.html.twig`, Funktion `seo_canonical_url()` | nur Seiten aus dem Verzeichnis (21 feste plus Restaurant-Detailseiten) |
+| `<link rel="canonical">` | Block `canonical` in `base.html.twig`, Funktion `seo_canonical_url()` | nur Seiten aus dem Verzeichnis (20 feste plus Restaurant-Detailseiten) |
 | `<link rel="alternate" hreflang>` | `base.html.twig`, Funktion `seo_alternate_urls()` | jede Seite mit Route außer `app_root`; alle Sprachen aus `enabled_locales` (lb, de, fr, en, pt) plus `x-default` auf `lb` |
 | `X-Robots-Tag: noindex` | Antwortkopfzeile, `SeoRobotsHeaderSubscriber` | die 16 Ausschlusswege (Anmelden, Passwort, Bestätigungen, Abmeldelinks, Dankeseiten, Einreichformulare) |
 
@@ -167,13 +167,15 @@ und meldet seinen Zustand selbst an Screenreader. Der Stimulus-Controller
 Der `::-webkit-details-marker` ist ausgeblendet, der Pfeil dreht sich über
 `group-open:rotate-180` mit `motion-safe:`-Schutz.
 
-Inhalt des Aufklappmenüs — die vier Vertriebszielgruppen, Slugs aus
+Inhalt des Aufklappmenüs — die drei Vertriebszielgruppen, Slugs aus
 `App\Enum\OrganisationType::slug()`:
 
 `🍽️ nav.for_restaurants` → `app_partner` ·
 `🏛️ nav.for_communes` → `…/gemeinden` ·
-`🏢 nav.for_companies` → `…/unternehmen` ·
-`🤲 nav.for_associations` → `…/vereine`
+`🏢 nav.for_companies` („Für Unternehmen und Vereine") → `…/unternehmen`
+
+Bis 2026-10-14 stand dort ein vierter Eintrag `🤲 nav.for_associations` → `…/vereine`
+(Beirat, entfallen; die Adresse leitet weiter).
 
 ### 3 · Konto und Sprache — rechts
 
@@ -375,7 +377,7 @@ Gewicht: vier gepflegte Sprachkataloge, von denen auf Mobil nur einer erreichbar
 ### 3 · Zwei Navigationspunkte fehlen auf Mobil ersatzlos
 
 „Restaurant vorschlagen" und das Aufklappmenü „Mitmachen" (Partner, Gemeinden,
-Unternehmen, Vereine) stehen nur in der `hidden md:flex`-Kopfnavigation. Beides sind
+Unternehmen und Vereine) stehen nur in der `hidden md:flex`-Kopfnavigation. Beides sind
 die Eingänge zu Community-Beitrag und Vertrieb — auf Mobil nur über die Fußzeile
 erreichbar (dort liegen Partner und Organisationen), „vorschlagen" gar nicht.
 

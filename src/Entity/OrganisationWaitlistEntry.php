@@ -106,32 +106,33 @@ class OrganisationWaitlistEntry implements WaitlistEntryInterface
 
     /** Kann vom Organisationsnamen abweichen (z. B. Gemeindesyndikat). */
     #[ORM\Column(length: 120, nullable: true)]
-    #[Assert\IsNull(message: 'organisation_waitlist.commune_only', groups: ['company', 'association'])]
+    #[Assert\IsNull(message: 'organisation_waitlist.commune_only', groups: ['company'])]
     private ?string $communeName = null;
 
     #[ORM\Column(nullable: true)]
     #[Assert\Range(min: 1, max: 5000, notInRangeMessage: 'organisation_waitlist.venues_range', groups: ['commune'])]
-    #[Assert\IsNull(message: 'organisation_waitlist.commune_only', groups: ['company', 'association'])]
+    #[Assert\IsNull(message: 'organisation_waitlist.commune_only', groups: ['company'])]
     private ?int $estimatedVenues = null;
 
     #[ORM\Column(length: 20, nullable: true, enumType: OrganisationTimeframe::class)]
-    #[Assert\IsNull(message: 'organisation_waitlist.commune_only', groups: ['company', 'association'])]
+    #[Assert\IsNull(message: 'organisation_waitlist.commune_only', groups: ['company'])]
     private ?OrganisationTimeframe $timeframe = null;
 
-    // --- Nur für Unternehmen ------------------------------------------------
+    // --- Nur für Unternehmen und Vereine -------------------------------------
+    //
+    // Beide Listen gehören zum Typ `company`: Sponsoring und Zusammenarbeit ohne
+    // Geld. Bis 2026-10-14 trug ein eigener Vereinstyp die zweite Liste.
 
     /** @var string[] Werte aus App\Enum\SponsorshipInterest */
     #[ORM\Column(type: Types::JSON)]
-    #[Assert\Count(max: 0, maxMessage: 'organisation_waitlist.company_only', groups: ['commune', 'association'])]
+    #[Assert\Count(max: 0, maxMessage: 'organisation_waitlist.company_only', groups: ['commune'])]
     #[Assert\All([new Assert\Choice(callback: [SponsorshipInterest::class, 'values'], message: 'organisation_waitlist.invalid_choice')], groups: ['company'])]
     private array $sponsorshipInterests = [];
 
-    // --- Nur für Organisationen ---------------------------------------------
-
     /** @var string[] Werte aus App\Enum\CollaborationInterest */
     #[ORM\Column(type: Types::JSON)]
-    #[Assert\Count(max: 0, maxMessage: 'organisation_waitlist.association_only', groups: ['commune', 'company'])]
-    #[Assert\All([new Assert\Choice(callback: [CollaborationInterest::class, 'values'], message: 'organisation_waitlist.invalid_choice')], groups: ['association'])]
+    #[Assert\Count(max: 0, maxMessage: 'organisation_waitlist.company_only', groups: ['commune'])]
+    #[Assert\All([new Assert\Choice(callback: [CollaborationInterest::class, 'values'], message: 'organisation_waitlist.invalid_choice')], groups: ['company'])]
     private array $collaborationInterests = [];
 
     #[ORM\Column]

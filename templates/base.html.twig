@@ -178,8 +178,7 @@
                     {% for item in [
                         {href: path('app_partner'), label: 'nav.for_restaurants', emoji: '🍽️'},
                         {href: path('app_organisations_type', {slug: 'gemeinden'}), label: 'nav.for_communes', emoji: '🏛️'},
-                        {href: path('app_organisations_type', {slug: 'unternehmen'}), label: 'nav.for_companies', emoji: '🏢'},
-                        {href: path('app_organisations_type', {slug: 'vereine'}), label: 'nav.for_associations', emoji: '🤲'}
+                        {href: path('app_organisations_type', {slug: 'unternehmen'}), label: 'nav.for_companies', emoji: '🏢'}
                     ] %}
                         <a href="{{ item.href }}"
                            class="flex items-center gap-2.5 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-100 hover:text-cyan-700 transition focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-cyan-700">

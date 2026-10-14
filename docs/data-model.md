@@ -35,7 +35,7 @@ aus dem WebAuthn-Bundle (`Webauthn\CredentialRecord`,
 |---|---|---|
 | **Kern** | `Restaurant`, `RestaurantImage`, `OpeningHour`, `OrderingOption`, `Cuisine` | Das Verzeichnis selbst: Häuser, Fotos, Öffnungszeiten, Bestellwege, Küchen |
 | **Community & Konto** | `RestaurantSuggestion`, `User`, `WebauthnCredential` | Vorschläge aus der Community, Konten, Passkeys |
-| **Vertrieb** | `PartnerWaitlistEntry`, `OrganisationWaitlistEntry` | Zwei Wartelisten mit Double-Opt-In (Restaurants bzw. Gemeinden/Unternehmen/Vereine) |
+| **Vertrieb** | `PartnerWaitlistEntry`, `OrganisationWaitlistEntry` | Zwei Wartelisten mit Double-Opt-In (Restaurants bzw. Gemeinden/Unternehmen und Vereine) |
 | **Transparenz** | `FinanceEntry`, `MetricSnapshot` | Was der Betrieb kostet und wie sich die Kennzahlen entwickeln — Grundlage von `/open` |
 
 Elf Enums (alle `string`-backed) liegen in `src/Enum/`, zwölf Repositories in
@@ -519,10 +519,13 @@ wird erst gesetzt, wenn das Haus im Verzeichnis steht.
 
 `src/Entity/OrganisationWaitlistEntry.php` · Tabelle `organisation_waitlist_entry` · `OrganisationWaitlistEntryRepository`
 
-Die zweite Warteliste, für drei kommerziell grundverschiedene Gruppen: Gemeinden
-(bezahlter Auftrag), Unternehmen (Sponsoring) und Vereine (Beirat, **kein
-Geldfluss in beide Richtungen**). Implementiert ebenfalls
-`WaitlistEntryInterface`.
+Die zweite Warteliste, für zwei kommerziell grundverschiedene Gruppen: Gemeinden
+(bezahlter Auftrag) sowie Unternehmen und Vereine (Sponsoring oder Zusammenarbeit
+**ohne Geldfluss**). Implementiert ebenfalls `WaitlistEntryInterface`.
+
+⚠ Bis 2026-10-14 waren Vereine ein eigener Typ `association` mit einem Beirat.
+Beides ist entfallen; `Version20261014120000` hat den Bestand auf `company`
+umgeschrieben (siehe Migrations-Historie).
 
 **Gemeinsame Felder**
 
@@ -553,8 +556,8 @@ Geldfluss in beide Richtungen**). Implementiert ebenfalls
 | `communeName` | `commune_name` | `varchar(120)` | Gemeinde |
 | `estimatedVenues` | `estimated_venues` | `int` | Gemeinde (Range 1–5000) |
 | `timeframe` | `timeframe` | `varchar(20)` | Gemeinde (`OrganisationTimeframe`) |
-| `sponsorshipInterests` | `sponsorship_interests` | `json` | Unternehmen (Werte aus `SponsorshipInterest`) |
-| `collaborationInterests` | `collaboration_interests` | `json` | Verein (Werte aus `CollaborationInterest`) |
+| `sponsorshipInterests` | `sponsorship_interests` | `json` | Unternehmen oder Verein (Werte aus `SponsorshipInterest`) |
+| `collaborationInterests` | `collaboration_interests` | `json` | Unternehmen oder Verein (Werte aus `CollaborationInterest`) |
 
 **Indizes:** `IDX_org_waitlist_type_status` auf `(type, status)`,
 `IDX_org_waitlist_status_created` auf `(status, created_at)`.
@@ -857,8 +860,7 @@ Vorprüfung dazwischenliegt.
 |---|---|---|
 | `PARTNER` | `partner` | Partner-Warteliste |
 | `COMMUNE` | `commune` | Gemeinde |
-| `COMPANY` | `company` | Unternehmen |
-| `ASSOCIATION` | `association` | Verein |
+| `COMPANY` | `company` | Unternehmen oder Verein |
 | `ACCOUNT` | `account` | Nutzerkonto |
 | `APP` | `app` | App-Warteliste (Feature 08) |
 
@@ -866,6 +868,9 @@ Methoden: `transKey()`, `label()`, `brevoValue()`, `fromOrganisationType()`
 
 ⚠ Bezeichnet die **Rolle im Vertrieb**, nicht die Person — ausdrücklich **nicht**,
 ob jemand selbst von einer Behinderung betroffen ist (Feature 04, AK-30).
+
+⚠ `association` ist am 2026-10-14 entfallen (Vereine zählen als `company`). Ein
+Brevo-Segment auf `ORIGIN = ASSOCIATION` bleibt danach leer.
 
 ### MarketingSyncState
 
@@ -887,14 +892,13 @@ Versuchszähler (BF-86).
 | Case | Wert | Slug | Geschäftsverhältnis |
 |---|---|---|---|
 | `COMMUNE` | `commune` | `gemeinden` | bezahlter Auftrag |
-| `COMPANY` | `company` | `unternehmen` | Sponsoring |
-| `ASSOCIATION` | `association` | `vereine` | Beirat, kein Geldfluss |
+| `COMPANY` | `company` | `unternehmen` | Unternehmen und Vereine: Sponsoring oder Zusammenarbeit ohne Geld |
 
 Methoden: `transKey()`, `label()`, `emoji()`, `slug()`, `fromSlug()`,
-`badgeClasses()`, `values()`
+`badgeClasses()`, `values()`; Konstante `LEGACY_SLUGS`
 
-Der Slug für `ASSOCIATION` heißt bewusst `vereine` — sonst lautete die URL
-`/organisationen/organisationen`.
+Bis 2026-10-14 gab es `ASSOCIATION` (`association`, Slug `vereine`, Beirat). Der
+Slug steht seither in `LEGACY_SLUGS` und leitet mit 301 auf `unternehmen`.
 
 ### FinanceType
 
@@ -977,8 +981,9 @@ Methoden: `transKey()`, `label()`, `values()`
 
 ### CollaborationInterest
 
-Werte: `advisory_board`, `data_access`, `joint_communication`, `referrals`,
-`other`
+Werte: `data_access`, `joint_communication`, `referrals`, `other` — für
+Unternehmen und Vereine, die ohne Geld mitarbeiten. `advisory_board` („Sitz im
+Beirat") ist am 2026-10-14 entfallen.
 Methoden: `transKey()`, `label()`, `values()`
 
 ---
@@ -1235,3 +1240,11 @@ Von Hand geschrieben, ohne `COMMENT '(DC2Type:…)'`-Zusätze: Doctrine 3 schrei
 sie nicht mehr, ältere Tabellen tragen sie noch und erzeugen dadurch das
 beschriebene Diff-Rauschen. Eine neue Tabelle vergrößert es nicht — nachgeprüft:
 `doctrine:schema:update --dump-sql` nennt `app_waitlist_entry` nicht.
+
+**`Version20261014120000`** (2026-10-14) — Vereine und Unternehmen zusammengelegt,
+Beirat gestrichen. Reine Datenmigration: `organisation_waitlist_entry.type`
+`association` → `company`; `advisory_board` aus `collaboration_interests` entfernt
+(in PHP, nicht mit JSON-Funktionen — MariaDB auf Produktion, MySQL 8 lokal);
+`marketing_contact.origin` `association` → `company`, übertragene und nicht
+gesperrte Kontakte zurück auf `pending`, damit Brevo die neue Herkunft bekommt.
+`down()` wirft — welche Zeile ein Verein war, steht danach nirgends mehr.

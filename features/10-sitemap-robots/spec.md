@@ -60,8 +60,10 @@ Search Console.
 
 ### Die festen Seiten
 
-Diese 21 Seiten stehen immer in der Sitemap, jede in vier Sprachen (`lb`, `de`, `fr`,
-`en`) — zusammen **84 Einträge**:
+Diese 20 Seiten stehen immer in der Sitemap, jede in fünf Sprachen (`lb`, `de`, `fr`,
+`en`, `pt`) — zusammen **100 Einträge**. *(Bis 2026-10-14 21 Seiten: die Vereinsseite
+`/{s}/organisationen/vereine` ist mit dem Beirat entfallen und leitet mit 301 auf
+`…/unternehmen`.)*
 
 | # | Seite | Adresse (mit `{s}` für das Sprachsegment) |
 |---|---|---|
@@ -82,10 +84,9 @@ Diese 21 Seiten stehen immer in der Sitemap, jede in vier Sprachen (`lb`, `de`, 
 | 15 | Partnerprogramm | `/{s}/partner` |
 | 16 | Organisationen · Übersicht | `/{s}/organisationen` |
 | 17 | Gemeinden | `/{s}/organisationen/gemeinden` |
-| 18 | Unternehmen | `/{s}/organisationen/unternehmen` |
-| 19 | Vereine | `/{s}/organisationen/vereine` |
-| 20 | App-Warteliste | `/{s}/app` |
-| 21 | Community-Ideen · Übersicht | `/{s}/community/ideen` |
+| 18 | Unternehmen und Vereine | `/{s}/organisationen/unternehmen` |
+| 19 | App-Warteliste | `/{s}/app` |
+| 20 | Community-Ideen · Übersicht | `/{s}/community/ideen` |
 
 ⚠ Kommt eine öffentliche Seite hinzu oder fällt eine weg, ändert sich diese Tabelle und
 mit ihr die Zahl in AK-02 und AK-10. Wer eine Seite anlegt, ohne hier nachzuziehen,
@@ -97,8 +98,8 @@ bekommt einen roten Prüflauf — so ist es gewollt.
   abgerufen wird, dann antwortet sie mit HTTP 200, und die Datei besteht die Prüfung
   gegen das Sitemap-Schema von sitemaps.org ohne Fehler.
 - **AK-02** · Angenommen es gibt *n* öffentlich aufrufbare Restaurants, wenn die Sitemap
-  abgerufen wird, dann enthält sie genau **(21 + n) × 4** Einträge: die festen Seiten aus
-  der Tabelle oben und jede Restaurant-Detailseite, jeweils in allen vier Sprachen.
+  abgerufen wird, dann enthält sie genau **(20 + n) × 5** Einträge: die festen Seiten aus
+  der Tabelle oben und jede Restaurant-Detailseite, jeweils in allen fünf Sprachen.
   *(Heute auf Produktion mit n = 3: 96 Einträge.)*
 - **AK-03** · Angenommen die Sitemap wird abgerufen, wenn man ihre Einträge liest, dann
   beginnt jede Adresse mit `https://endlech.lu/`, trägt direkt danach eines der
@@ -120,7 +121,8 @@ bekommt einen roten Prüflauf — so ist es gewollt.
 - **AK-09** · Angenommen ein Admin löscht ein Restaurant, wenn die Sitemap 60 Minuten später
   abgerufen wird, dann steht keine der vier Sprachfassungen seiner Detailseite mehr darin.
 - **AK-10** · Angenommen es gibt kein einziges Restaurant, wenn die Sitemap abgerufen wird,
-  dann antwortet sie mit HTTP 200 und enthält genau die 84 Einträge der festen Seiten.
+  dann antwortet sie mit HTTP 200 und enthält genau die 100 Einträge der festen Seiten
+  (20 × 5 Sprachen).
 - **AK-11** · Angenommen der Restaurantbestand kann nicht gelesen werden und es liegt keine
   gespeicherte Fassung der Sitemap vor, wenn die Sitemap abgerufen wird, dann antwortet
   sie mit einem Serverfehler (HTTP 5xx) — **nicht** mit HTTP 200 und **nicht** mit einer

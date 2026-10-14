@@ -9,6 +9,13 @@ Status: `rekonstruiert` · Stand: 2026-08-23 · **Rückerfassung aus dem Bestand
 > Datenschutzlage anhand dieser Datei beurteilte, kam zu einem falschen Ergebnis.
 > **FB-02 ist nicht betroffen und weiterhin offen.**
 >
+> **Geändert am 2026-10-14: Vereine und Unternehmen zusammengelegt, Beirat gestrichen**
+> (Betreiberentscheidung: zu viele Beteiligte, verlangsamt Entscheidungen). Zwei statt drei
+> Typen; `association` existiert nicht mehr, `/organisationen/vereine` leitet mit 301 auf
+> `…/unternehmen`. Angepasst: Zweck, AK-01, AK-03, AK-04, AK-05, AK-07, AK-09, EC-01,
+> OF-01, OF-02, Decision Log 7–12. Migration `Version20261014120000`. Am selben Tag: Umbaufirmen
+> sowie Hersteller und Lieferanten als Sponsoren zugelassen (Decision Log 12).
+>
 > ⚠ Diese Datei ist die **Rekonstruktion** eines Bestandsfeatures und veraltet mit jeder
 > Reparatur, die sie behebt. Drei der sechs Stellen hat erst der `code-reviewer`
 > gefunden — der prüfende Agent hatte nur die AK-Tabelle angesehen, nicht den
@@ -16,14 +23,15 @@ Status: `rekonstruiert` · Stand: 2026-08-23 · **Rückerfassung aus dem Bestand
 
 ## Zweck
 
-Drei Zielgruppen mit je eigener Seite und eigener Bestätigungsmail: **Gemeinden**
-(bezahlter Auftrag), **Unternehmen** (Sponsoring) und **Vereine** (Beirat, kein
-Geldfluss in beide Richtungen). Übersicht unter `/{locale}/organisationen`, dazu je
-eine Unterseite.
+Zwei Zielgruppen mit je eigener Seite und eigener Bestätigungsmail: **Gemeinden**
+(bezahlter Auftrag) sowie **Unternehmen und Vereine** (Sponsoring oder Zusammenarbeit
+ohne Geld). Übersicht unter `/{locale}/organisationen`, dazu je eine Unterseite.
 
 Der kommerzielle Unterschied ist der Grund für den Zuschnitt: Ein gemeinsames Formular
-mit einem Auswahlfeld hätte drei grundverschiedene Beziehungen zu einem Vorgang
-verschmolzen.
+mit einem Auswahlfeld hätte grundverschiedene Beziehungen zu einem Vorgang verschmolzen.
+
+*Bis 2026-10-14 waren Vereine eine dritte Zielgruppe mit eigener Seite und einem Beirat,
+der über Kriterien und Gewichtung mitentscheiden sollte. Beides ist entfallen.*
 
 ## Abhängigkeiten
 
@@ -47,32 +55,32 @@ verschmolzen.
 ## Akzeptanzkriterien
 
 - **AK-01** · Angenommen, ein Besucher ruft `/{locale}/organisationen` auf, wenn die
-  Seite lädt, dann sieht er Hero, drei Zielgruppenkarten, den Integritätsblock und ein
+  Seite lädt, dann sieht er Hero, zwei Zielgruppenkarten, den Integritätsblock und ein
   Formular mit **freier** Typwahl.
 - **AK-02** · Angenommen, `?type=commune` steht in der Adresse, wenn die Seite lädt,
   dann ist der Formulartyp vorgewählt — **ohne JavaScript**.
-- **AK-03** · Angenommen, `/{locale}/organisationen/gemeinden`, `…/unternehmen` oder
-  `…/vereine` wird aufgerufen, wenn die Seite lädt, dann erscheint die Zielgruppenseite
-  mit vorgewähltem Typ; der Selektor bleibt **sichtbar**, damit ein falsch Gelandeter
-  ohne Umweg wechseln kann.
+- **AK-03** · Angenommen, `/{locale}/organisationen/gemeinden` oder `…/unternehmen` wird
+  aufgerufen, wenn die Seite lädt, dann erscheint die Zielgruppenseite mit vorgewähltem
+  Typ; der Selektor bleibt **sichtbar**, damit ein falsch Gelandeter ohne Umweg wechseln
+  kann. `…/vereine` antwortet mit **301** auf `…/unternehmen` (seit 2026-10-14).
 - **AK-04** · Angenommen, ein unbekannter Slug wird aufgerufen, wenn die Anfrage
   durchläuft, dann greift das Routen-Requirement `gemeinden|unternehmen|vereine` und
-  die Route wird nicht gefunden.
+  die Route wird nicht gefunden (`vereine` steht nur noch für die Weiterleitung darin).
 - **AK-05** · Angenommen, kein JavaScript ist aktiv, wenn das Formular betrachtet wird,
-  dann sind **alle drei** Feldgruppen sichtbar und beschriftet.
+  dann sind **beide** Feldgruppen sichtbar und beschriftet.
 - **AK-06** · Angenommen, JavaScript ist aktiv, wenn der Typ gewechselt wird, dann
   werden die Felder der nicht gewählten Typen ausgeblendet **und auf `disabled`
   gesetzt** — sie fallen damit aus der Tab-Reihenfolge; der Wechsel wird in einer
   `aria-live`-Region angesagt.
 - **AK-07** · Angenommen, ein Feld eines **fremden** Typs wird untergeschoben (etwa
-  `estimatedVenues` bei einem Vereinseintrag), wenn abgeschickt wird, dann antwortet
+  `estimatedVenues` bei einem Unternehmenseintrag), wenn abgeschickt wird, dann antwortet
   der Server mit **422** — es wird nicht stillschweigend ignoriert.
 - **AK-08** · Angenommen, ein Typ ist gewählt, wenn die Validierung läuft, dann gilt die
   Validierungsgruppe `['Default', <typ>]`; die fremden Felder tragen dort `IsNull` bzw.
   `Count(max: 0)`.
 - **AK-09** · Angenommen, eine Anmeldung ist gültig, wenn sie abgeschickt wird, dann
   bekommt der Interessent die **typspezifische** Bestätigungsmail
-  (`email/organisation/{commune|company|association}.html.twig`) mit typspezifischem
+  (`email/organisation/{commune|company}.html.twig`) mit typspezifischem
   Betreff.
 - **AK-10** · Angenommen, kein Typ ist übermittelt, wenn der Versand vorbereitet wird,
   dann fällt der Code auf `OrganisationType::COMMUNE` zurück.
@@ -131,8 +139,10 @@ verschmolzen.
 
 ## Edge Cases
 
-- **EC-01** · `OrganisationType::slug()` gibt für `ASSOCIATION` bewusst `vereine` zurück
-  — sonst hieße die Adresse `/organisationen/organisationen`.
+- **EC-01** · `OrganisationType::LEGACY_SLUGS` führt `vereine` → `unternehmen`: Die frühere
+  Vereinsseite war verlinkt und indexiert und endet deshalb nicht auf einer 404.
+  *(Bis 2026-10-14: `slug()` gab für `ASSOCIATION` bewusst `vereine` zurück, sonst hieße
+  die Adresse `/organisationen/organisationen`.)*
 - **EC-02** · Bei `expanded: true` ist `choice.vars.data` der **Checked-Zustand (bool)**,
   nicht der Enum-Case. Für Emoji und Label im Template wird deshalb eine Map
   `value → Case` aus den übergebenen `types` gebaut.
@@ -196,11 +206,13 @@ Alles aus B14 gilt hier gleichermaßen — der Unterbau ist derselbe:
   `jean-luc@télécom.lu` ab, das der Web-Weg seit dieser Reparatur **annimmt**. Dieselbe
   Adresse führt damit je nach Tür zu einem anderen Ergebnis. — Betreiber
 
-- **OF-01** · Sollen die drei Typen getrennte Kontingente bekommen? Eine Gemeinde und
+- **OF-01** · Sollen die beiden Typen getrennte Kontingente bekommen? Eine Gemeinde und
   ein Unternehmen hinter derselben Verwaltungs-IP blockieren sich heute gegenseitig. —
   Betreiber
-- **OF-02** · Vereine bringen ausdrücklich kein Geld. Soll ihre Anmeldung trotzdem
-  denselben Trichter durchlaufen (`WaitlistStatus` bis `converted`)? — Betreiber
+- ~~**OF-02** · Vereine bringen ausdrücklich kein Geld. Soll ihre Anmeldung trotzdem
+  denselben Trichter durchlaufen (`WaitlistStatus` bis `converted`)?~~ — **Erledigt
+  2026-10-14:** Vereine laufen mit Unternehmen in einem Typ und damit im selben Trichter
+  (Decision Log 9).
 
 ## Decision Log
 
@@ -212,5 +224,9 @@ Alles aus B14 gilt hier gleichermaßen — der Unterbau ist derselbe:
 | 4 | Validierung über Gruppen | `validation_groups` aus `$type` | zweite Schicht neben `PRE_SUBMIT` |
 | 5 | Choices als Strings | ja | die JSON-Spalten speichern `string[]`; Enum-Cases bräuchten einen Transformer |
 | 6 | Eigene Seite je Zielgruppe | ja | verhindert doppelten Text im Netz und erlaubt zielgruppengenaue Ansprache |
-| 7 | Slug `vereine` für `ASSOCIATION` | ja | sonst `/organisationen/organisationen` |
-| 8 | Eigene Bestätigungsmail je Typ | drei Vorlagen | die Beziehung ist je Typ eine andere |
+| 7 | Slug `vereine` für `ASSOCIATION` | ~~ja~~ entfallen 2026-10-14; `vereine` leitet mit 301 auf `unternehmen` | Adresse war verlinkt und indexiert |
+| 8 | Eigene Bestätigungsmail je Typ | zwei Vorlagen (bis 2026-10-14 drei) | die Beziehung ist je Typ eine andere |
+| 9 | Vereine und Unternehmen | **ein Typ `company`** (2026-10-14, Betreiber) | ohne Beirat bleibt für Vereine dieselbe Rolle wie für Unternehmen: unterstützen, mit oder ohne Geld |
+| 10 | Beirat | **gestrichen** (2026-10-14, Betreiber) | zu viele Beteiligte, die sich einmischen; verlangsamt den Prozess. Die Kriterien legt Endlech.lu allein fest |
+| 11 | Bestandsdaten | per Migration umgeschrieben, nicht stehen gelassen | ein Enum-Wert ohne Fall lässt Doctrine beim Laden scheitern; `advisory_board` wäre eine Zusage, die es nicht mehr gibt |
+| 12 | Wen wir nicht als Sponsor annehmen | nur noch Gastronomieketten und Betriebe, die selbst bewertet werden (2026-10-14, Betreiber) | Umbaufirmen sowie Hersteller und Lieferanten dürfen sponsern; ausgeschlossen bleibt, wer bewertet wird — sonst wären Bewertungen käuflich |

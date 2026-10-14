@@ -35,10 +35,11 @@
                 {label: 'Lokale (geschätzt)', value: entry.estimatedVenues ?: '—'},
                 {label: 'Zeitrahmen', value: entry.timeframe ? entry.timeframe.transKey|trans({}, null, 'de') : '—'}
             ]) %}
-        {% elseif entry.type.value == 'company' %}
-            {% set rows = rows|merge([{label: 'Sponsoring', value: entry.sponsorshipInterests|length ? entry.sponsorshipInterests|join(', ') : '—'}]) %}
         {% else %}
-            {% set rows = rows|merge([{label: 'Zusammenarbeit', value: entry.collaborationInterests|length ? entry.collaborationInterests|join(', ') : '—'}]) %}
+            {% set rows = rows|merge([
+                {label: 'Sponsoring', value: entry.sponsorshipInterests|length ? entry.sponsorshipInterests|join(', ') : '—'},
+                {label: 'Ohne Geld', value: entry.collaborationInterests|length ? entry.collaborationInterests|join(', ') : '—'}
+            ]) %}
         {% endif %}
 
         {% for row in rows %}

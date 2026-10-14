@@ -168,32 +168,39 @@ Erhebung, nicht das Ergebnis."*
 **Heutiger Weg:** `/organisationen/gemeinden` mit eigener Landing-Page und
 Warteliste.
 
-### 4. Unternehmen
+### 4. Unternehmen und Vereine
 
-**Bedarf:** gesellschaftliches Engagement mit sichtbarem Bezug.
+**Bedarf:** gesellschaftliches Engagement mit sichtbarem Bezug — mit Geld, mit dem
+eigenen Team oder indem man die Ergebnisse weiterträgt.
 
-> „Sie können Barrierefreiheit in Luxemburg mitfinanzieren, ohne dafür etwas zu
-> bekommen, das andere nicht bekommen. Was Sie erhalten, ist die Nennung als
-> Unterstützer – keine bessere Bewertung, keine bevorzugte Platzierung, keinen
-> Einfluss auf Inhalte."
+> „Sie können Barrierefreiheit in Luxemburg mitfinanzieren oder ohne Geld mit uns
+> zusammenarbeiten. In beiden Fällen bekommen Sie nichts, was andere nicht
+> bekommen: Wer mitfinanziert, wird als Unterstützer genannt – keine bessere
+> Bewertung, keine bevorzugte Platzierung, kein Einfluss auf Inhalte."
 
-**Formate:** Inclusion-Boxen finanzieren, Mitarbeitende als Testpersonen, eine
-Gemeinde-Erhebung mitfinanzieren, Übersetzungen und Workshops.
+**Formate mit Geld oder Team:** Inclusion-Boxen finanzieren, Mitarbeitende als
+Testpersonen, eine Gemeinde-Erhebung mitfinanzieren, Übersetzungen und Workshops.
 
-**Ausschlüsse, öffentlich benannt:** Gastronomieketten und Betriebe, die selbst
-auf Endlech.lu bewertet werden; Umbaufirmen; Lieferanten.
+**Formate ohne Geld:** Zugang zu aggregierten Daten, gemeinsame Kommunikation,
+Weiterempfehlung an die eigenen Mitglieder. *„Dafür zahlen Sie nichts, und Sie
+erhalten kein Honorar."*
 
-### 5. Vereine und Organisationen
+**Ausschluss für Sponsoren, öffentlich benannt:** Gastronomieketten und Betriebe,
+die selbst auf Endlech.lu bewertet werden — sonst wären Bewertungen käuflich.
+*(Bis 2026-10-14 zusätzlich Umbaufirmen sowie Hersteller und Lieferanten von Produkten,
+die in Beratungsberichten genannt werden könnten. Beide dürfen seither sponsern,
+Betreiberentscheidung.)*
 
-**Bedarf:** mitentscheiden, was überhaupt gemessen wird.
+**Heutiger Weg:** `/organisationen/unternehmen`, gemeinsame Seite und ein
+Formulartyp für beide.
 
-> „Wir messen Barrierefreiheit – aber wer legt fest, was gemessen wird und wie
-> schwer es wiegt? Diese Entscheidung wollen wir nicht allein treffen. Dafür gibt
-> es den Beirat."
-
-**Hier fließt in keine Richtung Geld.** Der Beirat entscheidet über Kriterien,
-Gewichtung im Score und Methodenänderungen; zwei Sitzungen im Jahr; die
-Mitglieder werden öffentlich benannt.
+> **Entscheidung 2026-10-14: kein Beirat.** Bis dahin waren Vereine eine eigene
+> Zielgruppe mit eigener Seite, und die Seite versprach einen Beirat, der über
+> Kriterien, Gewichtung im Score und Methodenänderungen mitentscheidet (zwei
+> Sitzungen im Jahr, Mitglieder öffentlich benannt). Gestrichen, weil zu viele
+> Beteiligte die Entscheidungen verlangsamen. Die Kriterien legt Endlech.lu
+> seither allein fest. Vereine laufen mit Unternehmen zusammen;
+> `/organisationen/vereine` leitet dauerhaft weiter.
 
 ---
 
@@ -293,8 +300,8 @@ absichern.
 | Route | Funktion |
 |---|---|
 | `/partner` | Landing-Page + Warteliste für Restaurants |
-| `/organisationen` | Übersicht der drei Organisationstypen + Warteliste |
-| `/organisationen/gemeinden`, `…/unternehmen`, `…/vereine` | eigene Seite je Zielgruppe, Formulartyp vorgewählt |
+| `/organisationen` | Übersicht der beiden Organisationstypen + Warteliste |
+| `/organisationen/gemeinden`, `…/unternehmen` | eigene Seite je Zielgruppe, Formulartyp vorgewählt; `…/vereine` leitet seit 2026-10-14 mit 301 auf `…/unternehmen` |
 
 Beide Wartelisten teilen sich `WaitlistConfirmationService`: Token → Speichern →
 Bestätigungsmail. Scheitert der Versand, ist die Anmeldung trotzdem gesichert.
@@ -414,10 +421,11 @@ Drei Erlöspfade, alle noch **ohne Preis und ohne Zahlungsabwicklung im Code**:
 |---|---|---|---|
 | **Partnerprogramm** | Restaurants | wiederkehrend | Warteliste; *„Preise und Paketumfang stehen noch nicht fest. Wer auf der Warteliste steht, erfährt sie als Erstes"* |
 | **Erhebungen** | Gemeinden | Projektauftrag | Warteliste; Umfang beschrieben (Karte, Bericht, Gemeinderat), Dauer 8–16 Wochen |
-| **Sponsoring** | Unternehmen | Zuwendung | Warteliste; Formate benannt, Ausschlüsse öffentlich |
+| **Sponsoring** | Unternehmen und Vereine | Zuwendung | Warteliste; Formate benannt, Ausschluss öffentlich |
 
-**Vereine sind ausdrücklich kein Vertriebskanal.** *„Hier fließt in keine
-Richtung Geld."*
+**Die Zusammenarbeit ohne Geld ist ausdrücklich kein Vertriebskanal.** *„Dafür
+zahlen Sie nichts, und Sie erhalten kein Honorar."* Sie läuft über denselben
+Formulartyp wie das Sponsoring (seit 2026-10-14, vorher eigener Vereinstyp).
 
 **Kostenseite**, laufend erfasst in `FinanceEntry` und veröffentlicht: Hosting,
 E-Mail-Versand, Apple-Developer-Programm, Domain, Material für Inclusion-Boxen.

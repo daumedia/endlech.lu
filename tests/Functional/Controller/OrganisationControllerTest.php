@@ -26,7 +26,7 @@ final class OrganisationControllerTest extends AbstractWebTestCase
         ];
     }
 
-    public function testLandingPageRendersAllThreeSections(): void
+    public function testLandingPageRendersAllSections(): void
     {
         $client = static::createClient();
         $crawler = $client->request('GET', self::LOCALE . '/organisationen');
@@ -39,10 +39,10 @@ final class OrganisationControllerTest extends AbstractWebTestCase
         self::assertGreaterThan(0, $crawler->filter('#anfrage')->count());
 
         // Der Typ-Selektor muss eine echte Radiogruppe sein, keine klickbaren Divs.
-        self::assertSame(3, $crawler->filter('input[type="radio"][name="organisation_waitlist[type]"]')->count());
+        self::assertSame(2, $crawler->filter('input[type="radio"][name="organisation_waitlist[type]"]')->count());
 
         // Ohne JavaScript müssen alle typspezifischen Blöcke vorhanden sein.
-        self::assertSame(3, $crawler->filter('[data-organisation-type-target="block"]')->count());
+        self::assertSame(2, $crawler->filter('[data-organisation-type-target="block"]')->count());
     }
 
     /**
@@ -53,7 +53,6 @@ final class OrganisationControllerTest extends AbstractWebTestCase
         return [
             'Gemeinden' => ['gemeinden', 'commune'],
             'Unternehmen' => ['unternehmen', 'company'],
-            'Vereine' => ['vereine', 'association'],
         ];
     }
 
@@ -85,7 +84,67 @@ final class OrganisationControllerTest extends AbstractWebTestCase
     }
 
     /**
-     * BF-151 · Übersicht und alle drei Zielgruppenseiten schicken in jeder Sprache an die POST-Route.
+     * Die frühere Vereinsseite (Beirat, entfallen 2026-10-14) ist verlinkt und
+     * indexiert. Sie leitet dauerhaft auf die gemeinsame Seite für Unternehmen und
+     * Vereine, in jeder Sprache — nicht auf eine 404.
+     */
+    public function testVereineLeitetDauerhaftAufUnternehmenWeiter(): void
+    {
+        $client = static::createClient();
+
+        foreach (['de', 'en', 'fr', 'lb', 'pt'] as $sprache) {
+            $client->request('GET', '/'.$sprache.'/organisationen/vereine');
+
+            self::assertResponseStatusCodeSame(301);
+            self::assertResponseRedirects('/'.$sprache.'/organisationen/unternehmen');
+        }
+    }
+
+    /**
+     * Seit 2026-10-14 schließt die Sponsoring-Regel nur noch aus, wer selbst bewertet
+     * wird. Umbaufirmen sowie Hersteller und Lieferanten dürfen sponsern — eine
+     * öffentliche Regel, die sie weiter ausschlösse, hielte Sponsoren ab, die wir wollen.
+     */
+    public function testSponsoringSchliesstNurBewerteteBetriebeAus(): void
+    {
+        $client = static::createClient();
+        $crawler = $client->request('GET', self::LOCALE.'/organisationen/unternehmen');
+
+        self::assertResponseIsSuccessful();
+        $regel = $crawler->filter('li')->reduce(static fn ($li) => str_contains($li->text(), '✕'));
+        self::assertCount(1, $regel, 'Genau ein Ausschluss.');
+        self::assertStringContainsString('selbst auf Endlech.lu bewertet', $regel->text());
+
+        $html = (string) $client->getResponse()->getContent();
+        self::assertStringNotContainsString('Umbauten für Barrierefreiheit', $html);
+        self::assertStringNotContainsString('Lieferanten von Produkten', $html);
+    }
+
+    /**
+     * Der Beirat ist gestrichen — keine Organisationsseite darf ihn noch anbieten,
+     * in keiner Sprache. Geprüft wird das Wort selbst, weil es in Texten an
+     * Stellen steckte, die kein Schlüsselname verrät (Integritätsblock, Hero).
+     */
+    public function testKeineSeiteBietetNochEinenBeiratAn(): void
+    {
+        $client = static::createClient();
+        $woerter = ['Beirat', 'Beirot', 'advisory board', 'comité consultatif', 'conselho consultivo'];
+
+        foreach (['de', 'en', 'fr', 'lb', 'pt'] as $sprache) {
+            foreach (['', '/gemeinden', '/unternehmen'] as $seite) {
+                $client->request('GET', '/'.$sprache.'/organisationen'.$seite);
+                self::assertResponseIsSuccessful();
+                $html = (string) $client->getResponse()->getContent();
+
+                foreach ($woerter as $wort) {
+                    self::assertStringNotContainsStringIgnoringCase($wort, $html, "/{$sprache}/organisationen{$seite} nennt noch „{$wort}“.");
+                }
+            }
+        }
+    }
+
+    /**
+     * BF-151 · Übersicht und beide Zielgruppenseiten schicken in jeder Sprache an die POST-Route.
      *
      * Geprüft wird das gerenderte `action`, nicht das Absenden: Der Absende-Weg von den Zielgruppenseiten steht in
      * `Qa11ZielgruppenFormularTest`. Dieser Lauf deckt die übrigen Sprachen ab — ein Ziel ohne Sprachpräfix träfe
@@ -96,7 +155,7 @@ final class OrganisationControllerTest extends AbstractWebTestCase
         $client = static::createClient();
 
         foreach (['de', 'en', 'fr', 'lb', 'pt'] as $sprache) {
-            foreach (['', '/gemeinden', '/unternehmen', '/vereine'] as $seite) {
+            foreach (['', '/gemeinden', '/unternehmen'] as $seite) {
                 $crawler = $client->request('GET', '/'.$sprache.'/organisationen'.$seite);
                 self::assertResponseIsSuccessful();
 
@@ -113,23 +172,26 @@ final class OrganisationControllerTest extends AbstractWebTestCase
         $client = static::createClient();
         $crawler = $client->request('GET', self::LOCALE . '/organisationen');
 
-        foreach (['gemeinden', 'unternehmen', 'vereine'] as $slug) {
+        foreach (['gemeinden', 'unternehmen'] as $slug) {
             self::assertGreaterThan(
                 0,
                 $crawler->filter('a[href="' . self::LOCALE . '/organisationen/' . $slug . '"]')->count(),
                 "Die Übersicht muss auf /{$slug} verlinken.",
             );
         }
+
+        // Keine Karte und kein Menüeintrag führt mehr über die Weiterleitung.
+        self::assertSame(0, $crawler->filter('a[href="' . self::LOCALE . '/organisationen/vereine"]')->count());
     }
 
     public function testTypeCanBePreselectedViaQuery(): void
     {
         $client = static::createClient();
-        $crawler = $client->request('GET', self::LOCALE . '/organisationen?type=association');
+        $crawler = $client->request('GET', self::LOCALE . '/organisationen?type=company');
 
         self::assertResponseIsSuccessful();
         self::assertNotNull(
-            $crawler->filter('input[value="association"]')->attr('checked'),
+            $crawler->filter('input[value="company"]')->attr('checked'),
             'Der Typ aus ?type= muss vorausgewählt sein.',
         );
     }
@@ -173,16 +235,47 @@ final class OrganisationControllerTest extends AbstractWebTestCase
         self::assertNull($entry->getEstimatedVenues(), 'Ein Unternehmen darf keine Lokal-Zahl haben.');
     }
 
-    public function testAssociationSubmissionStoresCollaborationInterests(): void
+    /**
+     * Unternehmen und Vereine teilen sich seit 2026-10-14 einen Typ: Sponsoring und
+     * Zusammenarbeit ohne Geld stehen im selben Eintrag.
+     */
+    public function testCompanySubmissionStoresBothInterestLists(): void
     {
         $client = static::createClient();
-        $this->rawSubmit($client, self::base('association'), [
+        $this->rawSubmit($client, self::base('company'), [
+            'sponsorshipInterests' => ['employee_engagement'],
+            'collaborationInterests' => ['data_access', 'referrals'],
+        ]);
+
+        self::assertResponseRedirects(self::LOCALE . '/organisationen');
+
+        $entry = $this->latest($client);
+        self::assertSame(OrganisationType::COMPANY, $entry?->getType());
+        self::assertSame(['employee_engagement'], $entry->getSponsorshipInterests());
+        self::assertSame(['data_access', 'referrals'], $entry->getCollaborationInterests());
+    }
+
+    /** Der Beirat ist gestrichen: „Sitz im Beirat" ist keine zulässige Auswahl mehr. */
+    public function testBeiratIstKeineAuswahlMehr(): void
+    {
+        $client = static::createClient();
+        $this->rawSubmit($client, self::base('company'), [
             'collaborationInterests' => ['advisory_board'],
         ]);
 
-        $entry = $this->latest($client);
-        self::assertSame(OrganisationType::ASSOCIATION, $entry?->getType());
-        self::assertSame(['advisory_board'], $entry->getCollaborationInterests());
+        self::assertResponseStatusCodeSame(422);
+        self::assertNull($this->latest($client));
+    }
+
+    /** Der frühere Typ `association` existiert nicht mehr und erzeugt keinen Eintrag. */
+    public function testFruehererVereinstypWirdAbgelehnt(): void
+    {
+        $client = static::createClient();
+        // Über `$extra`, weil der Crawler einen Radiowert ablehnt, den das Formular nicht anbietet.
+        $this->rawSubmit($client, self::base('company'), ['type' => 'association']);
+
+        self::assertResponseStatusCodeSame(422);
+        self::assertNull($this->latest($client));
     }
 
     /**
@@ -278,7 +371,7 @@ final class OrganisationControllerTest extends AbstractWebTestCase
     {
         $client = static::createClient();
         $crawler = $client->request('GET', self::LOCALE . '/organisationen');
-        $client->submit($this->formWithField($crawler, 'organisation_waitlist[email]', self::base('association')));
+        $client->submit($this->formWithField($crawler, 'organisation_waitlist[email]', self::base('company')));
 
         $token = (string) $this->latest($client)?->getConfirmationToken();
         $client->request('GET', self::LOCALE . '/organisationen/confirmation/' . $token);
@@ -368,11 +461,11 @@ final class OrganisationControllerTest extends AbstractWebTestCase
     }
 
     /**
-     * AK-05 / AK-19: Ohne JavaScript sind alle drei Feldgruppen im Markup —
+     * AK-05 / AK-19: Ohne JavaScript sind alle Feldgruppen im Markup —
      * `PRE_SET_DATA` baut sie alle auf. Wer das auf den aktuellen Typ einschränkt,
      * macht die Seite ohne JavaScript unbenutzbar.
      */
-    public function testAk05AlleDreiFeldgruppenStehenImMarkup(): void
+    public function testAk05AlleFeldgruppenStehenImMarkup(): void
     {
         $client = static::createClient();
         $client->request('GET', self::LOCALE.'/organisationen/gemeinden');
@@ -410,7 +503,7 @@ final class OrganisationControllerTest extends AbstractWebTestCase
 
         $crawler = $client->request('GET', self::LOCALE.'/organisationen');
         $client->submit($this->formWithField($crawler, 'organisation_waitlist[email]', [
-            'organisation_waitlist[type]' => 'association',
+            'organisation_waitlist[type]' => 'company',
             'organisation_waitlist[organisationName]' => 'Verein BF129',
             'organisation_waitlist[contactName]' => 'Alex Muster',
             'organisation_waitlist[email]' => 'bf129_'.uniqid().'@verein-test.lu',

@@ -113,7 +113,6 @@ final class GrowthTrichterTest extends KernelTestCase
                 ...array_values($this->pfade('app_organisations')),
                 ...array_values($this->pfade('app_organisations_type', ['slug' => 'gemeinden'])),
                 ...array_values($this->pfade('app_organisations_type', ['slug' => 'unternehmen'])),
-                ...array_values($this->pfade('app_organisations_type', ['slug' => 'vereine'])),
             ],
         ];
         self::assertSame(array_keys($seiten), array_keys($trichter));

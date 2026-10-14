@@ -91,7 +91,7 @@ Gezählt über alle Templates, nach Häufigkeit der Familie:
 | **blue** | ~35 | neutrale Information, Status `confirmed` |
 | **emerald** | ~27 | Ernährungsmerkmale (vegan, vegetarisch) |
 | **amber** | ~23 | Warnung, Status `pending`, Ausgaben, Bewertung 4–6 |
-| **teal** | ~17 | Vereine (`OrganisationType::ASSOCIATION`) |
+| **teal** | einstellig | Zusammenarbeit ohne Geld (Kasten „Auch ohne Geld", Admin-Abzeichen); bis 2026-10-14 die Vereinsseite |
 | orange, pink, indigo, yellow | einstellig | Einzelakzente (Küchen-Tags orange) |
 
 ### Welche Farbe ist die primäre?
@@ -312,8 +312,7 @@ Als Link statt Button: `inline-block` statt `w-full md:w-auto`.
 | Zielgruppe | Farbe |
 |---|---|
 | Öffentlich, Gemeinden | `bg-cyan-700 hover:bg-cyan-800 … focus:outline-cyan-700` |
-| Unternehmen | `bg-purple-700 hover:bg-purple-800 … focus:outline-purple-700` |
-| Vereine | `bg-teal-800 hover:bg-teal-900 … focus:outline-teal-800` |
+| Unternehmen und Vereine | `bg-purple-700 hover:bg-purple-800 … focus:outline-purple-700` |
 | Destruktiv | `text-red-600 hover:text-red-800 … focus:outline-red-600` |
 
 **Auf Verlaufsgrund** — primär und sekundär als Paar (`templates/open/index.html.twig`):

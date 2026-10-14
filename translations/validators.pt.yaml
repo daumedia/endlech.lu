@@ -91,8 +91,7 @@ organisation_waitlist:
     venues_range: "Indique um número entre {{ min }} e {{ max }}."
     invalid_choice: "Esta opção não é permitida."
     commune_only: "Este campo destina-se apenas a comunas."
-    company_only: "Esta opção destina-se apenas a empresas."
-    association_only: "Esta opção destina-se apenas a organizações."
+    company_only: "Esta opção destina-se apenas a empresas e associações."
 
 finance:
     date_required: "Indique uma data."

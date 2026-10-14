@@ -95,8 +95,7 @@ organisation_waitlist:
     # Greifen nur bei manipulierten Anfragen: Das Formular baut die Felder eines
     # fremden Typs gar nicht erst auf (PRE_SUBMIT).
     commune_only: "Dieses Feld ist nur für Gemeinden vorgesehen."
-    company_only: "Diese Auswahl ist nur für Unternehmen vorgesehen."
-    association_only: "Diese Auswahl ist nur für Organisationen vorgesehen."
+    company_only: "Diese Auswahl ist nur für Unternehmen und Vereine vorgesehen."
 
 finance:
     date_required: "Bitte gib ein Datum an."
