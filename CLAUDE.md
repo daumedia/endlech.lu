@@ -142,7 +142,8 @@ Nur `CatalogueCompletenessTest` & Co. merken es.
 ## Tech Stack
 
 - **Backend:** PHP 8.4+, Symfony 8.0.*
-- **Database:** MySQL 8.0 (via Docker) — **Production fährt MariaDB** (siehe Deployment)
+- **Database:** MySQL 8.0 (via Docker) — **Production fährt `mysql:8` als Coolify-Datenbank, nicht MariaDB**
+  (siehe Deployment)
 - **ORM:** Doctrine 3.6 mit Migrations
 - **Templates:** Twig
 - **CSS:** Tailwind CSS v4.1 via PostCSS
@@ -1046,10 +1047,15 @@ Dafür ist `ReleaseVisibility` dreiwertig (sonst wären „bewusst still" und �
 ⚠ **Im selben Handgriff die Roadmap durchsehen** (Feature 07, OF-03). Dabei: **Ein Vorhaben, das zwölf Monate ohne
 Fortschritt in „Geplant" steht, wandert nach „Angedacht" zurück** (OF-04).
 
-Konvention: Release-Commit direkt auf `main` (`Release vYYYY.MM.DD – Titel`), Tag darauf, dann Merge `main` →
-`master` (= Deploy).
-⚠ **`master` ist der Produktionszweig, `main` der Entwicklungszweig** — umgekehrt zur verbreiteten Lesart. Bis
-2026-09-02 hießen sie `dev` und `production`.
+Konvention: Release-Commit direkt auf `main` (`Release vYYYY.MM.DD – Titel`), Tag darauf, dann in Coolify ausrollen.
+⚠ **Coolify baut seit 2026-10-15 aus `main`, nicht mehr aus `master`** (gemessen 2026-10-22 über die Coolify-API,
+App und Worker). Umgestellt zwischen zwei Deploys: Am 2026-10-14 lief noch `c70f650` aus `master` aus, obwohl `main`
+schon weiter war; am 2026-10-15 `23c4278` (PR #140), das nur auf `main` lag. Bis dahin galt `master` als
+Produktionszweig; bis 2026-09-02 hießen die beiden `dev` und `production`.
+⚠ **Ausgeliefert wird, was beim Klick auf `main` steht — auch Unveröffentlichtes.** So ging PR #140 ohne Release live;
+Footer und Sentry-Release blieben bis 2026-10-22 auf `2026.09.15.1`, obwohl neuerer Code lief. Wer nur einen Hotfix
+ausrollen will, nimmt alles mit, was seit dem letzten Deploy auf `main` gemergt wurde.
+`master` liefert nichts mehr aus; zuletzt mitgezogen beim Hotfix v2026.10.22. Ob er bleibt, ist nicht entschieden.
 
 ## CI
 
@@ -1065,8 +1071,13 @@ Konvention: Release-Commit direkt auf `main` (`Release vYYYY.MM.DD – Titel`), 
 
 `make sicherung-pruefen DATEI=…` spielt eine DB-Sicherung in einen **Wegwerf-Container** ein und urteilt (Rückgabe
 0/1, Zeugnis unter `qa/sicherungen/`).
-⚠ **MariaDB, nicht das lokale MySQL 8.** Production fährt MariaDB; Einspielen in MySQL kann an Kollationen scheitern
-→ Fehlalarm über eine gesunde Sicherung.
+⚠⚠ **Coolify sichert die Produktionsdatenbank nicht** (gemessen 2026-10-22: an der Ressource ist keine Sicherung
+eingerichtet, `GET /databases/{uuid}/backups` liefert eine leere Liste). Ob Hostinger den VPS als Ganzes sichert, ist
+offen (BE-03 in `docs/datenschutz.md`). Das Skript prüft eine Datei — es kann nicht wissen, ob es überhaupt eine gibt.
+⚠ **Das Skript spielt in MariaDB 10.5 ein, und die Begründung dafür ist hinfällig.** Gewählt unter der Annahme,
+Production fahre MariaDB (Stand Cloudways); seit dem Umzug auf Coolify ist es `mysql:8`. Eine echte Sicherung aus
+MySQL 8 kann in MariaDB an Kollationen wie `utf8mb4_0900_ai_ci` scheitern — derselbe Fehlalarm über eine gesunde
+Sicherung, den die Wahl vermeiden sollte, nur umgekehrt. Die Umstellung auf ein `mysql:8`-Image steht aus.
 ⚠ **Die Liste erwarteter Tabellen steht im Skript.** Wer eine Migration mit neuer Tabelle schreibt, ergänzt sie dort
 (sonst gilt eine Sicherung ohne die neue Tabelle als vollständig — eine Prüfung, die ihre Erwartung aus dem Prüfling
 ableitet, prüft gegen sich selbst).
@@ -1074,7 +1085,8 @@ ableitet, prüft gegen sich selbst).
 Schleife frisst es die Datei auf, aus der die Schleife liest. Beim Bauen gemessen: der Abgleich verglich **eine
 einzige** Tabelle und meldete „alle Zeilenzahlen stimmen überein" (18 von 19 Tabellen konnten fehlen, grün). Die
 Schleife liest seither über Dateikennung 3, die Ausgabe nennt die Zahl verglichener Tabellen.
-⚠ **Am 2026-09-12 erstmals belegt: Alle Migrationen laufen auf MariaDB 10.5 durch** (bis dahin eine Annahme).
+⚠ **Am 2026-09-12 belegt: Alle Migrationen laufen auf MariaDB 10.5 durch** — gegen eine aus den Migrationen erzeugte
+Datenbank. Über Production sagt das nichts, dort läuft MySQL.
 
 ## Puls an den externen Wächter (`app:worker:pulse`, BE-01)
 
@@ -1232,7 +1244,8 @@ Link ist ein Download). Jede andere Stimulus-Anbindung im Hauptbereich bleibt ro
 
 ## Deployment (CD)
 
-**Ein Merge nach `master` ist die Voraussetzung, nicht der Deploy selbst.** Coolify **beobachtet den Zweig nicht** —
+**Ein Merge nach `main` ist die Voraussetzung, nicht der Deploy selbst** (seit 2026-10-15; vorher `master`, siehe
+Versioning). Coolify **beobachtet den Zweig nicht** —
 das Ausrollen wird in der Oberfläche von Hand angestoßen; danach baut es aus dem `Dockerfile` und tauscht den
 Container. Zwei Ressourcen aus derselben Datei: Anwendung (`--target runtime`) und Worker (`--target worker`).
 ⚠️ **Bis 2026-09-05 stand hier „Coolify beobachtet den Zweig".** Falsch — fiel beim Ausliefern von Feature 08 auf
@@ -1257,9 +1270,14 @@ Düsseldorf). ⚠ Die IP liegt aus historischen Gründen in einem **LACNIC**-Ber
 landet bei Brasilien und hält es für einen Drittlandtransfer. Ist keiner.
 ⚠️ **Coolify ist die Software, nicht der Anbieter.** Auftragsverarbeiter im Verzeichnis ist deshalb **Hostinger**
 (Einzelheiten in `docs/datenschutz.md`).
-**Production-DB:** MariaDB — neue Migrationen bleiben frei von MySQL-8-only-Syntax (`CHECK` mit JSON-Funktionen,
-Window-Functions in DDL). Lokal/CI läuft MySQL 8.0, der Unterschied fällt sonst erst auf Production auf.
-**Rollback:** Revert-Commit auf `master`, oder in Coolify den vorherigen Build erneut ausrollen.
+**Production-DB:** `mysql:8` als Coolify-Datenbankressource (`standalone-mysql`, angelegt 2026-09-01, nicht
+öffentlich), **nicht MariaDB**. Bis 2026-10-22 stand hier MariaDB — der Stand bei Cloudways, beim Umzug nicht
+nachgezogen. Der Tag `mysql:8` schwebt (Docker Hub führt ihn auf der 8.4-Reihe); die genaue Version ist über die
+Coolify-API nicht lesbar, `SELECT VERSION()` nennt sie. Lokal/CI läuft MySQL 8.0.
+⚠ **Die Regel „Migrationen MariaDB-10.5-tauglich halten" hatte nur diesen Grund.** Viele Migrationen bis Oktober 2026
+sind deshalb ohne natives `ENUM`, ohne `CHECK` mit JSON-Funktionen und mit Datenumbau in PHP geschrieben; das schadet
+nicht und bleibt so. Ihre Kommentare („Production läuft auf MariaDB") beschreiben die damalige Annahme.
+**Rollback:** Revert-Commit auf `main`, oder in Coolify den vorherigen Build erneut ausrollen.
 
 ### Wartungsseite: jetzt ein Handschalter
 `public/index.php` prüft auf `var/maintenance` **vor** `vendor/autoload_runtime.php` und liefert dann 503 mit
@@ -1510,7 +1528,7 @@ nicht (`debug:config sentry` schlägt dort bewusst fehl); weder lokale Entwicklu
 braucht nichts. Lokaltest: `sentry:test --env=prod` mit temporärem DSN in `.env.local`.
 **DSN.** `SENTRY_DSN` leer in `.env` (committed), **nur `.env.local` auf dem Server** (Repo öffentlich, committeter
 DSN erlaubte Fremd-Events). Leer = lautlos inaktiv (wie `MOBILITEIT_API_KEY`); leerer Default verhindert Container-
-Build-Bruch. ⚠️ Muss **vor** dem Merge nach `master` auf dem Server stehen, sonst deployt es grün und Sentry bleibt still.
+Build-Bruch. ⚠️ Muss **vor** dem Ausrollen auf dem Server stehen, sonst deployt es grün und Sentry bleibt still.
 **`config/packages/sentry.yaml`** (alles `when@prod`):
 - `release: 'endlech@%app.version%'` (hängt am CalVer-Parameter, zieht bei jedem Release mit).
 - `send_default_pii: false` (keine IPs, Cookies, Header, Nutzerdaten).

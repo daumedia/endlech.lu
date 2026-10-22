@@ -509,7 +509,7 @@ Stand 2026-09-14. Was hier fehlt, meldet seinen Ausfall nicht selbst.
 | **Uptime von außen** | **läuft seit 2026-09-12** — Uptime Kuma auf einem **zweiten VPS**, zwei Prüfungen: `/health` und ein Puls des Messenger-Consumers. `/open.json` bewusst nicht (Entscheidung 2026-09-12) (BE-01) | siehe unten |
 | **Messenger-Consumer, Totalausfall** | **läuft seit 2026-09-12, Alarm ausgelöst** — `app:worker:pulse` meldet alle fünf Minuten nach außen; bleibt der Puls aus, schlägt Kuma an | `src/Command/WorkerPulseCommand.php` |
 | Produktanalyse | **live seit 2026-09-14** (Feature 11, `v2026.09.14.2`, auf der Produktion nachgeprüft) — Umami, selbst betrieben auf dem zweiten VPS, erreicht über eine eigene Domain, Zählweg über endlech.lu; der Roadmap-Eintrag `usage_analytics` ist entfernt (BE-02) | `features/11-nutzungsmessung/`, Abschnitt „Nutzungsmessung“ oben |
-| Sicherungen der Datenbank | **Rückweg prüfbar seit 2026-09-12**, die Sicherung selbst weiter ungeklärt: ob Coolify sichert und wie oft, ist nicht dokumentiert (BE-03) | `bin/sicherung-pruefen.sh` |
+| **Sicherungen der Datenbank** | ⚠ **Coolify sichert nicht** (gemessen 2026-10-22: an der Datenbankressource ist keine Sicherung eingerichtet); ob Hostinger den VPS sichert, ist offen. Der Rückweg ist seit 2026-09-12 prüfbar (BE-03) | `bin/sicherung-pruefen.sh` |
 | **Verfügbarkeit von Umami** | ⚠ **nicht überwacht** — fällt Umami aus, antwortet die Anwendung still mit 202, und niemand erfährt es (BE-04, Frist 2026-09-30) | siehe unten |
 | **Sicherung der Umami-Daten** | ⚠ **ungeklärt** — Postgres-Volume auf dem zweiten VPS, ob Hostinger den VPS sichert, ist nicht nachgesehen (BE-05, Frist 2026-09-30) | siehe unten |
 | **Alarmregel in Sentry, Zertifikatswarnung in Kuma** | **in Einrichtung seit 2026-09-14** (BE-06) | siehe unten |
@@ -635,7 +635,7 @@ dasselbe Muster wie bei BF-45 (HAFAS-Schlüssel), einschließlich des Umstands, 
 - [x] `APP_UPTIME_PUSH_URL` auf der **Worker**-Ressource in Coolify eintragen (siehe oben).
 
 ⚠ **Die Reihenfolge ist hier nicht beliebig.** Der Puls ist Code und läuft erst nach
-einem Rollout (`main` → Release → `master` → Coolify). Ein aktiver Push-Monitor meldet
+einem Rollout (`main` → Release → Ausrollen in Coolify; bis 2026-10-14 über `master`). Ein aktiver Push-Monitor meldet
 vorher vom ersten Takt an „ausgefallen" — zu Recht, denn es ruft niemand an. Das ist der
 Fehlalarm, mit dem eine neue Überwachung ihr Vertrauen verliert, bevor sie einmal
 gearbeitet hat. Die Adresse entsteht aber erst mit dem Monitor. Deshalb:
@@ -711,9 +711,18 @@ eine Produktentscheidung und keine technische.
 
 ### BE-03 · Sicherungen der Datenbank — der Rückweg ist seit 2026-09-12 prüfbar
 
-Ob Coolify die Datenbank sichert, in welchem Takt und wie lange die Sicherungen liegen,
-ist nirgends dokumentiert. **Das gehört gemessen, nicht angenommen**: eine Sicherung
-wiederherstellen, bevor sie gebraucht wird.
+⚠⚠ **Seit 2026-10-22 gemessen: Coolify sichert die Datenbank nicht.** An der
+Datenbankressource ist keine Sicherung eingerichtet (Coolify-API,
+`GET /databases/{uuid}/backups` liefert eine leere Liste); auf demselben Server hat nur
+die Datenbank eines anderen Projekts eine. Ob Hostinger den VPS als Ganzes sichert, ist
+weiter ungeklärt. Bis dahin hieß es hier, das sei „nirgends dokumentiert“.
+
+⚠ **Production fährt `mysql:8`, nicht MariaDB** (Coolify-Datenbank seit 2026-09-01,
+ebenfalls am 2026-10-22 gemessen). Alles, was dieser Abschnitt bis dahin über MariaDB auf
+Produktion sagte, war der Stand bei Cloudways.
+
+**Das gehört gemessen, nicht angenommen**: eine Sicherung wiederherstellen, bevor sie
+gebraucht wird.
 
 **Dafür gibt es seit dem 2026-09-12 ein Werkzeug statt eines Vorsatzes:**
 
@@ -722,9 +731,12 @@ make sicherung-pruefen DATEI=~/Downloads/endlech-2026-09-12.sql.gz
 ```
 
 `bin/sicherung-pruefen.sh` spielt die Datei in einen **eigens gestarteten
-Wegwerf-Container** ein (MariaDB, dieselbe Maschine wie Produktion — ein Einspielen in
-das lokale MySQL 8 kann an Kollationen scheitern, die mit der Sicherung nichts zu tun
-haben, und das wäre ein Fehlalarm über eine gesunde Sicherung). Der Container wird
+Wegwerf-Container** ein (MariaDB 10.5). ⚠ **Die Wahl beruht auf der falschen Annahme,
+Produktion fahre MariaDB.** Gedacht war: dieselbe Maschine wie Produktion, damit keine
+Kollation einen Fehlalarm über eine gesunde Sicherung auslöst. Produktion fährt aber
+MySQL 8, und eine echte Sicherung daraus kann in MariaDB an `utf8mb4_0900_ai_ci`
+scheitern — derselbe Fehlalarm, nur umgekehrt. Die Umstellung auf ein `mysql:8`-Image
+steht aus. Der Container wird
 danach gelöscht, auch bei Abbruch. **In eine bestehende Datenbank schreibt das Skript
 nie** — ein Prüfwerkzeug, das Produktion überschreiben könnte, ist ein Risiko und keine
 Prüfung. Das Urteil landet als Zeugnis unter `qa/sicherungen/`.
@@ -745,7 +757,8 @@ Sieben Prüfungen, und sie sind so gewählt, dass die *stillen* Fehlerfälle auf
 Produktion nicht von außen erreichbar ist):
 
 - Alle Migrationen laufen auf **MariaDB 10.5** durch — das war bisher eine Annahme, die
-  `CLAUDE.md` an mehreren Stellen voraussetzt, ohne sie je geprüft zu haben.
+  `CLAUDE.md` an mehreren Stellen voraussetzt, ohne sie je geprüft zu haben. ⚠ Über
+  Produktion sagt das nichts: Dort läuft MySQL 8 (gemessen 2026-10-22).
 - Eine gezogene Sicherung (44 kB, gepackt 7,7 kB) spielt fehlerfrei ein: 19 von 19
   Tabellen, 14 Fremdschlüssel, Schemastand `Version20260904120000` = Stand des Codes.
 - Der Abgleich gegen die Quelle findet nachgestellte Abweichungen: drei nachträglich
@@ -762,9 +775,9 @@ hier ist er endgültig.
 
 | | |
 |---|---|
-| **Zu klären** | Zwei Ebenen, und sie werden leicht verwechselt: **Hostinger** kann den VPS als Ganzes sichern (Snapshot), **Coolify** kann die Datenbank sichern. Sichert eines von beidem? In welchem Takt, wie lange aufbewahrt, und liegt die Sicherung auf demselben Rechner wie die Datenbank? |
+| **Zu klären** | Zwei Ebenen, und sie werden leicht verwechselt: **Hostinger** kann den VPS als Ganzes sichern (Snapshot), **Coolify** kann die Datenbank sichern. **Coolify: nein** (2026-10-22). **Hostinger: offen** (hPanel → VPS → Backups). Sichert keines von beidem, gehört in Coolify eine Sicherung eingerichtet — mit Takt, Aufbewahrung und einer Ablage außerhalb des Rechners, auf dem die Datenbank liegt |
 | **Zu prüfen** | Eine Sicherung einmal einspielen — ein Rückweg, den niemand gegangen ist, ist eine Annahme. Der Weg dafür steht jetzt: `make sicherung-pruefen DATEI=…` |
-| **Woher die Datei** | Entweder aus Coolify (Datenbank-Ressource → „Backups" → herunterladen), oder von Hand auf dem VPS: `docker exec <db-container> mariadb-dump -u… -p… --single-transaction --quick --databases endlech \| gzip > endlech-$(date +%F).sql.gz` und herunterkopieren. ⚠ **Nicht** über eine von außen erreichbare Adresse — die Datenbank ist bewusst nicht öffentlich, und das soll sie bleiben |
+| **Woher die Datei** | Entweder aus Coolify (Datenbank-Ressource → „Backups" → herunterladen, sobald dort eine eingerichtet ist), oder von Hand auf dem VPS: `docker exec <db-container> sh -c 'exec mysqldump -uroot -p"$MYSQL_ROOT_PASSWORD" --single-transaction --quick --databases <datenbank>' \| gzip > endlech-$(date +%F).sql.gz` und herunterkopieren. ⚠ `mariadb-dump` gibt es im `mysql`-Image nicht. Coolify legt die Datenbank unter dem Namen `default` an (Feld `mysql_database`); welchen Namen `DATABASE_URL` tatsächlich nutzt, zeigt die Variable an der Anwendung. ⚠ **Nicht** über eine von außen erreichbare Adresse — die Datenbank ist bewusst nicht öffentlich, und das soll sie bleiben |
 | **Frist** | 2026-09-30 |
 
 ### BE-04 · Ausfall von Umami melden — offen, Frist 2026-09-30

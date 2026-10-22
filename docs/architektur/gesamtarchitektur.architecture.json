@@ -19,7 +19,7 @@
           "app",
           "db"
         ],
-        "note": "Vom Browser oder der iOS-App über den Coolify-Proxy zur Symfony-Anwendung und in die MariaDB."
+        "note": "Vom Browser oder der iOS-App über den Coolify-Proxy zur Symfony-Anwendung und in die Datenbank (MySQL 8)."
       },
       {
         "id": "hintergrund",
@@ -104,7 +104,7 @@
     {
       "id": "db",
       "type": "database",
-      "label": "MariaDB",
+      "label": "MySQL 8",
       "sublabel": "Daten · Queue",
       "pos": [
         820,
@@ -282,8 +282,8 @@
       "title": "Hostinger (Deutschland)",
       "items": [
         "Coolify baut Anwendung und Worker aus einem Dockerfile",
-        "MariaDB hält Daten, Messenger-Queue und Scheduler-Merkposten",
-        "Ausrollen von Hand nach dem Merge in master"
+        "MySQL 8 hält Daten, Messenger-Queue und Scheduler-Merkposten",
+        "Ausrollen von Hand nach dem Merge in main"
       ]
     },
     {

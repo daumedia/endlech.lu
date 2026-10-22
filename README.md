@@ -180,8 +180,8 @@ php bin/console cache:clear
 no path, no IP address. It also covers every subdomain, but never the other way
 round, so production must use `endlech.lu` and **not** `www.endlech.lu`.
 
-Set it as an environment variable on the Coolify app resource **before** merging
-into `master`. A wrong value deploys green and only shows up when someone tries
+Set it as an environment variable on the Coolify app resource **before**
+deploying. A wrong value deploys green and only shows up when someone tries
 to sign in — the browser rejects the ceremony with a `SecurityError`.
 
 Locally the default `localhost` applies. Browsers treat `localhost` as a secure
@@ -193,13 +193,18 @@ list stays empty on purpose, so the spec's own rule applies.
 
 ## 🚢 Deployment
 
-A merge into `master` **is** the deploy. Coolify watches that branch, builds the
+A merge into `main` is the precondition, **not** the deploy. Coolify does not
+watch the branch: the deploy is started by hand in Coolify, which then builds the
 image from the `Dockerfile` in this repo and swaps the container.
 
 ```
-main ──merge──▶ master ──▶ Coolify builds --target runtime ──▶ container swap
-                          └──▶ Coolify builds --target worker  ──▶ container swap
+merge into main ──▶ deploy by hand in Coolify ──▶ builds --target runtime ──▶ container swap
+                                               └──▶ builds --target worker  ──▶ container swap
 ```
+
+⚠️ **Both resources build from `main` since 2026-10-15** — before that from
+`master`. Whatever sits on `main` when the deploy is started goes live, unreleased
+pull requests included.
 
 Two resources out of the same Dockerfile: the app (`--target runtime`) and the
 messenger worker (`--target worker`). See *Container image* below for what each
@@ -223,7 +228,7 @@ as a post-deployment command in Coolify, or run it by hand after a deploy that
 carries one. This is the single biggest difference to the old setup, where
 `deploy.sh` always ran them.
 
-Rollback: push a revert commit to `master`, or redeploy the previous build from
+Rollback: push a revert commit to `main` and deploy, or redeploy the previous build from
 Coolify's deployment list.
 
 ⚠️ **`public/build` is still committed, but nothing verifies it any more.** The
@@ -422,7 +427,7 @@ see any other way. Verify afterwards with
 ### One-time setup in Coolify
 
 Two resources, both **Build Pack: Dockerfile**, Dockerfile location `/Dockerfile`,
-base directory `/`, branch `master`:
+base directory `/`, branch `main`:
 
 ⚠️ **Set the stage target explicitly on both.** Docker builds the *last* stage when
 none is given. The file ends with `app` (an alias for `runtime`) precisely so that an
