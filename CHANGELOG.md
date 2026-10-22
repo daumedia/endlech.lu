@@ -2,7 +2,7 @@
 
 Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
-![Version](https://img.shields.io/badge/version-2026.09.15.1-blue)
+![Version](https://img.shields.io/badge/version-2026.10.22-blue)
 ![Status](https://img.shields.io/badge/status-beta-green)
 
 ## [Unreleased]
@@ -37,6 +37,21 @@ Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 - **Sponsoring: Umbaufirmen sowie Hersteller und Lieferanten sind jetzt zugelassen.** Ausgeschlossen bleiben nur
   Gastronomieketten und Betriebe, die selbst auf Endlech.lu bewertet werden; der Einleitungssatz der Regel begründet
   das jetzt mit „Bewertungen nicht käuflich" statt mit dem Wert der Empfehlungen.
+
+## [2026.10.22] – Sicherheitsupdate PHP 8.4.27
+
+Hotfix direkt auf `master`: Das Image baut auf PHP 8.4.27 statt einer älteren 8.4. Schließt CVE-2026-109618 und
+CVE-2026-109619 (Pre-Auth-Remote-Code-Execution, von PHP am 2026-10-21 als kritisch gemeldet). Sonst keine Änderung.
+
+⚠ **Keine Migration.** ⚠ **Anwendung UND Worker ausrollen** — beide laufen aus demselben Image, beide brauchen das
+neue PHP.
+
+⚠ **Nach dem Ausrollen prüfen:** `docker exec <container> php -v` zeigt `PHP 8.4.27` auf beiden Containern, der
+Footer `v2026.10.22`.
+
+- `Dockerfile`: `ARG PHP_VERSION=8.4.27` statt `8.4`. Der wandernde Tag `1-php8.4` ließ Docker das Basis-Image aus dem
+  Cache nehmen, ein Neuausrollen hätte lautlos das alte PHP behalten. Die feste Patch-Version erzwingt das
+  Herunterladen und ist bei jeder PHP-Sicherheitsmeldung von Hand anzuheben.
 
 ## [2026.09.15.1] – Ein Violett, ein Postfach
 
