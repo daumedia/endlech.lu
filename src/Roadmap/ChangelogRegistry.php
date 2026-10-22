@@ -29,6 +29,9 @@ final readonly class ChangelogRegistry
     public function notes(): array
     {
         return [
+            // SILENT (Hotfix, 2026-10-22): PHP 8.4.27 im Image gegen CVE-2026-109618/-109619. Ein Gast merkt nichts
+            // davon; eine Sicherheitslücke im Changelog anzukündigen, bevor jede Instanz gepatcht ist, hilft niemandem.
+            new ReleaseNote('2026.10.22', new \DateTimeImmutable('2026-10-22'), ReleaseVisibility::SILENT),
             // SILENT (Vorschlag beim Vorbereiten, 2026-09-15): Violett in Presse-Bedingungen und E-Mails, dazu die
             // Kontaktadresse support@ statt info@. Ein Gast bemerkt höchstens die korrigierte Adresse im Impressum —
             // eine Berichtigung, keine Neuerung. Der wichtigere Teil (interne Meldungen erreichen das Team) ist Betrieb.

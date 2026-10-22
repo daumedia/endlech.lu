@@ -12,7 +12,13 @@
 # Request-pro-Prozess-Modell. Das ist langsamer, verzeiht aber Zustandslecks,
 # die ein Worker gnadenlos aufdeckt.
 
-ARG PHP_VERSION=8.4
+# ⚠ Patch-Version fest, nicht `8.4`. Der Tag `1-php8.4` wandert mit jedem
+# PHP-Release, Docker nimmt beim Bauen aber das Basis-Image aus dem Cache, wenn
+# es schon auf dem Rechner liegt. Ein Neuausrollen in Coolify lieferte dann
+# lautlos das alte PHP aus. Ein geänderter Tag erzwingt das Herunterladen.
+# Gesetzt am 2026-10-22 für CVE-2026-109618/-109619 (Pre-Auth-RCE, „PHP2Shell“,
+# gefixt in 8.4.27). Bei jeder PHP-Sicherheitsmeldung von Hand anheben.
+ARG PHP_VERSION=8.4.27
 ARG FRANKENPHP_VERSION=1
 ARG NODE_VERSION=26
 
