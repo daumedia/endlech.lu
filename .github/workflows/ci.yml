@@ -61,6 +61,16 @@ jobs:
       - name: Generate JWT keypair
         run: php bin/console lexik:jwt:generate-keypair --env=test --skip-if-exists
 
+      - name: Build assets (AssetMapper)
+        # ⚠ Pflicht vor PHPUnit: Jede Seite rendert `importmap()`, und das braucht die von
+        # SWC kompilierten Module unter var/typescript/ — ohne sie scheitert jeder
+        # Funktionstest mit einer Seite. assets/vendor/ ist gitignored (importmap:install
+        # holt es), BuiltAssetsTest liest var/tailwind/app.built.css.
+        run: |
+          php bin/console importmap:install --env=test
+          php bin/console tailwind:build --env=test
+          php bin/console typescript:build --env=test
+
       - name: Prepare test database
         run: |
           php bin/console doctrine:database:create --env=test --if-not-exists
@@ -77,10 +87,25 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      # ⚠ Die Typen von `@symfony/stimulus-bundle` liegen im Composer-Paket, nicht auf npm
+      # (tsconfig.json: `paths` → vendor/symfony/stimulus-bundle/assets/dist/loader.d.ts).
+      # Ohne vendor/ meldet `tsc` das Modul als unbekannt.
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: ctype, iconv, intl, mbstring
+          coverage: none
+          tools: composer:v2
+
+      - name: Install PHP dependencies (nur für Typen)
+        run: composer install --no-interaction --no-progress --prefer-dist --no-scripts --no-dev
+
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
-          # Gemeinsame Quelle mit cd.yml und der lokalen Entwicklung.
+          # Gemeinsame Quelle mit der lokalen Entwicklung. Node baut nichts mehr
+          # (seit 2026-10-22 AssetMapper), es prüft nur Typen und Stil.
           node-version-file: '.nvmrc'
           cache: 'npm'
 

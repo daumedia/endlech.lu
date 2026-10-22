@@ -1,9 +1,24 @@
 framework:
     asset_mapper:
-        # The paths to make available to the asset mapper.
+        # Alles unter assets/ ist ausgeliefert: eigene Module, Stylesheets, Schriften
+        # und die per `importmap:install` geladenen Pakete (assets/vendor/).
         paths:
             - assets/
         missing_import_mode: strict
+
+        # ⚠ Turbo Drive tauscht beim Navigieren nur den Seiteninhalt. Ändert sich nach
+        # einem Deploy das Importmap, lädt Turbo die Seite mit dieser Markierung einmal
+        # ganz neu — ohne sie fügte es das neue Importmap und `import 'app'` in den
+        # laufenden Kopf ein, und Stimulus liefe zweimal (alter und neuer Stand).
+        # Die Nonce stört den Vergleich nicht: Turbo leert sie vor dem Abgleich.
+        importmap_script_attributes:
+            data-turbo-track: reload
+
+        # ⚠ Der eingebaute Polyfill-Lader ist aus und durch assets/es_module_shims_loader.js
+        # ersetzt (eingebunden in base.html.twig). Er schrieb die CSP-Nonce in seinen Skripttext,
+        # der je Anfrage wechselt — mit `data-turbo-track` lud Turbo dadurch bei JEDER Navigation
+        # die Seite neu. `es-module-shims` bleibt in importmap.php, damit es lokal liegt.
+        importmap_polyfill: false
 
 when@prod:
     framework:

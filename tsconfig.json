@@ -3,16 +3,19 @@
         "target": "ES2020",
         "module": "ESNext",
         "moduleResolution": "node",
+        "allowImportingTsExtensions": true,
         "strict": true,
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
         "forceConsistentCasingInFileNames": true,
         "skipLibCheck": true,
         "noEmit": true,
-        "sourceMap": true,
         "lib": ["ES2020", "DOM", "DOM.Iterable"],
-        "types": ["webpack-env"]
+        "types": [],
+        "paths": {
+            "@symfony/stimulus-bundle": ["./vendor/symfony/stimulus-bundle/assets/dist/loader.d.ts"]
+        }
     },
     "include": ["assets/**/*.ts"],
-    "exclude": ["node_modules", "public"]
+    "exclude": ["node_modules", "public", "assets/vendor"]
 }

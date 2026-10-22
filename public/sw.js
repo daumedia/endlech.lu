@@ -4,7 +4,7 @@
  * Strategie:
  *  - App-Shell (Offline-Seite, Logo, Icons, Manifest) beim Install vorcachen.
  *  - Navigationen: network-first, bei Fehler -> Offline-Fallback.
- *  - Gebaute Assets unter /build/: stale-while-revalidate (Encore-Hashing-sicher).
+ *  - Ausgelieferte Assets unter /assets/: stale-while-revalidate (Prüfsumme im Dateinamen).
  *  - Bilder/Icons: cache-first mit Netzwerk-Fallback.
  *  - /api/-Requests und Nicht-GET: nie cachen (immer frische Daten).
  *
@@ -32,7 +32,11 @@
 // „Endlech" in beiden Wort-Bildmarken unter `public/presse-kit/` trägt jetzt das Blau
 // der Bildmarke (#01b6ed) statt #0891b2 bzw. #22d3ee. Ohne diese Zahl sähe ein
 // wiederkehrender Besucher die alte Vorschau neben dem neuen Paket.
-const CACHE_VERSION = 'endlech-v4';
+//
+// ⚠ Auf `v5` erhöht am 2026-10-22 (Umstellung Encore → AssetMapper): Die Dateien liegen
+// jetzt unter `/assets/` statt `/build/`. Den alten Stand fragt keine Seite mehr an; ohne
+// Versionswechsel bliebe er trotzdem im Cache jedes wiederkehrenden Besuchers liegen.
+const CACHE_VERSION = 'endlech-v5';
 const OFFLINE_URL = '/offline.html';
 
 // ⚠ BF-140: **Positivliste, keine Ausschlussliste.** Gecacht wird nur, was hier steht.
@@ -113,8 +117,9 @@ self.addEventListener('fetch', (event) => {
         return;
     }
 
-    // Gebaute Assets: stale-while-revalidate.
-    if (url.pathname.startsWith('/build/')) {
+    // Ausgelieferte Assets (Module, Stylesheets, Schriften): stale-while-revalidate.
+    // Jede Datei trägt ihre Prüfsumme im Namen, ein neuer Stand hat eine neue Adresse.
+    if (url.pathname.startsWith('/assets/')) {
         event.respondWith(
             caches.open(CACHE_VERSION).then((cache) => cache.match(request).then((cached) => {
                 const network = fetch(request)

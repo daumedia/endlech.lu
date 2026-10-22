@@ -2,11 +2,14 @@
 #
 # Endlech.lu – Produktions-Image für Coolify.
 #
-# Drei Stages, damit im Endbild weder Composer noch Node noch die Quellen der
-# Build-Werkzeuge liegen:
+# Drei Stages, damit im Endbild weder Composer noch die Build-Werkzeuge liegen:
 #   vendor  – PHP-Abhängigkeiten (--no-dev)
-#   assets  – Webpack Encore → public/build
+#   assets  – AssetMapper: Tailwind-CLI, SWC, Importmap → public/assets
 #   runtime – FrankenPHP + App
+#
+# Seit 2026-10-22 ohne Node: Tailwind und TypeScript übersetzen eigenständige
+# Programme (Tailwind-CLI, SWC), die die beiden Bundles beim ersten Aufruf
+# herunterladen. Vorher baute ein Node-Stage mit Webpack Encore.
 #
 # Kein Worker-Mode in dieser Fassung: FrankenPHP fährt im klassischen
 # Request-pro-Prozess-Modell. Das ist langsamer, verzeiht aber Zustandslecks,
@@ -20,7 +23,6 @@
 # gefixt in 8.4.27). Bei jeder PHP-Sicherheitsmeldung von Hand anheben.
 ARG PHP_VERSION=8.4.27
 ARG FRANKENPHP_VERSION=1
-ARG NODE_VERSION=26
 
 # ---------------------------------------------------------------------------
 # base – gemeinsame PHP-Grundlage für vendor- und runtime-Stage
@@ -65,9 +67,9 @@ ENV COMPOSER_ALLOW_SUPERUSER=1 \
 COPY composer.json composer.lock symfony.lock ./
 
 # --no-scripts ist hier Pflicht, nicht Geschmackssache: `auto-scripts` in
-# composer.json ruft `importmap:install`, aber symfony/asset-mapper ist in
-# diesem Projekt gar nicht installiert (importmap.php ist eine Altlast aus dem
-# Skeleton). Ausserdem gibt es zu diesem Zeitpunkt weder src/ noch config/.
+# composer.json bootet den Kernel (cache:clear, importmap:install), und zu
+# diesem Zeitpunkt gibt es weder src/ noch config/. Das Importmap holt der
+# assets-Stage ausdrücklich.
 # --no-autoloader, weil der Klassenmap erst nach dem Kopieren des Codes
 # entstehen kann.
 RUN --mount=type=cache,target=/tmp/composer-cache \
@@ -84,31 +86,40 @@ COPY . .
 RUN composer dump-autoload --no-dev --classmap-authoritative
 
 # ---------------------------------------------------------------------------
-# assets – Webpack Encore (kein AssetMapper in diesem Projekt)
+# assets – AssetMapper → public/assets
 # ---------------------------------------------------------------------------
-FROM node:${NODE_VERSION}-alpine AS assets
+# Baut auf `vendor` auf, weil alle drei Schritte Symfony-Befehle sind. Ins
+# Endbild wandert allein public/assets; die heruntergeladenen Programme
+# (Tailwind ~75 MB, SWC ~30 MB unter var/) und assets/vendor/ bleiben hier.
+FROM vendor AS assets
 
-WORKDIR /app
+# ⚠ APP_ENV=prod ist Pflicht: Ohne die Angabe gälte `dev` aus .env, und der
+# Kernel suchte Bundles, die `--no-dev` gar nicht installiert hat.
+ENV APP_ENV=prod \
+    APP_DEBUG=0
 
-COPY package.json package-lock.json ./
-
-# ⚠ Reihenfolge ist Pflicht: package.json führt
-# "@symfony/ux-turbo": "file:vendor/symfony/ux-turbo/assets" – eine
-# Datei-Abhängigkeit in den Composer-Bestand hinein. Ohne vendor/ scheitert
-# `npm ci` am toten Symlink. Derselbe Fallstrick steht in CLAUDE.md für den
-# `verify-assets`-Job der GitHub-Action.
-COPY --from=vendor /app/vendor/symfony/ux-turbo ./vendor/symfony/ux-turbo
-
-RUN --mount=type=cache,target=/root/.npm \
-    npm ci --no-audit --no-fund
-
-# assets/, templates/ und src/ müssen vollständig vorliegen: assets/styles/app.css
-# deklariert `@source "../../templates"`, `"../../assets"` und `"../../src"` –
-# Tailwind v4 findet die verwendeten Klassen sonst nicht und liefert ein
-# nahezu leeres Stylesheet aus, ohne dass der Build fehlschlägt.
-COPY . .
-
-RUN npm run build
+# Drei Schritte, Reihenfolge wesentlich:
+#   importmap:install  lädt die npm-Pakete aus importmap.php nach assets/vendor/
+#                      (von cdn.jsdelivr.net — der Build braucht Netz, der Betrieb nicht).
+#   tailwind:build     baut assets/styles/app.css nach var/tailwind/app.built.css.
+#                      ⚠ MUSS vor asset-map:compile laufen: Das Tailwind-Bundle hängt sich
+#                      nicht selbst in den Kompiliervorgang, ohne die Datei bricht er ab.
+#   asset-map:compile  ruft vorher selbst `typescript:build` (SWC, liest .swcrc) und schreibt
+#                      Dateien mit Prüfsumme, manifest.json und importmap.json nach public/assets.
+#
+# ⚠ assets/, templates/ und src/ müssen vollständig vorliegen (COPY . . im vendor-Stage):
+# app.css deklariert `@source "../../templates"`, `"../../assets"` und `"../../src"`. Fehlt
+# eines, liefert Tailwind ein nahezu leeres Stylesheet, ohne dass der Build fehlschlägt.
+#
+# Platzhalterwerte wie im runtime-Stage: Der Kernel bootet, fragt aber nichts ab.
+RUN set -eux; \
+    export APP_SECRET=build-only \
+        DATABASE_URL="mysql://build:build@127.0.0.1:3306/build?serverVersion=8.0&charset=utf8mb4"; \
+    php bin/console importmap:install --no-interaction; \
+    php bin/console tailwind:build --minify --no-interaction; \
+    php bin/console asset-map:compile --no-interaction; \
+    test -s public/assets/manifest.json; \
+    test -s public/assets/importmap.json
 
 # ---------------------------------------------------------------------------
 # runtime – das Bild, das in Coolify läuft
@@ -174,7 +185,7 @@ session.use_strict_mode = 1
 INI
 
 COPY --from=vendor  /app                   /app
-COPY --from=assets  /app/public/build      /app/public/build
+COPY --from=assets  /app/public/assets     /app/public/assets
 
 # var/ liegt nicht im Repo (gitignored) und muss deshalb hier entstehen.
 # www-data ist der Benutzer, unter dem FrankenPHP die PHP-Threads fährt.

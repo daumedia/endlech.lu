@@ -41,12 +41,12 @@ darunter setzt der Admin sein eigenes dunkles Band und die Seitenleiste.
 
 Bereiche ohne eigenes Layout: E-Mails (`templates/email/base.html.twig`, eigenständig)
 und `public/offline.html` (steht außerhalb von Twig, weil offline weder Server noch
-Encore-Assets erreichbar sind).
+die Dateien unter `/assets/` erreichbar sind).
 
 | Block | Zweck |
 |---|---|
 | `title` | Seitentitel, Vorgabe `Endlech.lu` |
-| `stylesheets` / `javascripts` | Encore-Einbindung, wird praktisch nie überschrieben |
+| `stylesheets` / `javascripts` | AssetMapper-Einbindung: drei `<link>` (Tom Select, GLightbox, app.css), `importmap('app')` mit Nonce, Polyfill-Lader. Wird nie überschrieben — wer es tut, verliert JS und CSS |
 | `body` | der gesamte Seiteninhalt |
 | `admin_title` / `admin_body` | nur in der Admin-Shell |
 

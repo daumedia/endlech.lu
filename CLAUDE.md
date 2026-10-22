@@ -146,9 +146,10 @@ Nur `CatalogueCompletenessTest` & Co. merken es.
   (siehe Deployment)
 - **ORM:** Doctrine 3.6 mit Migrations
 - **Templates:** Twig
-- **CSS:** Tailwind CSS v4.1 via PostCSS
-- **JS/TS:** TypeScript, Hotwire (Stimulus 3.x + Turbo 7/8)
-- **Build:** Webpack Encore 5.1
+- **CSS:** Tailwind CSS v4.1 über `symfonycasts/tailwind-bundle` (Standalone-CLI, kein Node)
+- **JS/TS:** TypeScript, Hotwire (Stimulus 3.x + Turbo 8)
+- **Build:** Symfony AssetMapper + Importmap; TypeScript über `sensiolabs/typescript-bundle` (SWC). **Seit
+  2026-10-22, vorher Webpack Encore** — Node baut nichts mehr, es prüft nur Typen und Stil (siehe „Frontend")
 - **Scheduling:** `symfony/scheduler` + `dragonmantank/cron-expression` (braucht Messenger-Worker)
 - **Testing:** PHPUnit 12.5
 - **Email:** Brevo via `symfony/brevo-mailer` (prod); Dev: Mailpit (SMTP 1025, UI 8025)
@@ -188,21 +189,21 @@ public/                  # Web root; images/platforms/ (SVG), uploads/restaurant
 ## Common Commands
 
 ```bash
-make init       # Full setup: Docker, composer, npm, DB, fixtures
+make init       # Full setup: Docker, composer, npm (Prüfwerkzeuge), Assets, DB, fixtures
 make start/stop/restart
 make db         # Doctrine migrations   |  make migration  # generate from entity diff
 make fixtures   # reload (destructive)  |  make db-reset   # drop, recreate, migrate, fixtures
-make cc         # clear cache           |  make assets     # prod asset build (npm run build)
+make cc         # clear cache           |  make assets     # tailwind:build + typescript:build (einmal)
 make fix        # PHP-CS-Fixer          |  make lint       # TS type-check + ESLint
 ```
 
-**NPM:** `npm run dev | watch | build | dev-server | typecheck (tsc --noEmit) | lint | lint:fix`
+**NPM:** nur noch `npm run typecheck (tsc --noEmit) | lint | lint:fix` — gebaut wird über die Konsole (siehe „Frontend").
 **Console:** `php bin/console <cmd>`; nützlich: `debug:router`, `make:entity`, `make:controller`, `make:migration`.
 
 ## Testing
 
 ```bash
-make test               # Test-DB vorbereiten + PHPUnit
+make test               # Test-DB + Assets vorbereiten + PHPUnit
 make test-db-setup      # nur Test-DB aufsetzen (einmalig)
 php bin/phpunit                          # alle (Test-DB muss stehen)
 php bin/phpunit --testsuite Unit|Integration|Functional
@@ -213,6 +214,11 @@ composer test                            # == make test (CI)
 
 Strict mode in `phpunit.dist.xml`: fails on deprecation, notices, warnings. Bootstrap lädt
 `.env.test`. Läuft real auf PHP 8.5; Zielversion 8.4+.
+
+⚠ **Funktionstests brauchen gebaute Assets.** Jede Seite rendert `importmap()`, und das liest die von SWC kompilierten
+Module unter `var/typescript/` — fehlen sie, scheitert jeder Test mit einer Seite. `BuiltAssetsTest` liest
+`var/tailwind/app.built.css`. Lokal halten die Watcher beides aktuell, `make test`/`composer test` bauen vorher, die
+CI ebenso.
 
 **Test-Isolation:** `dama/doctrine-test-bundle` (bundles.php nur `test`, Extension in
 `phpunit.dist.xml`) wickelt jeden Test in eine Transaktion mit Rollback. Fixtures **einmal
@@ -417,8 +423,8 @@ reiner Frontend/Static-File-Ansatz, keine Entity/Migration/Backend. **Locale-fre
   ist 10000×7664). 512 dient auch als maskable. **Eingecheckt.**
 - `public/sw.js` — Vanilla SW, Scope `/`, `CACHE_VERSION`-Konstante (bei Änderungen erhöhen). install: App-Shell
   vorcachen + `skipWaiting()`. activate: alte Caches löschen + `clients.claim()`. fetch (nur GET, eigene Origin,
-  **nie** `/api/`): Navigationen network-first → `offline.html`; `/build/`-Assets stale-while-revalidate; Bilder/
-  Icons cache-first.
+  **nie** `/api/`): Navigationen network-first → `offline.html`; `/assets/`-Dateien stale-while-revalidate; Bilder/
+  Icons cache-first. ⚠ Bis `endlech-v4` hieß der Pfad `/build/` (Encore); `v5` räumt den alten Stand weg.
 - `public/offline.html` — eigenständig (Inline-CSS), vom SW vorgecacht.
 - `templates/partials/_bottom_nav.html.twig` — mobile Bottom-Nav (`fixed bottom-0 md:hidden`, Safe-Area
   `pb-[env(safe-area-inset-bottom)]`, Tap-Targets ≥ 44 px), 4 Items, aktiver Zustand über Route-Vergleich. In
@@ -552,7 +558,7 @@ Gründerporträt, freigegebene Zitate, Meldungen, Kontakt. **Keine Entity/Migrat
 
 ⚠️ **Wer eine Datei in `public/presse-kit/` ersetzt, erhöht `CACHE_VERSION` in `public/sw.js`.** Der SW liefert
 Bilder cache-first; ein wiederkehrender Besucher sähe sonst die alte Logo-Vorschau. Das Paket selbst wird nie
-gecacht (kein `image`, nicht `/build/`) — genau deshalb laufen beide auseinander, und **kein Prüflauf sieht es**.
+gecacht (kein `image`, nicht `/assets/`) — genau deshalb laufen beide auseinander, und **kein Prüflauf sieht es**.
 
 ⚠️ **Das Paket ist eine committete Datei, erzeugt von `app:press:package`** (`make press-kit`), nicht zur Laufzeit
 gepackt. Liegt unter `public/presse-kit/`, direkt vom Webserver ausgeliefert (nichts zu deckeln). `PressPackageTest`
@@ -972,13 +978,50 @@ ein Kompatibilitätsbruch).
 - Migrations-Namespace `DoctrineMigrations` (nicht `App\Migrations`), Pfad `migrations/`.
 - `DATABASE_URL` in `.env.local`: `mysql://root:root@127.0.0.1:3306/endlech?serverVersion=8.0&charset=utf8mb4`.
 
-### Frontend
-- Entry `assets/app.ts` (Encore → `public/build/`). Stimulus-Controller in `assets/controllers/*.ts` (auto-discovered).
-- TypeScript `tsconfig.json` (`strict`, ES2020, `noEmit`); Encore `enableTypeScriptLoader()` `transpileOnly`. ESLint
-  Flat-Config (`eslint.config.mjs`). Tailwind v4 via PostCSS (`postcss.config.mjs`). CSRF = double-submit cookie
+### Frontend (AssetMapper, seit 2026-10-22)
+- Entry `assets/app.ts` (`importmap('app')` in `base.html.twig`). Stimulus-Controller in `assets/controllers/*.ts`
+  (StimulusBundle findet sie selbst; `/* stimulusFetch: 'lazy' */` lädt erst bei Bedarf). CSRF = double-submit cookie
   (`csrf_protection_controller.ts`).
-- **Encore:** Output `public/build/`; PostCSS, Stimulus bridge, ts-loader, code splitting, source maps (dev), Hashing
-  (prod). Config `webpack.config.js`.
+- **Drei Bauschritte, alle als Konsolenbefehl, kein Node:** `tailwind:build` (`assets/styles/app.css` →
+  `var/tailwind/app.built.css`, Tailwind-CLI v4.1.18 fest in `symfonycasts_tailwind.yaml`), `typescript:build` (SWC →
+  `var/typescript/`), `asset-map:compile` (nur Produktion, schreibt `public/assets/` mit Prüfsummen). Lokal reicht
+  AssetMapper die Dateien dynamisch durch; die Watcher aus `.symfony.local.yaml` startet `symfony server:start` mit.
+- npm-Pakete stehen in `importmap.php` und liegen nach `importmap:install` in `assets/vendor/` (gitignored, von
+  jsDelivr). `package.json` führt dieselben Versionen **nur als Typquelle** für `tsc`/ESLint.
+
+⚠ **Lokale Importe tragen die Endung `.ts`** (`import './stimulus_bootstrap.ts'`). AssetMapper löst Pfade ohne Endung
+nicht auf (Test/Dev: Ausnahme; Produktion: nur Warnung und ein fehlendes Modul). `allowImportingTsExtensions` in
+`tsconfig.json` erlaubt es `tsc`.
+⚠ **SWC liest `.swcrc`, nicht `tsconfig.json`.** Ohne `target: es2020` übersetzt es nach ES5 — jeder Stimulus-Controller
+bräche im Browser („Class constructor Controller cannot be invoked without 'new'"). `useDefineForClassFields: false`
+entspricht der bisherigen tsc-Semantik (Klassenfelder ohne Initialwert überdecken keine Stimulus-Getter). Ein
+`exclude` in `.swcrc` geht nicht: SWC 1.3.92 bricht bei ausgeschlossenen Dateien ab, statt sie zu überspringen
+(kompiliert `assets/vendor/` deshalb unnötig mit, ausgeliefert wird davon nichts).
+⚠ **Kein `import '….css'` in einem Modul.** AssetMapper schreibt dafür ein `data:application/javascript`-Modul ins
+Importmap; eine scharfe CSP ohne `script-src data:` ließe daran den ganzen Modulbaum scheitern. Die Stylesheets stehen
+als `<link>` in `base.html.twig` (Reihenfolge wie unter Encore: Tom Select, GLightbox, app.css).
+`AssetMapperTest::testKeinModulImportiertCss` hält es fest.
+⚠⚠ **Inhalte mit `data-turbo-track` müssen über Anfragen hinweg gleich bleiben.** Turbo vergleicht sie nach Quelltext
+und lädt bei Abweichung die ganze Seite neu; geleert wird dabei nur das `nonce`-Attribut. Der eingebaute
+Polyfill-Lader von `importmap()` trug die Nonce in seinem **Text** — gemessen 2026-10-22 im Browser: jeder Klick
+`turbo:reload` mit `tracked_element_mismatch`, Turbo Drive tot, alle Prüfläufe grün. Deshalb
+`importmap_polyfill: false` + eigener Lader `assets/es_module_shims_loader.js` (klassisches Skript, Polyfill-Adresse in
+`data-shim`). `AssetMapperTest::testVerfolgteKopfelementeSindUeberAnfragenHinwegGleich` bildet Turbos Vergleich nach.
+⚠ **`es-module-shims` muss in `importmap.php` stehen** — fehlt es, griffe der eingebaute Lader auf `ga.jspm.io` zurück
+(fremde Herkunft, sieht die Besucher-IP). Nur Browser ohne Importmap (Safari < 16.4) laden es.
+⚠ **`tom-select` lässt sich nur mit fest versionierten `@orchidjs/*` einziehen** („Unable to find the latest version
+for package @orchidjs/sifter", 2026-10-22).
+⚠ **Eine Version heben heißt zwei Stellen:** `importmap:require paket@x.y.z` **und** `package.json` (sonst prüft `tsc`
+gegen eine andere API, als der Browser lädt). Die Typen von `@symfony/stimulus-bundle` kommen aus `vendor/`
+(`paths` in `tsconfig.json`) — deshalb installiert auch der `frontend`-Job der CI Composer-Pakete.
+⚠ **macOS: Das Tailwind-Programm wird mit Signal 9 beendet** (Signatur der offiziellen v4.1.18-Datei gilt dort als
+ungültig, Prüfsumme stimmt). `make tailwind-binary` signiert neu; `make init`/`make assets` rufen es. Linux unberührt.
+⚠ **Veralteter Stand ohne Fehlermeldung:** Läuft kein Watcher, liefert der lokale Server die zuletzt gebauten Dateien
+aus `var/` (beim Bauen gemessen: `app.ts` geändert, Browser bekam die alte Fassung). Ebenso verdeckt ein lokal
+erzeugtes `public/assets/` die dynamische Auslieferung — nach einem Probelauf von `asset-map:compile` löschen.
+⚠ **Ein veralteter Prod-Cache übersetzt TypeScript nicht.** Ein `asset-map:compile --env=prod` gegen einen
+`var/cache/prod` von vor der Bundle-Installation schrieb die Quellen roh als `.ts` nach `public/assets/` (im Image
+ausgeschlossen, dort ist der Cache frisch).
 
 ## Code Style
 PHP 4-space (PSR-4, `make fix`), YAML 2-space, TS/JS/CSS 4-space, LF, UTF-8, Trailing-Whitespace getrimmt (außer
@@ -1257,7 +1300,7 @@ abgelöst. Ältere Protokolle (`deploy.sh`, `verify-assets`, `~/public_html`) be
 
 | entfallen | Ersatz |
 |---|---|
-| `verify-assets` (public/build vs. Quellen) | `assets`-Stage baut sie im Image; `.dockerignore` schließt den committeten Stand aus |
+| `verify-assets` (public/build vs. Quellen) | `assets`-Stage baut sie im Image (seit 2026-10-22 AssetMapper, `public/build` entfallen) |
 | `deploy.sh` führte Migrationen aus | **Post-Deployment-Command in Coolify** — sonst läuft keine Migration |
 | Wartungsseite gegen das ENDLECH-5-Fenster | Entfällt (Container-Tausch hat kein Fenster) |
 | Cron für `messenger:consume` | Die Worker-Ressource |
@@ -1317,10 +1360,11 @@ Fehler ab, **ohne zu loggen**.
 keine Mailer-`TransportExceptionInterface`). Sie täuschen eine Absicherung vor; Aufräumen ist ein eigener Auftrag.
 Die Tabelle ist da: `Version20260113160019` legt `messenger_messages` an, Schema deckt sich mit
 `symfony/doctrine-messenger` (`auto_setup=0` unkritisch).
-**Tägliche Arbeit:** Änderung unter `assets/` → `npm run build` + `public/build` mitcommitten (für Production egal,
-das Image baut selbst; für Betrieb ohne Docker nötig). `.nvmrc` ist die gemeinsame Node-Version für lokal + `ci.yml`;
-das Dockerfile führt sie als `ARG NODE_VERSION` (bei Wechsel beide Stellen). Neue Migration → Post-Deployment-Command
-in Coolify prüfen. PHPUnit ist **kein** Deploy-Gate.
+**Tägliche Arbeit:** Änderung unter `assets/` oder an Klassen in `templates/`/`src/` → nichts committen außer den
+Quellen; das Image baut CSS und JS bei jedem Deploy frisch (`public/build` gibt es seit 2026-10-22 nicht mehr). Lokal
+halten die Watcher (`symfony server:start`) den Stand aktuell. `.nvmrc` ist die Node-Version für lokal + `ci.yml`
+(nur Typprüfung und Lint; das Dockerfile braucht kein Node mehr). Neue Migration → Post-Deployment-Command in Coolify
+prüfen. PHPUnit ist **kein** Deploy-Gate.
 
 ## Zeitpläne statt System-Cron (`src/Scheduler/`)
 
@@ -1389,23 +1433,27 @@ Monate Ausfall = drei Monatsläufe, drei Tage = ein Brevo-Lauf, Gegenprobe ohne 
 ## Container-Image (`Dockerfile`, Coolify)
 
 Seit 2026-09-02 **der** Auslieferungsweg: Coolify baut zwei Ressourcen, Anwendung (`--target runtime`) und Worker
-(`--target worker`). Basis `dunglas/frankenphp:1-php8.4`, drei Stufen: `vendor` (Composer), `assets` (Encore),
-`runtime`. **Kein FrankenPHP-Worker-Modus** (Request-pro-Prozess ist langsamer, verzeiht aber Zustandslecks).
+(`--target worker`). Basis `dunglas/frankenphp:1-php8.4`, drei Stufen: `vendor` (Composer), `assets` (AssetMapper,
+baut auf `vendor` auf), `runtime`. **Kein FrankenPHP-Worker-Modus** (Request-pro-Prozess ist langsamer, verzeiht aber
+Zustandslecks).
 
 ⚠️ **PHP 8.4, nicht 8.3** (`composer.json` verlangt `>=8.4`).
 ⚠️ **`zip` gehört in den `vendor`-Stage, nicht die Laufzeit** (ohne Erweiterung bricht `composer install` mit „The
 zip extension and unzip/7z commands are both missing"; die App braucht sie nie, `ext-zip` ist `require-dev`, nur
 `app:press:package`).
-⚠️ **`vendor/symfony/ux-turbo` muss VOR `npm ci` im Node-Stage liegen** — `"@symfony/ux-turbo":
-"file:vendor/symfony/ux-turbo/assets"` in `package.json` ist eine Datei-Abhängigkeit in den Composer-Bestand (sonst
-toter Symlink).
-⚠️ **`assets/`, `templates/` und `src/` müssen im Node-Stage vollständig vorliegen** (`app.css` deklariert sie als
-`@source`-Positivliste). Fehlt eines, liefert Tailwind ein fast leeres Stylesheet **ohne** Build-Fehler; Nachweis ist
-der Hash (byte-identisch zum committeten Stand, blockt `verify-assets` nicht).
-⚠️ **`public/build` steht in der `.dockerignore`** (der Node-Stage baut es neu, `COPY` löscht nichts — läge der Stand
-im Kontext, blieben alte Hash-Dateien für immer im Bild).
-⚠️ **`--no-scripts` beim `composer install` ist Pflicht** (`auto-scripts` rufen `importmap:install`, aber
-`symfony/asset-mapper` ist nicht installiert — `importmap.php` ist Skeleton-Altlast, das Projekt fährt Encore).
+⚠️ **Der `assets`-Stage: `importmap:install` → `tailwind:build --minify` → `asset-map:compile`, in dieser Reihenfolge.**
+Das Tailwind-Bundle hängt sich nicht selbst in den Kompiliervorgang (ohne gebaute Datei bricht er ab);
+`typescript:build` dagegen ruft `asset-map:compile` selbst. `APP_ENV=prod` ist Pflicht (sonst `dev` aus `.env`, und
+der Kernel sucht Bundles, die `--no-dev` nicht installiert hat). Der Build braucht Netz (jsDelivr, GitHub-Releases
+für Tailwind-CLI und SWC), der Betrieb nicht. Ins Endbild wandert nur `public/assets` — die beiden Programme (~105 MB)
+bleiben im Stage.
+⚠️ **`assets/`, `templates/` und `src/` müssen im `assets`-Stage vollständig vorliegen** (`app.css` deklariert sie als
+`@source`-Positivliste). Fehlt eines, liefert Tailwind ein fast leeres Stylesheet **ohne** Build-Fehler.
+⚠️ **`public/assets` und `assets/vendor` stehen in der `.dockerignore`** (der Stage baut beides neu, `COPY` löscht
+nichts — ein lokaler Stand im Kontext ließe alte Prüfsummen-Dateien bzw. andere Paketversionen im Bild).
+⚠️ **`.swcrc` darf NICHT in die `.dockerignore`** (ohne sie ES5, siehe „Frontend").
+⚠️ **`--no-scripts` beim `composer install` ist Pflicht** (`auto-scripts` booten den Kernel — `cache:clear`,
+`importmap:install` —, und zu diesem Zeitpunkt gibt es weder `src/` noch `config/`).
 `assets:install public` + `cache:warmup` laufen als eigene Schritte (ersteres, weil Swagger-UI aus
 `public/bundles/` lädt).
 ⚠️ **Der Warmup braucht Platzhalter für `APP_SECRET` und `DATABASE_URL`** (letztere steht **nicht** in `.env`, nur
@@ -1466,7 +1514,7 @@ in Coolify **ohne Domain/Port**.
 Am 2026-09-11 gemessen: Produktion lieferte **keine einzige** Sicherheits-Kopfzeile (BF-123). Das Basisimage bringt
 sie nicht mit, eine eigene Caddy-Konfiguration gibt es nicht.
 
-⚠️ **In PHP gesetzt, nicht im Webserver.** Der naheliegende Ort (Caddyfile) erreichte auch `/build/`, aber: die
+⚠️ **In PHP gesetzt, nicht im Webserver.** Der naheliegende Ort (Caddyfile) erreichte auch `/assets/`, aber: die
 Standard-Caddyfile müsste ersetzt werden und ein Fehler nimmt die Seite offline (BF-116 genau so passiert);
 `CADDY_SERVER_EXTRA_DIRECTIVES` wäre eine weitere Coolify-Variable (siehe `TRUSTED_PROXIES`); und **ein Prüflauf kann
 keine Caddyfile messen**, diesen Subscriber schon. Praktisch trägt: jeder Besucher lädt zuerst ein Dokument, HSTS
@@ -1477,6 +1525,13 @@ den **gemessenen** Bestand ab: keine Inline-`<script>`, aber Inline-`style=` in 
 nur für Stile. **Wer sie scharf schaltet**, tauscht den Kopfzeilennamen — nachdem er in der Konsole über mehrere
 Seiten geprüft hat, dass kein Verstoß mehr gemeldet wird. `SecurityHeadersSubscriberTest` hält fest, dass es nicht
 versehentlich passiert.
+⚠️ **Seit AssetMapper (2026-10-22) gibt es zwei Inline-Skripte je Seite** (Importmap, `import 'app'`). Sie tragen eine
+Nonce je Anfrage (`App\Security\CspNonce`, Twig `csp_nonce()`), die der Subscriber nur dann in `script-src` schreibt,
+wenn das Template sie abgerufen hat. **Kein `data:` und kein `'unsafe-inline'` in `script-src`** (deshalb CSS als
+`<link>`, siehe „Frontend"). Vor dem Scharfschalten offen: Browser ohne Importmap brauchen für `es-module-shims`
+`blob:`; und **`onsubmit=`/`onclick=`/`onload=` stehen in zehn Templates** (Bestätigungsdialoge, `about/index`) — sie
+verstoßen gegen `script-src-attr` schon seit der Einführung der Richtlinie (im Browser gemessen 2026-10-22), scharf
+geschaltet liefen diese Formulare **ohne Rückfrage** durch (Löschen ohne Bestätigung).
 ⚠️ **Kein `preload`, kein `includeSubDomains` beim HSTS** (Zusage über Namen, die es nicht gibt; Preload-Liste ist
 kaum zu verlassen). HSTS **nur über HTTPS, nie im Debug** (lokal zwingt es den Browser dauerhaft auf
 `https://localhost`, bis man die Herkunft aus `chrome://net-internals/#hsts` löscht).
@@ -1553,12 +1608,16 @@ Stacktraces, potenziell Passwörter aus `AuthController` — passt nicht zu `sen
 | File | Purpose |
 |---|---|
 | `composer.json` / `package.json` | PHP- / NPM-Abhängigkeiten und Skripte |
-| `webpack.config.js` / `postcss.config.mjs` | Encore-Build / PostCSS + Tailwind |
+| `importmap.php` | AssetMapper: npm-Pakete mit Version, Entry `app` — Versionen auch in `package.json` (Typen) |
+| `.swcrc` | SWC-Ziel `es2020` für TypeScript — ohne sie ES5, Stimulus bricht |
+| `.symfony.local.yaml` | Tailwind- und TypeScript-Watcher für `symfony server:start` |
+| `assets/es_module_shims_loader.js` | Polyfill-Lader ohne Nonce im Text (sonst lädt Turbo jede Seite neu) |
+| `src/Security/CspNonce.php` | Nonce je Anfrage für die Inline-Skripte von `importmap()` |
 | `phpunit.dist.xml` | PHPUnit-Konfiguration |
 | `compose.yaml` | Docker (MySQL 8.0, Mailpit) |
 | `Makefile` | Development-Befehle |
-| `tsconfig.json` / `eslint.config.mjs` | TypeScript / ESLint |
-| `.nvmrc` | Node-Version für lokal + beide Workflows |
+| `tsconfig.json` / `eslint.config.mjs` | Typprüfung (`tsc --noEmit`) / ESLint — beide bauen nichts |
+| `.nvmrc` | Node-Version für lokal + `ci.yml` (nur Prüfwerkzeuge) |
 | `Dockerfile` | Produktions-Image, Stages `runtime` und `worker` |
 | `bin/sicherung-pruefen.sh` | BE-03: Sicherung in Wegwerf-Container einspielen und urteilen |
 | `src/Command/WorkerPulseCommand.php` | BE-01: Puls an Uptime Kuma; sein Ausbleiben ist die Meldung |
@@ -1566,6 +1625,5 @@ Stacktraces, potenziell Passwörter aus `AuthController` — passt nicht zu `sen
 | `public/robots.txt` | Feature 10: statisch, ohne Platzhalter; Ausschlusswege nie sperren |
 | `src/Usage/UsageEventCatalogue.php` | Feature 11: einzige Ereignisliste; was fehlt, erreicht Umami nicht |
 | `public/zaehler.js` | Feature 11: Umami-Tracker in fester Version — bei Umami-Update mit ersetzen |
-| `importmap.php` | Symfony AssetMapper (Skeleton-Altlast) |
 | `.editorconfig` | Editor-Formatierungsregeln |
 | `docs/` | Datenmodell-, Design-System- und PRD-Referenz |

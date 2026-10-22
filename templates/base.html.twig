@@ -60,13 +60,35 @@
         <link rel="alternate" hreflang="{{ _hreflang }}" href="{{ _href }}">
     {% endfor %}
 
-    {# Hier laden wir CSS/JS via Webpack Encore #}
+    {# CSS und JS über AssetMapper.
+
+       `asset()` liefert die Datei unter ihrem Namen mit Prüfsumme (/assets/styles/app-….css);
+       `styles/app.css` ist dabei die mit `tailwind:build` gebaute Fassung, nicht die Eingabe.
+       Reihenfolge wie bisher unter Encore: Fremd-CSS zuerst, damit app.css es übersteuern kann.
+
+       ⚠ **Stylesheets als <link>, nicht als `import` in app.ts.** Für jede aus einem Modul
+       importierte CSS-Datei schreibt AssetMapper ein `data:`-Modul ins Importmap — eine
+       scharfe CSP ohne `script-src data:` nähme der Seite damit das gesamte JavaScript.
+
+       ⚠ `importmap('app')` schreibt das Importmap und `import 'app'` als Inline-Skripte. Sie tragen
+       die Nonce der Anfrage, die `SecurityHeadersSubscriber` in `script-src` aufnimmt. Module laufen
+       wie `defer` nach dem Parsen, in Dokumentreihenfolge mit dem Zählskript unten.
+
+       ⚠ Der Polyfill-Lader steht als eigene Datei daneben, nicht als Inline-Skript von `importmap()`:
+       Dessen Text enthielte die Nonce, und Turbo läse jede Navigation als neuen Deploy (siehe
+       assets/es_module_shims_loader.js). Inhalte im Kopf mit `data-turbo-track` müssen über
+       Anfragen hinweg gleich bleiben — die Nonce darf nur als Attribut stehen. #}
     {% block stylesheets %}
-        {{ encore_entry_link_tags('app') }}
+        <link rel="stylesheet" href="{{ asset('vendor/tom-select/dist/css/tom-select.css') }}" data-turbo-track="reload">
+        <link rel="stylesheet" href="{{ asset('vendor/glightbox/dist/css/glightbox.css') }}" data-turbo-track="reload">
+        <link rel="stylesheet" href="{{ asset('styles/app.css') }}" data-turbo-track="reload">
     {% endblock %}
 
     {% block javascripts %}
-        {{ encore_entry_script_tags('app') }}
+        {{ importmap('app', {nonce: csp_nonce()}) }}
+        <script async src="{{ asset('es_module_shims_loader.js') }}"
+                data-shim="{{ asset('vendor/es-module-shims/es-module-shims.index.js') }}"
+                data-turbo-track="reload"></script>
     {% endblock %}
 
     {# Nutzungsmessung (Feature 11) — Umami, selbst betrieben; Skript und Zählweg auf endlech.lu.
@@ -75,7 +97,7 @@
        Regel, wo es fehlt (Verwaltung, Profil, Token-Seiten, ohne Website-Kennung), steht in
        App\Usage\UsageTrackingPolicy.
 
-       ⚠ `defer` und NACH den Encore-Tags: Die Vor-Versand-Prüfung liegt im App-Bundle.
+       ⚠ `defer` und NACH `importmap()`: Die Vor-Versand-Prüfung liegt im App-Modul.
        ⚠ Die Attribute sind Höflichkeit gegenüber ehrlichen Browsern, keine Grenze — die Grenze ist
        die Weiterleitung /api/send. Wer hier eines entfernt, ändert nichts an dem, was Umami erreicht,
        wohl aber an dem, was den Browser verlässt (AK-03, AK-09, AK-22). #}

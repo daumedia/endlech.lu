@@ -18,23 +18,24 @@ use PHPUnit\Framework\TestCase;
  *
  * ⚠ **Tailwind v4 scannt in diesem Projekt `templates/`**
  * (`assets/styles/app.css`: `@source "../../templates"`). Ein Twig-Template mit
- * einer neuen Klasse **ist** eine Asset-Änderung. Die Projektregel in
- * `CLAUDE.md` nennt bislang nur `assets/`.
+ * einer neuen Klasse **ist** eine Asset-Änderung.
  *
- * Dieser Prüflauf schließt die Lücke für die Klassen, die dieses Feature
- * eingeführt hat. Er ersetzt `verify-assets` nicht — er meldet den Fall nur
- * früher, nämlich im normalen Lauf statt erst im Deploy.
+ * Seit der Umstellung auf AssetMapper (2026-10-22) baut das Container-Image das
+ * CSS bei jedem Deploy frisch aus den Templates; ein vergessener Bau erreicht die
+ * Produktion nicht mehr. Der Prüflauf bleibt, weil er die andere Hälfte belegt:
+ * dass die `@source`-Liste die Templates überhaupt erfasst. Gelesen wird die
+ * Ausgabe von `tailwind:build` — lokal hält `--watch` sie aktuell, die CI baut
+ * sie vor PHPUnit.
  */
 final class BuiltAssetsTest extends TestCase
 {
     private static function gebautesCss(): string
     {
-        $wurzel = \dirname(__DIR__, 3);
-        $dateien = glob($wurzel . '/public/build/*.css') ?: [];
+        $datei = \dirname(__DIR__, 3) . '/var/tailwind/app.built.css';
 
-        self::assertNotEmpty($dateien, 'Kein gebautes CSS unter public/build — `npm run build` fehlt.');
+        self::assertFileExists($datei, 'Kein gebautes CSS unter var/tailwind — `php bin/console tailwind:build` fehlt.');
 
-        return implode("\n", array_map(static fn (string $f): string => (string) file_get_contents($f), $dateien));
+        return (string) file_get_contents($datei);
     }
 
     /**
@@ -57,7 +58,7 @@ final class BuiltAssetsTest extends TestCase
             self::gebautesCss(),
             sprintf(
                 "Die Regel `%s` fehlt im gebauten CSS.\n"
-                . "Ursache ist fast immer: ein Template wurde geändert, aber `npm run build` lief nicht.\n"
+                . "Ursache ist fast immer: ein Template wurde geändert, aber `tailwind:build` lief nicht.\n"
                 . "⚠ Tailwind scannt `templates/` — ein Twig-Template IST eine Asset-Änderung (BF-105).",
                 $selektor,
             ),

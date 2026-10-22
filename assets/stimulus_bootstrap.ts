@@ -1,13 +1,10 @@
-import { startStimulusApp } from '@symfony/stimulus-bridge';
+import { startStimulusApp } from '@symfony/stimulus-bundle';
 import { AuthenticationController, RegistrationController } from '@web-auth/webauthn-stimulus';
 
-// Registers Stimulus controllers from controllers.json and in the controllers/ directory
-export const app = startStimulusApp(require.context(
-    '@symfony/stimulus-bridge/lazy-controller-loader!./controllers',
-    true,
-    /\.[jt]sx?$/
-));
-// register any custom, 3rd party controllers here
+// Registriert die Controller aus controllers.json und aus assets/controllers/.
+// Die Liste erzeugt das StimulusBundle beim Ausliefern; Controller mit
+// `/* stimulusFetch: 'lazy' */` lädt es erst, wenn ihr data-controller auftaucht.
+const app = startStimulusApp();
 
 // Passkeys: Die beiden Controller des WebAuthn-Bundles bringen den
 // WebAuthn-Ablauf samt base64url-Kodierung und Fehlerklassen mit.

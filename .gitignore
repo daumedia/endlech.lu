@@ -13,11 +13,11 @@
 /.phpunit.cache/
 ###< phpunit/phpunit ###
 
-###> symfony/webpack-encore-bundle ###
+###> node (nur Typprüfung und Lint, kein Build) ###
 /node_modules/
 npm-debug.log
 yarn-error.log
-###< symfony/webpack-encore-bundle ###
+###< node ###
 
 ###> symfony/asset-mapper ###
 /public/assets/

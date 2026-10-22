@@ -1,22 +1,21 @@
-import './stimulus_bootstrap';
-// Nutzungsmessung (Feature 11): Vor-Versand-Prüfung, die das Zählskript über data-before-send ruft.
-import './usage/before_send';
 /*
- * Welcome to your app's main JavaScript file!
+ * Einstieg der Anwendung — `importmap('app')` in base.html.twig lädt dieses Modul.
  *
- * We recommend including the built version of this JavaScript file
- * (and its CSS file) in your base layout (base.html.twig).
+ * ⚠ Lokale Importe tragen die Endung `.ts`. AssetMapper löst Pfade ohne Endung
+ * nicht auf (im Test- und Entwicklungsbetrieb ein Fehler, in Produktion nur eine
+ * Warnung und ein fehlendes Modul); die Endung zeigt auf die Quelldatei, die das
+ * TypeScript-Bundle beim Ausliefern durch ihre kompilierte Fassung ersetzt.
  */
+import './stimulus_bootstrap.ts';
+// Nutzungsmessung (Feature 11): Vor-Versand-Prüfung, die das Zählskript über data-before-send ruft.
+import './usage/before_send.ts';
 
-// any CSS you import will output into a single css file (app.css in this case)
-import './styles/app.css';
-
-// Tom Select CSS für Autocomplete-Selects
-import 'tom-select/dist/css/tom-select.css';
+// ⚠ Kein CSS-Import hier. Die Stylesheets (Tailwind, Tom Select, GLightbox) stehen als <link>
+// in base.html.twig — ein `import '….css'` legte ein `data:`-Modul ins Importmap, an dem eine
+// scharfe CSP den ganzen Modulbaum scheitern ließe (siehe SecurityHeadersSubscriber).
 
 // GLightbox – Lightbox für Restaurant-Fotos
 import GLightbox from 'glightbox';
-import 'glightbox/dist/css/glightbox.css';
 
 document.addEventListener('DOMContentLoaded', () => {
     GLightbox({ selector: '.glightbox' });
