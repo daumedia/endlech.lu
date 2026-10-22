@@ -1496,16 +1496,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     },
  *     default_transport?: scalar|null|Param, // Default: "default"
  * }
- * @psalm-type WebpackEncoreConfig = array{
- *     output_path: scalar|null|Param, // The path where Encore is building the assets - i.e. Encore.setOutputPath()
- *     crossorigin?: false|"anonymous"|"use-credentials"|Param, // crossorigin value when Encore.enableIntegrityHashes() is used, can be false (default), anonymous or use-credentials // Default: false
- *     preload?: bool|Param, // preload all rendered script and link tags automatically via the http2 Link header. // Default: false
- *     cache?: bool|Param, // Enable caching of the entry point file(s) // Default: false
- *     strict_mode?: bool|Param, // Throw an exception if the entrypoints.json file is missing or an entry is missing from the data // Default: true
- *     builds?: array<string, scalar|null|Param>,
- *     script_attributes?: array<string, scalar|null|Param>,
- *     link_attributes?: array<string, scalar|null|Param>,
- * }
  * @psalm-type SymfonycastsTailwindConfig = array{
  *     input_css?: list<scalar|null|Param>,
  *     config_file?: scalar|null|Param, // Path to the tailwind.config.js file // Default: "%kernel.project_dir%/tailwind.config.js"
@@ -1892,6 +1882,13 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         },
  *     },
  * }
+ * @psalm-type SensiolabsTypescriptConfig = array{
+ *     source_dir?: list<scalar|null|Param>,
+ *     binary_download_dir?: scalar|null|Param, // The directory where the SWC binary will be downloaded // Default: "%kernel.project_dir%/var"
+ *     swc_binary?: scalar|null|Param, // The SWC binary to use // Default: null
+ *     swc_config_file?: scalar|null|Param, // Path to .swcrc configuration file to use // Default: "%kernel.project_dir%/.swcrc"
+ *     swc_version?: scalar|null|Param, // The SWC version to use // Default: "v1.3.92"
+ * }
  * @psalm-type ConfigType = array{
  *     imports?: ImportsConfig,
  *     parameters?: ParametersConfig,
@@ -1905,12 +1902,12 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     monolog?: MonologConfig,
  *     stimulus?: StimulusConfig,
  *     turbo?: TurboConfig,
- *     webpack_encore?: WebpackEncoreConfig,
  *     symfonycasts_tailwind?: SymfonycastsTailwindConfig,
  *     lexik_jwt_authentication?: LexikJwtAuthenticationConfig,
  *     nelmio_cors?: NelmioCorsConfig,
  *     nelmio_api_doc?: NelmioApiDocConfig,
  *     webauthn?: WebauthnConfig,
+ *     sensiolabs_typescript?: SensiolabsTypescriptConfig,
  *     "when@dev"?: array{
  *         imports?: ImportsConfig,
  *         parameters?: ParametersConfig,
@@ -1927,12 +1924,12 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         maker?: MakerConfig,
  *         stimulus?: StimulusConfig,
  *         turbo?: TurboConfig,
- *         webpack_encore?: WebpackEncoreConfig,
  *         symfonycasts_tailwind?: SymfonycastsTailwindConfig,
  *         lexik_jwt_authentication?: LexikJwtAuthenticationConfig,
  *         nelmio_cors?: NelmioCorsConfig,
  *         nelmio_api_doc?: NelmioApiDocConfig,
  *         webauthn?: WebauthnConfig,
+ *         sensiolabs_typescript?: SensiolabsTypescriptConfig,
  *     },
  *     "when@prod"?: array{
  *         imports?: ImportsConfig,
@@ -1947,13 +1944,13 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         monolog?: MonologConfig,
  *         stimulus?: StimulusConfig,
  *         turbo?: TurboConfig,
- *         webpack_encore?: WebpackEncoreConfig,
  *         symfonycasts_tailwind?: SymfonycastsTailwindConfig,
  *         lexik_jwt_authentication?: LexikJwtAuthenticationConfig,
  *         nelmio_cors?: NelmioCorsConfig,
  *         nelmio_api_doc?: NelmioApiDocConfig,
  *         sentry?: SentryConfig,
  *         webauthn?: WebauthnConfig,
+ *         sensiolabs_typescript?: SensiolabsTypescriptConfig,
  *     },
  *     "when@test"?: array{
  *         imports?: ImportsConfig,
@@ -1969,13 +1966,13 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         monolog?: MonologConfig,
  *         stimulus?: StimulusConfig,
  *         turbo?: TurboConfig,
- *         webpack_encore?: WebpackEncoreConfig,
  *         symfonycasts_tailwind?: SymfonycastsTailwindConfig,
  *         lexik_jwt_authentication?: LexikJwtAuthenticationConfig,
  *         nelmio_cors?: NelmioCorsConfig,
  *         nelmio_api_doc?: NelmioApiDocConfig,
  *         dama_doctrine_test?: DamaDoctrineTestConfig,
  *         webauthn?: WebauthnConfig,
+ *         sensiolabs_typescript?: SensiolabsTypescriptConfig,
  *     },
  *     ...<string, ExtensionType|array{ // extra keys must follow the when@%env% pattern or match an extension alias
  *         imports?: ImportsConfig,

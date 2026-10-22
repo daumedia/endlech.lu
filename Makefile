@@ -1,4 +1,4 @@
-.PHONY: help init start stop restart db migration fixtures db-reset cc assets fix lint test test-db-setup press-kit sicherung-pruefen
+.PHONY: help init start stop restart db migration fixtures db-reset cc assets tailwind-binary fix lint test test-db-setup press-kit sicherung-pruefen
 
 # Standard-Hilfe: Zeigt alle Befehle an, wenn du nur "make" tippst
 help: ## Zeigt diese Hilfe an
@@ -13,8 +13,10 @@ init: ## Projekt initialisieren (Docker, Dependencies, DB & Fixtures)
 	@sleep 10
 	@echo "📦 Installiere PHP Dependencies..."
 	composer install
-	@echo "📦 Installiere JS Dependencies..."
+	@echo "📦 Installiere JS-Prüfwerkzeuge (tsc, ESLint)..."
 	npm install
+	@echo "🎨 Baue CSS und TypeScript..."
+	$(MAKE) --no-print-directory assets
 	@echo "🗄  Richte Datenbank ein..."
 	php bin/console doctrine:database:create --if-not-exists
 	php bin/console doctrine:migrations:migrate --no-interaction
@@ -22,10 +24,9 @@ init: ## Projekt initialisieren (Docker, Dependencies, DB & Fixtures)
 	php bin/console doctrine:fixtures:load --no-interaction
 	@echo "✅ Setup fertig! Starte den Server mit 'make start'"
 
-start: ## Startet Docker, Symfony Server und Asset-Watcher
+start: ## Startet Docker und den Symfony Server (samt Tailwind- und TypeScript-Watcher aus .symfony.local.yaml)
 	docker compose up -d
 	symfony server:start -d
-	npm run watch
 
 stop: ## Stoppt alles (Symfony Server & Docker)
 	symfony server:stop
@@ -57,7 +58,7 @@ test-db-setup: ## Test-Datenbank anlegen, migrieren & Fixtures laden
 	php bin/console doctrine:migrations:migrate --env=test --no-interaction
 	php bin/console doctrine:fixtures:load --env=test --no-interaction
 
-test: test-db-setup ## Bereitet die Test-DB vor und führt PHPUnit aus
+test: test-db-setup assets ## Bereitet Test-DB und Assets vor und führt PHPUnit aus
 	php bin/phpunit
 
 # --- 🧹 Tools & Assets ---
@@ -74,12 +75,24 @@ ifndef DATEI
 endif
 	bin/sicherung-pruefen.sh --datei "$(DATEI)"
 
-assets: ## Baut die Assets für Production (Minifiziert)
-	npm run build
+assets: tailwind-binary ## Baut CSS (var/tailwind) und TypeScript (var/typescript) einmal – Produktion baut das Image selbst
+	php bin/console tailwind:build
+	php bin/console typescript:build
+
+# ⚠ macOS: Das offizielle Tailwind-Programm (v4.1.18) trägt eine Signatur, die macOS als
+# ungültig verwirft — es wird beim Start mit Signal 9 beendet („The process has been signaled
+# with signal 9"), ohne weitere Meldung. Die Datei ist echt (Prüfsumme gegen sha256sums.txt
+# des Releases verglichen, 2026-10-22); neu signiert läuft sie. Unter Linux (CI, Image) nichts zu tun.
+# Der erste `tailwind:build` lädt die Datei herunter und scheitert, deshalb `|| true`.
+tailwind-binary: ## macOS: Tailwind-Programm laden und neu signieren (sonst Abbruch mit Signal 9)
+ifeq ($(shell uname),Darwin)
+	@ls var/tailwind/*/tailwindcss-macos-* >/dev/null 2>&1 || php bin/console tailwind:build >/dev/null 2>&1 || true
+	@for f in var/tailwind/*/tailwindcss-macos-*; do codesign --verify "$$f" 2>/dev/null || codesign --force --sign - "$$f"; done
+endif
 
 fix: ## Repariert Code-Styles (CS-Fixer)
 	vendor/bin/php-cs-fixer fix
 
 lint: ## TypeScript & ESLint prüfen
-	npx tsc --noEmit
+	npm run typecheck
 	npm run lint

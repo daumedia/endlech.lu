@@ -43,28 +43,26 @@ Verwandte Dokumente: [Datenmodell](data-model.md) · [PRD](prd.md)
 
 ## Grundlagen
 
-**Tailwind CSS v4.1** über PostCSS. Die vollständige Konfiguration:
-
-```js
-// postcss.config.mjs
-export default { plugins: { "@tailwindcss/postcss": {} } };
-```
+**Tailwind CSS v4.1** über die Standalone-CLI (`symfonycasts/tailwind-bundle`, Version fest
+in `config/packages/symfonycasts_tailwind.yaml`). Keine PostCSS-Konfiguration, kein Node.
 
 ```css
 /* assets/styles/app.css */
-@import "tailwindcss";
-@source not "../../public";
+@import "tailwindcss" source(none);
+@source "../../templates";
+@source "../../assets";
+@source "../../src";
 ```
 
-Gebaut wird mit **Webpack Encore** (nicht AssetMapper, trotz vorhandener
-`importmap.php`): Entry `assets/app.ts` → `public/build/`, TypeScript über
-ts-loader mit `transpileOnly`, Typprüfung separat per `npm run typecheck`.
+Ausgeliefert wird über **Symfony AssetMapper** (seit 2026-10-22, vorher Webpack Encore):
+`tailwind:build` baut `app.css` nach `var/tailwind/app.built.css`, AssetMapper liefert es
+unter `/assets/styles/app-<Prüfsumme>.css` aus. TypeScript übersetzt SWC
+(`sensiolabs/typescript-bundle`), Typprüfung separat per `npm run typecheck`.
 
-> **Wer Templates ändert, muss `npm run build` ausführen und `public/build`
-> mitcommitten.** Der CD-Workflow baut die Assets neu und vergleicht sie mit dem
-> committeten Stand; eine Abweichung blockt den Deploy. Ein laufender
-> `npm run watch` überschreibt `public/build` mit einem Dev-Build — vor dem
-> Commit also immer noch einmal produktiv bauen.
+> **Wer Templates ändert, muss nichts bauen und nichts committen außer dem Template.** Das
+> Container-Image baut das CSS bei jedem Deploy frisch. Lokal hält der Watcher aus
+> `.symfony.local.yaml` (`symfony server:start`) `var/tailwind/` aktuell — ohne ihn fehlt
+> eine neue Klasse im Browser, ohne dass etwas meldet.
 
 Die vier Sonderblöcke in `app.css`:
 

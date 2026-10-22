@@ -1,0 +1,11 @@
+# Symfony CLI: `symfony server:start` startet diese Prozesse mit (Ausgabe: `symfony server:log`).
+#
+# ⚠ Ohne die beiden Wächter liefert der lokale Server veraltetes CSS und JS aus: AssetMapper
+# reicht im Entwicklungsbetrieb var/tailwind/app.built.css und var/typescript/ durch, und die
+# entstehen nur durch `tailwind:build` bzw. `typescript:build`. Eine neue Klasse im Template
+# oder eine Änderung in einem Controller wäre ohne Watcher im Browser schlicht nicht da.
+workers:
+    tailwind:
+        cmd: ['symfony', 'console', 'tailwind:build', '--watch']
+    typescript:
+        cmd: ['symfony', 'console', 'typescript:build', '--watch']

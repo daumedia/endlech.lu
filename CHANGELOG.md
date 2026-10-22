@@ -7,6 +7,22 @@ Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
 ## [Unreleased]
 
+### AssetMapper statt Webpack Encore
+
+- **CSS und JavaScript entstehen ohne Node.** Tailwind baut über die Standalone-CLI (`symfonycasts/tailwind-bundle`,
+  v4.1.18 wie bisher), TypeScript über SWC (`sensiolabs/typescript-bundle`), ausgeliefert per Importmap unter
+  `/assets/`. Der Node-Stage im Dockerfile entfällt; `package.json` trägt nur noch Typprüfung und ESLint
+  (507 npm-Pakete weniger).
+- **`public/build` ist nicht mehr im Repo.** Das Image baut bei jedem Deploy frisch aus den Quellen; lokal starten
+  `tailwind:build --watch` und `typescript:build --watch` mit `symfony server:start` (`.symfony.local.yaml`).
+- **CSP:** Die beiden Inline-Skripte des Importmaps tragen eine Nonce je Anfrage, `script-src` nennt sie. Stylesheets
+  stehen als `<link>` im Kopf statt als Import im Modul (sonst bräuchte eine scharfe Richtlinie `script-src data:`).
+- **Eigener Polyfill-Lader** für Browser ohne Importmap (`assets/es_module_shims_loader.js`, `es-module-shims` lokal):
+  Der eingebaute schrieb die Nonce in seinen Text, und Turbo lud dadurch bei jedem Klick die ganze Seite neu.
+- Service Worker `endlech-v5`: Assets unter `/assets/` statt `/build/`.
+- ⚠ **Kein Eingriff in Coolify nötig** — das Dockerfile trägt den neuen Ablauf. Der Build braucht Netz (jsDelivr,
+  GitHub-Releases für Tailwind-CLI und SWC), der Betrieb nicht.
+
 ### `/` und Kurzlinks in der Sprache des Besuchers
 
 - **`/` leitet nicht mehr fest auf `/lb/`**, sondern in die Sprache des Besuchers: eine schon gewählte Sprache (Sitzung),

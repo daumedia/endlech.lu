@@ -5,12 +5,16 @@
 /vendor/
 /node_modules/
 /var/
-/public/build/
+/public/assets/
 /public/bundles/
+/assets/vendor/
 
-# ⚠ /public/build/ MUSS ignoriert werden: Der Node-Stage baut es neu, und COPY
-# löscht nichts. Läge der committete Stand mit im Kontext, blieben die alten
-# gehashten Dateien im Image liegen — Müll, der bei jedem Deploy wächst.
+# ⚠ /public/assets/ MUSS ignoriert werden: Der assets-Stage schreibt es neu, und
+# COPY löscht nichts. Läge ein lokal kompilierter Stand mit im Kontext, blieben
+# dessen Dateien mit alter Prüfsumme im Image liegen — und ein lokales
+# manifest.json könnte den frisch gebauten Stand überdecken.
+# /assets/vendor/ holt `importmap:install` frisch; ein lokaler Stand könnte
+# eine andere Version tragen als importmap.php.
 
 # --- Werkzeug und Metadaten ---
 /.git/
@@ -38,7 +42,13 @@
 /phpunit.dist.xml
 /phpunit.xml
 /eslint.config.mjs
-# ⚠ tsconfig.json NICHT ignorieren – ts-loader liest sie im Encore-Build.
+# Node dient nur noch Typprüfung und Lint — im Image baut nichts mehr mit npm.
+/package.json
+/package-lock.json
+/tsconfig.json
+# ⚠ .swcrc NICHT ignorieren – SWC liest sie im assets-Stage. Ohne sie übersetzt
+# es nach ES5, und jeder Stimulus-Controller bricht im Browser ab („Class
+# constructor Controller cannot be invoked without 'new'").
 /bin/a11y-audit.mjs
 /bin/generate-pwa-icons.sh
 

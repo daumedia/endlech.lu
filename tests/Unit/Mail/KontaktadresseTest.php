@@ -25,8 +25,8 @@ final class KontaktadresseTest extends TestCase
     /** Verzeichnisse und Dateien relativ zum Projekt. */
     private const array ORTE = ['templates', 'translations', 'config', 'src', 'public', '.env', '.env.test'];
 
-    /** Binär oder erzeugt — dort steht die Adresse nicht als Text, und `public/build` baut Encore. */
-    private const array AUSGENOMMEN = ['/public/build/', '.zip', '.png', '.jpg', '.woff2', '.ico'];
+    /** Binär oder erzeugt — dort steht die Adresse nicht als Text, und `public/assets` schreibt `asset-map:compile`. */
+    private const array AUSGENOMMEN = ['/public/assets/', '.zip', '.png', '.jpg', '.woff2', '.ico'];
 
     public function testDieNichtExistierendeAdresseStehtNirgends(): void
     {

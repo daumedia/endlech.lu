@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Unit\EventSubscriber;
 
 use App\EventSubscriber\SecurityHeadersSubscriber;
+use App\Security\CspNonce;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -56,6 +57,22 @@ final class SecurityHeadersSubscriberTest extends TestCase
         self::assertMatchesRegularExpression("/(^|; )script-src 'self';/", $csp);
         self::assertMatchesRegularExpression("/(^|; )connect-src 'self';/", $csp);
         self::assertStringNotContainsString('http', $csp);
+    }
+
+    /**
+     * AssetMapper schreibt das Importmap und `import 'app'` als Inline-Skripte.
+     * Hat das Template die Nonce abgerufen, steht sie in `script-src`; sonst bleibt es bei `'self'`.
+     */
+    public function testNonceDerAnfrageStehtInScriptSrc(): void
+    {
+        $anfrage = Request::create('https://endlech.lu/de/');
+        $anfrage->attributes->set(CspNonce::ATTRIBUT, 'q0Jx+9/Ab==');
+
+        $csp = (string) $this->schicke(new Response('<html></html>'), anfrage: $anfrage)
+            ->headers->get('Content-Security-Policy-Report-Only');
+
+        self::assertMatchesRegularExpression("#(^|; )script-src 'self' 'nonce-q0Jx\\+9/Ab=='; #", $csp);
+        self::assertDoesNotMatchRegularExpression("/script-src[^;]*(unsafe-inline|data:)/", $csp);
     }
 
     /**
@@ -128,8 +145,9 @@ final class SecurityHeadersSubscriberTest extends TestCase
         bool $debug = false,
         bool $sicher = true,
         int $typ = HttpKernelInterface::MAIN_REQUEST,
+        ?Request $anfrage = null,
     ): Response {
-        $anfrage = Request::create($sicher ? 'https://endlech.lu/de/' : 'http://endlech.lu/de/');
+        $anfrage ??= Request::create($sicher ? 'https://endlech.lu/de/' : 'http://endlech.lu/de/');
 
         $ereignis = new ResponseEvent(
             $this->createStub(KernelInterface::class),

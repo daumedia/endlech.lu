@@ -20,7 +20,7 @@ Current development status of the platform.
 
 ### 🏗️ Core & Backend
 - [x] **Project Setup:** Symfony 8.0 installation & configuration.
-- [x] **Frontend Stack:** Tailwind CSS & Webpack Encore integration.
+- [x] **Frontend Stack:** Tailwind CSS & Symfony AssetMapper (no Node build; Webpack Encore until 2026-10-22).
 - [x] **Database:** Schema for restaurants & users (MySQL 8.0).
 - [x] **Data Seeding:** Initial Luxembourg restaurants via fixtures.
 - [x] **User Fixtures:** Test users (admin, verified, unverified) for development & testing.
@@ -65,10 +65,10 @@ Ideas for version 2.0 (after the first stable release):
 
 * **Backend:** PHP 8.4+, Symfony 8.0
 * **Database:** MySQL 8.0 (Doctrine ORM)
-* **Frontend:** Twig, Tailwind CSS v4 (via PostCSS)
+* **Frontend:** Twig, Tailwind CSS v4 (standalone CLI via `symfonycasts/tailwind-bundle`)
 * **JS:** TypeScript, Stimulus, Turbo (Hotwire)
 * **Email:** Brevo (Symfony Mailer) / Mailpit (dev)
-* **Assets:** Webpack Encore
+* **Assets:** Symfony AssetMapper + importmap, TypeScript via SWC (`sensiolabs/typescript-bundle`)
 
 ## ⚙️ Installation & Setup
 
@@ -124,15 +124,20 @@ Ideas for version 2.0 (after the first stable release):
 
 7.  **Build assets & start server:**
     ```bash
-    npm run build
-    symfony server:start
+    php bin/console importmap:install
+    php bin/console tailwind:build
+    php bin/console typescript:build
+    symfony server:start   # also starts the Tailwind and TypeScript watchers (.symfony.local.yaml)
     ```
 
     Or using `make`:
     ```bash
-    make init   # Full setup (Docker, composer, npm, DB, fixtures)
-    make start  # Start server + asset watcher
+    make init   # Full setup (Docker, composer, npm, assets, DB, fixtures)
+    make start  # Start Docker + server (watchers included)
     ```
+
+    On macOS, `make assets` (also run by `make init`) re-signs the downloaded
+    Tailwind binary — macOS otherwise kills it with signal 9.
 
 ## 📱 PWA / Install on iPhone
 
@@ -158,19 +163,26 @@ native `sips` tool):
 ## 🌍 Environments
 
 ### 🛠 Development
-Active development mode. Changes to templates and CSS are picked up immediately.
-Tailwind runs as a PostCSS plugin inside the Encore build, so the asset watcher
-is the only process you need:
+Active development mode. AssetMapper serves assets dynamically; the two watchers
+(Tailwind → `var/tailwind/`, SWC → `var/typescript/`) keep them current and are
+started by `symfony server:start`. Without a server, run them by hand:
 
 ```bash
-npm run watch
+php bin/console tailwind:build --watch
+php bin/console typescript:build --watch
 ```
+
+Node is only used for type-checking and linting (`npm run typecheck`, `npm run lint`).
 
 ### 🚀 Production
 Optimized for performance and security.
 
+The container image builds everything (see below). Without Docker:
+
 ```bash
-npm run build
+php bin/console importmap:install
+php bin/console tailwind:build --minify
+php bin/console asset-map:compile   # runs typescript:build itself
 php bin/console cache:clear
 ```
 
@@ -231,12 +243,8 @@ carries one. This is the single biggest difference to the old setup, where
 Rollback: push a revert commit to `main` and deploy, or redeploy the previous build from
 Coolify's deployment list.
 
-⚠️ **`public/build` is still committed, but nothing verifies it any more.** The
-old `verify-assets` job rebuilt it and blocked the deploy on a mismatch; that
-workflow is gone with Cloudways. It no longer matters for production — the image
-builds its assets from source in the `assets` stage and `.dockerignore` excludes
-the committed copy. It does still matter for anyone running the app without
-Docker, so keep committing it after changes under `assets/`.
+Built assets are no longer committed (`public/build` is gone since 2026-10-22).
+The image builds them from source in the `assets` stage on every deploy.
 
 ### Container image (Coolify)
 
@@ -250,7 +258,7 @@ docker build -t endlech .
 docker run -p 8080:80 -e APP_SECRET=… -e DATABASE_URL=… endlech
 ```
 
-Three stages: Composer dependencies, Encore assets, slim runtime. `/health` returns
+Three stages: Composer dependencies, AssetMapper assets (Tailwind CLI, SWC, importmap — needs network at build time, not at runtime), slim runtime. `/health` returns
 `{"status":"ok"}` and is what the `HEALTHCHECK` polls — no curl in the image, the
 check runs through `php -r`.
 

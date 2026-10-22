@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\EventSubscriber;
 
+use App\Security\CspNonce;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -65,17 +67,29 @@ final class SecurityHeadersSubscriber implements EventSubscriberInterface
      * fehlenden `TRUSTED_PROXIES`, wo der Anmeldeknopf schlicht nichts tat).
      *
      * Die Richtlinie bildet den **gemessenen** Bestand ab: keine Inline-Skripte
-     * in `templates/` (geprüft), aber Inline-`style=` in 23 Dateien, deshalb
-     * `'unsafe-inline'` für Stile. Externe Verweise sind Links, keine geladenen
-     * Ressourcen.
+     * in `templates/` (geprüft) außer den zweien, die `importmap()` schreibt — die
+     * tragen die Nonce der Anfrage ({@see CspNonce}), die hier in `script-src`
+     * landet. Inline-`style=` steht in 23 Dateien, deshalb `'unsafe-inline'` für
+     * Stile. Externe Verweise sind Links, keine geladenen Ressourcen.
+     *
+     * ⚠ **Kein `data:` in `script-src`.** AssetMapper schreibt für jede CSS-Datei,
+     * die ein Modul importiert, ein `data:application/javascript,…`-Modul ins
+     * Importmap; scharf geschaltet bräche daran der ganze Modulbaum. Die
+     * Stylesheets stehen deshalb als `<link>` in base.html.twig, kein Modul
+     * importiert CSS.
+     *
+     * ⚠ **Browser ohne Importmap** (Safari < 16.4) laden `es-module-shims`, und
+     * das wertet Module über `blob:`-Adressen aus. Scharf geschaltet laufen sie
+     * ohne JavaScript, solange `blob:` nicht in `script-src` steht — das ist
+     * vor dem Umschalten zu entscheiden, nicht danach.
      *
      * Wer sie scharf schaltet, tauscht den Kopfzeilennamen gegen
      * `Content-Security-Policy` — **nachdem** er in der Browser-Konsole
      * nachgesehen hat, dass über mehrere Seiten kein Verstoß mehr gemeldet wird.
      */
-    private const CSP = "default-src 'self'; "
-        ."script-src 'self'; "
-        ."style-src 'self' 'unsafe-inline'; "
+    private const CSP_VOR_SKRIPT = "default-src 'self'; ";
+
+    private const CSP_NACH_SKRIPT = "style-src 'self' 'unsafe-inline'; "
         ."img-src 'self' data:; "
         ."font-src 'self'; "
         ."connect-src 'self'; "
@@ -129,7 +143,7 @@ final class SecurityHeadersSubscriber implements EventSubscriberInterface
 
         if (!$headers->has('Content-Security-Policy-Report-Only')
             && !$headers->has('Content-Security-Policy')) {
-            $headers->set('Content-Security-Policy-Report-Only', self::CSP);
+            $headers->set('Content-Security-Policy-Report-Only', self::richtlinie($event->getRequest()));
         }
 
         // ⚠ **HSTS nur über HTTPS und nie im Debug-Betrieb.** Über `http://`
@@ -145,6 +159,18 @@ final class SecurityHeadersSubscriber implements EventSubscriberInterface
         if (!$this->debug && $event->getRequest()->isSecure() && !$headers->has('Strict-Transport-Security')) {
             $headers->set('Strict-Transport-Security', 'max-age=31536000');
         }
+    }
+
+    /**
+     * Die Nonce steht nur in der Richtlinie, wenn das Template sie abgerufen hat —
+     * eine Antwort ohne `importmap()` (Weiterleitung, Fehlertext) braucht keine.
+     */
+    private static function richtlinie(Request $anfrage): string
+    {
+        $nonce = $anfrage->attributes->get(CspNonce::ATTRIBUT);
+        $skript = \is_string($nonce) ? "script-src 'self' 'nonce-{$nonce}'; " : "script-src 'self'; ";
+
+        return self::CSP_VOR_SKRIPT.$skript.self::CSP_NACH_SKRIPT;
     }
 
     /**
