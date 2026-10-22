@@ -570,9 +570,12 @@ Zwischennachricht fällig wird?
 
 ### 5. Zwei Datenbanken
 
-Lokal und in der CI läuft MySQL 8.0, auf Production MariaDB 10.5. Jeder Deploy
-führt Migrationen aus. MySQL-eigene Syntax fällt erst auf Production auf — und
-dort mitten im Deploy.
+Lokal und in der CI läuft MySQL 8.0, auf Production `mysql:8` (8.4-Reihe,
+schwebender Tag). Bis 2026-10-22 stand hier MariaDB 10.5 — der Stand bei
+Cloudways; seit dem Umzug auf Coolify ist der Unterschied auf eine Unterversion
+geschrumpft. Geblieben ist das andere Risiko: Migrationen laufen nur, wenn der
+Post-Deployment-Command in Coolify gesetzt ist. Fehlt er, meldet ein Deploy grün,
+und jede betroffene Seite wirft danach 500.
 
 ### 6. Abhängigkeit von fremden Schnittstellen
 

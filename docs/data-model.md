@@ -1219,12 +1219,15 @@ jemand gegen den Code gehalten haben.
 | `20260829170000` | **BF-89:** `self_confirmed_at` an beiden Wartelisten — trennt den eingelösten Double-Opt-In vom Verwaltungs-Backfill |
 | `20260830120000` | `board_idea`, `board_vote` — Community Feedback Board (Feature 06) |
 
-> **Neue Migrationen müssen gegen MariaDB 10.5 laufen.** Lokal und in der CI
-> läuft MySQL 8.0, auf Production MariaDB 10.5 — und `deploy.sh` führt bei jedem
-> Lauf `doctrine:migrations:migrate` aus. MySQL-8-eigene Syntax (`CHECK` mit
-> JSON-Funktionen, Window-Functions in DDL) fällt erst auf Production auf.
-> Aus demselben Grund werden Enums als `VARCHAR` gespeichert, nicht als natives
-> `ENUM`.
+> **Production fährt `mysql:8`, nicht MariaDB** (Coolify-Datenbank seit
+> 2026-09-01, gemessen 2026-10-22). Bis dahin stand hier „Neue Migrationen müssen
+> gegen MariaDB 10.5 laufen" — der Stand bei Cloudways, als `deploy.sh` bei jedem
+> Lauf migrierte. Viele Migrationen bis Oktober 2026 sind deshalb bewusst
+> MariaDB-tauglich geschrieben: Enums als `VARCHAR` statt nativem `ENUM`, kein
+> `CHECK` mit JSON-Funktionen, Datenumbau in PHP. Das schadet nicht und bleibt so;
+> ihre Kommentare beschreiben die damalige Annahme. Lokal und in der CI läuft
+> MySQL 8.0, auf Production der schwebende Tag `mysql:8` (8.4-Reihe). Migrationen
+> laufen nicht mehr von selbst, sondern über den Post-Deployment-Command in Coolify.
 >
 > **`doctrine:schema:validate` meldet die Datenbank als „nicht synchron".** Das
 > Mapping selbst ist in Ordnung; der Unterschied besteht aus Index-Umbenennungen
@@ -1244,7 +1247,7 @@ beschriebene Diff-Rauschen. Eine neue Tabelle vergrößert es nicht — nachgepr
 **`Version20261014120000`** (2026-10-14) — Vereine und Unternehmen zusammengelegt,
 Beirat gestrichen. Reine Datenmigration: `organisation_waitlist_entry.type`
 `association` → `company`; `advisory_board` aus `collaboration_interests` entfernt
-(in PHP, nicht mit JSON-Funktionen — MariaDB auf Produktion, MySQL 8 lokal);
+(in PHP, nicht mit JSON-Funktionen — geschrieben in der Annahme, Produktion fahre MariaDB);
 `marketing_contact.origin` `association` → `company`, übertragene und nicht
 gesperrte Kontakte zurück auf `pending`, damit Brevo die neue Herkunft bekommt.
 `down()` wirft — welche Zeile ein Verein war, steht danach nirgends mehr.
