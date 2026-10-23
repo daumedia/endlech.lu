@@ -1,0 +1,25 @@
+== einfuehrung/profilbild token=csrf-tok…
+gross21.png → 422  (gesendet 21600351 B)
+Das Profilbild darf maximal 2 MB groß sein.
+<input type="file" id="onboarding_avatar_avatar" name="onboarding_avatar[avatar]" accept="image/jpeg,image/png,image/webp" class="w-full rounded-lg bg-white px-4 py-2.5 text-base text-gray-900 border motion-safe:transition focus:outline-2 focus:outli
+zwei4.jpg → 422  (gesendet 2400350 B)
+Das Profilbild darf maximal 2 MB groß sein.
+<input type="file" id="onboarding_avatar_avatar" name="onboarding_avatar[avatar]" accept="image/jpeg,image/png,image/webp" class="w-full rounded-lg bg-white px-4 py-2.5 text-base text-gray-900 border motion-safe:transition focus:outline-2 focus:outli
+ueber2m.png → 422  (gesendet 2000352 B)
+Das Profilbild darf maximal 2000000 bytes groß sein.
+<input type="file" id="onboarding_avatar_avatar" name="onboarding_avatar[avatar]" accept="image/jpeg,image/png,image/webp" class="w-full rounded-lg bg-white px-4 py-2.5 text-base text-gray-900 border motion-safe:transition focus:outline-2 focus:outli
+text-bild.jpg → 422  (gesendet 1804 B)
+Bitte lade ein Bild im Format JPG, PNG oder WebP hoch.
+<input type="file" id="onboarding_avatar_avatar" name="onboarding_avatar[avatar]" accept="image/jpeg,image/png,image/webp" class="w-full rounded-lg bg-white px-4 py-2.5 text-base text-gray-900 border motion-safe:transition focus:outline-2 focus:outli
+== profile token=csrf-tok…
+gross21.png → 302 http://127.0.0.1:8098/de/profile (gesendet 21600331 B)
+zwei4.jpg → 500  (gesendet 2400330 B)
+ueber2m.png → 500  (gesendet 2000332 B)
+text-bild.jpg → 500  (gesendet 1784 B)
+Profil 21,6 MB per curl (mit Content-Length, Name/Adresse mitgeschickt):
+  POST /de/profile/edit → 302 http://127.0.0.1:8098/de/profile (gesendet 21600585 B)
+  Flash danach: Das Profilbild darf maximal 2 MB groß sein.
+  Profil zwei4.jpg → 422
+    Meldung: Das Profilbild darf maximal 2 MB groß sein.
+  Profil text-bild.jpg → 422
+    Meldung: Bitte lade ein Bild im Format JPG, PNG oder WebP hoch.

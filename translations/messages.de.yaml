@@ -1371,6 +1371,7 @@ marketing_sync_state:
     synced: "Übertragen"
     failed: "Fehlgeschlagen"
     removal_pending: "Löschung ausstehend"
+    blacklist_pending: "Sperre ausstehend"
 
 marketing_origin:
     partner: "Partner"
@@ -1608,3 +1609,63 @@ app_waitlist:
 app_platform:
     ios: "iPhone oder iPad"
     android: "Android"
+
+onboarding:
+    title: "Einführung"
+    page_title: "Schritt %current% von %total%: %step% – Endlech.lu"
+    step_of: "Schritt %current% von %total%"
+    nav_label: "Schritte der Einführung"
+    back: "Zurück"
+    next: "Weiter"
+    finish: "Einführung beenden"
+    search: "Restaurants suchen"
+    verify_first: "Bitte bestätige zuerst deine E-Mail-Adresse. Danach geht es mit der Einführung weiter."
+    profile_link: "Einführung ansehen"
+    welcome:
+        title: "Willkommen"
+        heading: "Willkommen bei Endlech.lu, %name%!"
+        intro: "Deine Adresse ist bestätigt. Wir zeigen dir kurz, wie du einen Eintrag liest, und richten dein Konto ein. Jeder Schritt ist freiwillig."
+        suggest_title: "Ein Restaurant vorschlagen"
+        suggest_text: "Kennst du ein Lokal, das hier noch fehlt? Schlag es vor. Wir prüfen jeden Vorschlag, bevor er erscheint."
+        suggest_cta: "Restaurant vorschlagen"
+        app_title: "Endlech.lu als App"
+        app_text: "Für iPhone und iPad läuft eine Testfassung, für Android sammeln wir gerade den Bedarf."
+        app_cta: "Zur App-Warteliste"
+    entries:
+        title: "Einträge lesen"
+        intro: "Diese Begriffe stehen genau so auf jeder Restaurantseite."
+        verified_text: "Dieses Abzeichen heißt: Endlech.lu hat das Lokal persönlich vor Ort geprüft. Wann, steht auf der Restaurantseite."
+        not_available_title: "„%label%“"
+        not_available_text: "Steht das bei einem Merkmal, ist es entweder nicht vorhanden oder von uns noch nicht erfasst. Die Seite unterscheidet das nicht."
+        measures_title: "%door% und %spacing%"
+        measures_text: "Beide Maße stehen in Zentimetern. „%below%“ heißt: schmaler als die 90 cm der DIN 18040. „%not_measured%“ heißt: Niemand hat nachgemessen."
+        principle: "Ein Eintrag zeigt, was wir erfasst haben, nicht was vor Ort gilt."
+    avatar:
+        title: "Profilbild"
+        intro: "Wenn du magst, lade ein Profilbild hoch."
+        visibility: "Dein Bild erscheint nur in deinem Profil und oben in der Kopfzeile, solange du angemeldet bist. Andere sehen es nicht."
+        upload: "Bild hochladen"
+        saved: "Dein Profilbild ist gespeichert."
+    newsletter:
+        title: "Newsletter"
+        intro: "Möchtest du Neuigkeiten von Endlech.lu per E-Mail bekommen? Dazu gehört einmal eine Willkommens-Mail."
+        label: "Ja, ich möchte Neuigkeiten von Endlech.lu per E-Mail bekommen."
+        terms: "Du kannst jederzeit abbestellen, in deinem Profil oder über den Link in jeder Mail. Ohne Häkchen geschieht nichts."
+    admin:
+        title: "Einführung"
+        due: "Konten mit Einführung"
+        shown: "davon angezeigt"
+        hint: "Konten, die ihre Adresse bestätigt haben, seit es die Einführung gibt."
+
+newsletter:
+    title: "Newsletter"
+    text: "Neuigkeiten von Endlech.lu per E-Mail, darunter einmal eine Willkommens-Mail. Abbestellen gilt für alle Neuigkeiten an diese Adresse, auch zu einer Warteliste."
+    text_unverified: "Neuigkeiten von Endlech.lu per E-Mail, darunter einmal eine Willkommens-Mail. Solange deine Adresse nicht bestätigt ist, gilt Abbestellen nur für dieses Konto; für alle Neuigkeiten an diese Adresse erst nach der Bestätigung oder über den Link in einer Mail."
+    subscribed_since: "Abonniert seit %date%"
+    not_subscribed: "Nicht abonniert"
+    subscribe: "Newsletter abonnieren"
+    unsubscribe: "Newsletter abbestellen"
+    pending_verification: "Wird wirksam, sobald du deine E-Mail-Adresse bestätigt hast."
+    flash_subscribed: "Du hast den Newsletter abonniert."
+    flash_unsubscribed: "Du hast den Newsletter abbestellt."
+    flash_rate_limited: "Zu viele Änderungen. Bitte versuch es in %minutes% Minuten erneut."

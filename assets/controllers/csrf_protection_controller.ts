@@ -91,5 +91,10 @@ export function removeCsrfToken (formElement: HTMLFormElement): void {
     }
 }
 
-/* stimulusFetch: 'lazy' */
+// ⚠ BF-156: NICHT `stimulusFetch: 'lazy'`. Verzögert geladen fehlte das Modul auf jeder Seite ohne
+// ein Element `data-controller="csrf-protection"` — also auf der frisch geladenen Anmeldeseite und
+// überall, wo nur der Abmeldeknopf steht. Hatte die Sitzung vorher ein Formular mit Double-Submit
+// abgeschickt, verlangt Symfony ihn danach für jede zustandslose Prüfung: Die Anmeldung scheiterte
+// mit „Ungültiges CSRF-Token.", die Abmeldung lief lautlos ins Leere. Sofort geladen hängt der
+// Submit-Hörer oben auf jeder Seite, ohne Wettlauf mit einem schnellen Absenden.
 export default 'csrf-protection-controller';

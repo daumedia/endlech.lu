@@ -1,0 +1,89 @@
+# Nachprüfung 2026-10-23 · AK-49, AK-57, AK-58, AK-61, AK-62, EC-02, EC-06, EC-07, EC-09, EC-10 · curl gegen :8099/:8098
+## AK-49: Kachel in /de/admin
+Admin: 200 
+Kachel: 👋 Einführung 5 / 11 11 Konten mit Einführung · 5 davon angezeigt Konten, die ihre Adresse bestätigt haben, seit es die Einführung gibt.
+SQL: due=11 · gesehen=5
+Namen/Adressen in der Kachel? nein
+Nutzer auf /de/admin: 403 
+## AK-57: Anna schickt fremde Kennungen mit (Admin-ID 31)
+Newsletter-Schritt mit user=31: 302 http://127.0.0.1:8099/de/restaurants
+Upload mit user=31: 302 http://127.0.0.1:8099/de/einfuehrung/profilbild
+Profilschalter mit user=31: 302 http://127.0.0.1:8099/de/profile
+Anna: verified=1 due=1 shown=2026-10-23 09:40:59 consent=NULL avatar=6adb2d4a555d47.15501824.png
+Admin vorher: verified=1 due=0 shown=NULL consent=NULL avatar=NULL Admin User|admin@endlech.lu
+Admin nachher: verified=1 due=0 shown=NULL consent=NULL avatar=NULL Admin User|admin@endlech.lu
+## AK-58: fremde Herkunft (Origin/Referer https://boese.example)
+Newsletter-Schritt: 422 · Meldung: Der CSRF-Token ist ungültig. Versuchen Sie bitte, das Formular erneut zu senden.
+Upload: 422 · Meldung: Der CSRF-Token ist ungültig. Versuchen Sie bitte, das Formular erneut zu senden.
+Profilschalter ohne gültiges Token: 302 http://127.0.0.1:8099/de/profile · Flash: Ungültiges CSRF-Token. Bitte versuche es erneut.
+Anna vorher: verified=1 due=1 shown=2026-10-23 09:40:59 consent=NULL avatar=6adb2d4a555d47.15501824.png
+Anna nachher: verified=1 due=1 shown=2026-10-23 09:40:59 consent=NULL avatar=6adb2d4a555d47.15501824.png
+## AK-62: Datenexport (Clara: Einführung gesehen, Einwilligung per Webhook zurückgenommen; Dora: Einwilligung bei Registrierung)
+onboardingDue=true onboardingShownAt="2026-10-23T09:41:56+00:00" marketingConsent=true marketingConsentAt="2026-10-23T09:41:56+00:00" 
+DB Dora: verified=1 due=1 shown=2026-10-23 09:41:56 consent=2026-10-23 09:41:56 avatar=NULL
+## AK-61: Ines (Einführung gesehen, Abo, Bild, übertragener Kontakt) löscht ihr Konto
+vorher: verified=1 due=1 shown=2026-10-23 09:48:23 consent=2026-10-23 09:48:23 avatar=6adb2d67382236.02898009.jpg · Datei: 6adb2d67382236.02898009.jpg · Kontakt: ines.neu@example.org | account | de | synced | 2026-10-23 09:48:23 | NULL | 2026-10-23 09:48:23
+Löschen: 302 http://127.0.0.1:8099/de/
+nachher: Zeile=0 · Datei: 1 (1 = weg) · Kontakt: ines.neu@example.org | account | de | removal_pending | 2026-10-23 09:48:23 | NULL | 2026-10-23 09:48:23
+Anmeldung danach: 302 http://127.0.0.1:8099/de/login
+## EC-06: Lena meldet sich mit 'angemeldet bleiben' an (fällig), Sitzung verworfen, nur REMEMBERME
+Anmeldung: 302 http://127.0.0.1:8099/de/einfuehrung · Cookies: PHPSESSID REMEMBERME 
+  nur REMEMBERME GET /de/restaurants: 200 
+  nur REMEMBERME GET /de/: 200 
+  nur REMEMBERME GET /de/profile: 200 
+Lena: verified=1 due=1 shown=NULL consent=NULL avatar=NULL
+## EC-07: Lena nie angemeldet gewesen? Neu: Max, bestätigt, nie angemeldet, setzt Passwort zurück
+Anforderung: 302 http://127.0.0.1:8099/de/login
+Token vorhanden: ja
+Neues Passwort: 302 http://127.0.0.1:8099/de/login
+erste Anmeldung: 302 http://127.0.0.1:8099/de/einfuehrung · verified=1 due=1 shown=NULL consent=NULL avatar=NULL
+## EC-09: Frieda startet über das Profil neu — Datum und Kachel unverändert
+shown vorher 2026-10-23 09:40:56 nachher 2026-10-23 09:40:56 · Kachelwert vorher 5 nachher 5
+## EC-10: Konto in Sitzung B gelöscht, Sitzung A macht weiter (Otto)
+Löschen in B: 302 http://127.0.0.1:8099/de/
+A: nächster Schritt 302 http://127.0.0.1:8099/de/login · Newsletter absenden 302 http://127.0.0.1:8099/de/login
+Zeile: 0 · Kontakt: ''
+## EC-02: Upload bricht nach 40 kB ab (Server :8098, Sitzung Frieda)
+gesendet: 40000 von 1462518 Bytes, Verbindung geschlossen
+Bild unverändert: ja · Bildschirm danach: 200  · Weiter-Link: 1
+[Fri Oct 23 11:48:37 2026] 127.0.0.1:51320 Closing
+[Fri Oct 23 11:48:39 2026] 127.0.0.1:51321 Accepted
+[Fri Oct 23 11:48:39 2026] 127.0.0.1:51321 Closing
+## Code-Review-Fund 6: HEAD-Anfrage auf die Willkommensseite (Lena, fällig)
+vorher: verified=1 due=1 shown=NULL consent=NULL avatar=NULL
+HEAD: 200
+nachher: verified=1 due=1 shown=2026-10-23 09:56:08 consent=NULL avatar=NULL
+nächste Anmeldung: 302 http://127.0.0.1:8099/de/
+## Code-Review-Fund 8: zwei gleichzeitige Erst-Abos desselben Kontos aus zwei Sitzungen (Max), Server :8096 mit PHP_CLI_SERVER_WORKERS=4
+m1 302 /de/profile · m2 500
+SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'max.neu@example.org' for key 'marketing_contact.UNIQ_E78FBDB7E7927C74' (500 Internal Server Error
+danach: verified=1 due=1 shown=NULL consent=2026-10-23 09:56:30 avatar=NULL · max.neu@example.org | account | de | pending | 2026-10-23 09:56:30 | NULL | NULL
+## BF-158 im Browser (Chromium-Vorschau, localhost:8099): Max ist fällig, nach AK-03 auf /de/community/suggest gelandet
+Profil, synthetisches mouseenter: Kontrolllink /de/restaurants → Turbo holt ihn vorab (fetch /de/restaurants); Link „Einführung ansehen" (data-turbo-prefetch="false") → keine Anfrage.
+Zustand nach dem Überfahren: verified=1 due=1 shown=NULL
+Klick auf den Link → /de/einfuehrung, „Schritt 1 von 3: Willkommen" → verified=1 due=1 shown=2026-10-23 10:02:26 consent=2026-10-23 09:56:30 avatar=NULL
+## Code-Review-Fund 5 im Browser: „Einführung abgeschlossen" trotz abgewiesenem Absenden (Kurt, Deckel erschöpft)
+Newsletter-Schritt, Häkchen gesetzt, „Restaurants suchen" geklickt → bleibt auf /de/einfuehrung/newsletter („Schritt 4 von 4"),
+Meldung „Zu viele Änderungen. Bitte versuch es in 60 Minuten erneut." — umami.track-Aufrufe: [["einfuehrung_abgeschlossen",null]]
+## Code-Review-Fund 13b: vier gleichzeitige Uploads in der Einführung (Frieda, vier Sitzungen, Server :8096 mit 4 Arbeitsprozessen, je 1,46 MB)
+o1–o4 → 302. public/uploads/avatars: vorher 3 Bilder (+ .gitkeep), nachher 4 Bilder bei 4 Konten mit Bild — darunter 6adb3183d22d77.91183846.png (1 462 275 B),
+auf das kein Konto verweist (Friedas Bild: 6adb3183e4c1a7.87392855.png). Sequentiell (AK-29) bleibt dagegen stets eine Datei.
+## AK-55 im Produktionsmodus (:8095, APP_ENV=prod, APP_DEBUG=0): Rosa Geheimname, Upload „Rosa Privat Geheimname.jpg", Fehlupload, Abo, Abbestellen, Abo, fremde Herkunft, 404
+stderr-Protokoll: 0 Treffer für rosa|geheim, 0 E-Mail-Adressen (nur Startzeilen und Abkündigungshinweise).
+## Gleichzeitiges Erst-Abo im Produktionsmodus (:8093, 4 Arbeitsprozesse): Sven, zwei Sitzungen
+s2 302 /de/profile · s1 500 („An Error Occurred: Internal Server Error", keine Einzelheiten) · Kontakt danach eine Zeile pending · stderr: 0 Treffer für die Adresse
+(der Kanal `request` ist in prod ausgeschlossen; die Ausnahme selbst — „Duplicate entry '<Adresse>'" — ginge an Sentry, hier nicht aktiv).
+## AK-63 (:8095 Produktionsmodus, BREVO_API_KEY=xkeysib-qa12nachpruefungattrappe… untergeschoben, danach wieder entfernt), Konto Rosa
+/de/einfuehrung 0 Treffer (36759 B)
+/de/einfuehrung/eintraege 0 Treffer (   36908 B)
+/de/einfuehrung/profilbild 0 Treffer (   36686 B)
+/de/einfuehrung/newsletter 0 Treffer (     306 B)
+/de/profile 0 Treffer (   46442 B)
+## AK-51/AK-52 · Zählweg /api/send (Server :8099)
+beendet schritt=2: 400
+beendet schritt=5: 400
+beendet + email: 400
+abgeschlossen + abonniert: 400
+begonnen ohne Daten: 400
+Profilpfad: 400
+AK-52: Profil ohne usage-event (0) und ohne Zählskript (0); Willkommensseite 4 Auslöser-Attribute

@@ -47,7 +47,7 @@
                     <label for="rememberMe" class="ml-2 text-sm text-gray-600">{{ 'login.remember_me'|trans }}</label>
                 </div>
 
-                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
 
                 {# Absenden #}
                 <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-lg shadow-md hover:shadow-lg transition transform hover:-translate-y-0.5 focus:outline-2 focus:outline-offset-2 focus:outline-purple-700">

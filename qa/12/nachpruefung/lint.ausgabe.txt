@@ -1,0 +1,6 @@
+ [OK] All 133 Twig files contain valid syntax.                                  
+
+
+lint:container [--resolve-env-vars]
+
+schema-dump Zeilen gesamt: 12

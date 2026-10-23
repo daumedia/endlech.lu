@@ -1,0 +1,26 @@
+# Nachprüfung 2026-10-23 · AK-25 bis AK-29 · Upload am Server :8099 (dev, upload_max_filesize=2M, post_max_size=8M)
+klein.jpg (1368 B) → 302 http://127.0.0.1:8099/de/einfuehrung/profilbild · avatar=6adb2c35cb77c1.91836661.jpg · Treffer Einführung(Kopf+Bildschirm)=2 · Profil=3 · Dateien im Verzeichnis: 1
+klein.png (613 B) → 302 http://127.0.0.1:8099/de/einfuehrung/profilbild · avatar=6adb2c3609ffc1.79911401.png · Treffer Einführung(Kopf+Bildschirm)=2 · Profil=3 · Dateien im Verzeichnis: 1
+klein.webp (158 B) → 302 http://127.0.0.1:8099/de/einfuehrung/profilbild · avatar=6adb2c363b8868.06555654.webp · Treffer Einführung(Kopf+Bildschirm)=2 · Profil=3 · Dateien im Verzeichnis: 1
+gross19.png (1462275 B) → 302 http://127.0.0.1:8099/de/einfuehrung/profilbild · avatar=6adb2c3774a950.04967819.png · Treffer Einführung(Kopf+Bildschirm)=2 · Profil=3 · Dateien im Verzeichnis: 1
+unter.png (2000000 B) → 302 http://127.0.0.1:8099/de/einfuehrung/profilbild · avatar=6adb2c38b63661.04862801.png · Treffer Einführung(Kopf+Bildschirm)=2 · Profil=3 · Dateien im Verzeichnis: 1
+ueber.png (2000001 B) → 422  · Feldfehler: Das Profilbild darf maximal 2000000 bytes groß sein. · aria-invalid=true · autofocus=ja · Weiter-Link=1 · avatar unverändert: ja
+gross25.png (2056139 B) → 422  · Feldfehler: Das Profilbild darf maximal 2 MB groß sein. · aria-invalid=true · autofocus=ja · Weiter-Link=1 · avatar unverändert: ja
+zugross.png (2434886 B) → 422  · Feldfehler: Die Datei ist zu groß. Die maximal zulässige Größe beträgt 2 MB. · aria-invalid=true · autofocus=ja · Weiter-Link=1 · avatar unverändert: ja
+klein.gif (295 B) → 422  · Feldfehler: Bitte lade ein Bild im Format JPG, PNG oder WebP hoch. · aria-invalid=true · autofocus=ja · Weiter-Link=1 · avatar unverändert: ja
+text-als-bild.jpg (18 B) → 422  · Feldfehler: Bitte lade ein Bild im Format JPG, PNG oder WebP hoch. · aria-invalid=true · autofocus=ja · Weiter-Link=1 · avatar unverändert: ja
+shell.jpg (16 B) → 422  · Feldfehler: Bitte lade ein Bild im Format JPG, PNG oder WebP hoch. · aria-invalid=true · autofocus=ja · Weiter-Link=1 · avatar unverändert: ja
+AK-27 bild.jpg (Text) → 422  · Feldfehler: Bitte lade ein Bild im Format JPG, PNG oder WebP hoch. · aria-invalid=true · autofocus=ja · Weiter-Link=1
+Profil, 2,5 MB, gleiche Meldung?
+422 
+Profil-Meldung: Profilbild entfernen
+## Server :8098 mit den Grenzen des Produktionsbildes (upload_max_filesize=8M, post_max_size=10M)
+Anmeldung Frieda: 302 http://127.0.0.1:8098/de/
+Einführung zugross.png (2434886 B) → 422  · Feldfehler: Das Profilbild darf maximal 2 MB groß sein. · aria-invalid=true · autofocus=ja · avatar unverändert: ja
+Einführung riesig.png (21637133 B) → 422  · Feldfehler: Das Profilbild darf maximal 2 MB groß sein. · aria-invalid=true · autofocus=ja · avatar unverändert: ja
+ugrep: error: error at position 114
+er|ungültig|CSRF)(?:[^\n\x80-\xbf][\x80-\xbf]*){0,80}
+                        exceeds complexity limits___/
+
+
+Profil riesig.png → 422  · Text: 

@@ -1,0 +1,5 @@
+EC-02 Konto paula4-115156@example.org, Bild vorher 6adb4a5e5ef713.66804211.png, Dateien vorher       17
+gesendet: 40000 von 1460243 Bytes, Verbindung geschlossen
+Bild nachher 6adb4a5e5ef713.66804211.png · Dateien nachher       17
+Bildschirm danach 200
+Weiter vorhanden: 1

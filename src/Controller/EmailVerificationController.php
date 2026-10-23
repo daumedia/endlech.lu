@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Marketing\MarketingContactRegistry;
+use App\Onboarding\OnboardingFlow;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -41,6 +43,7 @@ final class EmailVerificationController extends AbstractController
     #[Route('/verify/{token}', name: 'app_verify_email', requirements: ['token' => '[a-f0-9]{64}'])]
     public function verify(
         string $token,
+        Request $request,
         UserRepository $userRepository,
         EntityManagerInterface $entityManager,
         MarketingContactRegistry $marketingContacts,
@@ -63,6 +66,12 @@ final class EmailVerificationController extends AbstractController
         $user->setVerificationToken(null);
         $user->setVerificationTokenExpiresAt(null);
 
+        // Feature 12: Ab hier ist die Einführung für dieses Konto vorgesehen. Bestandskonten
+        // sind nie durch diese Zeile gegangen und bekommen sie deshalb nicht (AK-06); wer bei
+        // der Auslieferung noch unbestätigt war, bekommt sie jetzt (AK-07). Konten aus der
+        // App bestätigen über denselben Link (AK-08).
+        $user->markOnboardingDue();
+
         // Feature 04 / AK-05: Erst hier ist belegt, dass die Adresse dem Konto
         // gehört – vorher geht sie nicht nach Brevo (EC-03). Der Aufruf steht
         // deshalb NACH setIsVerified(true): Die Registry prüft die Bedingung
@@ -71,9 +80,24 @@ final class EmailVerificationController extends AbstractController
         // Sie schreibt nur ins Auftragsbuch und persist()et; der flush() unten
         // nimmt die neue Zeile mit. Ein fremder Dienst wird hier nicht gerufen
         // (AK-17).
-        $marketingContacts->recordUser($user);
+        //
+        // Feature 12, AK-40: Die Sprache dieser Anfrage wird die Sprache des Kontakts — der
+        // Link trägt die Sprache, in der registriert wurde. Bis dahin stand hier fest `de`.
+        $marketingContacts->recordUser($user, $request->getLocale());
 
         $entityManager->flush();
+
+        // Feature 12, AK-05: Wer schon mit genau diesem Konto angemeldet ist, landet direkt in
+        // der Einführung. Die Anmeldeseite schickte ihn sonst auf die Startseite weiter, und
+        // mit „angemeldet bleiben" sähe er die Einführung erst Wochen später.
+        //
+        // ⚠ BF-161: ohne die Meldung „Du kannst dich jetzt anmelden" — er ist angemeldet, und die
+        // Willkommensseite sagt selbst, dass die Adresse bestätigt ist.
+        $angemeldet = $this->getUser();
+
+        if ($angemeldet instanceof User && $angemeldet->getId() === $user->getId()) {
+            return $this->redirectToRoute('app_onboarding', ['schritt' => OnboardingFlow::WELCOME]);
+        }
 
         $this->addFlash('success', $this->translator->trans('flash.verify_success'));
 

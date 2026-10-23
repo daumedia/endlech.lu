@@ -1,0 +1,19 @@
+AK-49 SQL: {"vorgesehen":"21","angezeigt":"10"}
+AK-49 Kachel: 👋 Einführung 10 / 21 21 Konten mit Einführung · 10 davon angezeigt Konten, die ihre Adresse bestätigt haben, seit es die Einführung gibt. · Links in der Kachel: 0 · @ in der Kachel: 0
+AK-49 /de/admin als Nutzer: 403
+EC-09 Neustart: 200 „Schritt 1 von 4 Willkommen“ · shown vorher 2026-10-23 11:50:08 nachher 2026-10-23 11:50:08 · Kachel: 👋 Einführung 10 / 21 21 Konten mit Einführung · 10 davon angezeigt Konten, die ihre Adresse bestätigt haben, seit es die Einführung gibt. · Links in der Kachel: 0 · @ in der Kachel: 0
+AK-57 Newsletter-Schritt mit Admin-Kennung: 302 → /de/restaurants · Anna abonniert · Admin vorher {"id":126,"name":"Admin User","email":"admin@endlech.lu","is_verified":1,"onboarding_due":0,"onboarding_shown_at":null,"marketing_consent_at":null,"avatar_filename":null,"pending_email":null} nachher {"id":126,"name":"Admin User","email":"admin@endlech.lu","is_verified":1,"onboarding_due":0,"onboarding_shown_at":null,"marketing_consent_at":null,"avatar_filename":null,"pending_email":null}
+AK-57 Upload mit Admin-Kennung: 302 → /de/einfuehrung/profilbild · Anna Bild 6adb4aed524ce0.03680763.png · Admin Bild NULL
+AK-57 Profilschalter mit Admin-Kennung: 302 → /de/profile · Anna nicht abonniert · Admin nachher {"id":126,"name":"Admin User","email":"admin@endlech.lu","is_verified":1,"onboarding_due":0,"onboarding_shown_at":null,"marketing_consent_at":null,"avatar_filename":null,"pending_email":null}
+AK-58 Upload von fremder Herkunft: 422 · Meldung „Der CSRF-Token ist ungültig. Versuchen Sie bitte, das Formular erneut zu senden.“
+AK-58 Profilschalter mit falschem Token: → /de/profile · Flash „Ungültiges CSRF-Token. Bitte versuche es erneut.“
+AK-58 Newsletter-Schritt ohne Token-Cookie, fremde Herkunft: 422
+AK-58 Anna vorher = nachher: ja
+AK-62 Export 200 application/json; charset=utf-8: {"account.marketingConsent":true,"account.marketingConsentAt":"2026-10-23T11:51:20+00:00","account.onboardingDue":true,"account.onboardingShownAt":"2026-10-23T11:51:21+00:00"} · DB {"onboarding_due":1,"onboarding_shown_at":"2026-10-23 11:51:21","marketing_consent_at":"2026-10-23 11:51:20"}
+AK-61 vorher: {"id":151,"name":"Ines Vierte","email":"ines4-115418@example.org","is_verified":1,"onboarding_due":1,"onboarding_shown_at":"2026-10-23 11:54:22","marketing_consent_at":"2026-10-23 11:54:23","avatar_filename":"6adb4aeee96206.86209513.png","pending_email":null} · Datei vorhanden ja · Kontakt {"id":74,"email":"ines4-115418@example.org","origin":"account","locale":"de","sync_state":"synced","consent_at":"2026-10-23 11:54:23","revoked_at":null,"synced_at":"2026-10-23 11:54:23","attempts":0}
+AK-61 löschen: 302 → /de/
+AK-61 nachher: Konto NULL · Datei vorhanden JA · Kontakt {"id":74,"email":"ines4-115418@example.org","origin":"account","locale":"de","sync_state":"removal_pending","consent_at":"2026-10-23 11:54:23","revoked_at":null,"synced_at":"2026-10-23 11:54:23","attempts":0}
+AK-61 Anmeldung danach: 302 → /de/login
+EC-10 Sitzung B löscht: 302 → /de/ · Konto NULL
+EC-10 Sitzung A nächster Schritt: 302 → /de/login
+EC-10 Sitzung A Newsletter absenden: 302 → /de/login · Kontakt NULL · Konto NULL

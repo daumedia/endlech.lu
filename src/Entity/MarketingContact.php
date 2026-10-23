@@ -347,7 +347,11 @@ class MarketingContact
      */
     public function markFailed(string $reason): static
     {
-        if (MarketingSyncState::REMOVAL_PENDING !== $this->syncState) {
+        // Lösch- und Sperraufträge behalten ihren Zustand: Als `FAILED` wüsste der nächste Lauf
+        // nicht mehr, was zu tun war — und bei einer gesperrten Zeile holte er sie gar nicht
+        // mehr ab (Feature 12, AK-36).
+        if (MarketingSyncState::REMOVAL_PENDING !== $this->syncState
+            && MarketingSyncState::BLACKLIST_PENDING !== $this->syncState) {
             $this->syncState = MarketingSyncState::FAILED;
         }
 

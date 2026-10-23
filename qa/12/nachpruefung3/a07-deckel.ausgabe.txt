@@ -1,0 +1,18 @@
+AK-60 abbestellen ohne Abo 1:  · Stand nicht abonniert · Absender 
+AK-60 abbestellen ohne Abo 2:  · Stand nicht abonniert · Absender 
+AK-60 abbestellen ohne Abo 3:  · Stand nicht abonniert · Absender 
+AK-59 Wechsel 1 (subscribe): Du hast den Newsletter abonniert. · Stand abonniert · Absender 
+AK-59 Wechsel 2 (unsubscribe): Du hast den Newsletter abbestellt. · Stand nicht abonniert · Absender 
+AK-59 Wechsel 3 (subscribe): Du hast den Newsletter abonniert. · Stand abonniert · Absender 
+AK-59 Wechsel 4 (unsubscribe): Du hast den Newsletter abbestellt. · Stand nicht abonniert · Absender 
+AK-59 Wechsel 5 (subscribe): Du hast den Newsletter abonniert. · Stand abonniert · Absender 
+AK-59 Wechsel 6 (unsubscribe): Du hast den Newsletter abbestellt. · Stand nicht abonniert · Absender 
+AK-59 Wechsel 7 (subscribe): Du hast den Newsletter abonniert. · Stand abonniert · Absender 
+AK-59 Wechsel 8 (unsubscribe): Du hast den Newsletter abbestellt. · Stand nicht abonniert · Absender 
+AK-59 Wechsel 9 (subscribe): Du hast den Newsletter abonniert. · Stand abonniert · Absender 
+AK-59 Wechsel 10 (unsubscribe): Du hast den Newsletter abbestellt. · Stand nicht abonniert · Absender 
+AK-59 Wechsel 11 (subscribe): Zu viele Änderungen. Bitte versuch es in 60 Minuten erneut. · Stand nicht abonniert · Absender 
+AK-59 Wechsel 12 (unsubscribe): Zu viele Änderungen. Bitte versuch es in 60 Minuten erneut. · Stand nicht abonniert · Absender 
+Kontakt nach dem Deckel: {"id":72,"email":"kurt4-115352@example.org","origin":"account","locale":"de","sync_state":"blacklist_pending","consent_at":"2026-10-23 11:53:57","revoked_at":"2026-10-23 11:53:57","synced_at":null,"attempts":0}
+AK-59 Einführungsschritt danach: 302 → /de/einfuehrung/newsletter
+  Seite „Schritt 4 von 4 Newsletter“ · Meldung „Zu viele Änderungen. Bitte versuch es in 60 Minuten erneut.“ · Stand nicht abonniert · Messauslöser „abgeschlossen" 0

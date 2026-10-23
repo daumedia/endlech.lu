@@ -1,0 +1,11 @@
+Eva angemeldet: 302 → /de/einfuehrung · {"id":139,"email":"eva4-115104@example.org","pending_email":null}
+Adresswechsel 1 auf uebernahme4-115104@example.org (ohne Bild): Flash „Fast geschafft: Wir haben einen Bestätigungslink an uebernahme4-115104@example.org geschickt. Deine bisherige Adresse bleibt gültig, bis du ihn anklickst.“ · DB {"email":"eva4-115104@example.org","pending_email":"uebernahme4-115104@example.org"}
+Adresswechsel 2 auf uebernahme4-115104@example.org (ohne Bild): Flash „Fast geschafft: Wir haben einen Bestätigungslink an uebernahme4-115104@example.org geschickt. Deine bisherige Adresse bleibt gültig, bis du ihn anklickst.“ · DB {"email":"eva4-115104@example.org","pending_email":"uebernahme4-115104@example.org"}
+Adresswechsel 3 auf uebernahme4-115104@example.org (ohne Bild): Flash „Fast geschafft: Wir haben einen Bestätigungslink an uebernahme4-115104@example.org geschickt. Deine bisherige Adresse bleibt gültig, bis du ihn anklickst.“ · DB {"email":"eva4-115104@example.org","pending_email":"uebernahme4-115104@example.org"}
+4. Absenden mit Bild: 302 → /de/profile
+  Flash „Zu viele Adressänderungen. Bitte versuche es in einer Stunde erneut.“
+  Konto in der Datenbank: {"id":139,"email":"eva4-115104@example.org","pending_email":"uebernahme4-115104@example.org","is_verified":1}
+  Konto unter alter Adresse: {"id":139,"name":"Eva Vierte","email":"eva4-115104@example.org","is_verified":1,"onboarding_due":1,"onboarding_shown_at":null,"marketing_consent_at":null,"avatar_filename":"6adb4a294bbc43.67292670.jpg","pending_email":"uebernahme4-115104@example.org"} · unter neuer Adresse: NULL
+Anmeldung mit der neuen, nie bestätigten Adresse: 302 → /de/login
+Anmeldung mit der bisherigen Adresse: 302 → /de/einfuehrung
+Passwort vergessen für die neue Adresse: 302 → /de/login · Reset-Token gesetzt: nein

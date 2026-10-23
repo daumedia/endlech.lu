@@ -1,8 +1,17 @@
 {# Flash-Nachrichten (Erfolg, Fehler, Info) #}
 {% for type, messages in app.flashes %}
     {% for message in messages %}
+        {% if type == 'usage_event' %}
+            {# Feature 12, BF-171: ein Messereignis, das der Server erst nach einer gelungenen Handlung
+               auslöst. Der Name kommt aus dem Controller (UsageEventCatalogue), nie aus einer Eingabe;
+               die Weiterleitung prüft ihn ohnehin gegen den Katalog. Ohne Zählskript geschieht nichts. #}
+            {# ⚠ BF-177: `data-turbo-temporary` — Turbo nimmt das Element vor dem Zwischenspeichern heraus.
+               Sonst zählte jede Rückkehr aus dem Zwischenspeicher („Zurück", Vorschau) erneut. #}
+            <div hidden data-turbo-temporary data-controller="usage-event" data-usage-event-name-value="{{ message }}" data-usage-event-on-connect-value="true"></div>
+        {% else %}
         <div class="{% if type == 'success' %}bg-green-50 border-green-400 text-green-800{% elseif type == 'error' %}bg-red-50 border-red-400 text-red-800{% else %}bg-blue-50 border-blue-400 text-blue-800{% endif %} border-l-4 px-4 py-3 rounded-r-lg mb-4" role="alert">
             <p class="text-sm font-medium">{{ message }}</p>
         </div>
+        {% endif %}
     {% endfor %}
 {% endfor %}

@@ -1,0 +1,46 @@
+# Nachprüfung 2026-10-23 · AK-30 bis AK-38 am laufenden Server
+## AK-30: Häkchen nicht vorangehakt (Frieda)
+<input type="checkbox" id="onboarding_newsletter_consent" name="onboarding_newsletter[consent]" class="mt-0.5 w-5 h-5 shrink-0 cursor-pointer rounded border-gray-500 text-cyan-700 focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700" aria-describedby="einfuehrung-newsletter-hinweis" value="1" />
+## AK-33: Clara willigt in der Einführung unter /fr/ ein
+Anmeldung: 302 http://127.0.0.1:8099/fr/einfuehrung
+Absenden mit Häkchen: 302 http://127.0.0.1:8099/fr/restaurants
+Konto: verified=1 due=1 shown=2026-10-23 09:45:23 consent=2026-10-23 09:45:23 avatar=NULL
+Kontakt: clara.neu@example.org | account | fr | pending | 2026-10-23 09:45:23 | NULL | NULL
+## AK-13 nach Einwilligung in der Einführung: Étape 3 sur 3
+## AK-34/35/36: Profil (Gustav)
+Stand: Nicht abonniert
+Schalter: subscribe → 302 http://127.0.0.1:8099/de/profile
+Stand: Abonniert seit 23.10.2026 · gustav.neu@example.org | account | de | pending | 2026-10-23 09:45:24 | NULL | NULL
+Abbestellen vor dem ersten Abgleich: unsubscribe → 302 http://127.0.0.1:8099/de/profile
+Stand: Nicht abonniert · Konto: verified=1 due=1 shown=NULL consent=NULL avatar=NULL · Kontakt: gustav.neu@example.org | account | de | pending | 2026-10-23 09:45:24 | 2026-10-23 09:45:25 | NULL
+Wieder abonnieren: subscribe → 302 http://127.0.0.1:8099/de/profile · Kontakt: gustav.neu@example.org | account | de | pending | 2026-10-23 09:45:26 | 2026-10-23 09:45:25 | NULL
+-- Abgleich simuliert (synced_at gesetzt, Zustand synced), dann abbestellen
+Abbestellen: unsubscribe → 302 http://127.0.0.1:8099/de/profile · Stand: Nicht abonniert · Konto: verified=1 due=1 shown=NULL consent=NULL avatar=NULL
+Kontakt: gustav.neu@example.org | account | de | blacklist_pending | 2026-10-23 09:45:26 | 2026-10-23 09:45:27 | 2026-10-23 09:45:26
+## BF-155 am Server: unbestätigtes Konto mit der Adresse eines Wartelisten-Kontakts
+Insert: 0
+Insert: 0
+vorher: Warteliste consent=2026-10-18 09:45:28 · Kontakt: opfer@example.org | app | de | synced | 2026-10-18 09:45:28 | NULL | 2026-10-18 09:45:28
+Konto angelegt (unbestätigt): verified=0 due=0 shown=NULL consent=NULL avatar=NULL
+Schalter 1: subscribe → 302 http://127.0.0.1:8099/de/profile · Schalter 2: unsubscribe → 302 http://127.0.0.1:8099/de/profile
+nachher: Warteliste consent=2026-10-18 09:45:28 · Kontakt: opfer@example.org | app | de | synced | 2026-10-18 09:45:28 | NULL | 2026-10-18 09:45:28 · Konto: verified=0 due=0 shown=NULL consent=NULL avatar=NULL
+## BF-157 am Server: Gustav (blacklist_pending) bestätigt einen Adresswechsel vor dem nächsten Lauf
+Adressänderung beantragt: 302 http://127.0.0.1:8099/de/profile · pending=gustav.zwei@example.org
+Bestätigung: 302 http://127.0.0.1:8099/de/login
+Konto: gustav.zwei@example.org · Kontakt: gustav.zwei@example.org | account | de | blacklist_pending | 2026-10-23 09:45:26 | 2026-10-23 09:45:27 | 2026-10-23 09:45:26 · alte Adresse: 
+## BF-160 am Server: vier Wechsel so schnell wie möglich (Hanna)
+11:45:48.120 subscribe → 302 http://127.0.0.1:8099/de/profile
+11:45:48.158 unsubscribe → 302 http://127.0.0.1:8099/de/profile
+11:45:48.195 subscribe → 302 http://127.0.0.1:8099/de/profile
+11:45:48.229 unsubscribe → 302 http://127.0.0.1:8099/de/profile
+Konto: verified=1 due=1 shown=NULL consent=NULL avatar=NULL
+Kontakt: hanna.neu@example.org | account | de | pending | 2026-10-23 09:45:49 | 2026-10-23 09:45:49 | NULL · gesperrt (consent_at <= revoked_at): 1
+## AK-37 am Server :8097 (lokales Webhook-Geheimnis): Clara bestellt über den Link einer Brevo-Mail ab
+Profil vorher: Abonniert seit 23.10.2026 · Kontakt: clara.neu@example.org | account | fr | pending | 2026-10-23 09:45:23 | NULL | NULL
+falsches Geheimnis: 401
+Webhook: 200
+Profil nachher: Nicht abonniert · Konto: verified=1 due=1 shown=2026-10-23 09:45:23 consent=NULL avatar=NULL · Kontakt: clara.neu@example.org | account | fr | pending | 2026-10-23 09:45:23 | 2026-10-23 09:47:07 | NULL
+## AK-39: Anna ohne Einwilligung ändert ihren Namen
+vorher: verified=1 due=1 shown=2026-10-23 09:40:59 consent=NULL avatar=6adb2d4a555d47.15501824.png · Name Anna Neu
+POST: 302 http://127.0.0.1:8099/de/profile
+nachher: Name Anna Umbenannt · consent NULL

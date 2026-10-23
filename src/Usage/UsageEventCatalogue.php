@@ -31,6 +31,18 @@ final readonly class UsageEventCatalogue
     public const string PRESS_KIT_DOWNLOADED = 'presse_kit_geladen';
     public const string DATASET_DOWNLOADED = 'datensatz_geladen';
 
+    /**
+     * Die drei Ereignisse der Einführung (Feature 12, AK-50). Sie zeigen, an welcher Stelle
+     * Leute aussteigen — nie, wer, und nie, ob jemand abonniert oder ein Bild hochgeladen hat
+     * (AK-51). „Beendet" trägt nur die Nummer des Bildschirms.
+     */
+    public const string ONBOARDING_STARTED = 'einfuehrung_begonnen';
+    public const string ONBOARDING_COMPLETED = 'einfuehrung_abgeschlossen';
+    public const string ONBOARDING_LEFT = 'einfuehrung_beendet';
+
+    /** Bildschirmnummern der Einführung — mehr als vier gibt es nicht. */
+    public const array ONBOARDING_STEPS = ['1', '2', '3', '4'];
+
     /** Filter mit Ja/Nein-Wert, wie sie die Restaurantliste als Abfrageparameter liest. */
     public const array FILTER_KEYS = [
         'verified',
@@ -71,6 +83,9 @@ final readonly class UsageEventCatalogue
             self::VOTE_GIVEN,
             self::PRESS_KIT_DOWNLOADED,
             self::DATASET_DOWNLOADED,
+            self::ONBOARDING_STARTED,
+            self::ONBOARDING_COMPLETED,
+            self::ONBOARDING_LEFT,
         ];
     }
 
@@ -92,6 +107,7 @@ final readonly class UsageEventCatalogue
             self::CONTACT_USED => ['art', 'plattform'],
             self::WAITLIST_JOINED => ['liste'],
             self::DATASET_DOWNLOADED => ['format'],
+            self::ONBOARDING_LEFT => ['schritt'],
             default => [],
         };
     }
@@ -118,6 +134,7 @@ final readonly class UsageEventCatalogue
             self::CONTACT_USED => $this->isValidContact($data),
             self::WAITLIST_JOINED => \in_array($data['liste'] ?? null, self::WAITLISTS, true),
             self::DATASET_DOWNLOADED => \in_array($data['format'] ?? null, self::DATASET_FORMATS, true),
+            self::ONBOARDING_LEFT => \in_array($data['schritt'] ?? null, self::ONBOARDING_STEPS, true),
             default => [] === $data,
         };
     }

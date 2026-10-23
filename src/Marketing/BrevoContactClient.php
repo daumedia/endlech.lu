@@ -131,6 +131,15 @@ final class BrevoContactClient
             $update['listIds'] = $payload['listIds'];
         }
 
+        // ⚠ BF-154: Die Aufhebung einer Sperre (`emailBlacklisted: false`, Feature 12, Entscheidung 6)
+        // muss auch auf dem Aktualisierungsweg mit. Vorher übernahm dieser Rumpf nur Attribute und
+        // Listen — wer abbestellt und wieder abonniert hatte, blieb bei Brevo gesperrt, während das
+        // Profil „abonniert" zeigte. Ob das Feld überhaupt im Rumpf steht, entscheidet allein der
+        // Mapper; im Normalfall fehlt es (04/EC-05).
+        if (\array_key_exists('emailBlacklisted', $payload)) {
+            $update['emailBlacklisted'] = $payload['emailBlacklisted'];
+        }
+
         $status = $this->request(
             'PUT',
             self::ENDPOINT.'/'.rawurlencode($extId),
@@ -182,6 +191,32 @@ final class BrevoContactClient
         }
 
         throw $this->gescheitert(BrevoRequestFailed::fromStatus($status), 'delete');
+    }
+
+    /**
+     * Sperrt den Kontakt für Werbung, adressiert über die eigene Kennung (Feature 12, AK-36).
+     *
+     * Der Rumpf trägt **nur** `emailBlacklisted` — keine Attribute, keine Liste. Ein
+     * mitgeschicktes Attribut würde überschreiben, was dort steht, und die Sperre soll nichts
+     * anderes ändern als die Zustellbarkeit.
+     *
+     * ⚠ **404 gilt als Erfolg**, wie beim Löschen: Gibt es den Kontakt dort nicht, bekommt er
+     * auch nichts.
+     *
+     * @throws BrevoRequestFailed
+     */
+    public function blacklist(int $extId): void
+    {
+        $status = $this->request('PUT', self::ENDPOINT.'/'.$extId, 'blacklist', [
+            'json' => ['emailBlacklisted' => true],
+            'query' => ['identifierType' => 'ext_id'],
+        ]);
+
+        if (404 === $status || $this->isSuccess($status)) {
+            return;
+        }
+
+        throw $this->gescheitert(BrevoRequestFailed::fromStatus($status), 'blacklist');
     }
 
     private function isSuccess(int $status): bool

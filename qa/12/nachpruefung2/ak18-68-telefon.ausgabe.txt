@@ -1,0 +1,8 @@
+AK-18 / AK-68 im Browser, iPhone SE 375 × 667 (Viewport 360 + Scrollleiste), Konto brigitte3-824604@example.org, Turbo-Seitenwechsel:
+  willkommen (Schritt 1 von 3): Kopfzeile 81 px hoch; untere Leiste Home/Restaurants/Über uns/Mein Profil je 90×60; kein waagerechtes Scrollen
+     Ziele: Restaurant vorschlagen 236×44 · Zur App-Warteliste 236×44 · Weiter 99×48 · Einführung beenden 162×44
+  eintraege (2 von 3): Zurück 108×52 · Weiter 99×48 · Einführung beenden 162×44
+  profilbild (3 von 3): Dateifeld 278×46 · Bild hochladen 145×44 · Zurück 108×52 · Restaurants suchen 204×48 · Einführung beenden 162×44
+  newsletter (4 von 4, nach Abbestellen): Häkchen 20×20 mit Label 212×68 (H-2) · Zurück 108×52 · Restaurants suchen 204×48 · Einführung beenden 162×44
+  Ziele unter 44 px (ohne das Häkchen selbst): keine
+  Bildschirmfoto: qa/12/nachpruefung2/ak18-newsletter-telefon.png (die Symfony-Werkzeugleiste unten gibt es nur im Entwicklungsmodus)

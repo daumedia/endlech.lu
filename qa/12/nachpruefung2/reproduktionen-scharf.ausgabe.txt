@@ -1,0 +1,44 @@
+PHPUnit 12.5.4 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.5.12
+Configuration: /Users/michaelferreira/DEV/SaaS/endlech/phpunit.dist.xml
+
+......F........S.                                                 17 / 17 (100%)
+
+Time: 00:05.113, Memory: 66.50 MB
+
+Qa12Nachpruefung (App\Tests\Functional\Controller\Qa12Nachpruefung)
+ ✔ Ak 35 wieder einwilligung hebt die sperre auf
+ ✔ Bf 165 spaeterer abgleich hebt eine abmeldung bei brevo nicht auf
+ ✔ Bf 165 verspaeteter webhook hinterlaesst keinen entsperrten kontakt
+ ✔ Bf 166 abmeldung waehrend des abgleichs erreicht brevo
+ ✔ Bf 167 abmeldung nach gescheiterter erstuebertragung erreicht brevo
+ ✔ Bf 168 gescheiterter sperrauftrag wird weiter versucht
+ ✘ Bf 169 adresswechsel auf vorhandenen kontakt entfernt den alten
+   │
+   │ Der Kontakt der aufgegebenen Adresse muss gelöscht werden (Kommentar in changeEmail()).
+   │ Failed asserting that two variables reference the same object.
+   │ --- Expected
+   │ +++ Actual
+   │ @@ @@
+   │ -App\Enum\MarketingSyncState Enum #2289 (REMOVAL_PENDING, 'removal_pending')
+   │ +App\Enum\MarketingSyncState Enum #4068 (SYNCED, 'synced')
+   │
+   │ /Users/michaelferreira/DEV/SaaS/endlech/tests/Functional/Controller/Qa12NachpruefungTest.php:425
+   │ /Users/michaelferreira/DEV/SaaS/endlech/vendor/phpunit/phpunit/phpunit:104
+   │
+
+Qa12Onboarding (App\Tests\Functional\Controller\Qa12Onboarding)
+ ✔ Ak 33 ak 40 ak 56 rumpf an brevo nach einwilligung in der einfuehrung
+ ✔ Ak 36 abbestellen schickt nur die sperre
+ ✔ Bf 154 wieder einwilligung hebt die sperre bei brevo auf
+ ✔ Bf 155 unbestaetigtes konto nimmt fremde einwilligung nicht
+ ✔ Bf 157 adresswechsel laesst den sperrauftrag stehen
+ ✔ Bf 158 vorabladen vermerkt keine anzeige
+ ✔ Bf 159 uebergrosser upload zeigt eine meldung
+ ✔ Bf 160 schnelles umschalten endet gesperrt
+ ↩ Bf 156 anmeldung nach double submit in derselben sitzung
+ ✔ Ak 11 absendewege verlangen eine bestaetigte adresse
+
+FAILURES!
+Tests: 17, Assertions: 70, Failures: 1, Skipped: 1.

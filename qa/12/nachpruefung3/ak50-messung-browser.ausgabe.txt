@@ -1,0 +1,26 @@
+QA Feature 12, vierter Durchlauf (2026-10-23) — Messereignisse im Browser (Chromium-Vorschau, 1280 × 800, Turbo aktiv)
+Server :8094 = Entwicklung mit Website-Kennung; /zaehler.js ist eine Attrappe, die wie das echte Skript `window.umami`
+beim Ausführen setzt und jeden track()-Aufruf per sendBeacon an /__qa_zaehler schickt (Router schreibt mit:
+/tmp/endlech-f12/vierte/zaehlaufrufe.jsonl). Das echte public/zaehler.js zählt auf 127.0.0.1 nichts (data-domains=endlech.lu).
+Router: /tmp/endlech-f12/vierte/router4-zaehler.php
+
+Konto bruno4-b4753632@example.org, im Browser registriert, Link im selben Browser geöffnet, Anmeldung auf der frisch geladenen
+Anmeldeseite (BF-156, Weg 1) → /de/einfuehrung, Fokus #einfuehrung-titel.
+
+1) BF-179 — voller Seitenaufruf /de/einfuehrung (navigate):
+   Server-Mitschrift: {"t":"12:00:17","aufruf":{"name":"einfuehrung_begonnen","data":null,"pfad":"/de/einfuehrung","ms":368}}   → behoben
+2) „Weiter" ×3 (Turbo), Bild per Knopf „Bild hochladen" (Datei per DataTransfer gesetzt), Häkchen per Leertaste,
+   „Restaurants suchen" → /de/restaurants, Flash „Du hast den Newsletter abonniert.", ein Auslöser im DOM;
+   Aufrufe: [["einfuehrung_begonnen",null],["einfuehrung_abgeschlossen",null]]
+   Server-Mitschrift: {"t":"12:01:17","aufruf":{"name":"einfuehrung_abgeschlossen","data":null,"pfad":"/de/restaurants","ms":60510}}
+3) BF-177 — zweimal: Restaurant 56 öffnen (Turbo), history.back() → Liste aus Turbos Zwischenspeicher:
+   Auslöser im DOM 0, Aufrufe unverändert 2 (kein zweites „abgeschlossen")   → behoben
+4) NEU (BF-183) — Profil voll laden (/de/profile trägt kein Zählskript, Absicht), Link „Einführung ansehen" (Turbo):
+   [ms nach Klick, Pfad, typeof umami, Auslöser im DOM, Zahl der Aufrufe]
+   ["vorher","undefined"]
+   [105,"/de/einfuehrung","undefined",true,0]
+   [206,"/de/einfuehrung","object",true,0]
+   [510 … 3040,"/de/einfuehrung","object",true,0]
+   window.__zaehler = {"aufrufe":[], "ausgefuehrt": 2298.9}   → „Einführung begonnen" geht verloren (EC-09: Neustart soll
+   wieder als „begonnen" zählen). Ursache: Turbo fügt das Zählskript des neuen Kopfes erst nach dem Rendern ein; der Auslöser
+   verbindet vorher, `document.readyState` ist 'complete', der Wiederholversuch aus BF-179 greift deshalb nicht.

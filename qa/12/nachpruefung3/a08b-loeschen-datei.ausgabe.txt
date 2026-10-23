@@ -1,0 +1,3 @@
+vorher: Bild 6adb4b087fe0d1.34054402.png · is_file ja · test -e ja
+löschen: 302 → /de/ · Konto NULL
+nachher: is_file nein · test -e nein · Kontakt NULL

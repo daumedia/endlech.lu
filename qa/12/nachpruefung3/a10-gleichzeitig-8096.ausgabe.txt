@@ -1,0 +1,12 @@
+Server http://127.0.0.1:8096
+BF-172 Durchgang 1: 302 /de/profile | 302 /de/profile · Kontaktzeilen 1 · Konto abonniert: ja · MySQL-Fehler 1062 (Duplicate entry) in diesem Durchgang: 1
+BF-172 Durchgang 2: 302 /de/profile | 302 /de/profile · Kontaktzeilen 1 · Konto abonniert: ja · MySQL-Fehler 1062 (Duplicate entry) in diesem Durchgang: 1
+BF-172 Durchgang 3: 302 /de/profile | 302 /de/profile · Kontaktzeilen 1 · Konto abonniert: ja · MySQL-Fehler 1062 (Duplicate entry) in diesem Durchgang: 1
+BF-172 Durchgang 4: 302 /de/profile | 302 /de/profile · Kontaktzeilen 1 · Konto abonniert: ja · MySQL-Fehler 1062 (Duplicate entry) in diesem Durchgang: 1
+BF-172 Durchgang 5: 302 /de/profile | 302 /de/profile · Kontaktzeilen 1 · Konto abonniert: ja · MySQL-Fehler 1062 (Duplicate entry) in diesem Durchgang: 1
+BF-172 Summe: 0 × HTTP 500 in 5 Durchgängen
+BF-173 Durchgang 1: 302 | 302 | 302 | 302 · neue Dateien 1 · Konto verweist auf 6adb4ba165f338.18287252.jpg · verwaist 0
+BF-173 Durchgang 2: 302 | 302 | 302 | 302 · neue Dateien 1 · Konto verweist auf 6adb4ba4ea3294.93418317.jpg · verwaist 0
+BF-173 Durchgang 3: 302 | 302 | 302 | 302 · neue Dateien 1 · Konto verweist auf 6adb4ba8634f64.06518096.jpg · verwaist 0
+BF-173 Durchgang 4: 302 | 302 | 302 | 302 · neue Dateien 1 · Konto verweist auf 6adb4babd09835.83715878.jpg · verwaist 0
+BF-173 Durchgang 5: 302 | 302 | 302 | 302 · neue Dateien 1 · Konto verweist auf 6adb4baf4a5716.75352406.jpg · verwaist 0

@@ -58,6 +58,9 @@
         {# Passkeys #}
         {% include 'partials/_passkey_manage.html.twig' %}
 
+        {# Newsletter und Einführung (Feature 12) #}
+        {% include 'profile/_newsletter_manage.html.twig' %}
+
         {# Profil-Formular #}
         <div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
             <h2 class="text-lg font-bold text-gray-900 mb-6">{{ 'profile.section_info'|trans }}</h2>
@@ -102,12 +105,13 @@
                     {% if app.user.avatarUrl %}
                         <div class="flex items-center gap-4 mb-3">
                             <img src="{{ asset(app.user.avatarUrl) }}" alt="{{ app.user.name }}" class="w-16 h-16 rounded-full object-cover ring-2 ring-purple-100">
-                            <form method="post" action="{{ path('app_profile_avatar_delete') }}" onsubmit="return confirm('{{ 'profile.form.delete_avatar_confirm'|trans }}')">
-                                <input type="hidden" name="_token" value="{{ csrf_token('delete-avatar') }}">
-                                <button type="submit" class="text-sm text-red-600 hover:text-red-800 font-medium transition">
-                                    {{ 'profile.form.delete_avatar'|trans }}
-                                </button>
-                            </form>
+                            {# ⚠ BF-164: Der Knopf gehört zum Formular `profil-bild-entfernen` UNTER dem
+                               Profilformular (Attribut `form`). Stand das Formular hier, war es ein
+                               <form> im <form>: Der Browser verwarf das innere Tag, „Änderungen speichern"
+                               gehörte zu keinem Formular mehr, „Profilbild entfernen" schickte das falsche. #}
+                            <button type="submit" form="profil-bild-entfernen" class="text-sm text-red-600 hover:text-red-800 font-medium transition">
+                                {{ 'profile.form.delete_avatar'|trans }}
+                            </button>
                         </div>
                     {% endif %}
 
@@ -121,6 +125,13 @@
                 </button>
 
             {{ form_end(profileForm) }}
+
+            {% if app.user.avatarUrl %}
+                {# BF-164: eigenes Formular außerhalb des Profilformulars, der Knopf steht oben beim Bild. #}
+                <form id="profil-bild-entfernen" method="post" action="{{ path('app_profile_avatar_delete') }}" onsubmit="return confirm('{{ 'profile.form.delete_avatar_confirm'|trans }}')">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete-avatar') }}">
+                </form>
+            {% endif %}
         </div>
 
         {# Passwort-Formular #}
@@ -206,7 +217,7 @@
            ein <a href> wäre ein GET und von einer fremden Seite auslösbar. #}
         <div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
             <form method="post" action="{{ path('app_logout') }}">
-                <input type="hidden" name="_csrf_token" value="{{ csrf_token('logout') }}">
+                <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('logout') }}">
                 <button type="submit"
                         class="w-full inline-flex items-center justify-center gap-2 min-h-[44px] px-5 rounded-lg border border-gray-300 text-sm font-semibold text-gray-700 hover:border-purple-500 hover:text-purple-700 motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-purple-700">
                     <span aria-hidden="true">↩</span>

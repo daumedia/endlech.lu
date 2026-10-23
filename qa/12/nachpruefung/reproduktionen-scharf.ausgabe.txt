@@ -1,0 +1,30 @@
+PHPUnit 12.5.4 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.5.12
+Configuration: /Users/michaelferreira/DEV/SaaS/endlech/phpunit.dist.xml
+
+........F.                                                        10 / 10 (100%)
+
+Time: 00:01.665, Memory: 66.50 MB
+
+Qa12Onboarding (App\Tests\Functional\Controller\Qa12Onboarding)
+ ✔ Ak 33 ak 40 ak 56 rumpf an brevo nach einwilligung in der einfuehrung
+ ✔ Ak 36 abbestellen schickt nur die sperre
+ ✔ Bf 154 wieder einwilligung hebt die sperre bei brevo auf
+ ✔ Bf 155 unbestaetigtes konto nimmt fremde einwilligung nicht
+ ✔ Bf 157 adresswechsel laesst den sperrauftrag stehen
+ ✔ Bf 158 vorabladen vermerkt keine anzeige
+ ✔ Bf 159 uebergrosser upload zeigt eine meldung
+ ✔ Bf 160 schnelles umschalten endet gesperrt
+ ✘ Bf 156 anmeldung nach double submit in derselben sitzung
+   │
+   │ Die Anmeldung muss gelingen.
+   │ Failed asserting that 'http://localhost/de/login' [ASCII](length: 25) does not contain "/login" [ASCII](length: 6).
+   │
+   │ /Users/michaelferreira/DEV/SaaS/endlech/tests/Functional/Controller/Qa12OnboardingTest.php:417
+   │ /Users/michaelferreira/DEV/SaaS/endlech/vendor/phpunit/phpunit/phpunit:104
+   │
+ ✔ Ak 11 absendewege verlangen eine bestaetigte adresse
+
+FAILURES!
+Tests: 10, Assertions: 52, Failures: 1.

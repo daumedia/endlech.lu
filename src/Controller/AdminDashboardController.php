@@ -24,6 +24,8 @@ final class AdminDashboardController extends AbstractController
             'imageCount' => $stats->getImageCount(),
             'restaurantsThisMonth' => $stats->getRestaurantsAddedThisMonth(),
             'usersThisMonth' => $stats->getUsersRegisteredThisMonth(),
+            'onboardingDueCount' => $stats->getOnboardingDueCount(),
+            'onboardingShownCount' => $stats->getOnboardingShownCount(),
             'recentRestaurants' => $stats->getRecentRestaurants(5),
             'recentUsers' => $stats->getRecentUsers(5),
         ]);

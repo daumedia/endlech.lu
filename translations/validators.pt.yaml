@@ -36,7 +36,7 @@ ordering:
     url_max: "O URL não pode ter mais de {{ limit }} caracteres."
 
 profile:
-    avatar_max_size: "A foto de perfil não pode ter mais de {{ limit }}."
+    avatar_max_size: "A foto de perfil não pode ter mais de {{ limit }} {{ suffix }}."
     avatar_mime_type: "Carregue uma imagem em formato JPG, PNG ou WebP."
     current_password_blank: "Introduza a sua palavra-passe atual."
     new_password_blank: "Introduza uma nova palavra-passe."

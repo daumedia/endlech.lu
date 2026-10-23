@@ -1,0 +1,6 @@
+RFC-widrig (27 Zeichen): 500  · Titel „Email "../../etc/passwd@example.lu" does not comply with addr-spec of RFC 2822. (500 Internal Server Error)“ · email=vera4-120326-c0f0@example.org · pending_email=../../etc/passwd@example.lu
+   Profil danach: 200 · Hinweis auf offenen Wechsel: ja
+Punkt am Ende des lokalen Teils (25 Zeichen): 500  · Titel „Email "vera4.120326.@example.org" does not comply with addr-spec of RFC 2822. (500 Internal Server Error)“ · email=vera4-120326-87e8@example.org · pending_email=vera4.120326.@example.org
+   Profil danach: 200 · Hinweis auf offenen Wechsel: ja
+181 Zeichen (181 Zeichen): 500  · Titel „An exception occurred while executing a query: SQLSTATE[22001]: String data, right truncated: 1406 Data too lo“ · email=vera4-120326-49b0@example.org · pending_email=NULL
+   Profil danach: 200 · Hinweis auf offenen Wechsel: nein

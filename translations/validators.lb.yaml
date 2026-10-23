@@ -36,7 +36,7 @@ ordering:
     url_max: "D'URL dierf maximal {{ limit }} Zeechen laang sinn."
 
 profile:
-    avatar_max_size: "D'Profilbild dierf maximal {{ limit }} grouss sinn."
+    avatar_max_size: "D'Profilbild dierf maximal {{ limit }} {{ suffix }} grouss sinn."
     avatar_mime_type: "Luet w.e.g. e Bild am Format JPG, PNG oder WebP erop."
     current_password_blank: "Gëff w.e.g. däin aktuellt Passwuert an."
     new_password_blank: "Gëff w.e.g. en neit Passwuert an."

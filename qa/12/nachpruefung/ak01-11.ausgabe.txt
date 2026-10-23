@@ -1,0 +1,49 @@
+# Nachprüfung 2026-10-23 · AK-01 bis AK-11, EC-01/04/05 · curl gegen :8099, Zustand per SQL
+(eval):3: no matches found: /tmp/qa12b/jars/*.txt
+## AK-01: Registrierung (Frieda), Link als Gast, erste Anmeldung
+register: 302 http://127.0.0.1:8099/de/verify
+vor Bestätigung: verified=0 due=0 shown=NULL consent=NULL avatar=NULL
+verify als Gast: 302 http://127.0.0.1:8099/de/login
+nach Bestätigung: verified=1 due=1 shown=NULL consent=NULL avatar=NULL
+Anmeldung 1: 302 http://127.0.0.1:8099/de/einfuehrung
+GET Ziel: 200  · Titel: <title>Schritt 1 von 4: Willkommen – Endlech.lu
+nach Anzeige: verified=1 due=1 shown=2026-10-23 09:40:56 consent=NULL avatar=NULL
+## AK-02 + EC-01: zweite Anmeldung auf Gerät B
+Anmeldung Gerät B: 302 http://127.0.0.1:8099/de/
+## AK-03: Gast ruft Vorschlagen auf, meldet sich an (Bert)
+Bert: verified=1 due=1 shown=NULL consent=NULL avatar=NULL
+GET /de/community/suggest als Gast: 200 
+Anmeldung: 302 http://127.0.0.1:8099/de/community/suggest
+danach: verified=1 due=1 shown=NULL consent=NULL avatar=NULL
+nächste Anmeldung (neue Sitzung): 302 http://127.0.0.1:8099/de/einfuehrung
+## AK-04: unbestätigt (Anna)
+Anmeldung unbestätigt: 302 http://127.0.0.1:8099/de/
+Anna: verified=0 due=0 shown=NULL consent=NULL avatar=NULL
+## AK-11: unbestätigt ruft Einführung direkt auf
+GET /de/einfuehrung: 302 http://127.0.0.1:8099/de/verify
+GET /de/einfuehrung/eintraege: 302 http://127.0.0.1:8099/de/verify
+GET /de/einfuehrung/profilbild: 302 http://127.0.0.1:8099/de/verify
+GET /de/einfuehrung/newsletter: 302 http://127.0.0.1:8099/de/verify
+POST newsletter: 302 http://127.0.0.1:8099/de/verify
+POST profilbild: 302 http://127.0.0.1:8099/de/verify
+Anna danach: verified=0 due=0 shown=NULL consent=NULL avatar=NULL
+## AK-05: angemeldet unbestätigt, eigener Link
+verify in Annas Sitzung: 302 http://127.0.0.1:8099/de/einfuehrung
+Folge: 200  · Flash: 0 × 'jetzt anmelden'
+Anna: verified=1 due=1 shown=2026-10-23 09:40:59 consent=NULL avatar=NULL
+## AK-06: Bestandskonten
+user@ Anmeldung 1: 302 http://127.0.0.1:8099/de/ · Anmeldung 2: 302 http://127.0.0.1:8099/de/ · verified=1 due=0 shown=NULL consent=NULL avatar=NULL
+admin@ Anmeldung: 302 http://127.0.0.1:8099/de/ · verified=1 due=0 shown=NULL consent=NULL avatar=NULL
+## AK-10: Gast
+Gast GET /de/einfuehrung: 302 http://127.0.0.1:8099/de/login (     366 Byte)
+Gast GET /de/einfuehrung/willkommen: 302 http://127.0.0.1:8099/de/login (     366 Byte)
+Gast GET /de/einfuehrung/eintraege: 302 http://127.0.0.1:8099/de/login (     366 Byte)
+Gast GET /de/einfuehrung/profilbild: 302 http://127.0.0.1:8099/de/login (     366 Byte)
+Gast GET /de/einfuehrung/newsletter: 302 http://127.0.0.1:8099/de/login (     366 Byte)
+Gast POST newsletter: 302 http://127.0.0.1:8099/de/login
+Gast GET /de/einfuehrung/unbekannt: 404 
+## EC-04: Link eines fremden Kontos, während user@ angemeldet
+user@ öffnet Janas Link: 302 http://127.0.0.1:8099/de/login · danach /de/profile: 200  · user@: verified=1 due=0 shown=NULL consent=NULL avatar=NULL
+Jana: verified=1 due=1 shown=NULL consent=NULL avatar=NULL · Janas erste Anmeldung: 302 http://127.0.0.1:8099/de/einfuehrung
+## EC-05: abgelaufener Link
+abgelaufener Link: 302 http://127.0.0.1:8099/de/verify · Emil: verified=0 due=0 shown=NULL consent=NULL avatar=NULL

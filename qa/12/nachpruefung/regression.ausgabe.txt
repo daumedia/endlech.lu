@@ -1,0 +1,12 @@
+# Nachprüfung 2026-10-23 · Regression, Hauptwege berührter Features (curl gegen :8099)
+## 08 + 04: App-Warteliste mit Werbe-Einwilligung → Bestätigung → Kontakt
+GET /de/app: 200 
+POST: 302 http://127.0.0.1:8099/de/app
+Eintrag: pending consent=2026-10-23 10:09:22
+Bestätigung: 200 
+Kontakt: wanda.warteliste@example.org | app | de | pending | 2026-10-23 10:09:22 | NULL | NULL
+## 10: /sitemap.xml 200, Einträge mit 'einfuehrung': 0 · X-Robots-Tag auf /de/einfuehrung (Gast, Weiterleitung): X-Robots-Tag: noindex
+## B11: /de/community/suggest als bestätigtes Konto: 200 
+## B19: /de/admin als Admin 200  · als Nutzer 403 
+## B01: Registrierung → Link → Anmeldung siehe ak01-11 (Frieda) · B02 Anmeldung user@ → /de/ (ak01-11) · B04 Name ändern (AK-39), Upload im Profil (ak25-29)
+## 01: Export (AK-62), Löschung (AK-61) — ak49-62-ec

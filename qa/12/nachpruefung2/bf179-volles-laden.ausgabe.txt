@@ -1,0 +1,17 @@
+„Einführung begonnen" bei einem vollständigen Seitenaufruf (Hinweis des code-reviewer, nachgestellt).
+Server :8094 = :8099 mit Website-Kennung (Zählskript wird eingebunden, `<script defer src="/zaehler.js?v=3.3.1" …>` nach
+`importmap()`), /zaehler.js ersetzt durch eine Attrappe, die wie der echte Tracker beim Ausführen window.umami setzt und jeden
+track()-Aufruf in window.__zaehler.aufrufe mitschreibt (Router /tmp/endlech-f12/router3-zaehler.php). Chromium-Vorschau.
+
+1. Voller Aufruf http://127.0.0.1:8094/de/einfuehrung (navigation type „navigate", Brigitte angemeldet):
+   Zählskript ausgeführt bei 366 ms, Auslöser [data-usage-event-name-value="einfuehrung_begonnen"] im DOM: 1,
+   window.__zaehler.aufrufe = []                                   ← Ereignis verloren
+2. Danach Turbo.visit eintraege → Turbo.visit /de/einfuehrung:
+   aufrufe = [["einfuehrung_begonnen", null, 9664.8]]             ← per Turbo kommt es an
+3. Anmeldung (Zora, fällig) von der voll geladenen Anmeldeseite: Turbo folgt der Weiterleitung →
+   aufrufe = [["einfuehrung_begonnen", null, 3430]]               ← Hauptweg AK-01 zählt
+4. AK-05: Yara (unbestätigt) angemeldet, öffnet ihren Bestätigungslink im selben Browser (voller Aufruf) → 302 →
+   /de/einfuehrung „Schritt 1 von 4 Willkommen", Zählskript bei 77,6 ms ausgeführt, Auslöser im DOM: 1,
+   window.__zaehler.aufrufe = []                                   ← Willkommensseite angezeigt, „begonnen" nicht gesendet
+Ursache: Das App-Modul (`importmap()`) steht vor dem `defer`-Zählskript; Stimulus verbindet die Controller im Mikrotask nach
+dem Modul, also bevor /zaehler.js läuft. `usage_event_controller.ts#send` findet window.umami nicht und kehrt still zurück.

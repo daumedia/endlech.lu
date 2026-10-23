@@ -1372,6 +1372,7 @@ marketing_sync_state:
     synced: "Transferido"
     failed: "Falhou"
     removal_pending: "Eliminação pendente"
+    blacklist_pending: "Bloqueio pendente"
 
 marketing_origin:
     partner: "Parceiro"
@@ -1608,3 +1609,63 @@ app_waitlist:
 app_platform:
     ios: "iPhone ou iPad"
     android: "Android"
+
+onboarding:
+    title: "Introdução"
+    page_title: "Passo %current% de %total%: %step% – Endlech.lu"
+    step_of: "Passo %current% de %total%"
+    nav_label: "Passos da introdução"
+    back: "Voltar"
+    next: "Seguinte"
+    finish: "Terminar a introdução"
+    search: "Pesquisar restaurantes"
+    verify_first: "Confirme primeiro o seu endereço de e-mail. Depois, a introdução continua."
+    profile_link: "Ver introdução"
+    welcome:
+        title: "Boas-vindas"
+        heading: "Boas-vindas ao Endlech.lu, %name%!"
+        intro: "O seu endereço está confirmado. Mostramos-lhe rapidamente como ler uma ficha e configuramos a sua conta. Cada passo é opcional."
+        suggest_title: "Sugerir um restaurante"
+        suggest_text: "Conhece um estabelecimento que ainda falta aqui? Sugira-o. Verificamos cada sugestão antes de ser publicada."
+        suggest_cta: "Sugerir restaurante"
+        app_title: "Endlech.lu como aplicação"
+        app_text: "Existe uma versão de teste para iPhone e iPad; para Android, estamos a recolher o interesse."
+        app_cta: "Ir para a lista de espera da aplicação"
+    entries:
+        title: "Ler uma ficha"
+        intro: "Estes termos aparecem exatamente assim em cada página de restaurante."
+        verified_text: "Este distintivo significa que o Endlech.lu verificou o estabelecimento pessoalmente, no local. A data consta da página do restaurante."
+        not_available_title: "«%label%»"
+        not_available_text: "Se isto aparecer junto a uma característica, ela não existe ou ainda não foi registada por nós. A página não distingue os dois casos."
+        measures_title: "%door% e %spacing%"
+        measures_text: "Ambas as medidas são indicadas em centímetros. «%below%» significa: mais estreito do que os 90 cm da norma DIN 18040. «%not_measured%» significa: ninguém mediu."
+        principle: "Uma ficha mostra o que registámos, não o que se verifica no local."
+    avatar:
+        title: "Fotografia de perfil"
+        intro: "Se quiser, carregue uma fotografia de perfil."
+        visibility: "A sua fotografia aparece apenas no seu perfil e no cabeçalho enquanto tiver sessão iniciada. Mais ninguém a vê."
+        upload: "Carregar fotografia"
+        saved: "A sua fotografia de perfil foi guardada."
+    newsletter:
+        title: "Newsletter"
+        intro: "Gostaria de receber novidades do Endlech.lu por e-mail? Inclui um e-mail de boas-vindas, enviado uma única vez."
+        label: "Sim, quero receber novidades do Endlech.lu por e-mail."
+        terms: "Pode cancelar a subscrição a qualquer momento, no seu perfil ou através da ligação em cada e-mail. Sem a caixa assinalada, nada acontece."
+    admin:
+        title: "Introdução"
+        due: "Contas com introdução"
+        shown: "das quais apresentada"
+        hint: "Contas que confirmaram o endereço desde que a introdução existe."
+
+newsletter:
+    title: "Newsletter"
+    text: "Novidades do Endlech.lu por e-mail, incluindo um e-mail de boas-vindas enviado uma única vez. O cancelamento aplica-se a todas as novidades enviadas para este endereço, incluindo as de uma lista de espera."
+    text_unverified: "Novidades do Endlech.lu por e-mail, incluindo um e-mail de boas-vindas enviado uma única vez. Enquanto o seu endereço não estiver confirmado, o cancelamento aplica-se apenas a esta conta; a todas as novidades enviadas para este endereço só depois da confirmação ou através da ligação num e-mail."
+    subscribed_since: "Subscrito desde %date%"
+    not_subscribed: "Sem subscrição"
+    subscribe: "Subscrever a newsletter"
+    unsubscribe: "Cancelar a subscrição da newsletter"
+    pending_verification: "Entra em vigor assim que confirmar o seu endereço de e-mail."
+    flash_subscribed: "Subscreveu a newsletter."
+    flash_unsubscribed: "Cancelou a subscrição da newsletter."
+    flash_rate_limited: "Demasiadas alterações. Tente novamente dentro de %minutes% minutos."

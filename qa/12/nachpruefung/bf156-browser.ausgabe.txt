@@ -1,0 +1,30 @@
+# Nachprüfung 2026-10-23 · BF-156 (B02, vorbestehend) im Browser — weiter offen, und Feature 12 löst ihn zusätzlich aus
+Chromium-Vorschau, Server :8099 (dev). Sitzungsdatei = PHP-Sitzung des Browsers (Attribut csrf-token: 1 = Herkunft, 2 = Double-Submit, +256 = für sichere Anfragen gemerkt).
+
+## A · Registrierung → Bestätigungslink → Anmeldung, alles in einem Browser (wie im ersten Bericht)
+1. /de/register ausgefüllt (paula.browser@example.org), abgeschickt → /de/verify
+2. Bestätigungslink im selben Tab geöffnet → /de/login (Seite frisch geladen)
+3. Anmeldung → „Ungültiges CSRF-Token." (#login-error), zweiter Versuch ebenso
+   dev.log: request.WARNING: CSRF validation failed: double-submit info was used in a previous request but is now missing.
+   Sitzung: s:10:"csrf-token";i:259
+
+## B · NEU: Profilbild in der Einführung → Abmelden nach vollem Seitenaufruf → lautlos wirkungslos
+(frische Sitzung: zugehörige Sitzungsdatei verworfen)
+1. /de/login frisch geladen, Anmeldung paula.browser@example.org → /de/ (dev.log 09:59:08 „accepted using origin info")
+2. /de/einfuehrung/profilbild frisch geladen, Bild über das Formular hochgeladen → „Dein Profilbild ist gespeichert."
+   (dev.log 09:59:19 „accepted using both origin and double-submit info"; Sitzung danach csrf-token = 259)
+3. /de/ frisch geladen, Knopf „Abmelden" in der Kopfzeile geklickt → zurück auf /de/, weiterhin angemeldet
+   (Profil-Link in der Kopfzeile, Abmeldeformular noch da; /de/login leitet auf /de/ weiter)
+   dev.log 09:59:38: Matched route "app_logout" … request.WARNING: CSRF validation failed: double-submit info was used in a previous request but is now missing.
+   Keine Meldung auf der Seite.
+Gegenprobe (früher in derselben Prüfung): Wer nach der Einführung per Turbo weiterklickt (Modul csrf-protection bleibt geladen) und dann abmeldet, kommt hinaus —
+die Abmeldung trägt dann Double-Submit, und die neue Sitzung erbt das Merkmal 259: Die nächste frisch geladene Anmeldeseite meldet „Ungültiges CSRF-Token."
+Ursache wie BF-156: csrf_protection_controller.ts ist `stimulusFetch: 'lazy'`; Seiten ohne ein Element mit data-controller="csrf-protection"
+(Anmeldung, Startseite mit Abmeldeknopf) laden ihn nicht, ihr _csrf_token geht ohne Double-Submit hinaus.
+
+## C · Kürzester Auslöser, ganz ohne Feature 12 (Bestandskonto user@endlech.lu, frische Sitzung)
+1. /de/login frisch geladen → Anmeldung → /de/
+2. /de/profile frisch geladen (Profilformular trägt data-controller="csrf-protection" → Modul geladen)
+3. „Abmelden" in der Kopfzeile → abgemeldet (fetch /de/profile danach: Weiterleitung)
+4. /de/login frisch geladen → Anmeldung → „Ungültiges CSRF-Token."
+Das Modul ist auch auf main `stimulusFetch: 'lazy'` (git show main:assets/controllers/csrf_protection_controller.ts, Z. 94) — vorbestehend.

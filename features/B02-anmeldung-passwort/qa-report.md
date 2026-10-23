@@ -256,3 +256,30 @@ gehören aber in denselben Lauf — alle drei sitzen in derselben Konfigurations
 
 Die Korrektur der falschen Rekonstruktion in **B04/AK-13 und B04/FB-04** gehört in den
 QA-Durchlauf von B04; hier ist sie nur festgehalten.
+
+## Nachtrag 2026-10-23 · BF-156 behoben (nicht ausgeliefert)
+
+Gefunden in der QA von Feature 12 (`features/12-onboarding-neue-nutzer/qa-report.md`, BF-156). Behoben
+auf `feature/12-onboarding`, Fehlerauftrag ohne eigenen `review`-Status (Muster BF-151/B15):
+`assets/controllers/csrf_protection_controller.ts` wird sofort statt `lazy` geladen; die
+handgeschriebenen Token-Felder in `security/login.html.twig`, `base.html.twig` (Abmelden) und
+`profile/index.html.twig` (Abmelden) tragen `data-controller="csrf-protection"`. Serverseitig
+unverändert — der Double-Submit-Merker ist Absicht. Nachweis: `Bf156CsrfControllerTest`, Browserlauf
+(drei Wege). Nächster Schritt: `/sdd-qa B02` bzw. die Nachprüfung in `/sdd-qa 12`.
+
+## Nachprüfung 2026-10-23 · BF-156 behoben (in der QA von Feature 12, dritter Durchlauf)
+
+In eigener Session, im echten Browser (Chromium-Vorschau, Turbo aktiv) auf allen drei Wegen, die vorher scheiterten:
+Registrierung → Bestätigungslink im selben Browser → frische Anmeldeseite → Anmeldung → Einführung; Bild in der Einführung
+hochladen → Startseite frisch laden → Abmelden wirkt; Bestandskonto anmelden → Profil → Abmelden → Anmeldeseite frisch →
+Anmeldung gelingt. `var/log/dev.log`: jede Prüfung „CSRF validation accepted using both origin and double-submit info",
+kein „double-submit info … missing". Alle übrigen handgeschriebenen Token-Felder nutzen sitzungsgebundene Kennungen (nicht
+zustandslos), Symfony-Formulare tragen `data-controller="csrf-protection"` selbst. Beleg
+`qa/12/nachpruefung2/bf156-browser.ausgabe.txt`; volle Suite 1535 Tests grün. **BF-156 behoben, noch nicht ausgeliefert.**
+
+## Nachprüfung 2026-10-23 · BF-156 erneut bestätigt (QA Feature 12, vierter Durchlauf)
+
+Im Browser auf allen drei Wegen, die vorher scheiterten: Registrierung → Link im selben Browser → frisch geladene
+Anmeldeseite → Anmeldung → Einführung; Bild hochgeladen → Startseite frisch → „Abmelden" wirkt; anmelden → Profil →
+abmelden → Anmeldeseite frisch → Anmeldung gelingt. `dev.log`: jede Prüfung „accepted using both origin and double-submit
+info" (`qa/12/nachpruefung3/bf156-bf164-browser.ausgabe.txt`). Weiter **nicht ausgeliefert** (`feature/12-onboarding`).

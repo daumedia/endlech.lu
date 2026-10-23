@@ -1,0 +1,67 @@
+PHPUnit 12.5.4 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.5.12
+Configuration: /Users/michaelferreira/DEV/SaaS/endlech/phpunit.dist.xml
+
+.FFFFFF                                                             7 / 7 (100%)
+
+Time: 00:03.672, Memory: 58.50 MB
+
+Qa12Nachpruefung (App\Tests\Functional\Controller\Qa12Nachpruefung)
+ ✔ Ak 35 wieder einwilligung hebt die sperre auf
+ ✘ Bf 165 spaeterer abgleich hebt eine abmeldung bei brevo nicht auf
+   │
+   │ Ein Abgleich ohne neue Einwilligung darf eine Sperre bei Brevo nicht aufheben (design.md Entscheidung 6, 04/EC-05).
+   │ Failed asserting that an array does not have the key 'emailBlacklisted'.
+   │
+   │ /Users/michaelferreira/DEV/SaaS/endlech/tests/Functional/Controller/Qa12NachpruefungTest.php:199
+   │ /Users/michaelferreira/DEV/SaaS/endlech/vendor/phpunit/phpunit/phpunit:104
+   │
+ ✘ Bf 165 verspaeteter webhook hinterlaesst keinen entsperrten kontakt
+   │
+   │ Lokal gesperrt, bei Brevo entsperrt: Der Kontakt bekäme weiter Kampagnen.
+   │ Failed asserting that false is true.
+   │
+   │ /Users/michaelferreira/DEV/SaaS/endlech/tests/Functional/Controller/Qa12NachpruefungTest.php:238
+   │ /Users/michaelferreira/DEV/SaaS/endlech/vendor/phpunit/phpunit/phpunit:104
+   │
+ ✘ Bf 166 abmeldung waehrend des abgleichs erreicht brevo
+   │
+   │ Brevo hat den Kontakt angelegt und nie gesperrt — er bekommt Willkommens-Mail und Kampagnen.
+   │ Failed asserting that false is true.
+   │
+   │ /Users/michaelferreira/DEV/SaaS/endlech/tests/Functional/Controller/Qa12NachpruefungTest.php:330
+   │ /Users/michaelferreira/DEV/SaaS/endlech/vendor/phpunit/phpunit/phpunit:104
+   │
+ ✘ Bf 167 abmeldung nach gescheiterter erstuebertragung erreicht brevo
+   │
+   │ Der bei Brevo angelegte Kontakt muss gesperrt werden.
+   │ Failed asserting that false is true.
+   │
+   │ /Users/michaelferreira/DEV/SaaS/endlech/tests/Functional/Controller/Qa12NachpruefungTest.php:356
+   │ /Users/michaelferreira/DEV/SaaS/endlech/vendor/phpunit/phpunit/phpunit:104
+   │
+ ✘ Bf 168 gescheiterter sperrauftrag wird weiter versucht
+   │
+   │ Die Abmeldung erreicht Brevo nie; das Profil sagt „nicht abonniert".
+   │ Failed asserting that false is true.
+   │
+   │ /Users/michaelferreira/DEV/SaaS/endlech/tests/Functional/Controller/Qa12NachpruefungTest.php:385
+   │ /Users/michaelferreira/DEV/SaaS/endlech/vendor/phpunit/phpunit/phpunit:104
+   │
+ ✘ Bf 169 adresswechsel auf vorhandenen kontakt entfernt den alten
+   │
+   │ Der Kontakt der aufgegebenen Adresse muss gelöscht werden (Kommentar in changeEmail()).
+   │ Failed asserting that two variables reference the same object.
+   │ --- Expected
+   │ +++ Actual
+   │ @@ @@
+   │ -App\Enum\MarketingSyncState Enum #2191 (REMOVAL_PENDING, 'removal_pending')
+   │ +App\Enum\MarketingSyncState Enum #3970 (SYNCED, 'synced')
+   │
+   │ /Users/michaelferreira/DEV/SaaS/endlech/tests/Functional/Controller/Qa12NachpruefungTest.php:430
+   │ /Users/michaelferreira/DEV/SaaS/endlech/vendor/phpunit/phpunit/phpunit:104
+   │
+
+FAILURES!
+Tests: 7, Assertions: 21, Failures: 6.

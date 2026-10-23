@@ -22,6 +22,19 @@ enum MarketingSyncState: string
     case FAILED = 'failed';
     case REMOVAL_PENDING = 'removal_pending';
 
+    /**
+     * Sperre an Brevo übertragen (Feature 12, AK-36).
+     *
+     * Entsteht, wenn jemand im Profil oder in der Einführung abbestellt und der Kontakt schon
+     * einmal übertragen war. Gesperrt wird statt gelöscht: Ein gelöschter und später neu
+     * angelegter Kontakt wäre für Brevo ein neuer, und die Willkommens-Mail käme ein zweites
+     * Mal (AK-44). Brevos eigene Abmeldeerinnerung bleibt so ebenfalls erhalten.
+     *
+     * Wie `REMOVAL_PENDING` überlebt der Zustand einen Fehlversuch — sonst wäre der Auftrag
+     * nach dem ersten 429 weg und der Kontakt bekäme weiter Werbung.
+     */
+    case BLACKLIST_PENDING = 'blacklist_pending';
+
     public function transKey(): string
     {
         return 'marketing_sync_state.' . $this->value;
@@ -34,6 +47,7 @@ enum MarketingSyncState: string
             self::SYNCED => 'Übertragen',
             self::FAILED => 'Fehlgeschlagen',
             self::REMOVAL_PENDING => 'Löschung ausstehend',
+            self::BLACKLIST_PENDING => 'Sperre ausstehend',
         };
     }
 
@@ -51,6 +65,7 @@ enum MarketingSyncState: string
             self::SYNCED => 'bg-green-100 text-green-700',
             self::FAILED => 'bg-red-100 text-red-600',
             self::REMOVAL_PENDING => 'bg-gray-100 text-gray-700',
+            self::BLACKLIST_PENDING => 'bg-gray-100 text-gray-700',
         };
     }
 
@@ -73,6 +88,7 @@ enum MarketingSyncState: string
     {
         return self::PENDING === $this
             || self::REMOVAL_PENDING === $this
+            || self::BLACKLIST_PENDING === $this
             || self::FAILED === $this;
     }
 }

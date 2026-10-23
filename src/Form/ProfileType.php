@@ -10,7 +10,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
-use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -39,14 +38,8 @@ class ProfileType extends AbstractType
                 'label' => 'profile.form.avatar',
                 'mapped' => false,
                 'required' => false,
-                'constraints' => [
-                    new File(
-                        maxSize: '2M',
-                        mimeTypes: ['image/jpeg', 'image/png', 'image/webp'],
-                        maxSizeMessage: 'profile.avatar_max_size',
-                        mimeTypesMessage: 'profile.avatar_mime_type',
-                    ),
-                ],
+                // Seit Feature 12 an einer Stelle — die Einführung prüft mit derselben Regel.
+                'constraints' => AvatarConstraints::file(),
             ]);
     }
 

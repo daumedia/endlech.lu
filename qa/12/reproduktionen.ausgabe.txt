@@ -1,0 +1,78 @@
+# QA 12 · Reproduktionen scharf (QA12_REPRO=1), 2026-10-22 23:28
+# Befehl: QA12_REPRO=1 php bin/phpunit tests/Functional/Controller/Qa12OnboardingTest.php --testdox
+Qa12Onboarding (App\Tests\Functional\Controller\Qa12Onboarding)
+ ✔ Ak 33 ak 40 ak 56 rumpf an brevo nach einwilligung in der einfuehrung
+ ✔ Ak 36 abbestellen schickt nur die sperre
+ ✘ Bf 154 wieder einwilligung hebt die sperre bei brevo auf
+   │
+   │ Der PUT muss die Sperre aufheben.
+   │ Failed asserting that two arrays are identical.
+   │ --- Expected
+   │ +++ Actual
+   │ @@ @@
+   │ -Array &0 [
+   │ -    'emailBlacklisted' => false,
+   │ -]
+   │ +Array &0 []
+   │
+   │ /Users/michaelferreira/DEV/SaaS/endlech/tests/Functional/Controller/Qa12OnboardingTest.php:237
+   │ /Users/michaelferreira/DEV/SaaS/endlech/vendor/phpunit/phpunit/phpunit:104
+   │
+ ✘ Bf 155 unbestaetigtes konto nimmt fremde einwilligung nicht
+   │
+   │ Die Einwilligung des Inhabers auf der Warteliste muss stehen bleiben.
+   │ Failed asserting that null is not null.
+   │
+   │ /Users/michaelferreira/DEV/SaaS/endlech/tests/Functional/Controller/Qa12OnboardingTest.php:280
+   │ /Users/michaelferreira/DEV/SaaS/endlech/vendor/phpunit/phpunit/phpunit:104
+   │
+ ✘ Bf 157 adresswechsel laesst den sperrauftrag stehen
+   │
+   │ Die Sperre muss Brevo trotzdem erreichen.
+   │ Failed asserting that an array contains Array &0 [
+   │     'emailBlacklisted' => true,
+   │ ].
+   │
+   │ /Users/michaelferreira/DEV/SaaS/endlech/tests/Functional/Controller/Qa12OnboardingTest.php:316
+   │ /Users/michaelferreira/DEV/SaaS/endlech/vendor/phpunit/phpunit/phpunit:104
+   │
+ ✘ Bf 158 vorabladen vermerkt keine anzeige
+   │
+   │ Ein Vorabladen ist keine Anzeige.
+   │ Failed asserting that DateTimeImmutable Object #8254 (
+   │     'date' => '2026-10-22 21:28:58.000000',
+   │     'timezone_type' => 3,
+   │     'timezone' => 'UTC',
+   │ ) is null.
+   │
+   │ /Users/michaelferreira/DEV/SaaS/endlech/tests/Functional/Controller/Qa12OnboardingTest.php:335
+   │ /Users/michaelferreira/DEV/SaaS/endlech/vendor/phpunit/phpunit/phpunit:104
+   │
+ ✘ Bf 159 uebergrosser upload zeigt eine meldung
+   │
+   │ Der Nutzer muss erfahren, warum nichts geschah.
+   │ Failed asserting that two strings are not identical.
+   │
+   │ /Users/michaelferreira/DEV/SaaS/endlech/tests/Functional/Controller/Qa12OnboardingTest.php:360
+   │ /Users/michaelferreira/DEV/SaaS/endlech/vendor/phpunit/phpunit/phpunit:104
+   │
+ ✘ Bf 160 schnelles umschalten endet gesperrt
+   │
+   │ Nach der letzten Abmeldung muss die Zeile gesperrt sein.
+   │ Failed asserting that false is true.
+   │
+   │ /Users/michaelferreira/DEV/SaaS/endlech/tests/Functional/Controller/Qa12OnboardingTest.php:385
+   │ /Users/michaelferreira/DEV/SaaS/endlech/vendor/phpunit/phpunit/phpunit:104
+   │
+ ✘ Bf 156 anmeldung nach double submit in derselben sitzung
+   │
+   │ Die Anmeldung muss gelingen.
+   │ Failed asserting that 'http://localhost/de/login' [ASCII](length: 25) does not contain "/login" [ASCII](length: 6).
+   │
+   │ /Users/michaelferreira/DEV/SaaS/endlech/tests/Functional/Controller/Qa12OnboardingTest.php:423
+   │ /Users/michaelferreira/DEV/SaaS/endlech/vendor/phpunit/phpunit/phpunit:104
+   │
+ ✔ Ak 11 absendewege verlangen eine bestaetigte adresse
+
+FAILURES!
+Tests: 10, Assertions: 47, Failures: 7.

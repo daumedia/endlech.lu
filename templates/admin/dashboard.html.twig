@@ -90,6 +90,21 @@
         </div>
     </div>
 
+    {# Einführung (Feature 12, AK-49): zwei Summen, keine Namen, keine Liste. #}
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center gap-4">
+            <div class="bg-cyan-50 text-cyan-700 p-3 rounded-lg text-2xl" aria-hidden="true">👋</div>
+            <div>
+                <p class="text-sm text-gray-500">{{ 'onboarding.admin.title'|trans }}</p>
+                <p class="text-3xl font-bold text-gray-900">{{ onboardingShownCount }} <span class="text-base font-semibold text-gray-500">/ {{ onboardingDueCount }}</span></p>
+            </div>
+        </div>
+        <div class="mt-4 pt-4 border-t border-gray-100 text-sm text-gray-600">
+            <p>{{ onboardingDueCount }} {{ 'onboarding.admin.due'|trans }} · {{ onboardingShownCount }} {{ 'onboarding.admin.shown'|trans }}</p>
+            <p class="mt-1 text-xs text-gray-500">{{ 'onboarding.admin.hint'|trans }}</p>
+        </div>
+    </div>
+
     {# Restaurants diesen Monat #}
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
         <div class="flex items-center gap-4">

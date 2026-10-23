@@ -1,0 +1,20 @@
+lb verified.badge_text            „Verifizéiert Lokal“    Einführung:ja Detailseite:ja
+lb accessibility.not_available    „Net disponibel“         Einführung:ja Detailseite:ja
+lb accessibility.not_measured     „Net gemooss“            Einführung:ja Detailseite:ja
+lb accessibility.below_minimum    „manner wéi 90 cm“      Einführung:ja Detailseite:ja
+de verified.badge_text            „Verifiziertes Lokal“    Einführung:ja Detailseite:ja
+de accessibility.not_available    „Nicht verfügbar“       Einführung:ja Detailseite:ja
+de accessibility.not_measured     „Nicht ausgemessen“      Einführung:ja Detailseite:ja
+de accessibility.below_minimum    „unter 90 cm“            Einführung:ja Detailseite:ja
+fr verified.badge_text            „Établissement vérifié“ Einführung:ja Detailseite:ja
+fr accessibility.not_available    „Non disponible“         Einführung:ja Detailseite:ja
+fr accessibility.not_measured     „Non mesuré“            Einführung:ja Detailseite:ja
+fr accessibility.below_minimum    „moins de 90 cm“         Einführung:ja Detailseite:ja
+en verified.badge_text            „Verified Venue“         Einführung:ja Detailseite:ja
+en accessibility.not_available    „Not available“          Einführung:ja Detailseite:ja
+en accessibility.not_measured     „Not measured“           Einführung:ja Detailseite:ja
+en accessibility.below_minimum    „below 90 cm“            Einführung:ja Detailseite:ja
+pt verified.badge_text            „Estabelecimento verificado“ Einführung:ja Detailseite:ja
+pt accessibility.not_available    „Não disponível“       Einführung:ja Detailseite:ja
+pt accessibility.not_measured     „Não medido“            Einführung:ja Detailseite:ja
+pt accessibility.below_minimum    „abaixo de 90 cm“        Einführung:ja Detailseite:ja

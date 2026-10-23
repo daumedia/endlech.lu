@@ -1,0 +1,46 @@
+PHPUnit 12.5.4 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.5.12
+Configuration: /Users/michaelferreira/DEV/SaaS/endlech/phpunit.dist.xml
+
+FFFF.                                                               5 / 5 (100%)
+
+Time: 00:01.353, Memory: 64.50 MB
+
+Qa12Nachpruefung4 (App\Tests\Functional\Controller\Qa12Nachpruefung4)
+ ✘ Bf 182 name aus leerzeichen zeigt eine meldung statt http 500
+   │
+   │ Ein leerer Name ist eine Eingabe, die eine Meldung bekommt, kein Serverfehler.
+   │ Failed asserting that 500 is identical to 422.
+   │
+   │ /Users/michaelferreira/DEV/SaaS/endlech/tests/Functional/Controller/Qa12Nachpruefung4Test.php:163
+   │ /Users/michaelferreira/DEV/SaaS/endlech/vendor/phpunit/phpunit/phpunit:104
+   │
+ ✘ Bf 184 adresswechsel auf rfc widrige adresse zeigt eine meldung
+   │
+   │ Meldung am Feld statt Serverfehler: ../../etc/passwd@example.lu
+   │ Failed asserting that 500 is identical to 422.
+   │
+   │ /Users/michaelferreira/DEV/SaaS/endlech/tests/Functional/Controller/Qa12Nachpruefung4Test.php:182
+   │ /Users/michaelferreira/DEV/SaaS/endlech/vendor/phpunit/phpunit/phpunit:104
+   │
+ ✘ Bf 185 gescheiterter abgleich ueberschreibt gleichzeitiges abbestellen nicht
+   │
+   │ Der Kontakt bei Brevo muss gesperrt werden — sonst Werbung nach Widerspruch.
+   │ Failed asserting that false is true.
+   │
+   │ /Users/michaelferreira/DEV/SaaS/endlech/tests/Functional/Controller/Qa12Nachpruefung4Test.php:234
+   │ /Users/michaelferreira/DEV/SaaS/endlech/vendor/phpunit/phpunit/phpunit:104
+   │
+ ✘ Bf 186 entfernen mit leerem entity namen hinterlaesst keinen toten verweis
+   │
+   │ Das Konto verweist auf eine gelöschte Datei: 'qa12e-neu-104c15.png'
+   │ Failed asserting that false is true.
+   │
+   │ /Users/michaelferreira/DEV/SaaS/endlech/tests/Functional/Controller/Qa12Nachpruefung4Test.php:264
+   │ /Users/michaelferreira/DEV/SaaS/endlech/vendor/phpunit/phpunit/phpunit:104
+   │
+ ✔ Gegenprobe gueltige eingaben im profil laufen wie bisher
+
+FAILURES!
+Tests: 5, Assertions: 14, Failures: 4.

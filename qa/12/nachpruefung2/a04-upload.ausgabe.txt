@@ -1,0 +1,35 @@
+Paula Anmeldung: 302 → /de/einfuehrung
+Dateien im Avatar-Verzeichnis vorher: 0
+--- AK-25 / AK-29 (nacheinander ersetzen) ---
+klein.jpg         19437 B → 302 /de/einfuehrung/profilbild · Bild NEU 6adb3a2d410c02.11694061.jpg · Kopfzeile 6adb3a2d410c02.11694061.jpg · Bildschirm 6adb3a2d410c02.11694061.jpg · Meldung „“
+klein.png         21440 B → 302 /de/einfuehrung/profilbild · Bild NEU 6adb3a2d56efa4.78748347.png · Kopfzeile 6adb3a2d56efa4.78748347.png · Bildschirm 6adb3a2d56efa4.78748347.png · Meldung „“
+klein.webp         9424 B → 302 /de/einfuehrung/profilbild · Bild NEU 6adb3a2d6c7327.47130088.webp · Kopfzeile 6adb3a2d6c7327.47130088.webp · Bildschirm 6adb3a2d6c7327.47130088.webp · Meldung „“
+mittel.jpg      1460000 B → 302 /de/einfuehrung/profilbild · Bild NEU 6adb3a2d831d08.50697350.jpg · Kopfzeile 6adb3a2d831d08.50697350.jpg · Bildschirm 6adb3a2d831d08.50697350.jpg · Meldung „“
+genau2m.png     2000000 B → 302 /de/einfuehrung/profilbild · Bild NEU 6adb3a2d99d982.72779017.png · Kopfzeile 6adb3a2d99d982.72779017.png · Bildschirm 6adb3a2d99d982.72779017.png · Meldung „“
+Dateien nachher: 1 (vorher 0, erwartet +1) · Datei des Kontos vorhanden: ja
+AK-25 Profil zeigt: 6adb3a2d99d982.72779017.png (Konto: 6adb3a2d99d982.72779017.png)
+--- AK-26 / AK-27 / BF-159 / BF-163 (Einführung) ---
+ueber2m.png     2000001 B → 422  · Bild unverändert · aria-invalid=true · autofocus=ja · Meldung „Das Profilbild darf maximal 2000000 bytes groß sein.“ · Weiter vorhanden: ja
+zwei4.jpg       2400000 B → 422  · Bild unverändert · aria-invalid=true · autofocus=ja · Meldung „Das Profilbild darf maximal 2 MB groß sein.“ · Weiter vorhanden: ja
+gross21.png    21600000 B → 200  · Bild unverändert
+text-bild.jpg      1450 B → 422  · Bild unverändert · aria-invalid=true · autofocus=ja · Meldung „Bitte lade ein Bild im Format JPG, PNG oder WebP hoch.“ · Weiter vorhanden: ja
+shell.jpg            32 B → 422  · Bild unverändert · aria-invalid=true · autofocus=ja · Meldung „Bitte lade ein Bild im Format JPG, PNG oder WebP hoch.“ · Weiter vorhanden: ja
+bild.gif          37676 B → 422  · Bild unverändert · aria-invalid=true · autofocus=ja · Meldung „Bitte lade ein Bild im Format JPG, PNG oder WebP hoch.“ · Weiter vorhanden: ja
+--- Profil zum Vergleich (B04: „dieselbe Meldung wie im Profil") ---
+Profil ueber2m.png    → 422  · aria-invalid=– · autofocus=nein · Meldung „“ · Bild unverändert
+Profil zwei4.jpg      → 422  · aria-invalid=– · autofocus=nein · Meldung „“ · Bild unverändert
+Profil text-bild.jpg  → 422  · aria-invalid=– · autofocus=nein · Meldung „“ · Bild unverändert
+Profil gross21.png    → 200  · Bild unverändert
+Dateien am Ende: 1
+
+⚠ Zeile „gross21.png → 200": Artefakt des Treibers — Symfony HttpClient schickt den Multipart-Rumpf hier ohne
+Content-Length (chunked), PHP verwirft ihn, `CONTENT_LENGTH` fehlt. Ein Browser sendet immer Content-Length.
+Nachgestellt mit curl (Content-Length gesetzt) am selben Server :8098 (8M/10M):
+  Einführung 21,6 MB: 422 (gesendet 21600351 B) · #onboarding_avatar_avatar_error „Das Profilbild darf maximal 2 MB groß sein."
+    · <input type="file" … aria-describedby="onboarding_avatar_avatar_help onboarding_avatar_avatar_error" aria-invalid="true" autofocus="autofocus">
+  Profil 21,6 MB: 302 → /de/profile · Flash (role=alert) „Das Profilbild darf maximal 2 MB groß sein."   ← BF-159 Profilhälfte behoben
+Profil-Meldungen per curl (B04 rendert das Feld ohne aria-invalid, Meldung im Formular):
+  zwei4.jpg → 422 „Das Profilbild darf maximal 2 MB groß sein." · ueber2m.png → 422 „… maximal 2000000 bytes groß sein." (H-8)
+  · text-bild.jpg → 422 „Bitte lade ein Bild im Format JPG, PNG oder WebP hoch." — wortgleich mit der Einführung (AK-26)
+Hinweis: :8098 ist ein noch laufender Server aus dem zweiten Durchlauf (router.php, gleiche Grenzen, gleicher Arbeitsstand);
+mein eigener Start auf :8098 scheiterte an „Address already in use".

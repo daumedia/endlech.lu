@@ -133,7 +133,7 @@ final class MarketingPayloadMapper
             $payload['listIds'] = [(int) $listId];
         }
 
-        // ⚠ **`emailBlacklisted` steht NIE im Rumpf** (EC-05).
+        // ⚠ **`emailBlacklisted` steht im Normalfall NIE im Rumpf** (EC-05).
         //
         // Brevo setzt das Feld ausschließlich dann, wenn es mitgeschickt wird.
         // Fehlt es, bleibt eine dort bestehende Abmeldung unangetastet – genau
@@ -146,6 +146,30 @@ final class MarketingPayloadMapper
         // nicht: Sie kennt nur Abmeldungen, die uns über den Webhook erreicht
         // haben. Eine Abmeldung, die vor dem Webhook in Brevo entstand, kennt
         // nur Brevo – und deshalb bleibt sie dort unberührt.
+        //
+        // ⚠ **Eine Ausnahme, seit Feature 12** (design.md, Entscheidung 6): Kennen
+        // **wir** die Sperre (`revokedAt`) und liegt die Einwilligung **danach**,
+        // hat dieser Mensch ausdrücklich neu zugestimmt — im Profil, in der
+        // Einführung oder auf einer Warteliste (04/AK-45 „Adresse wieder frei").
+        // Ohne Aufhebung stünde im Profil „abonniert", während Brevo nichts
+        // zustellt. Bei jedem Abgleich mitgeschickt hübe das Feld dagegen eine
+        // Abmeldung auf, deren Webhook noch nicht angekommen ist — deshalb nur
+        // hier, und nie als `true` (die Sperre überträgt ein eigener Auftrag,
+        // `MarketingSyncState::BLACKLIST_PENDING`).
+        //
+        // ⚠ BF-165: **nur, bis die Aufhebung einmal übertragen ist.** `revokedAt` bleibt als Historie
+        // stehen; ohne die Bedingung an `syncedAt` ging die Aufhebung bei JEDEM späteren Abgleich
+        // wieder mit (Adresswechsel, Statuswechsel einer Warteliste) und machte eine Abmeldung über
+        // den Brevo-Link rückgängig, deren Webhook noch unterwegs war. Ein gelungener Abgleich setzt
+        // `syncedAt` hinter die Einwilligung; danach gilt wieder 04/EC-05.
+        $revokedAt = $contact->getRevokedAt();
+        $syncedAt = $contact->getSyncedAt();
+        $consentAt = $contact->getConsentAt();
+
+        if (null !== $revokedAt && $consentAt > $revokedAt && (null === $syncedAt || $syncedAt < $consentAt)) {
+            $payload['emailBlacklisted'] = false;
+        }
+
         return $payload;
     }
 }

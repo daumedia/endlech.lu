@@ -251,7 +251,7 @@
                    B02 ein CSRF-Token beim Abmelden (logout.enable_csrf). Ein <a href>
                    wäre ein GET und ließe sich von einer fremden Seite auslösen. #}
                 <form method="post" action="{{ path('app_logout') }}" class="hidden md:inline-block">
-                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('logout') }}">
+                    <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('logout') }}">
                     <button type="submit" class="text-sm font-semibold text-gray-500 hover:text-purple-600 cursor-pointer transition">
                         {{ 'nav.logout'|trans }}
                     </button>

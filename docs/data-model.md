@@ -387,8 +387,13 @@ Backticks im Tabellennamen, weil `user` in MySQL reserviert ist. Implementiert
 | `pendingEmailTokenExpiresAt` | `pending_email_token_expires_at` | `datetime` | ja | – | 24 Stunden |
 | `avatarFilename` | `avatar_filename` | `varchar(255)` | ja | – | Datei unter `public/uploads/avatars/` |
 | `webauthnHandle` | `webauthn_handle` | `varchar(64)` | ja | **ja** | dauerhafte Kennung auf dem Gerät |
-| `marketingConsentAt` | `marketing_consent_at` | `datetime` | ja | – | Werbe-Einwilligung; `null` = keine. Geht erst nach der E-Mail-Verifikation nach Brevo (Feature 04, AK-05) |
+| `marketingConsentAt` | `marketing_consent_at` | `datetime` | ja | – | Werbe-Einwilligung; `null` = keine. Geht erst nach der E-Mail-Verifikation nach Brevo (Feature 04, AK-05). Seit Feature 12 auch im Profil und in der Einführung an- und abbestellbar |
 | `createdAt` | `created_at` | `datetime` | nein | – | |
+| `onboardingDue` | `onboarding_due` | `tinyint(1)` | nein, Vorgabe `0` | – | **Feature 12:** Einführung vorgesehen. Gesetzt beim Bestätigen über `app_verify_email` — Bestandskonten tragen `0` und bekommen sie nie |
+| `onboardingShownAt` | `onboarding_shown_at` | `datetime` | ja | – | **Feature 12:** erste Anzeige der Einführung; einmal geschrieben, nie überschrieben |
+
+Fällig für die Einführung ist ein Konto genau dann, wenn `isVerified` **und** `onboardingDue`
+**und** `onboardingShownAt` leer ist (`User::isOnboardingPending()`).
 
 **Relation:** `passkeys` OneToMany → `WebauthnCredential`, `orphanRemoval: true`,
 **kein cascade**, `OrderBy createdAt DESC`.
@@ -880,6 +885,7 @@ Brevo-Segment auf `ORIGIN = ASSOCIATION` bleibt danach leer.
 | `SYNCED` | `synced` | in Brevo vorhanden |
 | `FAILED` | `failed` | letzter Versuch scheiterte |
 | `REMOVAL_PENDING` | `removal_pending` | Löschauftrag offen |
+| `BLACKLIST_PENDING` | `blacklist_pending` | **Feature 12:** Sperrauftrag offen — ein Konto hat über Endlech.lu abbestellt, Brevo soll den Kontakt sperren (nicht löschen). Wird trotz `revokedAt` vom Lauf abgeholt und überlebt Fehlversuche wie `REMOVAL_PENDING` |
 
 Methoden: `transKey()`, `label()`, `badgeClasses()`, `isOpen()`
 
@@ -1042,6 +1048,8 @@ Implementiert `PasswordUpgraderInterface`.
 | `upgradePassword(...)` | Rehash beim Anmelden |
 | `findByVerificationToken(string)` | Lookup für die E-Mail-Bestätigung |
 | `countRegisteredSince(\DateTimeImmutable)` | Neuregistrierungen (Dashboard) |
+| `countOnboardingDue()` | Feature 12: Konten mit vorgesehener Einführung (Dashboard, Summe) |
+| `countOnboardingShown()` | Feature 12: davon angezeigt (Dashboard, Summe) |
 | `findRecent(int $limit = 5)` | zuletzt registrierte Nutzer |
 
 ### WebauthnCredentialRepository
@@ -1243,6 +1251,11 @@ Von Hand geschrieben, ohne `COMMENT '(DC2Type:…)'`-Zusätze: Doctrine 3 schrei
 sie nicht mehr, ältere Tabellen tragen sie noch und erzeugen dadurch das
 beschriebene Diff-Rauschen. Eine neue Tabelle vergrößert es nicht — nachgeprüft:
 `doctrine:schema:update --dump-sql` nennt `app_waitlist_entry` nicht.
+
+**`Version20261022203034`** (2026-10-22) — Feature 12: `user.onboarding_due` und
+`user.onboarding_shown_at`, reines `ADD COLUMN` ohne Datenumbau. Von Hand auf diese zwei
+Spalten gekürzt; der Diff schlug zusätzlich die bekannten Index-Umbenennungen vor.
+`MarketingSyncState::BLACKLIST_PENDING` braucht keine Migration (`VARCHAR(20)`, 17 Zeichen).
 
 **`Version20261014120000`** (2026-10-14) — Vereine und Unternehmen zusammengelegt,
 Beirat gestrichen. Reine Datenmigration: `organisation_waitlist_entry.type`

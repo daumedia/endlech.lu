@@ -1,0 +1,22 @@
+{% extends 'onboarding/_rahmen.html.twig' %}
+
+{% block schritt_titel %}{{ 'onboarding.avatar.title'|trans }}{% endblock %}
+
+{% block inhalt %}
+    <p>{{ 'onboarding.avatar.intro'|trans }}</p>
+
+    <div class="flex items-center gap-4">
+        {% include 'partials/_avatar.html.twig' with {user: user, size: 'lg'} %}
+    </div>
+
+    {{ form_start(avatarForm, {'attr': {'class': 'space-y-4'}}) }}
+        {% include 'partials/_form_field.html.twig' with {
+            field: avatarForm.avatar,
+            help: 'profile.form.avatar_hint'|trans,
+            autofocus: avatarForm.avatar.vars.errors|length > 0,
+        } %}
+        <button type="submit" class="inline-flex items-center justify-center min-h-[44px] rounded-full border-2 border-purple-600 px-5 py-2 text-sm font-bold text-purple-700 hover:bg-purple-50 motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700">{{ 'onboarding.avatar.upload'|trans }}</button>
+    {{ form_end(avatarForm) }}
+
+    <p class="text-sm text-gray-700">{{ 'onboarding.avatar.visibility'|trans }}</p>
+{% endblock %}
