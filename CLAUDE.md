@@ -1184,8 +1184,11 @@ ausrollen will, nimmt alles mit, was seit dem letzten Deploy auf `main` gemergt 
 
 `make sicherung-pruefen DATEI=…` spielt eine DB-Sicherung in einen **Wegwerf-Container** ein und urteilt (Rückgabe
 0/1, Zeugnis unter `qa/sicherungen/`).
-⚠⚠ **Coolify sichert die Produktionsdatenbank nicht** (gemessen 2026-10-22: an der Ressource ist keine Sicherung
-eingerichtet, `GET /databases/{uuid}/backups` liefert eine leere Liste). Ob Hostinger den VPS als Ganzes sichert, ist
+⚠⚠ **Coolify sichert die Produktionsdatenbank nicht regelmäßig** (gemessen 2026-10-22: keine Sicherung eingerichtet).
+Seit 2026-10-23 gibt es an der Ressource eine Sicherungs-Konfiguration **ohne Zeitplan** (`enabled: false`), angelegt
+über `POST /databases/{uuid}/backups` mit `backup_now: true` für eine einmalige Sicherung vor dem Ausrollen von
+`v2026.10.23` (Ablage `/data/coolify/backups/…`, Datenbank heißt `default`). Ein Zeitplan ist bewusst nicht gesetzt
+(Betreiberentscheidung beim Ausrollen). Ob Hostinger den VPS als Ganzes sichert, ist
 offen (BE-03 in `docs/datenschutz.md`). Das Skript prüft eine Datei — es kann nicht wissen, ob es überhaupt eine gibt.
 ⚠ **Das Skript spielt in MariaDB 10.5 ein, und die Begründung dafür ist hinfällig.** Gewählt unter der Annahme,
 Production fahre MariaDB (Stand Cloudways); seit dem Umzug auf Coolify ist es `mysql:8`. Eine echte Sicherung aus
@@ -1391,6 +1394,17 @@ Coolify-API nicht lesbar, `SELECT VERSION()` nennt sie. Lokal/CI läuft MySQL 8.
 sind deshalb ohne natives `ENUM`, ohne `CHECK` mit JSON-Funktionen und mit Datenumbau in PHP geschrieben; das schadet
 nicht und bleibt so. Ihre Kommentare („Production läuft auf MariaDB") beschreiben die damalige Annahme.
 **Rollback:** Revert-Commit auf `main`, oder in Coolify den vorherigen Build erneut ausrollen.
+⚠ **Migration vor dem Code — so geht es mit Coolify** (erstmals 2026-10-23, `v2026.10.23`). Der Post-Deployment-Command
+läuft erst **nach** dem Containertausch; ändert der neue Code das Mapping einer Tabelle, die jeder Request liest
+(`user`), wirft jede Seite bis dahin einen Fehler. Für eine rein ergänzende Migration (`ADD COLUMN` mit Vorgabe):
+**einmaligen Pre-Deployment-Befehl** per API setzen (`PATCH /applications/{uuid}`, Feld `pre_deployment_command`),
+der im noch laufenden alten Container per `dbal:run-sql` die Spalten anlegt **und** die Version in
+`doctrine_migration_versions` einträgt — danach findet der Post-Command nichts mehr zu tun. **Gleich nach dem
+Ausrollen wieder leeren**, sonst scheitert das nächste Ausrollen am doppelten `ADD COLUMN`. ⚠ Im Befehl keine einfachen
+Anführungszeichen (Coolify wickelt ihn in `sh -c '…'`); die Version als Hex-Literal (`0x446f…`), `user` unquotiert (in
+MySQL kein reserviertes Wort). Vorher gegen eine Wegwerf-Datenbank im Produktions-Image proben.
+⚠ **Ausrollen per API ist `POST /deploy`** mit `{"uuid": …}` (GET antwortet 405). Die Protokolle eines Ausrollens sind
+mit dem vorhandenen Token nicht lesbar (`logs` leer) — Erfolg der Schritte über die Anwendung selbst prüfen.
 
 ### Wartungsseite: jetzt ein Handschalter
 `public/index.php` prüft auf `var/maintenance` **vor** `vendor/autoload_runtime.php` und liefert dann 503 mit

@@ -45,7 +45,7 @@ der Übergabe.
 - [x] **T05** `[P]` · `config/packages/security.yaml`: Zeile
       `^/[a-z]{2}/einfuehrung` → `IS_AUTHENTICATED_REMEMBERED` neben der Profilregel, mit
       Begründung — `AK-10`
-- [ ] **T06** · **Plattform, Betreiber:** im Brevo-Konto prüfen, ob der Tarif die
+- [x] **T06** · **Plattform, Betreiber:** im Brevo-Konto prüfen, ob der Tarif die
       Automation trägt (OF-04), dann Automation „Willkommen · Konto" nach der Tabelle in
       `design.md` einrichten: Einstieg Liste `BREVO_LIST_ID`, Bedingung `ORIGIN = ACCOUNT`,
       „nur einmal", Verzweigung nach `LOCALE` in fünf Mails mit Abmeldelink, ohne
@@ -54,8 +54,8 @@ der Übergabe.
       — `AK-40, AK-41, AK-42, AK-43, AK-44, AK-45, AK-47, AK-48`
       *Stand 2026-10-23:* Kostenloser Tarif (300 Mails/Tag), Automationen im Menü vorhanden — ob Einstieg, Bedingung und „nur einmal“ gehen (OF-04), zeigt erst das Anlegen. Alle fünf Vorlagen in
       Brevo angelegt (#2–#6); Automation #1 „Willkommen · Konto“ vollständig gebaut, **inaktiv**
-      (Bild `qa/12/t06/`). Testversand aller fünf Mails zugestellt (15:58), Empfang vom Betreiber bestätigt. Offen: Einschalten
-      vor dem Ausrollen — `willkommens-mail/README.md`.
+      (Bild `qa/12/t06/`). Testversand aller fünf Mails zugestellt (15:58), Empfang vom Betreiber bestätigt; eingeschaltet vor dem
+      Ausrollen von `v2026.10.23`, im Betrieb mit einem echten Konto nachgeprüft — `willkommens-mail/README.md`.
 - [x] **T07** `[P]` · Alle neuen Texte in `translations/messages.{lb,de,fr,en,pt}.yaml`
       (Block `onboarding:`, `profile.newsletter_*`, `flash.onboarding_*`,
       `flash.newsletter_*`, `admin.dashboard.onboarding_*`,

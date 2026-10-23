@@ -31,7 +31,7 @@ Absender aller Vorlagen: **Endlech.lu <support@endlech.lu>** (verifiziert, Domai
 
 „Aktiv“ heißt bei einer Vorlage nur „in Automationen auswählbar“ — verschickt wird dadurch nichts.
 
-## Automation „Willkommen · Konto“ — gebaut, **inaktiv**
+## Automation „Willkommen · Konto“ — **aktiv seit 2026-10-23** (eingeschaltet unmittelbar vor dem Ausrollen von `v2026.10.23`)
 
 Brevo-Automation **#1** „Willkommen · Konto“, `https://app.brevo.com/automation/edit/1`.
 
@@ -54,7 +54,7 @@ später ändert, ändert ihn **in der Automationsnachricht**, nicht nur in der V
 | Verzweigung #7 | A: `LOCALE` ist `en` → Mail (Nachricht #9 aus Vorlage #5) · B: weiter | gespeichert |
 | Verzweigung #9 | A: `LOCALE` ist `pt` → Mail (Nachricht #10 aus Vorlage #6) · B: Mail de (Nachricht #11 aus Vorlage #2) | gespeichert |
 | Einstellungen | Name „Willkommen · Konto“; „Allow contact re-entry after exit“ **aus** → jeder Kontakt nur einmal (AK-44) | gespeichert |
-| Zustand | **Inactive** | — |
+| Zustand | **Active** (seit 2026-10-23, kurz vor dem Ausrollen) | — |
 
 Nachweis: `qa/12/t06/automation-willkommen-konto.png` (Aufbau), `qa/12/t06/automation-einstellungen-wiedereintritt.png`
 (Wiedereintritt aus). Alle fünf Mail-Schritte mit Absender `support@endlech.lu` / „Endlech.lu“ und dem Betreff
@@ -69,8 +69,9 @@ Der Test schickt jede Nachricht der Automation an den Kontakt — Verzweigungen 
 ⚠ Das prüft Zustellung und Inhalt, **nicht** die Weiche (Liste, `ORIGIN`, `LOCALE`, „nur einmal“). Die zeigt sich erst
 im Betrieb: ein neues Konto mit Newsletter-Häkchen auf `/fr/…` bekommt genau die französische Mail.
 
-**Offen:** Einschalten („Activate automation“) unmittelbar vor dem Ausrollen von Feature 12 — nach ausdrücklichem
-Ja des Betreibers.
+**Eingeschaltet 2026-10-23** unmittelbar vor dem Ausrollen von `v2026.10.23`. Nach dem Ausrollen vom Betreiber auf der
+Produktion nachgeprüft: Registrierung auf `/fr/`, Einführung, Newsletter im letzten Schritt → französische
+Willkommens-Mail angekommen (Weiche `ORIGIN`/`LOCALE` im Betrieb bestätigt).
 
 **Einschalten erst unmittelbar vor dem Ausrollen von Feature 12** (sonst bekäme ein neues Konto bis dahin die
 deutsche Fassung, weil der laufende Code `LOCALE` fest auf `de` setzt; Konten, die vor dem Einschalten zur Liste

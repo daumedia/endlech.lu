@@ -264,7 +264,7 @@ Die drei Befunde des ersten `03`-Durchlaufs (BF-77/78/79), BF-81 sowie die vier 
 
 ## Behoben
 
-### Feature 12 · Onboarding für neue Nutzer — dritter Fehlerauftrag (QA 2026-10-23, behoben 2026-10-23, nachgeprüft 2026-10-23)
+### Feature 12 · Onboarding für neue Nutzer — dritter Fehlerauftrag (QA 2026-10-23, behoben 2026-10-23, nachgeprüft 2026-10-23, ausgeliefert 2026-10-23 mit `v2026.10.23`)
 
 Ausgeliefert: **noch nicht** — uncommittet auf `feature/12-onboarding`. ⚠ **BF-175 (*hoch*) besteht auf der Produktion
 fort**, bis der Branch ausgerollt ist. Gegenprobe in der dritten Nachprüfung vom 2026-10-23 (`qa/12/nachpruefung3/`,
@@ -280,7 +280,7 @@ scharf geschaltete Reproduktionen `QA12_REPRO=1 … Qa12Nachpruefung3Test`, dazu
 | BF-180 | B04 / 12 | „Profilbild entfernen" liegt nicht unter der Sperre aus BF-173 und nimmt den Namen aus der beim Anfragebeginn geladenen Entity: gleichzeitig mit einem Upload desselben Kontos → Konto `NULL`, die neue Datei bleibt ohne Verweis (am Server mit vier Arbeitsprozessen getroffen). Restfall von BF-173; Hinweis des `code-reviewer` | niedrig | **behoben 2026-10-23**: `delete()` unter derselben Sperre, Name frisch aus der Datenbank; `testBf180…` scharf grün | Server mit vier Arbeitsprozessen, zehn Durchgänge (0–250 ms Abstand): 0 verwaiste Dateien (`a13-avatar-loeschen-gleichzeitig.ausgabe.txt`); `testBf180…` grün. ⚠ Restfall leerer Entity-Name: BF-186 |
 | BF-181 | 12 / 04 | Abbestellen stellt keinen Sperrauftrag, wenn die Spur einer verlorenen Erstübertragung zurückgesetzt ist: Brevo legt den Kontakt an, die Antwort geht verloren (`failed`, `attempts = 1`), ein bestätigter Adresswechsel setzt `pending`, `attempts = 0`; Abbestellen vor dem nächsten Lauf → kein Auftrag, Brevo behält einen ungesperrten Kontakt. Ebenso (im Code nachvollzogen) nach einem gescheiterten `flush()` am Laufende und wenn ein `failed` des Laufs ein gleichzeitiges Abbestellen überschreibt. Restfall von BF-167; Hinweis des `code-reviewer` | niedrig | **behoben 2026-10-23**: jede bestehende Zeile bekommt beim Abbestellen den Sperrauftrag (außer Löschauftrag), 404 = Erfolg, nichts angelegt; `testBf181…` scharf grün | `testBf181…` scharf grün; Server: jede abbestellte Zeile, auch nie übertragen, `blacklist_pending` (`a06`, `a07`). ⚠ Restfall „`failed` überschreibt den Auftrag": BF-185 |
 
-### Feature 12 · Onboarding für neue Nutzer — zweiter Fehlerauftrag (QA 2026-10-23, behoben 2026-10-23, nachgeprüft 2026-10-23)
+### Feature 12 · Onboarding für neue Nutzer — zweiter Fehlerauftrag (QA 2026-10-23, behoben 2026-10-23, nachgeprüft 2026-10-23, ausgeliefert 2026-10-23 mit `v2026.10.23`)
 
 Ausgeliefert: **noch nicht** — uncommittet auf `feature/12-onboarding`. Gegenprobe in der zweiten Nachprüfung vom 2026-10-23
 (`qa/12/nachpruefung2/`, scharf geschaltete Reproduktionen `QA12_REPRO=1 … Qa12NachpruefungTest`). Dazu die drei
@@ -301,7 +301,7 @@ vorbestehenden Befunde in B02/B04, die auf demselben Branch repariert wurden.
 | BF-159 | B04 (vorher 12 / B04) | **Ein Bild über `post_max_size` ergibt im Profil 422 ohne jede Meldung.** Mit den Grenzen des Produktionsbildes: 21,6-MB-PNG im Profil → 422, nichts auf der Seite. **In der Einführung am 2026-10-23 behoben** (gleiche Datei → 422 mit „maximal 2 MB" am Feld, nachgeprüft am Server `:8098`). Zweite Ausprägung von BF-58 | mittel | behoben 2026-10-23 · Einführung (erster Fehlerauftrag) und Profil (Fehlerauftrag B04): `AvatarConstraints::bodyWasDiscarded()`/`tooLargeMessage()` | `:8098` (8M/10M), 21,6 MB per curl: Einführung 422 mit „maximal 2 MB" am Feld; Profil 302 mit Fehlermeldung „Das Profilbild darf maximal 2 MB groß sein." (`a04-upload.ausgabe.txt`) |
 | BF-164 | B04 | **Mit Profilbild lässt sich das Profil im Browser nicht speichern — vorbestehend seit 2026-03-17 (`d132140`), auf `main`.** Das Formular „Profilbild entfernen" steht **im** Profilformular; der Browser verwirft das innere `<form>`, dessen `</form>` schließt das äußere. Gemessen: „Änderungen speichern" und `profile[_token]` gehören zu keinem Formular — Klick ohne Anfrage, Name unverändert; „Profilbild entfernen" schickt ohne Rückfrage das Profilformular an `/de/profile/edit`, das Bild bleibt. Ohne Bild unauffällig. ⚠ Feature 12 lädt in der Einführung zum Hochladen ein | hoch | behoben 2026-10-23 (Fehlerauftrag B04) · Löschformular hinter dem Profilformular, Knopf über `form="profil-bild-entfernen"` | Browser, Konto mit Bild: jeder Knopf gehört zu seinem Formular, Speichern per Klick und per Enter → „Profil erfolgreich aktualisiert.", Bild bleibt; „Profilbild entfernen" → entfernt (`bf164-browser.ausgabe.txt`) |
 
-### Feature 12 · Onboarding für neue Nutzer (QA 2026-10-22, behoben 2026-10-23, nachgeprüft 2026-10-23)
+### Feature 12 · Onboarding für neue Nutzer (QA 2026-10-22, behoben 2026-10-23, nachgeprüft 2026-10-23, ausgeliefert 2026-10-23 mit `v2026.10.23`)
 
 Ausgeliefert: **noch nicht** — uncommittet auf `feature/12-onboarding`. Gegenprobe jeweils in der Nachprüfung vom 2026-10-23
 (`qa/12/nachpruefung/`, scharf geschaltete Reproduktionen `QA12_REPRO=1 … Qa12OnboardingTest`).
