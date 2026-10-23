@@ -76,10 +76,18 @@ export default class extends Controller {
         this.#send({ filter: [...new Set(eintraege)].join(',') });
     }
 
-    #send(daten: Record<string, string>): void {
+    #send(daten: Record<string, string>, nachLaden = false): void {
         try {
             const umami = window.umami;
             if (!umami || typeof umami.track !== 'function' || this.nameValue === '') {
+                // ⚠ BF-179: Bei einem vollständigen Seitenaufruf verbindet Stimulus vor dem `defer`-Zählskript —
+                // ein Auslöser „beim Erscheinen" fand `window.umami` noch nicht und ging verloren. Einmal nach dem
+                // Laden der Seite erneut versuchen, nicht öfter: Fehlt das Skript dann noch (Werbeblocker,
+                // Widerspruch), wird nicht gezählt.
+                if (!nachLaden && this.nameValue !== '' && document.readyState !== 'complete') {
+                    window.addEventListener('load', () => this.#send(daten, true), { once: true });
+                }
+
                 return;
             }
 

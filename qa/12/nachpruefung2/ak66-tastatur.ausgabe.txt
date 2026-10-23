@@ -1,0 +1,15 @@
+AK-66 im Browser (Chromium-Vorschau, 1280 × 800, :8099, document.hasFocus() = true), Konto brigitte3-824604@example.org, nur Tastatur
+(Tab/Enter/Leertaste über preview_press; Seitenaufruf der Willkommensseite über Turbo.visit):
+  Willkommen: Fokus auf H1#einfuehrung-titel „Schritt 1 von 4 Willkommen"
+    Tab → A „Restaurant vorschlagen"  (2 px, :focus-visible)
+    Tab → A „Zur App-Warteliste"      (2 px rgb(14,116,144), :focus-visible)
+    Tab → A „Weiter"                  (2 px rgb(14,116,144))      Enter →
+  Einträge: Fokus auf H1 „Schritt 2 von 4 Einträge lesen"; Tab, Tab → A „Weiter" (während der Übergangsanimation 2 px weiß,
+    nach 600 ms 2 px rgb(14,116,144))                                Enter →
+  Profilbild: Fokus auf H1 „Schritt 3 von 4 Profilbild"; DOM-Reihenfolge = Tab-Reihenfolge: Dateifeld, „Bild hochladen", Zurück,
+    Weiter, Einführung beenden; kein positives tabindex auf der Seite.
+    Datei per Skript in das Feld gelegt (den Dateidialog bedient die Vorschau nicht), Tab, Tab → BUTTON „Bild hochladen" (2 px cyan)
+    Enter → „Dein Profilbild ist gespeichert.", neues Bild; Fokus wieder auf H1
+    4 × Tab → A „Weiter" (2 px cyan)                                  Enter →
+  Newsletter: Tab → INPUT#onboarding_newsletter_consent (2 px cyan, :focus-visible), Leertaste → checked = true
+    Tab, Tab (Zurück, dann) → BUTTON „Restaurants suchen" (2 px cyan) Enter → /de/restaurants, „Du hast den Newsletter abonniert."

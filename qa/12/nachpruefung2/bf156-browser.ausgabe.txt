@@ -1,0 +1,27 @@
+BF-156 im Browser (Chromium-Vorschau, Turbo aktiv, :8099) — CSRF-Entscheidungen aus var/log/dev.log in Reihenfolge:
+2026-10-23T10:52:50.787621 request.INFO: Matched route "app_login". {"route":"app_login","route_parameters":{"_route":"app_login","_controller":"App\\Controller\\SecurityController::login","_locale":"
+2026-10-23T10:52:50.789616 request.DEBUG: CSRF validation accepted using both origin and double-submit info. [] []
+2026-10-23T10:53:01.879872 request.INFO: Matched route "app_logout". {"route":"app_logout","route_parameters":{"_route":"app_logout","_controller":"App\\Controller\\SecurityController::logout","_local
+2026-10-23T10:53:01.889599 request.DEBUG: CSRF validation accepted using both origin and double-submit info. [] []
+2026-10-23T10:53:02.092633 request.INFO: Matched route "app_register". {"route":"app_register","route_parameters":{"_route":"app_register","_controller":"App\\Controller\\RegistrationController::regis
+2026-10-23T10:53:09.024332 request.INFO: Matched route "app_login". {"route":"app_login","route_parameters":{"_route":"app_login","_controller":"App\\Controller\\SecurityController::login","_locale":"
+2026-10-23T10:53:12.711594 request.INFO: Matched route "app_login". {"route":"app_login","route_parameters":{"_route":"app_login","_controller":"App\\Controller\\SecurityController::login","_locale":"
+2026-10-23T10:53:12.714483 request.DEBUG: CSRF validation accepted using both origin and double-submit info. [] []
+2026-10-23T10:53:28.672607 request.INFO: Matched route "app_onboarding_avatar". {"route":"app_onboarding_avatar","route_parameters":{"_route":"app_onboarding_avatar","_controller":"App\\Controller\\On
+2026-10-23T10:53:28.683471 request.DEBUG: CSRF validation accepted using both origin and double-submit info. [] []
+2026-10-23T10:53:36.841416 request.INFO: Matched route "app_logout". {"route":"app_logout","route_parameters":{"_route":"app_logout","_controller":"App\\Controller\\SecurityController::logout","_local
+2026-10-23T10:53:36.851309 request.DEBUG: CSRF validation accepted using both origin and double-submit info. [] []
+2026-10-23T10:53:37.042573 request.INFO: Matched route "app_register". {"route":"app_register","route_parameters":{"_route":"app_register","_controller":"App\\Controller\\RegistrationController::regis
+2026-10-23T10:53:44.267501 request.INFO: Matched route "app_register". {"route":"app_register","route_parameters":{"_route":"app_register","_controller":"App\\Controller\\RegistrationController::regis
+2026-10-23T10:53:50.105047 request.INFO: Matched route "app_register". {"route":"app_register","route_parameters":{"_route":"app_register","_controller":"App\\Controller\\RegistrationController::regis
+2026-10-23T10:53:50.108160 request.DEBUG: CSRF validation accepted using both origin and double-submit info. [] []
+2026-10-23T10:54:02.085932 request.INFO: Matched route "app_verify_email". {"route":"app_verify_email","route_parameters":{"_route":"app_verify_email","_controller":"App\\Controller\\EmailVerification
+2026-10-23T10:54:02.111788 request.INFO: Matched route "app_login". {"route":"app_login","route_parameters":{"_route":"app_login","_controller":"App\\Controller\\SecurityController::login","_locale":"
+2026-10-23T10:54:05.663171 request.INFO: Matched route "app_login". {"route":"app_login","route_parameters":{"_route":"app_login","_controller":"App\\Controller\\SecurityController::login","_locale":"
+2026-10-23T10:54:05.665604 request.DEBUG: CSRF validation accepted using both origin and double-submit info. [] []
+
+Wege:
+ (3) user@: Anmelden → Profil → Abmelden (Kopfzeile) → Anmeldeseite frisch (navigation type 'navigate') → Anmelden → /de/ angemeldet
+ (2) user@: Einführung Bild hochladen ("Dein Profilbild ist gespeichert.") → Startseite frisch → Abmelden → abgemeldet
+ (1) Registrierung im Browser (brigitte3-824604@example.org) → Bestätigungslink im selben Browser → Anmeldeseite ("… bestätigt! Du kannst dich jetzt anmelden.") → Anmelden → /de/einfuehrung, Fokus #einfuehrung-titel
+Kein „Ungültiges CSRF-Token", kein „double-submit info … missing".

@@ -1371,6 +1371,7 @@ marketing_sync_state:
     synced: "Transmis"
     failed: "Échec"
     removal_pending: "Suppression en attente"
+    blacklist_pending: "Blocage en attente"
 
 marketing_origin:
     partner: "Partenaire"
@@ -1608,3 +1609,63 @@ app_waitlist:
 app_platform:
     ios: "iPhone ou iPad"
     android: "Android"
+
+onboarding:
+    title: "Introduction"
+    page_title: "Étape %current% sur %total% : %step% – Endlech.lu"
+    step_of: "Étape %current% sur %total%"
+    nav_label: "Étapes de l’introduction"
+    back: "Retour"
+    next: "Suivant"
+    finish: "Terminer l’introduction"
+    search: "Rechercher des restaurants"
+    verify_first: "Veuillez d’abord confirmer votre adresse e-mail. L’introduction reprendra ensuite."
+    profile_link: "Voir l’introduction"
+    welcome:
+        title: "Bienvenue"
+        heading: "Bienvenue sur Endlech.lu, %name% !"
+        intro: "Votre adresse est confirmée. Nous vous montrons brièvement comment lire une fiche et configurons votre compte. Chaque étape est facultative."
+        suggest_title: "Proposer un restaurant"
+        suggest_text: "Vous connaissez un établissement qui manque ici ? Proposez-le. Nous vérifions chaque proposition avant sa publication."
+        suggest_cta: "Proposer un restaurant"
+        app_title: "Endlech.lu en application"
+        app_text: "Une version de test existe pour iPhone et iPad ; pour Android, nous recensons actuellement la demande."
+        app_cta: "Vers la liste d’attente de l’application"
+    entries:
+        title: "Lire une fiche"
+        intro: "Ces termes figurent tels quels sur chaque page de restaurant."
+        verified_text: "Ce badge signifie : Endlech.lu a vérifié l’établissement en personne, sur place. La date figure sur la page du restaurant."
+        not_available_title: "« %label% »"
+        not_available_text: "Si cette mention figure à côté d’un critère, celui-ci est soit absent, soit pas encore relevé par nous. La page ne fait pas la différence."
+        measures_title: "%door% et %spacing%"
+        measures_text: "Les deux mesures sont indiquées en centimètres. « %below% » signifie : plus étroit que les 90 cm de la norme DIN 18040. « %not_measured% » signifie : personne n’a mesuré."
+        principle: "Une fiche montre ce que nous avons relevé, pas ce qui vaut sur place."
+    avatar:
+        title: "Photo de profil"
+        intro: "Si vous le souhaitez, ajoutez une photo de profil."
+        visibility: "Votre photo apparaît uniquement dans votre profil et en haut de la page lorsque vous êtes connecté. Personne d’autre ne la voit."
+        upload: "Téléverser la photo"
+        saved: "Votre photo de profil est enregistrée."
+    newsletter:
+        title: "Newsletter"
+        intro: "Souhaitez-vous recevoir les nouvelles d’Endlech.lu par e-mail ? Cela inclut un e-mail de bienvenue, envoyé une seule fois."
+        label: "Oui, je souhaite recevoir les nouvelles d’Endlech.lu par e-mail."
+        terms: "Vous pouvez vous désabonner à tout moment, dans votre profil ou via le lien présent dans chaque e-mail. Sans case cochée, rien ne se passe."
+    admin:
+        title: "Introduction"
+        due: "Comptes avec introduction"
+        shown: "dont affichée"
+        hint: "Comptes ayant confirmé leur adresse depuis la mise en service de l’introduction."
+
+newsletter:
+    title: "Newsletter"
+    text: "Les nouvelles d’Endlech.lu par e-mail, dont un e-mail de bienvenue envoyé une seule fois. Le désabonnement vaut pour toutes les nouvelles envoyées à cette adresse, y compris pour une liste d’attente."
+    text_unverified: "Les nouvelles d’Endlech.lu par e-mail, dont un e-mail de bienvenue envoyé une seule fois. Tant que votre adresse n’est pas confirmée, le désabonnement ne vaut que pour ce compte ; pour toutes les nouvelles envoyées à cette adresse, seulement après la confirmation ou via le lien d’un e-mail."
+    subscribed_since: "Abonné depuis le %date%"
+    not_subscribed: "Non abonné"
+    subscribe: "S’abonner à la newsletter"
+    unsubscribe: "Se désabonner de la newsletter"
+    pending_verification: "Prend effet dès que vous aurez confirmé votre adresse e-mail."
+    flash_subscribed: "Vous êtes abonné à la newsletter."
+    flash_unsubscribed: "Vous êtes désabonné de la newsletter."
+    flash_rate_limited: "Trop de modifications. Veuillez réessayer dans %minutes% minutes."

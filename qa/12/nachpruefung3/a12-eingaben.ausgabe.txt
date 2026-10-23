@@ -1,0 +1,20 @@
+Newsletter-Schritt consent leer               → 302 /de/restaurants
+Newsletter-Schritt consent "nein"             → 302 /de/restaurants
+Newsletter-Schritt consent als Feld-Liste     → 302 /de/restaurants
+Newsletter-Schritt consent 10 000 Zeichen     → 302 /de/restaurants
+Newsletter-Schritt consent SQL                → 302 /de/restaurants
+Newsletter-Schritt Formular als Zeichenkette  → 302 /de/restaurants
+Newsletter-Schritt Token als Liste            → 302 /de/restaurants
+Profilschalter action=subscribe    → 302 /de/profile
+Profilschalter action=Liste        → 400 
+Profilschalter action=leer         → 302 /de/profile
+Profilschalter action=Skript       → 302 /de/profile
+Profilschalter _token als Liste → 400 
+Upload Dateiname ../../../../etc/passwd.png               → 302 · gespeichert als 6adb4b0f55f303.54933024.png
+Upload Dateiname ääääääääääääääääääääääääääääääääääääää → 302 · gespeichert als 6adb4b0f635360.96622157.png
+Upload Dateiname <img src=x onerror=alert(1)>.png         → 302 · gespeichert als 6adb4b0f714ee0.96649760.png
+PUT /de/einfuehrung/newsletter → 405
+PUT /de/einfuehrung/profilbild → 405
+PUT /de/profile/newsletter → 405
+GET /de/profile/newsletter → 405
+Konto: Einwilligung vorher NULL · nachher 2026-10-23 11:54:54

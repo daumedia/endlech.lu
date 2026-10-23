@@ -1,0 +1,34 @@
+{% extends 'onboarding/_rahmen.html.twig' %}
+
+{#
+    AK-22 bis AK-24. ⚠ Die erklärten Begriffe kommen aus DENSELBEN Katalogschlüsseln wie auf der
+    Detailseite (`verified.*`, `accessibility.*`) — nicht aus eigenen Texten (design.md,
+    Entscheidung 9). Wer dort einen Begriff ändert, ändert ihn hier mit (AK-23).
+
+    Die Zahl auf der Restaurantkarte (`rating`) wird bewusst NICHT erklärt, bis OF-01 entschieden
+    ist: lieber keine Erklärung als eine falsche.
+#}
+
+{% block schritt_titel %}{{ 'onboarding.entries.title'|trans }}{% endblock %}
+
+{% block inhalt %}
+    {% set mindestmass = constant('App\\Entity\\Restaurant::MIN_DOOR_WIDTH_CM') %}
+    <p>{{ 'onboarding.entries.intro'|trans }}</p>
+
+    <dl class="space-y-6">
+        <div class="rounded-xl border border-gray-200 p-5 space-y-2">
+            <dt>{% include 'partials/_verified_badge.html.twig' with {restaurant: {isVerified: true}, size: 'lg'} %}</dt>
+            <dd>{{ 'onboarding.entries.verified_text'|trans }}</dd>
+        </div>
+        <div class="rounded-xl border border-gray-200 p-5 space-y-2">
+            <dt class="font-bold text-gray-900">{{ 'onboarding.entries.not_available_title'|trans({'%label%': 'accessibility.not_available'|trans}) }}</dt>
+            <dd>{{ 'onboarding.entries.not_available_text'|trans }}</dd>
+        </div>
+        <div class="rounded-xl border border-gray-200 p-5 space-y-2">
+            <dt class="font-bold text-gray-900">{{ 'onboarding.entries.measures_title'|trans({'%door%': 'accessibility.door_width'|trans, '%spacing%': 'accessibility.table_spacing'|trans}) }}</dt>
+            <dd>{{ 'onboarding.entries.measures_text'|trans({'%below%': 'accessibility.below_minimum'|trans({'%min%': mindestmass}), '%not_measured%': 'accessibility.not_measured'|trans}) }}</dd>
+        </div>
+    </dl>
+
+    <p class="rounded-xl bg-cyan-50 border border-cyan-200 p-5 font-semibold text-cyan-900">{{ 'onboarding.entries.principle'|trans }}</p>
+{% endblock %}

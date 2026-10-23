@@ -29,6 +29,11 @@ final readonly class ChangelogRegistry
     public function notes(): array
     {
         return [
+            // SHOWN — jeder neue Gast merkt es: die Einführung nach der ersten Anmeldung, der Newsletter-Schalter im
+            // Profil und die Willkommens-Mail (Feature 12). Dazu die schon live geschaltete Sprachwahl nach Browser,
+            // die bisher nirgends angekündigt war. AssetMapper und die Reparaturen bleiben ungenannt (kein Gast merkt
+            // sie als Neuerung). ⚠ Der Text verspricht keine Bewertungen (12/AK-21).
+            new ReleaseNote('2026.10.23', new \DateTimeImmutable('2026-10-23'), ReleaseVisibility::SHOWN),
             // SILENT (Hotfix, 2026-10-22): PHP 8.4.27 im Image gegen CVE-2026-109618/-109619. Ein Gast merkt nichts
             // davon; eine Sicherheitslücke im Changelog anzukündigen, bevor jede Instanz gepatcht ist, hilft niemandem.
             new ReleaseNote('2026.10.22', new \DateTimeImmutable('2026-10-22'), ReleaseVisibility::SILENT),

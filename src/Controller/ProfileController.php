@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Account\AccountDataExporter;
 use App\Account\AccountDeleter;
+use App\Account\NewsletterSubscription;
+use App\Form\AvatarConstraints;
 use App\Form\ChangePasswordType;
 use App\Form\ProfileType;
 use App\RateLimit\ActionLimiter;
@@ -62,6 +64,9 @@ final class ProfileController extends AbstractController
         // Feature 01: Der Export liest den halben Bestand eines Kontos zusammen.
         #[Autowire(service: 'limiter.account_export')]
         private readonly RateLimiterFactoryInterface $exportLimiter,
+        // Feature 12, AK-59: dasselbe Kontingent wie der Newsletter-Schritt der Einführung.
+        #[Autowire(service: 'limiter.newsletter_toggle')]
+        private readonly RateLimiterFactoryInterface $newsletterLimiter,
     ) {
     }
 
@@ -97,21 +102,43 @@ final class ProfileController extends AbstractController
         // um den es geht.
         $bisherigeAdresse = $user->getEmail();
 
+        // ⚠ BF-159 (Muster BF-58): Überschreitet der Upload `post_max_size`, verwirft PHP den ganzen
+        // Rumpf. Ohne diese Abfrage zeigte das Profil das Formular ohne jede Meldung erneut — das
+        // Telefonfoto über 10 MB war einfach weg. Dieselbe Meldung wie bei jedem zu großen Bild.
+        if (AvatarConstraints::bodyWasDiscarded($request)) {
+            $this->addFlash('error', AvatarConstraints::tooLargeMessage($this->translator));
+
+            return $this->redirectToRoute('app_profile');
+        }
+
         $profileForm = $this->createForm(ProfileType::class, $user);
         $profileForm->handleRequest($request);
 
         if ($profileForm->isSubmitted() && $profileForm->isValid()) {
+            $gewuenschteAdresse = $user->getEmail();
+            $adresseGeaendert = $gewuenschteAdresse !== null
+                && strcasecmp($gewuenschteAdresse, (string) $bisherigeAdresse) !== 0;
+
+            // Zurück auf die bestätigte Adresse — SOFORT, vor allem, was schreibt. Eine sofort
+            // wirksame Änderung machte aus einer gekaperten Sitzung eine dauerhafte Übernahme
+            // (BF-19). ⚠ BF-175: Vorher stand diese Zeile erst im Adresszweig, hinter dem Upload.
+            // `AvatarUploadService` schreibt mit `flush()` die ganze Unit of Work — samt der
+            // eingegebenen Adresse; und der Zweig „Deckel erreicht" kehrte zurück, bevor sie
+            // zurückgesetzt war. Mit Bild und erreichtem Deckel stand die nie bestätigte Adresse
+            // dauerhaft am Konto.
+            $user->setEmail($bisherigeAdresse);
+
             $avatarFile = $profileForm->get('avatar')->getData();
             if ($avatarFile instanceof UploadedFile) {
                 $avatarService->upload($avatarFile, $user);
             }
 
-            $gewuenschteAdresse = $user->getEmail();
-            $adresseGeaendert = $gewuenschteAdresse !== null
-                && strcasecmp($gewuenschteAdresse, (string) $bisherigeAdresse) !== 0;
-
             if ($adresseGeaendert) {
-                $limiter = ActionLimiter::for($this->emailChangeLimiter, $user->getUserIdentifier());
+                // ⚠ BF-176: am KONTO zählen. Mit `getUserIdentifier()` war der Schlüssel nach
+                // `handleRequest()` die GEWÜNSCHTE Adresse — jede neue Adresse brachte ein neues
+                // Kontingent, acht Wechsel auf acht Adressen liefen alle durch (16 Mails).
+                // Schlüssel ist die BESTÄTIGTE Adresse, wie bei `password_change` und `account_delete`.
+                $limiter = ActionLimiter::for($this->emailChangeLimiter, (string) $bisherigeAdresse);
 
                 if (!$limiter->isAllowed()) {
                     $this->addFlash('error', $this->translator->trans('flash.email_change_rate_limited'));
@@ -119,11 +146,6 @@ final class ProfileController extends AbstractController
                     return $this->redirectToRoute('app_profile');
                 }
 
-                // Zurück auf die bestätigte Adresse. Eine sofort wirksame Änderung
-                // machte aus einer gekaperten Sitzung eine dauerhafte Übernahme:
-                // Der rechtmäßige Inhaber könnte sich nicht mehr anmelden und hat
-                // keinen Weg zurück, weil es kein Passwort-Zurücksetzen gibt.
-                $user->setEmail($bisherigeAdresse);
                 $token = $user->requestEmailChange($gewuenschteAdresse);
                 $em->flush();
 
@@ -398,6 +420,56 @@ final class ProfileController extends AbstractController
             // Profil und kann ihn dort abbrechen.
             $this->addFlash('error', $this->translator->trans('flash.profile_email_mail_failed'));
         }
+    }
+
+    /**
+     * Newsletter an- und abbestellen (Feature 12, AK-34 bis AK-38; löst 04/OF-02).
+     *
+     * Die Richtung steht im Knopf (`action`), nicht im aktuellen Zustand: Ein Umschalten nach
+     * Zustand drehte bei zwei offenen Tabs die Wahl des ersten wieder um (EC-08).
+     *
+     * ⚠ Kontingent erst verbrauchen, wenn sich etwas ändert (AK-60, BF-11) — wer „abbestellen"
+     * schickt, obwohl nichts abonniert ist, hat nichts getan.
+     */
+    #[Route('/newsletter', name: 'app_profile_newsletter', methods: ['POST'])]
+    public function newsletter(Request $request, NewsletterSubscription $newsletter): Response
+    {
+        if (!$this->isCsrfTokenValid('profile-newsletter', $request->request->getString('_token'))) {
+            $this->addFlash('error', $this->translator->trans('flash.invalid_csrf'));
+
+            return $this->redirectToRoute('app_profile');
+        }
+
+        $aktion = $request->request->getString('action');
+
+        if (!\in_array($aktion, ['subscribe', 'unsubscribe'], true)) {
+            return $this->redirectToRoute('app_profile');
+        }
+
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+        $limiter = ActionLimiter::for($this->newsletterLimiter, $user->getUserIdentifier());
+
+        if (!$limiter->isAllowed()) {
+            $this->addFlash('error', $this->translator->trans('newsletter.flash_rate_limited', [
+                '%minutes%' => max(1, (int) ceil($limiter->retryAfter() / 60)),
+            ]));
+
+            return $this->redirectToRoute('app_profile');
+        }
+
+        $geaendert = 'subscribe' === $aktion
+            ? $newsletter->subscribe($user, $request->getLocale())
+            : $newsletter->unsubscribe($user);
+
+        if ($geaendert) {
+            $limiter->consume();
+            $this->addFlash('success', $this->translator->trans(
+                'subscribe' === $aktion ? 'newsletter.flash_subscribed' : 'newsletter.flash_unsubscribed',
+            ));
+        }
+
+        return $this->redirectToRoute('app_profile');
     }
 
     #[Route('/avatar/delete', name: 'app_profile_avatar_delete', methods: ['POST'])]

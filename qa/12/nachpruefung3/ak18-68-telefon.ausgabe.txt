@@ -1,0 +1,13 @@
+QA Feature 12, vierter Durchlauf — AK-18 / AK-68 im Browser, Voreinstellung iPhone SE (375 × 667), Konto ohne Einwilligung (4 Schritte)
+Messung je Bildschirm: Kopfzeile (Höhe), untere Leiste (fixed, sichtbar), waagerechtes Scrollen, alle sichtbaren a/button/input/label im <main> mit Breite × Höhe
+
+Schritt 1 von 4 Willkommen   · Kopf 81 px · untere Leiste: Home 90×60, Restaurants 90×60, Über uns 90×60, Profil 90×60 · waagerecht: nein
+   Restaurant vorschlagen 236×44 · Zur App-Warteliste 236×44 · Weiter 99×48 · Einführung beenden 162×44
+Schritt 2 von 4 Einträge lesen · Kopf 81 · untere Leiste wie oben · waagerecht: nein
+   Zurück 108×52 · Weiter 99×48 · Einführung beenden 162×44
+Schritt 3 von 4 Profilbild   · Kopf 81 · untere Leiste wie oben · waagerecht: nein
+   input:file 278×46 · Bild hochladen 145×44 · Zurück 108×52 · Weiter 99×48 · Einführung beenden 162×44
+   (Label „Profilbild" 278×20 ist die Beschriftung des Dateifelds, kein eigenes Ziel)
+Schritt 4 von 4 Newsletter   · Kopf 81 · untere Leiste wie oben · waagerecht: nein
+   Häkchen 20×20 mit Label 212×68 (schaltet mit, H-2) · Zurück 108×52 · Restaurants suchen 204×48 · Einführung beenden 162×44
+Bildschirmfoto: qa/12/nachpruefung3/ak18-profilbild-telefon.png

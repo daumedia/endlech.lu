@@ -1371,6 +1371,7 @@ marketing_sync_state:
     synced: "Iwwerdroen"
     failed: "Feelgeschloen"
     removal_pending: "Läschung aussteend"
+    blacklist_pending: "Spär aussteend"
 
 marketing_origin:
     partner: "Partner"
@@ -1608,3 +1609,63 @@ app_waitlist:
 app_platform:
     ios: "iPhone oder iPad"
     android: "Android"
+
+onboarding:
+    title: "Aféierung"
+    page_title: "Schrëtt %current% vun %total%: %step% – Endlech.lu"
+    step_of: "Schrëtt %current% vun %total%"
+    nav_label: "Schrëtt vun der Aféierung"
+    back: "Zréck"
+    next: "Weider"
+    finish: "Aféierung ofschléissen"
+    search: "Restauranten sichen"
+    verify_first: "Bestäteg w.e.g. fir d’éischt deng E-Mail-Adress. Duerno geet et mat der Aféierung weider."
+    profile_link: "Aféierung ukucken"
+    welcome:
+        title: "Wëllkomm"
+        heading: "Wëllkomm op Endlech.lu, %name%!"
+        intro: "Deng Adress ass bestätegt. Mir weisen dir kuerz, wéi s du en Androg liess, a riichten däi Kont an. All Schrëtt ass fräiwëlleg."
+        suggest_title: "E Restaurant virschloen"
+        suggest_text: "Kenns du e Lokal, dat hei nach feelt? Schlo et vir. Mir préiwen all Virschlag, ier en erschéngt."
+        suggest_cta: "Restaurant virschloen"
+        app_title: "Endlech.lu als App"
+        app_text: "Fir iPhone an iPad gëtt et eng Testversioun, fir Android sammele mir grad de Besoin."
+        app_cta: "Op d’App-Waardelëscht"
+    entries:
+        title: "Androen liesen"
+        intro: "Dës Begrëffer stinn esou op all Restaurantsäit."
+        verified_text: "Dëse Badge heescht: Endlech.lu huet d’Lokal perséinlech virun Ort gepréift. Wéini, steet op der Restaurantsäit."
+        not_available_title: "„%label%“"
+        not_available_text: "Steet dat bei engem Merkmol, ass et entweder net do oder vun eis nach net erfaasst. D’Säit mécht do keen Ënnerscheed."
+        measures_title: "%door% an %spacing%"
+        measures_text: "Béid Moossen stinn an Zentimeter. „%below%“ heescht: méi schmuel wéi déi 90 cm vun der DIN 18040. „%not_measured%“ heescht: Keen huet nogemooss."
+        principle: "En Androg weist, wat mir erfaasst hunn, net wat virun Ort gëllt."
+    avatar:
+        title: "Profilbild"
+        intro: "Wann s du wëlls, lued e Profilbild erop."
+        visibility: "Däi Bild erschéngt just an dengem Profil an uewen an der Kappzeil, soulaang s du ugemellt bass. Anerer gesinn et net."
+        upload: "Bild eroplueden"
+        saved: "Däi Profilbild ass gespäichert."
+    newsletter:
+        title: "Newsletter"
+        intro: "Wëlls du Neiegkeeten vun Endlech.lu per E-Mail kréien? Dozou gehéiert eng Kéier eng Wëllkomms-Mail."
+        label: "Jo, ech wëll Neiegkeeten vun Endlech.lu per E-Mail kréien."
+        terms: "Du kanns all Moment ofbestellen, an dengem Profil oder iwwer de Link an all Mail. Ouni Hoken geschitt näischt."
+    admin:
+        title: "Aféierung"
+        due: "Konten mat Aféierung"
+        shown: "dovun ugewisen"
+        hint: "Konten, déi hir Adress bestätegt hunn, zënter et d’Aféierung gëtt."
+
+newsletter:
+    title: "Newsletter"
+    text: "Neiegkeeten vun Endlech.lu per E-Mail, dorënner eng Kéier eng Wëllkomms-Mail. Ofbestellen gëllt fir all Neiegkeeten un dës Adress, och zu enger Waardelëscht."
+    text_unverified: "Neiegkeeten vun Endlech.lu per E-Mail, dorënner eng Kéier eng Wëllkomms-Mail. Soulaang deng Adress net bestätegt ass, gëllt Ofbestellen just fir dëse Kont; fir all Neiegkeeten un dës Adress eréischt no der Bestätegung oder iwwer de Link an enger Mail."
+    subscribed_since: "Abonnéiert säit %date%"
+    not_subscribed: "Net abonnéiert"
+    subscribe: "Newsletter abonnéieren"
+    unsubscribe: "Newsletter ofbestellen"
+    pending_verification: "Gëllt, soubal s du deng E-Mail-Adress bestätegt hues."
+    flash_subscribed: "Du hues den Newsletter abonnéiert."
+    flash_unsubscribed: "Du hues den Newsletter ofbestallt."
+    flash_rate_limited: "Ze vill Ännerungen. Probéier et w.e.g. an %minutes% Minutten nach eng Kéier."

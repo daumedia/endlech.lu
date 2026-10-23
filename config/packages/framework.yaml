@@ -122,6 +122,15 @@ framework:
             policy: 'sliding_window'
             limit: 3
             interval: '1 hour'
+        # Newsletter an- und abbestellen (Feature 12, AK-59): Schalter im Profil und
+        # Schritt der Einführung teilen sich EIN Kontingent. Jeder Wechsel kann über die
+        # Brevo-Automation eine Mail auslösen — Projektregel: ein Weg, der Mails auslöst,
+        # braucht einen Deckel. Am KONTO gezählt, nicht an der IP (wie `email_change`).
+        # Verbraucht wird nur bei einem tatsächlichen Wechsel (AK-60, BF-11).
+        newsletter_toggle:
+            policy: 'sliding_window'
+            limit: 10
+            interval: '1 hour'
         # Vorschläge über die API (BF-30) und über den Assistenten (BF-50): beide
         # füllen dieselbe Moderationsschlange, und die abzuarbeiten ist Handarbeit.
         # Am Konto gezählt — beide Wege setzen eine Anmeldung voraus.
@@ -289,6 +298,10 @@ when@test:
                 limit: 10000
                 interval: '15 minutes'
             email_change:
+                policy: 'sliding_window'
+                limit: 10000
+                interval: '1 hour'
+            newsletter_toggle:
                 policy: 'sliding_window'
                 limit: 10000
                 interval: '1 hour'

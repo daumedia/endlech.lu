@@ -1371,6 +1371,7 @@ marketing_sync_state:
     synced: "Transferred"
     failed: "Failed"
     removal_pending: "Removal pending"
+    blacklist_pending: "Block pending"
 
 marketing_origin:
     partner: "Partner"
@@ -1608,3 +1609,63 @@ app_waitlist:
 app_platform:
     ios: "iPhone or iPad"
     android: "Android"
+
+onboarding:
+    title: "Introduction"
+    page_title: "Step %current% of %total%: %step% – Endlech.lu"
+    step_of: "Step %current% of %total%"
+    nav_label: "Introduction steps"
+    back: "Back"
+    next: "Next"
+    finish: "End introduction"
+    search: "Search restaurants"
+    verify_first: "Please confirm your email address first. The introduction will continue afterwards."
+    profile_link: "View introduction"
+    welcome:
+        title: "Welcome"
+        heading: "Welcome to Endlech.lu, %name%!"
+        intro: "Your address is confirmed. We will briefly show you how to read a listing and set up your account. Every step is optional."
+        suggest_title: "Suggest a restaurant"
+        suggest_text: "Know a place that is missing here? Suggest it. We check every suggestion before it appears."
+        suggest_cta: "Suggest a restaurant"
+        app_title: "Endlech.lu as an app"
+        app_text: "A test version is available for iPhone and iPad; for Android we are currently gauging demand."
+        app_cta: "Go to the app waiting list"
+    entries:
+        title: "Reading a listing"
+        intro: "These terms appear exactly like this on every restaurant page."
+        verified_text: "This badge means Endlech.lu checked the place in person, on site. The restaurant page shows when."
+        not_available_title: "“%label%”"
+        not_available_text: "If this appears next to a feature, it is either not there or not yet recorded by us. The page does not tell the two apart."
+        measures_title: "%door% and %spacing%"
+        measures_text: "Both are given in centimetres. “%below%” means narrower than the 90 cm of DIN 18040. “%not_measured%” means nobody has measured."
+        principle: "A listing shows what we have recorded, not what applies on site."
+    avatar:
+        title: "Profile picture"
+        intro: "If you like, upload a profile picture."
+        visibility: "Your picture only appears in your profile and in the header while you are signed in. Nobody else sees it."
+        upload: "Upload picture"
+        saved: "Your profile picture has been saved."
+    newsletter:
+        title: "Newsletter"
+        intro: "Would you like to receive news from Endlech.lu by email? This includes a one-time welcome email."
+        label: "Yes, I would like to receive news from Endlech.lu by email."
+        terms: "You can unsubscribe at any time, in your profile or via the link in every email. Without a tick, nothing happens."
+    admin:
+        title: "Introduction"
+        due: "Accounts with introduction"
+        shown: "of which shown"
+        hint: "Accounts that confirmed their address since the introduction went live."
+
+newsletter:
+    title: "Newsletter"
+    text: "News from Endlech.lu by email, including a one-time welcome email. Unsubscribing applies to all news sent to this address, including for a waiting list."
+    text_unverified: "News from Endlech.lu by email, including a one-time welcome email. Until your address is confirmed, unsubscribing applies to this account only; for all news sent to this address only after confirmation or via the link in an email."
+    subscribed_since: "Subscribed since %date%"
+    not_subscribed: "Not subscribed"
+    subscribe: "Subscribe to the newsletter"
+    unsubscribe: "Unsubscribe from the newsletter"
+    pending_verification: "Takes effect once you have confirmed your email address."
+    flash_subscribed: "You have subscribed to the newsletter."
+    flash_unsubscribed: "You have unsubscribed from the newsletter."
+    flash_rate_limited: "Too many changes. Please try again in %minutes% minutes."

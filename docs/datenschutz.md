@@ -186,6 +186,34 @@ je um einen Wert erweitert, prüft diesen Satz zuerst.
 - Der Datenexport eines Kontos (Art. 20) gibt aus, ob und wann eingewilligt
   wurde.
 
+**Seit Feature 12 (Onboarding, 2026-10-22):**
+
+- **Ein Konto kann selbst ein- und abbestellen** — im Profil und im letzten Schritt
+  der Einführung (löst Feature 04, OF-02). Gemeinsames Kontingent `newsletter_toggle`,
+  10 Wechsel je Stunde, am Konto gezählt.
+- **Abbestellen über Endlech.lu sperrt den Kontakt in Brevo, statt ihn zu löschen**
+  (Sync-Zustand `blacklist_pending`, dann `emailBlacklisted: true`). Gelöscht und neu
+  angelegt wäre er für Brevo ein neuer Kontakt — die Willkommens-Mail käme ein zweites
+  Mal. Wie beim Abmeldelink fällt die Einwilligung an **allen** Quellen der Adresse.
+- **Erneutes Einwilligen hebt eine Sperre auf** (`emailBlacklisted: false`), aber nur,
+  wenn die Sperre bei uns bekannt ist und die neue Einwilligung jünger ist. Eine
+  Abmeldung, von der nur Brevo weiß, bleibt unangetastet (Feature 04, EC-05).
+- **Willkommens-Mail** als Brevo-Automation an Kontakte mit `ORIGIN = ACCOUNT`, höchstens
+  einmal je Kontakt. Werbung an Einwilligende, dieselbe Rechtsgrundlage wie die
+  Kampagnen (Art. 6 Abs. 1 lit. a). Text und Sprachvarianten werden in Brevo gepflegt.
+  ⚠ Ob der Brevo-Tarif die Automation trägt, ist offen (Feature 12, OF-04).
+- `LOCALE` eines Konto-Kontakts kommt seither aus der Anfrage, in der eingewilligt oder
+  bestätigt wurde — vorher stand dort fest `de`.
+- **Am Konto stehen zwei weitere Angaben**: ob die Einführung vorgesehen ist und wann
+  sie zum ersten Mal angezeigt wurde. Keine Schritte, keine Klicks, **keine Frage nach
+  Bedarf oder Einschränkung** — die Datenschutzstufe B bleibt. Beide stehen im
+  Datenexport und fallen mit dem Konto weg. Weder sie noch das Profilbild gehen nach
+  Brevo.
+- Die Nutzungsmessung (Feature 11) kennt drei Ereignisse der Einführung — begonnen,
+  abgeschlossen, vorzeitig beendet mit Bildschirmnummer. Keine Kontokennung, keine
+  Angabe, ob abonniert oder ein Bild hochgeladen wurde. Der Schalter im Profil wird
+  nicht gemessen.
+
 ⚠ **Offen (OF-06): eine Löschfrist für Werbe-Kontakte, die jahrelang nicht
 reagieren, gibt es nicht.** Zeilen mit gesetztem `revoked_at` bleiben als Sperre
 unbegrenzt stehen, damit der nächste Abgleich die Adresse nicht erneut einträgt.

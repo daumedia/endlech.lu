@@ -1,0 +1,7 @@
+> typecheck
+> tsc --noEmit
+
+
+> lint
+> eslint assets/
+

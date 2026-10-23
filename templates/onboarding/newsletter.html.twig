@@ -1,0 +1,34 @@
+{% extends 'onboarding/_rahmen.html.twig' %}
+
+{#
+    AK-30 bis AK-33. Das Häkchen ist leer, und ohne Häkchen geschieht nichts. Der Knopf
+    „Restaurants suchen" schickt das Formular ab — er steht in der Fußleiste und hängt sich über
+    `form=` an das Formular, damit die Fußleiste auf allen Bildschirmen gleich bleibt.
+#}
+
+{% block schritt_titel %}{{ 'onboarding.newsletter.title'|trans }}{% endblock %}
+
+{% block inhalt %}
+    <p>{{ 'onboarding.newsletter.intro'|trans }}</p>
+
+    {% set consent = newsletterForm.consent %}
+    {{ form_start(newsletterForm, {'attr': {'id': 'einfuehrung-newsletter'}}) }}
+        <div class="rounded-xl border border-gray-300 bg-gray-50 p-4 space-y-2">
+            <div class="flex items-start gap-3">
+                {{ form_widget(consent, {'attr': {
+                    'class': 'mt-0.5 w-5 h-5 shrink-0 cursor-pointer rounded border-gray-500 text-cyan-700 focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700',
+                    'aria-describedby': 'einfuehrung-newsletter-hinweis',
+                }}) }}
+                {{ form_label(consent, null, {'label_attr': {
+                    'class': 'block min-h-[44px] text-sm text-gray-900 leading-relaxed cursor-pointer',
+                }}) }}
+            </div>
+            <p id="einfuehrung-newsletter-hinweis" class="text-sm text-gray-700">{{ 'onboarding.newsletter.terms'|trans }}</p>
+        </div>
+    {{ form_end(newsletterForm) }}
+{% endblock %}
+
+{% block weiter %}
+    {# BF-171: kein Messauslöser am Knopf — „abgeschlossen" zählt die Seite nach dem gelungenen Absenden. #}
+    <button type="submit" form="einfuehrung-newsletter" class="{{ knopf_haupt }}">{{ 'onboarding.search'|trans }}</button>
+{% endblock %}

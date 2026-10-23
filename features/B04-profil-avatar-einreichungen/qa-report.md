@@ -237,3 +237,70 @@ Reproduktion oben — dieselbe Regelung wie bei BF-02 und BF-13.
 
 `/sdd-qa B23`. B04 geht auf `approved`; ausgeliefert ist noch nichts — die
 Reparaturen von B01, B02 und B04 liegen zusammen auf `dev` und warten auf `/sdd-deploy`.
+
+## Nachtrag 2026-10-23 · BF-164, BF-159 (Profil), BF-173 behoben (nicht ausgeliefert)
+
+Gefunden in der QA von Feature 12. Behoben auf `feature/12-onboarding`, Fehlerauftrag ohne eigenen
+`review`-Status (Muster BF-151/B15):
+- **BF-164** — Das Formular „Profilbild entfernen" steht hinter dem Profilformular, der Knopf hängt
+  sich über `form="profil-bild-entfernen"` daran. `Bf164ProfilFormularTest`, Browser: Speichern mit
+  Bild gelingt.
+- **BF-159 (Profilhälfte)** — Ein Upload über `post_max_size` zeigt im Profil „Das Profilbild darf
+  maximal 2 MB groß sein." (`AvatarConstraints::bodyWasDiscarded()`/`tooLargeMessage()`).
+- **BF-173** — `AvatarUploadService` arbeitet unter einer Sperre je Konto und räumt den frisch aus der
+  Datenbank gelesenen alten Namen mit weg (`Bf173AvatarVerwaistTest`).
+Nächster Schritt: `/sdd-qa B04` bzw. die Nachprüfung in `/sdd-qa 12`.
+
+## Nachprüfung 2026-10-23 · BF-164, BF-159, BF-173 behoben — zwei neue Befunde (QA Feature 12, dritter Durchlauf)
+
+- **BF-164 behoben** — im Browser, Konto mit Bild: jeder Knopf gehört zu seinem Formular, Speichern per Klick und per Enter
+  gelingt, „Profilbild entfernen" entfernt (`qa/12/nachpruefung2/bf164-browser.ausgabe.txt`).
+- **BF-159 (Profilhälfte) behoben** — 21,6 MB gegen die Grenzen des Produktionsbildes → Fehlermeldung „Das Profilbild darf
+  maximal 2 MB groß sein." (`a04-upload.ausgabe.txt`).
+- **BF-173 behoben** — vier gleichzeitige Uploads eines Kontos (vier Arbeitsprozesse, auch Produktionsmodus), fünf
+  Durchgänge: 0 verwaiste Dateien.
+- **Neu, vorbestehend auf der Produktion: BF-175 (hoch)** — ein Adresswechsel wird ohne Bestätigung wirksam, wenn im selben
+  Absenden ein Profilbild hochgeladen wird und der Deckel `email_change` erreicht ist: `AvatarUploadService::upload()` ruft
+  `flush()`, während `handleRequest()` die neue Adresse schon in die Entity geschrieben hat; der Deckel-Zweig setzt nicht
+  zurück. Hebt BF-19 auf (`a05-adresswechsel-mit-bild.ausgabe.txt`, `Qa12Nachpruefung3Test::testBf175…`).
+- **Neu, vorbestehend: BF-176 (mittel)** — der Deckel `email_change` zählt an der gewünschten Adresse statt am Konto
+  (`a05b-deckel-schluessel.ausgabe.txt`, `testBf176…`).
+
+- **Neu: BF-180 (niedrig, B04/12)** — „Profilbild entfernen" liegt nicht unter der Sperre aus BF-173; gleichzeitig mit einem
+  Upload bleibt die neue Datei ohne Konto liegen (`a13-avatar-loeschen-gleichzeitig.ausgabe.txt`, `testBf180…`).
+
+Status bleibt `deployed` mit Vermerk; **nächster Schritt `/sdd-build B04`** (BF-175, BF-176, BF-180) — BF-175 betrifft laufenden Code.
+
+## Nachtrag 2026-10-23 · BF-175, BF-176, BF-180 behoben (nicht ausgeliefert)
+
+Behoben auf `feature/12-onboarding` im dritten Fehlerauftrag zu Feature 12, ohne eigenen `review`-Status (Muster
+BF-151/B15):
+- **BF-175** — `ProfileController::edit()` setzt die Adresse direkt nach der Validierung auf die bestätigte zurück,
+  **vor** dem Upload und vor jedem anderen Schreiben; die gewünschte Adresse lebt nur noch in einer Variablen. Der
+  `flush()` des Upload-Dienstes findet damit keine fremde Änderung mehr. ⚠ **Auf der Produktion besteht der Fehler
+  fort**, bis der Branch ausgerollt ist. `Qa12Nachpruefung3Test::testBf175…` scharf grün.
+- **BF-176** — Der Deckel `email_change` zählt an der bestätigten Adresse (vor `handleRequest()` gelesen), nicht an
+  der Eingabe. `testBf176…` scharf grün.
+- **BF-180** — `AvatarUploadService::delete()` läuft unter derselben Sperre je Konto wie `upload()` und löscht den
+  Namen aus der Entity und den frisch aus der Datenbank gelesenen. `testBf180…` scharf grün.
+`ProfileControllerTest` und `AvatarUploadServiceTest` unverändert grün. Nächster Schritt: Nachprüfung in `/sdd-qa 12`.
+
+## Nachprüfung 2026-10-23 · BF-175, BF-176, BF-180 behoben — drei neue, vorbestehende Befunde (QA Feature 12, vierter Durchlauf)
+
+- **BF-175 behoben** — am laufenden Server: drei Adresswechsel, der vierte mit Bild bei erreichtem Deckel → Flash „Zu viele
+  Adressänderungen …", `email` unverändert, nur vorgemerkt; Anmeldung mit der neuen Adresse scheitert, „Passwort vergessen"
+  erzeugt dafür keinen Token (`qa/12/nachpruefung3/a05-adresswechsel-mit-bild.ausgabe.txt`). ⚠ **Auf der Produktion
+  besteht der Fehler fort**, bis `feature/12-onboarding` ausgerollt ist.
+- **BF-176 behoben** — acht Wechsel auf acht neue Adressen: drei angenommen, ab dem vierten abgewiesen (`a05b`).
+- **BF-180 behoben** — Upload und „Entfernen" gleichzeitig, vier Arbeitsprozesse, zehn Durchgänge: 0 verwaiste Dateien (`a13`).
+- Hauptweg im Browser: Profil mit Bild per Klick und per Enter gespeichert, Bild bleibt (`bf156-bf164-browser.ausgabe.txt`).
+- **Neu, vorbestehend: BF-182 (mittel)** — ein Name aus Leerzeichen ergibt **HTTP 500** (`ProfileType`: `'empty_data' => ''`
+  fehlt; der Browser schickt das ab). Leeres Adressfeld ebenso, dort hält der Browser es ab (`a15`, `a15b`,
+  `Qa12Nachpruefung4Test::testBf182…`).
+- **Neu, vorbestehend: BF-184 (mittel)** — ein Adresswechsel auf eine RFC-widrige (`../../etc/passwd@example.lu`) oder über
+  180 Zeichen lange Adresse ergibt **HTTP 500**; die RFC-widrige bleibt vorgemerkt. Das Profil ist der fünfte Adresseingang,
+  den BF-119 nicht nachgezogen hat (`a16`, `testBf184…`).
+- **Neu: BF-186 (niedrig, B04/12)** — „Entfernen" mit einer Entity, die beim Anfragebeginn kein Bild trug, löscht die
+  inzwischen gespeicherte Datei und lässt den Verweis stehen; dieselbe Lücke im `AccountDeleter` (`testBf186…`).
+
+Status bleibt `deployed` mit Vermerk (kein Befund *hoch* offen); nächster Schritt `/sdd-build B04` mit BF-182, BF-184, BF-186.

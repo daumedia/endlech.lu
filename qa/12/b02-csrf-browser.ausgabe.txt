@@ -1,0 +1,17 @@
+# QA 12 · BF-156 (B02, vorbestehend) — Anmeldung scheitert nach Double-Submit in derselben Sitzung
+# 2026-10-22, Chromium-Vorschau, http://localhost:8096 (Entwicklungsserver, Datenbank Port 3309)
+
+1. /de/register frisch geladen → Formular abgeschickt (Token-Feld mit data-controller="csrf-protection")
+   dev.log 21:18:35  request.DEBUG: CSRF validation accepted using both origin and double-submit info.
+   → /de/verify, Flash „Registrierung erfolgreich! …"
+2. Bestätigungslink als neue Seite geladen: /de/verify/4807…c6b2 → 302 /de/login
+   Flash „Deine E-Mail-Adresse wurde erfolgreich bestätigt! Du kannst dich jetzt anmelden."
+   performance.getEntriesByType('resource') enthält KEIN csrf_protection_controller (lazy, kein Element fordert ihn an)
+3. Anmeldung frida.browser@example.org / richtiges Passwort → Flash „Ungültiges CSRF-Token."
+   dev.log 21:18:46  request.WARNING: CSRF validation failed: double-submit info was used in a previous request but is now missing.
+4. Zweiter Versuch derselbe Ausgang („Ungültiges CSRF-Token.").
+5. Gegenprobe: /de/register laden (Controller wird geladen), per Turbo auf „Login" → Anmeldung gelingt → /de/einfuehrung.
+
+Produktion (nur gelesen, GET): Login-Formular `name="_csrf_token" value="csrf-token"` ohne data-controller,
+Registrierung mit data-controller="csrf-protection"; im Encore-Bündel ist der Controller ebenfalls ein Lazy-Stub
+(`__stimulusLazyController`, Chunk erst bei Bedarf). Auf der Produktion NICHT nachgestellt (kein Konto angelegt).

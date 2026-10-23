@@ -124,6 +124,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private \DateTimeImmutable $createdAt;
 
+    /**
+     * Einführung vorgesehen (Feature 12).
+     *
+     * Gesetzt beim Bestätigen der Adresse über den Link aus der Registrierungsmail. Daran
+     * unterscheiden sich neue Konten von Bestandskonten: Wer vor der Auslieferung bestätigt
+     * war, ist nie durch diesen Weg gegangen und trägt `false` (AK-06); wer damals noch
+     * unbestätigt war, bekommt den Merker mit seiner Bestätigung (AK-07).
+     *
+     * ⚠ Kein Stichtag am Anlagedatum: Der verfehlte genau AK-07. Und kein für Bestandskonten
+     * eingetragenes Datum in `onboardingShownAt` — das behauptete im Datenexport, jemand habe
+     * die Einführung gesehen, der sie nie sah (design.md, Entscheidung 2).
+     */
+    #[ORM\Column(options: ['default' => false])]
+    private bool $onboardingDue = false;
+
+    /**
+     * Wann die Einführung diesem Konto zum ersten Mal angezeigt wurde (Feature 12, AK-02).
+     *
+     * Wird einmal geschrieben und nie überschrieben — auch nicht, wenn jemand sie über das
+     * Profil erneut ansieht (AK-09).
+     */
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $onboardingShownAt = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -373,6 +397,44 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getCreatedAt(): \DateTimeImmutable
     {
         return $this->createdAt;
+    }
+
+    public function isOnboardingDue(): bool
+    {
+        return $this->onboardingDue;
+    }
+
+    public function markOnboardingDue(): static
+    {
+        $this->onboardingDue = true;
+
+        return $this;
+    }
+
+    public function getOnboardingShownAt(): ?\DateTimeImmutable
+    {
+        return $this->onboardingShownAt;
+    }
+
+    /**
+     * Vermerkt die erste Anzeige. Ein späterer Aufruf ändert nichts (AK-53).
+     */
+    public function markOnboardingShown(\DateTimeImmutable $now): static
+    {
+        $this->onboardingShownAt ??= $now;
+
+        return $this;
+    }
+
+    /**
+     * Soll die Einführung nach der nächsten Anmeldung von selbst erscheinen?
+     *
+     * Drei Bedingungen, alle nötig: Die Adresse ist bestätigt (AK-04), die Einführung ist für
+     * dieses Konto vorgesehen (AK-06, AK-07), und sie wurde noch nie angezeigt (AK-02).
+     */
+    public function isOnboardingPending(): bool
+    {
+        return $this->isVerified && $this->onboardingDue && null === $this->onboardingShownAt;
     }
 
     public function getWebauthnHandle(): ?string

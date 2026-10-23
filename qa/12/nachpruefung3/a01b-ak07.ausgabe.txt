@@ -1,0 +1,5 @@
+AK-07 vorher: {"is_verified":0,"onboarding_due":0,"onboarding_shown_at":null}
+AK-07 Anmeldung unbestätigt: 302 → /de/
+AK-07 Link neu anfordern: 302 → /de/verify
+AK-07 Link als Gast geöffnet: 302 → /de/login · {"is_verified":1,"onboarding_due":1,"onboarding_shown_at":null}
+AK-07 erste Anmeldung nach Bestätigung: 302 → /de/einfuehrung

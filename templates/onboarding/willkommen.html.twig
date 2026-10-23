@@ -1,0 +1,28 @@
+{% extends 'onboarding/_rahmen.html.twig' %}
+
+{% block schritt_titel %}{{ 'onboarding.welcome.title'|trans }}{% endblock %}
+
+{% block inhalt %}
+    {# AK-50: „begonnen" beim Erscheinen. Ohne Zählskript geschieht nichts. Eigenes Element mit
+       `data-turbo-temporary` (wie BF-177): Turbo speichert es nicht mit, „Zurück" zählt nicht erneut. #}
+    <div hidden data-turbo-temporary data-controller="usage-event" data-usage-event-name-value="einfuehrung_begonnen" data-usage-event-on-connect-value="true"></div>
+    <div class="space-y-6">
+        <p class="text-lg font-semibold text-gray-900">{{ 'onboarding.welcome.heading'|trans({'%name%': user.name}) }}</p>
+        <p>{{ 'onboarding.welcome.intro'|trans }}</p>
+
+        <div class="grid gap-4 md:grid-cols-2">
+            <section class="rounded-xl border border-gray-200 bg-gray-50 p-5 flex flex-col gap-3" aria-labelledby="einfuehrung-vorschlagen">
+                <span class="text-3xl" aria-hidden="true">🍽️</span>
+                <h2 id="einfuehrung-vorschlagen" class="text-lg font-bold text-gray-900">{{ 'onboarding.welcome.suggest_title'|trans }}</h2>
+                <p class="text-sm">{{ 'onboarding.welcome.suggest_text'|trans }}</p>
+                <a href="{{ path('community_vorschlagen') }}" class="mt-auto inline-flex items-center justify-center min-h-[44px] rounded-full border-2 border-purple-600 px-5 py-2 text-sm font-bold text-purple-700 hover:bg-purple-50 motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700">{{ 'onboarding.welcome.suggest_cta'|trans }}</a>
+            </section>
+            <section class="rounded-xl border border-gray-200 bg-gray-50 p-5 flex flex-col gap-3" aria-labelledby="einfuehrung-app">
+                <span class="text-3xl" aria-hidden="true">📱</span>
+                <h2 id="einfuehrung-app" class="text-lg font-bold text-gray-900">{{ 'onboarding.welcome.app_title'|trans }}</h2>
+                <p class="text-sm">{{ 'onboarding.welcome.app_text'|trans }}</p>
+                <a href="{{ path('app_app_waitlist') }}" class="mt-auto inline-flex items-center justify-center min-h-[44px] rounded-full border-2 border-purple-600 px-5 py-2 text-sm font-bold text-purple-700 hover:bg-purple-50 motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700">{{ 'onboarding.welcome.app_cta'|trans }}</a>
+            </section>
+        </div>
+    </div>
+{% endblock %}

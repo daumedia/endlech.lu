@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+
+{#
+    Rahmen der Einführung (Feature 12).
+
+    Parameter aus dem Controller: `position` (App\Onboarding\OnboardingPosition), `user`, je nach
+    Bildschirm `avatarForm` oder `newsletterForm`.
+
+    ⚠ Die Seite steht im gewöhnlichen Seitengerüst: Kopfzeile und untere Leiste bleiben, man kommt
+    jederzeit hinaus (AK-18). Wer darüber geht, hat die Einführung gesehen (AK-02).
+
+    ⚠ Fokus ohne JavaScript: Die Überschrift trägt `autofocus` (Browser und Turbo fokussieren sie
+    beim Laden), damit ein Screenreader zuerst „Schritt N von M" vorliest (AK-67). Nach einem
+    fehlgeschlagenen Upload bekommt stattdessen das Feld den Fokus — zwei `autofocus` auf einer
+    Seite liefen auf das erste im Dokument hinaus, und das wäre die Überschrift.
+#}
+
+{% set einfuehrung_fehler = (avatarForm is defined and avatarForm.vars.submitted and not avatarForm.vars.valid)
+    or (newsletterForm is defined and newsletterForm.vars.submitted and not newsletterForm.vars.valid) %}
+
+{# ⚠ BF-162: Fehler, die am Formular selbst hängen statt an einem Feld — vor allem ein abgelaufenes
+   oder fremdes CSRF-Token. Ohne diese Anzeige gab es 422 ohne Meldung und ohne Fokus. #}
+{% set wurzel_fehler = [] %}
+{% for f in [avatarForm ?? null, newsletterForm ?? null] %}
+    {% if f is not null %}
+        {% for fehler in f.vars.errors %}{% set wurzel_fehler = wurzel_fehler|merge([fehler.message]) %}{% endfor %}
+    {% endif %}
+{% endfor %}
+
+{% set knopf_haupt = 'inline-flex items-center justify-center min-h-[48px] bg-purple-600 hover:bg-purple-700 text-white font-bold px-6 py-3 rounded-full motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700' %}
+{% set knopf_neben = 'inline-flex items-center justify-center min-h-[48px] border-2 border-gray-300 text-gray-800 hover:border-purple-600 hover:text-purple-700 font-bold px-6 py-3 rounded-full motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700' %}
+{% set knopf_leise = 'inline-flex items-center justify-center min-h-[44px] px-3 text-sm font-semibold text-gray-700 underline underline-offset-4 hover:text-purple-700 focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700' %}
+
+{% block title %}{{ 'onboarding.page_title'|trans({'%current%': position.number, '%total%': position.total, '%step%': block('schritt_titel')|trim}) }}{% endblock %}
+
+{% block body %}
+<div class="py-10 md:py-14 px-4">
+    <div class="max-w-2xl mx-auto">
+        <div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 md:p-10">
+            <p class="text-sm font-semibold text-cyan-800">{{ 'onboarding.title'|trans }}</p>
+
+            {# Fortschritt als Fläche — für Sehende. Die Aussage trägt der Text in der Überschrift. #}
+            <div class="mt-3 flex gap-1.5" aria-hidden="true">
+                {% for i in 1..position.total %}
+                    <span class="h-1.5 flex-1 rounded-full {{ i <= position.number ? 'bg-purple-600' : 'bg-gray-200' }}"></span>
+                {% endfor %}
+            </div>
+
+            <h1 id="einfuehrung-titel" tabindex="-1" {{ einfuehrung_fehler ? '' : 'autofocus' }}
+                class="mt-5 text-2xl md:text-3xl font-bold text-gray-900 focus:outline-2 focus:outline-offset-4 focus:outline-cyan-700">
+                <span class="block text-base font-semibold text-gray-700">{{ 'onboarding.step_of'|trans({'%current%': position.number, '%total%': position.total}) }}</span>
+                {{ block('schritt_titel') }}
+            </h1>
+
+            <div class="mt-6 space-y-6 text-gray-800 leading-relaxed">
+                {% if wurzel_fehler is not empty %}
+                    {# Fokus auf die Meldung: Ein Feld zum Korrigieren gibt es hier nicht (AK-67). #}
+                    <div role="alert" tabindex="-1" autofocus
+                         class="rounded-xl border border-red-300 bg-red-50 p-4 text-sm font-semibold text-red-800 focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700">
+                        {% for meldung in wurzel_fehler %}<p>{{ meldung }}</p>{% endfor %}
+                    </div>
+                {% endif %}
+                {% block inhalt %}{% endblock %}
+            </div>
+
+            <nav aria-label="{{ 'onboarding.nav_label'|trans }}" class="mt-10 pt-6 border-t border-gray-200 flex flex-wrap items-center gap-3">
+                {% if position.previous %}
+                    <a href="{{ path('app_onboarding', {schritt: position.previous}) }}" class="{{ knopf_neben }}">{{ 'onboarding.back'|trans }}</a>
+                {% endif %}
+
+                {% block weiter %}
+                    {% if position.isLast %}
+                        <a href="{{ path('app_restaurant_index') }}" class="{{ knopf_haupt }}"
+                           data-controller="usage-event" data-action="click->usage-event#track"
+                           data-usage-event-name-value="einfuehrung_abgeschlossen">{{ 'onboarding.search'|trans }}</a>
+                    {% else %}
+                        <a href="{{ path('app_onboarding', {schritt: position.next}) }}" class="{{ knopf_haupt }}">{{ 'onboarding.next'|trans }}</a>
+                    {% endif %}
+                {% endblock %}
+
+                <a href="{{ path('app_restaurant_index') }}" class="{{ knopf_leise }} sm:ml-auto"
+                   data-controller="usage-event" data-action="click->usage-event#track"
+                   data-usage-event-name-value="einfuehrung_beendet"
+                   data-usage-event-data-value="{{ {schritt: position.number ~ ''}|json_encode }}">{{ 'onboarding.finish'|trans }}</a>
+            </nav>
+        </div>
+    </div>
+</div>
+{% endblock %}

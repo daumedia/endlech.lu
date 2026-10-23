@@ -1,0 +1,8 @@
+Adresswechsel 1 auf eine jeweils NEUE Adresse: Flash „Fast geschafft: Wir haben einen Bestätigungslink an ida4-115…“ · pending=ida4-115106-ziel1@example.org
+Adresswechsel 2 auf eine jeweils NEUE Adresse: Flash „Fast geschafft: Wir haben einen Bestätigungslink an ida4-115…“ · pending=ida4-115106-ziel2@example.org
+Adresswechsel 3 auf eine jeweils NEUE Adresse: Flash „Fast geschafft: Wir haben einen Bestätigungslink an ida4-115…“ · pending=ida4-115106-ziel3@example.org
+Adresswechsel 4 auf eine jeweils NEUE Adresse: Flash „Zu viele Adressänderungen. Bitte versuche es in einer Stunde…“ · pending=ida4-115106-ziel3@example.org
+Adresswechsel 5 auf eine jeweils NEUE Adresse: Flash „Zu viele Adressänderungen. Bitte versuche es in einer Stunde…“ · pending=ida4-115106-ziel3@example.org
+Adresswechsel 6 auf eine jeweils NEUE Adresse: Flash „Zu viele Adressänderungen. Bitte versuche es in einer Stunde…“ · pending=ida4-115106-ziel3@example.org
+Adresswechsel 7 auf eine jeweils NEUE Adresse: Flash „Zu viele Adressänderungen. Bitte versuche es in einer Stunde…“ · pending=ida4-115106-ziel3@example.org
+Adresswechsel 8 auf eine jeweils NEUE Adresse: Flash „Zu viele Adressänderungen. Bitte versuche es in einer Stunde…“ · pending=ida4-115106-ziel3@example.org

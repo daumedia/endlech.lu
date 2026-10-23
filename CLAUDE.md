@@ -532,6 +532,12 @@ reine `ADD COLUMN`, MariaDB-10.5-tauglich). `User`-Methoden: `requestEmailChange
 ⚠️ **`ProfileController::edit()` merkt sich die bisherige Adresse VOR `handleRequest()` und setzt sie danach
 zurück.** `ProfileType` ist an die Entity gebunden; nach `handleRequest()` steht dort der Eingabewert. Der soll
 nicht wirksam werden, die Validierung muss ihn aber sehen (sonst prüfte `UniqueEntity` auf dem alten Wert).
+⚠️ **„Danach" heißt: unmittelbar nach der Validierung, VOR allem, was schreibt** (BF-175). Der Upload-Dienst ruft
+`flush()` und schrieb damit die eingegebene Adresse mit, während der Deckel-Zweig zurückkehrte, ohne zurückzusetzen —
+ein Adresswechsel wurde ohne Bestätigung wirksam (hob BF-19 auf, lag auf der Produktion). Die gewünschte Adresse lebt
+seither nur in einer Variablen. **Wer zwischen Validierung und Zurücksetzen einen Dienst ruft, holt BF-175 zurück.**
+⚠️ **Der Deckel `email_change` zählt an der BESTÄTIGTEN Adresse** (BF-176) — nach `handleRequest()` liefert
+`getUserIdentifier()` die Eingabe; jede neue Wunschadresse bekam ein frisches Kontingent.
 
 ⚠️ **Zwei Mails, die wichtigere geht an die ALTE Adresse.** Ein Konto-Übernehmer sitzt im neuen Postfach; nur die
 Warnung an die alte Adresse erreicht den rechtmäßigen Inhaber. Vorlagen `email/email_change.html.twig` (Knopf),
@@ -680,6 +686,65 @@ ist (Apple bietet keine Abfrage, ein voller Link antwortet wie ein offener) — 
 leer = lautlos aus (zweite Mail ohne Beta-Abschnitt). Limiter `app_waitlist` (10/Std je IP, `when@test` 10000) —
 **eigenes Kontingent**, nicht `partner_waitlist` mitbenutzt (BF-38); großzügiger, weil Privatpersonen vom Telefon
 kommen und Mobilfunk-NAT viele auf dieselbe Adresse legt. **Migration** `Version20260904120000`.
+
+## Einführung für neue Konten (`/einfuehrung`, Feature 12)
+
+Nach der ersten Anmeldung eines bestätigten Kontos vier Bildschirme (Willkommen, Einträge lesen,
+Profilbild, Newsletter), danach die Restaurantsuche. Dazu ein Newsletter-Schalter im Profil (löst
+`04/OF-02`) und eine Willkommens-Mail als **Brevo-Automation** (kein Versand aus der Anwendung).
+
+⚠ **Die Weiche ist ein Zuhörer auf `LoginSuccessEvent`** (`OnboardingRedirectSubscriber`), kein
+eigener Erfolgs-Handler: Er ersetzt **nur** eine Weiterleitung, deren **Pfad** die Startseite ist
+(`form_login` liefert eine absolute, der Passkey-Weg eine relative Adresse). Eine gemerkte Zielseite
+(B11) gewinnt, „angemeldet bleiben" liefert keine Weiterleitung. Funktionstests dafür brauchen das
+**echte** Anmeldeformular — `loginUser()` löst kein Anmeldeereignis aus.
+⚠ **Bestandskonten unterscheidet ein Merker, kein Stichtag.** `user.onboarding_due` setzt allein
+`app_verify_email`; wer vor der Auslieferung bestätigt war, ging nie durch diese Zeile. Ein
+Stichtag am `created_at` verfehlte Konten, die damals noch unbestätigt waren. **Kein Datum für
+Bestandskonten eintragen** — es stünde als „gesehen" im Datenexport.
+⚠ **Abbestellen über Endlech.lu sperrt in Brevo, statt zu löschen** (`MarketingSyncState::
+BLACKLIST_PENDING`). Gelöscht und neu angelegt wäre der Kontakt für Brevo neu, die Willkommens-Mail
+käme zweimal. Der Zustand wird **trotz `revokedAt`** abgeholt und überlebt Fehlversuche wie
+`REMOVAL_PENDING` (`markFailed()`); ohne das wäre der Auftrag nach dem ersten 429 weg.
+⚠ **`emailBlacklisted: false` geht nur bei Wieder-Einwilligung nach bekannter Sperre hinaus**
+(`revokedAt` gesetzt **und** `consentAt` jünger). Bei jedem Abgleich mitgeschickt höbe es eine
+Abmeldung auf, deren Webhook noch nicht da ist (04/EC-05 gilt sonst unverändert).
+⚠ **Ab- und wieder abonniert in derselben Sekunde:** Die DB speichert Sekunden, `isBlocked()`
+vergleicht `consentAt <= revokedAt`. Deshalb holt `NewsletterSubscription` den Zeitpunkt über
+`MarketingContactRegistry::consentMomentFor()` (eine Sekunde nach der Sperre).
+⚠ **`recordUser()` nimmt die Sprache als Argument** — vorher fest `de`, die Willkommens-Mail wäre
+jedem auf Deutsch gekommen. Ohne Argument bleibt die gespeicherte Sprache der Zeile.
+⚠ **Limiter `newsletter_toggle` erst zusammen mit seiner Verdrahtung anlegen** — `LimiterCoverageTest`
+wird rot, sobald ein Limiter konfiguriert, aber nicht benutzt ist (im Bau so passiert). Verbraucht
+wird nur bei tatsächlichem Wechsel; Profil und Einführung teilen ein Kontingent am Konto.
+⚠ **Die Einführung liegt NICHT unter `/profile`** — dort verwirft die Nutzungsmessung jeden Pfad
+(Feature 11), die drei Ereignisse kämen nie an. Dafür steht `app_onboarding` in
+`SeoRegistry::UNLISTED_ROUTES` (sonst `SeoRouteCoverageTest` rot).
+⚠ **„Einträge lesen" rendert die Katalogschlüssel der Detailseite**, keine eigenen Texte — ein
+geänderter Begriff dort ändert sich hier mit. Die Zahl auf der Restaurantkarte (`rating`) wird
+bewusst nicht erklärt, bis Feature 12/OF-01 entschieden ist.
+⚠ **`emailBlacklisted: false` geht nur so lange mit, bis die Aufhebung übertragen ist** (BF-165: zusätzlich
+`syncedAt` fehlt oder liegt vor der Einwilligung). Ohne diese Hälfte hob jeder spätere Abgleich eine Abmeldung über
+den Brevo-Link wieder auf.
+⚠ **Sperraufträge kennen keine Versuchsgrenze** (BF-168) und werden nach einem Lauf nachgetragen, wenn die Abmeldung
+während des Laufs kam (BF-166, bedingtes `UPDATE … WHERE sync_state = 'synced'`). Abbestellen stellt den Auftrag für
+**jede** bestehende Zeile, nie über einen Löschauftrag (BF-181). ⚠ Nicht wieder „nur, wo es den Kontakt bei Brevo
+geben kann" ableiten: `syncedAt`, `attempts` und der Zustand verlieren die Spur (verlorene Antwort, Adresswechsel und
+neue Einwilligung setzen den Zähler zurück). Der Auftrag ist ein `PUT {emailBlacklisted:true}` auf die `ext_id`, eine
+404 gilt als Erfolg — angelegt wird nichts.
+⚠ **Und das Spiegelbild:** Wer wieder einwilligt, WÄHREND der Lauf die Sperre überträgt, geht nach dem Lauf zurück auf
+`pending` mit leerem `synced_at` (BF-178, zweiter Nachtrag). `consentMomentFor()` liegt hinter `max(revoked_at,
+synced_at)` — die Bedingung des Mappers (`syncedAt < consentAt`) scheitert sonst an derselben Sekunde.
+⚠ **Ein Messereignis, das erst nach gelungener Handlung zählen soll, geht als Flash-Art `usage_event`** (BF-171):
+`addFlash('usage_event', UsageEventCatalogue::…)`, das Flash-Partial rendert es als unsichtbaren Auslöser auf der
+Folgeseite. Ein Auslöser am Knopf zählt auch abgewiesene Absendungen.
+⚠ **Jeder Auslöser „beim Erscheinen" trägt `data-turbo-temporary`** (BF-177). Turbo speichert die Seite samt Element
+und verbindet es bei jeder Rückkehr aus dem Zwischenspeicher neu — gemessen: ein Absenden, vier Ereignisse. Bei einem
+**vollen** Seitenaufruf verbindet Stimulus vor dem `defer`-Zählskript; `#send` versucht es deshalb einmal beim
+`load`-Ereignis erneut (BF-179). Ein Prüflauf ohne Browser sieht beides nicht.
+⚠ **`AvatarUploadService` arbeitet unter einer Sperre je Konto und räumt auch den frisch gelesenen alten Namen weg**
+(BF-173) — sonst bleiben bei gleichzeitigen Uploads Dateien ohne Konto liegen.
+⚠ **Kein Verzeichnis `public/einfuehrung` anlegen** (BF-100).
 
 ## Cookie-Consent-Banner (Issue #82)
 DSGVO-Banner beim ersten Besuch, speichert `accepted`/`declined` 365 Tage im Cookie `cookie_consent`. Keine Entity/
@@ -997,6 +1062,11 @@ bräche im Browser („Class constructor Controller cannot be invoked without 'n
 entspricht der bisherigen tsc-Semantik (Klassenfelder ohne Initialwert überdecken keine Stimulus-Getter). Ein
 `exclude` in `.swcrc` geht nicht: SWC 1.3.92 bricht bei ausgeschlossenen Dateien ab, statt sie zu überspringen
 (kompiliert `assets/vendor/` deshalb unnötig mit, ausgeliefert wird davon nichts).
+⚠⚠ **`csrf_protection_controller.ts` NIE `stimulusFetch: 'lazy'`** (BF-156). Lazy fehlte das Modul auf jeder Seite
+ohne Element `data-controller="csrf-protection"` — frisch geladene Anmeldeseite, Seiten mit nur dem Abmeldeknopf. Hat
+eine Sitzung einmal Double-Submit benutzt, verlangt Symfony ihn danach für jede zustandslose Prüfung (Absicht, nicht
+abschalten): Anmeldung „Ungültiges CSRF-Token.", Abmeldung lautlos wirkungslos, bis die Sitzung endet. Handgeschriebene
+`_csrf_token`-Felder tragen zusätzlich `data-controller="csrf-protection"`. `Bf156CsrfControllerTest` prüft beides.
 ⚠ **Kein `import '….css'` in einem Modul.** AssetMapper schreibt dafür ein `data:application/javascript`-Modul ins
 Importmap; eine scharfe CSP ohne `script-src data:` ließe daran den ganzen Modulbaum scheitern. Die Stylesheets stehen
 als `<link>` in `base.html.twig` (Reihenfolge wie unter Encore: Tom Select, GLightbox, app.css).

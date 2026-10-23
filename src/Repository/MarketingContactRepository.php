@@ -53,11 +53,19 @@ class MarketingContactRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('m')
             ->where('m.syncState IN (:states)')
-            ->andWhere('m.attempts < :maxAttempts')
-            ->andWhere('m.syncState = :removal OR m.revokedAt IS NULL OR m.consentAt > m.revokedAt')
+            // ⚠ BF-168: Ein Sperrauftrag kennt keine Versuchsgrenze. Nach fünf Fehlversuchen (etwa ein
+            // abgelaufener API-Schlüssel) blieb er sonst für immer liegen — und für Konto-Kontakte zeigt
+            // keine Verwaltungsseite das an. Eine Abmeldung, die Brevo nicht erreicht, heißt Werbung nach
+            // einem Widerspruch; ein Aufruf je Lauf und gesperrtem Kontakt ist der kleinere Preis.
+            ->andWhere('m.attempts < :maxAttempts OR m.syncState = :sperre')
+            ->setParameter('sperre', MarketingSyncState::BLACKLIST_PENDING)
+            // Feature 12: Ein Sperrauftrag betrifft per Definition eine gesperrte Zeile — ohne
+            // diese Ausnahme holte der Lauf ihn nie ab, und der Kontakt bekäme weiter Werbung.
+            ->andWhere('m.syncState IN (:trotzSperre) OR m.revokedAt IS NULL OR m.consentAt > m.revokedAt')
             ->setParameter('states', [
                 MarketingSyncState::PENDING,
                 MarketingSyncState::REMOVAL_PENDING,
+                MarketingSyncState::BLACKLIST_PENDING,
                 // ⚠ BF-86: `FAILED` gehört hierher. Vorher fragte die Abfrage nur
                 // die beiden erstgenannten Zustände ab – eine einmal
                 // fehlgeschlagene Übertragung wurde damit **nie wieder**
@@ -70,7 +78,7 @@ class MarketingContactRepository extends ServiceEntityRepository
                 // scheiternde Zeile am Ende liegen.
                 MarketingSyncState::FAILED,
             ])
-            ->setParameter('removal', MarketingSyncState::REMOVAL_PENDING)
+            ->setParameter('trotzSperre', [MarketingSyncState::REMOVAL_PENDING, MarketingSyncState::BLACKLIST_PENDING])
             ->setParameter('maxAttempts', MarketingContact::MAX_ATTEMPTS)
             ->orderBy('m.updatedAt', 'ASC')
             ->setMaxResults($limit)

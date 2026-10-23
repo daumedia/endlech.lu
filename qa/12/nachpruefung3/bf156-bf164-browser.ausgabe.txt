@@ -1,0 +1,15 @@
+QA Feature 12, vierter Durchlauf — B02/BF-156 und B04/BF-164 im Browser (Chromium-Vorschau, :8094, 1280 × 800, Turbo aktiv)
+
+BF-156 Weg 1: /de/register im Browser ausgefüllt → /de/verify „Registrierung erfolgreich! …"; Bestätigungslink im selben
+  Browser → /de/login „Deine E-Mail-Adresse wurde erfolgreich bestätigt! …" (Token-Feld `_csrf_token` mit
+  data-controller="csrf-protection"); Anmeldung → /de/einfuehrung „Schritt 1 von 4 Willkommen", Fokus #einfuehrung-titel.
+BF-156 Weg 2: Bild in der Einführung hochgeladen → /de/ voll geladen → „Abmelden" (Kopfzeile) → /de/, Kopfzeile „Login",
+  kein Profil-Link (abgemeldet).
+BF-156 Weg 3: /de/login voll geladen → Anmeldung → /de/; /de/profile voll geladen → „Abmelden" → /de/ abgemeldet;
+  /de/login voll geladen → Anmeldung → /de/, Profil-Link vorhanden, keine Fehlermeldung.
+  dev.log zu diesen Absendungen: „CSRF validation accepted using both origin and double-submit info." (6 Zeilen 12:07:25–12:07:56 UTC)
+
+BF-164: Konto mit Bild (/uploads/avatars/6adb4c67cee092.67942526.png), Profil: Name geändert, Klick „Änderungen speichern"
+  (Knopf gehört zu form /de/profile/edit) → „Profil erfolgreich aktualisiert.", Name „Bruno Geklickt", Bild unverändert;
+  Name per Tastatur ersetzt + Enter → „Profil erfolgreich aktualisiert.", Name „Bruno Enter", Bild unverändert;
+  form#profil-bild-entfernen vorhanden, verschachtelte Formulare: 0.

@@ -1,0 +1,37 @@
+# Nachprüfung 2026-10-23 · AK-59/AK-60 · Server :8097 (dev, Produktionswert newsletter_toggle 10/Std., TRUSTED_PROXIES=127.0.0.1, Absenderadresse über X-Forwarded-For wechselnd)
+Registrierung: 302 http://127.0.0.1:8097/de/verify
+Anmeldung: 302 http://127.0.0.1:8097/de/einfuehrung/newsletter
+AK-60 vorweg: 3× 'abbestellen' ohne Abo (kein Wechsel)
+  leer 1 → 302 http://127.0.0.1:8097/de/profile · Meldung: ''
+  leer 2 → 302 http://127.0.0.1:8097/de/profile · Meldung: ''
+  leer 3 → 302 http://127.0.0.1:8097/de/profile · Meldung: ''
+ 1 von 10.0.0.1   subscribe   → 302 http://127.0.0.1:8097/de/profile | Stand an | Du hast den Newsletter abonniert.
+ 2 von 10.0.0.2   unsubscribe → 302 http://127.0.0.1:8097/de/profile | Stand aus | Du hast den Newsletter abbestellt.
+ 3 von 10.0.0.3   subscribe   → 302 http://127.0.0.1:8097/de/profile | Stand an | Du hast den Newsletter abonniert.
+ 4 von 10.0.0.4   unsubscribe → 302 http://127.0.0.1:8097/de/profile | Stand aus | Du hast den Newsletter abbestellt.
+ 5 von 10.0.0.5   subscribe   → 302 http://127.0.0.1:8097/de/profile | Stand an | Du hast den Newsletter abonniert.
+ 6 von 10.0.0.6   unsubscribe → 302 http://127.0.0.1:8097/de/profile | Stand aus | Du hast den Newsletter abbestellt.
+ 7 von 10.0.0.7   subscribe   → 302 http://127.0.0.1:8097/de/profile | Stand an | Du hast den Newsletter abonniert.
+ 8 von 10.0.0.8   unsubscribe → 302 http://127.0.0.1:8097/de/profile | Stand aus | Du hast den Newsletter abbestellt.
+ 9 von 10.0.0.9   subscribe   → 302 http://127.0.0.1:8097/de/profile | Stand an | Du hast den Newsletter abonniert.
+10 von 10.0.0.10  unsubscribe → 302 http://127.0.0.1:8097/de/profile | Stand aus | Du hast den Newsletter abbestellt.
+11 von 10.0.0.11  subscribe   → 302 http://127.0.0.1:8097/de/profile | Stand aus | Zu viele Änderungen. Bitte versuch es in 60 Minuten erneut.
+12 von 10.0.0.12  subscribe   → 302 http://127.0.0.1:8097/de/profile | Stand aus | Zu viele Änderungen. Bitte versuch es in 60 Minuten erneut.
+Einführungsschritt danach (Häkchen, Adresse 10.0.0.99):
+  302 http://127.0.0.1:8097/de/einfuehrung/newsletter · Zu viele Änderungen. Bitte versuch es in 60 Minuten erneut. · Konto: verified=1 due=1 shown=2026-10-23 09:46:47 consent=NULL avatar=NULL
+Kontakt: kurt.deckel@example.org | account | de | pending | 2026-10-23 09:46:49 | 2026-10-23 09:46:49 | NULL
+## EC-08 (:8099): Theo — Tab 1 hat den Newsletter-Schritt offen, Tab 2 abonniert im Profil, dann setzt Tab 1 das Häkchen
+Tab 2 abonnieren: 302 http://127.0.0.1:8099/de/profile
+Einwilligung: 2026-10-23 10:08:49 · Kontakt: theo.tabs@example.org | account | de | pending | 2026-10-23 10:08:49 | NULL | NULL
+Tab 1 Häkchen absenden: 302 http://127.0.0.1:8099/de/restaurants
+Einwilligung danach: 2026-10-23 10:08:49 (unverändert: ja) · Kontakte: 1
+Wechsel 2 unsubscribe → Stand aus
+Wechsel 3 subscribe → Stand an
+Wechsel 4 unsubscribe → Stand aus
+Wechsel 5 subscribe → Stand an
+Wechsel 6 unsubscribe → Stand aus
+Wechsel 7 subscribe → Stand an
+Wechsel 8 unsubscribe → Stand aus
+Wechsel 9 subscribe → Stand an
+Wechsel 10 unsubscribe → Stand aus
+Wechsel 11 subscribe → Stand aus

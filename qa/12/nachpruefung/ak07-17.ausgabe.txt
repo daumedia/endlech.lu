@@ -1,0 +1,68 @@
+# Nachprüfung 2026-10-23 · AK-07 bis AK-17, AK-38 (Teil Bestätigung)
+## AK-38 + AK-07: unverified@ (Altkonto, due=0) abonniert unbestätigt, bestätigt dann
+Anmeldung: 302 http://127.0.0.1:8099/de/ · verified=0 due=0 shown=NULL consent=NULL avatar=NULL
+Nicht abonniert
+abonnieren: 302 http://127.0.0.1:8099/de/profile
+Profil: Abonniert seit 23.10.2026 · Hinweis: Wird wirksam, sobald du deine E-Mail-Adresse bestätigt hast.
+Konto: verified=0 due=0 shown=NULL consent=2026-10-23 09:41:28 avatar=NULL · Kontakte: 0
+Bestätigung als Gast unter /pt/: 302 http://127.0.0.1:8099/pt/login
+Konto: verified=1 due=1 shown=NULL consent=2026-10-23 09:41:28 avatar=NULL · Kontakt: unverified@endlech.lu | account | pt | pending | 2026-10-23 09:41:28 | NULL | NULL
+AK-07 erste Anmeldung nach Bestätigung: 302 http://127.0.0.1:8099/de/einfuehrung
+## AK-08: Konto über die API
+201
+{"message":"Bal f\u00e4erdeg! Wann d\u0027Uginn g\u00eblteg sinn, hu mir dir eng E-Mail gesch\u00e9ckt. Best\u00e4teg w.e.g. deng Adress."}
+Link: 302 http://127.0.0.1:8099/lb/login · verified=1 due=1 shown=NULL consent=NULL avatar=NULL
+erste Website-Anmeldung: 302 http://127.0.0.1:8099/de/einfuehrung
+## AK-09: Frieda (gesehen) wählt im Profil den Link
+Link im Profil: <a href="/de/einfuehrung" data-turbo-prefetch="false">Einführung ansehen
+GET: 200  · Schritt 1 von 4 · shown vorher 2026-10-23 09:40:56, nachher 2026-10-23 09:40:56
+## AK-12/14/16/17: Fußleisten der vier Bildschirme (Frieda, ohne Einwilligung)
+-- willkommen: Schritt 1 von 4 · title: Schritt 1 von 4: Willkommen – Endlech.lu
+-- eintraege: Schritt 2 von 4 · title: Schritt 2 von 4: Einträge lesen – Endlech.lu
+-- profilbild: Schritt 3 von 4 · title: Schritt 3 von 4: Profilbild – Endlech.lu
+-- newsletter: Schritt 4 von 4 · title: Schritt 4 von 4: Newsletter – Endlech.lu
+## AK-15: Weiter/Zurück ändern nichts
+vorher: verified=1 due=1 shown=2026-10-23 09:40:56 consent=NULL avatar=NULL | 1
+nachher: verified=1 due=1 shown=2026-10-23 09:40:56 consent=NULL avatar=NULL | 1
+Upload-Formular ohne Datei: 422  · verified=1 due=1 shown=2026-10-23 09:40:56 consent=NULL avatar=NULL
+## AK-13: Konto mit Einwilligung bei der Registrierung (Dora)
+Dora:  · Anmeldung: 302 http://127.0.0.1:8099/de/login
+-- willkommen: 
+-- eintraege: 
+-- profilbild: 
+GET /de/einfuehrung/newsletter: 302 http://127.0.0.1:8099/de/login
+## Wiederholung nach Korrektur des Prüfskripts (Token-Muster, Registrierungsdeckel geleert)
+## AK-12/14/16/17: Fußleisten der vier Bildschirme (Frieda, ohne Einwilligung)
+-- willkommen: Schritt 1 von 4
+<a href="/de/einfuehrung/eintraege">Weiter
+<a href="/de/restaurants" data-usage-event-name-value="einfuehrung_beendet" data-usage-event-data-value="{&quot;schritt&quot;:&quot;1&quot;}">Einführung beenden
+-- eintraege: Schritt 2 von 4
+<a href="/de/einfuehrung">Zurück
+<a href="/de/einfuehrung/profilbild">Weiter
+<a href="/de/restaurants" data-usage-event-name-value="einfuehrung_beendet" data-usage-event-data-value="{&quot;schritt&quot;:&quot;2&quot;}">Einführung beenden
+-- profilbild: Schritt 3 von 4
+<a href="/de/einfuehrung/eintraege">Zurück
+<a href="/de/einfuehrung/newsletter">Weiter
+<a href="/de/restaurants" data-usage-event-name-value="einfuehrung_beendet" data-usage-event-data-value="{&quot;schritt&quot;:&quot;3&quot;}">Einführung beenden
+-- newsletter: Schritt 4 von 4
+<a href="/de/einfuehrung/profilbild">Zurück
+<button type="submit" form="einfuehrung-newsletter" data-usage-event-name-value="einfuehrung_abgeschlossen">Restaurants suchen
+<a href="/de/restaurants" data-usage-event-name-value="einfuehrung_beendet" data-usage-event-data-value="{&quot;schritt&quot;:&quot;4&quot;}">Einführung beenden
+Newsletter-Schritt ohne Häkchen absenden: 302 http://127.0.0.1:8099/de/restaurants · verified=1 due=1 shown=2026-10-23 09:40:56 consent=NULL avatar=NULL · Kontakte: 0
+## AK-15: Upload-Formular ohne Datei
+POST: 302 http://127.0.0.1:8099/de/einfuehrung/profilbild · verified=1 due=1 shown=2026-10-23 09:40:56 consent=NULL avatar=NULL
+## AK-13: Konto mit Einwilligung bei der Registrierung (Dora)
+Dora: verified=1 due=1 shown=NULL consent=2026-10-23 09:41:56 avatar=NULL · Anmeldung: 302 http://127.0.0.1:8099/de/einfuehrung/newsletter
+-- willkommen: Schritt 1 von 3
+<a href="/de/einfuehrung/eintraege">Weiter
+<a href="/de/restaurants" data-usage-event-name-value="einfuehrung_beendet" data-usage-event-data-value="{&quot;schritt&quot;:&quot;1&quot;}">Einführung beenden
+-- eintraege: Schritt 2 von 3
+<a href="/de/einfuehrung">Zurück
+<a href="/de/einfuehrung/profilbild">Weiter
+<a href="/de/restaurants" data-usage-event-name-value="einfuehrung_beendet" data-usage-event-data-value="{&quot;schritt&quot;:&quot;2&quot;}">Einführung beenden
+-- profilbild: Schritt 3 von 3
+<a href="/de/einfuehrung/eintraege">Zurück
+<a href="/de/restaurants" data-usage-event-name-value="einfuehrung_abgeschlossen">Restaurants suchen
+<a href="/de/restaurants" data-usage-event-name-value="einfuehrung_beendet" data-usage-event-data-value="{&quot;schritt&quot;:&quot;3&quot;}">Einführung beenden
+GET /de/einfuehrung/newsletter: 302 http://127.0.0.1:8099/de/restaurants
+Hinweis: Doras Anmeldung führte auf /de/einfuehrung/newsletter, weil derselbe Cookie-Speicher im ersten (am Registrierungsdeckel gescheiterten) Lauf diese Adresse als Gast aufgerufen hatte — gemerkte Zielseite (AK-03), kein Befund. Der Schritt leitet bei Einwilligung auf die Suche (AK-13).

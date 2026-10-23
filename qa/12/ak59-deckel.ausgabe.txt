@@ -1,0 +1,12 @@
+# QA 12 · AK-59/AK-60 — Deckel am laufenden Server (Produktionswert 10/Std., dev), Konto hanna.deckel@example.org
+ 1 subscribe   → 302 | Stand an  | Du hast den Newsletter abonniert
+ 2 unsubscribe → 302 | Stand aus | Du hast den Newsletter abbestellt
+ … (3–9 abwechselnd, alle durch)
+10 unsubscribe → 302 | Stand aus | Du hast den Newsletter abbestellt
+11 subscribe   → 302 | Stand aus | Zu viele Änderungen. Bitte versuch es in 60 Minuten erneut.
+12 unsubscribe → 302 | Stand aus | Zu viele Änderungen. Bitte versuch es in 60 Minuten erneut.
+Einführung, Newsletter-Schritt mit Häkchen danach → 302 /de/einfuehrung/newsletter, „Zu viele Änderungen …", Einwilligung NULL (gemeinsames Kontingent)
+AK-60/EC-08 (lena.reset@example.org): Profil abonniert (1), Einführungsschritt mit Häkchen bei bestehendem Abo → Einwilligung unverändert;
+  danach Wechsel 2–10 durch, Wechsel 11 → „Zu viele Änderungen" — der Leerlauf hat nichts verbraucht.
+⚠ Nebenbefund BF-160: Nach Wechsel 10 stand im Auftragsbuch consent_at 21:26:39 > revoked_at 21:26:38, sync_state pending,
+  am Konto marketing_consent_at NULL.

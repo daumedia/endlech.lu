@@ -1,0 +1,74 @@
+PHPUnit 12.5.4 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.5.12
+Configuration: /Users/michaelferreira/DEV/SaaS/endlech/phpunit.dist.xml
+
+FFFFFFF                                                             7 / 7 (100%)
+
+Time: 00:04.527, Memory: 64.50 MB
+
+Qa12Nachpruefung3 (App\Tests\Functional\Controller\Qa12Nachpruefung3)
+ ✘ Bf 178 wiedereinwilligung waehrend der sperr uebertragung erreicht brevo
+   │
+   │ Profil „abonniert", Brevo gesperrt — die Einwilligung kommt nie an (AK-35).
+   │ Failed asserting that true is false.
+   │
+   │ /Users/michaelferreira/DEV/SaaS/endlech/tests/Functional/Controller/Qa12Nachpruefung3Test.php:208
+   │ /Users/michaelferreira/DEV/SaaS/endlech/vendor/phpunit/phpunit/phpunit:104
+   │
+ ✘ Bf 178 wiedereinwilligung in derselben sekunde wie die sperre erreicht brevo
+   │
+   │ Der Aktualisierungsweg muss die Sperre aufheben (BF-154).
+   │ Failed asserting that null is false.
+   │
+   │ /Users/michaelferreira/DEV/SaaS/endlech/tests/Functional/Controller/Qa12Nachpruefung3Test.php:240
+   │ /Users/michaelferreira/DEV/SaaS/endlech/vendor/phpunit/phpunit/phpunit:104
+   │
+ ✘ Bf 175 adresswechsel mit bild und erreichtem deckel wird nicht wirksam
+   │
+   │ Die Adresse darf erst mit dem Bestätigungslink wechseln (BF-19).
+   │ Failed asserting that two strings are identical.
+   │ --- Expected
+   │ +++ Actual
+   │ @@ @@
+   │ -'qa12d@example.org'
+   │ +'qa12d-uebernahme@example.org'
+   │
+   │ /Users/michaelferreira/DEV/SaaS/endlech/tests/Functional/Controller/Qa12Nachpruefung3Test.php:278
+   │ /Users/michaelferreira/DEV/SaaS/endlech/vendor/phpunit/phpunit/phpunit:104
+   │
+ ✘ Bf 176 deckel zaehlt am konto nicht an der gewuenschten adresse
+   │
+   │ Die gewünschte Adresse ist kein Konto.
+   │ Failed asserting that 9999 is identical to 10000.
+   │
+   │ /Users/michaelferreira/DEV/SaaS/endlech/tests/Functional/Controller/Qa12Nachpruefung3Test.php:306
+   │ /Users/michaelferreira/DEV/SaaS/endlech/vendor/phpunit/phpunit/phpunit:104
+   │
+ ✘ Bf 177 messausloeser wird nicht zwischengespeichert
+   │
+   │ Ohne data-turbo-temporary zählt jede Rückkehr aus Turbos Zwischenspeicher erneut.
+   │ Failed asserting that null is not null.
+   │
+   │ /Users/michaelferreira/DEV/SaaS/endlech/tests/Functional/Controller/Qa12Nachpruefung3Test.php:332
+   │ /Users/michaelferreira/DEV/SaaS/endlech/vendor/phpunit/phpunit/phpunit:104
+   │
+ ✘ Bf 181 abbestellen nach zurueckgesetztem zaehler erreicht brevo
+   │
+   │ Der bei Brevo angelegte Kontakt muss gesperrt werden — sonst Werbung nach Widerspruch.
+   │ Failed asserting that false is true.
+   │
+   │ /Users/michaelferreira/DEV/SaaS/endlech/tests/Functional/Controller/Qa12Nachpruefung3Test.php:382
+   │ /Users/michaelferreira/DEV/SaaS/endlech/vendor/phpunit/phpunit/phpunit:104
+   │
+ ✘ Bf 180 entfernen neben einem upload hinterlaesst keine datei
+   │
+   │ Die Datei des neuen Bildes bleibt ohne Konto liegen (Muster BF-173).
+   │ Failed asserting that false is true.
+   │
+   │ /Users/michaelferreira/DEV/SaaS/endlech/tests/Functional/Controller/Qa12Nachpruefung3Test.php:417
+   │ /Users/michaelferreira/DEV/SaaS/endlech/vendor/phpunit/phpunit/phpunit:104
+   │
+
+FAILURES!
+Tests: 7, Assertions: 19, Failures: 7.

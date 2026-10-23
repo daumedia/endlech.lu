@@ -1,0 +1,32 @@
+AK-34 Profil vorher: Newsletter Neuigkeiten von Endlech.lu per E-Mail, darunter einmal eine Willkommens-Mail. Abbestellen gilt für alle Neuigkeiten an diese Adresse, auch zu einer Warteliste. Nicht abonniert Newsletter abonnieren Einführung ansehen
+AK-35 abonnieren (fr): /fr/profile · Flash „Vous êtes abonné à la newsletter.“
+  Konto 2026-10-23 11:53:20 · Kontakt {"id":66,"email":"gustav4-115319@example.org","origin":"account","locale":"fr","sync_state":"pending","consent_at":"2026-10-23 11:53:20","revoked_at":null,"synced_at":null,"attempts":0}
+AK-34 Profil nachher: Newsletter Neuigkeiten von Endlech.lu per E-Mail, darunter einmal eine Willkommens-Mail. Abbestellen gilt für alle Neuigkeiten an diese Adresse, auch zu einer Warteliste. Abonniert seit 23.10.2026 Newsletter abbestellen Einführung ansehen
+AK-36 abbestellen, Kontakt nie übertragen: /de/profile · Flash „Du hast den Newsletter abbestellt.“
+  Konto NULL · Kontakt {"id":66,"email":"gustav4-115319@example.org","origin":"account","locale":"fr","sync_state":"blacklist_pending","consent_at":"2026-10-23 11:53:20","revoked_at":"2026-10-23 11:53:20","synced_at":null,"attempts":0} · Profil: Newsletter Neuigkeiten von Endlech.lu per E-Mail, darunter einmal eine Willkommens-Mail. Abbestellen gilt für alle Neuigkeiten an diese Adresse, auch zu einer Warteliste. Nicht abonniert Newsletter abonnieren Einführung ansehen
+AK-35 wieder abonnieren: /de/profile · Flash „Du hast den Newsletter abonniert.“
+AK-36 abbestellen, Kontakt übertragen: /de/profile · Flash „Du hast den Newsletter abbestellt.“
+  Konto NULL · Kontakt {"id":66,"email":"gustav4-115319@example.org","origin":"account","locale":"de","sync_state":"blacklist_pending","consent_at":"2026-10-23 11:53:21","revoked_at":"2026-10-23 11:53:21","synced_at":"2026-10-23 11:53:22","attempts":0}
+AK-37 Clara vorher: Newsletter Neuigkeiten von Endlech.lu per E-Mail, darunter einmal eine Willkommens-Mail. Abbestellen gilt für alle Neuigkeiten an diese Adresse, auch zu einer Warteliste. Abonniert seit 23.10.2026 Newsletter abbestellen Einführung ansehen
+AK-37 Webhook mit falschem Geheimnis: 401 · Konto 2026-10-23 11:53:22
+AK-37 Webhook unsubscribed: 200 · Konto NULL · Kontakt {"id":67,"email":"clara4-115319@example.org","origin":"account","locale":"de","sync_state":"pending","consent_at":"2026-10-23 11:53:22","revoked_at":"2026-10-23 11:53:22","synced_at":null,"attempts":0}
+AK-37 Clara nachher: Newsletter Neuigkeiten von Endlech.lu per E-Mail, darunter einmal eine Willkommens-Mail. Abbestellen gilt für alle Neuigkeiten an diese Adresse, auch zu einer Warteliste. Nicht abonniert Newsletter abonnieren Einführung ansehen
+AK-38/BF-174 Ulla unbestätigt, Profil: Newsletter Neuigkeiten von Endlech.lu per E-Mail, darunter einmal eine Willkommens-Mail. Solange deine Adresse nicht bestätigt ist, gilt Abbestellen nur für dieses Konto; für alle Neuigkeiten an diese Adresse erst nach der Bestätigung oder über den Link in einer Mail. Nicht abonniert Newsletter abonnieren
+AK-38 abonnieren: /de/profile · Flash „Du hast den Newsletter abonniert.“
+  Konto 2026-10-23 11:53:23 · Kontakt NULL · Profil: Newsletter Neuigkeiten von Endlech.lu per E-Mail, darunter einmal eine Willkommens-Mail. Solange deine Adresse nicht bestätigt ist, gilt Abbestellen nur für dieses Konto; für alle Neuigkeiten an diese Adresse erst nach der Bestätigung oder über den Link in einer Mail. Abonniert seit 23.10.2026 Wird wirksam, sobald du deine E-Mail-Adresse bestätigt hast. Newsletter abbestellen
+AK-38 Bestätigung über /pt/verify/19c715226b92ae0a050411e842b1c2d835ead5686306a99ddf68628063a16efd → Kontakt {"id":68,"email":"ulla4-115319@example.org","origin":"account","locale":"pt","sync_state":"pending","consent_at":"2026-10-23 11:53:23","revoked_at":null,"synced_at":null,"attempts":0}
+BF-174 Ulla bestätigt, Profil: Newsletter Neuigkeiten von Endlech.lu per E-Mail, darunter einmal eine Willkommens-Mail. Abbestellen gilt für alle Neuigkeiten an diese Adresse, auch zu einer Warteliste. Abonniert seit 23.10.2026 Newsletter abbestellen Einführung ansehen
+BF-155 App-Warteliste eingetragen: 302 → /de/app
+  Warteliste {"marketing_consent_at":"2026-10-23 11:53:23"} · Kontakt {"id":69,"email":"opfer4-115319@example.org","origin":"app","locale":"de","sync_state":"synced","consent_at":"2026-10-23 11:53:23","revoked_at":null,"synced_at":"2026-10-23 11:53:23","attempts":0}
+BF-155/BF-174 Fremdkonto (unbestätigt) Profil: Newsletter Neuigkeiten von Endlech.lu per E-Mail, darunter einmal eine Willkommens-Mail. Solange deine Adresse nicht bestätigt ist, gilt Abbestellen nur für dieses Konto; für alle Neuigkeiten an diese Adresse erst nach der Bestätigung oder über den Link in einer Mail. Nicht abonniert Newsletter abonnieren
+  abonnieren: /de/profile · Flash „Du hast den Newsletter abonniert.“
+  abbestellen: /de/profile · Flash „Du hast den Newsletter abbestellt.“
+  Warteliste nachher {"marketing_consent_at":"2026-10-23 11:53:23"} · Kontakt {"id":69,"email":"opfer4-115319@example.org","origin":"app","locale":"de","sync_state":"synced","consent_at":"2026-10-23 11:53:23","revoked_at":null,"synced_at":"2026-10-23 11:53:23","attempts":0}
+AK-39 Name ändern ohne Einwilligung: 302 → /de/profile · Name Fremd Umbenannt
+EC-08 Tab 2 abonniert im Profil: /de/profile · Flash „Du hast den Newsletter abonniert.“
+EC-08 Tab 1 setzt das Häkchen: 302 → /fr/restaurants · Einwilligung vorher 2026-10-23 11:53:26 nachher 2026-10-23 11:53:26 · Kontaktzeilen 1
+BF-171 Restaurantliste danach: Messauslöser 1 · sichtbarer Text „einfuehrung_" 0
+AK-33 Hans (fr) setzt das Häkchen: 302 → /fr/restaurants · Einwilligung 2026-10-23 11:53:27 · Kontakt {"id":71,"email":"hans4-115319@example.org","origin":"account","locale":"fr","sync_state":"pending","consent_at":"2026-10-23 11:53:27","revoked_at":null,"synced_at":null,"attempts":0}
+BF-171 Restaurantliste nach gelungenem Absenden: Messauslöser 1 (<div hidden="" data-turbo-temporary="" data-controller="usage-event" data-usage-event-name-value="einfuehrung_abgeschlossen" data-usage-event-on-connect-value="true"></div>) · Erfolgsmeldung „Vous êtes abonné à la newsletter.“
+BF-171 Restaurantliste neu geladen: Messauslöser 0
+BF-171/AK-58 fremde Herkunft: 422 · Meldung „Der CSRF-Token ist ungültig. Versuchen Sie bitte, das Formular erneut zu senden.“ · Messauslöser 0 · Einwilligung NULL

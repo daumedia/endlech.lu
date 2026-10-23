@@ -1,0 +1,11 @@
+BF-164 im Browser (Chromium-Vorschau, :8099), Konto brigitte3-824604@example.org mit Profilbild (in der Einführung hochgeladen):
+  button.form je Knopf im Profil:
+    „Newsletter abonnieren"   → /de/profile/newsletter
+    „Profilbild entfernen"    → /de/profile/avatar/delete
+    „Änderungen speichern"    → /de/profile/edit
+    „Passwort ändern"         → /de/profile/password
+    „Konto endgültig löschen" → /de/profile/loeschen
+    „↩ Abmelden"              → /de/logout
+  Name „Brigitte Gespeichert", Klick „Änderungen speichern" → Flash „Profil erfolgreich aktualisiert.", Name übernommen
+  Name „Brigitte Enter", Enter im Namensfeld (implizites Absenden) → „Profil erfolgreich aktualisiert.", Bild bleibt
+  „Profilbild entfernen" (confirm → true) → „Profilbild erfolgreich entfernt.", kein Bild mehr, Name unverändert

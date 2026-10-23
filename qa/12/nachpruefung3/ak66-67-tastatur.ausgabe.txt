@@ -1,0 +1,18 @@
+QA Feature 12, vierter Durchlauf — AK-66 (Tastatur), AK-67 (Mechanik für Screenreader), AK-65 (Sprachwechsel) im Browser (:8094, 1280 × 800)
+document.hasFocus() = true · Elemente mit positivem tabindex: 0
+
+Newsletter-Schritt, Tab ab der Überschrift (#einfuehrung-titel, Fokusrahmen solid 2px rgb(14,116,144), :focus-visible wahr):
+  Tab 1 → input#onboarding_newsletter_consent · solid 2px rgb(14,116,144) · :focus-visible wahr
+  Tab 2 → a „Zurück" · solid 2px rgb(19,93,117) · wahr
+  Tab 3 → button „Restaurants suchen" · solid 2px rgb(14,116,144) · wahr
+  Tab 4 → a „Einführung beenden" · solid 2px rgb(14,116,144) · wahr
+  (früher in diesem Durchlauf: Häkchen per Leertaste gesetzt, Absenden → /de/restaurants „Du hast den Newsletter abonniert.")
+Profilbild-Schritt, DOM-Reihenfolge der Bedienelemente: Dateifeld → „Bild hochladen" → (verstecktes Token) → Zurück → Weiter → Einführung beenden
+  Datei per DataTransfer gesetzt (den Dateidialog bedient die Vorschau nicht), Fokus „Bild hochladen" (2px, :focus-visible), Enter
+  → „Dein Profilbild ist gespeichert.", neues Bild in Kopfzeile und Bildschirm (ersetzt das vorige, AK-29), Fokus #einfuehrung-titel
+  Textdatei als bild.jpg, Enter → 422-Darstellung: Fokus auf #onboarding_avatar_avatar, aria-invalid="true",
+  aria-describedby = Hilfe „JPG, PNG oder WebP, max. 2 MB" + Fehler „Bitte lade ein Bild im Format JPG, PNG oder WebP hoch.",
+  Bild unverändert, „Weiter" vorhanden
+Nach jedem Turbo-Seitenwechsel dieses Durchlaufs: document.activeElement = #einfuehrung-titel („Schritt N von M" + Titel)
+AK-65: /de/einfuehrung/newsletter, Sprachumschalter verweist auf /lb|/fr|/en|/pt/einfuehrung/newsletter; FR gewählt →
+  /fr/einfuehrung/newsletter, lang="fr", h1 „Étape 4 sur 4 Newsletter", Titel „Étape 4 sur 4 : Newsletter – Endlech.lu"

@@ -114,6 +114,11 @@ security:
         # Adressänderung eine Bestätigung per Mail. Eine wiedererkannte Sitzung
         # kommt damit an nichts heran, was sie nicht ohnehin sehen dürfte.
         - { path: '^/[a-z]{2}/profile', roles: IS_AUTHENTICATED_REMEMBERED }
+        # Feature 12: die Einführung. Dieselbe Stufe wie das Profil (BF-15) — nichts darin ist
+        # so empfindlich, dass es eine frische Anmeldung verlangte: Profilbild und Newsletter
+        # sind jederzeit umkehrbar. Ein Gast landet auf der Anmeldeseite, die Adresse wird als
+        # Ziel gemerkt (AK-10). Unbestätigte Konten weist der Controller ab (AK-11).
+        - { path: '^/[a-z]{2}/einfuehrung', roles: IS_AUTHENTICATED_REMEMBERED }
         - { path: '^/[a-z]{2}/register', roles: PUBLIC_ACCESS }
         - { path: '^/[a-z]{2}/login', roles: PUBLIC_ACCESS }
         - { path: '^/[a-z]{2}/verify', roles: PUBLIC_ACCESS }

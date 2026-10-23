@@ -93,6 +93,8 @@ final readonly class SeoRegistry
         'app_logout' => 'Leitet nur weiter; die Firewall beantwortet den Aufruf, bevor eine Seite entsteht',
         'app_verify_notice' => 'Nicht in der Liste von AK-15 — offene Frage OF-05 in spec.md',
         'app_verify_resend' => 'Nicht in der Liste von AK-15 — offene Frage OF-05 in spec.md',
+        'app_onboarding' => 'Einführung für neue Konten (Feature 12): nur nach Anmeldung erreichbar, ein Gast '
+            .'landet auf der Anmeldeseite — es gibt nichts anzubieten und nichts auszuschließen',
     ];
 
     /**

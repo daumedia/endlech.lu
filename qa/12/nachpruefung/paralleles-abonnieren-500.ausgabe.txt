@@ -1,0 +1,1 @@
+An exception occurred while executing a query: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'max.neu@example.org' for key 'marketing_contact.UNIQ_E78FBDB7E7927C74' (500 Internal Server Error)

@@ -1,0 +1,11 @@
+AK-55 Produktionsmodus :8095 — Protokollausschnitt dieses Durchlaufs:       72 Zeilen,    18921 B
+  Treffer „rosa.geheimname3-104922@example.org“         0
+  Treffer „geheimname“                                  0
+  Treffer „Geheimname“                                  0
+  Treffer „Rosa“                                        0
+  Treffer „Privat“                                      0
+  Treffer „Zu Gross“                                    0
+  Treffer „@example.org“                                0
+  Treffer „@endlech.lu“                                 0
+  Zeilen mit level ≥ warning: 0
+  44 "message":"User Deprecated: Support for MySQL < 8 is deprecated and will be removed in DBAL 5 (AbstractMySQLDriver.php:75 called by AbstractDriverMiddleware.php:32, https://github.com/doctrine/dbal/pull/6343, package doctrine/dbal)"

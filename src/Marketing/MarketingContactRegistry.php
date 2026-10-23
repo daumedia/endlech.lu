@@ -118,8 +118,15 @@ class MarketingContactRegistry
 
     /**
      * Trägt ein bestätigtes Nutzerkonto ins Auftragsbuch ein.
+     *
+     * @param string|null $locale Sprache der Anfrage, in der eingewilligt oder bestätigt wurde
+     *                            (Feature 12, AK-40). Ohne Angabe — eine Neuableitung ohne
+     *                            Anfrage, etwa nach BF-84 — bleibt die schon gespeicherte
+     *                            Sprache stehen. Bis Feature 12 stand hier fest `de`: Ein Konto
+     *                            hat keine eigene Sprache, und die Willkommens-Mail aus Brevo
+     *                            wäre jedem auf Deutsch gekommen.
      */
-    public function recordUser(User $user): ?MarketingContact
+    public function recordUser(User $user, ?string $locale = null): ?MarketingContact
     {
         // AK-05: dieselbe Regel wie bei den Wartelisten – erst die bestätigte
         // Adresse, dann der Kontakt.
@@ -131,7 +138,7 @@ class MarketingContactRegistry
             email: $user->getEmail(),
             origin: MarketingOrigin::ACCOUNT,
             consentAt: $user->getMarketingConsentAt() ?? new \DateTimeImmutable(),
-            locale: 'de',
+            locale: $locale ?? $this->finde($user->getEmail())?->getLocale() ?? 'de',
             contactName: $user->getName(),
             organisationName: null,
             // Ein Konto durchläuft keinen Vertriebstrichter – das Attribut
@@ -238,7 +245,7 @@ class MarketingContactRegistry
             $this->scheduleRemoval($contact->getEmail());
 
             $collision
-                ->setSyncState(MarketingSyncState::PENDING)
+                ->setSyncState($this->zustandNachAdresswechsel($collision))
                 ->setLastError(null)
                 ->setAttempts(0);
 
@@ -253,11 +260,29 @@ class MarketingContactRegistry
         // Zeilen unabhängig vom Zustand draußen.
         $contact
             ->setEmail($normalised)
-            ->setSyncState(MarketingSyncState::PENDING)
+            ->setSyncState($this->zustandNachAdresswechsel($contact))
             ->setLastError(null)
             ->setAttempts(0);
 
         return $contact;
+    }
+
+    /**
+     * Welcher Zustand nach einem Adresswechsel gilt.
+     *
+     * ⚠ BF-157: Ein offener Sperr- oder Löschauftrag bleibt stehen. Vorher setzte der Wechsel
+     * ohne Ansehen `pending`; eine gesperrte Zeile holt `findOpenForSync()` aber nur mit einem
+     * dieser beiden Aufträge ab — die Sperre erreichte Brevo nie, und der Kontakt bekam weiter
+     * Kampagnen an die alte Adresse. Brevo adressiert über `ext_id`; der Auftrag trifft also auch
+     * nach dem Wechsel den richtigen Kontakt.
+     */
+    private function zustandNachAdresswechsel(MarketingContact $contact): MarketingSyncState
+    {
+        $zustand = $contact->getSyncState();
+
+        return MarketingSyncState::REMOVAL_PENDING === $zustand || MarketingSyncState::BLACKLIST_PENDING === $zustand
+            ? $zustand
+            : MarketingSyncState::PENDING;
     }
 
     /**
@@ -430,6 +455,113 @@ class MarketingContactRegistry
         foreach ($this->sourcesFor($email) as $source) {
             $source->setMarketingConsentAt(null);
         }
+    }
+
+    /**
+     * Ein Konto bestellt über Endlech.lu ab — im Profil oder in der Einführung (Feature 12).
+     *
+     * Dieselbe Wirkung wie der Abmeldelink einer Brevo-Mail (`blockByEmail()`), mit einem
+     * Unterschied: Hier weiß Brevo noch nichts. Deshalb bekommt eine schon übertragene Zeile
+     * den Auftrag `BLACKLIST_PENDING`, und der nächste Lauf sperrt den Kontakt dort.
+     *
+     * ⚠ **Gesperrt, nicht gelöscht** (design.md, Entscheidung 4). Ein gelöschter und später
+     * neu angelegter Kontakt wäre für Brevo ein neuer — die Willkommens-Mail käme ein zweites
+     * Mal (AK-44), und Brevos eigene Abmeldeerinnerung wäre weg.
+     *
+     * ⚠ **Die Einwilligung fällt an allen Quellen der Adresse** (Entscheidung 5): Es gibt einen
+     * Brevo-Kontakt je Adresse, und eine Sperre trifft ihn ganz. Ließe man die Einwilligung an
+     * einer Warteliste stehen, behauptete der Datenexport eine Zustimmung, die Brevo nicht mehr
+     * ausführt.
+     *
+     * Eine nie übertragene Zeile bleibt einfach gesperrt: Bei Brevo gibt es sie nicht, und
+     * `findOpenForSync()` lässt gesperrte Zeilen ohne Auftrag draußen (AK-46). Ohne Zeile
+     * entsteht keine — eine Sperre auf Vorrat wäre ein Datensatz über jemanden, der nie
+     * übertragen wurde.
+     */
+    public function revokeForAccount(User $user): void
+    {
+        // Das Konto selbst ist bei einem frisch angelegten, noch nicht geschriebenen Nutzer
+        // nicht über die Abfrage zu finden.
+        $user->setMarketingConsentAt(null);
+
+        // ⚠ BF-155: Nur eine BESTÄTIGTE Adresse spricht für ihren Inhaber. Ein unbestätigtes Konto
+        // kann jeder mit einer fremden Adresse anlegen (B01/AK-13 lässt es sich anmelden) — es
+        // nimmt nur seine eigene Einwilligung zurück. Ohne diese Schranke löschte es mit zwei
+        // Klicks den Einwilligungsnachweis des echten Inhabers auf einer Warteliste und ließe
+        // dessen Brevo-Kontakt sperren (oder einen Löschauftrag in eine Sperre umwandeln).
+        if (!$user->isVerified()) {
+            return;
+        }
+
+        foreach ($this->sourcesFor($user->getEmail()) as $source) {
+            $source->setMarketingConsentAt(null);
+        }
+
+        $contact = $this->finde($user->getEmail());
+
+        if (null === $contact) {
+            return;
+        }
+
+        // ⚠ BF-160: Die Sperre darf nie VOR der Einwilligung liegen, die sie aufhebt.
+        // `consentMomentFor()` legt eine Wieder-Einwilligung eine Sekunde hinter die vorige
+        // Sperre; kommt die nächste Abmeldung noch in derselben Sekunde, läge „jetzt" davor —
+        // `isBlocked()` (`consentAt <= revokedAt`) hielte die Zeile für eingewilligt, und der
+        // nächste Lauf trüge die Adresse als Abonnent ein.
+        $jetzt = new \DateTimeImmutable();
+        $contact->setRevokedAt($contact->getConsentAt() > $jetzt ? $contact->getConsentAt() : $jetzt);
+
+        // ⚠ Ein Löschauftrag bleibt einer — die Kontolöschung wiegt schwerer als eine Sperre.
+        if (MarketingSyncState::REMOVAL_PENDING === $contact->getSyncState()) {
+            return;
+        }
+
+        // Sperrauftrag für JEDE bestehende Zeile. ⚠ BF-167/BF-181: Ob es den Kontakt bei Brevo gibt,
+        // weiß die Zeile nicht verlässlich — `syncedAt` heißt nur „letzte Übertragung bestätigt", eine
+        // verlorene Antwort hinterlässt `failed`, und Adresswechsel wie neue Einwilligung setzen den
+        // Versuchszähler zurück. Ein Sperrauftrag auf einen Kontakt, den es dort nicht gibt, ist
+        // harmlos: `PUT` legt nichts an, 404 gilt als Erfolg (AK-46 bleibt: Es entsteht kein Kontakt).
+        $contact
+            ->setSyncState(MarketingSyncState::BLACKLIST_PENDING)
+            ->setLastError(null)
+            ->setAttempts(0);
+    }
+
+    /**
+     * Zeitpunkt für eine neue Einwilligung, der sicher **nach** einer bestehenden Sperre liegt.
+     *
+     * ⚠ Die Datenbank speichert Sekunden. Bestellt jemand ab und abonniert in derselben Sekunde
+     * wieder, wären `consent_at` und `revoked_at` nach dem Neuladen gleich — und
+     * `isBlocked()` (`consentAt <= revokedAt`) hielte die neue Einwilligung für überholt. Das
+     * Profil zeigte „abonniert", Brevo bekäme nichts. Eine Sekunde Vorsprung ist harmlos.
+     */
+    public function consentMomentFor(string $email, \DateTimeImmutable $now): \DateTimeImmutable
+    {
+        $contact = $this->finde($email);
+        $revokedAt = $contact?->getRevokedAt();
+
+        if (null === $revokedAt) {
+            return $now;
+        }
+
+        // ⚠ BF-178: auch hinter die letzte Übertragung. Wurde die Sperre in derselben Sekunde
+        // übertragen, in der wieder eingewilligt wird, wären `synced_at` und `consent_at` gleich — und
+        // der Mapper schickt die Aufhebung nur, solange `synced_at` VOR der Einwilligung liegt.
+        $schranke = $revokedAt;
+        $syncedAt = $contact?->getSyncedAt();
+        if (null !== $syncedAt && $syncedAt > $schranke) {
+            $schranke = $syncedAt;
+        }
+
+        $sekunde = $schranke->setTime(
+            (int) $schranke->format('H'),
+            (int) $schranke->format('i'),
+            (int) $schranke->format('s'),
+        );
+
+        return $now->getTimestamp() > $sekunde->getTimestamp()
+            ? $now
+            : $sekunde->modify('+1 second');
     }
 
     /**

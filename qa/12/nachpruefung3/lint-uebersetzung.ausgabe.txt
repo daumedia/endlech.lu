@@ -1,0 +1,28 @@
+== debug:translation lb --only-missing
+ ------- -------- ---- ---------------------- ------------------------------- ------------------------------- 
+  State   Domain   Id   Message Preview (lb)   Fallback Message Preview (de)   Fallback Message Preview (en)  
+ ------- -------- ---- ---------------------- ------------------------------- ------------------------------- 
+== debug:translation de --only-missing
+ ------- -------- ---- ---------------------- ------------------------------- 
+  State   Domain   Id   Message Preview (de)   Fallback Message Preview (en)  
+ ------- -------- ---- ---------------------- ------------------------------- 
+== debug:translation fr --only-missing
+ ------- -------- ---- ---------------------- ------------------------------- ------------------------------- 
+  State   Domain   Id   Message Preview (fr)   Fallback Message Preview (de)   Fallback Message Preview (en)  
+ ------- -------- ---- ---------------------- ------------------------------- ------------------------------- 
+== debug:translation en --only-missing
+ ------- -------- ---- ---------------------- ------------------------------- 
+  State   Domain   Id   Message Preview (en)   Fallback Message Preview (de)  
+ ------- -------- ---- ---------------------- ------------------------------- 
+== debug:translation pt --only-missing
+ ------- -------- ---- ---------------------- ------------------------------- ------------------------------- 
+  State   Domain   Id   Message Preview (pt)   Fallback Message Preview (de)   Fallback Message Preview (en)  
+ ------- -------- ---- ---------------------- ------------------------------- ------------------------------- 
+== lint:twig
+ [OK] All 133 Twig files contain valid syntax.                                  
+
+== lint:yaml
+ [OK] All 63 YAML files contain valid syntax.                                   
+
+== npm typecheck/lint
+exit lint: 0

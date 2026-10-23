@@ -1,0 +1,25 @@
+de badge_text "Verifiziertes Lokal"               Einführung:ja Detailseite:ja
+de badge      "Verifiziert"                       Einführung:ja Detailseite:ja
+de na         "Nicht verfügbar"                  Einführung:ja Detailseite:ja
+de nm         "Nicht ausgemessen"                 Einführung:ja Detailseite:ja
+de below      "unter 90 cm"                       Einführung:ja Detailseite:ja
+lb badge_text "Verifizéiert Lokal"               Einführung:ja Detailseite:ja
+lb badge      "Verifizéiert"                     Einführung:ja Detailseite:ja
+lb na         "Net disponibel"                    Einführung:ja Detailseite:ja
+lb nm         "Net gemooss"                       Einführung:ja Detailseite:ja
+lb below      "manner wéi 90 cm"                 Einführung:ja Detailseite:ja
+fr badge_text "Établissement vérifié"          Einführung:ja Detailseite:ja
+fr badge      "Vérifié"                         Einführung:NEIN Detailseite:ja
+fr na         "Non disponible"                    Einführung:ja Detailseite:ja
+fr nm         "Non mesuré"                       Einführung:ja Detailseite:ja
+fr below      "moins de 90 cm"                    Einführung:ja Detailseite:ja
+en badge_text "Verified Venue"                    Einführung:ja Detailseite:ja
+en badge      "Verified"                          Einführung:ja Detailseite:ja
+en na         "Not available"                     Einführung:ja Detailseite:ja
+en nm         "Not measured"                      Einführung:ja Detailseite:ja
+en below      "below 90 cm"                       Einführung:ja Detailseite:ja
+pt badge_text "Estabelecimento verificado"        Einführung:ja Detailseite:ja
+pt badge      "Verificado"                        Einführung:NEIN Detailseite:ja
+pt na         "Não disponível"                  Einführung:ja Detailseite:ja
+pt nm         "Não medido"                       Einführung:ja Detailseite:ja
+pt below      "abaixo de 90 cm"                   Einführung:ja Detailseite:ja

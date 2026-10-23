@@ -1,0 +1,22 @@
+AK-50 / AK-51 / AK-52 / BF-171 im Browser (Chromium-Vorschau, :8099, Turbo aktiv). Ohne Zählskript in dev; window.umami durch einen
+Rekorder ersetzt (window.__ev = [[name, daten, pfad], …]), Seitenwechsel über Turbo (das Fenster bleibt bestehen).
+
+Konto brigitte3-824604@example.org (ohne Einwilligung, 4 Bildschirme):
+  Turbo.visit('/de/einfuehrung')                      → [["einfuehrung_begonnen",null,"/de/einfuehrung"]]
+  3 × „Weiter" (eintraege, profilbild, newsletter)      → kein weiteres Ereignis
+  Häkchen, „Restaurants suchen" (Absendeknopf)          → /de/restaurants, Flash „Du hast den Newsletter abonniert.",
+                                                          + ["einfuehrung_abgeschlossen",null,"/de/restaurants"], 1 Auslöser im DOM, kein sichtbarer Text
+⚠ Danach Restaurant 45 öffnen, history.back()           → + ["einfuehrung_abgeschlossen",null,"/de/restaurants"]   (zweites Mal)
+⚠ zweimal Restaurant öffnen + zurück                     → insgesamt 4 × „einfuehrung_abgeschlossen" für EIN Absenden
+  (Turbo stellt die Liste aus seinem Zwischenspeicher wieder her; der versteckte Auslöser mit on-connect steht im Abbild)
+
+Mit Einwilligung (3 Bildschirme), window.__ev geleert:
+  Turbo.visit eintraege („Schritt 2 von 3"), „Einführung beenden" → ["einfuehrung_beendet",{"schritt":"2"},"/de/einfuehrung/eintraege"]
+⚠                                                          + ["einfuehrung_abgeschlossen",null,"/de/restaurants"]   ← Vorschau aus dem Turbo-Zwischenspeicher
+                                                            der Restaurantliste trug noch den Auslöser: vorzeitig beendet UND abgeschlossen
+  Turbo.visit profilbild („Schritt 3 von 3"), Link „Restaurants suchen" → ["einfuehrung_abgeschlossen",null,"/de/einfuehrung/profilbild"] (richtig, Klick)
+
+AK-52: Turbo.visit('/de/profile') → 0 Elemente mit data-controller usage-event, kein Zählskript; zweimal Newsletter-Schalter → window.__ev = []
+
+BF-171 abgewiesen: Newsletter-Schritt mit gefälschtem Token, Häkchen, „Restaurants suchen" → bleibt auf „Schritt 4 von 4",
+  Meldung „Der CSRF-Token ist ungültig. …" (Fokus auf role=alert), window.__ev = []

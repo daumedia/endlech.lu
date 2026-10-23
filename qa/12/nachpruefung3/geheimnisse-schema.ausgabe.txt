@@ -1,0 +1,40 @@
+== git log --all -S 'xkeysib-' (Commits)
+1a38a2f  t3 checkpoint ref=refs/t3/checkpoints/YjYxMTY1ODgtMTE4NS00NDRjLTlmNDgtMGY1OTU2YWNiMDhh/turn/4
+df817c5  t3 checkpoint ref=refs/t3/checkpoints/YjYxMTY1ODgtMTE4NS00NDRjLTlmNDgtMGY1OTU2YWNiMDhh/turn/3
+87ed00a  t3 checkpoint ref=refs/t3/checkpoints/YjYxMTY1ODgtMTE4NS00NDRjLTlmNDgtMGY1OTU2YWNiMDhh/turn/2
+628ea48  t3 checkpoint ref=refs/t3/checkpoints/YjYxMTY1ODgtMTE4NS00NDRjLTlmNDgtMGY1OTU2YWNiMDhh/turn/1
+ad9cff3  t3 checkpoint ref=refs/t3/checkpoints/YjYxMTY1ODgtMTE4NS00NDRjLTlmNDgtMGY1OTU2YWNiMDhh/turn/0
+210b625  t3 checkpoint ref=refs/t3/checkpoints/MGY2MDVjMzUtNzEyMi00Y2I4LWE2ZDgtZmZjZjY0ZmY3ZWYz/turn/2
+3ce898f  t3 checkpoint ref=refs/t3/checkpoints/MGY2MDVjMzUtNzEyMi00Y2I4LWE2ZDgtZmZjZjY0ZmY3ZWYz/turn/1
+e06cee3  t3 checkpoint ref=refs/t3/checkpoints/MGY2MDVjMzUtNzEyMi00Y2I4LWE2ZDgtZmZjZjY0ZmY3ZWYz/turn/0
+cd4b260  t3 checkpoint ref=refs/t3/checkpoints/ZmFhYjgwMGQtOGY2OC00ZGI2LWJjYjUtM2M0NWQ4N2Q4N2Ey/turn/3
+dad9bd5  t3 checkpoint ref=refs/t3/checkpoints/ZmFhYjgwMGQtOGY2OC00ZGI2LWJjYjUtM2M0NWQ4N2Q4N2Ey/turn/2
+96956e2  t3 checkpoint ref=refs/t3/checkpoints/ZmFhYjgwMGQtOGY2OC00ZGI2LWJjYjUtM2M0NWQ4N2Q4N2Ey/turn/1
+9c04b44  t3 checkpoint ref=refs/t3/checkpoints/ZmFhYjgwMGQtOGY2OC00ZGI2LWJjYjUtM2M0NWQ4N2Q4N2Ey/turn/0
+== Arbeitsstand: grep xkeysib- in src templates config assets tests public docs features qa
+tests/Functional/Controller/OnboardingControllerTest.php:382:xkeysib-f12-pruefschluessel
+tests/Functional/Controller/OnboardingControllerTest.php:385:xkeysib-f12-pruefschluessel
+tests/Functional/Controller/OnboardingControllerTest.php:390:xkeysib-
+features/04-brevo-marketing-kontakte/inbetriebnahme.md:29:xkeysib-
+features/05-presse-kit/qa-report-3.md:91:xkeysib-
+features/05-presse-kit/qa-report.md:170:xkeysib-
+qa/12/qa-report-erster-durchlauf-2026-10-22.md:167:xkeysib-qa12attrappe
+qa/12/qa-report-erster-durchlauf-2026-10-22.md:234:xkeysib-
+qa/12/qa-report-erster-durchlauf-2026-10-22.md:234:xkeysib-f12-pruefschluessel
+qa/12/nachpruefung2/geheimnisse.ausgabe.txt:1:xkeysib-
+qa/12/nachpruefung2/geheimnisse.ausgabe.txt:14:xkeysib-
+qa/12/nachpruefung2/geheimnisse.ausgabe.txt:15:xkeysib-
+qa/12/nachpruefung2/geheimnisse.ausgabe.txt:16:xkeysib-qa12nachpruefungattrappe
+qa/12/nachpruefung2/geheimnisse.ausgabe.txt:20:xkeysib-
+qa/12/nachpruefung2/geheimnisse.ausgabe.txt:20:xkeysib-
+qa/12/nachpruefung2/geheimnisse.ausgabe.txt:20:xkeysib-f12-pruefschluessel
+qa/12/nachpruefung2/geheimnisse.ausgabe.txt:20:xkeysib-qa12
+qa/12/qa-report-dritter-durchlauf-2026-10-23.md:202:xkeysib-qa12dritteattrappe
+qa/12/qa-report-dritter-durchlauf-2026-10-23.md:202:xkeysib-
+qa/12/qa-report-dritter-durchlauf-2026-10-23.md:274:xkeysib-
+== Migration
+31:        $this->addSql('ALTER TABLE `user` ADD onboarding_due TINYINT DEFAULT 0 NOT NULL, ADD onboarding_shown_at DATETIME DEFAULT NULL');
+36:        $this->addSql('ALTER TABLE `user` DROP onboarding_due, DROP onboarding_shown_at');
+== schema:update --dump-sql: Anweisungen gesamt / davon onboarding|marketing_contact
+12
+0

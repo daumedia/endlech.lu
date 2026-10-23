@@ -1,0 +1,20 @@
+Gast GET /sitemap.xml             200 · <loc> 155 · „einfuehrung" 0
+Gast GET /de/                     200
+Gast GET /de/restaurants          200
+Gast GET /de/restaurants/45       404
+Gast GET /de/community/suggest    200
+Gast GET /de/app                  200
+Gast GET /open.json               200
+Gast GET /api/v1/restaurants      200
+Gast GET /health                  200
+B02 user@ Anmeldung: 302 → /de/
+user@ GET /de/community/suggest    200 
+user@ GET /de/profile              200 
+user@ GET /de/einfuehrung          200 
+user@ GET /de/admin                403 
+X-Robots-Tag auf /de/einfuehrung: noindex
+admin@ GET /de/admin                200
+admin@ GET /de/admin/warteliste     200
+admin@ GET /de/admin/restaurants    200
+B03 GET /passkey/login/options: 405
+B03 POST /passkey/login/options: 200

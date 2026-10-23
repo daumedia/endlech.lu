@@ -1,0 +1,12 @@
+BF-179 / BF-177 — Nachprüfung im Browser nach Fehlerauftrag 3 (2026-10-23, sdd-build).
+Aufbau wie qa/12/nachpruefung2/bf179-volles-laden.ausgabe.txt: Server :8094 mit Router /tmp/endlech-f12/router3-zaehler.php
+(Website-Kennung gesetzt, /zaehler.js = Attrappe, die window.umami setzt und jeden track()-Aufruf in window.__zaehler.aufrufe
+mitschreibt). Assets frisch gebaut (typescript:build). Chromium-Vorschau, angemeldetes, bestätigtes Konto.
+
+1. Voller Aufruf http://127.0.0.1:8094/de/einfuehrung (navigation type „navigate"):
+   Zählskript ausgeführt bei 87,4 ms, Auslöser [data-usage-event-name-value="einfuehrung_begonnen"][data-turbo-temporary]: 1
+   window.__zaehler.aufrufe = [["einfuehrung_begonnen", null, 87.7]]      ← vorher [] (BF-179)
+2. Turbo.visit('/de/einfuehrung/eintraege'), danach history.back() (Wiederherstellung aus Turbos Zwischenspeicher):
+   aufrufe = ["einfuehrung_begonnen"]                                       ← weiterhin eins, kein zweites Ereignis
+Behebung: usage_event_controller.ts#send versucht es bei fehlendem window.umami einmal beim `load`-Ereignis erneut
+(nur solange document.readyState !== 'complete'); beide on-connect-Auslöser tragen data-turbo-temporary.

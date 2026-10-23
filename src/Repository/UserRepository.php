@@ -40,6 +40,32 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         return $this->findOneBy(['pendingEmailToken' => $token]);
     }
 
+    /**
+     * Konten, für die die Einführung vorgesehen ist (Feature 12, AK-49) — also alle, die ihre
+     * Adresse bestätigt haben, seit es die Einführung gibt.
+     */
+    public function countOnboardingDue(): int
+    {
+        return (int) $this->createQueryBuilder('u')
+            ->select('COUNT(u.id)')
+            ->where('u.onboardingDue = true')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * Davon die, denen die Einführung mindestens einmal angezeigt wurde (AK-49).
+     */
+    public function countOnboardingShown(): int
+    {
+        return (int) $this->createQueryBuilder('u')
+            ->select('COUNT(u.id)')
+            ->where('u.onboardingDue = true')
+            ->andWhere('u.onboardingShownAt IS NOT NULL')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
     public function countRegisteredSince(\DateTimeImmutable $since): int
     {
         return (int) $this->createQueryBuilder('u')

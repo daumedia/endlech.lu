@@ -1,0 +1,10 @@
+# QA 12 · AK-55 — Protokolle im Produktionsmodus (APP_ENV=prod, APP_DEBUG=0, lokal, Port 8095)
+# Durchlauf: Registrierung → Bestätigung → Anmeldung → Willkommen/Einträge/Profilbild →
+# Upload „Mein Name Anna Neu privat.jpg" → Newsletter-Häkchen → im Profil abbestellen → wieder abonnieren
+# Ausgabe des Servers (stderr der Anwendung + Zugriffsprotokoll von php -S): 43 Zeilen
+grep -c 'ines.prod\|Ines Prodtest\|Mein Name\|privat' server-8095-prod.log → 0
+Einzige Anwendungszeile: channel "deprecation" (DBAL: „Support for MySQL < 8 is deprecated"), ohne Personenbezug.
+Im Entwicklungsprotokoll (DEBUG, alle Kanäle) stehen die Adressen dagegen in Rahmenkanälen:
+  security.DEBUG „User was reloaded from a user provider" (jede Anfrage, vorbestehend),
+  lock.DEBUG „newsletter_toggle-<Adresse>" (neu: Schlüssel des Limiters ist die Adresse),
+  doctrine.DEBUG (gebundene Parameter). Der ursprüngliche Dateiname steht nirgends (0 Treffer).

@@ -53,6 +53,20 @@ class AdminStatsService
         return $this->userRepository->count();
     }
 
+    /**
+     * Feature 12, AK-49: zwei Summen, keine Liste. Wer die Einführung gesehen hat, lässt sich in
+     * der Verwaltung keiner Person zuordnen — die Zahl reicht, um zu sehen, ob sie ankommt.
+     */
+    public function getOnboardingDueCount(): int
+    {
+        return $this->userRepository->countOnboardingDue();
+    }
+
+    public function getOnboardingShownCount(): int
+    {
+        return $this->userRepository->countOnboardingShown();
+    }
+
     public function getImageCount(): int
     {
         return $this->imageRepository->count();

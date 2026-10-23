@@ -1,0 +1,60 @@
+Registrierung Frieda: 302 → /de/verify
+  Konto nach Registrierung: {"id":129,"name":"Frieda Vierte","email":"frieda4-115006@example.org","is_verified":0,"onboarding_due":0,"onboarding_shown_at":null,"marketing_consent_at":null,"avatar_filename":null,"pending_email":null}
+AK-01 Link als Gast: 302 → /de/login
+  Konto nach Bestätigung: {"id":129,"name":"Frieda Vierte","email":"frieda4-115006@example.org","is_verified":1,"onboarding_due":1,"onboarding_shown_at":null,"marketing_consent_at":null,"avatar_filename":null,"pending_email":null}
+AK-01 erste Anmeldung (Gerät A): 302 → /de/einfuehrung
+  Seite: Schritt 1 von 4 Willkommen · shown=2026-10-23 11:50:08
+AK-02/EC-01 Anmeldung Gerät B nach Anzeige: 302 → /de/
+AK-02 dritte Anmeldung: 302 → /de/
+AK-02 Mia verlässt auf Schritt 2: 200, Text 'Schritt 2 von 4 Einträge lesen'
+AK-02 Mia nächste Anmeldung: 302 → /de/
+AK-03 Gast ruft Vorschlagen auf: 200 → 
+AK-03 Anmeldung mit gemerktem Ziel: 302 → /de/community/suggest · shown=NULL
+AK-03 nächste Anmeldung: 302 → /de/einfuehrung
+AK-04 unbestätigt anmelden: 302 → /de/ · {"is_verified":0,"onboarding_due":0,"onboarding_shown_at":null}
+AK-11 GET /de/einfuehrung: 302 → /de/verify
+AK-11 GET /de/einfuehrung/eintraege: 302 → /de/verify
+AK-11 GET /de/einfuehrung/profilbild: 302 → /de/verify
+AK-11 GET /de/einfuehrung/newsletter: 302 → /de/verify
+AK-11 POST newsletter: 302 → /de/verify
+AK-11 POST profilbild: 302 → /de/verify · Konto unverändert: {"onboarding_shown_at":null,"marketing_consent_at":null,"avatar_filename":null}
+AK-05 eigener Link, angemeldet: 302 → /de/einfuehrung
+  Willkommensseite: Schritt 1 von 4 Willkommen · „jetzt anmelden"-Treffer: 0 · Meldung bestätigt: ja
+  Konto: {"is_verified":1,"onboarding_due":1,"onboarding_shown_at":"2026-10-23 11:50:13"}
+AK-06 user@endlech.lu Anmeldung 1: 302 → /de/ · due=0
+AK-06 user@endlech.lu Anmeldung 2: 302 → /de/ · due=0
+AK-06 admin@endlech.lu Anmeldung 1: 302 → /de/ · due=0
+AK-06 admin@endlech.lu Anmeldung 2: 302 → /de/ · due=0
+AK-07 vorher: {"is_verified":0,"onboarding_due":0}
+AK-07 Link: 301 → /de/verify · {"is_verified":0,"onboarding_due":0}
+AK-07 erste Anmeldung: 302 → /de/
+AK-08 API-Registrierung: 201
+AK-08 Link /lb/verify/5ed0952b075a4b752d0bd49f5a9edf653d2158dca9078d4a1f8bd9fcaf74e610: 302 → /lb/login · due=1
+AK-08 erste Website-Anmeldung: 302 → /de/einfuehrung
+AK-09 Profillink: Einführung ansehen · prefetch=false
+AK-09 Aufruf: 200 · 'Schritt 1 von 4 Willkommen' · shown vorher=2026-10-23 11:50:08 nachher=2026-10-23 11:50:08
+AK-10 Gast GET /de/einfuehrung: 302 → /de/login · Inhalt 366 B, Willkommen-Text: nein
+AK-10 Gast GET /de/einfuehrung/willkommen: 302 → /de/login · Inhalt 366 B, Willkommen-Text: nein
+AK-10 Gast GET /de/einfuehrung/eintraege: 302 → /de/login · Inhalt 366 B, Willkommen-Text: nein
+AK-10 Gast GET /de/einfuehrung/profilbild: 302 → /de/login · Inhalt 366 B, Willkommen-Text: nein
+AK-10 Gast GET /de/einfuehrung/newsletter: 302 → /de/login · Inhalt 366 B, Willkommen-Text: nein
+AK-10 Gast POST newsletter: 302 → /de/login
+AK-10 unbekannter Schritt (Gast): 404
+AK-10 unbekannter Schritt (angemeldet): 404
+BF-170 Lena erste Anmeldung: 302 → /de/einfuehrung (nicht gefolgt)
+BF-170 HEAD /de/einfuehrung: 200 · shown=NULL
+BF-158 GET mit X-Sec-Purpose: prefetch: 200 · shown=NULL
+BF-158 GET mit Sec-Purpose: prefetch;prerender: 200 · shown=NULL
+BF-170 Lena nächste Anmeldung: 302 → /de/einfuehrung
+EC-04 user@ öffnet Janas Link: 302 → /de/login · Jana {"is_verified":1,"onboarding_due":1,"onboarding_shown_at":null} · user@ due=0
+EC-04 user@ noch angemeldet: Profil 200 · eigene Adresse sichtbar
+EC-04 Janas erste Anmeldung: 302 → /de/einfuehrung
+EC-05 abgelaufener Link: 302 → /de/verify · {"is_verified":0,"onboarding_due":0}
+EC-06 Anmeldung mit „angemeldet bleiben" (nicht gefolgt): 302 → /de/einfuehrung
+  REMEMBERME-Cookie: vorhanden · shown=NULL
+EC-06 nur mit REMEMBERME GET /de/restaurants: 200  · shown=NULL
+EC-06 nur mit REMEMBERME GET /de/: 200  · shown=NULL
+EC-06 nur mit REMEMBERME GET /de/profile: 200  · shown=NULL
+EC-07 Passwort vergessen: 302 → /de/login
+EC-07 neues Passwort gesetzt: 302 → /de/login
+EC-07 erste Anmeldung mit neuem Passwort: 302 → /de/einfuehrung

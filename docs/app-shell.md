@@ -209,6 +209,19 @@ Das `pb-16` schafft auf Mobil Platz für die feste Bottom-Navigation; ohne das l
 der letzte Inhalt dahinter. `<body>` ist `flex flex-col min-h-screen`, damit die
 Fußzeile auf kurzen Seiten unten bleibt.
 
+### Ziel nach der Anmeldung — die Weiche der Einführung (Feature 12)
+
+`form_login` schickt nach der Anmeldung auf `app_home`, sofern keine Zielseite gemerkt ist.
+Seit Feature 12 lenkt `App\EventSubscriber\OnboardingRedirectSubscriber` **genau diese**
+Weiterleitung auf `/{locale}/einfuehrung` um, wenn das Konto fällig ist
+(`User::isOnboardingPending()`). Eine gemerkte Zielseite (B11: „Restaurant vorschlagen")
+gewinnt; „angemeldet bleiben" liefert keine Weiterleitung und bleibt unberührt.
+
+Die vier Bildschirme unter `/{locale}/einfuehrung/{willkommen|eintraege|profilbild|newsletter}`
+stehen im gewöhnlichen Seitengerüst — Kopfzeile, Flash-Meldungen, Fußzeile und
+Bottom-Navigation bleiben, man kommt jederzeit hinaus. Erreichbar auch über
+„Einführung ansehen" im Profil.
+
 ---
 
 ## Fußzeile

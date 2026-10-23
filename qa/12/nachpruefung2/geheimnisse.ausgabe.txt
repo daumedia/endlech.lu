@@ -1,0 +1,20 @@
+git log --all -S 'xkeysib-' (Commits, die die Zeichenfolge einführen/entfernen):
+df817c5 t3 checkpoint ref=refs/t3/checkpoints/YjYxMTY1ODgtMTE4NS00NDRjLTlmNDgtMGY1OTU2YWNiMDhh/turn/3
+87ed00a t3 checkpoint ref=refs/t3/checkpoints/YjYxMTY1ODgtMTE4NS00NDRjLTlmNDgtMGY1OTU2YWNiMDhh/turn/2
+628ea48 t3 checkpoint ref=refs/t3/checkpoints/YjYxMTY1ODgtMTE4NS00NDRjLTlmNDgtMGY1OTU2YWNiMDhh/turn/1
+ad9cff3 t3 checkpoint ref=refs/t3/checkpoints/YjYxMTY1ODgtMTE4NS00NDRjLTlmNDgtMGY1OTU2YWNiMDhh/turn/0
+210b625 t3 checkpoint ref=refs/t3/checkpoints/MGY2MDVjMzUtNzEyMi00Y2I4LWE2ZDgtZmZjZjY0ZmY3ZWYz/turn/2
+3ce898f t3 checkpoint ref=refs/t3/checkpoints/MGY2MDVjMzUtNzEyMi00Y2I4LWE2ZDgtZmZjZjY0ZmY3ZWYz/turn/1
+e06cee3 t3 checkpoint ref=refs/t3/checkpoints/MGY2MDVjMzUtNzEyMi00Y2I4LWE2ZDgtZmZjZjY0ZmY3ZWYz/turn/0
+cd4b260 t3 checkpoint ref=refs/t3/checkpoints/ZmFhYjgwMGQtOGY2OC00ZGI2LWJjYjUtM2M0NWQ4N2Q4N2Ey/turn/3
+dad9bd5 t3 checkpoint ref=refs/t3/checkpoints/ZmFhYjgwMGQtOGY2OC00ZGI2LWJjYjUtM2M0NWQ4N2Q4N2Ey/turn/2
+96956e2 t3 checkpoint ref=refs/t3/checkpoints/ZmFhYjgwMGQtOGY2OC00ZGI2LWJjYjUtM2M0NWQ4N2Q4N2Ey/turn/1
+Arbeitsstand (ohne vendor/var/node_modules/qa):
+features/07-roadmap-changelog/qa-report.md:172:| Geheimnisse im Repository | bestanden | 0 Treffer auf `sk_live_`, `APP_SECRET`, `DATABASE_URL`, `BREVO_API` im Feature-Code und im HTML |
+features/05-presse-kit/qa-report-3.md:91:| Geheimnisse im Repository | bestanden | Keine Treffer auf `sk_live_`, `sk-…`, `xkeysib-`, private Schlüssel. ⚠ `app.operator_name: 'Michael Ferreira'` steht 
+features/05-presse-kit/qa-report.md:170:| Geheimnisse im Repository | bestanden | Suche nach `sk_live_`, `sk-…`, `xkeysib-`, `BEGIN … PRIVATE KEY` über alle neuen Dateien: keine Treffer. Die neuen Par
+qa/12/qa-report-zweiter-durchlauf-2026-10-23.md:193:| AK-63 | ✅ | Produktionsmodus mit untergeschobenem Schlüssel `xkeysib-qa12nachpruefungattrappe…`: vier Bildschirme und Profil → **0** Treffer |
+Untracked Dateien dieses Features mit Schlüsselmustern:
+features/12-onboarding-neue-nutzer/qa-report.md
+tests/Functional/Controller/OnboardingControllerTest.php
+Prüfung: nur Platzhalter/Attrappen (xkeysib-, xkeysib-…, xkeysib-f12-pruefschluessel, xkeysib-qa12…attrappe); t3-Checkpoint-Refs sind lokal (git ls-remote origin refs/t3/*: leer).

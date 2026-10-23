@@ -1,0 +1,12 @@
+Adresswechsel 1 auf eine jeweils NEUE Adresse: Flash „Fast geschafft: Wir haben einen Bestätigungslink an ida3-104…“ · pending=ida3-104528-ziel1@example.org
+Adresswechsel 2 auf eine jeweils NEUE Adresse: Flash „Fast geschafft: Wir haben einen Bestätigungslink an ida3-104…“ · pending=ida3-104528-ziel2@example.org
+Adresswechsel 3 auf eine jeweils NEUE Adresse: Flash „Fast geschafft: Wir haben einen Bestätigungslink an ida3-104…“ · pending=ida3-104528-ziel3@example.org
+Adresswechsel 4 auf eine jeweils NEUE Adresse: Flash „Fast geschafft: Wir haben einen Bestätigungslink an ida3-104…“ · pending=ida3-104528-ziel4@example.org
+Adresswechsel 5 auf eine jeweils NEUE Adresse: Flash „Fast geschafft: Wir haben einen Bestätigungslink an ida3-104…“ · pending=ida3-104528-ziel5@example.org
+Adresswechsel 6 auf eine jeweils NEUE Adresse: Flash „Fast geschafft: Wir haben einen Bestätigungslink an ida3-104…“ · pending=ida3-104528-ziel6@example.org
+Adresswechsel 7 auf eine jeweils NEUE Adresse: Flash „Fast geschafft: Wir haben einen Bestätigungslink an ida3-104…“ · pending=ida3-104528-ziel7@example.org
+Adresswechsel 8 auf eine jeweils NEUE Adresse: Flash „Fast geschafft: Wir haben einen Bestätigungslink an ida3-104…“ · pending=ida3-104528-ziel8@example.org
+Ida: ida3-104528@example.org
+Nachrichten in messenger_messages mit einer Zieladresse ida3-…-ziel…: 16
+Nachrichten an/mit der bisherigen Adresse ohne Zieladresse: 1
+Warteschlange default: 129

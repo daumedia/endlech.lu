@@ -61,6 +61,11 @@ final readonly class AccountDataExporter
                 // einsehen können, sonst ist der Nachweis einseitig.
                 'marketingConsent' => $user->hasMarketingConsent(),
                 'marketingConsentAt' => $user->getMarketingConsentAt()?->format(\DateTimeInterface::ATOM),
+                // Feature 12, AK-62: die beiden Angaben zur Einführung — ob sie vorgesehen
+                // ist und wann sie zum ersten Mal angezeigt wurde. Mehr speichert das
+                // Feature nicht (AK-53).
+                'onboardingDue' => $user->isOnboardingDue(),
+                'onboardingShownAt' => $user->getOnboardingShownAt()?->format(\DateTimeInterface::ATOM),
             ],
             'passkeys' => array_map(
                 static fn ($passkey) => [
