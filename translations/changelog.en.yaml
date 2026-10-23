@@ -23,6 +23,9 @@ repo:
     link_label: "Open CHANGELOG.md on GitHub"
 
 release:
+    v2026_10_23:
+        title: "A good start for new accounts"
+        body: "Anyone who creates an account and confirms their address now sees a short introduction: how to read the details on a restaurant page, how to add a profile picture and whether to receive our news by email. Every step is optional. You can now also subscribe to the newsletter or unsubscribe with one click in your profile; anyone who subscribes receives a one-time welcome email in their language. And Endlech.lu now opens in your browser’s language if you haven’t chosen one yet."
     v2026_09_15:
         title: "Endlech.lu is now available in Portuguese"
         body: "The whole site is now available in Portuguese – for the many people in Luxembourg who speak Portuguese. You choose it in the language menu at the top. We also tidied up the footer: links now sit in named groups, with the legal notice, privacy and accessibility on a line of their own. And anyone who wants to suggest a restaurant now first sees how it works and why a free account is needed, instead of landing straight on the login page."

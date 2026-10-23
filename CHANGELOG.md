@@ -2,10 +2,38 @@
 
 Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
-![Version](https://img.shields.io/badge/version-2026.10.22-blue)
+![Version](https://img.shields.io/badge/version-2026.10.23-blue)
 ![Status](https://img.shields.io/badge/status-beta-green)
 
 ## [Unreleased]
+
+## [2026.10.23] – Einführung für neue Konten, Newsletter im Profil, AssetMapper
+
+### Einführung für neue Konten (Feature 12)
+
+- **Vier Bildschirme nach der ersten Anmeldung** eines bestätigten Kontos: Willkommen, Einträge lesen, Profilbild,
+  Newsletter; danach die Restaurantsuche. Jeder Schritt ist freiwillig, „Einführung beenden" auf jedem Bildschirm,
+  im Profil erneut aufrufbar. Bestandskonten bekommen sie nicht (Merker `user.onboarding_due`, gesetzt nur beim
+  Bestätigen der Adresse).
+- **Newsletter-Schalter im Profil** (löst `04/OF-02`): an- und abbestellen mit einem Klick, Deckel
+  `newsletter_toggle` (10 Wechsel je Stunde am Konto). Abbestellen **sperrt** den Kontakt in Brevo, statt ihn zu
+  löschen (neuer Sync-Zustand `blacklist_pending`); erneutes Abonnieren hebt die Sperre auf.
+- **Willkommens-Mail als Brevo-Automation „Willkommen · Konto"** in fünf Sprachen, einmal je Adresse, nur für
+  Konten; Vorlagen unter `features/12-onboarding-neue-nutzer/willkommens-mail/`.
+- Verwaltung: Kachel mit Summen (Einführung vorgesehen / angezeigt); Nutzungsmessung: drei Ereignisse
+  `einfuehrung_begonnen`, `_abgeschlossen`, `_beendet`.
+- ⚠ **Migration `Version20261022203034`** (zwei `ADD COLUMN` an `user`). Muss vor dem neuen Code laufen.
+
+### Behoben (gefunden in der QA von Feature 12)
+
+- **Adresswechsel ohne Bestätigung über einen Bild-Upload** bei erreichtem Deckel (BF-175, *hoch*): Die Adresse wird
+  jetzt vor jedem Schreiben zurückgesetzt. Der Deckel `email_change` zählt an der bestätigten Adresse (BF-176).
+- **Anmeldung und Abmeldung nach einem Formular mit Double-Submit** schlugen fehl („Ungültiges CSRF-Token.") —
+  der CSRF-Controller wird jetzt auf jeder Seite sofort geladen (BF-156).
+- **Profil mit vorhandenem Bild ließ sich nicht speichern** (BF-164); ein Upload über `post_max_size` zeigt eine
+  Meldung (BF-159); Profilbild-Upload und -Entfernen hinterlassen keine Dateien ohne Konto (BF-173, BF-180).
+- Brevo-Abgleich: Sperren und Wieder-Einwilligungen gehen auch bei verlorenen Antworten, gleichzeitigen Läufen und
+  Adresswechseln nicht verloren (BF-154 bis BF-181).
 
 ### AssetMapper statt Webpack Encore
 
