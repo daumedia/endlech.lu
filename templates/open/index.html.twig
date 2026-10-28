@@ -234,7 +234,11 @@
 <section class="bg-white py-16" aria-labelledby="finance-heading">
     <div class="container mx-auto px-4 max-w-5xl">
         <h2 id="finance-heading" class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">{{ 'open.finance.heading'|trans }}</h2>
-        <p class="text-gray-600 mb-8 max-w-3xl">{{ 'open.finance.intro'|trans }}</p>
+        <p class="text-gray-600 mb-4 max-w-3xl">{{ 'open.finance.intro'|trans }}</p>
+        {# Feature 15 · AK-30: Wer finanziert, steht auf /sponsoren — als Link, nicht als Zeile
+           mit Betrag. ⚠ Außerhalb der Bedingung der Quartalssperre: Der Verweis gilt auch,
+           solange die Einnahmen noch nicht gezeigt werden, und verrät keinen Betrag. #}
+        <p class="mb-8"><a href="{{ path('app_sponsor_index') }}" class="text-cyan-800 font-semibold underline underline-offset-2 focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700">{{ 'open.finance.sponsors_link'|trans }}</a></p>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 

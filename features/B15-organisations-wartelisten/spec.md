@@ -2,6 +2,14 @@
 
 Status: `rekonstruiert` · Stand: 2026-08-23 · **Rückerfassung aus dem Bestand**
 
+> **Geändert am 2026-10-28 durch Feature 15 (Sponsoren).** Das Sponsoring ist seit dem ein
+> **Paket** (monatlich oder jährlich, Preis auf Anfrage) statt vier Formate; das Formular fragt
+> für Unternehmen nur noch die Laufzeit (`sponsorshipTerm`, zwei Radios, darf leer bleiben) statt
+> sechs Häkchen. Gespeichert wird weiterhin im JSON-Feld `sponsorship_interests`; alte Einträge
+> behalten ihre Formate und zeigen sie in der Verwaltung als „frühere Angabe“. US-02 („Sponsoring-
+> Interessen angeben“) gilt in dieser engeren Form. Maßgeblich: `features/15-sponsoren/spec.md`
+> AK-33 bis AK-39.
+
 > **Abgeglichen am 2026-09-12 (BF-130).** Sechs Stellen beschrieben einen überholten
 > Stand: AK-14 (zweite Hälfte), AK-15, AK-16 sowie FB-01, FB-03 und FB-06 — dazu FB-04
 > (BF-134). **FB-01 und FB-03 standen hier als DSGVO-Lücken** (Art. 7 Abs. 3, Art. 5

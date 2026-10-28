@@ -1,0 +1,28 @@
+PHPUnit 12.5.4 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.5.12
+Configuration: /Users/michaelferreira/DEV/SaaS/endlech/phpunit.dist.xml
+
+F.                                                                  2 / 2 (100%)
+
+Time: 00:00.004, Memory: 16.00 MB
+
+There was 1 failure:
+
+1) App\Tests\Unit\Sponsor\SponsorRegistryTest::testAk27JederEintragDerProduktionsquelleIstGueltig
+Ungültige Sponsoreneinträge:
+Die zwölf größten Logos wiegen zusammen 151 KB, erlaubt 150 KB (AK-10).
+Failed asserting that two arrays are identical.
+--- Expected
++++ Actual
+@@ @@
+-Array &0 []
++Array &0 [
++    0 => 'Die zwölf größten Logos wiegen zusammen 151 KB, erlaubt 150 KB (AK-10).',
++]
+
+/Users/michaelferreira/DEV/SaaS/endlech/tests/Unit/Sponsor/SponsorRegistryTest.php:31
+/Users/michaelferreira/DEV/SaaS/endlech/vendor/phpunit/phpunit/phpunit:104
+
+FAILURES!
+Tests: 2, Assertions: 2, Failures: 1.

@@ -36,8 +36,10 @@
                 {label: 'Zeitrahmen', value: entry.timeframe ? entry.timeframe.transKey|trans({}, null, 'de') : '—'}
             ]) %}
         {% else %}
+            {# Feature 15: die Laufzeit übersetzt, alte Formate mit Vermerk (AK-38, AK-39). #}
             {% set rows = rows|merge([
-                {label: 'Sponsoring', value: entry.sponsorshipInterests|length ? entry.sponsorshipInterests|join(', ') : '—'},
+                {label: 'Sponsoring', value: entry.sponsorshipTerm ? entry.sponsorshipTerm.transKey|trans({}, null, 'de') : '—'},
+                {label: 'Sponsoring (' ~ 'admin.waitlist.legacy_sponsorship'|trans({}, null, 'de') ~ ')', value: entry.legacySponsorshipInterests|length ? entry.legacySponsorshipInterests|map(v => ('organisation.sponsorship.' ~ v)|trans({}, null, 'de'))|join(', ') : '—'},
                 {label: 'Ohne Geld', value: entry.collaborationInterests|length ? entry.collaborationInterests|join(', ') : '—'}
             ]) %}
         {% endif %}

@@ -6,6 +6,7 @@ use App\Repository\RestaurantRepository;
 use App\Seo\SeoRegistry;
 use App\Seo\SeoUrlBuilder;
 use App\Seo\SitemapGenerator;
+use App\Sponsor\SponsorDirectory;
 use Doctrine\DBAL\Exception\ConnectionException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -40,6 +41,7 @@ final class SitemapGeneratorTest extends KernelTestCase
             new SeoRegistry(),
             new SeoUrlBuilder($c->get('router'), 'https://endlech.lu', ['lb', 'de', 'fr', 'en', 'pt']),
             $repository ?? $c->get(RestaurantRepository::class),
+            $c->get(SponsorDirectory::class),
             $c->get('twig'),
             $this->cache,
         );
@@ -58,15 +60,15 @@ final class SitemapGeneratorTest extends KernelTestCase
         return \count(static::getContainer()->get(RestaurantRepository::class)->findAllIdsAscending());
     }
 
-    /** AK-02 · (20 + n) × 5 Einträge — mit den Fixtures 155. */
+    /** AK-02 · (21 + n) × 5 Einträge — mit den Fixtures 160 (seit Feature 15 mit `/sponsoren`; Testsponsoren gibt es hier keine). */
     public function testEinundzwanzigPlusRestaurantsJeSprache(): void
     {
         $n = $this->restaurantAnzahl();
         $urls = $this->dokument($this->erzeuger()->xml())->getElementsByTagNameNS(self::NS_SITEMAP, 'url');
 
         self::assertSame(11, $n, 'Fixture-Bestand');
-        self::assertSame((20 + $n) * 5, $urls->length);
-        self::assertSame(155, $urls->length);
+        self::assertSame((21 + $n) * 5, $urls->length);
+        self::assertSame(160, $urls->length);
     }
 
     /** AK-01 · gültig gegen sitemap.xsd samt Schema für die Sprachverweise. */
@@ -140,13 +142,13 @@ final class SitemapGeneratorTest extends KernelTestCase
         }
     }
 
-    /** AK-10 · Ohne ein einziges Restaurant: die 100 Einträge der festen Seiten (20 × 5 Sprachen). */
+    /** AK-10 · Ohne ein einziges Restaurant: die 105 Einträge der festen Seiten (21 × 5 Sprachen). */
     public function testOhneRestaurantsGenauDieFestenSeiten(): void
     {
         static::getContainer()->get(EntityManagerInterface::class)->getConnection()->executeStatement('DELETE FROM restaurant');
 
         $urls = $this->dokument($this->erzeuger()->xml())->getElementsByTagNameNS(self::NS_SITEMAP, 'url');
-        self::assertSame(20 * 5, $urls->length);
+        self::assertSame(21 * 5, $urls->length);
     }
 
     /**
@@ -190,7 +192,7 @@ final class SitemapGeneratorTest extends KernelTestCase
         $waehrendDesAusfalls = $this->erzeuger($kaputt)->xml();
 
         self::assertSame($vollstaendig, $waehrendDesAusfalls);
-        self::assertSame(155, $this->dokument($waehrendDesAusfalls)->getElementsByTagNameNS(self::NS_SITEMAP, 'url')->length);
+        self::assertSame(160, $this->dokument($waehrendDesAusfalls)->getElementsByTagNameNS(self::NS_SITEMAP, 'url')->length);
     }
 
     /** AK-08, AK-09 · Einmal erzeugt, wird die Fassung wiederverwendet, bis sie abläuft. */

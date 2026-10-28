@@ -60,10 +60,12 @@ Search Console.
 
 ### Die festen Seiten
 
-Diese 20 Seiten stehen immer in der Sitemap, jede in fünf Sprachen (`lb`, `de`, `fr`,
-`en`, `pt`) — zusammen **100 Einträge**. *(Bis 2026-10-14 21 Seiten: die Vereinsseite
+Diese 21 Seiten stehen immer in der Sitemap, jede in fünf Sprachen (`lb`, `de`, `fr`,
+`en`, `pt`) — zusammen **105 Einträge**. *(Bis 2026-10-14 21 Seiten: die Vereinsseite
 `/{s}/organisationen/vereine` ist mit dem Beirat entfallen und leitet mit 301 auf
-`…/unternehmen`.)*
+`…/unternehmen`. Vom 2026-10-14 bis 2026-10-28 20 Seiten; seither kommt mit Feature 15 die
+Übersicht der Sponsoren hinzu (Nr. 21). Die Seiten der einzelnen Sponsoren werden — wie die
+Restaurantseiten — aus dem Bestand abgeleitet und stehen nicht in dieser Tabelle.)*
 
 | # | Seite | Adresse (mit `{s}` für das Sprachsegment) |
 |---|---|---|
@@ -87,6 +89,7 @@ Diese 20 Seiten stehen immer in der Sitemap, jede in fünf Sprachen (`lb`, `de`,
 | 18 | Unternehmen und Vereine | `/{s}/organisationen/unternehmen` |
 | 19 | App-Warteliste | `/{s}/app` |
 | 20 | Community-Ideen · Übersicht | `/{s}/community/ideen` |
+| 21 | Sponsoren · Übersicht (seit Feature 15) | `/{s}/sponsoren` |
 
 ⚠ Kommt eine öffentliche Seite hinzu oder fällt eine weg, ändert sich diese Tabelle und
 mit ihr die Zahl in AK-02 und AK-10. Wer eine Seite anlegt, ohne hier nachzuziehen,

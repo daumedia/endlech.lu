@@ -1,0 +1,75 @@
+# Nachprüfung 2026-10-28 · Reproduktionen BF-196, BF-197 scharf geschaltet
+# QA15_REPRO=1 php bin/phpunit tests/Unit/Sponsor/Qa15NachpruefungTest.php
+
+PHPUnit 12.5.4 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.5.12
+Configuration: /Users/michaelferreira/DEV/SaaS/endlech/phpunit.dist.xml
+
+....................FFFFFFFFE                                     29 / 29 (100%)
+
+Time: 00:00.010, Memory: 16.00 MB
+
+There was 1 error:
+
+1) App\Tests\Unit\Sponsor\Qa15NachpruefungTest::testBf197NullWirdMitSponsorUndAngabeGemeldet
+TypeError: trim(): Argument #1 ($string) must be of type string, null given
+
+/Users/michaelferreira/DEV/SaaS/endlech/src/Sponsor/SponsorRules.php:179
+/Users/michaelferreira/DEV/SaaS/endlech/src/Sponsor/SponsorRules.php:90
+/Users/michaelferreira/DEV/SaaS/endlech/tests/Unit/Sponsor/Qa15NachpruefungTest.php:160
+
+--
+
+There were 8 failures:
+
+1) App\Tests\Unit\Sponsor\Qa15NachpruefungTest::testBf196AusgeschriebenerEurobetragFaelltAuf@lb · 500 Euro with data ('lb', 'Mir bezuelen 500 Euro am Joer.')
+„Mir bezuelen 500 Euro am Joer.“ (lb) passiert den Prüflauf.
+Failed asserting that '' [ASCII](length: 0) contains "`acme`" [ASCII](length: 6).
+
+/Users/michaelferreira/DEV/SaaS/endlech/tests/Unit/Sponsor/Qa15NachpruefungTest.php:145
+
+2) App\Tests\Unit\Sponsor\Qa15NachpruefungTest::testBf196AusgeschriebenerEurobetragFaelltAuf@de · 500 Euro with data ('de', 'Wir zahlen 500 Euro im Jahr.')
+„Wir zahlen 500 Euro im Jahr.“ (de) passiert den Prüflauf.
+Failed asserting that '' [ASCII](length: 0) contains "`acme`" [ASCII](length: 6).
+
+/Users/michaelferreira/DEV/SaaS/endlech/tests/Unit/Sponsor/Qa15NachpruefungTest.php:145
+
+3) App\Tests\Unit\Sponsor\Qa15NachpruefungTest::testBf196AusgeschriebenerEurobetragFaelltAuf@fr · 500 euros with data ('fr', 'Nous versons 500 euros par an.')
+„Nous versons 500 euros par an.“ (fr) passiert den Prüflauf.
+Failed asserting that '' [ASCII](length: 0) contains "`acme`" [ASCII](length: 6).
+
+/Users/michaelferreira/DEV/SaaS/endlech/tests/Unit/Sponsor/Qa15NachpruefungTest.php:145
+
+4) App\Tests\Unit\Sponsor\Qa15NachpruefungTest::testBf196AusgeschriebenerEurobetragFaelltAuf@en · 500 euros with data ('en', 'We pay 500 euros a year.')
+„We pay 500 euros a year.“ (en) passiert den Prüflauf.
+Failed asserting that '' [ASCII](length: 0) contains "`acme`" [ASCII](length: 6).
+
+/Users/michaelferreira/DEV/SaaS/endlech/tests/Unit/Sponsor/Qa15NachpruefungTest.php:145
+
+5) App\Tests\Unit\Sponsor\Qa15NachpruefungTest::testBf196AusgeschriebenerEurobetragFaelltAuf@pt · 500 euros with data ('pt', 'Pagamos 500 euros por ano.')
+„Pagamos 500 euros por ano.“ (pt) passiert den Prüflauf.
+Failed asserting that '' [ASCII](length: 0) contains "`acme`" [ASCII](length: 6).
+
+/Users/michaelferreira/DEV/SaaS/endlech/tests/Unit/Sponsor/Qa15NachpruefungTest.php:145
+
+6) App\Tests\Unit\Sponsor\Qa15NachpruefungTest::testBf196AusgeschriebenerEurobetragFaelltAuf@de · 50EUR with data ('de', 'Ab 50EUR im Monat.')
+„Ab 50EUR im Monat.“ (de) passiert den Prüflauf.
+Failed asserting that '' [ASCII](length: 0) contains "`acme`" [ASCII](length: 6).
+
+/Users/michaelferreira/DEV/SaaS/endlech/tests/Unit/Sponsor/Qa15NachpruefungTest.php:145
+
+7) App\Tests\Unit\Sponsor\Qa15NachpruefungTest::testBf196AusgeschriebenerEurobetragFaelltAuf@de · 50 EURO with data ('de', 'Ab 50 EURO im Monat.')
+„Ab 50 EURO im Monat.“ (de) passiert den Prüflauf.
+Failed asserting that '' [ASCII](length: 0) contains "`acme`" [ASCII](length: 6).
+
+/Users/michaelferreira/DEV/SaaS/endlech/tests/Unit/Sponsor/Qa15NachpruefungTest.php:145
+
+8) App\Tests\Unit\Sponsor\Qa15NachpruefungTest::testBf196AusgeschriebenerEurobetragFaelltAuf@en · 50 eur with data ('en', 'From 50 eur a month.')
+„From 50 eur a month.“ (en) passiert den Prüflauf.
+Failed asserting that '' [ASCII](length: 0) contains "`acme`" [ASCII](length: 6).
+
+/Users/michaelferreira/DEV/SaaS/endlech/tests/Unit/Sponsor/Qa15NachpruefungTest.php:145
+
+ERRORS!
+Tests: 29, Assertions: 61, Errors: 1, Failures: 8.

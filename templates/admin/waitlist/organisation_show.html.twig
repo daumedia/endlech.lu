@@ -52,11 +52,19 @@
                 {% else %}
                     {# Unternehmen und Vereine: Sponsoring (lila) und Zusammenarbeit
                        ohne Geld (petrol) – beide Listen gehören zum selben Typ. #}
+                    {# Feature 15: Laufzeit des Pakets (lila); Formate aus der Zeit vor dem Paket
+                       bleiben lesbar, als frühere Angabe gekennzeichnet (AK-39). #}
                     {% if entry.sponsorshipInterests|length or entry.collaborationInterests|length %}
                         <ul class="flex flex-wrap gap-2">
-                            {% for interest in entry.sponsorshipInterests %}
+                            {% if entry.sponsorshipTerm %}
                                 <li class="bg-purple-100 text-purple-800 text-xs font-semibold px-2.5 py-1 rounded-full">
+                                    {{ entry.sponsorshipTerm.transKey|trans }}
+                                </li>
+                            {% endif %}
+                            {% for interest in entry.legacySponsorshipInterests %}
+                                <li class="bg-gray-100 text-gray-800 text-xs font-semibold px-2.5 py-1 rounded-full">
                                     {{ ('organisation.sponsorship.' ~ interest)|trans }}
+                                    <span class="font-normal">· {{ 'admin.waitlist.legacy_sponsorship'|trans }}</span>
                                 </li>
                             {% endfor %}
                             {% for interest in entry.collaborationInterests %}

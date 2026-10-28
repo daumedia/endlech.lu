@@ -1,0 +1,41 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Sponsor;
+
+/** QA-PROBE Feature 15 — wird nach der Prüfung durch die leere Fassung ersetzt. */
+final readonly class SponsorRegistry implements SponsorSource
+{
+    public const string LOGO_DIRECTORY = 'images/sponsors';
+
+    public function entries(): array
+    {
+        $e = [
+            new Sponsor(
+                slug: 'alpha-sarl',
+                name: 'Alpha S.à r.l.',
+                logo: 'alpha.png',
+                periods: [new SponsorPeriod('2026-01-01')],
+                website: 'https://example.com/alpha?x=1',
+                quote: 'Parce que l’accessibilité nous concerne tous — <b>vraiment</b> & sans exception.',
+                quoteLocale: 'fr',
+            ),
+            new Sponsor('emil-fils', 'Ëmil & Fils S.à r.l.', 'emil.webp', [new SponsorPeriod('2026-01-01')]),
+            new Sponsor('pause-wiederkehr', 'Pause & Wiederkehr SA', 'pause.png', [new SponsorPeriod('2024-01-01', '2024-12-31'), new SponsorPeriod('2026-06-15')], website: 'https://example.org/'),
+            new Sponsor('ehemals-gmbh', 'Ehemals GmbH', 'ehemals.png', [new SponsorPeriod('2025-01-01', '2026-10-27')], website: 'https://ehemals.example/'),
+            new Sponsor('frueh-sa', 'Früh SA', 'frueh.png', [new SponsorPeriod('2024-03-01', '2025-06-30')]),
+            new Sponsor('morgen-ag', 'Morgen AG', 'morgen.png', [new SponsorPeriod('2026-10-29')]),
+        ];
+        foreach (range(3, 13) as $i) {
+            $e[] = new Sponsor(\sprintf('s%02d', $i), \sprintf('Sponsor %02d', $i), \sprintf('s%02d.png', $i), [new SponsorPeriod(\sprintf('2026-%02d-01', $i - 2))]);
+        }
+
+        return $e;
+    }
+
+    public function removedSlugs(): array
+    {
+        return ['entfernt-sa'];
+    }
+}

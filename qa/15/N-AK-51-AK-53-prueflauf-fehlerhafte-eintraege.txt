@@ -1,0 +1,63 @@
+# Nachprüfung 2026-10-28 · Prüflauf über die Produktionsquelle mit absichtlich falschen Einträgen (AK-51, AK-53)
+# Befehl: php bin/phpunit tests/Unit/Sponsor/SponsorRegistryTest.php --filter testAk27
+# Lauf 1: elf falsche Einträge f01–f11 (f05 '500 Euro' lb, f06 '500 euros' fr, f07 '50EUR' de bleiben UNGEMELDET)
+
+PHPUnit 12.5.4 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.5.12
+Configuration: /Users/michaelferreira/DEV/SaaS/endlech/phpunit.dist.xml
+
+F                                                                   1 / 1 (100%)
+
+Time: 00:00.007, Memory: 18.00 MB
+
+There was 1 failure:
+
+1) App\Tests\Unit\Sponsor\SponsorRegistryTest::testAk27JederEintragDerProduktionsquelleIstGueltig
+Ungültige Sponsoreneinträge:
+Sponsor `f01-ohne-pt`: Kurzbeschreibung fehlt in der Sprache `pt` — alle Sprachen der Website oder keine (AK-51).
+Sponsor `f02-fr-leer`: Kurzbeschreibung in `fr` ist leer.
+Sponsor `f03-de-501`: Kurzbeschreibung in `de` hat 501 Zeichen, erlaubt 500 (AK-51).
+Sponsor `f04-en-euro-zeichen`: Kurzbeschreibung in `en` nennt einen Eurobetrag (AK-51, AK-14).
+Sponsor `f08-insta-http`: Profil Instagram muss eine https://-Adresse auf instagram.com sein (AK-53).
+Sponsor `f09-insta-fremd`: Profil Instagram muss eine https://-Adresse auf instagram.com sein (AK-53).
+Sponsor `f10-facebook-auf-linkedin`: Profil Facebook muss eine https://-Adresse auf facebook.com sein (AK-53).
+Sponsor `f11-tiktok`: Profil `tiktok` ist keine erlaubte Plattform (Instagram, Facebook, LinkedIn).
+Failed asserting that two arrays are identical.
+--- Expected
++++ Actual
+@@ @@
+-Array &0 []
++Array &0 [
++    0 => 'Sponsor `f01-ohne-pt`: Kurzbeschreibung fehlt in der Sprache `pt` — alle Sprachen der Website oder keine (AK-51).',
++    1 => 'Sponsor `f02-fr-leer`: Kurzbeschreibung in `fr` ist leer.',
++    2 => 'Sponsor `f03-de-501`: Kurzbeschreibung in `de` hat 501 Zeichen, erlaubt 500 (AK-51).',
++    3 => 'Sponsor `f04-en-euro-zeichen`: Kurzbeschreibung in `en` nennt einen Eurobetrag (AK-51, AK-14).',
++    4 => 'Sponsor `f08-insta-http`: Profil Instagram muss eine https://-Adresse auf instagram.com sein (AK-53).',
++    5 => 'Sponsor `f09-insta-fremd`: Profil Instagram muss eine https://-Adresse auf instagram.com sein (AK-53).',
++    6 => 'Sponsor `f10-facebook-auf-linkedin`: Profil Facebook muss eine https://-Adresse auf facebook.com sein (AK-53).',
++    7 => 'Sponsor `f11-tiktok`: Profil `tiktok` ist keine erlaubte Plattform (Instagram, Facebook, LinkedIn).',
++]
+
+/Users/michaelferreira/DEV/SaaS/endlech/tests/Unit/Sponsor/SponsorRegistryTest.php:34
+/Users/michaelferreira/DEV/SaaS/endlech/vendor/phpunit/phpunit/phpunit:104
+
+
+# Lauf 2: f12 description 'pt' => null, f13 profiles 'instagram' => null, f14 ohne pt
+# Ergebnis: TypeError statt Meldung; f14 wird gar nicht mehr gemeldet
+
+E                                                                   1 / 1 (100%)
+
+Time: 00:00.005, Memory: 18.00 MB
+
+There was 1 error:
+
+1) App\Tests\Unit\Sponsor\SponsorRegistryTest::testAk27JederEintragDerProduktionsquelleIstGueltig
+TypeError: trim(): Argument #1 ($string) must be of type string, null given
+
+/Users/michaelferreira/DEV/SaaS/endlech/src/Sponsor/SponsorRules.php:179
+/Users/michaelferreira/DEV/SaaS/endlech/src/Sponsor/SponsorRules.php:90
+/Users/michaelferreira/DEV/SaaS/endlech/tests/Unit/Sponsor/SponsorRegistryTest.php:26
+/Users/michaelferreira/DEV/SaaS/endlech/vendor/phpunit/phpunit/phpunit:104
+
+ERRORS!

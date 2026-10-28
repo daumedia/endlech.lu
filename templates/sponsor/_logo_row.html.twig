@@ -1,0 +1,13 @@
+{# Eine Reihe Logokacheln (Feature 15) — im Footer und auf der Unternehmensseite
+   dieselbe Auswahl in derselben Reihenfolge (AK-31): die ersten zwölf aktiven aus
+   `sponsors_footer()`.
+
+   ⚠ Die Liste steht direkt im Element, das die Überschrift trägt — `FooterStructureTest`
+   verlangt für jede Linkliste im Footer eine Überschrift im selben Elternelement.
+
+   Parameter: sponsors, class (zusätzliche Klassen der Liste). #}
+<ul class="flex flex-wrap gap-3 {{ class|default('') }}">
+    {%- for sponsor in sponsors %}
+        <li>{{ include('sponsor/_logo.html.twig', {sponsor: sponsor}) }}</li>
+    {%- endfor %}
+</ul>

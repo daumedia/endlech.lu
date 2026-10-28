@@ -42,6 +42,9 @@ facts:
     license_data_value: "CC BY 4.0"
     languages: "Langues"
     languages_value: "Luxembourgeois, allemand, français, anglais, portugais"
+    sponsors: "Sponsors"
+    sponsors_count: "{0} Aucun actuellement|{1} Un sponsor actif|]1,Inf[ %count% sponsors actifs"
+    sponsors_link: "Tous les sponsors"
     contact: "Contact presse"
 
 material:

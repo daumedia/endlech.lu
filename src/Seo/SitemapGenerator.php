@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Seo;
 
 use App\Repository\RestaurantRepository;
+use App\Sponsor\Sponsor;
+use App\Sponsor\SponsorDirectory;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Contracts\Cache\CacheInterface;
 use Twig\Environment;
@@ -12,8 +14,9 @@ use Twig\Environment;
 /**
  * Erzeugt die Sitemap unter `/sitemap.xml` (Feature 10).
  *
- * Einträge: die festen Seiten aus dem Seitenverzeichnis und eine Detailseite je Restaurant,
- * jede in allen vier Sprachen — (21 + n) × 4 (AK-02). Jeder Eintrag nennt seine vier
+ * Einträge: die festen Seiten aus dem Seitenverzeichnis, eine Detailseite je Restaurant und
+ * (seit Feature 15) eine Seite je sichtbarem Sponsor, jede in allen fünf Sprachen —
+ * (21 + n + s) × 5 (AK-02). Jeder Eintrag nennt seine vier
  * Sprachfassungen und die Vorgabe (AK-05). Kein Änderungsdatum, keine Priorität, keine
  * Häufigkeit (AK-07): Restaurants führen kein Änderungsdatum, ein erfundenes wäre falsch, und
  * die beiden anderen wertet Google nicht aus.
@@ -36,6 +39,7 @@ final readonly class SitemapGenerator
         private SeoRegistry $registry,
         private SeoUrlBuilder $urls,
         private RestaurantRepository $restaurants,
+        private SponsorDirectory $sponsors,
         private Environment $twig,
         #[Autowire(service: 'cache.sitemap')]
         private CacheInterface $cache,
@@ -55,6 +59,13 @@ final readonly class SitemapGenerator
             ...$this->registry->fixedPages(),
             // ⚠ Diese Zeile darf werfen. Siehe Klassenkommentar.
             ...$this->registry->restaurantPages($this->restaurants->findAllIdsAscending()),
+            // Feature 15 · AK-41: aktive und ehemalige Sponsoren, nie künftige oder entfernte.
+            // Gespeichert wird die Sitemap höchstens 50 Minuten — ein Sponsor, dessen Zeitraum
+            // um Mitternacht beginnt, steht damit binnen einer Stunde drin (AK-23).
+            ...$this->registry->sponsorPages(array_map(
+                static fn (Sponsor $s): string => $s->slug,
+                $this->sponsors->visible(),
+            )),
         ];
 
         $eintraege = [];

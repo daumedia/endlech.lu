@@ -328,6 +328,19 @@ Reichweite — das ist seine Handlung, nicht die der Plattform.
 
 ---
 
+### Nennung von Sponsoren (Feature 15, seit 2026-10-28)
+
+| | |
+|---|---|
+| **Zweck** | Sponsoren öffentlich nennen — im Footer jeder Seite, auf `/sponsoren` und einer eigenen Seite je Sponsor, im Faktenblatt der Presseseite |
+| **Daten** | Name des Unternehmens oder Vereins, Logo, Zeiträume, optional Website, ein kurzes Zitat (gezeichnet mit dem Firmennamen, **nie** mit einer Person), seit 2026-10-28 eine Kurzbeschreibung in fünf Sprachen (ohne Personennamen, VB-01) und Links auf Profile bei Instagram, Facebook, LinkedIn |
+| **Personenbezug** | Nur mittelbar: Der Firmenname eines Einzelunternehmens ist oft ein Personenname. Kontaktpersonen erscheinen nicht |
+| **Rechtsgrundlage** | Vertrag (Art. 6 Abs. 1 lit. b DSGVO) — die Vereinbarung je Sponsor regelt Logo-Nutzung, Zitat im Wortlaut und Zeitraum (VB-01 in `features/15-sponsoren/spec.md`) |
+| **Speicherort** | Im **Quelltext** (`App\Sponsor\SponsorRegistry`, Logos unter `assets/images/sponsors/`), keine Datenbank |
+| **Löschung** | Nach Ende des Sponsorings bleibt die Nennung als „ehemals“. **Auf Wunsch binnen 30 Tagen vollständig entfernt** (15/AK-43): Eintrag und Logo gelöscht, die Adresse leitet auf `/sponsoren` |
+| ⚠ **Grenze** | Das Repository ist öffentlich. Ein entfernter Eintrag bleibt im **Git-Verlauf** auffindbar; der Sponsor stimmt dem in der Vereinbarung zu (15/OF-01, entschieden 2026-10-28) |
+| **Weitergabe** | Keine. Die Links zur Website und zu den Profilen des Sponsors geben dem Ziel höchstens den Ursprung `endlech.lu` weiter (`Referrer-Policy`); gezählt werden nur Seitenaufrufe (Feature 11), keine Klicks. Von Instagram, Facebook und LinkedIn wird nichts eingebettet oder geladen — was die Plattform nach einem Klick erfasst, liegt außerhalb von Endlech.lu |
+
 ### Hostinger (Hosting, seit 2026-09-02)
 
 ⚠ **Der Auftragsverarbeiter ist Hostinger, nicht Coolify.** Coolify ist *selbst

@@ -6,7 +6,7 @@ use App\Entity\OrganisationWaitlistEntry;
 use App\Enum\CollaborationInterest;
 use App\Enum\OrganisationTimeframe;
 use App\Enum\OrganisationType;
-use App\Enum\SponsorshipInterest;
+use App\Enum\SponsorshipTerm;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -187,6 +187,16 @@ class OrganisationWaitlistType extends AbstractType
             $data = $event->getData();
             $type = \is_array($data) ? OrganisationType::tryFrom((string) ($data['type'] ?? '')) : null;
 
+            // Feature 15 · AK-37/AK-38: Radios nehmen in Symfony auch eine Liste an und
+            // behalten still einen der Werte. Zwei Laufzeiten auf einmal sind aber keine
+            // Antwort, sondern ein manipulierter Aufruf — er soll scheitern (422) wie jedes
+            // untergeschobene Feld, statt still gespeichert zu werden. Der Ersatzwert ist
+            // keine gültige Wahl und lässt die Auswahlprüfung des Feldes fehlschlagen.
+            if (\is_array($data) && \is_array($data['sponsorshipTerm'] ?? null)) {
+                $data['sponsorshipTerm'] = '__mehrere__';
+                $event->setData($data);
+            }
+
             $this->addTypeSpecificFields($event->getForm(), $type);
         });
     }
@@ -221,20 +231,29 @@ class OrganisationWaitlistType extends AbstractType
 
         if (OrganisationType::COMPANY === $type) {
             // Unternehmen und Vereine teilen sich einen Typ und damit beide
-            // Listen: Sponsoring und Zusammenarbeit ohne Geld. Bis 2026-10-14
+            // Fragen: Sponsoring und Zusammenarbeit ohne Geld. Bis 2026-10-14
             // trug ein eigener Vereinstyp die zweite Liste (siehe OrganisationType).
             //
-            // Choices sind bewusst reine Strings statt Enum-Cases: Die Entity
+            // Seit Feature 15 (2026-10-28) gibt es EIN Sponsoring-Paket: Gefragt
+            // wird nur noch die Laufzeit, als zwei Radios ohne dritte Antwort
+            // (AK-37, Entscheidung #8). Leer bleiben darf die Frage — dann geht es
+            // nur um Zusammenarbeit ohne Geld. Die Entity legt die Laufzeit im
+            // bisherigen JSON-Feld ab (`setSponsorshipTerm()`); die sechs Häkchen
+            // der früheren Formate gibt es nicht mehr.
+            //
+            // Die Choices der Zusammenarbeit bleiben reine Strings: Die Entity
             // speichert ein JSON-Array aus Strings, so passen Model- und
-            // Choice-Werte ohne Transformer zusammen. Der Array-Schlüssel ist
-            // der Übersetzungsschlüssel und wird als Label übersetzt.
+            // Choice-Werte ohne Transformer zusammen.
             $form
-                ->add('sponsorshipInterests', ChoiceType::class, [
-                    'label' => 'organisation.form.sponsorship_interests',
+                ->add('sponsorshipTerm', ChoiceType::class, [
+                    'label' => 'organisation.form.sponsorship_term',
                     'required' => false,
-                    'multiple' => true,
+                    'multiple' => false,
                     'expanded' => true,
-                    'choices' => self::enumChoices(SponsorshipInterest::cases()),
+                    'placeholder' => false,
+                    'choices' => SponsorshipTerm::cases(),
+                    'choice_value' => static fn (?SponsorshipTerm $t): ?string => $t?->value,
+                    'choice_label' => static fn (SponsorshipTerm $t): string => $t->transKey(),
                     'error_bubbling' => false,
                 ])
                 ->add('collaborationInterests', ChoiceType::class, [
@@ -251,7 +270,7 @@ class OrganisationWaitlistType extends AbstractType
     /**
      * Baut aus Enum-Cases eine Choice-Liste [Übersetzungsschlüssel => Wert].
      *
-     * @param array<SponsorshipInterest|CollaborationInterest> $cases
+     * @param array<CollaborationInterest> $cases
      *
      * @return array<string, string>
      */

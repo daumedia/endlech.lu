@@ -1,0 +1,104 @@
+# Nachprüfung 2026-10-28 · Abschrift der vorübergehenden Probe-Einträge in SponsorRegistry::entries()
+# (zusätzlich zum unveränderten lokalen Beispiel Fondatioun Wonschstär; Logos qa15b-*.png/.webp = Kopien aus tests/Fixtures/Sponsor/logos/)
+# Danach zurückgesetzt: SponsorRegistry.php SHA-256 1dfee822687cf9bf37751396b6371e8ff9e32f7bea2c90258d2db59e65fbe4bd (byte-gleich zum Ausgangszustand)
+
+            // QA15B-PROBE (Nachprüfung 2026-10-28) — wird vollständig zurückgesetzt.
+            new Sponsor(
+                slug: 'emil-fils',
+                name: 'Ëmil & Fils "Q" S.à r.l.',
+                logo: 'qa15b-breit.webp',
+                periods: [new SponsorPeriod('2026-01-01')],
+                website: 'https://example.com/emil?x=1',
+                quote: 'Parce que l’accessibilité nous concerne tous.',
+                quoteLocale: 'fr',
+                description: [
+                    'lb' => 'LB-EMIL Éischt Zeil <script>alert("lb")</script> <b>fett</b> &amp; „zitéiert“ \'eenzel\' "duebel" {{ 7*7 }} %name%
+Zweet Zeil
+
+Drëtt Absaz',
+                    'de' => 'DE-EMIL Erste Zeile <script>alert("de")</script> <b>fett</b> &amp; „zitiert“ \'einfach\' "doppelt" {{ 7*7 }} %name%
+Zweite Zeile
+
+Dritter Absatz',
+                    'fr' => 'FR-EMIL Première ligne <script>alert("fr")</script> <b>gras</b> &amp; « cité » l’accès \'simple\' "double" {{ 7*7 }} %name%
+Deuxième ligne
+
+Troisième paragraphe',
+                    'en' => 'EN-EMIL First line <script>alert("en")</script> <b>bold</b> &amp; “quoted” \'single\' "double" {{ 7*7 }} %name%
+Second line
+
+Third paragraph',
+                    'pt' => 'PT-EMIL Primeira linha <script>alert("pt")</script> <b>negrito</b> &amp; «citado» \'simples\' "duplo" {{ 7*7 }} %name%
+Segunda linha
+
+Terceiro parágrafo',
+                ],
+                profiles: [
+                    'linkedin' => 'https://lu.linkedin.com/company/emil',
+                    'instagram' => 'https://www.instagram.com/emil"onmouseover="alert(1)',
+                    'facebook' => 'https://m.facebook.com/emil',
+                ],
+            ),
+            new Sponsor(
+                slug: 'nur-profile',
+                name: 'Nur Profil SA',
+                logo: 'qa15b-quadrat.png',
+                periods: [new SponsorPeriod('2026-02-01')],
+                profiles: ['linkedin' => 'https://www.linkedin.com/company/nur-profil'],
+            ),
+            new Sponsor(
+                slug: 'ohne-alles',
+                name: 'Ohne Alles ASBL',
+                logo: 'qa15b-acme.png',
+                periods: [new SponsorPeriod('2026-03-01')],
+            ),
+            new Sponsor(
+                slug: 'grenze',
+                name: 'Grenze GmbH',
+                logo: 'qa15b-acme.png',
+                periods: [new SponsorPeriod('2026-04-01')],
+                description: [
+                    'lb' => 'LB-GRENZE-äääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääZ',
+                    'de' => 'DE-GRENZE-äääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääZ',
+                    'fr' => 'FR-GRENZE-äääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääZ',
+                    'en' => 'EN-GRENZE-äääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääZ',
+                    'pt' => 'PT-GRENZE-äääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääZ',
+                ],
+            ),
+            new Sponsor(
+                slug: 'ehemals-profil',
+                name: 'Ehemals Profil AG',
+                logo: 'qa15b-quadrat.png',
+                periods: [new SponsorPeriod('2025-01-01', '2026-09-30')],
+                website: 'https://example.com/ehemals',
+                quote: 'Nous étions là.',
+                quoteLocale: 'fr',
+                description: [
+                    'lb' => 'LB-EHEMALS Kurzbeschreibung des ehemaligen Sponsors.',
+                    'de' => 'DE-EHEMALS Kurzbeschreibung des ehemaligen Sponsors.',
+                    'fr' => 'FR-EHEMALS Kurzbeschreibung des ehemaligen Sponsors.',
+                    'en' => 'EN-EHEMALS Kurzbeschreibung des ehemaligen Sponsors.',
+                    'pt' => 'PT-EHEMALS Kurzbeschreibung des ehemaligen Sponsors.',
+                ],
+                profiles: [
+                    'instagram' => 'https://www.instagram.com/ehemals/',
+                    'facebook' => 'https://www.facebook.com/ehemals',
+                    'linkedin' => 'https://www.linkedin.com/company/ehemals',
+                ],
+            ),
+            new Sponsor(
+                slug: 'kuenftig',
+                name: 'Künftig SA',
+                logo: 'qa15b-acme.png',
+                periods: [new SponsorPeriod('2026-11-15')],
+                website: 'https://example.com/kuenftig',
+                description: [
+                    'lb' => 'LB-KUENFTIG nicht zu sehen.',
+                    'de' => 'DE-KUENFTIG nicht zu sehen.',
+                    'fr' => 'FR-KUENFTIG nicht zu sehen.',
+                    'en' => 'EN-KUENFTIG nicht zu sehen.',
+                    'pt' => 'PT-KUENFTIG nicht zu sehen.',
+                ],
+                profiles: ['instagram' => 'https://www.instagram.com/kuenftig/'],
+            ),
+        ];

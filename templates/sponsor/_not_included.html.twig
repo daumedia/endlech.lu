@@ -1,0 +1,25 @@
+{# „Was ein Sponsor dafür nicht bekommt" (Feature 15, AK-11, AK-16).
+
+   Auf der Übersicht allgemein, auf jeder Sponsorenseite mit dem Namen. Dieselben vier
+   Punkte an beiden Stellen — das Versprechen soll für jeden Sponsor einzeln nachlesbar
+   sein, nicht nur einmal im Kleingedruckten stehen.
+
+   Parameter: name (optional), heading_level (Vorgabe 'h2'). #}
+{%- set _hl = heading_level|default('h2') -%}
+<div class="rounded-xl border-2 border-purple-700 bg-purple-50 p-5">
+    <{{ _hl }} class="text-lg font-bold text-purple-950 mb-3">
+        {%- if name is defined and name -%}
+            {{ 'sponsor.not_included.title_named'|trans({'%name%': name}) }}
+        {%- else -%}
+            {{ 'sponsor.not_included.title'|trans }}
+        {%- endif -%}
+    </{{ _hl }}>
+    <ul class="space-y-2">
+        {%- for i in 1..4 %}
+            <li class="flex items-start gap-2 text-purple-950">
+                <span aria-hidden="true">✕</span>
+                <span>{{ ('sponsor.not_included.point_' ~ i)|trans }}</span>
+            </li>
+        {%- endfor %}
+    </ul>
+</div>

@@ -42,6 +42,9 @@ facts:
     license_data_value: "CC BY 4.0"
     languages: "Sproochen"
     languages_value: "Lëtzebuergesch, Däitsch, Franséisch, Englesch, Portugisesch"
+    sponsors: "Sponsoren"
+    sponsors_count: "{0} De Moment keng|{1} Een aktive Sponsor|]1,Inf[ %count% aktiv Sponsoren"
+    sponsors_link: "All Sponsoren"
     contact: "Presskontakt"
 
 material:

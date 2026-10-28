@@ -33,6 +33,13 @@ final readonly class SeoRegistry
     public const string RESTAURANT_ROUTE = 'app_restaurant_show';
 
     /**
+     * Die Seite je Sponsor (Feature 15). Ihre Einträge kommen aus dem Sponsorenverzeichnis —
+     * aktive und ehemalige, nie künftige oder entfernte (AK-41). Abgeleitet wie die
+     * Restaurantseiten, damit ein neuer Sponsor ohne Eintrag hier in der Sitemap steht (AK-26).
+     */
+    public const string SPONSOR_ROUTE = 'app_sponsor_show';
+
+    /**
      * Wege, die Suchmaschinen nicht in Ergebnisse aufnehmen sollen (AK-15).
      *
      * ⚠ Sie stehen bewusst **nicht** in `public/robots.txt`. Eine Sperre dort verhinderte,
@@ -128,6 +135,9 @@ final readonly class SeoRegistry
             ),
             new IndexablePage('app_app_waitlist'),
             new IndexablePage('app_board_index'),
+            // Feature 15: die Übersicht der Sponsoren — auch ohne einen einzigen Sponsor eine
+            // Seite mit Inhalt (Paket, Regeln, „derzeit keine“, AK-13).
+            new IndexablePage('app_sponsor_index'),
         ];
     }
 
@@ -149,12 +159,39 @@ final readonly class SeoRegistry
     }
 
     /**
+     * Eine Seite je sichtbarem Sponsor (Feature 15).
+     *
+     * @param iterable<string> $slugs
+     *
+     * @return list<IndexablePage>
+     */
+    public function sponsorPages(iterable $slugs): array
+    {
+        $pages = [];
+        foreach ($slugs as $slug) {
+            $pages[] = new IndexablePage(self::SPONSOR_ROUTE, ['slug' => $slug]);
+        }
+
+        return $pages;
+    }
+
+    /**
+     * Angebotene Routen, deren Einträge aus einem Bestand abgeleitet werden statt fest zu stehen.
+     *
+     * @return list<string>
+     */
+    public function derivedRoutes(): array
+    {
+        return [self::RESTAURANT_ROUTE, self::SPONSOR_ROUTE];
+    }
+
+    /**
      * Wird eine Anfrage an diese Route Suchmaschinen angeboten? Maßgeblich für den
      * canonical-Verweis im Seitenkopf.
      */
     public function isIndexableRoute(string $route): bool
     {
-        if (self::RESTAURANT_ROUTE === $route) {
+        if (\in_array($route, $this->derivedRoutes(), true)) {
             return true;
         }
 

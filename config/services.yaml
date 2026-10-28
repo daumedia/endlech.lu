@@ -10,7 +10,7 @@ parameters:
 
     # Wird im Footer als `v{{ app_version }}` gerendert (twig.yaml → globals).
     # Bei jedem Release mitziehen – zusammen mit den Badges in CHANGELOG.md und README.md.
-    app.version: '2026.10.23'
+    app.version: '2026.10.28'
     # string:-Cast, damit ein leerer/fehlender Key zu '' (nicht null) wird – sonst
     # bricht PublicTransportService (string $apiKey) bei der Graceful-Degradation.
     app.mobiliteit_api_key: '%env(string:default::MOBILITEIT_API_KEY)%'
@@ -197,6 +197,17 @@ services:
     # die Adresse des zweiten VPS ins Protokoll — also den Standort der Überwachung.
     # Der cURL-Client bleibt, wie er gebaut und gemessen ist (ein Platz, Zeitlimit, Unterbrecher);
     # die Schlüsselbindung, für die er einmal gewählt wurde, ist am 2026-09-14 entfallen.
+    # Sponsoren (Feature 15). Die Einträge stehen im Quelltext (SponsorRegistry); die
+    # Schnittstelle erlaubt dem Testlauf, sie zu ersetzen — die echte Liste ist heute leer
+    # und ändert sich mit jedem Vertrag (Entscheidung #1 in features/15-sponsoren/design.md).
+    App\Sponsor\SponsorSource: '@App\Sponsor\SponsorRegistry'
+
+    # Eigene Uhr für Beginn und Ende der Sponsorings (Entscheidung #2). In Produktion die
+    # Systemuhr. ⚠ Bewusst NICHT die globale Uhr im Test ersetzen: Rate Limiter und Zeitpläne
+    # hängen an ihr, und ihre Prüfläufe rechneten dann mit einem erfundenen Datum.
+    app.sponsor_clock:
+        alias: clock
+
     app.usage.umami_client:
         class: Symfony\Component\HttpClient\CurlHttpClient
         autowire: false
@@ -204,6 +215,17 @@ services:
 
 when@test:
     services:
+        # Feature 15: verstellbare Uhr und austauschbare Quelle für die Prüfläufe. Das Datum
+        # liegt in der Zukunft, damit kein Prüflauf zufällig vom echten Kalender abhängt.
+        app.sponsor_clock:
+            class: Symfony\Component\Clock\MockClock
+            arguments: ['2027-06-15 10:00:00', 'Europe/Luxembourg']
+            public: true
+        App\Tests\Support\Sponsor\InMemorySponsorSource:
+            public: true
+        App\Sponsor\SponsorSource:
+            alias: App\Tests\Support\Sponsor\InMemorySponsorSource
+            public: true
         # Kein Test erreicht je eine echte Umami-Instanz. Die Prüfläufe setzen die Antworten
         # über MockHttpClient::setResponseFactory().
         app.usage.umami_client:

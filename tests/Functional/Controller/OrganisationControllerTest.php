@@ -4,6 +4,7 @@ namespace App\Tests\Functional\Controller;
 
 use App\Entity\OrganisationWaitlistEntry;
 use App\Enum\OrganisationType;
+use App\Enum\SponsorshipTerm;
 use App\Enum\WaitlistStatus;
 use App\Repository\OrganisationWaitlistEntryRepository;
 use App\Tests\AbstractWebTestCase;
@@ -220,19 +221,75 @@ final class OrganisationControllerTest extends AbstractWebTestCase
         self::assertEmailCount(1);
     }
 
-    public function testCompanySubmissionStoresSponsorshipInterests(): void
+    /** Feature 15 · AK-37: Seit dem Paket fragt das Formular nur noch die Laufzeit. */
+    public function testAk37CompanySubmissionStoresSponsorshipTerm(): void
     {
         $client = static::createClient();
         $this->rawSubmit($client, self::base('company'), [
-            'sponsorshipInterests' => ['inclusion_boxes', 'workshops'],
+            'sponsorshipTerm' => 'monthly',
         ]);
 
         self::assertResponseRedirects(self::LOCALE . '/organisationen');
 
         $entry = $this->latest($client);
         self::assertSame(OrganisationType::COMPANY, $entry?->getType());
-        self::assertSame(['inclusion_boxes', 'workshops'], $entry->getSponsorshipInterests());
+        self::assertSame(SponsorshipTerm::MONTHLY, $entry->getSponsorshipTerm());
+        self::assertSame(['monthly'], $entry->getSponsorshipInterests());
         self::assertNull($entry->getEstimatedVenues(), 'Ein Unternehmen darf keine Lokal-Zahl haben.');
+    }
+
+    /** Feature 15 · AK-37: Die Frage darf leer bleiben — dann geht es um Zusammenarbeit ohne Geld. */
+    public function testAk37OhneLaufzeitIstErlaubt(): void
+    {
+        $client = static::createClient();
+        $this->rawSubmit($client, self::base('company'), [
+            'collaborationInterests' => ['joint_communication'],
+        ]);
+
+        self::assertResponseRedirects(self::LOCALE . '/organisationen');
+        self::assertNull($this->latest($client)?->getSponsorshipTerm());
+        self::assertSame([], $this->latest($client)->getSponsorshipInterests());
+    }
+
+    /**
+     * Feature 15 · AK-38: Ein altes Format, als Laufzeit untergeschoben, wird abgewiesen —
+     * kein Eintrag, keine Mail.
+     */
+    public function testAk38AltesFormatAlsLaufzeitWirdAbgelehnt(): void
+    {
+        $client = static::createClient();
+        $this->rawSubmit($client, self::base('company'), [
+            'sponsorshipTerm' => 'inclusion_boxes',
+        ]);
+
+        self::assertResponseStatusCodeSame(422);
+        self::assertNull($this->latest($client));
+        self::assertEmailCount(0);
+    }
+
+    /** Feature 15 · AK-38: Das alte Feld gibt es nicht mehr; wer es mitschickt, bekommt 422. */
+    public function testAk38AltesFeldWirdAbgelehnt(): void
+    {
+        $client = static::createClient();
+        $this->rawSubmit($client, self::base('company'), [
+            'sponsorshipInterests' => ['inclusion_boxes'],
+        ]);
+
+        self::assertResponseStatusCodeSame(422);
+        self::assertNull($this->latest($client));
+        self::assertEmailCount(0);
+    }
+
+    /** Feature 15 · AK-37: höchstens eine Laufzeit — zwei Werte auf einmal sind keine Antwort. */
+    public function testAk37ZweiLaufzeitenWerdenAbgelehnt(): void
+    {
+        $client = static::createClient();
+        $this->rawSubmit($client, self::base('company'), [
+            'sponsorshipTerm' => ['monthly', 'yearly'],
+        ]);
+
+        self::assertResponseStatusCodeSame(422);
+        self::assertNull($this->latest($client));
     }
 
     /**
@@ -243,7 +300,7 @@ final class OrganisationControllerTest extends AbstractWebTestCase
     {
         $client = static::createClient();
         $this->rawSubmit($client, self::base('company'), [
-            'sponsorshipInterests' => ['employee_engagement'],
+            'sponsorshipTerm' => 'yearly',
             'collaborationInterests' => ['data_access', 'referrals'],
         ]);
 
@@ -251,7 +308,7 @@ final class OrganisationControllerTest extends AbstractWebTestCase
 
         $entry = $this->latest($client);
         self::assertSame(OrganisationType::COMPANY, $entry?->getType());
-        self::assertSame(['employee_engagement'], $entry->getSponsorshipInterests());
+        self::assertSame(SponsorshipTerm::YEARLY, $entry->getSponsorshipTerm());
         self::assertSame(['data_access', 'referrals'], $entry->getCollaborationInterests());
     }
 
@@ -288,7 +345,7 @@ final class OrganisationControllerTest extends AbstractWebTestCase
     {
         $client = static::createClient();
         $this->rawSubmit($client, self::base('commune'), [
-            'sponsorshipInterests' => ['inclusion_boxes'],
+            'sponsorshipTerm' => 'monthly',
         ]);
 
         self::assertResponseStatusCodeSame(422);
@@ -471,7 +528,7 @@ final class OrganisationControllerTest extends AbstractWebTestCase
         $client->request('GET', self::LOCALE.'/organisationen/gemeinden');
         $html = $client->getResponse()->getContent();
 
-        foreach (['communeName', 'estimatedVenues', 'timeframe', 'sponsorshipInterests', 'collaborationInterests'] as $feld) {
+        foreach (['communeName', 'estimatedVenues', 'timeframe', 'sponsorshipTerm', 'collaborationInterests'] as $feld) {
             self::assertStringContainsString('organisation_waitlist['.$feld.']', $html, "Feld {$feld} fehlt im Markup.");
         }
     }
