@@ -38,6 +38,9 @@ final class AccessibilityStructureTest extends AbstractWebTestCase
         // Feature 05 — die Presseseite. Ohne diese Zeile greift AK-54 aus
         // Feature 02 für sie nicht.
         yield 'presse' => ['/presse'];
+        // Feature 15 — die Übersicht der Sponsoren. Die Seite eines einzelnen Sponsors
+        // prüft SponsorAccessibilityTest (sie braucht Testsponsoren).
+        yield 'sponsoren' => ['/sponsoren'];
         yield 'login' => ['/login'];
         yield 'register' => ['/register'];
     }

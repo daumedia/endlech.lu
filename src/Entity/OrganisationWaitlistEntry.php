@@ -5,7 +5,7 @@ namespace App\Entity;
 use App\Enum\CollaborationInterest;
 use App\Enum\OrganisationTimeframe;
 use App\Enum\OrganisationType;
-use App\Enum\SponsorshipInterest;
+use App\Enum\SponsorshipTerm;
 use App\Repository\OrganisationWaitlistEntryRepository;
 use App\Waitlist\WaitlistEntryInterface;
 use App\Enum\WaitlistStatus;
@@ -123,10 +123,21 @@ class OrganisationWaitlistEntry implements WaitlistEntryInterface
     // Beide Listen gehören zum Typ `company`: Sponsoring und Zusammenarbeit ohne
     // Geld. Bis 2026-10-14 trug ein eigener Vereinstyp die zweite Liste.
 
-    /** @var string[] Werte aus App\Enum\SponsorshipInterest */
+    /**
+     * Seit Feature 15 (2026-10-28) höchstens EIN Wert aus `SponsorshipTerm`
+     * (`monthly` | `yearly`). Zeilen von vorher tragen Werte aus
+     * `SponsorshipInterest` und behalten sie — sie werden nicht erneut geprüft,
+     * weil die Verwaltung nur den Status ändert, nicht diese Angaben.
+     *
+     * ⚠ Der Spaltenname stammt aus der Zeit der Formate. Eine eigene Spalte hätte
+     * eine Migration und ein Fenster beim Ausrollen gekostet (Entscheidung #7).
+     *
+     * @var string[]
+     */
     #[ORM\Column(type: Types::JSON)]
     #[Assert\Count(max: 0, maxMessage: 'organisation_waitlist.company_only', groups: ['commune'])]
-    #[Assert\All([new Assert\Choice(callback: [SponsorshipInterest::class, 'values'], message: 'organisation_waitlist.invalid_choice')], groups: ['company'])]
+    #[Assert\Count(max: 1, maxMessage: 'organisation_waitlist.invalid_choice', groups: ['company'])]
+    #[Assert\All([new Assert\Choice(callback: [SponsorshipTerm::class, 'values'], message: 'organisation_waitlist.invalid_choice')], groups: ['company'])]
     private array $sponsorshipInterests = [];
 
     /** @var string[] Werte aus App\Enum\CollaborationInterest */
@@ -450,6 +461,45 @@ class OrganisationWaitlistEntry implements WaitlistEntryInterface
         $this->sponsorshipInterests = array_values($sponsorshipInterests);
 
         return $this;
+    }
+
+    /**
+     * Die gewählte Laufzeit des Sponsoring-Pakets (Feature 15, AK-37) — oder null,
+     * wenn es nur um Zusammenarbeit ohne Geld geht oder die Zeile aus der Zeit vor
+     * dem Paket stammt.
+     */
+    public function getSponsorshipTerm(): ?SponsorshipTerm
+    {
+        foreach ($this->sponsorshipInterests as $value) {
+            $term = SponsorshipTerm::tryFrom($value);
+            if (null !== $term) {
+                return $term;
+            }
+        }
+
+        return null;
+    }
+
+    public function setSponsorshipTerm(?SponsorshipTerm $term): static
+    {
+        $this->sponsorshipInterests = null === $term ? [] : [$term->value];
+
+        return $this;
+    }
+
+    /**
+     * Angaben aus der Zeit vor dem Paket (Werte aus `SponsorshipInterest`). Sie
+     * werden nicht umgeschrieben, sondern in der Verwaltung als „frühere Angabe“
+     * gezeigt (AK-39).
+     *
+     * @return string[]
+     */
+    public function getLegacySponsorshipInterests(): array
+    {
+        return array_values(array_filter(
+            $this->sponsorshipInterests,
+            static fn (string $value): bool => null === SponsorshipTerm::tryFrom($value),
+        ));
     }
 
     /** @return string[] */

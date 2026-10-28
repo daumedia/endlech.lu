@@ -1,0 +1,13 @@
+# Nachprüfung 2026-10-28 · volle Suite nach den neuen QA-Tests
+# php bin/phpunit (Registry im Ausgangszustand mit dem lokalen Beispiel Wonschstär)
+PHPUnit 12.5.4 by Sebastian Bergmann and contributors.
+Runtime:       PHP 8.5.12
+Configuration: /Users/michaelferreira/DEV/SaaS/endlech/phpunit.dist.xml
+Time: 00:51.155, Memory: 153.00 MB
+OK, but some tests were skipped!
+Tests: 1816, Assertions: 10398, Skipped: 28.
+
+# Vor den neuen QA-Tests (gleiche Arbeitskopie):
+Time: 00:52.625, Memory: 151.00 MB
+OK, but some tests were skipped!
+Tests: 1774, Assertions: 10268, Skipped: 19.

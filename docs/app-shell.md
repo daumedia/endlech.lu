@@ -242,6 +242,7 @@ lg:col-span-4` (volle Breite bis `lg`), jede Gruppe `lg:col-span-2`. Gemessen: D
 | Mitmachen | `footer.get_involved` | Restaurant vorschlagen (`footer.suggest_restaurant`) · Feedback & Ideen (Feature 06) · Für Restaurants · Für Organisationen |
 | Über Endlech | `nav.about` | Über uns (`nav.about_short`, BF-80) · Zahlen & Finanzen · Roadmap · Changelog (Feature 07) · Presse (Feature 05) |
 | Vergleiche | `footer.comparisons` | je ein Link pro Wettbewerber + `footer.all_comparisons` (Feature 03 AK-01) |
+| Sponsoren (Feature 15) | `sponsor.footer.title` (`section[aria-labelledby=footer-sponsoren]`) | eigene Zeile unter dem Raster: bis zu zwölf Logos auf weißer Kachel (je ein Link auf die Sponsorenseite, `alt` = Name), dann „Alle Sponsoren" (sobald es aktive oder ehemalige gibt) und „Sponsor werden →". Ohne jeden Sponsor nur der letzte Link |
 | Rechtsleiste | `nav[aria-label=footer.legal_nav]` | Impressum · Datenschutz (`app_impressum#datenschutz`) · Barrierefreiheit (Feature 02 AK-42) · Cookie-Einstellungen |
 
 ⚠ **Wer einen Link ergänzt, ordnet ihn einer Gruppe zu.** Keine Liste ohne Überschrift, keine

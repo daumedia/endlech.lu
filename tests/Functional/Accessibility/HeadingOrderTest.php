@@ -43,6 +43,8 @@ final class HeadingOrderTest extends AbstractWebTestCase
         yield 'Changelog' => ['/changelog'];
         yield 'Ideen-Board' => ['/community/ideen'];
         yield 'Impressum' => ['/legal'];
+        yield 'Sponsoren' => ['/sponsoren'];
+        yield 'Unternehmen und Vereine' => ['/organisationen/unternehmen'];
     }
 
     #[DataProvider('seiten')]

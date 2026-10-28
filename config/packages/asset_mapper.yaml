@@ -24,3 +24,12 @@ when@prod:
     framework:
         asset_mapper:
             missing_import_mode: warn
+
+# Feature 15: Testlogos der Sponsoren — nur im Testlauf und unter demselben logischen Pfad wie
+# die echten (`images/sponsors/…`). So rendern die Prüfläufe echte Dateien, ohne dass Testbilder
+# mit ausgeliefert werden.
+when@test:
+    framework:
+        asset_mapper:
+            paths:
+                'tests/Fixtures/Sponsor/logos/': 'images/sponsors'

@@ -4,6 +4,13 @@
     Seit 2026-10-14 eine gemeinsame Zielgruppe: Sponsoring und Zusammenarbeit
     ohne Geld. Die frühere Vereinsseite mit Beirat ist entfallen.
 
+    Seit Feature 15 (2026-10-28) gibt es EIN Sponsoring-Paket — monatlich oder
+    jährlich, Preis auf Anfrage. Es ersetzt die vier Formate (Inclusion-Boxen
+    finanzieren, Mitarbeitende als Testpersonen, eine Gemeinde mitfinanzieren,
+    Übersetzungen und Workshops; AK-33, AK-34). ⚠ Kein Preis auf der Seite: Preis ×
+    Zahl der Logos im Footer ergäbe die Einnahmen, und die Quartalssperre auf /open
+    stünde nur noch auf dem Papier (Decision Log #7).
+
     Wird an zwei Stellen eingebunden: als Block auf der Übersichtsseite und als
     Hauptinhalt der eigenen Unterseite (/organisationen/{slug}). Deshalb steht
     hier kein <section>-Rahmen – Hintergrund und Abstände bestimmt die
@@ -14,14 +21,20 @@
     dort <h2>, sonst übersprünge die Seite eine Ebene.
 #}
 {% set hl = heading_level|default('h2') %}
-    <{{ hl }} class="text-lg font-bold text-gray-900 mb-4">{{ 'organisation.company.formats_title'|trans }}</{{ hl }}>
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-        {% for i in 1..4 %}
-            <div class="rounded-xl border border-gray-300 bg-gray-50 p-4">
-                <p class="font-semibold text-gray-900 mb-1">{{ ('organisation.company.format_' ~ i ~ '_title')|trans }}</p>
-                <p class="text-sm text-gray-700 leading-relaxed">{{ ('organisation.company.format_' ~ i ~ '_text')|trans }}</p>
-            </div>
-        {% endfor %}
+    <div class="rounded-xl border-2 border-purple-700 bg-purple-50 p-5 mb-8">
+        <{{ hl }} class="text-lg font-bold text-purple-950 mb-2">{{ 'organisation.company.package_title'|trans }}</{{ hl }}>
+        <p class="text-purple-950 leading-relaxed mb-4">{{ 'organisation.company.package_text'|trans }}</p>
+        <p class="font-semibold text-purple-950 mb-2">{{ 'organisation.company.package_gets_title'|trans }}</p>
+        <ul class="space-y-1.5 mb-4">
+            {% for i in 1..2 %}
+                <li class="flex items-start gap-2 text-purple-950">
+                    <span aria-hidden="true">✓</span>
+                    <span>{{ ('organisation.company.package_gets_' ~ i)|trans }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+        <p class="text-sm text-purple-950 leading-relaxed mb-3">{{ 'organisation.company.package_usage'|trans }}</p>
+        <a href="{{ path('app_sponsor_index') }}" class="text-sm font-semibold text-purple-900 underline underline-offset-2 focus:outline-2 focus:outline-offset-2 focus:outline-purple-700">{{ 'organisation.company.package_link'|trans }}</a>
     </div>
 
     {# Zusammenarbeit ohne Geld – die Zusage „kein Honorar, keine Zahlung" muss

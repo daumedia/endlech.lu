@@ -1,0 +1,22 @@
+{# Die Zeiträume eines Sponsors als Text (Feature 15, AK-16, AK-25):
+   „seit März 2027" oder „März 2025 – Dezember 2026 und seit März 2029".
+
+   ⚠ Genannt werden nur Zeiträume, die schon begonnen haben (`sponsor_periods()`) —
+   ein Zeitraum nach einer Pause, der erst im September beginnt, stünde im Juni sonst
+   als „seit September" da.
+
+   ⚠ Monat und Jahr in der Seitensprache, über `format_date` und nicht über einen
+   Katalog: `LLLL` ist der Monatsname im Nominativ („März", „Mäerz", „mars").
+
+   Parameter: sponsor. #}
+{%- set _teile = [] -%}
+{%- for periode in sponsor_periods(sponsor) -%}
+    {%- set _start = periode.startDate|format_date(pattern: 'LLLL y', locale: app.request.locale) -%}
+    {%- if periode.end is null -%}
+        {%- set _teile = _teile|merge(['sponsor.period.open'|trans({'%start%': _start})]) -%}
+    {%- else -%}
+        {%- set _ende = periode.endDate|format_date(pattern: 'LLLL y', locale: app.request.locale) -%}
+        {%- set _teile = _teile|merge(['sponsor.period.closed'|trans({'%start%': _start, '%end%': _ende})]) -%}
+    {%- endif -%}
+{%- endfor -%}
+{{- _teile|join('sponsor.period.joiner'|trans) -}}

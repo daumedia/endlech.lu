@@ -1,0 +1,8 @@
+1) App\Tests\Unit\Sponsor\Qa15SponsorTest::testBf188EntfernterSlugGewinntUeberEinenStehengebliebenenEintrag
+Failed asserting that two arrays are identical.
+2) App\Tests\Unit\Sponsor\Qa15SponsorTest::testBf189LiegengebliebeneLogodateiFaelltImPrueflaufAuf
+Eine Logodatei ohne Eintrag (hier die eines entfernten Sponsors) wird nicht gemeldet.
+Failed asserting that two arrays are not identical.
+3) App\Tests\Functional\Sponsor\Qa15SponsorSeitenTest::testBf188EntfernterSponsorErscheintNirgendsAuchWennDerEintragNochSteht
+Footer nennt den entfernten Sponsor.
+Failed asserting that actual size 1 matches expected size 0.

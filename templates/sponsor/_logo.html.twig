@@ -1,0 +1,45 @@
+{# Eine Logokachel (Feature 15).
+
+   ⚠ **Immer auf weißer Fläche** (Entscheidung #5 in features/15-sponsoren/design.md):
+   Der Footer ist dunkel, und ein dunkles Logo darauf wäre unsichtbar (AK-29). So
+   braucht kein Sponsor eine zweite Fassung für dunklen Grund.
+
+   ⚠ **Feste Fläche, Bild mit `object-contain`** — jedes Logo nimmt denselben Platz ein,
+   egal ob 8 : 1 oder quadratisch, und wird nicht verzerrt (AK-02, EC-04). `width` und
+   `height` stehen am Bild, damit nichts springt, wenn es nachlädt.
+
+   ⚠ **`loading="lazy"`, natives Nachladen** (Entscheidung #6): ohne JavaScript, damit
+   die Logos auch ohne JavaScript erscheinen (EC-09). Browser laden in einer Vorlaufzone
+   vorab; auf sehr kurzen Seiten liegt der Footer darin.
+
+   ⚠ **`alt` ist der Name**, nicht „Logo" — im Footer ist das Bild der einzige Inhalt des
+   Links und damit sein Name (AK-04). Steht der Name daneben schon als Überschrift
+   (Sponsorenseite), wird `alt` leer, sonst läse der Screenreader ihn zweimal.
+
+   Parameter: sponsor, size ('sm' | 'lg', Vorgabe 'sm'), link (Vorgabe true),
+   decorative (Vorgabe false).
+
+   ⚠ **`link` NICHT über `|default(true)` lesen** — Twigs `default` ersetzt auch ein
+   ausdrückliches `false`. Genau so lag die Kachel auf der Übersicht als Link in der
+   Karte, die selbst ein Link ist, und auf der Sponsorenseite stand ein Logo-Link mit
+   leerem alt, also ohne Namen (im Selbsttest gefunden, `SponsorAccessibilityTest`). #}
+{%- set _verlinkt = link is defined ? link : true -%}
+{%- set _lg = (size|default('sm')) == 'lg' -%}
+{%- set _flaeche = _lg ? 'h-24 w-60 p-3' : 'h-14 w-36 p-2' -%}
+{%- set _bild -%}
+    <img src="{{ asset(sponsor.logoPath) }}"
+         alt="{{ (decorative is defined and decorative) ? '' : sponsor.name }}"
+         width="{{ _lg ? 216 : 128 }}" height="{{ _lg ? 72 : 40 }}"
+         loading="lazy" decoding="async"
+         class="h-full w-full object-contain">
+{%- endset -%}
+{%- if _verlinkt -%}
+    <a href="{{ path('app_sponsor_show', {slug: sponsor.slug}) }}"
+       class="inline-flex items-center justify-center {{ _flaeche }} rounded-lg bg-white ring-1 ring-gray-300 hover:ring-cyan-400 motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-cyan-400">
+        {{- _bild -}}
+    </a>
+{%- else -%}
+    <span class="inline-flex items-center justify-center {{ _flaeche }} rounded-lg bg-white ring-1 ring-gray-300">
+        {{- _bild -}}
+    </span>
+{%- endif -%}

@@ -561,7 +561,7 @@ umgeschrieben (siehe Migrations-Historie).
 | `communeName` | `commune_name` | `varchar(120)` | Gemeinde |
 | `estimatedVenues` | `estimated_venues` | `int` | Gemeinde (Range 1–5000) |
 | `timeframe` | `timeframe` | `varchar(20)` | Gemeinde (`OrganisationTimeframe`) |
-| `sponsorshipInterests` | `sponsorship_interests` | `json` | Unternehmen oder Verein (Werte aus `SponsorshipInterest`) |
+| `sponsorshipInterests` | `sponsorship_interests` | `json` | Unternehmen oder Verein. **Seit Feature 15 (2026-10-28) höchstens ein Wert aus `SponsorshipTerm`** (`monthly`/`yearly`), gelesen und gesetzt über `getSponsorshipTerm()`/`setSponsorshipTerm()`. Ältere Zeilen behalten Werte aus `SponsorshipInterest` (`getLegacySponsorshipInterests()`, „frühere Angabe“). Der Spaltenname stammt aus der Zeit der Formate — eine eigene Spalte hätte eine Migration gekostet |
 | `collaborationInterests` | `collaboration_interests` | `json` | Unternehmen oder Verein (Werte aus `CollaborationInterest`) |
 
 **Indizes:** `IDX_org_waitlist_type_status` auf `(type, status)`,
@@ -984,6 +984,27 @@ Methoden: `transKey()`, `label()`
 Werte: `inclusion_boxes`, `employee_engagement`, `commune_sponsorship`,
 `translation`, `workshops`, `other`
 Methoden: `transKey()`, `label()`, `values()`
+
+⚠ **Seit Feature 15 nur noch Lesehilfe für Altdaten.** Das Formular bietet die Formate nicht
+mehr an; die Übersetzungen `organisation.sponsorship.*` bleiben für die Verwaltung stehen.
+
+### SponsorshipTerm (seit Feature 15)
+
+Werte: `monthly`, `yearly` — Laufzeit des einen Sponsoring-Pakets. Gespeichert in
+`organisation_waitlist_entry.sponsorship_interests`. ⚠ Erscheint nie öffentlich (verriete den
+Betrag, 15/AK-14).
+Methoden: `transKey()`, `values()`
+
+### Sponsoren (Feature 15) — keine Tabelle
+
+Sponsoren sind **Wertobjekte im Quelltext** (`App\Sponsor\Sponsor`, `SponsorPeriod`), gepflegt in
+`App\Sponsor\SponsorRegistry`. Felder: `slug`, `name`, `logo` (PNG/WebP unter
+`assets/images/sponsors/`), `periods` (Kalendertage `JJJJ-MM-TT`, Ende einschließlich),
+optional `website`, `quote`, `quoteLocale`, seit der Überarbeitung vom 2026-10-28 `description` (Text je Sprache,
+alle Sprachen der Website oder keine, je ≤ 500 Zeichen) und `profiles` (URL je `SponsorPlatform`: `instagram`,
+`facebook`, `linkedin`). **Kein Feld für Betrag, Laufzeitart oder Person.**
+Ob ein Sponsor aktiv, ehemalig oder noch unsichtbar ist, rechnet `SponsorDirectory` bei jeder
+Anfrage aus den Zeiträumen und dem Tag in Luxemburg.
 
 ### CollaborationInterest
 

@@ -15,6 +15,7 @@
    - Feature 08 AK-40: App-Warteliste. Feature 07: Roadmap + Changelog.
    - BF-80: „Über uns" steht hier, weil die Kopfnavigation es zwischen 768–1023 px nicht zeigt.
    - B26 AK-04: Cookie-Einstellungen, aber nicht im Verwaltungsbereich.
+   - Feature 15 AK-01 bis AK-07: Bereich „Sponsoren" auf jeder Seite.
 
    ⚠ BF-109: Gruppentitel sind `h2`, nicht `h4` — sonst springt die Überschriftenkette jeder
    Seite (`HeadingOrderTest`). Die Schriftgröße hängt an den Klassen, nicht am Tag. #}
@@ -96,6 +97,29 @@
                 </ul>
             </div>
         </div>
+
+        {# Feature 15 · Sponsoren — eigene Zeile unter dem Raster, über der Rechtsleiste.
+
+           ⚠ Eine Nennung, keine Werbefläche: alle Logos gleich groß, nach Beginn sortiert,
+           höchstens zwölf (AK-02, AK-06). Die Auswahl kommt aus `sponsors_footer()`, nicht aus
+           dem Controller — dieselbe Lage wie bei den Vergleichen: Der Footer steht auf jeder
+           Seite, auch unter Restaurantseiten (Decision Log #9); im Inhalt dort erscheint nichts.
+
+           Drei Zustände: nie ein Sponsor → nur „Sponsor werden →" (AK-07); nur ehemalige →
+           beide Links, keine Logos; aktive → Logos und beide Links (AK-05). #}
+        {% set _sponsoren = sponsors_footer() %}
+        <section aria-labelledby="footer-sponsoren" class="border-t border-gray-800 mt-10 pt-8">
+            <h2 id="footer-sponsoren" class="text-white font-bold uppercase tracking-wider text-xs mb-3">{{ 'sponsor.footer.title'|trans }}</h2>
+            {% if _sponsoren is not empty %}
+                {{ include('sponsor/_logo_row.html.twig', {sponsors: _sponsoren, class: 'mb-4'}) }}
+            {% endif %}
+            <ul class="flex flex-wrap gap-x-5">
+                {% if sponsors_exist() %}
+                    <li><a href="{{ path('app_sponsor_index') }}" class="{{ _link }}">{{ 'sponsor.all'|trans }}</a></li>
+                {% endif %}
+                <li><a href="{{ path('app_organisations_type', {slug: 'unternehmen'}) }}#anfrage" class="{{ _link }} text-cyan-400">{{ 'sponsor.become'|trans }}</a></li>
+            </ul>
+        </section>
 
         {# Rechtliches — eigene Leiste, nicht zwischen den Inhalten. #}
         <div class="border-t border-gray-800 mt-10 pt-6 flex flex-col-reverse gap-4 lg:flex-row lg:items-center lg:justify-between text-xs text-gray-400">

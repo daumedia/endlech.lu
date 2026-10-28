@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 final class SeoRegistryTest extends TestCase
 {
     /**
-     * Die 20 festen Seiten aus der Tabelle der Spec — hier ausgeschrieben, NICHT aus dem
+     * Die 21 festen Seiten aus der Tabelle der Spec (seit Feature 15 mit `/sponsoren`) — hier ausgeschrieben, NICHT aus dem
      * Verzeichnis abgeleitet. Ein Prüflauf, der seine Erwartung aus dem Prüfling ableitet,
      * prüft gegen sich selbst.
      *
@@ -40,9 +40,10 @@ final class SeoRegistryTest extends TestCase
         ['app_organisations_type', ['slug' => 'unternehmen']],
         ['app_app_waitlist', []],
         ['app_board_index', []],
+        ['app_sponsor_index', []],
     ];
 
-    /** AK-02 · genau die 20 festen Seiten der Spec, keine mehr und keine weniger. */
+    /** AK-02 · genau die 21 festen Seiten der Spec, keine mehr und keine weniger. */
     public function testDieFestenSeitenDeckenSichMitDerTabelleDerSpec(): void
     {
         $ist = array_map(
@@ -56,7 +57,7 @@ final class SeoRegistryTest extends TestCase
         sort($ist);
         sort($soll);
 
-        self::assertCount(20, $ist, 'Die Spec nennt 20 feste Seiten. Ändert sich die Zahl, zieht die Tabelle in spec.md mit.');
+        self::assertCount(21, $ist, 'Die Spec nennt 21 feste Seiten (Feature 15: + /sponsoren). Ändert sich die Zahl, zieht die Tabelle in spec.md mit.');
         self::assertSame($soll, $ist);
     }
 
@@ -75,7 +76,7 @@ final class SeoRegistryTest extends TestCase
         $r = new SeoRegistry();
         $angeboten = array_unique([
             ...array_map(static fn (IndexablePage $p): string => $p->route, $r->fixedPages()),
-            SeoRegistry::RESTAURANT_ROUTE,
+            ...$r->derivedRoutes(),
         ]);
 
         self::assertSame([], array_values(array_intersect($angeboten, $r->excludedRoutes())));
@@ -112,6 +113,8 @@ final class SeoRegistryTest extends TestCase
 
         self::assertTrue($r->isIndexableRoute('app_home'));
         self::assertTrue($r->isIndexableRoute('app_restaurant_show'));
+        self::assertTrue($r->isIndexableRoute('app_sponsor_index'), 'Feature 15 · AK-40');
+        self::assertTrue($r->isIndexableRoute('app_sponsor_show'), 'Feature 15 · AK-40');
         self::assertFalse($r->isIndexableRoute('app_login'));
         self::assertFalse($r->isIndexableRoute('app_board_show'), 'Einzelne Ideen werden nicht angeboten.');
 

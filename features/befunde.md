@@ -1,6 +1,6 @@
 # Befunde — projektweit
 
-Stand: 2026-10-23 · Quelle: die `qa-report.md` aller geprüften Features
+Stand: 2026-10-28 · Quelle: die `qa-report.md` aller geprüften Features
 
 Diese Liste wird von `sdd-qa` fortgeschrieben, nicht von Hand. Sie ist die Grundlage
 des Auditberichts, den `/sdd-erfassen abschluss` daraus baut.
@@ -10,6 +10,29 @@ Durchlauf), B23 (34/35 im zweiten Durchlauf), B19 (17/17, davon eines nicht prü
 B14 (28/28), B15 (27/27), B22 (30/30), B17 (25/25) — abgenommen.
 B10 (24/24 im zweiten Durchlauf), B18 (29/29), B11 (18/19, eines nicht prüfbar), B20 (19/20), B21 (20/20), B09 (18/18), B05 (24/24), **B06 (23/23 — das erste Feature ohne eigenen Befund)**, B07 (17/17, eines nicht ausgeführt), B08 (16/16) — abgenommen.
 B12 (15/15 nach der Reparatur), B13 (14/14), B16 (29/29), B24 (16/16) — abgenommen.
+
+**2026-10-28 · Feature `15` (Sponsoren), Nachprüfung der Überarbeitung (Kurzbeschreibung, Profillinks): 6/7 neue
+Kriterien bestanden, AK-51 durchgefallen, EC-13 durchgefallen, EC-14 bestanden; 16 berührte bisherige Kriterien
+erneut bestanden — Production-ready weiterhin ja, mit Vorbehalten.** Kein Befund *kritisch* oder *hoch*. Neu, alle
+nachgestellt (Entwicklungsserver mit sechs Probe-Sponsoren, Produktionskernel für Sitemap und Seiten, Chrome bei 390 px):
+**BF-196** (*mittel*) — ein ausgeschriebener Eurobetrag („500 Euro“, „500 euros“, „50EUR“) in der Kurzbeschreibung
+passiert den Prüflauf, Laufzeitwörter prüft er gar nicht; BF-197 (*niedrig*) — `null` in Beschreibung oder Profil bricht
+den Prüflauf mit `TypeError` ab, ohne Sponsor und Sprache zu nennen; BF-198 (*niedrig*) — ein Zeilenumbruch wird `<br>`,
+kein Absatz (EC-13). BF-188 bis BF-195 unverändert offen. ⚠ Das markierte lokale Beispiel „Fondatioun Wonschstär“ in
+`SponsorRegistry` muss vor dem Commit heraus (kein Befund, H-8). 1816 Tests grün, 28 übersprungen (12 Reproduktionen).
+Bericht: zweiter Abschnitt in `features/15-sponsoren/qa-report.md`, Nachweise `qa/15/N-*`.
+
+**2026-10-28 · Feature `15` (Sponsoren), erste Prüfung: 44/48 bestanden, AK-10 durchgefallen, 3 nicht prüfbar (AK-26,
+AK-47, AK-48); Randfälle 12/12 — Production-ready ja, mit Vorbehalten.** Kein Befund *kritisch* oder *hoch*. Neu, alle
+nachgestellt (Entwicklungsserver gegen eine Wegwerf-Datenbank mit 17 Probe-Sponsoren, Chrome bei 390/320/660 px):
+**BF-188** (*mittel*) — ein entfernter Slug, dessen Eintrag noch steht, bleibt in Footer, Übersicht, Sitemap,
+Faktenblatt und Logoreihe genannt, nur die eigene Seite leitet um; **BF-190** (*mittel*, Entscheidung) — AK-10 auf
+kurzen Seiten: liegt der Footer in Chromes Vorlaufzone (761 px), laden alle zwölf Logos ohne Scrollen; BF-189
+(*niedrig*) — liegengebliebene Logodatei eines entfernten Sponsors bleibt mit 200 erreichbar, kein Prüflauf merkt es;
+BF-191 bis BF-195 (*niedrig*) — deutsche Anführungszeichen um jedes Zitat, schrumpfende Kacheln auf der Übersicht,
+„Sie sponsern …“, ein von seinem Dienst getrennter ⚠-Kommentar (Feature 11), eine leere Altformat-Zeile in der
+internen Meldung. 1753 Tests grün, 19 übersprungen (3 Reproduktionen). Bericht: `features/15-sponsoren/qa-report.md`,
+Nachweise `qa/15/`.
 
 **2026-10-23 · Feature `12`, dritte Nachprüfung (vierter Durchlauf): 55/68 bestanden, keines durchgefallen, 13 nicht
 prüfbar, EC-09 durchgefallen — Production-ready ja, mit Vorbehalten.** Alle sieben Befunde aus dem dritten Durchlauf sind
@@ -179,6 +202,17 @@ ausliefert, hat sie gebaut, ohne es zu merken.
 
 | ID | Feature | Befund | Grad | Fundstelle | Status |
 |---|---|---|---|---|---|
+| BF-188 | 15 | **Ein entfernter Slug, dessen Eintrag noch steht, bleibt überall genannt.** `removedSlugs()` wirkt nur auf die eigene Seite (301 auf `/sponsoren`); `active()`, `former()`, `visible()` lesen `entries()` ungefiltert — Footer, Übersicht, Sitemap (alle fünf Sprachen), Faktenblatt-Zahl und Logoreihe nennen den Sponsor weiter, der Logo-Klick führt per 301 auf die Übersicht, die ihn wieder listet. `design.md`: „Ein entfernter Sponsor ist weder aktiv noch ehemalig“; EC-08: „die Entfernung gewinnt“. Rot wird allein `SponsorRegistryTest` — PHPUnit ist kein Deploy-Gate, und die Anleitung „Entfernen“ in `CLAUDE.md` nennt den Prüflauf nicht. Reproduktion: `Qa15SponsorTest::testBf188…`, `Qa15SponsorSeitenTest::testBf188…` | mittel | `src/Sponsor/SponsorDirectory.php:44`, `:70`, `:104` | offen |
+| BF-190 | 15 | **AK-10 auf kurzen Seiten nicht erfüllt.** Liegt der Footer innerhalb von Chromes Vorlaufzone für `loading="lazy"`, lädt Chrome alle zwölf Logos ohne Scrollen — gemessen mit kaltem Cache bei 390 × 844: Bestätigungsseite der Organisations-Warteliste, Footer 761 px unter dem Sichtbereich, 12 von 12 geladen; Startseite (5400 px), Restaurantliste (4602 px), Sponsorenseiten (1418 px), `/de/app` (2640 px): 0 von 12. Gewicht stets unter 150 KB. Der Entwurf (Entscheidung #6) sah das voraus und beschränkte die Messung auf zwei Seiten, die Spec sagt „eine Seite“. Schärfer nur mit JavaScript-Nachladen, das EC-09 bräche — **Entscheidung nötig** (`/sdd-klaeren 15`). Der Abschlussbericht meldete einen Abruf bei 1716 px; mit kaltem Cache nicht nachstellbar (vermutlich Logos aus dem Browserspeicher) | mittel | `templates/sponsor/_logo.html.twig:33`; `features/15-sponsoren/design.md`, Entscheidung #6 | offen |
+| BF-189 | 15 | Die Logodatei eines entfernten Sponsors bleibt mit 200 ausgeliefert, wenn sie im Verzeichnis liegen bleibt (gleicher Inhalt, gleiche Adresse); `SponsorRegistryTest` bleibt grün. AK-43 verlangt 404. `SponsorRules` prüft „Datei fehlt“, nicht „Datei ohne Eintrag“. Reproduktion: `Qa15SponsorTest::testBf189…` | niedrig | `src/Sponsor/SponsorRules.php:34` | offen |
+| BF-191 | 15 | Das Zitat steht auf allen fünf Sprachfassungen in deutschen Anführungszeichen („…“), auch ein französisches auf `/fr/` | niedrig | `templates/sponsor/show.html.twig:53` | offen |
+| BF-192 | 15 | Logokacheln auf `/sponsoren` schrumpfen ungleich (102–117 px bei 320 px, 107–123 px bei 660 px statt 144 px): Kachel ohne `shrink-0` als Flex-Kind der Karte. Footer unberührt. Muster BF-107/BF-108 | niedrig | `templates/sponsor/_logo.html.twig:42`, `templates/sponsor/index.html.twig:47` | offen |
+| BF-193 | 15 | „Sie sponsern Endlech.lu bereits“ über der Logoreihe liest sich auf einer Seite, die durchgehend siezt, als Anrede an den Interessenten; lb/fr/en/pt stehen in der dritten Person | niedrig | `translations/messages.de.yaml:1286` | offen |
+| BF-194 | 15 / 11 | Der Sponsorenblock steht zwischen dem ⚠-Kommentar „`autoconfigure: false` ist der Punkt …“ und `app.usage.umami_client`; der Dienst, dessen Konfiguration die Adresse des Überwachungs-VPS aus dem Protokoll hält, steht ohne Begründung | niedrig | `config/services.yaml:193–209` | offen |
+| BF-195 | 15 / B15 | Die interne Meldung führt für jede neue Unternehmensanfrage eine Zeile „Sponsoring (Frühere Angabe (vor dem Paket)): —“ — immer leer, doppelte Klammer | niedrig | `templates/email/organisation/internal_notification.html.twig:42` | offen |
+| BF-196 | 15 | **Ein ausgeschriebener Eurobetrag in der Kurzbeschreibung passiert den Prüflauf (AK-51 durchgefallen).** Die Regel `/€\|\bEUR\b/u` meldet „50 €“ und „50 EUR“, nicht aber „500 Euro“ (lb/de), „500 euros“ (fr/en/pt), „50EUR“, „50 EURO“, „50 eur“ — die übliche Schreibweise im Fließtext. Laufzeitwörter („monatlich“, „jährlich“, AK-14) prüft sie gar nicht. Die Beschreibung ist seit der Überarbeitung das einzige Freitextfeld der Sponsorenseite; ein Betrag dort veröffentlichte den Paketpreis (Decision Log #7). `CLAUDE.md` nennt „kein Eurobetrag“ als geprüft; `SponsorRulesTest` prüft genau die zwei Formen der Regel, `SponsorIntegrityTest` hat eine schärfere Definition, aber nur für Testdaten. Reproduktion: `Qa15NachpruefungTest::testBf196…` (8 Fälle) | mittel | `src/Sponsor/SponsorRules.php:185`; `features/15-sponsoren/design.md:342` | offen — vor dem ersten Sponsor mit Beschreibung |
+| BF-197 | 15 | `null` als Beschreibung einer Sprache oder als Profiladresse bricht den Prüflauf mit `TypeError` (`trim()`, `str_starts_with()`) ab — ohne Sponsor, Sprache oder Plattform, alle weiteren Verstöße entfallen. Zur Laufzeit fehlen Abschnitt bzw. Link lautlos. Der Prüflauf ist rot, nur die Meldung fehlt (AK-51/AK-53 „nennt …“). Reproduktion: `Qa15NachpruefungTest::testBf197…` | niedrig | `src/Sponsor/SponsorRules.php:179`, `:209` | offen |
+| BF-198 | 15 | Ein Zeilenumbruch in der Kurzbeschreibung wird `<br>` im selben `<p>`, kein Absatz (EC-13: „bleibt ein Absatz“). Der Entwurf widerspricht sich (`design.md:309` „→ Absatz“, `:320` „`nl2br`“), der Prüflauf des Baus prüft „bleibt ein Umbruch“ | niedrig | `templates/sponsor/show.html.twig:58` | offen |
 | BF-185 | 12 / 04 | **Ein gescheiterter Abgleich überschreibt ein gleichzeitiges Abbestellen.** Der Lauf lädt eine `pending`-Zeile (etwa nach einem bestätigten Adresswechsel), Brevo antwortet 504/429; **während** der Antwort bestellt das Konto ab (`blacklist_pending`, `revoked_at`). `markFailed()` setzt auf der geladenen Entity `failed`, der `flush()` am Laufende schreibt das über den Auftrag; der Nachtrag aus BF-166 sieht nur gelungene Zeilen. Danach `failed` + gesperrt — `findOpenForSync()` holt die Zeile nie wieder ab. Mit **zwei echten Prozessen** nachgestellt: Profil „nicht abonniert", bei Brevo bleibt der Kontakt ungesperrt, unter der **alten** Adresse; kein Alarm. Restfall von BF-181 (dort benannt, im dritten Auftrag nicht erreicht); Hinweis des `code-reviewer` | mittel | `src/Marketing/MarketingSyncService.php::run()` (`flush()`, Nachtrag nur für `$angelegt`), `MarketingContact::markFailed()`, `MarketingContactRepository::findOpenForSync()`; Beleg `qa/12/nachpruefung3/a17-wettlauf-abgleich.ausgabe.txt`, Reproduktion `Qa12Nachpruefung4Test::testBf185…` (übersprungen) | offen — `/sdd-build 12` |
 | BF-182 | B04 | **Vorbestehend, auf der Produktion: Ein Name aus Leerzeichen im Profil ergibt HTTP 500.** `TextType` kürzt „   " auf „" und reicht `null` an `User::setName(string)` — „Expected argument of type "string", "null" given at property path "name"". Ein Browser schickt das ab (`required` gilt mit Leerzeichen als erfüllt). Ebenso leeres oder fehlendes Feld; am Feld `email` gleich (dort hält der Browser es ab). Konvention „`empty_data` ist Pflicht" — Muster BF-51 | mittel | `src/Form/ProfileType.php` (Felder `name`, `email` ohne `'empty_data' => ''`); Beleg `a15-profil-leerer-name.ausgabe.txt`, `a15b-profil-leere-adresse.ausgabe.txt`, Reproduktion `Qa12Nachpruefung4Test::testBf182…` (übersprungen) | offen — `/sdd-build B04` |
 | BF-184 | B04 | **Vorbestehend, auf der Produktion: Ein Adresswechsel auf eine RFC-widrige oder über 180 Zeichen lange Adresse ergibt HTTP 500.** `ProfileType` prüft mit `Email` im HTML5-Modus und ohne Länge; `../../etc/passwd@example.lu` passiert, `Mime\Address` lehnt sie nach dem `flush()` ab (`->to()` vor dem `try`) — die Vormerkung bleibt stehen, ein Deckelplatz ist verbraucht. 181 Zeichen → `SQLSTATE[22001]` an `pending_email`. Das Profil ist der fünfte Adresseingang, den BF-119 („alle vier Wege prüfen strikt") nicht nachgezogen hat; Hinweis des `code-reviewer`, am Server nachgestellt | mittel | `src/Form/ProfileType.php`, `ProfileController::sendeAdressbestaetigung()`; Beleg `a16-profil-adresse-rfc.ausgabe.txt`, Reproduktion `Qa12Nachpruefung4Test::testBf184…` (übersprungen) | offen — `/sdd-build B04` |
@@ -653,6 +687,14 @@ BF-185 als neu. **Regel: Wege mit Unique-Index, Dateiersatz oder einem Lauf,
   neu ausgestellte Bestätigungstoken wurde auf *Änderung* geprüft, während er nicht
   *trug*. **Regel: Prüfe die Wirkung, nicht das Anzeichen.** Bei einer Begrenzung
   `assertCount(min(...))`, bei einem neu ausgestellten Zugang den Aufruf des Zugangs.
+  *Nachtrag 2026-10-28 (Feature 15, H-3):* Dreimal in einem Bau — „entfernte fehlen in der Sitemap“ an einem Slug
+  ohne Eintrag (wahr unabhängig vom Code, BF-188 bliebe grün), `each()` über Logos ohne Mindestzahl, ein `?? 'de'`
+  als Rückfall für die geprüfte Seitensprache.
+  *Nachtrag 2026-10-28 (Feature 15, BF-196):* Diesmal ist es die **Regel** selbst, und ihr Test spiegelt die Regel statt
+  des Kriteriums: AK-51 sagt „nennt einen Eurobetrag“, `SponsorRules` prüft `€` und `EUR`, `SponsorRulesTest` prüft genau
+  `€` und `EUR` — grün, während „500 Euro“ durchgeht. Im selben Feature steht eine schärfere Definition im
+  Integritätstest, angewandt nur auf Testdaten. **Regel: Eine Prüfregel wird gegen die Wortlaute des Kriteriums getestet,
+  nicht gegen ihre eigene Implementierung — und dieselbe Frage hat im Feature genau eine Definition.**
 - **Ein Zweig, der vor dem `consume()` zurückkehrt, hebt den Deckel auf (BF-118).** Die
   Konvention „erst verbrauchen, wenn die Handlung stattfindet" (BF-11) hat eine Kehrseite,
   die im Projekt bisher nicht stand: **Jeder `return` zwischen `isAllowed()` und
@@ -716,6 +758,8 @@ BF-185 als neu. **Regel: Wege mit Unique-Index, Dateiersatz oder einem Lauf,
   bei `basis-full min-w-0 sm:basis-auto sm:flex-1`; Feature `07` baute die Karte neu und
   begann von vorn. **Die Klassenkette gehört ins Design-System**, nicht in ein Template —
   sonst wiederholt sie sich bei der nächsten Karte ein drittes Mal.
+  *Nachtrag 2026-10-28 (BF-192):* Das dritte Mal, an einer neuen Karte (`/sponsoren`): die Logokachel als Flex-Kind
+  ohne `shrink-0` neben einem Text, der umbricht. Die Klassenkette steht noch immer nicht im Design-System.
 - **Gemessen wird an den Enden, kaputt ist die Mitte (BF-80, BF-108).** Alle Kriterien der
   Features `02`, `03`, `05` und `07` nennen 320 px, die QA von `03` zusätzlich 375 px. Beide
   Befunde sitzen bei **768 px** — dem Umbruchpunkt, ab dem mehrspaltige Layouts und die
@@ -811,6 +855,8 @@ Was in mehr als einem Feature auftritt — der Grund, warum diese Liste existier
   Beide Male hat der Kommentar die Prüfung *ersetzt* statt sie zu leiten: Wer ihn liest,
   hält die Sache für geklärt und sieht nicht mehr nach. **Folgerung für künftige QA: Ein
   ⚠-Kommentar, der ein Verhalten zusichert, ist ein Prüfauftrag, kein Nachweis.**
+  *Nachtrag 2026-10-28 (BF-188):* Diesmal sagte es der **Entwurf** („Ein entfernter Sponsor ist weder aktiv noch
+  ehemalig“) und die Schnittstelle (`SponsorSource::removedSlugs()`); der Code hielt es an einer von sechs Stellen.
 - **Ein geteilter Schlüssel löst einen Fall auf der Schreibseite und bricht ihn auf der
   Löschseite (BF-84, offen).** `marketing_contact` hat bewusst *eine Zeile je Adresse* —
   das löst EC-01 („eine Adresse, ein Kontakt") beim Eintragen sauber und auf

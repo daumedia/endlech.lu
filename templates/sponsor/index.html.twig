@@ -1,0 +1,126 @@
+{% extends 'base.html.twig' %}
+
+{# Übersicht der Sponsoren (Feature 15).
+
+   Überschriftenhierarchie (Feature 02): genau ein <h1> im Kopfband, jede Sektion <h2>.
+   Das Kopfband ist ein <section> mit Verlauf — der @media-print-Block in app.css greift
+   auf `section.bg-linear-to-r` (sonst weiß auf weiß im Druck).
+
+   Zustände (kein Ladezustand, serverseitig gerendert):
+   - leer: „Endlech.lu hat derzeit keine Sponsoren." statt einer leeren Liste (AK-13);
+   - nur ehemalige: derselbe Satz, darunter „Bisher unterstützt von";
+   - gefüllt: alle aktiven, auch über zwölf (AK-12).
+
+   ⚠ Kein Betrag, keine Laufzeitart bei einem Sponsor (AK-14). Der allgemeine Satz zum
+   Paket nennt „monatlich oder jährlich" für alle — nie für einen. #}
+
+{% block title %}{{ 'sponsor.meta_title'|trans }} · Endlech.lu{% endblock %}
+
+{% block meta_description %}
+    <meta name="description" content="{{ 'sponsor.meta_description'|trans }}">
+{% endblock %}
+
+{% block body %}
+    {# === KOPFBAND ========================================================= #}
+    <section class="bg-linear-to-r from-cyan-700 to-purple-800 text-white py-20">
+        <div class="container mx-auto px-4 max-w-3xl">
+            <p class="inline-block bg-white/20 text-white text-sm font-semibold px-4 py-1.5 rounded-full mb-6">{{ 'sponsor.index.eyebrow'|trans }}</p>
+            <h1 class="text-3xl md:text-5xl font-bold mb-5 leading-tight">{{ 'sponsor.index.heading'|trans }}</h1>
+            <p class="text-lg text-cyan-50 leading-relaxed">{{ 'sponsor.index.intro'|trans }}</p>
+        </div>
+    </section>
+
+    {# === AKTIVE SPONSOREN ================================================= #}
+    <section id="aktive-sponsoren" class="bg-white py-16 scroll-mt-24" aria-labelledby="aktive-titel">
+        <div class="container mx-auto px-4 max-w-3xl">
+            <h2 id="aktive-titel" class="text-2xl md:text-3xl font-bold text-gray-900 mb-6">{{ 'sponsor.index.active_title'|trans }}</h2>
+
+            {% if active is empty %}
+                <p class="text-gray-700 leading-relaxed">{{ 'sponsor.index.none'|trans }}</p>
+            {% else %}
+                <ul class="grid gap-4 sm:grid-cols-2">
+                    {% for sponsor in active %}
+                        {% set _seit = sponsor_current_period(sponsor).startDate|format_date(pattern: 'LLLL y', locale: app.request.locale) %}
+                        <li>
+                            {# Ein Link je Karte: Das Logo ist hier Schmuck (leeres alt), der Name trägt den Link. #}
+                            <a href="{{ path('app_sponsor_show', {slug: sponsor.slug}) }}"
+                               class="flex items-center gap-4 rounded-xl border-2 border-gray-300 bg-white p-4 hover:border-cyan-700 motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700">
+                                {{ include('sponsor/_logo.html.twig', {sponsor: sponsor, link: false, decorative: true}) }}
+                                <span>
+                                    <span class="block font-semibold text-gray-900">{{ sponsor.name }}</span>
+                                    <span class="block text-sm text-gray-700">{{ 'sponsor.show.label_active'|trans({'%periods%': 'sponsor.period.open'|trans({'%start%': _seit})}) }}</span>
+                                </span>
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+    </section>
+
+    {# === WAS EIN SPONSOR BEKOMMT — UND WAS NICHT ========================== #}
+    <section class="bg-gray-50 py-16" aria-labelledby="bekommt-titel">
+        <div class="container mx-auto px-4 max-w-3xl space-y-8">
+            <div>
+                <h2 id="bekommt-titel" class="text-2xl md:text-3xl font-bold text-gray-900 mb-4">{{ 'sponsor.index.gets_title'|trans }}</h2>
+                <ul class="space-y-2">
+                    {% for i in 1..2 %}
+                        <li class="flex items-start gap-2 text-gray-800">
+                            <span aria-hidden="true">✓</span>
+                            <span>{{ ('sponsor.index.gets_' ~ i)|trans }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            {{ include('sponsor/_not_included.html.twig') }}
+
+            {# Dieselbe Regel und derselbe Wortlaut wie auf der Unternehmensseite — ein Text,
+               nicht zwei, die auseinanderlaufen können. #}
+            <div class="rounded-xl border-2 border-red-700 bg-red-50 p-5">
+                <h2 class="text-lg font-bold text-red-900 mb-2">{{ 'organisation.company.exclusion_title'|trans }}</h2>
+                <p class="text-red-950 leading-relaxed mb-3">{{ 'organisation.company.exclusion_text'|trans }}</p>
+                <p class="flex items-start gap-2 text-sm text-red-950">
+                    <span aria-hidden="true">✕</span>
+                    <span>{{ 'organisation.company.exclusion_1'|trans }}</span>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    {# === VERWENDUNG ======================================================= #}
+    <section class="bg-white py-16" aria-labelledby="verwendung-titel">
+        <div class="container mx-auto px-4 max-w-3xl">
+            <h2 id="verwendung-titel" class="text-2xl md:text-3xl font-bold text-gray-900 mb-4">{{ 'sponsor.usage.title'|trans }}</h2>
+            <p class="text-gray-800 leading-relaxed mb-4">{{ 'sponsor.usage.text'|trans }}</p>
+            <a href="{{ path('app_open') }}#finance-heading" class="text-cyan-800 underline underline-offset-2 focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700">{{ 'sponsor.usage.link'|trans }}</a>
+        </div>
+    </section>
+
+    {# === EHEMALIGE ======================================================== #}
+    {% if former is not empty %}
+        <section id="ehemalige-sponsoren" class="bg-gray-50 py-16 scroll-mt-24" aria-labelledby="ehemalige-titel">
+            <div class="container mx-auto px-4 max-w-3xl">
+                <h2 id="ehemalige-titel" class="text-2xl md:text-3xl font-bold text-gray-900 mb-6">{{ 'sponsor.index.former_title'|trans }}</h2>
+                <ul class="divide-y divide-gray-200 rounded-xl border-2 border-gray-300 bg-white">
+                    {% for sponsor in former %}
+                        <li class="p-4">
+                            <a href="{{ path('app_sponsor_show', {slug: sponsor.slug}) }}" class="font-semibold text-gray-900 underline underline-offset-2 focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700">{{ sponsor.name }}</a>
+                            <span class="block text-sm text-gray-700">{{ include('sponsor/_periods.html.twig', {sponsor: sponsor}) }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </section>
+    {% endif %}
+
+    {# === HANDLUNGSAUFRUF ================================================== #}
+    <section class="bg-white py-16">
+        <div class="container mx-auto px-4 max-w-3xl text-center">
+            <a href="{{ path('app_organisations_type', {slug: 'unternehmen'}) }}#anfrage"
+               class="inline-block min-h-[48px] bg-purple-700 hover:bg-purple-800 text-white font-bold px-8 py-3 rounded-full shadow-md hover:shadow-lg motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-purple-700">
+                {{ 'sponsor.become'|trans }}
+            </a>
+        </div>
+    </section>
+{% endblock %}

@@ -56,7 +56,7 @@ final class SeoRouteCoverageTest extends KernelTestCase
         $r = new SeoRegistry();
         $angeboten = array_unique([
             ...array_map(static fn (IndexablePage $p): string => $p->route, $r->fixedPages()),
-            SeoRegistry::RESTAURANT_ROUTE,
+            ...$r->derivedRoutes(),
         ]);
         $ausgeschlossen = $r->excludedRoutes();
         $uebergangen = array_keys($r->unlistedRoutes());
@@ -98,7 +98,7 @@ final class SeoRouteCoverageTest extends KernelTestCase
         $r = new SeoRegistry();
         $angeboten = array_unique([
             ...array_map(static fn (IndexablePage $p): string => $p->route, $r->fixedPages()),
-            SeoRegistry::RESTAURANT_ROUTE,
+            ...$r->derivedRoutes(),
         ]);
 
         $lesenSeitenzahl = [];
@@ -140,7 +140,7 @@ final class SeoRouteCoverageTest extends KernelTestCase
         $r = new SeoRegistry();
         $namen = array_unique([
             ...array_map(static fn (IndexablePage $p): string => $p->route, $r->fixedPages()),
-            SeoRegistry::RESTAURANT_ROUTE,
+            ...$r->derivedRoutes(),
             ...$r->excludedRoutes(),
             ...array_keys($r->unlistedRoutes()),
         ]);

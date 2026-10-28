@@ -1,0 +1,64 @@
+PHPUnit 12.5.4 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.5.12
+Configuration: /Users/michaelferreira/DEV/SaaS/endlech/phpunit.dist.xml
+
+F.                                                                  2 / 2 (100%)
+
+Time: 00:00.004, Memory: 16.00 MB
+
+There was 1 failure:
+
+1) App\Tests\Unit\Sponsor\SponsorRegistryTest::testAk27JederEintragDerProduktionsquelleIstGueltig
+Ungültige Sponsoreneinträge:
+Sponsor `ohne-name`: Name fehlt.
+Sponsor `ohne-logo`: Logo muss ein Dateiname ohne Pfad sein.
+Sponsor `ohne-beginn`: kein Zeitraum — mindestens einer mit Beginn.
+Sponsor `leerer-beginn`: Beginn von Zeitraum 1 ist kein Tag im Format JJJJ-MM-TT.
+Sponsor `ende-vor-beginn`: Ende von Zeitraum 1 liegt vor dem Beginn.
+Sponsor `ueberlapp`: Zeitraum 2 überlappt den vorigen (nur der letzte darf ohne Ende sein).
+Sponsor `doppelt`: Adresse doppelt vergeben.
+Sponsor `zitat-lang`: Zitat 301 Zeichen, erlaubt 300 (AK-19).
+Sponsor `zitat-ohne-sprache`: Sprache des Zitats fehlt oder ist kein zweibuchstabiger Code wie `fr` (AK-18).
+Sponsor `logo-fehlt`: Logo `gibt-es-nicht.png` liegt nicht unter assets/images/sponsors/.
+Sponsor `svg-getarnt`: Logo `svg-getarnt.png` ist dem Inhalt nach kein PNG (AK-28).
+Sponsor `zu-gross`: Logo `zu-gross.png` wiegt 30 KB, erlaubt 25 KB (AK-10).
+Sponsor `Gross-Buchstaben`: Adresse nur aus a–z, 0–9 und einzelnen Bindestrichen (EC-05).
+Sponsor `svg-endung`: Logo `logo.svg` muss PNG oder WebP sein (AK-28).
+Sponsor `http-website`: Website muss eine vollständige https://-Adresse sein.
+Sponsor `js-website`: Website muss eine vollständige https://-Adresse sein.
+Sponsor `name-81`: Name 81 Zeichen, erlaubt 80.
+Sponsor `entfernt-sa`: steht zugleich unter den entfernten Adressen (AK-43).
+Sponsor `falsches-datum`: Beginn von Zeitraum 1 ist kein Tag im Format JJJJ-MM-TT.
+Failed asserting that two arrays are identical.
+--- Expected
++++ Actual
+@@ @@
+-Array &0 []
++Array &0 [
++    0 => 'Sponsor `ohne-name`: Name fehlt.',
++    1 => 'Sponsor `ohne-logo`: Logo muss ein Dateiname ohne Pfad sein.',
++    2 => 'Sponsor `ohne-beginn`: kein Zeitraum — mindestens einer mit Beginn.',
++    3 => 'Sponsor `leerer-beginn`: Beginn von Zeitraum 1 ist kein Tag im Format JJJJ-MM-TT.',
++    4 => 'Sponsor `ende-vor-beginn`: Ende von Zeitraum 1 liegt vor dem Beginn.',
++    5 => 'Sponsor `ueberlapp`: Zeitraum 2 überlappt den vorigen (nur der letzte darf ohne Ende sein).',
++    6 => 'Sponsor `doppelt`: Adresse doppelt vergeben.',
++    7 => 'Sponsor `zitat-lang`: Zitat 301 Zeichen, erlaubt 300 (AK-19).',
++    8 => 'Sponsor `zitat-ohne-sprache`: Sprache des Zitats fehlt oder ist kein zweibuchstabiger Code wie `fr` (AK-18).',
++    9 => 'Sponsor `logo-fehlt`: Logo `gibt-es-nicht.png` liegt nicht unter assets/images/sponsors/.',
++    10 => 'Sponsor `svg-getarnt`: Logo `svg-getarnt.png` ist dem Inhalt nach kein PNG (AK-28).',
++    11 => 'Sponsor `zu-gross`: Logo `zu-gross.png` wiegt 30 KB, erlaubt 25 KB (AK-10).',
++    12 => 'Sponsor `Gross-Buchstaben`: Adresse nur aus a–z, 0–9 und einzelnen Bindestrichen (EC-05).',
++    13 => 'Sponsor `svg-endung`: Logo `logo.svg` muss PNG oder WebP sein (AK-28).',
++    14 => 'Sponsor `http-website`: Website muss eine vollständige https://-Adresse sein.',
++    15 => 'Sponsor `js-website`: Website muss eine vollständige https://-Adresse sein.',
++    16 => 'Sponsor `name-81`: Name 81 Zeichen, erlaubt 80.',
++    17 => 'Sponsor `entfernt-sa`: steht zugleich unter den entfernten Adressen (AK-43).',
++    18 => 'Sponsor `falsches-datum`: Beginn von Zeitraum 1 ist kein Tag im Format JJJJ-MM-TT.',
++]
+
+/Users/michaelferreira/DEV/SaaS/endlech/tests/Unit/Sponsor/SponsorRegistryTest.php:31
+/Users/michaelferreira/DEV/SaaS/endlech/vendor/phpunit/phpunit/phpunit:104
+
+FAILURES!
+Tests: 2, Assertions: 2, Failures: 1.

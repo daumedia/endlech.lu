@@ -178,8 +178,13 @@ eigenen Team oder indem man die Ergebnisse weiterträgt.
 > bekommen: Wer mitfinanziert, wird als Unterstützer genannt – keine bessere
 > Bewertung, keine bevorzugte Platzierung, kein Einfluss auf Inhalte."
 
-**Formate mit Geld oder Team:** Inclusion-Boxen finanzieren, Mitarbeitende als
-Testpersonen, eine Gemeinde-Erhebung mitfinanzieren, Übersetzungen und Workshops.
+**Sponsoring als ein Paket** (seit Feature 15, 2026-10-28): monatlich oder jährlich,
+**Preis nur auf Anfrage**, gleich für alle. Gegenleistung: das Logo im Footer jeder Seite und eine
+eigene Sponsorenseite unter `/sponsoren` — keine Stufen, kein Betrag auf der Seite. *(Bis dahin
+vier Formate mit Geld oder Team: Inclusion-Boxen finanzieren, Mitarbeitende als Testpersonen,
+eine Gemeinde-Erhebung mitfinanzieren, Übersetzungen und Workshops. Alle entfallen, auch das
+Team-Format.)* Der Preis steht bewusst nicht öffentlich: Preis × Zahl der Logos ergäbe die
+Einnahmen und höbe die Quartalssperre (Prinzip 5) auf.
 
 **Formate ohne Geld:** Zugang zu aggregierten Daten, gemeinsame Kommunikation,
 Weiterempfehlung an die eigenen Mitglieder. *„Dafür zahlen Sie nichts, und Sie
@@ -415,13 +420,13 @@ Verweildauer das falsche Signal.
 
 ### Belegt
 
-Drei Erlöspfade, alle noch **ohne Preis und ohne Zahlungsabwicklung im Code**:
+Drei Erlöspfade, alle noch **ohne öffentlichen Preis und ohne Zahlungsabwicklung im Code**:
 
 | Pfad | Zielgruppe | Art | Stand |
 |---|---|---|---|
 | **Partnerprogramm** | Restaurants | wiederkehrend | Warteliste; *„Preise und Paketumfang stehen noch nicht fest. Wer auf der Warteliste steht, erfährt sie als Erstes"* |
 | **Erhebungen** | Gemeinden | Projektauftrag | Warteliste; Umfang beschrieben (Karte, Bericht, Gemeinderat), Dauer 8–16 Wochen |
-| **Sponsoring** | Unternehmen und Vereine | Zuwendung | Warteliste; Formate benannt, Ausschluss öffentlich |
+| **Sponsoring** | Unternehmen und Vereine | wiederkehrend (monatlich oder jährlich) | **ein Paket, Preis auf Anfrage** (Feature 15; ⚠ der Betrag steht bewusst in keiner Datei des öffentlichen Repositorys); Nennung im Footer und auf `/sponsoren`, Rechnung von Hand; Ausschluss öffentlich |
 
 **Die Zusammenarbeit ohne Geld ist ausdrücklich kein Vertriebskanal.** *„Dafür
 zahlen Sie nichts, und Sie erhalten kein Honorar."* Sie läuft über denselben

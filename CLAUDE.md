@@ -298,6 +298,7 @@ stateless (`token_id: submit`), passt headless via Same-Origin-Referer; Custom-T
 | `api_v1_restaurants_index / _create / _show / _images` | `/api/v1/restaurants[…]` | `Api\V1\RestaurantApiController` |
 | `api_v1_me / _me_submissions` (GET) | `/api/v1/me[/submissions]` | `Api\V1\MeController` |
 | `app.swagger_ui`      | `/api/docs`    | NelmioApiDoc Swagger-UI |
+| `app_sponsor_index` / `_show` | `/sponsoren`, `/sponsoren/{slug}` | `SponsorController` (Feature 15; entfernter Slug → 301, unsichtbarer → 404) |
 | `app_sitemap`         | `/sitemap.xml` (locale-frei) | `Seo\SitemapController::sitemap()` (Feature 10) |
 | `app_usage_collect`   | `/api/send` (POST, locale-frei) | `Usage\CollectController` (Feature 11, Zählweg zu Umami) |
 
@@ -745,6 +746,58 @@ und verbindet es bei jeder Rückkehr aus dem Zwischenspeicher neu — gemessen: 
 ⚠ **`AvatarUploadService` arbeitet unter einer Sperre je Konto und räumt auch den frisch gelesenen alten Namen weg**
 (BF-173) — sonst bleiben bei gleichzeitigen Uploads Dateien ohne Konto liegen.
 ⚠ **Kein Verzeichnis `public/einfuehrung` anlegen** (BF-100).
+
+## Sponsoren (`/sponsoren`, Feature 15)
+
+Ein Sponsoring-**Paket** (monatlich oder jährlich, Preis auf Anfrage) statt der früheren vier Formate. Jeder aktive
+Sponsor steht mit Logo im Footer jeder Seite (höchstens zwölf), auf `/sponsoren` und auf einer eigenen Seite
+`/sponsoren/{slug}`; dazu ein Verweis auf `/open` (Finanzen) und eine Zeile im Faktenblatt der Presseseite. Spec,
+Entwurf und Plan unter `features/15-sponsoren/`. **Keine Entity, keine Migration.**
+
+**Sponsor eintragen** (AK-26): Vereinbarung liegt vor (VB-01 — Logo-Recht, Zitat im Wortlaut, kein Ausschlussgrund,
+Zustimmung zum öffentlichen Quelltext). Dann ein `new Sponsor(…)` in `App\Sponsor\SponsorRegistry::entries()` und die
+Logodatei nach `assets/images/sponsors/`, danach `php bin/phpunit tests/Unit/Sponsor` (prüft den Eintrag), committen,
+ausrollen. **Nichts sonst** — kein Katalog (Name und Zitat werden nicht übersetzt), keine Sitemap, kein Prüflauf.
+**Beenden:** Ende in den Zeitraum schreiben (`new SponsorPeriod('2027-03-01', '2027-12-31')`), gern im Voraus — der
+Sponsor verschwindet am Folgetag von selbst aus dem Footer und bleibt als ehemalig genannt. **Entfernen** (nur auf
+Wunsch, binnen 30 Tagen, AK-43): Eintrag und Logodatei löschen, Slug in `removedSlugs()` — die Adresse leitet dann mit
+301 auf `/sponsoren`.
+
+**Seit der Überarbeitung (2026-10-28):** optional `description: ['lb' => …, 'de' => …, 'fr' => …, 'en' => …, 'pt' => …]`
+(alle Sprachen aus `translation.yaml` oder keine, je ≤ 500 Zeichen, kein Eurobetrag, jede Fassung vom Sponsor
+freigegeben) und `profiles: ['instagram' => 'https://…', 'facebook' => …, 'linkedin' => …]` (Host muss zur Plattform
+gehören, `SponsorPlatform::hosts()`). Beides steht im Eintrag, **nicht** im Katalog — ein Sponsor braucht weiterhin
+keine Übersetzungsdatei. Profile und Website fallen bei ehemaligen Sponsoren weg, die Beschreibung bleibt.
+⚠ **`SponsorRules::violations()` bekommt die Sprachen als Argument** — `SponsorRegistryTest` liest sie aus
+`translation.yaml`. Keine Konstante daraus machen, sonst ist es eine weitere Stelle für „Eine Sprache hinzufügen“.
+⚠ **Profile als Textlink ohne Plattformsymbol** (AK-55): ein Symbol von deren Server verstieße gegen „nichts von fremden
+Servern“, ein eingebettetes Markenlogo bräuchte ein Nutzungsrecht.
+
+⚠ **Der Betrag steht in keiner Datei des Repositorys** (Decision Log #7). Öffentlicher Preis × Zahl der Logos ergäbe
+die Einnahmen, und die Quartalssperre auf `/open` stünde nur noch auf dem Papier. Das Repository ist öffentlich — auch
+Spec, PRD und Kommentare. `Sponsor` hat strukturell kein Feld für Betrag, Laufzeitart oder Person
+(`SponsorRegistryTest::testAk14Ak44…`).
+⚠ **Aktiv/ehemalig/unsichtbar wird bei jeder Anfrage gerechnet** (`SponsorDirectory`, Kalendertag in
+`Europe/Luxembourg`, Ende einschließlich). Deshalb kein Cache auf der Footer-Auswahl — ein Cache bräuchte eine Regel für
+den Tageswechsel. Die Sitemap bleibt gespeichert (50 Min. + 10 Min. HTTP, innerhalb der Stunde aus AK-23/AK-41).
+⚠ **Eigene Uhr `app.sponsor_clock`, nicht die globale.** Im Test eine `MockClock` auf dem 2027-06-15; die globale Uhr zu
+ersetzen träfe Rate Limiter und Zeitpläne.
+⚠ **Im Test kommen die Sponsoren aus `InMemorySponsorSource`** (`when@test`, Vorgabe leer), gesetzt über
+`TestSponsors::use($client, …)` **vor der ersten Anfrage** — der Client bootet danach neu. Die echte Liste prüft allein
+`SponsorRegistryTest` (über `SponsorRules`). Die Testlogos liegen unter `tests/Fixtures/Sponsor/logos/` und sind nur
+im Testlauf unter `images/sponsors/` gemappt (`asset_mapper.yaml`, `when@test`).
+⚠ **Logos nur PNG oder WebP, geprüft am Inhalt; je ≤ 25 KB, die zwölf größten zusammen ≤ 150 KB** (AK-10, AK-28). Eine
+SVG führte direkt aufgerufen eingebettete Skripte im Ursprung `endlech.lu` aus.
+⚠ **Logos unter `assets/`, nicht `public/images/`.** Der Service Worker liefert `/images/` cache-first; ein getauschtes
+Logo bliebe stehen (die Falle aus Feature 05). Über AssetMapper trägt die Datei ihre Prüfsumme im Namen (EC-06).
+⚠ **Kein Verzeichnis `public/sponsoren`** (BF-100). `/sponsoren` ist die 21. feste Seite in `SeoRegistry`; die Seiten
+der Sponsoren werden abgeleitet (`SeoRegistry::SPONSOR_ROUTE`, `derivedRoutes()`).
+⚠ **Der Website-Link trägt `rel="sponsored noopener"`** und fehlt bei ehemaligen Sponsoren (eine verfallene Domain
+gehörte Jahre später womöglich einem Fremden). Kein Messauslöser daran — gezählt werden nur Seitenaufrufe (AK-46).
+⚠ **Die Laufzeit im Formular steht im alten JSON-Feld `sponsorship_interests`** (`getSponsorshipTerm()`), alte
+Zeilen behalten ihre Formate als „frühere Angabe“ (`getLegacySponsorshipInterests()`). Symfony nimmt bei Radios auch
+eine Liste an und behält still einen Wert — `OrganisationWaitlistType` setzt eine Liste in `PRE_SUBMIT` deshalb auf
+einen ungültigen Wert, damit sie mit 422 scheitert wie jedes untergeschobene Feld.
 
 ## Cookie-Consent-Banner (Issue #82)
 DSGVO-Banner beim ersten Besuch, speichert `accepted`/`declined` 365 Tage im Cookie `cookie_consent`. Keine Entity/
