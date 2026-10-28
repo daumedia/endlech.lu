@@ -29,6 +29,10 @@ final readonly class ChangelogRegistry
     public function notes(): array
     {
         return [
+            // SHOWN — jeder Gast sieht es: den Bereich „Sponsoren“ im Footer jeder Seite und die Seite /sponsoren
+            // (Feature 15). ⚠ Der Text nennt keinen Preis (Decision Log #7) und verspricht keinen Sponsor — es gibt
+            // bei der Auslieferung noch keinen.
+            new ReleaseNote('2026.10.28', new \DateTimeImmutable('2026-10-28'), ReleaseVisibility::SHOWN),
             // SHOWN — jeder neue Gast merkt es: die Einführung nach der ersten Anmeldung, der Newsletter-Schalter im
             // Profil und die Willkommens-Mail (Feature 12). Dazu die schon live geschaltete Sprachwahl nach Browser,
             // die bisher nirgends angekündigt war. AssetMapper und die Reparaturen bleiben ungenannt (kein Gast merkt

@@ -2,10 +2,32 @@
 
 Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
-![Version](https://img.shields.io/badge/version-2026.10.23-blue)
+![Version](https://img.shields.io/badge/version-2026.10.28-blue)
 ![Status](https://img.shields.io/badge/status-beta-green)
 
 ## [Unreleased]
+
+## [2026.10.28] – Sponsoren
+
+### Sponsoren (Feature 15)
+
+- **Ein Sponsoring-Paket** (monatlich oder jährlich, Preis auf Anfrage) ersetzt die vier früheren Formate
+  (Inclusion-Boxen finanzieren, Mitarbeitende als Testpersonen, eine Gemeinde mitfinanzieren, Übersetzungen und
+  Workshops). `/organisationen/unternehmen` beschreibt nur noch das Paket; das Formular fragt die Laufzeit
+  (`sponsorshipTerm`, zwei Radios, darf leer bleiben) statt sechs Häkchen. Alte Einträge zeigen ihre Formate in der
+  Verwaltung als „frühere Angabe“. **Keine Migration** — die Laufzeit steht im bestehenden JSON-Feld.
+- **Footer auf jeder Seite:** Bereich „Sponsoren“ mit bis zu zwölf Logos, „Alle Sponsoren“ und „Sponsor werden →“.
+  Ohne Sponsor nur der letzte Link.
+- **`/sponsoren`** (Paket, was ein Sponsor bekommt und was nicht, Ausschlussregel, Verwendung des Geldes, aktive und
+  ehemalige Sponsoren) und **`/sponsoren/{slug}`** (Zeiträume, Kurzbeschreibung in fünf Sprachen, Zitat in der
+  Originalsprache, Website und Profile bei Instagram, Facebook, LinkedIn als bezahlte Links). Entfernte Sponsoren
+  leiten mit 301 auf die Übersicht.
+- Sponsoren stehen im Quelltext (`App\Sponsor\SponsorRegistry`, heute leer); Beginn und Ende greifen nach dem
+  Kalendertag in Luxemburg, ohne Ausrollen. `SponsorRegistryTest` prüft jeden Eintrag (Logos nur PNG/WebP, Gewicht,
+  Zeiträume, Beschreibung, Profiladressen).
+- `/open` verlinkt im Block Finanzen „Wer uns finanziert →“, das Faktenblatt der Presseseite nennt die Zahl der
+  aktiven Sponsoren. `/sponsoren` ist die 21. feste Seite der Sitemap, die Sponsorenseiten werden abgeleitet.
+- Bekannt und offen (nicht blockierend): BF-188 bis BF-198 in `features/befunde.md`.
 
 ## [2026.10.23] – Einführung für neue Konten, Newsletter im Profil, AssetMapper
 
