@@ -42,9 +42,6 @@ freshness:
     never: "No changelog entry yet."
 
 item:
-    roadmap_changelog:
-        title: "Public roadmap and changelog"
-        reason: "This page itself. From the outside there was no way to tell whether the platform was still being worked on."
     reviews:
         title: "Reviews and comments"
         reason: "Guests should be able to share their own experience of a venue, not only read the recorded details."
@@ -54,6 +51,12 @@ item:
     favourites:
         title: "Favourites"
         reason: "Save venues instead of searching for them again — the first use of an account beyond submitting."
+    computed_score:
+        title: "Calculated score on every venue card"
+        reason: "The number on every venue card is currently set by hand and explained nowhere. It will be replaced by the score from eight features that already appears on the transparency page — calculated the same way for every venue, and traceable."
+    not_recorded:
+        title: "Telling “not there” apart from “not recorded”"
+        reason: "Today, “Not available” means either that something is missing or that nobody has checked yet. Anyone planning a visit in a wheelchair needs exactly that difference."
     ios_app:
         title: "Native iOS app"
         reason: "The interface for it has existed since June. Whether a dedicated app is worth it depends on there being enough content people need while out."

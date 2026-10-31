@@ -42,9 +42,6 @@ freshness:
     never: "Aucune entrée dans le journal des modifications pour l'instant."
 
 item:
-    roadmap_changelog:
-        title: "Feuille de route et journal des modifications publics"
-        reason: "Cette page elle-même. De l'extérieur, rien ne permettait de savoir si la plateforme était encore développée."
     reviews:
         title: "Avis et commentaires"
         reason: "Les visiteurs doivent pouvoir partager leur propre expérience d'un établissement, et pas seulement lire les caractéristiques relevées."
@@ -54,6 +51,12 @@ item:
     favourites:
         title: "Favoris"
         reason: "Retenir des établissements sans les rechercher à chaque fois — la première utilité d'un compte au-delà des propositions."
+    computed_score:
+        title: "Score calculé sur chaque fiche de restaurant"
+        reason: "La note affichée sur chaque fiche de restaurant est aujourd'hui attribuée à la main et n'est expliquée nulle part. Elle sera remplacée par le score à huit critères qui figure déjà sur la page de transparence — calculé de la même manière pour chaque établissement, et vérifiable."
+    not_recorded:
+        title: "Distinguer « absent » de « pas encore relevé »"
+        reason: "Aujourd'hui, « Non disponible » signifie soit qu'un élément manque, soit que personne ne l'a encore vérifié. Pour préparer une sortie en fauteuil roulant, c'est précisément cette différence qui compte."
     ios_app:
         title: "Application iOS native"
         reason: "L'interface nécessaire existe depuis juin. L'intérêt d'une application dédiée dépend de la quantité de contenu réellement utile en déplacement."

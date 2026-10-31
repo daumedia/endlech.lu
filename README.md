@@ -24,7 +24,7 @@ Current development status of the platform.
 - [x] **Database:** Schema for restaurants & users (MySQL 8.0).
 - [x] **Data Seeding:** Initial Luxembourg restaurants via fixtures.
 - [x] **User Fixtures:** Test users (admin, verified, unverified) for development & testing.
-- [ ] **Authentication:** Login & registration for users.
+- [x] **Authentication:** Login & registration with email verification, passkeys (Face ID / Touch ID), password reset.
 - [x] **Email:** Brevo mailer integration for transactional emails (verification, password reset).
 - [x] **Cookie Consent:** GDPR-compliant cookie banner with accept/decline, 365-day storage, footer re-open link, and translations (LU/DE/FR/EN).
 - [x] **REST API (Issue #87):** Versioned JSON API under `/api/v1/` for the native iOS app — JWT auth (login/register), paginated & filterable restaurants, full detail, `/me` + submissions, restaurant submission. CORS, rate limiting, and auto-generated Swagger UI at `/api/docs`.
@@ -50,16 +50,14 @@ Current development status of the platform.
 - [x] **Contact & Social Media:** Phone, email, website, Instagram, Facebook, and TikTok links on restaurant detail pages.
 
 ### 👤 User & Community
+- [x] **Crowdsourcing:** Five-step wizard to suggest new restaurants, reviewed by an admin before publication.
+- [x] **Ideas Board:** Public board at `/community/ideen` to submit and vote on ideas for the platform.
 - [ ] **User Profiles:** Save favorites.
-- [ ] **Crowdsourcing:** Form to suggest new restaurants.
 - [ ] **Reviews:** Comment system for accessibility feedback.
 
 ## 🔮 Roadmap
 
-Ideas for version 2.0 (after the first stable release):
-
-* **Multilingual:** Interface in LU, FR, EN.
-* **Map:** Interactive map view (Leaflet/Google Maps).
+The current roadmap is public at [endlech.lu/roadmap](https://endlech.lu/roadmap) — what is planned, what is being considered, and what is deliberately not being built. It is maintained in `src/Roadmap/RoadmapRegistry.php`.
 
 ## 🛠 Tech Stack
 

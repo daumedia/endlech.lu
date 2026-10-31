@@ -41,9 +41,6 @@ freshness:
     never: "Ainda não há entradas no registo de alterações."
 
 item:
-    roadmap_changelog:
-        title: "Roteiro público e registo de alterações"
-        reason: "Esta própria página. Até agora, quem via de fora não conseguia perceber se ainda se estava a trabalhar na plataforma."
     reviews:
         title: "Avaliações e comentários"
         reason: "Os clientes devem poder deixar a sua própria experiência sobre um estabelecimento, e não apenas ler as características registadas."
@@ -53,6 +50,12 @@ item:
     favourites:
         title: "Favoritos"
         reason: "Guardar estabelecimentos sem ter de os procurar sempre de novo — a primeira utilidade de uma conta para além de enviar sugestões."
+    computed_score:
+        title: "Pontuação calculada em cada cartão de restaurante"
+        reason: "O número em cada cartão de restaurante é hoje atribuído à mão e não é explicado em lado nenhum. Será substituído pela pontuação de oito características que já consta da página de transparência — calculada da mesma forma para cada estabelecimento, e verificável."
+    not_recorded:
+        title: "Distinguir «não existe» de «não registado»"
+        reason: "Hoje, «Não disponível» significa que algo falta ou que ainda ninguém verificou. Quem planeia uma visita em cadeira de rodas precisa precisamente desta diferença."
     ios_app:
         title: "App nativa para iOS"
         reason: "A interface para isso existe desde junho. Se uma app própria compensa depende de haver conteúdo suficiente de que se precise em movimento."

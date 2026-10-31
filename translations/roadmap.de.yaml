@@ -48,9 +48,6 @@ freshness:
     never: "Noch kein Eintrag im Changelog."
 
 item:
-    roadmap_changelog:
-        title: "Öffentliche Roadmap und Changelog"
-        reason: "Diese Seite selbst. Von außen war bisher nicht erkennbar, ob an der Plattform noch gearbeitet wird."
     reviews:
         title: "Bewertungen und Kommentare"
         reason: "Gäste sollen ihre eigene Erfahrung zu einem Lokal hinterlassen können, nicht nur die erfassten Merkmale lesen."
@@ -60,6 +57,12 @@ item:
     favourites:
         title: "Favoriten"
         reason: "Lokale merken, ohne sie jedes Mal neu zu suchen — der erste Nutzen eines Kontos über das Einreichen hinaus."
+    computed_score:
+        title: "Berechnete Punktzahl auf jeder Restaurantkarte"
+        reason: "Die Zahl auf jeder Restaurantkarte wird heute von Hand vergeben und nirgends erklärt. An ihre Stelle tritt die Punktzahl aus acht Merkmalen, die schon auf der Transparenzseite steht — für jedes Lokal gleich gerechnet und nachvollziehbar."
+    not_recorded:
+        title: "„Nicht vorhanden“ und „nicht erfasst“ unterscheiden"
+        reason: "„Nicht verfügbar“ heißt heute entweder, dass etwas fehlt, oder, dass es noch niemand geprüft hat. Wer mit Rollstuhl einen Besuch plant, braucht genau diesen Unterschied."
     ios_app:
         title: "Native iOS-App"
         reason: "Die Schnittstelle dafür steht seit Juni. Ob eine eigene App sich lohnt, hängt daran, ob es genug Inhalt gibt, den man unterwegs braucht."

@@ -42,9 +42,6 @@ freshness:
     never: "Nach keen Androen am Changelog."
 
 item:
-    roadmap_changelog:
-        title: "Ëffentlech Roadmap a Changelog"
-        reason: "Dës Säit selwer. Vun dobaussen war bis elo net z'erkennen, ob nach un der Plattform geschafft gëtt."
     reviews:
         title: "Bewäertungen a Kommentaren"
         reason: "Gäscht sollen hir eegen Erfarung zu engem Lokal hannerloosse kënnen, net nëmmen déi erfaassten Ugaben liesen."
@@ -54,6 +51,12 @@ item:
     favourites:
         title: "Favoritten"
         reason: "Lokaler markéieren, ouni se all Kéier nei ze sichen — den éischten Notzen vun engem Kont iwwer d'Araiche eraus."
+    computed_score:
+        title: "Berechent Punktzuel op all Restaurantkaart"
+        reason: "D'Zuel op all Restaurantkaart gëtt haut mat der Hand vergi an néierens erkläert. Amplaz kënnt d'Punktzuel aus aacht Merkmaler, déi schonn op der Transparenzsäit steet — fir all Lokal op déiselwecht Aart gerechent a fir jiddereen ze verstoen."
+    not_recorded:
+        title: "„Net do“ an „net erfaasst“ ënnerscheeden"
+        reason: "„Net disponibel“ heescht haut entweder, datt eppes feelt, oder datt et nach keen nogekuckt huet. Wien mam Rollstull e Besuch plangt, brauch genee dësen Ënnerscheed."
     ios_app:
         title: "Native iOS-App"
         reason: "D'Schnëttplaz dofir steet zënter Juni. Ob eng eege App sech lount, hänkt dovun of, ob et genuch Inhalt gëtt, deen ee ënnerwee brauch."
