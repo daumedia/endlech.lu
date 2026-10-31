@@ -2,10 +2,12 @@
 
 Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
-![Version](https://img.shields.io/badge/version-2026.10.28-blue)
+![Version](https://img.shields.io/badge/version-2026.10.31-blue)
 ![Status](https://img.shields.io/badge/status-beta-green)
 
 ## [Unreleased]
+
+## [2026.10.31] – Roadmap-Durchsicht
 
 ### Roadmap-Durchsicht
 
