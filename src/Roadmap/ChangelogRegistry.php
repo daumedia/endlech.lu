@@ -29,6 +29,10 @@ final readonly class ChangelogRegistry
     public function notes(): array
     {
         return [
+            // SILENT, wie `v2026.09.12.3`: Ein Gast bemerkt nur die Roadmap selbst — „In Arbeit“ ist leer, unter
+            // „Geplant“ stehen die Features 13 und 14. Die Roadmap ist der Ort, an dem Vorhaben mitgeteilt werden;
+            // ein Changelog-Eintrag sagte dasselbe ein zweites Mal und läse sich wie eine Ankündigung.
+            new ReleaseNote('2026.10.31', new \DateTimeImmutable('2026-10-31'), ReleaseVisibility::SILENT),
             // SHOWN — jeder Gast sieht es: den Bereich „Sponsoren“ im Footer jeder Seite und die Seite /sponsoren
             // (Feature 15). ⚠ Der Text nennt keinen Preis (Decision Log #7) und verspricht keinen Sponsor — es gibt
             // bei der Auslieferung noch keinen.

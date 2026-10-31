@@ -2,10 +2,21 @@
 
 Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
-![Version](https://img.shields.io/badge/version-2026.10.28-blue)
+![Version](https://img.shields.io/badge/version-2026.10.31-blue)
 ![Status](https://img.shields.io/badge/status-beta-green)
 
 ## [Unreleased]
+
+## [2026.10.31] – Roadmap-Durchsicht
+
+### Roadmap-Durchsicht
+
+- **„In Arbeit“ ist leer** — dort stand seit dem 2026-08-31 noch „Öffentliche Roadmap und Changelog“, obwohl beides
+  seit `v2026.08.31` live ist. Die Spalte zeigt jetzt ihren Leertext.
+- **Zwei neue Vorhaben unter „Geplant“:** berechnete Punktzahl auf jeder Restaurantkarte (Feature 13) und „Nicht
+  vorhanden“ von „nicht erfasst“ unterscheiden (Feature 14), je mit Begründung in fünf Sprachen.
+- README: Anmeldung, Restaurant-Vorschläge und Ideen-Board als vorhanden geführt, Roadmap-Abschnitt verweist auf
+  `/roadmap`.
 
 ## [2026.10.28] – Sponsoren
 

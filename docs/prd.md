@@ -491,6 +491,8 @@ erste getragen hat.
 | **Chat-Widget** | Stand bis 2026-08-30 nur auf dem externen Board `endlech.userjot.com` (Status „Planned") und in keinem Projektartefakt. Mit Feature `06` hierher überführt; das externe Board wird abgeschaltet |
 | **KI-Filter** | Ebenda, Status „Planned". Was genau gefiltert werden soll, ist nicht festgehalten — der Punkt ist ein Merkposten, keine Anforderung |
 | **Android-App · Google-Login · Apple-Login** | Ebenda, Status „Pending". Vollständigkeitshalber notiert; keiner der drei ist bisher begründet oder priorisiert |
+| **Berechnete Punktzahl auf der Restaurantkarte** | Feature `13`, aus `12/OF-01`: `rating` wird von Hand gepflegt und nirgends erklärt, `/open` rechnet längst `AccessibilityScore` — zwei Zahlen für dieselbe Frage |
+| **„Nicht vorhanden“ und „nicht erfasst“ unterscheiden** | Feature `14`, aus `12/OF-02`: die Detailseite zeigt für beides „Nicht verfügbar“ und sagt das in ihrem Hilfetext selbst; die Freigabe macht aus „Weiß nicht“ ein „Nein“ |
 
 > **Herkunft der letzten vier Zeilen:** Bis August 2026 lief unter
 > `endlech.userjot.com` ein extern gehostetes Ideen-Board, verlinkt aus der

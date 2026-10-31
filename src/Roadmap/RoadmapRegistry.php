@@ -28,12 +28,16 @@ final readonly class RoadmapRegistry
      */
     public function items(): array
     {
+        // „In Arbeit“ ist leer, solange niemand an einem Vorhaben baut — die Spalte
+        // zeigt dann ihren Leertext. Ein ausgeliefertes Vorhaben bleibt nicht stehen
+        // (`roadmap_changelog` stand nach dem 2026-08-31 noch zwei Monate hier).
         return [
-            new RoadmapItem('roadmap_changelog', RoadmapStage::IN_PROGRESS),
-
             new RoadmapItem('reviews', RoadmapStage::PLANNED),
             new RoadmapItem('map', RoadmapStage::PLANNED),
             new RoadmapItem('favourites', RoadmapStage::PLANNED),
+            // Features 13 und 14, beide aus Feature 12 (OF-01, OF-02) hervorgegangen.
+            new RoadmapItem('computed_score', RoadmapStage::PLANNED),
+            new RoadmapItem('not_recorded', RoadmapStage::PLANNED),
 
             new RoadmapItem('ios_app', RoadmapStage::CONSIDERED),
             new RoadmapItem('chat_widget', RoadmapStage::CONSIDERED),

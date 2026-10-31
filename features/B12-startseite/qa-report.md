@@ -4,6 +4,11 @@ Stand: 2026-08-24 · Vorstufe: `rekonstruiert` · Branch `fix/b04-profil-qa`
 
 ## Fazit
 
+> **Stand 2026-10-31 — überholt.** Der zweite Durchlauf bestand 15/15 nach der Reparatur
+> von BF-64 (`features/befunde.md`); die Reparatur ging mit `v2026.08.29` hinaus. Auf der
+> Produktion (`v2026.10.28`) zeigt die Top-Liste der Startseite **6 Karten**. Das Fazit
+> darunter ist das des ersten Durchlaufs und bleibt als Herkunft stehen.
+
 **Production-ready: nein** — ein Befund mit Grad *mittel* an der prominentesten Seite der
 Anwendung.
 
