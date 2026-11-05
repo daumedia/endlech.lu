@@ -237,7 +237,7 @@ lg:col-span-4` (volle Breite bis `lg`), jede Gruppe `lg:col-span-2`. Gemessen: D
 
 | Bereich | Überschrift (`h2`) | Inhalt |
 |---|---|---|
-| Marke | — / `footer.contact_title` | Wortmarke → `app_home`, `footer.tagline`; Kontakt: `footer.help_improve`, `mailto:support@endlech.lu`, GitHub (`target="_blank"`, `rel="noopener noreferrer"`) |
+| Marke | — / `footer.contact_title` | Wortmarke → `app_home`, `footer.tagline`, Herstellerhinweis `footer.product_of` („Ein Produkt von Daumedia" → `daumedia.lu/lb/` bzw. `/en/`, Twig-Globals `operator_brand`/`operator_website`, ohne `rel="sponsored"`); Kontakt: `footer.help_improve`, `mailto:support@endlech.lu`, GitHub (`target="_blank"`, `rel="noopener noreferrer"`) |
 | Entdecken | `footer.discover` | Restaurants suchen · Kriterien für Barrierefreiheit · App-Warteliste (Feature 08) |
 | Mitmachen | `footer.get_involved` | Restaurant vorschlagen (`footer.suggest_restaurant`) · Feedback & Ideen (Feature 06) · Für Restaurants · Für Organisationen |
 | Über Endlech | `nav.about` | Über uns (`nav.about_short`, BF-80) · Zahlen & Finanzen · Roadmap · Changelog (Feature 07) · Presse (Feature 05) |

@@ -29,10 +29,10 @@
                 Tätigkeit **samt der Behörde, die sie erteilt hat**, und — falls
                 vorhanden — die MwSt-Nummer.
 
-                ⚠ Jede Zeile steht unter `is not empty`: Die MwSt-Nummer ist
-                noch nicht vergeben, und eine Beschriftung ohne Wert sähe aus
-                wie ein Fehler. Sobald der Parameter gefüllt ist, erscheint sie
-                ohne Codeänderung.
+                ⚠ Jede Zeile steht unter `is not empty`: Eine Beschriftung ohne
+                Wert sähe aus wie ein Fehler. Die MwSt-Nummer war bis zum
+                2026-11-05 nicht vergeben und erschien erst, als der Parameter
+                gefüllt wurde — ohne Codeänderung.
             #}
             {% if operator_rcs is not empty or operator_authorisation is not empty or operator_vat is not empty %}
                 <dl class="text-gray-700 leading-relaxed mt-3 space-y-1">

@@ -97,10 +97,11 @@ parameters:
     # sind dieselbe Adresse — bei einer S.à r.l.-S der Regelfall, aber wer sie
     # ändert, ändert damit eine Privatanschrift.
     #
-    # ⚠ **`app.operator_vat` ist leer, bis die Nummer vorliegt.** Art. 5 verlangt
-    # sie nur, „falls vorhanden"; die Gründungsurkunde nennt keine. Sobald das
-    # Steueramt sie vergeben hat, hier eintragen — das Template blendet die Zeile
-    # dann von selbst ein.
+    # **`app.operator_vat` seit dem 2026-11-05 gefüllt** (LU37860701, am selben
+    # Tag über VIES geprüft: gültig, ausgestellt auf DAUMEDIA S.A.R.L.- S,
+    # 13, rue de la Fontaine, L-3768 Tétange). Art. 5 verlangt sie, „falls
+    # vorhanden" — bis dahin stand der Wert leer, weil die Gründungsurkunde keine
+    # nannte. Leer gesetzt blendet das Template die Zeile von selbst aus.
     #
     # Die Werte erscheinen an zwei Stellen zugleich — Faktenblatt auf /presse und
     # Impressum (/legal). Genau deshalb stehen sie hier und nicht in vier
@@ -127,7 +128,14 @@ parameters:
     # lb wäre er sinnlos.
     app.operator_rcs: 'B311765'
     app.operator_authorisation: '10199120/0'
-    app.operator_vat: ''
+    app.operator_vat: 'LU37860701'
+    # Herstellerhinweis in der Fußzeile („Ein Produkt von Daumedia"), damit die
+    # Gesellschaft hinter Endlech.lu auf jeder Seite für sich wirbt. Die Marke,
+    # unter der sie auftritt — nicht der Registername oben, der gehört in Impressum
+    # und Faktenblatt. Ohne abschließenden Schrägstrich: Die Fußzeile hängt die
+    # Sprache an (daumedia.lu führt nur `lb` und `en`).
+    app.operator_brand: 'Daumedia'
+    app.operator_website: 'https://daumedia.lu'
     # Presseadresse. ⚠ VB-02: Das Postfach muss beim Hoster eingerichtet sein und
     # gelesen werden — eine Presseadresse, die ins Leere läuft, ist schlimmer als
     # keine. Fallback-Parameter wie bei app.contact_email, damit ein leerer

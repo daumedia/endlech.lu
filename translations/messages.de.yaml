@@ -21,6 +21,7 @@ nav:
 
 footer:
     tagline: "Die Plattform für barrierefreie Gastronomie in Luxemburg. Gemeinsam für mehr Inklusion."
+    product_of: "Ein Produkt von %company%"
     open_source: "Open Source auf GitHub"
     search_restaurants: "Restaurants suchen"
     accessibility_criteria: "Kriterien für Barrierefreiheit"

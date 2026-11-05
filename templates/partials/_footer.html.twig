@@ -53,6 +53,16 @@
                 </a>
                 <p class="mt-3 max-w-sm text-gray-300">{{ 'footer.tagline'|trans }}</p>
 
+                {# Herstellerhinweis — wirbt für Daumedia, die Gesellschaft hinter Endlech.lu.
+                   Gewöhnlicher Link, kein `sponsored`/`nofollow`: Hersteller und Betreiber sind
+                   dieselbe Gesellschaft, es ist keine bezahlte Platzierung (anders als Feature 15).
+                   daumedia.lu führt nur `lb` und `en` — Luxemburgisch für lb/de, sonst Englisch. #}
+                <p class="mt-1">
+                    <a href="{{ operator_website }}/{{ app.request.locale in ['lb', 'de'] ? 'lb' : 'en' }}/" class="{{ _link }} text-gray-400">
+                        {{ 'footer.product_of'|trans({'%company%': operator_brand}) }}
+                    </a>
+                </p>
+
                 <h2 class="mt-6 text-white font-bold uppercase tracking-wider text-xs">{{ 'footer.contact_title'|trans }}</h2>
                 <p class="mt-2">{{ 'footer.help_improve'|trans }}</p>
                 <ul class="mt-1">

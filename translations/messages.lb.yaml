@@ -21,6 +21,7 @@ nav:
 
 footer:
     tagline: "D'Plattform fir barrierefräi Gastronomie zu Lëtzebuerg. Zesumme fir méi Inklusioun."
+    product_of: "E Produkt vun %company%"
     open_source: "Open Source op GitHub"
     search_restaurants: "Restauranten sichen"
     accessibility_criteria: "Critèren fir Barrierefreiheet"

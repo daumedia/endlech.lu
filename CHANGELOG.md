@@ -7,6 +7,18 @@ Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
 ## [Unreleased]
 
+### Herstellerhinweis im Footer
+
+- **„Ein Produkt von Daumedia"** unter dem Leitsatz in der Markenspalte, auf jeder Seite und in allen fünf Sprachen
+  (`footer.product_of`). Der Link führt auf `daumedia.lu` — Luxemburgisch für `lb`/`de`, Englisch für `fr`/`en`/`pt`
+  (die Seite führt nur diese beiden Sprachen). Marke und Adresse als Parameter `app.operator_brand` und
+  `app.operator_website`, nicht im Katalog.
+
+### MwSt-Nummer im Impressum
+
+- **LU37860701** steht jetzt unter `/legal` (`app.operator_vat`, am 2026-11-05 über VIES geprüft). Art. 5 der Loi du
+  14 août 2000 verlangt sie, sobald es sie gibt; bis dahin blendete das Impressum die Zeile aus.
+
 ## [2026.10.31] – Roadmap-Durchsicht
 
 ### Roadmap-Durchsicht

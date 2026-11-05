@@ -34,6 +34,7 @@ eine Lücke in der Erklärung — nicht in dieser Datei.
 | **Sitz** | 13, rue de la Fontaine, L-3768 Tétange, Luxemburg |
 | **Handelsregister** | RCS Luxembourg **B311765** (Gründung 27.07.2026, Eintragung 02.09.2026) |
 | **Handelsermächtigung** | 10199120/0, erteilt vom Ministère de l’Économie |
+| **MwSt-Nummer** | **LU37860701** (am 2026-11-05 über VIES geprüft, gültig) |
 | **Vertreten durch** | Michael Ferreira Rodrigues, Geschäftsführer |
 | **Kontakt** | `support@endlech.lu` (einzige Adresse; `info@` existiert nicht, bis 2026-09-15 falsch angegeben) |
 
@@ -47,8 +48,8 @@ Einwilligungen gelten dem Angebot „Endlech.lu", das unverändert weiterbetrieb
 Ob der Übergang eine Information der Betroffenen erfordert, ist eine Frage, die
 fachlicher Rat beantworten sollte; sie steht als **DS-05** unten.
 
-⚠ **Keine MwSt-Nummer.** Die Gründungsurkunde nennt keine. Sobald sie vergeben ist,
-gehört sie in `app.operator_vat` — das Impressum blendet die Zeile dann von selbst ein.
+**MwSt-Nummer seit 2026-11-05 im Impressum** (`app.operator_vat`). Die Gründungsurkunde
+nannte keine; bis dahin stand der Parameter leer und das Impressum blendete die Zeile aus.
 
 ## Auftragsverarbeiter
 
