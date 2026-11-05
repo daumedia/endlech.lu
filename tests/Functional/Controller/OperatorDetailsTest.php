@@ -61,6 +61,35 @@ final class OperatorDetailsTest extends AbstractWebTestCase
     }
 
     /**
+     * Art. 5 der Loi du 14 août 2000: Handelsregister, Ermächtigung und — sobald es sie gibt —
+     * die MwSt-Nummer stehen im Impressum, in jeder Sprache. Ein leerer Parameter blendet die
+     * Zeile samt Beschriftung aus; gefüllt muss sie erscheinen.
+     */
+    public function testImpressumNenntRegisterErmaechtigungUndMwStNummer(): void
+    {
+        $client = static::createClient();
+        $container = static::getContainer();
+
+        $pflicht = [
+            'app.operator_rcs' => 'Handelsregister',
+            'app.operator_authorisation' => 'Ermächtigung',
+            'app.operator_vat' => 'MwSt-Nummer',
+        ];
+
+        foreach (['lb', 'de', 'fr', 'en', 'pt'] as $sprache) {
+            $legal = $client->request('GET', "/$sprache/legal")->filter('main')->text();
+            self::assertResponseIsSuccessful();
+
+            foreach ($pflicht as $parameter => $was) {
+                $wert = trim((string) $container->getParameter($parameter));
+                if ('' !== $wert) {
+                    self::assertStringContainsString($wert, $legal, sprintf('%s fehlt auf /%s/legal.', $was, $sprache));
+                }
+            }
+        }
+    }
+
+    /**
      * Solange die Angaben fehlen, sagt keine der beiden Seiten etwas Falsches.
      *
      * /presse weist den Stand als ausstehend aus, /legal behält den bisherigen

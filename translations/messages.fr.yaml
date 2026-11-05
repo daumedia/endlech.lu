@@ -21,6 +21,7 @@ nav:
 
 footer:
     tagline: "La plateforme pour la gastronomie accessible au Luxembourg. Ensemble pour plus d'inclusion."
+    product_of: "Un produit de %company%"
     open_source: "Open Source sur GitHub"
     search_restaurants: "Rechercher des restaurants"
     accessibility_criteria: "Critères d'accessibilité"

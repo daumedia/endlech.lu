@@ -72,6 +72,24 @@ final class FooterStructureTest extends AbstractWebTestCase
         self::assertCount(1, $leiste->filter('[data-action="cookie-consent#openSettings"]'));
     }
 
+    /**
+     * Der Herstellerhinweis steht auf jeder Seite und führt in eine Sprache, die daumedia.lu
+     * tatsächlich hat (`lb`, `en`) — eine andere Sprache endet dort in einer 404.
+     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('sprachen')]
+    public function testHerstellerhinweisVerlinktDaumedia(string $sprache): void
+    {
+        $client = static::createClient();
+        $footer = $client->request('GET', "/$sprache/about")->filter('footer');
+        self::assertResponseIsSuccessful();
+
+        $erwartet = 'https://daumedia.lu/'.(\in_array($sprache, ['lb', 'de'], true) ? 'lb' : 'en').'/';
+        $link = $footer->filter('a[href="'.$erwartet.'"]');
+        self::assertCount(1, $link, "Kein Herstellerhinweis auf $erwartet.");
+        self::assertStringContainsString('Daumedia', $link->text());
+        self::assertStringNotContainsString('sponsored', (string) $link->attr('rel'));
+    }
+
     /** Die Wortmarke liest sich als „Endlech.lu", nicht als „Endlech .lu". */
     public function testWortmarkeOhneLuecke(): void
     {
