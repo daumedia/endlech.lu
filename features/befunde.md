@@ -332,7 +332,7 @@ Die drei Befunde des ersten `03`-Durchlaufs (BF-77/78/79), BF-81 sowie die vier 
 
 ## Behoben
 
-### Feature 16 · Roadmap und Ideen in einem Bereich — Fehlerauftrag (QA 2026-11-07, behoben 2026-11-07, nachgeprüft 2026-11-07, ausgeliefert: noch nicht)
+### Feature 16 · Roadmap und Ideen in einem Bereich — Fehlerauftrag (QA 2026-11-07, behoben 2026-11-07, nachgeprüft 2026-11-07, ausgeliefert 2026-11-07 mit `v2026.11.07`)
 
 Ausgeliefert: **noch nicht** — uncommittet auf `feature/16-roadmap-und-ideen`. ⚠ **BF-199 (*hoch*) besteht auf der Produktion
 fort** (Zustimmen unter `/community/ideen/…/zustimmen`), bis der Branch ausgerollt ist. Gegenprobe in der zweiten QA vom
