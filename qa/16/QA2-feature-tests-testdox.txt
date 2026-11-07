@@ -1,0 +1,124 @@
+PHPUnit 12.5.4 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.5.12
+Configuration: /Users/michaelferreira/DEV/SaaS/endlech/phpunit.dist.xml
+
+...............................................................  63 / 101 ( 62%)
+......................................                          101 / 101 (100%)
+
+Time: 00:09.287, Memory: 76.50 MB
+
+Board Legacy Redirect (App\Tests\Functional\Controller\BoardLegacyRedirect)
+ ✔ Ak 21 seitenadressen leiten dauerhaft weiter with data set "lb Übersicht"
+ ✔ Ak 21 seitenadressen leiten dauerhaft weiter with data set "lb Formular"
+ ✔ Ak 21 seitenadressen leiten dauerhaft weiter with data set "lb Bestätigung"
+ ✔ Ak 21 seitenadressen leiten dauerhaft weiter with data set "de Übersicht"
+ ✔ Ak 21 seitenadressen leiten dauerhaft weiter with data set "de Formular"
+ ✔ Ak 21 seitenadressen leiten dauerhaft weiter with data set "de Bestätigung"
+ ✔ Ak 21 seitenadressen leiten dauerhaft weiter with data set "fr Übersicht"
+ ✔ Ak 21 seitenadressen leiten dauerhaft weiter with data set "fr Formular"
+ ✔ Ak 21 seitenadressen leiten dauerhaft weiter with data set "fr Bestätigung"
+ ✔ Ak 21 seitenadressen leiten dauerhaft weiter with data set "en Übersicht"
+ ✔ Ak 21 seitenadressen leiten dauerhaft weiter with data set "en Formular"
+ ✔ Ak 21 seitenadressen leiten dauerhaft weiter with data set "en Bestätigung"
+ ✔ Ak 21 seitenadressen leiten dauerhaft weiter with data set "pt Übersicht"
+ ✔ Ak 21 seitenadressen leiten dauerhaft weiter with data set "pt Formular"
+ ✔ Ak 21 seitenadressen leiten dauerhaft weiter with data set "pt Bestätigung"
+ ✔ Ak 21 nach einem sprung ist das ziel erreicht
+ ✔ Ak 22 mail link fuehrt auf dieselbe idee with data set "lb"
+ ✔ Ak 22 mail link fuehrt auf dieselbe idee with data set "de"
+ ✔ Ak 22 mail link fuehrt auf dieselbe idee with data set "fr"
+ ✔ Ak 22 mail link fuehrt auf dieselbe idee with data set "en"
+ ✔ Ak 22 mail link fuehrt auf dieselbe idee with data set "pt"
+ ✔ Ak 24 weiterleitung bleibt intern with data set "next"
+ ✔ Ak 24 weiterleitung bleibt intern with data set "url"
+ ✔ Ak 24 weiterleitung bleibt intern with data set "target"
+ ✔ Ak 24 weiterleitung bleibt intern with data set "Pfad"
+ ✔ Ak 24 weiterleitung bleibt intern with data set "Pfad nach Nummer"
+ ✔ Ak 29 wartende idee bleibt unsichtbar
+ ✔ Ak 30 keine personenangabe im protokoll
+ ✔ Ec 02 veralteter titelteil fuehrt trotzdem zur idee
+ ✔ Ec 03 dublette hoechstens zwei spruenge
+ ✔ Ec 04 ohne sprache keine adresse
+ ✔ Ec 06 lesezeichen mit filter landet auf dem reiter
+
+Footer Roadmap Ideas (App\Tests\Functional\FooterRoadmapIdeas)
+ ✔ Ak 01 ein eintrag in mitmachen with data set "Startseite der Suche"
+ ✔ Ak 01 ein eintrag in mitmachen with data set "Über uns"
+ ✔ Ak 01 ein eintrag in mitmachen with data set "Roadmap"
+ ✔ Ak 01 ein eintrag in mitmachen with data set "Ideen"
+ ✔ Ak 02 alte eintraege sind weg
+
+Qa16Roadmap Ideen (App\Tests\Functional\Controller\Qa16RoadmapIdeen)
+ ✔ Ak 31 zaehlaufruf neuer pfad ohne abfrageteil und ohne neues feld
+ ✔ Ak 21 alte adresse behaelt ihre sprache gegen die sitzung
+ ✔ Ak 24 titelteil bleibt im ziel kodiert with data set "CRLF"
+ ✔ Ak 24 titelteil bleibt im ziel kodiert with data set "Rückstriche"
+ ✔ Ak 24 titelteil bleibt im ziel kodiert with data set "Unicode-Umkehr"
+ ✔ Ak 24 titelteil bleibt im ziel kodiert with data set "Punkt-Punkt"
+ ✔ Ak 29 wartende idee auch mit parametern und fremdem konto unsichtbar
+ ✔ Ec 01 ohne freigegebene idee
+ ✔ Bf 199 zustimmen verraet wartende idee nicht
+ ✔ Bf 201 ort heisst auch in leerzustand bestaetigung und mail ideen
+
+Roadmap Area (App\Tests\Functional\Controller\RoadmapArea)
+ ✔ Ak 05 kopf mit name und drei reitern with data set "Roadmap"
+ ✔ Ak 05 kopf mit name und drei reitern with data set "Ideen"
+ ✔ Ak 05 kopf mit name und drei reitern with data set "Changelog"
+ ✔ Ak 05 kopf mit name und drei reitern with data set "Einzelseite"
+ ✔ Ak 06 aktiver reiter with data set "Roadmap"
+ ✔ Ak 06 aktiver reiter with data set "Ideen"
+ ✔ Ak 06 aktiver reiter with data set "Changelog"
+ ✔ Ak 06 aktiver reiter with data set "Einzelseite"
+ ✔ Ak 07 reiter sind links auf eigene adressen
+ ✔ Ak 10 knopf im kopf jedes reiters with data set "Roadmap"
+ ✔ Ak 10 knopf im kopf jedes reiters with data set "Ideen"
+ ✔ Ak 10 knopf im kopf jedes reiters with data set "Changelog"
+ ✔ Ak 12 gast landet nach der anmeldung auf dem formular
+ ✔ Ak 12 unbestaetigtes konto bekommt den hinweis
+ ✔ Ak 13 eigene titel und genau eine h 1
+ ✔ Ak 13 kette lueckenlos mit ideen
+ ✔ Ak 08 reiter tragen mindestmasse
+ ✔ Bf 200 ueber der reiterleiste steht ueberall dasselbe with data set "Roadmap"
+ ✔ Bf 200 ueber der reiterleiste steht ueberall dasselbe with data set "Ideen"
+ ✔ Bf 200 ueber der reiterleiste steht ueberall dasselbe with data set "Changelog"
+ ✔ Bf 200 ueber der reiterleiste steht ueberall dasselbe with data set "Einzelseite"
+ ✔ Bf 200 alle reiter gleich fett
+ ✔ Bf 203 etikett auf dunklem glas
+ ✔ Ak 14 roadmap ohne weiterlesen
+ ✔ Ak 15 community verweis ohne umweg
+ ✔ Ak 16 weitere geplante ideen fuehren auf den gefilterten reiter
+ ✔ Ak 17 reiter ideen zeigt die leitzahl
+ ✔ Ak 19 formular und bestaetigung fuehren zurueck
+ ✔ Ec 01 leerer reiter mit weg zum formular
+ ✔ Ec 07 kein aktualitaetshinweis auf dem reiter ideen
+
+Roadmap Area Locale (App\Tests\Functional\Controller\RoadmapAreaLocale)
+ ✔ Ak 27 beschriftet und ohne rohen schluessel with data set "lb"
+ ✔ Ak 27 beschriftet und ohne rohen schluessel with data set "de"
+ ✔ Ak 27 beschriftet und ohne rohen schluessel with data set "fr"
+ ✔ Ak 27 beschriftet und ohne rohen schluessel with data set "en"
+ ✔ Ak 27 beschriftet und ohne rohen schluessel with data set "pt"
+ ✔ Ak 37 ort heisst ideen with data set "lb"
+ ✔ Ak 37 ort heisst ideen with data set "de"
+ ✔ Ak 37 ort heisst ideen with data set "fr"
+ ✔ Ak 37 ort heisst ideen with data set "en"
+ ✔ Ak 37 ort heisst ideen with data set "pt"
+ ✔ Bf 202 franzoesischer reiter ist kurz
+
+Roadmap Ideen Adresse (App\Tests\Functional\Controller\RoadmapIdeenAdresse)
+ ✔ Ak 04 drei reiter ohne anmeldung with data set "lb"
+ ✔ Ak 04 drei reiter ohne anmeldung with data set "de"
+ ✔ Ak 04 drei reiter ohne anmeldung with data set "fr"
+ ✔ Ak 04 drei reiter ohne anmeldung with data set "en"
+ ✔ Ak 04 drei reiter ohne anmeldung with data set "pt"
+ ✔ Ak 18 einzelseite unter neuer adresse
+ ✔ Ak 20 zustimmen fuehrt unter die neue adresse
+ ✔ Ak 20 zurueckziehen fuehrt unter die neue adresse
+ ✔ Ak 23 mail link zeigt auf die neue adresse
+ ✔ Ak 25 sitemap nennt nur die neue adresse
+ ✔ Ak 26 massgebliche adresse und sprachverweise
+ ✔ Ak 33 wartende idee nur fuer den verfasser
+ ✔ Ak 34 deckel am konto gilt unter der neuen adresse
+
+OK (101 tests, 3687 assertions)

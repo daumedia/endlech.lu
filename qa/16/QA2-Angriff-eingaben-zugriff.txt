@@ -1,0 +1,23 @@
+/de/community/ideen/94-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa → 301 http://127.0.0.1:8000/de/roadmap/ideen/94-‹a × 10 000› 
+/de/roadmap/ideen/94-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa → 200  
+/de/community/ideen/94-%F0%9F%92%A1%F0%9F%A6%93 → 301 http://127.0.0.1:8000/de/roadmap/ideen/94-%F0%9F%92%A1%F0%9F%A6%93 
+/de/community/ideen/94-%27%3B%20drop%20table%20board_idea%3B%20-- → 301 http://127.0.0.1:8000/de/roadmap/ideen/94-%27;%20drop%20table%20board_idea;%20-- 
+/de/community/ideen/94-%3Cscript%3Ealert(1)%3C%2Fscript%3E → 404  
+/de/community/ideen/0-x → 301 http://127.0.0.1:8000/de/roadmap/ideen/0-x 
+/de/community/ideen/99999999999999999999-x → 301 http://127.0.0.1:8000/de/roadmap/ideen/99999999999999999999-x 
+/de/roadmap/ideen/99999999999999999999-x → 404  
+/de/community/ideen/94-..%2F..%2Fetc%2Fpasswd → 404  
+/de/roadmap/ideen?status%5B%5D=new → 400  
+/de/roadmap/ideen?page=abc → 400  
+/de/roadmap/ideen?page=-5 → 200  
+/de/roadmap/ideen?page=99999 → 200  
+/de/roadmap/ideen?sort=%27%3Bdrop → 200  
+/de/roadmap/ideen?status=%3Cscript%3E → 200  
+
+Zugriff:
+user@ GET /de/admin/ideen → 403
+user@ POST /de/admin/ideen/184/veroeffentlichen → 403
+Gast GET /de/roadmap/ideen/neu → 302 http://127.0.0.1:8000/de/login
+Gast GET /de/roadmap/ideen/eingereicht → 302 http://127.0.0.1:8000/de/login
+unbestätigt GET /de/roadmap/ideen/neu → 302 http://127.0.0.1:8000/de/verify
+/de/roadmap/ideen/0-x → 404

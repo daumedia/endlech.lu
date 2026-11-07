@@ -1,0 +1,8 @@
+/de/changelog: main 200 / 16 200, Einträge-Abschnitt 246 Zeilen, Abweichungen 0 []
+/fr/changelog: main 200 / 16 200, Einträge-Abschnitt 246 Zeilen, Abweichungen 0 []
+/pt/changelog: main 200 / 16 200, Einträge-Abschnitt 246 Zeilen, Abweichungen 0 []
+/lb/legal → 200, Anker datenschutz: True
+/de/legal → 200, Anker datenschutz: True
+/fr/legal → 200, Anker datenschutz: True
+/en/legal → 200, Anker datenschutz: True
+/pt/legal → 200, Anker datenschutz: True

@@ -1,0 +1,76 @@
+# AK-01 bis AK-03 · Fußzeile (2026-11-07, Dev-Server), 8 Seiten x 5 Sprachen
+lb /                 Bereichslinks=1 [('Matmaachen', 'Roadmap & Iddien', '/lb/roadmap', None)] alt=[]
+lb /restaurants      Bereichslinks=1 [('Matmaachen', 'Roadmap & Iddien', '/lb/roadmap', None)] alt=[]
+lb /about            Bereichslinks=1 [('Matmaachen', 'Roadmap & Iddien', '/lb/roadmap', None)] alt=[]
+lb /roadmap          Bereichslinks=1 [('Matmaachen', 'Roadmap & Iddien', '/lb/roadmap', None)] alt=[]
+lb /roadmap/ideen    Bereichslinks=1 [('Matmaachen', 'Roadmap & Iddien', '/lb/roadmap', None)] alt=[]
+lb /changelog        Bereichslinks=1 [('Matmaachen', 'Roadmap & Iddien', '/lb/roadmap', None)] alt=[]
+lb /open             Bereichslinks=1 [('Matmaachen', 'Roadmap & Iddien', '/lb/roadmap', None)] alt=[]
+lb /sponsoren        Bereichslinks=1 [('Matmaachen', 'Roadmap & Iddien', '/lb/roadmap', None)] alt=[]
+de /                 Bereichslinks=1 [('Mitmachen', 'Roadmap & Ideen', '/de/roadmap', None)] alt=[]
+de /restaurants      Bereichslinks=1 [('Mitmachen', 'Roadmap & Ideen', '/de/roadmap', None)] alt=[]
+de /about            Bereichslinks=1 [('Mitmachen', 'Roadmap & Ideen', '/de/roadmap', None)] alt=[]
+de /roadmap          Bereichslinks=1 [('Mitmachen', 'Roadmap & Ideen', '/de/roadmap', None)] alt=[]
+de /roadmap/ideen    Bereichslinks=1 [('Mitmachen', 'Roadmap & Ideen', '/de/roadmap', None)] alt=[]
+de /changelog        Bereichslinks=1 [('Mitmachen', 'Roadmap & Ideen', '/de/roadmap', None)] alt=[]
+de /open             Bereichslinks=1 [('Mitmachen', 'Roadmap & Ideen', '/de/roadmap', None)] alt=[]
+de /sponsoren        Bereichslinks=1 [('Mitmachen', 'Roadmap & Ideen', '/de/roadmap', None)] alt=[]
+fr /                 Bereichslinks=1 [('Participer', 'Feuille de route & idées', '/fr/roadmap', None)] alt=[]
+fr /restaurants      Bereichslinks=1 [('Participer', 'Feuille de route & idées', '/fr/roadmap', None)] alt=[]
+fr /about            Bereichslinks=1 [('Participer', 'Feuille de route & idées', '/fr/roadmap', None)] alt=[]
+fr /roadmap          Bereichslinks=1 [('Participer', 'Feuille de route & idées', '/fr/roadmap', None)] alt=[]
+fr /roadmap/ideen    Bereichslinks=1 [('Participer', 'Feuille de route & idées', '/fr/roadmap', None)] alt=[]
+fr /changelog        Bereichslinks=1 [('Participer', 'Feuille de route & idées', '/fr/roadmap', None)] alt=[]
+fr /open             Bereichslinks=1 [('Participer', 'Feuille de route & idées', '/fr/roadmap', None)] alt=[]
+fr /sponsoren        Bereichslinks=1 [('Participer', 'Feuille de route & idées', '/fr/roadmap', None)] alt=[]
+en /                 Bereichslinks=1 [('Get involved', 'Roadmap & ideas', '/en/roadmap', None)] alt=[]
+en /restaurants      Bereichslinks=1 [('Get involved', 'Roadmap & ideas', '/en/roadmap', None)] alt=[]
+en /about            Bereichslinks=1 [('Get involved', 'Roadmap & ideas', '/en/roadmap', None)] alt=[]
+en /roadmap          Bereichslinks=1 [('Get involved', 'Roadmap & ideas', '/en/roadmap', None)] alt=[]
+en /roadmap/ideen    Bereichslinks=1 [('Get involved', 'Roadmap & ideas', '/en/roadmap', None)] alt=[]
+en /changelog        Bereichslinks=1 [('Get involved', 'Roadmap & ideas', '/en/roadmap', None)] alt=[]
+en /open             Bereichslinks=1 [('Get involved', 'Roadmap & ideas', '/en/roadmap', None)] alt=[]
+en /sponsoren        Bereichslinks=1 [('Get involved', 'Roadmap & ideas', '/en/roadmap', None)] alt=[]
+pt /                 Bereichslinks=1 [('Participar', 'Roteiro e ideias', '/pt/roadmap', None)] alt=[]
+pt /restaurants      Bereichslinks=1 [('Participar', 'Roteiro e ideias', '/pt/roadmap', None)] alt=[]
+pt /about            Bereichslinks=1 [('Participar', 'Roteiro e ideias', '/pt/roadmap', None)] alt=[]
+pt /roadmap          Bereichslinks=1 [('Participar', 'Roteiro e ideias', '/pt/roadmap', None)] alt=[]
+pt /roadmap/ideen    Bereichslinks=1 [('Participar', 'Roteiro e ideias', '/pt/roadmap', None)] alt=[]
+pt /changelog        Bereichslinks=1 [('Participar', 'Roteiro e ideias', '/pt/roadmap', None)] alt=[]
+pt /open             Bereichslinks=1 [('Participar', 'Roteiro e ideias', '/pt/roadmap', None)] alt=[]
+pt /sponsoren        Bereichslinks=1 [('Participar', 'Roteiro e ideias', '/pt/roadmap', None)] alt=[]
+--- alle Fußzeilenlinks /de/ ---
+None | Endlech.lu | /de/ | None
+Die Plattform für barrierefreie Gastronomie in Luxemburg. Gemeinsam für mehr Inklusion. | Ein Produkt von Daumedia | https://daumedia.lu/lb/ | None
+Helfen Sie uns, besser zu werden. | support@endlech.lu | mailto:support@endlech.lu | None
+Helfen Sie uns, besser zu werden. | Open Source auf GitHub | https://github.com/Mukaarts/endlech.lu | _blank
+Entdecken | Restaurants suchen | /de/restaurants | None
+Entdecken | Kriterien für Barrierefreiheit | /de/criteria | None
+Entdecken | App-Warteliste | /de/app | None
+Mitmachen | Restaurant vorschlagen | /de/community/suggest | None
+Mitmachen | Roadmap & Ideen | /de/roadmap | None
+Mitmachen | Für Restaurants | /de/partner | None
+Mitmachen | Für Organisationen | /de/organisationen | None
+Über Endlech | Über uns | /de/about | None
+Über Endlech | Zahlen & Finanzen | /de/open | None
+Über Endlech | Presse | /de/presse | None
+Vergleiche | vs. Google Maps | /de/vergleich/google-maps | None
+Vergleiche | vs. Wheelmap | /de/vergleich/wheelmap | None
+Vergleiche | vs. TripAdvisor | /de/vergleich/tripadvisor | None
+Vergleiche | Alle Vergleiche | /de/vergleich | None
+Sponsoren | Sponsor werden → | /de/organisationen/unternehmen#anfrage | None
+© 2026 Endlech.lu
+                ·
+                Made with ❤️ in Luxembourg.
+                ·
+                v2026.10.31 | Impressum | /de/legal | None
+© 2026 Endlech.lu
+                ·
+                Made with ❤️ in Luxembourg.
+                ·
+                v2026.10.31 | Datenschutz | /de/legal#datenschutz | None
+© 2026 Endlech.lu
+                ·
+                Made with ❤️ in Luxembourg.
+                ·
+                v2026.10.31 | Barrierefreiheit | /de/accessibility | None

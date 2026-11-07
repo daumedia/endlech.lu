@@ -1,0 +1,35 @@
+lb roadmap                  nav="Roadmap & Iddien" Roadmap [] | Iddien [] | Changelog []
+lb roadmap/ideen            nav="Roadmap & Iddien" Roadmap [] | Iddien [] | Changelog []
+lb changelog                nav="Roadmap & Iddien" Roadmap [] | Iddien [] | Changelog []
+lb roadmap/ideen/94-qa16-0  nav="Roadmap & Iddien" Roadmap [] | Iddien [] | Changelog []
+de roadmap                  nav="Roadmap & Ideen" Roadmap [] | Ideen [] | Changelog []
+de roadmap/ideen            nav="Roadmap & Ideen" Roadmap [] | Ideen [] | Changelog []
+de changelog                nav="Roadmap & Ideen" Roadmap [] | Ideen [] | Changelog []
+de roadmap/ideen/94-qa16-0  nav="Roadmap & Ideen" Roadmap [] | Ideen [] | Changelog []
+fr roadmap                  nav="Feuille de route & idées" Feuille de route [] | Idées [] | Journal des modifications []
+fr roadmap/ideen            nav="Feuille de route & idées" Feuille de route [] | Idées [] | Journal des modifications []
+fr changelog                nav="Feuille de route & idées" Feuille de route [] | Idées [] | Journal des modifications []
+fr roadmap/ideen/94-qa16-0  nav="Feuille de route & idées" Feuille de route [] | Idées [] | Journal des modifications []
+en roadmap                  nav="Roadmap & ideas" Roadmap [] | Ideas [] | Changelog []
+en roadmap/ideen            nav="Roadmap & ideas" Roadmap [] | Ideas [] | Changelog []
+en changelog                nav="Roadmap & ideas" Roadmap [] | Ideas [] | Changelog []
+en roadmap/ideen/94-qa16-0  nav="Roadmap & ideas" Roadmap [] | Ideas [] | Changelog []
+pt roadmap                  nav="Roteiro e ideias" Roteiro [] | Ideias [] | Registo de alterações []
+pt roadmap/ideen            nav="Roteiro e ideias" Roteiro [] | Ideias [] | Registo de alterações []
+pt changelog                nav="Roteiro e ideias" Roteiro [] | Ideias [] | Registo de alterações []
+pt roadmap/ideen/94-qa16-0  nav="Roteiro e ideias" Roteiro [] | Ideias [] | Registo de alterações []
+Enter lb roadmap        /roadmap/ideen/neu→/lb/roadmap/ideen/neu ok  /roadmap→/lb/roadmap ok  /roadmap/ideen→/lb/roadmap/ideen ok  /changelog→/lb/changelog ok
+Enter lb roadmap/ideen  /roadmap/ideen/neu→/lb/roadmap/ideen/neu ok  /roadmap→/lb/roadmap ok  /roadmap/ideen→/lb/roadmap/ideen ok  /changelog→/lb/changelog ok
+Enter lb changelog      /roadmap/ideen/neu→/lb/roadmap/ideen/neu ok  /roadmap→/lb/roadmap ok  /roadmap/ideen→/lb/roadmap/ideen ok  /changelog→/lb/changelog ok
+Enter de roadmap        /roadmap/ideen/neu→/de/roadmap/ideen/neu ok  /roadmap→/de/roadmap ok  /roadmap/ideen→/de/roadmap/ideen ok  /changelog→/de/changelog ok
+Enter de roadmap/ideen  /roadmap/ideen/neu→/de/roadmap/ideen/neu ok  /roadmap→/de/roadmap ok  /roadmap/ideen→/de/roadmap/ideen ok  /changelog→/de/changelog ok
+Enter de changelog      /roadmap/ideen/neu→/de/roadmap/ideen/neu ok  /roadmap→/de/roadmap ok  /roadmap/ideen→/de/roadmap/ideen ok  /changelog→/de/changelog ok
+Enter fr roadmap        /roadmap/ideen/neu→/fr/roadmap/ideen/neu ok  /roadmap→/fr/roadmap ok  /roadmap/ideen→/fr/roadmap/ideen ok  /changelog→/fr/changelog ok
+Enter fr roadmap/ideen  /roadmap/ideen/neu→/fr/roadmap/ideen/neu ok  /roadmap→/fr/roadmap ok  /roadmap/ideen→/fr/roadmap/ideen ok  /changelog→/fr/changelog ok
+Enter fr changelog      /roadmap/ideen/neu→/fr/roadmap/ideen/neu ok  /roadmap→/fr/roadmap ok  /roadmap/ideen→/fr/roadmap/ideen ok  /changelog→/fr/changelog ok
+Enter en roadmap        /roadmap/ideen/neu→/en/roadmap/ideen/neu ok  /roadmap→/en/roadmap ok  /roadmap/ideen→/en/roadmap/ideen ok  /changelog→/en/changelog ok
+Enter en roadmap/ideen  /roadmap/ideen/neu→/en/roadmap/ideen/neu ok  /roadmap→/en/roadmap ok  /roadmap/ideen→/en/roadmap/ideen ok  /changelog→/en/changelog ok
+Enter en changelog      /roadmap/ideen/neu→/en/roadmap/ideen/neu ok  /roadmap→/en/roadmap ok  /roadmap/ideen→/en/roadmap/ideen ok  /changelog→/en/changelog ok
+Enter pt roadmap        /roadmap/ideen/neu→/pt/roadmap/ideen/neu ok  /roadmap→/pt/roadmap ok  /roadmap/ideen→/pt/roadmap/ideen ok  /changelog→/pt/changelog ok
+Enter pt roadmap/ideen  /roadmap/ideen/neu→/pt/roadmap/ideen/neu ok  /roadmap→/pt/roadmap ok  /roadmap/ideen→/pt/roadmap/ideen ok  /changelog→/pt/changelog ok
+Enter pt changelog      /roadmap/ideen/neu→/pt/roadmap/ideen/neu ok  /roadmap→/pt/roadmap ok  /roadmap/ideen→/pt/roadmap/ideen ok  /changelog→/pt/changelog ok

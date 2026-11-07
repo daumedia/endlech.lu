@@ -53,7 +53,7 @@ final class BoardLocaleTest extends AbstractWebTestCase
         }
         $em->flush();
 
-        $client->request('GET', $locale . '/community/ideen');
+        $client->request('GET', $locale . '/roadmap/ideen');
         self::assertResponseIsSuccessful();
 
         $html = (string) $client->getResponse()->getContent();
@@ -73,7 +73,7 @@ final class BoardLocaleTest extends AbstractWebTestCase
         $client = static::createClient();
         $this->loginAs($client, 'user@endlech.lu');
 
-        $client->request('GET', $locale . '/community/ideen/neu');
+        $client->request('GET', $locale . '/roadmap/ideen/neu');
         self::assertResponseIsSuccessful();
 
         $html = (string) $client->getResponse()->getContent();
@@ -96,7 +96,7 @@ final class BoardLocaleTest extends AbstractWebTestCase
         $em->persist($idee);
         $em->flush();
 
-        $client->request('GET', '/fr/community/ideen');
+        $client->request('GET', '/fr/roadmap/ideen');
 
         $html = (string) $client->getResponse()->getContent();
         self::assertStringContainsString($text, $html, 'Der Text erscheint unverändert.');

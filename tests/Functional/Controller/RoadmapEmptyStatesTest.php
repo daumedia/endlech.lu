@@ -80,7 +80,7 @@ final class RoadmapEmptyStatesTest extends KernelTestCase
     {
         $html = $this->leereRoadmap()->html();
 
-        self::assertStringNotContainsString('Aus dem Ideen-Board', $html);
+        self::assertStringNotContainsString('Aus den Ideen der Community', $html);
         self::assertStringNotContainsString('weitere geplante', $html);
         self::assertStringNotContainsString('zehn geplanten Ideen', $html, 'Die Auswahlregel gehört nur über eine vorhandene Gruppe.');
     }

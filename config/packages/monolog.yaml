@@ -28,6 +28,14 @@ when@test:
                 type: stream
                 path: "%kernel.logs_dir%/%kernel.environment%.log"
                 level: debug
+            # Feature 16 / BF-205: hält JEDE Protokollzeile einer Anfrage im Speicher. Ein Prüflauf
+            # „steht keine Personenangabe im Protokoll" las vorher `test.log` — dorthin schreibt
+            # `main` erst ab `error`, bei einer gewöhnlichen Antwort also nie, und der Lauf war
+            # grün, egal was protokolliert wurde. Der Speicher wird zwischen zwei Anfragen geleert
+            # (services_resetter); auslesen deshalb nach jeder Anfrage.
+            pruefung:
+                type: test
+                level: debug
 
 when@prod:
     monolog:

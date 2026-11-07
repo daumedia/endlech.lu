@@ -203,7 +203,7 @@ final class RoadmapCommunityTest extends AbstractWebTestCase
 
         $spalte = $crawler->filter('section[aria-labelledby="stage-planned"]');
         self::assertGreaterThan(0, $spalte->filter('h3')->count(), 'Die kuratierten Vorhaben müssen stehen bleiben.');
-        self::assertStringNotContainsString('Aus dem Ideen-Board', $spalte->text(), 'Ohne Ideen darf der Community-Block nicht erscheinen.');
+        self::assertStringNotContainsString('Aus den Ideen der Community', $spalte->text(), 'Ohne Ideen darf der Community-Block nicht erscheinen.');
         self::assertCount(0, $spalte->filter('h4'));
     }
 

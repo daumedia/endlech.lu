@@ -1,9 +1,15 @@
 meta_title: "Roteiro – Endlech.lu"
 meta_description: "Em que se está a trabalhar, o que vem a seguir e o que, de forma consciente, não vai ser feito. Sem datas, com justificação."
-eyebrow: "O que estamos a construir"
 heading: "Roteiro"
 intro: "Em que se está a trabalhar, o que vem a seguir — e o que decidimos conscientemente não fazer."
 no_dates_hint: "Aqui não há datas. Endlech.lu é construído a par de outra atividade profissional, e um prazo que ninguém consegue cumprir não é informação."
+
+area:
+    name: "Roteiro e ideias"
+    tab:
+        roadmap: "Roteiro"
+        ideas: "Ideias"
+        changelog: "Registo de alterações"
 
 stage:
     in_progress:
@@ -11,29 +17,22 @@ stage:
         empty: "De momento, não se está a construir nada de novo. O que ficou pronto por último está no registo de alterações."
     planned:
         title: "Planeado"
-        empty: "Nada planeado em concreto — o que deveria estar aqui, quem melhor nos diz é o quadro de ideias."
+        empty: "Nada planeado em concreto — a melhor forma de nos dizer o que deveria estar aqui é uma ideia em «Ideias»."
     considered:
         title: "Em ponderação"
-        empty: "Nada mais em ponderação. As sugestões são bem-vindas no quadro de ideias."
+        empty: "Nada mais em ponderação. As sugestões são bem-vindas em «Ideias»."
 
 shelved:
     section_title: "Conscientemente fora de planos"
     section_intro: "Estes pontos não vão ser feitos — pelo menos, não desta forma. Estão aqui para que ninguém fique à espera deles."
 
 community:
-    heading: "Do quadro de ideias"
-    selection_hint: "Aqui estão as dez ideias planeadas com mais apoios. Quem apoia ideias no quadro ajuda a decidir quais delas aparecem aqui."
-    more: "{1}Há mais uma ideia planeada no quadro.|]1,Inf[Há mais %count% ideias planeadas no quadro."
+    heading: "Das ideias da comunidade"
+    selection_hint: "Aqui estão as dez ideias planeadas com mais apoios. Quem apoia ideias em «Ideias» ajuda a decidir quais delas aparecem aqui."
+    more: "{1}Há mais uma ideia planeada em «Ideias».|]1,Inf[Há mais %count% ideias planeadas em «Ideias»."
     votes: "{0}Ainda sem apoios|{1}1 apoio|]1,Inf[%count% apoios"
     source_label: "Ideia da comunidade"
-    open_board: "Ir para o quadro de ideias"
-
-more:
-    section_title: "Saber mais"
-    changelog_label: "Registo de alterações"
-    changelog_hint: "O que foi acrescentado nas últimas semanas e meses."
-    board_label: "Quadro de ideias"
-    board_hint: "Envie a sua própria ideia ou apoie a de outra pessoa."
+    open_board: "Ver a ideia"
 
 freshness:
     label: "Atualizado em: %date%"

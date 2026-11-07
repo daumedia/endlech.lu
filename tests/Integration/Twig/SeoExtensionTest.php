@@ -85,8 +85,8 @@ final class SeoExtensionTest extends KernelTestCase
     {
         $e = $this->erweiterung('app_board_index', ['_locale' => 'de'], ['page' => '3', 'sort' => 'new']);
 
-        self::assertSame('https://endlech.lu/de/community/ideen?page=3', $e->canonicalUrl());
-        self::assertSame('https://endlech.lu/en/community/ideen?page=3', $e->alternateUrls()['en']);
+        self::assertSame('https://endlech.lu/de/roadmap/ideen?page=3', $e->canonicalUrl());
+        self::assertSame('https://endlech.lu/en/roadmap/ideen?page=3', $e->alternateUrls()['en']);
     }
 
     public function testOhneAnfrageOderRouteNichts(): void

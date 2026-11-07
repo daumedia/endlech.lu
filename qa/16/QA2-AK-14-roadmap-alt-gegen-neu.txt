@@ -1,0 +1,195 @@
+lb: alt 293 Zeilen, neu 295, Abweichungen 38
+    -<h3 class="mb-2 text-sm font-bold uppercase tracking-wider text-gray-700">Aus dem Ideeën-Board</h3>
+    -<p class="mb-3 text-sm text-gray-600">Hei stinn déi zéng geplangten Ideeë mat de meeschten Zoustëmmungen. Wien um Board zoustëmmt, entscheet mat, wat dovunner uewe steet.</p>
+    +<h3 class="mb-2 text-sm font-bold uppercase tracking-wider text-gray-700">Aus den Iddie vun der Community</h3>
+    +<p class="mb-3 text-sm text-gray-600">Hei stinn déi zéng geplangten Iddie mat de meeschten Zoustëmmungen. Wien ënner „Iddien“ zoustëmmt, entscheet mat, wat dovunner uewe steet.</p>
+    -Op d&#039;Ideeën-Board
+    +Bei d&#039;Iddi
+    -Op d&#039;Ideeën-Board
+    +Bei d&#039;Iddi
+    -Op d&#039;Ideeën-Board
+    +Bei d&#039;Iddi
+    -Op d&#039;Ideeën-Board
+    +Bei d&#039;Iddi
+    -Op d&#039;Ideeën-Board
+    +Bei d&#039;Iddi
+    -Op d&#039;Ideeën-Board
+    +Bei d&#039;Iddi
+    -Op d&#039;Ideeën-Board
+    +Bei d&#039;Iddi
+    -Op d&#039;Ideeën-Board
+    +Bei d&#039;Iddi
+    -Op d&#039;Ideeën-Board
+    +Bei d&#039;Iddi
+    -Op d&#039;Ideeën-Board
+    -<span aria-hidden="true" class="ml-1">→</span>
+    -</a>
+    -</li>
+    -</ul>
+    -<p class="mt-3 text-sm text-gray-600">
+    -2 weider geplangten Ideeë stinn um Board.
+    +Bei d&#039;Iddi
+    +<span aria-hidden="true" class="ml-1">→</span>
+    +</a>
+    +</li>
+    +</ul>
+    +<p class="mt-3 text-sm">
+    +<a href="/lb/roadmap/ideen?status=planned"
+    +class="inline-flex items-center min-h-[44px] font-semibold text-cyan-700 hover:text-cyan-800 hover:underline motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-cyan-600">2 weider geplangten Iddi
+    +</a>
+de: alt 293 Zeilen, neu 295, Abweichungen 38
+    -<h3 class="mb-2 text-sm font-bold uppercase tracking-wider text-gray-700">Aus dem Ideen-Board</h3>
+    -<p class="mb-3 text-sm text-gray-600">Hier stehen die zehn geplanten Ideen mit den meisten Zustimmungen. Wer im Board zustimmt, entscheidet mit, was davon oben steht.</p>
+    +<h3 class="mb-2 text-sm font-bold uppercase tracking-wider text-gray-700">Aus den Ideen der Community</h3>
+    +<p class="mb-3 text-sm text-gray-600">Hier stehen die zehn geplanten Ideen mit den meisten Zustimmungen. Wer unter „Ideen“ zustimmt, entscheidet mit, was davon oben steht.</p>
+    -Zum Ideen-Board
+    +Zur Idee
+    -Zum Ideen-Board
+    +Zur Idee
+    -Zum Ideen-Board
+    +Zur Idee
+    -Zum Ideen-Board
+    +Zur Idee
+    -Zum Ideen-Board
+    +Zur Idee
+    -Zum Ideen-Board
+    +Zur Idee
+    -Zum Ideen-Board
+    +Zur Idee
+    -Zum Ideen-Board
+    +Zur Idee
+    -Zum Ideen-Board
+    +Zur Idee
+    -Zum Ideen-Board
+    -<span aria-hidden="true" class="ml-1">→</span>
+    -</a>
+    -</li>
+    -</ul>
+    -<p class="mt-3 text-sm text-gray-600">
+    -2 weitere geplante Ideen stehen im Board.
+    +Zur Idee
+    +<span aria-hidden="true" class="ml-1">→</span>
+    +</a>
+    +</li>
+    +</ul>
+    +<p class="mt-3 text-sm">
+    +<a href="/de/roadmap/ideen?status=planned"
+    +class="inline-flex items-center min-h-[44px] font-semibold text-cyan-700 hover:text-cyan-800 hover:underline motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-cyan-600">2 weitere geplante Ideen
+    +</a>
+fr: alt 293 Zeilen, neu 295, Abweichungen 38
+    -<h3 class="mb-2 text-sm font-bold uppercase tracking-wider text-gray-700">Issu du tableau d&#039;idées</h3>
+    -<p class="mb-3 text-sm text-gray-600">Voici les dix idées prévues ayant reçu le plus de soutiens. Soutenir une idée sur le tableau, c&#039;est décider de ce qui figure en haut.</p>
+    +<h3 class="mb-2 text-sm font-bold uppercase tracking-wider text-gray-700">Issu des idées de la communauté</h3>
+    +<p class="mb-3 text-sm text-gray-600">Voici les dix idées prévues ayant reçu le plus de soutiens. Soutenir une idée sous « Idées », c&#039;est décider de ce qui figure en haut.</p>
+    -Vers le tableau d&#039;idées
+    +Voir l&#039;idée
+    -Vers le tableau d&#039;idées
+    +Voir l&#039;idée
+    -Vers le tableau d&#039;idées
+    +Voir l&#039;idée
+    -Vers le tableau d&#039;idées
+    +Voir l&#039;idée
+    -Vers le tableau d&#039;idées
+    +Voir l&#039;idée
+    -Vers le tableau d&#039;idées
+    +Voir l&#039;idée
+    -Vers le tableau d&#039;idées
+    +Voir l&#039;idée
+    -Vers le tableau d&#039;idées
+    +Voir l&#039;idée
+    -Vers le tableau d&#039;idées
+    +Voir l&#039;idée
+    -Vers le tableau d&#039;idées
+    -<span aria-hidden="true" class="ml-1">→</span>
+    -</a>
+    -</li>
+    -</ul>
+    -<p class="mt-3 text-sm text-gray-600">
+    -2 autres idées prévues figurent sur le tableau.
+    +Voir l&#039;idée
+    +<span aria-hidden="true" class="ml-1">→</span>
+    +</a>
+    +</li>
+    +</ul>
+    +<p class="mt-3 text-sm">
+    +<a href="/fr/roadmap/ideen?status=planned"
+    +class="inline-flex items-center min-h-[44px] font-semibold text-cyan-700 hover:text-cyan-800 hover:underline motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-cyan-600">2 autres idées prévues f
+    +</a>
+en: alt 293 Zeilen, neu 295, Abweichungen 38
+    -<h3 class="mb-2 text-sm font-bold uppercase tracking-wider text-gray-700">From the idea board</h3>
+    -<p class="mb-3 text-sm text-gray-600">These are the ten planned ideas with the most support. Supporting an idea on the board decides what appears at the top.</p>
+    +<h3 class="mb-2 text-sm font-bold uppercase tracking-wider text-gray-700">From the community&#039;s ideas</h3>
+    +<p class="mb-3 text-sm text-gray-600">These are the ten planned ideas with the most support. Supporting an idea under “Ideas” decides what appears at the top.</p>
+    -Go to the idea board
+    +View the idea
+    -Go to the idea board
+    +View the idea
+    -Go to the idea board
+    +View the idea
+    -Go to the idea board
+    +View the idea
+    -Go to the idea board
+    +View the idea
+    -Go to the idea board
+    +View the idea
+    -Go to the idea board
+    +View the idea
+    -Go to the idea board
+    +View the idea
+    -Go to the idea board
+    +View the idea
+    -Go to the idea board
+    -<span aria-hidden="true" class="ml-1">→</span>
+    -</a>
+    -</li>
+    -</ul>
+    -<p class="mt-3 text-sm text-gray-600">
+    -2 more planned ideas are on the board.
+    +View the idea
+    +<span aria-hidden="true" class="ml-1">→</span>
+    +</a>
+    +</li>
+    +</ul>
+    +<p class="mt-3 text-sm">
+    +<a href="/en/roadmap/ideen?status=planned"
+    +class="inline-flex items-center min-h-[44px] font-semibold text-cyan-700 hover:text-cyan-800 hover:underline motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-cyan-600">2 more planned ideas are
+    +</a>
+pt: alt 293 Zeilen, neu 295, Abweichungen 38
+    -<h3 class="mb-2 text-sm font-bold uppercase tracking-wider text-gray-700">Do quadro de ideias</h3>
+    -<p class="mb-3 text-sm text-gray-600">Aqui estão as dez ideias planeadas com mais apoios. Quem apoia ideias no quadro ajuda a decidir quais delas aparecem aqui.</p>
+    +<h3 class="mb-2 text-sm font-bold uppercase tracking-wider text-gray-700">Das ideias da comunidade</h3>
+    +<p class="mb-3 text-sm text-gray-600">Aqui estão as dez ideias planeadas com mais apoios. Quem apoia ideias em «Ideias» ajuda a decidir quais delas aparecem aqui.</p>
+    -Ir para o quadro de ideias
+    +Ver a ideia
+    -Ir para o quadro de ideias
+    +Ver a ideia
+    -Ir para o quadro de ideias
+    +Ver a ideia
+    -Ir para o quadro de ideias
+    +Ver a ideia
+    -Ir para o quadro de ideias
+    +Ver a ideia
+    -Ir para o quadro de ideias
+    +Ver a ideia
+    -Ir para o quadro de ideias
+    +Ver a ideia
+    -Ir para o quadro de ideias
+    +Ver a ideia
+    -Ir para o quadro de ideias
+    +Ver a ideia
+    -Ir para o quadro de ideias
+    -<span aria-hidden="true" class="ml-1">→</span>
+    -</a>
+    -</li>
+    -</ul>
+    -<p class="mt-3 text-sm text-gray-600">
+    -Há mais 2 ideias planeadas no quadro.
+    +Ver a ideia
+    +<span aria-hidden="true" class="ml-1">→</span>
+    +</a>
+    +</li>
+    +</ul>
+    +<p class="mt-3 text-sm">
+    +<a href="/pt/roadmap/ideen?status=planned"
+    +class="inline-flex items-center min-h-[44px] font-semibold text-cyan-700 hover:text-cyan-800 hover:underline motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-cyan-600">Há mais 2 ideias planead
+    +</a>

@@ -1,0 +1,9 @@
+http://127.0.0.1:8000/de/roadmap/ideen/neu → 429 | Bitte versuche es in 60 Minuten erneut.
+http://127.0.0.1:8001/de/community/ideen/neu → 429 | Bitte versuche es in 60 Minuten erneut.
+
+# Vorlauf (submit.sh): neu #1–#5 → 302 /de/roadmap/ideen/eingereicht, #6 → 429; alt (main, Port 8001) #1–#5 → 302 /de/community/ideen/eingereicht, #6 → 429
+
+# Zustimmen (board_vote, 60/Std am Konto), 2026-11-07
+neu  (Port 8000, /de/roadmap/ideen/95/zustimmen): 61 Versuche, 60 umgeschaltet (Stimmen danach 0), Folgeseite: 'Zu viele Zustimmungen. Bitte versuche es in 60 Minuten erneut.'
+alt  (main, Port 8001, /de/community/ideen/96/zustimmen): 61 Versuche, Folgeseite: 'Zu viele Zustimmungen. Bitte versuche es in 60 Minuten erneut.'
+Einreichen: Meldung beider Stände 'Zu viele Einreichungen. Bitte versuche es in 60 Minuten erneut.'

@@ -1,0 +1,65 @@
+ ✔ Bf 199 bestaetigtes fremdes konto erfaehrt nichts ueber wartende idee
+ ✔ Ak 05 band ueber den reitern ist auf allen seitenarten gleich with data set "lb"
+ ✔ Ak 05 band ueber den reitern ist auf allen seitenarten gleich with data set "de"
+ ✔ Ak 05 band ueber den reitern ist auf allen seitenarten gleich with data set "fr"
+ ✔ Ak 05 band ueber den reitern ist auf allen seitenarten gleich with data set "en"
+ ✔ Ak 05 band ueber den reitern ist auf allen seitenarten gleich with data set "pt"
+ ✔ Ak 37 gruppenueberschrift und verweise ohne board with data set "lb"
+ ✔ Ak 37 gruppenueberschrift und verweise ohne board with data set "de"
+ ✔ Ak 37 gruppenueberschrift und verweise ohne board with data set "fr"
+ ✔ Ak 37 gruppenueberschrift und verweise ohne board with data set "en"
+ ✔ Ak 37 gruppenueberschrift und verweise ohne board with data set "pt"
+ ✘ Bf 207 einzelseite hat genau eine hauptueberschrift with data set "lb"
+   │ /Users/michaelferreira/DEV/SaaS/endlech/tests/Functional/Controller/Qa16NachpruefungTest.php:165
+   │ /Users/michaelferreira/DEV/SaaS/endlech/vendor/phpunit/phpunit/phpunit:104
+ ✘ Bf 207 einzelseite hat genau eine hauptueberschrift with data set "de"
+   │ /Users/michaelferreira/DEV/SaaS/endlech/tests/Functional/Controller/Qa16NachpruefungTest.php:165
+   │ /Users/michaelferreira/DEV/SaaS/endlech/vendor/phpunit/phpunit/phpunit:104
+ ✘ Bf 207 einzelseite hat genau eine hauptueberschrift with data set "fr"
+   │ /Users/michaelferreira/DEV/SaaS/endlech/tests/Functional/Controller/Qa16NachpruefungTest.php:165
+   │ /Users/michaelferreira/DEV/SaaS/endlech/vendor/phpunit/phpunit/phpunit:104
+ ✘ Bf 207 einzelseite hat genau eine hauptueberschrift with data set "en"
+   │ /Users/michaelferreira/DEV/SaaS/endlech/tests/Functional/Controller/Qa16NachpruefungTest.php:165
+   │ /Users/michaelferreira/DEV/SaaS/endlech/vendor/phpunit/phpunit/phpunit:104
+ ✘ Bf 207 einzelseite hat genau eine hauptueberschrift with data set "pt"
+   │ /Users/michaelferreira/DEV/SaaS/endlech/tests/Functional/Controller/Qa16NachpruefungTest.php:165
+   │ /Users/michaelferreira/DEV/SaaS/endlech/vendor/phpunit/phpunit/phpunit:104
+ ✘ Bf 206 globaler fokus fallback liegt in einer kaskadenebene
+   │ BF-206: :focus-visible { outline … } steht ungeschichtet und übersteuert jede focus:outline-<farbe>.
+   │ /Users/michaelferreira/DEV/SaaS/endlech/tests/Functional/Controller/Qa16NachpruefungTest.php:211
+   │ /Users/michaelferreira/DEV/SaaS/endlech/vendor/phpunit/phpunit/phpunit:104
+ ✘ Bf 208 textteil der freigabe mail ohne html entitaeten with data set "lb"
+   │ BF-208: HTML-Entität im Textteil.
+   │ /Users/michaelferreira/DEV/SaaS/endlech/tests/Functional/Controller/Qa16NachpruefungTest.php:234
+   │ /Users/michaelferreira/DEV/SaaS/endlech/vendor/phpunit/phpunit/phpunit:104
+ ✘ Bf 208 textteil der freigabe mail ohne html entitaeten with data set "de"
+   │ BF-208: HTML-Entität im Textteil.
+   │ /Users/michaelferreira/DEV/SaaS/endlech/tests/Functional/Controller/Qa16NachpruefungTest.php:234
+   │ /Users/michaelferreira/DEV/SaaS/endlech/vendor/phpunit/phpunit/phpunit:104
+ ✘ Bf 208 textteil der freigabe mail ohne html entitaeten with data set "fr"
+   │ BF-208: HTML-Entität im Textteil.
+   │ /Users/michaelferreira/DEV/SaaS/endlech/tests/Functional/Controller/Qa16NachpruefungTest.php:234
+   │ /Users/michaelferreira/DEV/SaaS/endlech/vendor/phpunit/phpunit/phpunit:104
+ ✘ Bf 208 textteil der freigabe mail ohne html entitaeten with data set "en"
+   │ BF-208: HTML-Entität im Textteil.
+   │ /Users/michaelferreira/DEV/SaaS/endlech/tests/Functional/Controller/Qa16NachpruefungTest.php:234
+   │ /Users/michaelferreira/DEV/SaaS/endlech/vendor/phpunit/phpunit/phpunit:104
+ ✘ Bf 208 textteil der freigabe mail ohne html entitaeten with data set "pt"
+   │ BF-208: HTML-Entität im Textteil.
+   │ /Users/michaelferreira/DEV/SaaS/endlech/tests/Functional/Controller/Qa16NachpruefungTest.php:234
+   │ /Users/michaelferreira/DEV/SaaS/endlech/vendor/phpunit/phpunit/phpunit:104
+ ✘ Bf 209 dublette verraet wartendes original nicht
+   │ /de/roadmap/ideen/21741-qa16n-dublette
+   │ /Users/michaelferreira/DEV/SaaS/endlech/tests/Functional/Controller/Qa16NachpruefungTest.php:256
+   │ /Users/michaelferreira/DEV/SaaS/endlech/vendor/phpunit/phpunit/phpunit:104
+ ✔ Ak 31 zaehlaufruf neuer pfad ohne abfrageteil und ohne neues feld
+ ✔ Ak 21 alte adresse behaelt ihre sprache gegen die sitzung
+ ✔ Ak 24 titelteil bleibt im ziel kodiert with data set "CRLF"
+ ✔ Ak 24 titelteil bleibt im ziel kodiert with data set "Rückstriche"
+ ✔ Ak 24 titelteil bleibt im ziel kodiert with data set "Unicode-Umkehr"
+ ✔ Ak 24 titelteil bleibt im ziel kodiert with data set "Punkt-Punkt"
+ ✔ Ak 29 wartende idee auch mit parametern und fremdem konto unsichtbar
+ ✔ Ec 01 ohne freigegebene idee
+ ✔ Bf 199 zustimmen verraet wartende idee nicht
+ ✔ Bf 201 ort heisst auch in leerzustand bestaetigung und mail ideen
+Tests: 33, Assertions: 602, Failures: 12.

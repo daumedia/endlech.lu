@@ -239,8 +239,8 @@ lg:col-span-4` (volle Breite bis `lg`), jede Gruppe `lg:col-span-2`. Gemessen: D
 |---|---|---|
 | Marke | — / `footer.contact_title` | Wortmarke → `app_home`, `footer.tagline`, Herstellerhinweis `footer.product_of` („Ein Produkt von Daumedia" → `daumedia.lu/lb/` bzw. `/en/`, Twig-Globals `operator_brand`/`operator_website`, ohne `rel="sponsored"`); Kontakt: `footer.help_improve`, `mailto:support@endlech.lu`, GitHub (`target="_blank"`, `rel="noopener noreferrer"`) |
 | Entdecken | `footer.discover` | Restaurants suchen · Kriterien für Barrierefreiheit · App-Warteliste (Feature 08) |
-| Mitmachen | `footer.get_involved` | Restaurant vorschlagen (`footer.suggest_restaurant`) · Feedback & Ideen (Feature 06) · Für Restaurants · Für Organisationen |
-| Über Endlech | `nav.about` | Über uns (`nav.about_short`, BF-80) · Zahlen & Finanzen · Roadmap · Changelog (Feature 07) · Presse (Feature 05) |
+| Mitmachen | `footer.get_involved` | Restaurant vorschlagen (`footer.suggest_restaurant`) · **Roadmap & Ideen** (`footer.roadmap_ideas` → `app_roadmap_index`, Feature 16) · Für Restaurants · Für Organisationen |
+| Über Endlech | `nav.about` | Über uns (`nav.about_short`, BF-80) · Zahlen & Finanzen · Presse (Feature 05) — Roadmap und Changelog stehen seit Feature 16 nicht mehr hier, sondern sind Reiter des Bereichs „Roadmap & Ideen“ |
 | Vergleiche | `footer.comparisons` | je ein Link pro Wettbewerber + `footer.all_comparisons` (Feature 03 AK-01) |
 | Sponsoren (Feature 15) | `sponsor.footer.title` (`section[aria-labelledby=footer-sponsoren]`) | eigene Zeile unter dem Raster: bis zu zwölf Logos auf weißer Kachel (je ein Link auf die Sponsorenseite, `alt` = Name), dann „Alle Sponsoren" (sobald es aktive oder ehemalige gibt) und „Sponsor werden →". Ohne jeden Sponsor nur der letzte Link |
 | Rechtsleiste | `nav[aria-label=footer.legal_nav]` | Impressum · Datenschutz (`app_impressum#datenschutz`) · Barrierefreiheit (Feature 02 AK-42) · Cookie-Einstellungen |
@@ -258,6 +258,15 @@ zwei Spalten gegliedert.
 
 **Feedback & Ideen** zeigte bis 2026-08-30 auf `https://endlech.userjot.com` und wurde mit
 Feature 06 **ersetzt**, nicht ergänzt (AK-80: genau ein Rückmeldeweg, intern, ohne `_blank`).
+Seit Feature 16 (2026-11-07) ist dieser eine Rückmeldeweg der Eintrag **„Roadmap & Ideen“**: Er führt
+auf den Reiter Roadmap, dessen Kopf den Knopf „Idee einreichen“ trägt (16/AK-01 bis AK-03, AK-10).
+
+**Bereichskopf „Roadmap & Ideen“** (`roadmap/_area_header.html.twig`, Feature 16): einzeiliges Verlaufsband
+mit Bereichsname (Etikett, **kein** `h1`) und Knopf „Idee einreichen“, darunter die Reiterleiste
+(`<nav aria-label=…>`, gewöhnliche Links mit `aria-current="page"`, alle gleich fett, aktiver Reiter mit
+4-px-Unterstrich, je ≥ 44 × 44 px), **danach** `h1` + Einleitung der Seite. Über der Leiste steht auf jeder
+Seitenart dasselbe — sie steht beim Wechseln still (BF-200). Steht auf `/roadmap`, `/roadmap/ideen`,
+`/changelog` und der Einzelseite einer Idee; nicht auf Formular und Bestätigung (16, Decision Log 14).
 
 **Die Vergleiche kommen aus einer Twig-Erweiterung**, nicht aus dem Controller:
 `comparison_competitors()` in `src/Twig/ComparisonExtension.php`. Die Fußzeile wird auf *jeder*

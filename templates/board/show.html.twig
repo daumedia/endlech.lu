@@ -3,6 +3,10 @@
 {% block title %}{{ idea.title }} · {{ 'board.title'|trans }} · Endlech.lu{% endblock %}
 
 {% block body %}
+{# Feature 16: derselbe Bereichskopf wie auf den Reitern, ohne eigene Überschrift — die
+   Hauptaussage der Seite ist die Idee selbst (AK-05, AK-18). „Ideen" gilt als aktiv. #}
+{% include 'roadmap/_area_header.html.twig' with {active: 'ideas'} only %}
+
 <div class="max-w-3xl mx-auto px-4 py-8">
     <a href="{{ path('app_board_index') }}"
        class="inline-flex items-center min-h-[48px] text-cyan-700 hover:text-cyan-900 focus:outline-2 focus:outline-offset-2">

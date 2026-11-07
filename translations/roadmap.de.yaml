@@ -7,10 +7,16 @@
 # Features teilen — er steht auf /roadmap und auf /changelog.
 meta_title: "Roadmap – Endlech.lu"
 meta_description: "Woran gerade gearbeitet wird, was als Nächstes kommt und was bewusst nicht gebaut wird. Ohne Termine, mit Begründung."
-eyebrow: "Was wir bauen"
 heading: "Roadmap"
 intro: "Woran gerade gearbeitet wird, was als Nächstes kommt — und was wir bewusst nicht bauen."
 no_dates_hint: "Hier steht kein Datum. Endlech.lu wird nebenberuflich gebaut, und ein Termin, den niemand halten kann, ist keine Auskunft."
+
+area:
+    name: "Roadmap & Ideen"
+    tab:
+        roadmap: "Roadmap"
+        ideas: "Ideen"
+        changelog: "Changelog"
 
 stage:
     in_progress:
@@ -18,29 +24,22 @@ stage:
         empty: "Gerade wird nichts Neues gebaut. Was zuletzt fertig wurde, steht im Changelog."
     planned:
         title: "Geplant"
-        empty: "Nichts fest eingeplant — was hier stehen sollte, sagt uns am besten das Ideen-Board."
+        empty: "Nichts fest eingeplant — was hier stehen sollte, sagt uns am besten eine Idee unter „Ideen“."
     considered:
         title: "Angedacht"
-        empty: "Nichts Weiteres angedacht. Vorschläge sind auf dem Ideen-Board willkommen."
+        empty: "Nichts Weiteres angedacht. Vorschläge sind unter „Ideen“ willkommen."
 
 shelved:
     section_title: "Bewusst nicht gebaut"
     section_intro: "Diese Punkte kommen nicht — jedenfalls nicht so. Sie stehen hier, damit niemand darauf wartet."
 
 community:
-    heading: "Aus dem Ideen-Board"
-    selection_hint: "Hier stehen die zehn geplanten Ideen mit den meisten Zustimmungen. Wer im Board zustimmt, entscheidet mit, was davon oben steht."
-    more: "{1}Eine weitere geplante Idee steht im Board.|]1,Inf[%count% weitere geplante Ideen stehen im Board."
+    heading: "Aus den Ideen der Community"
+    selection_hint: "Hier stehen die zehn geplanten Ideen mit den meisten Zustimmungen. Wer unter „Ideen“ zustimmt, entscheidet mit, was davon oben steht."
+    more: "{1}Eine weitere geplante Idee steht unter „Ideen“.|]1,Inf[%count% weitere geplante Ideen stehen unter „Ideen“."
     votes: "{0}Noch keine Zustimmung|{1}1 Zustimmung|]1,Inf[%count% Zustimmungen"
     source_label: "Community-Idee"
-    open_board: "Zum Ideen-Board"
-
-more:
-    section_title: "Weiterlesen"
-    changelog_label: "Changelog"
-    changelog_hint: "Was in den letzten Wochen und Monaten dazugekommen ist."
-    board_label: "Ideen-Board"
-    board_hint: "Eigene Idee einreichen oder für eine fremde stimmen."
+    open_board: "Zur Idee"
 
 freshness:
     label: "Stand: %date%"

@@ -91,9 +91,10 @@ Kriteriums.
 - **AK-01** · Angenommen, ein Besucher ist nicht angemeldet, wenn er `/de/roadmap`
   aufruft, dann erscheint die Seite mit HTTP 200 und ohne Aufforderung, sich
   anzumelden.
-- **AK-02** · Angenommen, ein Besucher steht auf einer beliebigen Seite außerhalb der
+- **AK-02** · ~~Angenommen, ein Besucher steht auf einer beliebigen Seite außerhalb der
   Verwaltung, wenn er die Fußzeile liest, dann findet er dort je einen Verweis auf die
-  Roadmap und auf den Changelog, ohne die Adressen zu kennen.
+  Roadmap und auf den Changelog, ohne die Adressen zu kennen.~~
+  *Abgelöst am 2026-11-07 durch Feature 16 (AK-01, AK-02): ein Fußzeileneintrag „Roadmap & Ideen“, der Changelog ist einen Reiter entfernt.*
 - **AK-03** · Angenommen, die Roadmap ist geöffnet, wenn ein Besucher sie ohne
   Scrollen betrachtet, dann ist ablesbar, **woran gerade gearbeitet wird** — die Spalte
   „In Arbeit" steht im ersten Bildschirm, auf einem Gerät mit 800 px Höhe.
@@ -115,8 +116,9 @@ Kriteriums.
 - **AK-09** · Angenommen, eine Spalte enthält keinen einzigen Eintrag, wenn die
   Roadmap geöffnet wird, dann erscheint dort ein erklärender Satz statt einer leeren
   Fläche — und die Seite bleibt HTTP 200.
-- **AK-10** · Angenommen, die Roadmap ist geöffnet, wenn ein Besucher weiterlesen
-  will, dann findet er von dort in **einem** Klick den Changelog und das Ideen-Board.
+- **AK-10** · ~~Angenommen, die Roadmap ist geöffnet, wenn ein Besucher weiterlesen
+  will, dann findet er von dort in **einem** Klick den Changelog und das Ideen-Board.~~
+  *Abgelöst am 2026-11-07 durch Feature 16 (AK-07): Die Reiter führen in einem Klick zu Changelog und Ideen; der Block „Weiterlesen“ ist entfallen.*
 - **AK-11** · Angenommen, jemand ruft `/de/roadmap` mit einer anderen Methode als GET
   oder HEAD auf, dann antwortet die Anwendung mit HTTP 405 und es entsteht kein
   Datensatz. Dasselbe gilt für `/de/changelog`.
@@ -142,6 +144,7 @@ Kriteriums.
   wenn die Roadmap geöffnet wird, dann erscheinen **höchstens zehn** — die mit den
   meisten Zustimmungen — und ein Verweis auf das Board für die übrigen. **Kein Aufruf
   lädt alle zwölf.**
+  *Teilweise abgelöst am 2026-11-07 durch Feature 16 (AK-16): Der Verweis auf die übrigen führt auf den Reiter „Ideen“, gefiltert auf „Geplant“. Die Obergrenze von zehn gilt unverändert.*
 - **AK-18** · Angenommen, eine Idee steht in der Spalte „Geplant", wenn ihr Status im
   Board auf `Abgelehnt` gesetzt oder ihre Veröffentlichung zurückgenommen wird, dann
   ist sie beim nächsten Aufruf der Roadmap **verschwunden** — ohne Deploy und ohne

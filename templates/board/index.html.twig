@@ -3,23 +3,28 @@
 {% block title %}{{ 'board.title'|trans }} · Endlech.lu{% endblock %}
 
 {% block body %}
-<div class="bg-gradient-to-br from-cyan-700 to-purple-800 text-white">
-    <div class="max-w-4xl mx-auto px-4 py-12 sm:py-16">
-        <h1 class="text-3xl sm:text-4xl font-bold">{{ 'board.title'|trans }}</h1>
-        <p class="mt-3 text-cyan-50 max-w-2xl">{{ 'board.intro'|trans }}</p>
-
-        {# Genau EINE Leitzahl je Seite (Design-System). #}
-        <p class="mt-6 text-4xl sm:text-5xl font-bold">{{ total }}</p>
-        <p class="text-cyan-100 text-sm">{{ 'board.lead_label'|trans }}</p>
-
-        <a href="{{ path('app_board_new') }}"
-           class="mt-6 inline-flex items-center min-h-[48px] px-6 rounded-lg bg-white text-cyan-800 font-semibold focus:outline-2 focus:outline-offset-2 motion-safe:transition hover:bg-cyan-50">
-            {{ 'board.submit_cta'|trans }}
-        </a>
-    </div>
-</div>
+{# Seit Feature 16 der Reiter „Ideen" im Bereich „Roadmap & Ideen": Der gemeinsame Kopf
+   trägt Name, Knopf „Idee einreichen" und die Reiter. Die Leitzahl stand vorher im Kopfband
+   und steht jetzt über der Steuerleiste (design.md Entscheidung 10) — der Kopf ist auf
+   allen Reitern gleich (AK-05) und muss bei 800 px Höhe Platz lassen (AK-10). #}
+{% include 'roadmap/_area_header.html.twig' with {
+    active: 'ideas',
+    heading: 'board.title'|trans,
+    intro: 'board.intro'|trans,
+    kopfbreite: 'max-w-4xl mx-auto px-4',
+} only %}
 
 <div class="max-w-4xl mx-auto px-4 py-8">
+
+    {# Genau EINE Leitzahl je Seite (Design-System) — und zugleich die Überschrift der Liste.
+       ⚠ Sie ist ein h2, kein <p>: Die Ideen-Karten tragen h3, und ohne Ebene dazwischen
+       sprang die Kette von h1 auf h3 (16/AK-13, bei T08 im Browser gemessen). Den Sprung
+       gab es schon vor Feature 16; `HeadingOrderTest` sah ihn nicht, weil die Test-
+       Datenbank keine veröffentlichte Idee führt. #}
+    <h2 class="mb-6 text-base font-normal text-gray-600" data-board-lead>
+        <span class="text-3xl font-bold text-gray-900">{{ total }}</span>
+        {{ 'board.lead_label'|trans }}
+    </h2>
 
     {# Steuerleiste als GET-Formular: wirkt ohne JavaScript (AK-49). #}
     <form method="get" class="flex flex-wrap items-end gap-4 mb-6">

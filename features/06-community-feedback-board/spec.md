@@ -70,12 +70,14 @@ Jedes Kriterium ist ohne Codekenntnis prüfbar.
 
 ### A · Board finden und lesen
 
-- **AK-01** · Angenommen, ein Besucher ist nicht angemeldet, wenn er
+- **AK-01** · ~~Angenommen, ein Besucher ist nicht angemeldet, wenn er
   `/de/community/ideen` aufruft, dann erscheint das Board mit HTTP 200 und ohne
-  Aufforderung, sich anzumelden.
-- **AK-02** · Angenommen, ein Besucher steht auf einer beliebigen Seite außerhalb der
+  Aufforderung, sich anzumelden.~~
+  *Abgelöst am 2026-11-07 durch Feature 16 (AK-04, AK-17): Das Board liegt als Reiter „Ideen“ unter `/roadmap/ideen`, die Fußzeile führt mit „Roadmap & Ideen“ hinein.*
+- **AK-02** · ~~Angenommen, ein Besucher steht auf einer beliebigen Seite außerhalb der
   Verwaltung, wenn er die Fußzeile liest, dann findet er dort einen Verweis auf das
-  Board, ohne die Adresse zu kennen.
+  Board, ohne die Adresse zu kennen.~~
+  *Abgelöst am 2026-11-07 durch Feature 16 (AK-01, AK-03): Das Board liegt als Reiter „Ideen“ unter `/roadmap/ideen`, die Fußzeile führt mit „Roadmap & Ideen“ hinein.*
 - **AK-03** · Angenommen, es liegen drei freigegebene und zwei wartende Ideen vor, wenn
   das Board geöffnet wird, dann erscheinen genau die drei freigegebenen und keine der
   wartenden.
@@ -381,10 +383,11 @@ beim Aufgabenplan als AK-31/AK-32 auffielen.
   auf Freigabe — die in AK-72 zugesagte Frist ist damit erreicht —, wenn ein Admin die
   Warteschlange öffnet, dann ist sie dort **deutlicher hervorgehoben als eine bald
   fällige** aus AK-73, und die beiden Stufen sind ohne Farbwahrnehmung unterscheidbar.
-- **AK-80** *(aus OF-07)* · Angenommen, ein Besucher liest die Fußzeile, wenn er nach
+- **AK-80** *(aus OF-07)* · ~~Angenommen, ein Besucher liest die Fußzeile, wenn er nach
   einem Weg für Rückmeldungen sucht, dann findet er dort **genau einen** und dieser führt
   auf `/community/ideen` — kein zweiter Verweis auf ein fremdes Board, und keiner mit
-  `target="_blank"`.
+  `target="_blank"`.~~
+  *Abgelöst am 2026-11-07 durch Feature 16 (AK-03): Das Board liegt als Reiter „Ideen“ unter `/roadmap/ideen`, die Fußzeile führt mit „Roadmap & Ideen“ hinein.*
 - **AK-81** *(aus OF-07)* · Angenommen, das Feature ist ausgeliefert, wenn
   `endlech.userjot.com` aufgerufen wird, dann nimmt der Dienst **keine neuen Einreichungen
   mehr entgegen**.

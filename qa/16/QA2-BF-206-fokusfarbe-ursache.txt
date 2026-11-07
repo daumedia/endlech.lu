@@ -1,0 +1,29 @@
+BF-206 · Fokusrahmen auf dem Verlaufsband: cyan-700 statt weiß (QA 16, zweiter Durchlauf, 2026-11-07)
+
+Messung (Brave headless, Tastaturfokus per Tab, 600 ms nach dem Fokus — `motion-safe:transition` blendet
+`outline-color` über 150 ms ein; sofort gemessen erscheint `currentColor`). Kontrast = Pixel des Rahmens
+gegen dieselbe Stelle ohne Fokus (geänderte Pixel, Median / höchster Wert):
+
+  16    /de/roadmap        Knopf „Idee einreichen“ (Band)  1280 px  outline rgb(14,116,144)  1,58 / 1,65 : 1
+  16    /de/roadmap        Knopf „Idee einreichen“ (Band)   375 px  outline rgb(14,116,144)  1,46 / 1,63 : 1
+  16    /de/roadmap        Reiter „Ideen“ (weißer Grund)    1280 px  outline rgb(14,116,144)  5,36 / 5,36 : 1
+  main  /de/community/ideen Knopf im alten Kopfband        1280 px  outline rgb(14,116,144)  1,27 / 1,32 : 1
+  main  /de/               Hero-Knopf „Restaurants finden“ 1280 px  outline rgb(14,116,144)  1,07 / 1,20 : 1
+  16    /de/               Hero-Knopf „Restaurants finden“ 1280 px  outline rgb(14,116,144)  1,07 / 1,20 : 1
+
+Alle Knöpfe tragen `focus:outline-white`; wirksam ist überall cyan-700 aus der globalen Regel in
+`assets/styles/app.css:98` (`:focus-visible { outline: 2px solid #0e7490 }`).
+
+Ursache (CDP `CSS.getMatchedStylesForNode` am Knopf): `.focus\:outline-white` liegt in `@layer utilities`,
+die globale Regel ist ungeschichtet — ungeschichtete Deklarationen schlagen geschichtete, unabhängig von
+der Spezifität. Der Kommentar über der Regel („… die diesen Fallback durch höhere Spezifität überschreibt“)
+trifft unter Tailwind v4 nicht zu.
+
+Gegenprobe im Browser (nichts im Repository geändert): globale Regel per CSSOM entfernt und wortgleich in
+`@layer base { … }` eingefügt → derselbe Knopf hat bei Tastaturfokus outline-color rgb(255, 255, 255).
+
+Ausgabe der Gegenprobe:
+  mit globaler :focus-visible-Regel (ungeschichtet): rgb(14, 116, 144)
+  gleiche Regel in @layer base:                      rgb(255, 255, 255)
+
+Bilder: QA2-BF-206-knopf-ohne-fokus-1280.png, QA2-BF-206-knopf-fokus-1280.png

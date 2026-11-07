@@ -43,7 +43,7 @@ final class BoardControllerTest extends AbstractWebTestCase
     public function testBoardIstOeffentlich(): void
     {
         $client = static::createClient();
-        $client->request('GET', self::LOCALE . '/community/ideen');
+        $client->request('GET', self::LOCALE . '/roadmap/ideen');
 
         self::assertResponseIsSuccessful();
     }
@@ -52,10 +52,10 @@ final class BoardControllerTest extends AbstractWebTestCase
     public function testLeererZustand(): void
     {
         $client = static::createClient();
-        $crawler = $client->request('GET', self::LOCALE . '/community/ideen');
+        $crawler = $client->request('GET', self::LOCALE . '/roadmap/ideen');
 
         self::assertResponseIsSuccessful();
-        self::assertGreaterThan(0, $crawler->filter('a[href$="/community/ideen/neu"]')->count());
+        self::assertGreaterThan(0, $crawler->filter('a[href$="/roadmap/ideen/neu"]')->count());
     }
 
     /** AK-03 + AK-71: Wartende Ideen erscheinen nicht im Board. */
@@ -65,7 +65,7 @@ final class BoardControllerTest extends AbstractWebTestCase
         $this->idee($client, published: false, titel: 'Geheime wartende Idee');
         $this->idee($client, published: true, titel: 'Sichtbare Idee');
 
-        $client->request('GET', self::LOCALE . '/community/ideen');
+        $client->request('GET', self::LOCALE . '/roadmap/ideen');
 
         self::assertSelectorTextContains('body', 'Sichtbare Idee');
         self::assertStringNotContainsString('Geheime wartende Idee', (string) $client->getResponse()->getContent());
@@ -79,12 +79,12 @@ final class BoardControllerTest extends AbstractWebTestCase
         $idee = $this->idee($client, published: false, von: $besitzer, titel: 'Nur für den Verfasser');
 
         // Gast
-        $client->request('GET', self::LOCALE . '/community/ideen/' . $idee->getId() . '-kartenansicht');
+        $client->request('GET', self::LOCALE . '/roadmap/ideen/' . $idee->getId() . '-kartenansicht');
         self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
 
         // Fremdes Konto
         $this->loginAs($client, 'admin@endlech.lu');
-        $client->request('GET', self::LOCALE . '/community/ideen/' . $idee->getId() . '-kartenansicht');
+        $client->request('GET', self::LOCALE . '/roadmap/ideen/' . $idee->getId() . '-kartenansicht');
         self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
     }
 
@@ -106,7 +106,7 @@ final class BoardControllerTest extends AbstractWebTestCase
     {
         $client = static::createClient();
         $idee = $this->idee($client, published: false, von: null, titel: 'Ohne Verfasser');
-        $pfad = self::LOCALE.'/community/ideen/'.$idee->getId().'-kartenansicht';
+        $pfad = self::LOCALE.'/roadmap/ideen/'.$idee->getId().'-kartenansicht';
 
         // Gast
         $client->request('GET', $pfad);
@@ -135,7 +135,7 @@ final class BoardControllerTest extends AbstractWebTestCase
         $user = $this->loginAs($client, 'user@endlech.lu');
         $idee = $this->idee($client, published: false, von: $user, titel: 'Meine wartende Idee');
 
-        $client->request('GET', self::LOCALE . '/community/ideen/' . $idee->getId() . '-kartenansicht');
+        $client->request('GET', self::LOCALE . '/roadmap/ideen/' . $idee->getId() . '-kartenansicht');
 
         self::assertResponseIsSuccessful();
         self::assertSelectorTextContains('body', 'Meine wartende Idee');
@@ -145,7 +145,7 @@ final class BoardControllerTest extends AbstractWebTestCase
     public function testEinreichenVerlangtAnmeldung(): void
     {
         $client = static::createClient();
-        $client->request('GET', self::LOCALE . '/community/ideen/neu');
+        $client->request('GET', self::LOCALE . '/roadmap/ideen/neu');
 
         self::assertResponseRedirects();
 
@@ -159,7 +159,7 @@ final class BoardControllerTest extends AbstractWebTestCase
         $client = static::createClient();
         $this->loginAs($client, 'unverified@endlech.lu');
 
-        $client->request('GET', self::LOCALE . '/community/ideen/neu');
+        $client->request('GET', self::LOCALE . '/roadmap/ideen/neu');
 
         self::assertResponseRedirects();
         self::assertSame(0, $client->getContainer()->get(BoardIdeaRepository::class)->count([]));
@@ -171,7 +171,7 @@ final class BoardControllerTest extends AbstractWebTestCase
         $client = static::createClient();
         $this->loginAs($client, 'user@endlech.lu');
 
-        $crawler = $client->request('GET', self::LOCALE . '/community/ideen/neu');
+        $crawler = $client->request('GET', self::LOCALE . '/roadmap/ideen/neu');
         $form = $this->formWithField($crawler, 'board_idea[title]', [
             'board_idea[title]' => '',
             'board_idea[description]' => '',
@@ -188,7 +188,7 @@ final class BoardControllerTest extends AbstractWebTestCase
         $client = static::createClient();
         $this->loginAs($client, 'user@endlech.lu');
 
-        $crawler = $client->request('GET', self::LOCALE . '/community/ideen/neu');
+        $crawler = $client->request('GET', self::LOCALE . '/roadmap/ideen/neu');
         $form = $this->formWithField($crawler, 'board_idea[title]', [
             // EC-03: 121 × „ß" — der Slugger macht daraus 242 Zeichen.
             'board_idea[title]' => str_repeat('ß', 121),
@@ -206,14 +206,14 @@ final class BoardControllerTest extends AbstractWebTestCase
         $client = static::createClient();
         $this->loginAs($client, 'user@endlech.lu');
 
-        $crawler = $client->request('GET', self::LOCALE . '/community/ideen/neu');
+        $crawler = $client->request('GET', self::LOCALE . '/roadmap/ideen/neu');
         $form = $this->formWithField($crawler, 'board_idea[title]', [
             'board_idea[title]' => 'Filter für ruhige Bereiche',
             'board_idea[description]' => 'Ein Filter für reizarme Ecken wäre für mich der wichtigste überhaupt.',
         ]);
         $client->submit($form);
 
-        self::assertResponseRedirects(self::LOCALE . '/community/ideen/eingereicht');
+        self::assertResponseRedirects(self::LOCALE . '/roadmap/ideen/eingereicht');
 
         $ideen = $client->getContainer()->get(BoardIdeaRepository::class)->findAll();
         self::assertCount(1, $ideen);
@@ -227,7 +227,7 @@ final class BoardControllerTest extends AbstractWebTestCase
         $client = static::createClient();
         $this->loginAs($client, 'user@endlech.lu');
 
-        $crawler = $client->request('GET', self::LOCALE . '/community/ideen/neu');
+        $crawler = $client->request('GET', self::LOCALE . '/roadmap/ideen/neu');
         $form = $this->formWithField($crawler, 'board_idea[title]', [
             'board_idea[title]' => 'Von einem Bot',
             'board_idea[description]' => 'Diese Idee sollte nie entstehen.',
@@ -235,7 +235,7 @@ final class BoardControllerTest extends AbstractWebTestCase
         ]);
         $client->submit($form);
 
-        self::assertResponseRedirects(self::LOCALE . '/community/ideen/eingereicht');
+        self::assertResponseRedirects(self::LOCALE . '/roadmap/ideen/eingereicht');
         self::assertSame(0, $client->getContainer()->get(BoardIdeaRepository::class)->count([]));
     }
 
@@ -247,7 +247,7 @@ final class BoardControllerTest extends AbstractWebTestCase
         $idee = $this->idee($client, published: true);
         $repo = $client->getContainer()->get(BoardIdeaRepository::class);
 
-        $pfad = self::LOCALE . '/community/ideen/' . $idee->getId() . '-kartenansicht';
+        $pfad = self::LOCALE . '/roadmap/ideen/' . $idee->getId() . '-kartenansicht';
 
         $crawler = $client->request('GET', $pfad);
         $client->submit($this->formByAction($crawler, '/zustimmen'));
@@ -266,7 +266,7 @@ final class BoardControllerTest extends AbstractWebTestCase
         $client = static::createClient();
         $idee = $this->idee($client, published: true);
 
-        $client->request('POST', self::LOCALE . '/community/ideen/' . $idee->getId() . '/zustimmen');
+        $client->request('POST', self::LOCALE . '/roadmap/ideen/' . $idee->getId() . '/zustimmen');
 
         self::assertResponseRedirects();
         self::assertSame(0, $client->getContainer()->get(BoardIdeaRepository::class)->countVotesForOne($idee));
@@ -279,7 +279,7 @@ final class BoardControllerTest extends AbstractWebTestCase
         $user = $this->loginAs($client, 'user@endlech.lu');
         $idee = $this->idee($client, published: false, von: $user);
 
-        $crawler = $client->request('GET', self::LOCALE . '/community/ideen/' . $idee->getId() . '-kartenansicht');
+        $crawler = $client->request('GET', self::LOCALE . '/roadmap/ideen/' . $idee->getId() . '-kartenansicht');
         $client->submit($this->formByAction($crawler, '/zurueckziehen'));
 
         self::assertSame(0, $client->getContainer()->get(BoardIdeaRepository::class)->count([]));
@@ -292,7 +292,7 @@ final class BoardControllerTest extends AbstractWebTestCase
         $user = $this->loginAs($client, 'user@endlech.lu');
         $idee = $this->idee($client, published: true, von: $user);
 
-        $client->request('POST', self::LOCALE . '/community/ideen/' . $idee->getId() . '/zurueckziehen');
+        $client->request('POST', self::LOCALE . '/roadmap/ideen/' . $idee->getId() . '/zurueckziehen');
 
         self::assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
         self::assertSame(1, $client->getContainer()->get(BoardIdeaRepository::class)->count([]));
@@ -308,7 +308,7 @@ final class BoardControllerTest extends AbstractWebTestCase
         $fertig->setStatus(BoardIdeaStatus::DONE);
         $em->flush();
 
-        $client->request('GET', self::LOCALE . '/community/ideen');
+        $client->request('GET', self::LOCALE . '/roadmap/ideen');
 
         self::assertResponseIsSuccessful();
         // Sie erscheint — aber unter der eigenen Überschrift, nicht in der Liste.
@@ -326,7 +326,7 @@ final class BoardControllerTest extends AbstractWebTestCase
         $idee->setDescription('Siehe https://beispiel.tld und <script>alert(1)</script>');
         $em->flush();
 
-        $client->request('GET', self::LOCALE . '/community/ideen/' . $idee->getId() . '-kartenansicht');
+        $client->request('GET', self::LOCALE . '/roadmap/ideen/' . $idee->getId() . '-kartenansicht');
 
         $html = (string) $client->getResponse()->getContent();
         self::assertStringNotContainsString('<script>alert(1)</script>', $html);
@@ -345,7 +345,7 @@ final class BoardControllerTest extends AbstractWebTestCase
         $dublette->setDuplicateOf($original);
         $em->flush();
 
-        $client->request('GET', self::LOCALE . '/community/ideen/' . $dublette->getId() . '-kartenansicht');
+        $client->request('GET', self::LOCALE . '/roadmap/ideen/' . $dublette->getId() . '-kartenansicht');
 
         self::assertResponseRedirects();
     }

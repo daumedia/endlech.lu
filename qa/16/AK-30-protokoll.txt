@@ -1,0 +1,16 @@
+# AK-30 · Protokoll nach je 100 Aufrufen (2026-11-07, Dev-Server, var/log/dev.log, DEBUG-Stufe)
+# anonym: /de/roadmap /de/roadmap/ideen /de/changelog /de/community/ideen /de/community/ideen/neu /de/community/ideen/eingereicht /de/community/ideen/94-qa16-0 (je 100)
+# angemeldet (user@): /de/roadmap /de/roadmap/ideen /de/changelog /de/roadmap/ideen/95-qa16-1 /de/community/ideen/94-qa16-0 (je 100)
+Zeilen im Ausschnitt:    14021
+Test User                  0
+Test U\.                   0
+Admin User                 0
+Geplante Idee Nummer       0
+QA16X Idee                 0
+Beschreibung QA16X         0
+QA16Y                      0
+Zebrafink                  0
+admin@endlech\.lu          0
+user@endlech\.lu           500
+user@endlech.lu nur in: security.DEBUG: User was reloaded from a user provider. {"
+Slug in request_uri (Matched route): 300

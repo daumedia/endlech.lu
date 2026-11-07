@@ -1,0 +1,1939 @@
+{
+ "ak05": [
+  {
+   "width": 1280,
+   "l": "lb",
+   "kind": "roadmap",
+   "status": 200,
+   "name": "Roadmap & Iddien",
+   "tabs": "Roadmap | Iddien | Changelog",
+   "btn": "Iddi araichen",
+   "navY": 323,
+   "xs": "16,114,184"
+  },
+  {
+   "width": 1280,
+   "l": "lb",
+   "kind": "ideas",
+   "status": 200,
+   "name": "Roadmap & Iddien",
+   "tabs": "Roadmap | Iddien | Changelog",
+   "btn": "Iddi araichen",
+   "navY": 353,
+   "xs": "16,111,184"
+  },
+  {
+   "width": 1280,
+   "l": "lb",
+   "kind": "changelog",
+   "status": 200,
+   "name": "Roadmap & Iddien",
+   "tabs": "Roadmap | Iddien | Changelog",
+   "btn": "Iddi araichen",
+   "navY": 323,
+   "xs": "16,111,182"
+  },
+  {
+   "width": 1280,
+   "l": "lb",
+   "kind": "show",
+   "status": 200,
+   "name": "Roadmap & Iddien",
+   "tabs": "Roadmap | Iddien | Changelog",
+   "btn": "Iddi araichen",
+   "navY": 225,
+   "xs": "16,111,184"
+  },
+  {
+   "width": 1280,
+   "l": "lb",
+   "kind": "navY je Seitenart",
+   "ys": "roadmap:323 ideas:353 changelog:323 show:225"
+  },
+  {
+   "width": 1280,
+   "l": "de",
+   "kind": "roadmap",
+   "status": 200,
+   "name": "Roadmap & Ideen",
+   "tabs": "Roadmap | Ideen | Changelog",
+   "btn": "Idee einreichen",
+   "navY": 353,
+   "xs": "16,114,182"
+  },
+  {
+   "width": 1280,
+   "l": "de",
+   "kind": "ideas",
+   "status": 200,
+   "name": "Roadmap & Ideen",
+   "tabs": "Roadmap | Ideen | Changelog",
+   "btn": "Idee einreichen",
+   "navY": 353,
+   "xs": "16,111,179"
+  },
+  {
+   "width": 1280,
+   "l": "de",
+   "kind": "changelog",
+   "status": 200,
+   "name": "Roadmap & Ideen",
+   "tabs": "Roadmap | Ideen | Changelog",
+   "btn": "Idee einreichen",
+   "navY": 323,
+   "xs": "16,111,179"
+  },
+  {
+   "width": 1280,
+   "l": "de",
+   "kind": "show",
+   "status": 200,
+   "name": "Roadmap & Ideen",
+   "tabs": "Roadmap | Ideen | Changelog",
+   "btn": "Idee einreichen",
+   "navY": 225,
+   "xs": "16,111,179"
+  },
+  {
+   "width": 1280,
+   "l": "de",
+   "kind": "navY je Seitenart",
+   "ys": "roadmap:353 ideas:353 changelog:323 show:225"
+  },
+  {
+   "width": 1280,
+   "l": "fr",
+   "kind": "roadmap",
+   "status": 200,
+   "name": "Feuille de route & idées",
+   "tabs": "Feuille de route | Idées | Journal des modifications",
+   "btn": "Proposer une idée",
+   "navY": 353,
+   "xs": "16,159,227"
+  },
+  {
+   "width": 1280,
+   "l": "fr",
+   "kind": "ideas",
+   "status": 200,
+   "name": "Feuille de route & idées",
+   "tabs": "Feuille de route | Idées | Journal des modifications",
+   "btn": "Proposer une idée",
+   "navY": 353,
+   "xs": "16,156,224"
+  },
+  {
+   "width": 1280,
+   "l": "fr",
+   "kind": "changelog",
+   "status": 200,
+   "name": "Feuille de route & idées",
+   "tabs": "Feuille de route | Idées | Journal des modifications",
+   "btn": "Proposer une idée",
+   "navY": 323,
+   "xs": "16,156,224"
+  },
+  {
+   "width": 1280,
+   "l": "fr",
+   "kind": "show",
+   "status": 200,
+   "name": "Feuille de route & idées",
+   "tabs": "Feuille de route | Idées | Journal des modifications",
+   "btn": "Proposer une idée",
+   "navY": 225,
+   "xs": "16,156,224"
+  },
+  {
+   "width": 1280,
+   "l": "fr",
+   "kind": "navY je Seitenart",
+   "ys": "roadmap:353 ideas:353 changelog:323 show:225"
+  },
+  {
+   "width": 1280,
+   "l": "en",
+   "kind": "roadmap",
+   "status": 200,
+   "name": "Roadmap & ideas",
+   "tabs": "Roadmap | Ideas | Changelog",
+   "btn": "Submit an idea",
+   "navY": 323,
+   "xs": "16,114,182"
+  },
+  {
+   "width": 1280,
+   "l": "en",
+   "kind": "ideas",
+   "status": 200,
+   "name": "Roadmap & ideas",
+   "tabs": "Roadmap | Ideas | Changelog",
+   "btn": "Submit an idea",
+   "navY": 353,
+   "xs": "16,111,179"
+  },
+  {
+   "width": 1280,
+   "l": "en",
+   "kind": "changelog",
+   "status": 200,
+   "name": "Roadmap & ideas",
+   "tabs": "Roadmap | Ideas | Changelog",
+   "btn": "Submit an idea",
+   "navY": 323,
+   "xs": "16,111,179"
+  },
+  {
+   "width": 1280,
+   "l": "en",
+   "kind": "show",
+   "status": 200,
+   "name": "Roadmap & ideas",
+   "tabs": "Roadmap | Ideas | Changelog",
+   "btn": "Submit an idea",
+   "navY": 225,
+   "xs": "16,111,179"
+  },
+  {
+   "width": 1280,
+   "l": "en",
+   "kind": "navY je Seitenart",
+   "ys": "roadmap:323 ideas:353 changelog:323 show:225"
+  },
+  {
+   "width": 1280,
+   "l": "pt",
+   "kind": "roadmap",
+   "status": 200,
+   "name": "Roteiro e ideias",
+   "tabs": "Roteiro | Ideias | Registo de alterações",
+   "btn": "Enviar ideia",
+   "navY": 353,
+   "xs": "16,96,164"
+  },
+  {
+   "width": 1280,
+   "l": "pt",
+   "kind": "ideas",
+   "status": 200,
+   "name": "Roteiro e ideias",
+   "tabs": "Roteiro | Ideias | Registo de alterações",
+   "btn": "Enviar ideia",
+   "navY": 353,
+   "xs": "16,93,164"
+  },
+  {
+   "width": 1280,
+   "l": "pt",
+   "kind": "changelog",
+   "status": 200,
+   "name": "Roteiro e ideias",
+   "tabs": "Roteiro | Ideias | Registo de alterações",
+   "btn": "Enviar ideia",
+   "navY": 323,
+   "xs": "16,93,162"
+  },
+  {
+   "width": 1280,
+   "l": "pt",
+   "kind": "show",
+   "status": 200,
+   "name": "Roteiro e ideias",
+   "tabs": "Roteiro | Ideias | Registo de alterações",
+   "btn": "Enviar ideia",
+   "navY": 225,
+   "xs": "16,93,164"
+  },
+  {
+   "width": 1280,
+   "l": "pt",
+   "kind": "navY je Seitenart",
+   "ys": "roadmap:353 ideas:353 changelog:323 show:225"
+  },
+  {
+   "width": 375,
+   "l": "lb",
+   "kind": "roadmap",
+   "status": 200,
+   "name": "Roadmap & Iddien",
+   "tabs": "Roadmap | Iddien | Changelog",
+   "btn": "Iddi araichen",
+   "navY": 358,
+   "xs": "16,114,184"
+  },
+  {
+   "width": 375,
+   "l": "lb",
+   "kind": "ideas",
+   "status": 200,
+   "name": "Roadmap & Iddien",
+   "tabs": "Roadmap | Iddien | Changelog",
+   "btn": "Iddi araichen",
+   "navY": 388,
+   "xs": "16,111,184"
+  },
+  {
+   "width": 375,
+   "l": "lb",
+   "kind": "changelog",
+   "status": 200,
+   "name": "Roadmap & Iddien",
+   "tabs": "Roadmap | Iddien | Changelog",
+   "btn": "Iddi araichen",
+   "navY": 358,
+   "xs": "16,111,182"
+  },
+  {
+   "width": 375,
+   "l": "lb",
+   "kind": "show",
+   "status": 200,
+   "name": "Roadmap & Iddien",
+   "tabs": "Roadmap | Iddien | Changelog",
+   "btn": "Iddi araichen",
+   "navY": 209,
+   "xs": "16,111,184"
+  },
+  {
+   "width": 375,
+   "l": "lb",
+   "kind": "navY je Seitenart",
+   "ys": "roadmap:358 ideas:388 changelog:358 show:209"
+  },
+  {
+   "width": 375,
+   "l": "de",
+   "kind": "roadmap",
+   "status": 200,
+   "name": "Roadmap & Ideen",
+   "tabs": "Roadmap | Ideen | Changelog",
+   "btn": "Idee einreichen",
+   "navY": 358,
+   "xs": "16,114,182"
+  },
+  {
+   "width": 375,
+   "l": "de",
+   "kind": "ideas",
+   "status": 200,
+   "name": "Roadmap & Ideen",
+   "tabs": "Roadmap | Ideen | Changelog",
+   "btn": "Idee einreichen",
+   "navY": 388,
+   "xs": "16,111,179"
+  },
+  {
+   "width": 375,
+   "l": "de",
+   "kind": "changelog",
+   "status": 200,
+   "name": "Roadmap & Ideen",
+   "tabs": "Roadmap | Ideen | Changelog",
+   "btn": "Idee einreichen",
+   "navY": 358,
+   "xs": "16,111,179"
+  },
+  {
+   "width": 375,
+   "l": "de",
+   "kind": "show",
+   "status": 200,
+   "name": "Roadmap & Ideen",
+   "tabs": "Roadmap | Ideen | Changelog",
+   "btn": "Idee einreichen",
+   "navY": 209,
+   "xs": "16,111,179"
+  },
+  {
+   "width": 375,
+   "l": "de",
+   "kind": "navY je Seitenart",
+   "ys": "roadmap:358 ideas:388 changelog:358 show:209"
+  },
+  {
+   "width": 375,
+   "l": "fr",
+   "kind": "roadmap",
+   "status": 200,
+   "name": "Feuille de route & idées",
+   "tabs": "Feuille de route | Idées | Journal des modifications",
+   "btn": "Proposer une idée",
+   "navY": 402,
+   "xs": "16,159,16"
+  },
+  {
+   "width": 375,
+   "l": "fr",
+   "kind": "ideas",
+   "status": 200,
+   "name": "Feuille de route & idées",
+   "tabs": "Feuille de route | Idées | Journal des modifications",
+   "btn": "Proposer une idée",
+   "navY": 432,
+   "xs": "16,156,16"
+  },
+  {
+   "width": 375,
+   "l": "fr",
+   "kind": "changelog",
+   "status": 200,
+   "name": "Feuille de route & idées",
+   "tabs": "Feuille de route | Idées | Journal des modifications",
+   "btn": "Proposer une idée",
+   "navY": 411,
+   "xs": "16,156,16"
+  },
+  {
+   "width": 375,
+   "l": "fr",
+   "kind": "show",
+   "status": 200,
+   "name": "Feuille de route & idées",
+   "tabs": "Feuille de route | Idées | Journal des modifications",
+   "btn": "Proposer une idée",
+   "navY": 253,
+   "xs": "16,156,16"
+  },
+  {
+   "width": 375,
+   "l": "fr",
+   "kind": "navY je Seitenart",
+   "ys": "roadmap:402 ideas:432 changelog:411 show:253"
+  },
+  {
+   "width": 375,
+   "l": "en",
+   "kind": "roadmap",
+   "status": 200,
+   "name": "Roadmap & ideas",
+   "tabs": "Roadmap | Ideas | Changelog",
+   "btn": "Submit an idea",
+   "navY": 358,
+   "xs": "16,114,182"
+  },
+  {
+   "width": 375,
+   "l": "en",
+   "kind": "ideas",
+   "status": 200,
+   "name": "Roadmap & ideas",
+   "tabs": "Roadmap | Ideas | Changelog",
+   "btn": "Submit an idea",
+   "navY": 358,
+   "xs": "16,111,179"
+  },
+  {
+   "width": 375,
+   "l": "en",
+   "kind": "changelog",
+   "status": 200,
+   "name": "Roadmap & ideas",
+   "tabs": "Roadmap | Ideas | Changelog",
+   "btn": "Submit an idea",
+   "navY": 358,
+   "xs": "16,111,179"
+  },
+  {
+   "width": 375,
+   "l": "en",
+   "kind": "show",
+   "status": 200,
+   "name": "Roadmap & ideas",
+   "tabs": "Roadmap | Ideas | Changelog",
+   "btn": "Submit an idea",
+   "navY": 209,
+   "xs": "16,111,179"
+  },
+  {
+   "width": 375,
+   "l": "en",
+   "kind": "navY je Seitenart",
+   "ys": "roadmap:358 ideas:358 changelog:358 show:209"
+  },
+  {
+   "width": 375,
+   "l": "pt",
+   "kind": "roadmap",
+   "status": 200,
+   "name": "Roteiro e ideias",
+   "tabs": "Roteiro | Ideias | Registo de alterações",
+   "btn": "Enviar ideia",
+   "navY": 358,
+   "xs": "16,96,164"
+  },
+  {
+   "width": 375,
+   "l": "pt",
+   "kind": "ideas",
+   "status": 200,
+   "name": "Roteiro e ideias",
+   "tabs": "Roteiro | Ideias | Registo de alterações",
+   "btn": "Enviar ideia",
+   "navY": 358,
+   "xs": "16,93,164"
+  },
+  {
+   "width": 375,
+   "l": "pt",
+   "kind": "changelog",
+   "status": 200,
+   "name": "Roteiro e ideias",
+   "tabs": "Roteiro | Ideias | Registo de alterações",
+   "btn": "Enviar ideia",
+   "navY": 358,
+   "xs": "16,93,162"
+  },
+  {
+   "width": 375,
+   "l": "pt",
+   "kind": "show",
+   "status": 200,
+   "name": "Roteiro e ideias",
+   "tabs": "Roteiro | Ideias | Registo de alterações",
+   "btn": "Enviar ideia",
+   "navY": 209,
+   "xs": "16,93,164"
+  },
+  {
+   "width": 375,
+   "l": "pt",
+   "kind": "navY je Seitenart",
+   "ys": "roadmap:358 ideas:358 changelog:358 show:209"
+  },
+  {
+   "width": 320,
+   "l": "lb",
+   "kind": "navY je Seitenart",
+   "ys": "roadmap:402 ideas:432 changelog:402 show:253"
+  },
+  {
+   "width": 320,
+   "l": "de",
+   "kind": "navY je Seitenart",
+   "ys": "roadmap:402 ideas:469 changelog:432 show:253"
+  },
+  {
+   "width": 320,
+   "l": "fr",
+   "kind": "navY je Seitenart",
+   "ys": "roadmap:432 ideas:469 changelog:440 show:253"
+  },
+  {
+   "width": 320,
+   "l": "en",
+   "kind": "navY je Seitenart",
+   "ys": "roadmap:402 ideas:469 changelog:402 show:253"
+  },
+  {
+   "width": 320,
+   "l": "pt",
+   "kind": "navY je Seitenart",
+   "ys": "roadmap:388 ideas:425 changelog:396 show:209"
+  }
+ ],
+ "ak06": [
+  {
+   "width": 1280,
+   "l": "lb",
+   "kind": "roadmap",
+   "active": "Roadmap w=700 bb=4px solid oklch(0.52 0.105 223.128)",
+   "inactive": "Iddien w=400 bb=4px solid rgba(0, 0, 0, 0);Changelog w=400 bb=4px solid rgba(0, 0, 0, 0)"
+  },
+  {
+   "width": 1280,
+   "l": "lb",
+   "kind": "ideas",
+   "active": "Iddien w=700 bb=4px solid oklch(0.52 0.105 223.128)",
+   "inactive": "Roadmap w=400 bb=4px solid rgba(0, 0, 0, 0);Changelog w=400 bb=4px solid rgba(0, 0, 0, 0)"
+  },
+  {
+   "width": 1280,
+   "l": "lb",
+   "kind": "changelog",
+   "active": "Changelog w=700 bb=4px solid oklch(0.52 0.105 223.128)",
+   "inactive": "Roadmap w=400 bb=4px solid rgba(0, 0, 0, 0);Iddien w=400 bb=4px solid rgba(0, 0, 0, 0)"
+  },
+  {
+   "width": 1280,
+   "l": "lb",
+   "kind": "show",
+   "active": "Iddien w=700 bb=4px solid oklch(0.52 0.105 223.128)",
+   "inactive": "Roadmap w=400 bb=4px solid rgba(0, 0, 0, 0);Changelog w=400 bb=4px solid rgba(0, 0, 0, 0)"
+  },
+  {
+   "width": 1280,
+   "l": "de",
+   "kind": "roadmap",
+   "active": "Roadmap w=700 bb=4px solid oklch(0.52 0.105 223.128)",
+   "inactive": "Ideen w=400 bb=4px solid rgba(0, 0, 0, 0);Changelog w=400 bb=4px solid rgba(0, 0, 0, 0)"
+  },
+  {
+   "width": 1280,
+   "l": "de",
+   "kind": "ideas",
+   "active": "Ideen w=700 bb=4px solid oklch(0.52 0.105 223.128)",
+   "inactive": "Roadmap w=400 bb=4px solid rgba(0, 0, 0, 0);Changelog w=400 bb=4px solid rgba(0, 0, 0, 0)"
+  },
+  {
+   "width": 1280,
+   "l": "de",
+   "kind": "changelog",
+   "active": "Changelog w=700 bb=4px solid oklch(0.52 0.105 223.128)",
+   "inactive": "Roadmap w=400 bb=4px solid rgba(0, 0, 0, 0);Ideen w=400 bb=4px solid rgba(0, 0, 0, 0)"
+  },
+  {
+   "width": 1280,
+   "l": "de",
+   "kind": "show",
+   "active": "Ideen w=700 bb=4px solid oklch(0.52 0.105 223.128)",
+   "inactive": "Roadmap w=400 bb=4px solid rgba(0, 0, 0, 0);Changelog w=400 bb=4px solid rgba(0, 0, 0, 0)"
+  },
+  {
+   "width": 1280,
+   "l": "fr",
+   "kind": "roadmap",
+   "active": "Feuille de route w=700 bb=4px solid oklch(0.52 0.105 223.128)",
+   "inactive": "Idées w=400 bb=4px solid rgba(0, 0, 0, 0);Journal des modifications w=400 bb=4px solid rgba(0, 0, 0, 0)"
+  },
+  {
+   "width": 1280,
+   "l": "fr",
+   "kind": "ideas",
+   "active": "Idées w=700 bb=4px solid oklch(0.52 0.105 223.128)",
+   "inactive": "Feuille de route w=400 bb=4px solid rgba(0, 0, 0, 0);Journal des modifications w=400 bb=4px solid rgba(0, 0, 0, 0)"
+  },
+  {
+   "width": 1280,
+   "l": "fr",
+   "kind": "changelog",
+   "active": "Journal des modifications w=700 bb=4px solid oklch(0.52 0.105 223.128)",
+   "inactive": "Feuille de route w=400 bb=4px solid rgba(0, 0, 0, 0);Idées w=400 bb=4px solid rgba(0, 0, 0, 0)"
+  },
+  {
+   "width": 1280,
+   "l": "fr",
+   "kind": "show",
+   "active": "Idées w=700 bb=4px solid oklch(0.52 0.105 223.128)",
+   "inactive": "Feuille de route w=400 bb=4px solid rgba(0, 0, 0, 0);Journal des modifications w=400 bb=4px solid rgba(0, 0, 0, 0)"
+  },
+  {
+   "width": 1280,
+   "l": "en",
+   "kind": "roadmap",
+   "active": "Roadmap w=700 bb=4px solid oklch(0.52 0.105 223.128)",
+   "inactive": "Ideas w=400 bb=4px solid rgba(0, 0, 0, 0);Changelog w=400 bb=4px solid rgba(0, 0, 0, 0)"
+  },
+  {
+   "width": 1280,
+   "l": "en",
+   "kind": "ideas",
+   "active": "Ideas w=700 bb=4px solid oklch(0.52 0.105 223.128)",
+   "inactive": "Roadmap w=400 bb=4px solid rgba(0, 0, 0, 0);Changelog w=400 bb=4px solid rgba(0, 0, 0, 0)"
+  },
+  {
+   "width": 1280,
+   "l": "en",
+   "kind": "changelog",
+   "active": "Changelog w=700 bb=4px solid oklch(0.52 0.105 223.128)",
+   "inactive": "Roadmap w=400 bb=4px solid rgba(0, 0, 0, 0);Ideas w=400 bb=4px solid rgba(0, 0, 0, 0)"
+  },
+  {
+   "width": 1280,
+   "l": "en",
+   "kind": "show",
+   "active": "Ideas w=700 bb=4px solid oklch(0.52 0.105 223.128)",
+   "inactive": "Roadmap w=400 bb=4px solid rgba(0, 0, 0, 0);Changelog w=400 bb=4px solid rgba(0, 0, 0, 0)"
+  },
+  {
+   "width": 1280,
+   "l": "pt",
+   "kind": "roadmap",
+   "active": "Roteiro w=700 bb=4px solid oklch(0.52 0.105 223.128)",
+   "inactive": "Ideias w=400 bb=4px solid rgba(0, 0, 0, 0);Registo de alterações w=400 bb=4px solid rgba(0, 0, 0, 0)"
+  },
+  {
+   "width": 1280,
+   "l": "pt",
+   "kind": "ideas",
+   "active": "Ideias w=700 bb=4px solid oklch(0.52 0.105 223.128)",
+   "inactive": "Roteiro w=400 bb=4px solid rgba(0, 0, 0, 0);Registo de alterações w=400 bb=4px solid rgba(0, 0, 0, 0)"
+  },
+  {
+   "width": 1280,
+   "l": "pt",
+   "kind": "changelog",
+   "active": "Registo de alterações w=700 bb=4px solid oklch(0.52 0.105 223.128)",
+   "inactive": "Roteiro w=400 bb=4px solid rgba(0, 0, 0, 0);Ideias w=400 bb=4px solid rgba(0, 0, 0, 0)"
+  },
+  {
+   "width": 1280,
+   "l": "pt",
+   "kind": "show",
+   "active": "Ideias w=700 bb=4px solid oklch(0.52 0.105 223.128)",
+   "inactive": "Roteiro w=400 bb=4px solid rgba(0, 0, 0, 0);Registo de alterações w=400 bb=4px solid rgba(0, 0, 0, 0)"
+  },
+  {
+   "width": 375,
+   "l": "lb",
+   "kind": "roadmap",
+   "active": "Roadmap w=700 bb=4px solid oklch(0.52 0.105 223.128)",
+   "inactive": "Iddien w=400 bb=4px solid rgba(0, 0, 0, 0);Changelog w=400 bb=4px solid rgba(0, 0, 0, 0)"
+  },
+  {
+   "width": 375,
+   "l": "lb",
+   "kind": "ideas",
+   "active": "Iddien w=700 bb=4px solid oklch(0.52 0.105 223.128)",
+   "inactive": "Roadmap w=400 bb=4px solid rgba(0, 0, 0, 0);Changelog w=400 bb=4px solid rgba(0, 0, 0, 0)"
+  },
+  {
+   "width": 375,
+   "l": "lb",
+   "kind": "changelog",
+   "active": "Changelog w=700 bb=4px solid oklch(0.52 0.105 223.128)",
+   "inactive": "Roadmap w=400 bb=4px solid rgba(0, 0, 0, 0);Iddien w=400 bb=4px solid rgba(0, 0, 0, 0)"
+  },
+  {
+   "width": 375,
+   "l": "lb",
+   "kind": "show",
+   "active": "Iddien w=700 bb=4px solid oklch(0.52 0.105 223.128)",
+   "inactive": "Roadmap w=400 bb=4px solid rgba(0, 0, 0, 0);Changelog w=400 bb=4px solid rgba(0, 0, 0, 0)"
+  },
+  {
+   "width": 375,
+   "l": "de",
+   "kind": "roadmap",
+   "active": "Roadmap w=700 bb=4px solid oklch(0.52 0.105 223.128)",
+   "inactive": "Ideen w=400 bb=4px solid rgba(0, 0, 0, 0);Changelog w=400 bb=4px solid rgba(0, 0, 0, 0)"
+  },
+  {
+   "width": 375,
+   "l": "de",
+   "kind": "ideas",
+   "active": "Ideen w=700 bb=4px solid oklch(0.52 0.105 223.128)",
+   "inactive": "Roadmap w=400 bb=4px solid rgba(0, 0, 0, 0);Changelog w=400 bb=4px solid rgba(0, 0, 0, 0)"
+  },
+  {
+   "width": 375,
+   "l": "de",
+   "kind": "changelog",
+   "active": "Changelog w=700 bb=4px solid oklch(0.52 0.105 223.128)",
+   "inactive": "Roadmap w=400 bb=4px solid rgba(0, 0, 0, 0);Ideen w=400 bb=4px solid rgba(0, 0, 0, 0)"
+  },
+  {
+   "width": 375,
+   "l": "de",
+   "kind": "show",
+   "active": "Ideen w=700 bb=4px solid oklch(0.52 0.105 223.128)",
+   "inactive": "Roadmap w=400 bb=4px solid rgba(0, 0, 0, 0);Changelog w=400 bb=4px solid rgba(0, 0, 0, 0)"
+  },
+  {
+   "width": 375,
+   "l": "fr",
+   "kind": "roadmap",
+   "active": "Feuille de route w=700 bb=4px solid oklch(0.52 0.105 223.128)",
+   "inactive": "Idées w=400 bb=4px solid rgba(0, 0, 0, 0);Journal des modifications w=400 bb=4px solid rgba(0, 0, 0, 0)"
+  },
+  {
+   "width": 375,
+   "l": "fr",
+   "kind": "ideas",
+   "active": "Idées w=700 bb=4px solid oklch(0.52 0.105 223.128)",
+   "inactive": "Feuille de route w=400 bb=4px solid rgba(0, 0, 0, 0);Journal des modifications w=400 bb=4px solid rgba(0, 0, 0, 0)"
+  },
+  {
+   "width": 375,
+   "l": "fr",
+   "kind": "changelog",
+   "active": "Journal des modifications w=700 bb=4px solid oklch(0.52 0.105 223.128)",
+   "inactive": "Feuille de route w=400 bb=4px solid rgba(0, 0, 0, 0);Idées w=400 bb=4px solid rgba(0, 0, 0, 0)"
+  },
+  {
+   "width": 375,
+   "l": "fr",
+   "kind": "show",
+   "active": "Idées w=700 bb=4px solid oklch(0.52 0.105 223.128)",
+   "inactive": "Feuille de route w=400 bb=4px solid rgba(0, 0, 0, 0);Journal des modifications w=400 bb=4px solid rgba(0, 0, 0, 0)"
+  },
+  {
+   "width": 375,
+   "l": "en",
+   "kind": "roadmap",
+   "active": "Roadmap w=700 bb=4px solid oklch(0.52 0.105 223.128)",
+   "inactive": "Ideas w=400 bb=4px solid rgba(0, 0, 0, 0);Changelog w=400 bb=4px solid rgba(0, 0, 0, 0)"
+  },
+  {
+   "width": 375,
+   "l": "en",
+   "kind": "ideas",
+   "active": "Ideas w=700 bb=4px solid oklch(0.52 0.105 223.128)",
+   "inactive": "Roadmap w=400 bb=4px solid rgba(0, 0, 0, 0);Changelog w=400 bb=4px solid rgba(0, 0, 0, 0)"
+  },
+  {
+   "width": 375,
+   "l": "en",
+   "kind": "changelog",
+   "active": "Changelog w=700 bb=4px solid oklch(0.52 0.105 223.128)",
+   "inactive": "Roadmap w=400 bb=4px solid rgba(0, 0, 0, 0);Ideas w=400 bb=4px solid rgba(0, 0, 0, 0)"
+  },
+  {
+   "width": 375,
+   "l": "en",
+   "kind": "show",
+   "active": "Ideas w=700 bb=4px solid oklch(0.52 0.105 223.128)",
+   "inactive": "Roadmap w=400 bb=4px solid rgba(0, 0, 0, 0);Changelog w=400 bb=4px solid rgba(0, 0, 0, 0)"
+  },
+  {
+   "width": 375,
+   "l": "pt",
+   "kind": "roadmap",
+   "active": "Roteiro w=700 bb=4px solid oklch(0.52 0.105 223.128)",
+   "inactive": "Ideias w=400 bb=4px solid rgba(0, 0, 0, 0);Registo de alterações w=400 bb=4px solid rgba(0, 0, 0, 0)"
+  },
+  {
+   "width": 375,
+   "l": "pt",
+   "kind": "ideas",
+   "active": "Ideias w=700 bb=4px solid oklch(0.52 0.105 223.128)",
+   "inactive": "Roteiro w=400 bb=4px solid rgba(0, 0, 0, 0);Registo de alterações w=400 bb=4px solid rgba(0, 0, 0, 0)"
+  },
+  {
+   "width": 375,
+   "l": "pt",
+   "kind": "changelog",
+   "active": "Registo de alterações w=700 bb=4px solid oklch(0.52 0.105 223.128)",
+   "inactive": "Roteiro w=400 bb=4px solid rgba(0, 0, 0, 0);Ideias w=400 bb=4px solid rgba(0, 0, 0, 0)"
+  },
+  {
+   "width": 375,
+   "l": "pt",
+   "kind": "show",
+   "active": "Ideias w=700 bb=4px solid oklch(0.52 0.105 223.128)",
+   "inactive": "Roteiro w=400 bb=4px solid rgba(0, 0, 0, 0);Registo de alterações w=400 bb=4px solid rgba(0, 0, 0, 0)"
+  }
+ ],
+ "ak08": [
+  {
+   "l": "lb",
+   "kind": "roadmap",
+   "scrollW": 320,
+   "clientW": 320,
+   "bodyScrollW": 320,
+   "tabsVisible": true,
+   "minTab": 44,
+   "sizes": "Roadmap 74x44 | Iddien 47x44 | Changelog 82x44",
+   "rows": 1
+  },
+  {
+   "l": "lb",
+   "kind": "ideas",
+   "scrollW": 320,
+   "clientW": 320,
+   "bodyScrollW": 320,
+   "tabsVisible": true,
+   "minTab": 44,
+   "sizes": "Roadmap 71x44 | Iddien 49x44 | Changelog 82x44",
+   "rows": 1
+  },
+  {
+   "l": "lb",
+   "kind": "changelog",
+   "scrollW": 320,
+   "clientW": 320,
+   "bodyScrollW": 320,
+   "tabsVisible": true,
+   "minTab": 44,
+   "sizes": "Roadmap 71x44 | Iddien 47x44 | Changelog 85x44",
+   "rows": 1
+  },
+  {
+   "l": "lb",
+   "kind": "show",
+   "scrollW": 320,
+   "clientW": 320,
+   "bodyScrollW": 320,
+   "tabsVisible": true,
+   "minTab": 44,
+   "sizes": "Roadmap 71x44 | Iddien 49x44 | Changelog 82x44",
+   "rows": 1
+  },
+  {
+   "l": "de",
+   "kind": "roadmap",
+   "scrollW": 320,
+   "clientW": 320,
+   "bodyScrollW": 320,
+   "tabsVisible": true,
+   "minTab": 44,
+   "sizes": "Roadmap 74x44 | Ideen 44x44 | Changelog 82x44",
+   "rows": 1
+  },
+  {
+   "l": "de",
+   "kind": "ideas",
+   "scrollW": 320,
+   "clientW": 320,
+   "bodyScrollW": 320,
+   "tabsVisible": true,
+   "minTab": 44,
+   "sizes": "Roadmap 71x44 | Ideen 44x44 | Changelog 82x44",
+   "rows": 1
+  },
+  {
+   "l": "de",
+   "kind": "changelog",
+   "scrollW": 320,
+   "clientW": 320,
+   "bodyScrollW": 320,
+   "tabsVisible": true,
+   "minTab": 44,
+   "sizes": "Roadmap 71x44 | Ideen 44x44 | Changelog 85x44",
+   "rows": 1
+  },
+  {
+   "l": "de",
+   "kind": "show",
+   "scrollW": 320,
+   "clientW": 320,
+   "bodyScrollW": 320,
+   "tabsVisible": true,
+   "minTab": 44,
+   "sizes": "Roadmap 71x44 | Ideen 44x44 | Changelog 82x44",
+   "rows": 1
+  },
+  {
+   "l": "fr",
+   "kind": "roadmap",
+   "scrollW": 320,
+   "clientW": 320,
+   "bodyScrollW": 320,
+   "tabsVisible": true,
+   "minTab": 44,
+   "sizes": "Feuille de route 119x44 | Idées 44x44 | Journal des modifications 195x44",
+   "rows": 2
+  },
+  {
+   "l": "fr",
+   "kind": "ideas",
+   "scrollW": 320,
+   "clientW": 320,
+   "bodyScrollW": 320,
+   "tabsVisible": true,
+   "minTab": 44,
+   "sizes": "Feuille de route 116x44 | Idées 44x44 | Journal des modifications 195x44",
+   "rows": 2
+  },
+  {
+   "l": "fr",
+   "kind": "changelog",
+   "scrollW": 320,
+   "clientW": 320,
+   "bodyScrollW": 320,
+   "tabsVisible": true,
+   "minTab": 44,
+   "sizes": "Feuille de route 116x44 | Idées 44x44 | Journal des modifications 203x44",
+   "rows": 2
+  },
+  {
+   "l": "fr",
+   "kind": "show",
+   "scrollW": 320,
+   "clientW": 320,
+   "bodyScrollW": 320,
+   "tabsVisible": true,
+   "minTab": 44,
+   "sizes": "Feuille de route 116x44 | Idées 44x44 | Journal des modifications 195x44",
+   "rows": 2
+  },
+  {
+   "l": "en",
+   "kind": "roadmap",
+   "scrollW": 320,
+   "clientW": 320,
+   "bodyScrollW": 320,
+   "tabsVisible": true,
+   "minTab": 44,
+   "sizes": "Roadmap 74x44 | Ideas 44x44 | Changelog 82x44",
+   "rows": 1
+  },
+  {
+   "l": "en",
+   "kind": "ideas",
+   "scrollW": 320,
+   "clientW": 320,
+   "bodyScrollW": 320,
+   "tabsVisible": true,
+   "minTab": 44,
+   "sizes": "Roadmap 71x44 | Ideas 44x44 | Changelog 82x44",
+   "rows": 1
+  },
+  {
+   "l": "en",
+   "kind": "changelog",
+   "scrollW": 320,
+   "clientW": 320,
+   "bodyScrollW": 320,
+   "tabsVisible": true,
+   "minTab": 44,
+   "sizes": "Roadmap 71x44 | Ideas 44x44 | Changelog 85x44",
+   "rows": 1
+  },
+  {
+   "l": "en",
+   "kind": "show",
+   "scrollW": 320,
+   "clientW": 320,
+   "bodyScrollW": 320,
+   "tabsVisible": true,
+   "minTab": 44,
+   "sizes": "Roadmap 71x44 | Ideas 44x44 | Changelog 82x44",
+   "rows": 1
+  },
+  {
+   "l": "pt",
+   "kind": "roadmap",
+   "scrollW": 320,
+   "clientW": 320,
+   "bodyScrollW": 320,
+   "tabsVisible": true,
+   "minTab": 44,
+   "sizes": "Roteiro 56x44 | Ideias 45x44 | Registo de alterações 163x44",
+   "rows": 2
+  },
+  {
+   "l": "pt",
+   "kind": "ideas",
+   "scrollW": 320,
+   "clientW": 320,
+   "bodyScrollW": 320,
+   "tabsVisible": true,
+   "minTab": 44,
+   "sizes": "Roteiro 53x44 | Ideias 47x44 | Registo de alterações 163x44",
+   "rows": 2
+  },
+  {
+   "l": "pt",
+   "kind": "changelog",
+   "scrollW": 320,
+   "clientW": 320,
+   "bodyScrollW": 320,
+   "tabsVisible": true,
+   "minTab": 44,
+   "sizes": "Roteiro 53x44 | Ideias 45x44 | Registo de alterações 168x44",
+   "rows": 2
+  },
+  {
+   "l": "pt",
+   "kind": "show",
+   "scrollW": 320,
+   "clientW": 320,
+   "bodyScrollW": 320,
+   "tabsVisible": true,
+   "minTab": 44,
+   "sizes": "Roteiro 53x44 | Ideias 47x44 | Registo de alterações 163x44",
+   "rows": 2
+  }
+ ],
+ "ak10": [
+  {
+   "w": 1280,
+   "h": 800,
+   "l": "lb",
+   "banner": "sichtbar",
+   "kind": "roadmap",
+   "top": 137,
+   "bottom": 185,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 1280,
+   "h": 800,
+   "l": "lb",
+   "banner": "sichtbar",
+   "kind": "ideas",
+   "top": 137,
+   "bottom": 185,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 1280,
+   "h": 800,
+   "l": "lb",
+   "banner": "sichtbar",
+   "kind": "changelog",
+   "top": 137,
+   "bottom": 185,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 1280,
+   "h": 800,
+   "l": "lb",
+   "banner": "weggeklickt",
+   "kind": "roadmap",
+   "top": 137,
+   "bottom": 185,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 1280,
+   "h": 800,
+   "l": "lb",
+   "banner": "weggeklickt",
+   "kind": "ideas",
+   "top": 137,
+   "bottom": 185,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 1280,
+   "h": 800,
+   "l": "lb",
+   "banner": "weggeklickt",
+   "kind": "changelog",
+   "top": 137,
+   "bottom": 185,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 1280,
+   "h": 800,
+   "l": "de",
+   "banner": "sichtbar",
+   "kind": "roadmap",
+   "top": 137,
+   "bottom": 185,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 1280,
+   "h": 800,
+   "l": "de",
+   "banner": "sichtbar",
+   "kind": "ideas",
+   "top": 137,
+   "bottom": 185,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 1280,
+   "h": 800,
+   "l": "de",
+   "banner": "sichtbar",
+   "kind": "changelog",
+   "top": 137,
+   "bottom": 185,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 1280,
+   "h": 800,
+   "l": "de",
+   "banner": "weggeklickt",
+   "kind": "roadmap",
+   "top": 137,
+   "bottom": 185,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 1280,
+   "h": 800,
+   "l": "de",
+   "banner": "weggeklickt",
+   "kind": "ideas",
+   "top": 137,
+   "bottom": 185,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 1280,
+   "h": 800,
+   "l": "de",
+   "banner": "weggeklickt",
+   "kind": "changelog",
+   "top": 137,
+   "bottom": 185,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 1280,
+   "h": 800,
+   "l": "fr",
+   "banner": "sichtbar",
+   "kind": "roadmap",
+   "top": 137,
+   "bottom": 185,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 1280,
+   "h": 800,
+   "l": "fr",
+   "banner": "sichtbar",
+   "kind": "ideas",
+   "top": 137,
+   "bottom": 185,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 1280,
+   "h": 800,
+   "l": "fr",
+   "banner": "sichtbar",
+   "kind": "changelog",
+   "top": 137,
+   "bottom": 185,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 1280,
+   "h": 800,
+   "l": "fr",
+   "banner": "weggeklickt",
+   "kind": "roadmap",
+   "top": 137,
+   "bottom": 185,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 1280,
+   "h": 800,
+   "l": "fr",
+   "banner": "weggeklickt",
+   "kind": "ideas",
+   "top": 137,
+   "bottom": 185,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 1280,
+   "h": 800,
+   "l": "fr",
+   "banner": "weggeklickt",
+   "kind": "changelog",
+   "top": 137,
+   "bottom": 185,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 1280,
+   "h": 800,
+   "l": "en",
+   "banner": "sichtbar",
+   "kind": "roadmap",
+   "top": 137,
+   "bottom": 185,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 1280,
+   "h": 800,
+   "l": "en",
+   "banner": "sichtbar",
+   "kind": "ideas",
+   "top": 137,
+   "bottom": 185,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 1280,
+   "h": 800,
+   "l": "en",
+   "banner": "sichtbar",
+   "kind": "changelog",
+   "top": 137,
+   "bottom": 185,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 1280,
+   "h": 800,
+   "l": "en",
+   "banner": "weggeklickt",
+   "kind": "roadmap",
+   "top": 137,
+   "bottom": 185,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 1280,
+   "h": 800,
+   "l": "en",
+   "banner": "weggeklickt",
+   "kind": "ideas",
+   "top": 137,
+   "bottom": 185,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 1280,
+   "h": 800,
+   "l": "en",
+   "banner": "weggeklickt",
+   "kind": "changelog",
+   "top": 137,
+   "bottom": 185,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 1280,
+   "h": 800,
+   "l": "pt",
+   "banner": "sichtbar",
+   "kind": "roadmap",
+   "top": 137,
+   "bottom": 185,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 1280,
+   "h": 800,
+   "l": "pt",
+   "banner": "sichtbar",
+   "kind": "ideas",
+   "top": 137,
+   "bottom": 185,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 1280,
+   "h": 800,
+   "l": "pt",
+   "banner": "sichtbar",
+   "kind": "changelog",
+   "top": 137,
+   "bottom": 185,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 1280,
+   "h": 800,
+   "l": "pt",
+   "banner": "weggeklickt",
+   "kind": "roadmap",
+   "top": 137,
+   "bottom": 185,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 1280,
+   "h": 800,
+   "l": "pt",
+   "banner": "weggeklickt",
+   "kind": "ideas",
+   "top": 137,
+   "bottom": 185,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 1280,
+   "h": 800,
+   "l": "pt",
+   "banner": "weggeklickt",
+   "kind": "changelog",
+   "top": 137,
+   "bottom": 185,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 375,
+   "h": 800,
+   "l": "lb",
+   "banner": "sichtbar",
+   "kind": "roadmap",
+   "top": 129,
+   "bottom": 177,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 375,
+   "h": 800,
+   "l": "lb",
+   "banner": "sichtbar",
+   "kind": "ideas",
+   "top": 129,
+   "bottom": 177,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 375,
+   "h": 800,
+   "l": "lb",
+   "banner": "sichtbar",
+   "kind": "changelog",
+   "top": 129,
+   "bottom": 177,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 375,
+   "h": 800,
+   "l": "lb",
+   "banner": "weggeklickt",
+   "kind": "roadmap",
+   "top": 129,
+   "bottom": 177,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 375,
+   "h": 800,
+   "l": "lb",
+   "banner": "weggeklickt",
+   "kind": "ideas",
+   "top": 129,
+   "bottom": 177,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 375,
+   "h": 800,
+   "l": "lb",
+   "banner": "weggeklickt",
+   "kind": "changelog",
+   "top": 129,
+   "bottom": 177,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 375,
+   "h": 800,
+   "l": "de",
+   "banner": "sichtbar",
+   "kind": "roadmap",
+   "top": 129,
+   "bottom": 177,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 375,
+   "h": 800,
+   "l": "de",
+   "banner": "sichtbar",
+   "kind": "ideas",
+   "top": 129,
+   "bottom": 177,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 375,
+   "h": 800,
+   "l": "de",
+   "banner": "sichtbar",
+   "kind": "changelog",
+   "top": 129,
+   "bottom": 177,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 375,
+   "h": 800,
+   "l": "de",
+   "banner": "weggeklickt",
+   "kind": "roadmap",
+   "top": 129,
+   "bottom": 177,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 375,
+   "h": 800,
+   "l": "de",
+   "banner": "weggeklickt",
+   "kind": "ideas",
+   "top": 129,
+   "bottom": 177,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 375,
+   "h": 800,
+   "l": "de",
+   "banner": "weggeklickt",
+   "kind": "changelog",
+   "top": 129,
+   "bottom": 177,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 375,
+   "h": 800,
+   "l": "fr",
+   "banner": "sichtbar",
+   "kind": "roadmap",
+   "top": 173,
+   "bottom": 221,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 375,
+   "h": 800,
+   "l": "fr",
+   "banner": "sichtbar",
+   "kind": "ideas",
+   "top": 173,
+   "bottom": 221,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 375,
+   "h": 800,
+   "l": "fr",
+   "banner": "sichtbar",
+   "kind": "changelog",
+   "top": 173,
+   "bottom": 221,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 375,
+   "h": 800,
+   "l": "fr",
+   "banner": "weggeklickt",
+   "kind": "roadmap",
+   "top": 173,
+   "bottom": 221,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 375,
+   "h": 800,
+   "l": "fr",
+   "banner": "weggeklickt",
+   "kind": "ideas",
+   "top": 173,
+   "bottom": 221,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 375,
+   "h": 800,
+   "l": "fr",
+   "banner": "weggeklickt",
+   "kind": "changelog",
+   "top": 173,
+   "bottom": 221,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 375,
+   "h": 800,
+   "l": "en",
+   "banner": "sichtbar",
+   "kind": "roadmap",
+   "top": 129,
+   "bottom": 177,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 375,
+   "h": 800,
+   "l": "en",
+   "banner": "sichtbar",
+   "kind": "ideas",
+   "top": 129,
+   "bottom": 177,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 375,
+   "h": 800,
+   "l": "en",
+   "banner": "sichtbar",
+   "kind": "changelog",
+   "top": 129,
+   "bottom": 177,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 375,
+   "h": 800,
+   "l": "en",
+   "banner": "weggeklickt",
+   "kind": "roadmap",
+   "top": 129,
+   "bottom": 177,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 375,
+   "h": 800,
+   "l": "en",
+   "banner": "weggeklickt",
+   "kind": "ideas",
+   "top": 129,
+   "bottom": 177,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 375,
+   "h": 800,
+   "l": "en",
+   "banner": "weggeklickt",
+   "kind": "changelog",
+   "top": 129,
+   "bottom": 177,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 375,
+   "h": 800,
+   "l": "pt",
+   "banner": "sichtbar",
+   "kind": "roadmap",
+   "top": 129,
+   "bottom": 177,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 375,
+   "h": 800,
+   "l": "pt",
+   "banner": "sichtbar",
+   "kind": "ideas",
+   "top": 129,
+   "bottom": 177,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 375,
+   "h": 800,
+   "l": "pt",
+   "banner": "sichtbar",
+   "kind": "changelog",
+   "top": 129,
+   "bottom": 177,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 375,
+   "h": 800,
+   "l": "pt",
+   "banner": "weggeklickt",
+   "kind": "roadmap",
+   "top": 129,
+   "bottom": 177,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 375,
+   "h": 800,
+   "l": "pt",
+   "banner": "weggeklickt",
+   "kind": "ideas",
+   "top": 129,
+   "bottom": 177,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 375,
+   "h": 800,
+   "l": "pt",
+   "banner": "weggeklickt",
+   "kind": "changelog",
+   "top": 129,
+   "bottom": 177,
+   "inView": true,
+   "coveredBy": null
+  }
+ ],
+ "ak11": [
+  {
+   "w": 1280,
+   "h": 800,
+   "l": "lb",
+   "banner": "sichtbar",
+   "text": "🔨\n                            An Aarbecht",
+   "top": 507,
+   "bottom": 535,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 1280,
+   "h": 800,
+   "l": "lb",
+   "banner": "weggeklickt",
+   "text": "🔨\n                            An Aarbecht",
+   "top": 507,
+   "bottom": 535,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 1280,
+   "h": 800,
+   "l": "de",
+   "banner": "sichtbar",
+   "text": "🔨\n                            In Arbeit",
+   "top": 537,
+   "bottom": 565,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 1280,
+   "h": 800,
+   "l": "de",
+   "banner": "weggeklickt",
+   "text": "🔨\n                            In Arbeit",
+   "top": 537,
+   "bottom": 565,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 1280,
+   "h": 800,
+   "l": "fr",
+   "banner": "sichtbar",
+   "text": "🔨\n                            En cours",
+   "top": 537,
+   "bottom": 565,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 1280,
+   "h": 800,
+   "l": "fr",
+   "banner": "weggeklickt",
+   "text": "🔨\n                            En cours",
+   "top": 537,
+   "bottom": 565,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 1280,
+   "h": 800,
+   "l": "en",
+   "banner": "sichtbar",
+   "text": "🔨\n                            In progress",
+   "top": 507,
+   "bottom": 535,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 1280,
+   "h": 800,
+   "l": "en",
+   "banner": "weggeklickt",
+   "text": "🔨\n                            In progress",
+   "top": 507,
+   "bottom": 535,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 1280,
+   "h": 800,
+   "l": "pt",
+   "banner": "sichtbar",
+   "text": "🔨\n                            Em curso",
+   "top": 537,
+   "bottom": 565,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 1280,
+   "h": 800,
+   "l": "pt",
+   "banner": "weggeklickt",
+   "text": "🔨\n                            Em curso",
+   "top": 537,
+   "bottom": 565,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 375,
+   "h": 800,
+   "l": "lb",
+   "banner": "sichtbar",
+   "text": "🔨\n                            An Aarbecht",
+   "top": 574,
+   "bottom": 602,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 375,
+   "h": 800,
+   "l": "lb",
+   "banner": "weggeklickt",
+   "text": "🔨\n                            An Aarbecht",
+   "top": 574,
+   "bottom": 602,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 375,
+   "h": 800,
+   "l": "de",
+   "banner": "sichtbar",
+   "text": "🔨\n                            In Arbeit",
+   "top": 574,
+   "bottom": 602,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 375,
+   "h": 800,
+   "l": "de",
+   "banner": "weggeklickt",
+   "text": "🔨\n                            In Arbeit",
+   "top": 574,
+   "bottom": 602,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 375,
+   "h": 800,
+   "l": "fr",
+   "banner": "sichtbar",
+   "text": "🔨\n                            En cours",
+   "top": 661,
+   "bottom": 689,
+   "inView": true,
+   "coveredBy": "<p id=\"cookie-banner-desc\">\n                Nous utilisons uniquement des cookie"
+  },
+  {
+   "w": 375,
+   "h": 800,
+   "l": "fr",
+   "banner": "weggeklickt",
+   "text": "🔨\n                            En cours",
+   "top": 661,
+   "bottom": 689,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 375,
+   "h": 800,
+   "l": "en",
+   "banner": "sichtbar",
+   "text": "🔨\n                            In progress",
+   "top": 574,
+   "bottom": 602,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 375,
+   "h": 800,
+   "l": "en",
+   "banner": "weggeklickt",
+   "text": "🔨\n                            In progress",
+   "top": 574,
+   "bottom": 602,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 375,
+   "h": 800,
+   "l": "pt",
+   "banner": "sichtbar",
+   "text": "🔨\n                            Em curso",
+   "top": 574,
+   "bottom": 602,
+   "inView": true,
+   "coveredBy": null
+  },
+  {
+   "w": 375,
+   "h": 800,
+   "l": "pt",
+   "banner": "weggeklickt",
+   "text": "🔨\n                            Em curso",
+   "top": 574,
+   "bottom": 602,
+   "inView": true,
+   "coveredBy": null
+  }
+ ],
+ "problems": [
+  "1280 lb: Reiterzeile weicht zwischen Seitenarten ab: {\"name\":\"Roadmap & Iddien\",\"tabs\":[[\"Roadmap\",\"/lb/roadmap\",16,74],[\"Iddien\",\"/lb/roadmap/ideen\",114,47],[\"Changelog\",\"/lb/changelog\",184,82]]} // {\"name\":\"Roadmap & Iddien\",\"tabs\":[[\"Roadmap\",\"/lb/roadmap\",16,71],[\"Iddien\",\"/lb/roadmap/ideen\",111,49],[\"Changelog\",\"/lb/changelog\",184,82]]} // {\"name\":\"Roadmap & Iddien\",\"tabs\":[[\"Roadmap\",\"/lb/roadmap\",16,71],[\"Iddien\",\"/lb/roadmap/ideen\",111,47],[\"Changelog\",\"/lb/changelog\",182,85]]}",
+  "1280 de: Reiterzeile weicht zwischen Seitenarten ab: {\"name\":\"Roadmap & Ideen\",\"tabs\":[[\"Roadmap\",\"/de/roadmap\",16,74],[\"Ideen\",\"/de/roadmap/ideen\",114,44],[\"Changelog\",\"/de/changelog\",182,82]]} // {\"name\":\"Roadmap & Ideen\",\"tabs\":[[\"Roadmap\",\"/de/roadmap\",16,71],[\"Ideen\",\"/de/roadmap/ideen\",111,44],[\"Changelog\",\"/de/changelog\",179,82]]} // {\"name\":\"Roadmap & Ideen\",\"tabs\":[[\"Roadmap\",\"/de/roadmap\",16,71],[\"Ideen\",\"/de/roadmap/ideen\",111,44],[\"Changelog\",\"/de/changelog\",179,85]]}",
+  "1280 fr: Reiterzeile weicht zwischen Seitenarten ab: {\"name\":\"Feuille de route & idées\",\"tabs\":[[\"Feuille de route\",\"/fr/roadmap\",16,119],[\"Idées\",\"/fr/roadmap/ideen\",159,44],[\"Journal des modifications\",\"/fr/changelog\",227,195]]} // {\"name\":\"Feuille de route & idées\",\"tabs\":[[\"Feuille de route\",\"/fr/roadmap\",16,116],[\"Idées\",\"/fr/roadmap/ideen\",156,44],[\"Journal des modifications\",\"/fr/changelog\",224,195]]} // {\"name\":\"Feuille de route & idées\",\"tabs\":[[\"Feuille de route\",\"/fr/roadmap\",16,116],[\"Idées\",\"/fr/roadmap/ideen\",156,44],[\"Journal des modifications\",\"/fr/changelog\",224,203]]}",
+  "1280 en: Reiterzeile weicht zwischen Seitenarten ab: {\"name\":\"Roadmap & ideas\",\"tabs\":[[\"Roadmap\",\"/en/roadmap\",16,74],[\"Ideas\",\"/en/roadmap/ideen\",114,44],[\"Changelog\",\"/en/changelog\",182,82]]} // {\"name\":\"Roadmap & ideas\",\"tabs\":[[\"Roadmap\",\"/en/roadmap\",16,71],[\"Ideas\",\"/en/roadmap/ideen\",111,44],[\"Changelog\",\"/en/changelog\",179,82]]} // {\"name\":\"Roadmap & ideas\",\"tabs\":[[\"Roadmap\",\"/en/roadmap\",16,71],[\"Ideas\",\"/en/roadmap/ideen\",111,44],[\"Changelog\",\"/en/changelog\",179,85]]}",
+  "1280 pt: Reiterzeile weicht zwischen Seitenarten ab: {\"name\":\"Roteiro e ideias\",\"tabs\":[[\"Roteiro\",\"/pt/roadmap\",16,56],[\"Ideias\",\"/pt/roadmap/ideen\",96,45],[\"Registo de alterações\",\"/pt/changelog\",164,163]]} // {\"name\":\"Roteiro e ideias\",\"tabs\":[[\"Roteiro\",\"/pt/roadmap\",16,53],[\"Ideias\",\"/pt/roadmap/ideen\",93,47],[\"Registo de alterações\",\"/pt/changelog\",164,163]]} // {\"name\":\"Roteiro e ideias\",\"tabs\":[[\"Roteiro\",\"/pt/roadmap\",16,53],[\"Ideias\",\"/pt/roadmap/ideen\",93,45],[\"Registo de alterações\",\"/pt/changelog\",162,168]]}",
+  "375 lb: Reiterzeile weicht zwischen Seitenarten ab: {\"name\":\"Roadmap & Iddien\",\"tabs\":[[\"Roadmap\",\"/lb/roadmap\",16,74],[\"Iddien\",\"/lb/roadmap/ideen\",114,47],[\"Changelog\",\"/lb/changelog\",184,82]]} // {\"name\":\"Roadmap & Iddien\",\"tabs\":[[\"Roadmap\",\"/lb/roadmap\",16,71],[\"Iddien\",\"/lb/roadmap/ideen\",111,49],[\"Changelog\",\"/lb/changelog\",184,82]]} // {\"name\":\"Roadmap & Iddien\",\"tabs\":[[\"Roadmap\",\"/lb/roadmap\",16,71],[\"Iddien\",\"/lb/roadmap/ideen\",111,47],[\"Changelog\",\"/lb/changelog\",182,85]]}",
+  "375 de: Reiterzeile weicht zwischen Seitenarten ab: {\"name\":\"Roadmap & Ideen\",\"tabs\":[[\"Roadmap\",\"/de/roadmap\",16,74],[\"Ideen\",\"/de/roadmap/ideen\",114,44],[\"Changelog\",\"/de/changelog\",182,82]]} // {\"name\":\"Roadmap & Ideen\",\"tabs\":[[\"Roadmap\",\"/de/roadmap\",16,71],[\"Ideen\",\"/de/roadmap/ideen\",111,44],[\"Changelog\",\"/de/changelog\",179,82]]} // {\"name\":\"Roadmap & Ideen\",\"tabs\":[[\"Roadmap\",\"/de/roadmap\",16,71],[\"Ideen\",\"/de/roadmap/ideen\",111,44],[\"Changelog\",\"/de/changelog\",179,85]]}",
+  "375 fr: Reiterzeile weicht zwischen Seitenarten ab: {\"name\":\"Feuille de route & idées\",\"tabs\":[[\"Feuille de route\",\"/fr/roadmap\",16,119],[\"Idées\",\"/fr/roadmap/ideen\",159,44],[\"Journal des modifications\",\"/fr/changelog\",16,195]]} // {\"name\":\"Feuille de route & idées\",\"tabs\":[[\"Feuille de route\",\"/fr/roadmap\",16,116],[\"Idées\",\"/fr/roadmap/ideen\",156,44],[\"Journal des modifications\",\"/fr/changelog\",16,195]]} // {\"name\":\"Feuille de route & idées\",\"tabs\":[[\"Feuille de route\",\"/fr/roadmap\",16,116],[\"Idées\",\"/fr/roadmap/ideen\",156,44],[\"Journal des modifications\",\"/fr/changelog\",16,203]]}",
+  "375 en: Reiterzeile weicht zwischen Seitenarten ab: {\"name\":\"Roadmap & ideas\",\"tabs\":[[\"Roadmap\",\"/en/roadmap\",16,74],[\"Ideas\",\"/en/roadmap/ideen\",114,44],[\"Changelog\",\"/en/changelog\",182,82]]} // {\"name\":\"Roadmap & ideas\",\"tabs\":[[\"Roadmap\",\"/en/roadmap\",16,71],[\"Ideas\",\"/en/roadmap/ideen\",111,44],[\"Changelog\",\"/en/changelog\",179,82]]} // {\"name\":\"Roadmap & ideas\",\"tabs\":[[\"Roadmap\",\"/en/roadmap\",16,71],[\"Ideas\",\"/en/roadmap/ideen\",111,44],[\"Changelog\",\"/en/changelog\",179,85]]}",
+  "375 pt: Reiterzeile weicht zwischen Seitenarten ab: {\"name\":\"Roteiro e ideias\",\"tabs\":[[\"Roteiro\",\"/pt/roadmap\",16,56],[\"Ideias\",\"/pt/roadmap/ideen\",96,45],[\"Registo de alterações\",\"/pt/changelog\",164,163]]} // {\"name\":\"Roteiro e ideias\",\"tabs\":[[\"Roteiro\",\"/pt/roadmap\",16,53],[\"Ideias\",\"/pt/roadmap/ideen\",93,47],[\"Registo de alterações\",\"/pt/changelog\",164,163]]} // {\"name\":\"Roteiro e ideias\",\"tabs\":[[\"Roteiro\",\"/pt/roadmap\",16,53],[\"Ideias\",\"/pt/roadmap/ideen\",93,45],[\"Registo de alterações\",\"/pt/changelog\",162,168]]}",
+  "320 lb: Reiterzeile weicht zwischen Seitenarten ab: {\"name\":\"Roadmap & Iddien\",\"tabs\":[[\"Roadmap\",\"/lb/roadmap\",16,74],[\"Iddien\",\"/lb/roadmap/ideen\",114,47],[\"Changelog\",\"/lb/changelog\",184,82]]} // {\"name\":\"Roadmap & Iddien\",\"tabs\":[[\"Roadmap\",\"/lb/roadmap\",16,71],[\"Iddien\",\"/lb/roadmap/ideen\",111,49],[\"Changelog\",\"/lb/changelog\",184,82]]} // {\"name\":\"Roadmap & Iddien\",\"tabs\":[[\"Roadmap\",\"/lb/roadmap\",16,71],[\"Iddien\",\"/lb/roadmap/ideen\",111,47],[\"Changelog\",\"/lb/changelog\",182,85]]}",
+  "320 de: Reiterzeile weicht zwischen Seitenarten ab: {\"name\":\"Roadmap & Ideen\",\"tabs\":[[\"Roadmap\",\"/de/roadmap\",16,74],[\"Ideen\",\"/de/roadmap/ideen\",114,44],[\"Changelog\",\"/de/changelog\",182,82]]} // {\"name\":\"Roadmap & Ideen\",\"tabs\":[[\"Roadmap\",\"/de/roadmap\",16,71],[\"Ideen\",\"/de/roadmap/ideen\",111,44],[\"Changelog\",\"/de/changelog\",179,82]]} // {\"name\":\"Roadmap & Ideen\",\"tabs\":[[\"Roadmap\",\"/de/roadmap\",16,71],[\"Ideen\",\"/de/roadmap/ideen\",111,44],[\"Changelog\",\"/de/changelog\",179,85]]}",
+  "320 fr: Reiterzeile weicht zwischen Seitenarten ab: {\"name\":\"Feuille de route & idées\",\"tabs\":[[\"Feuille de route\",\"/fr/roadmap\",16,119],[\"Idées\",\"/fr/roadmap/ideen\",159,44],[\"Journal des modifications\",\"/fr/changelog\",16,195]]} // {\"name\":\"Feuille de route & idées\",\"tabs\":[[\"Feuille de route\",\"/fr/roadmap\",16,116],[\"Idées\",\"/fr/roadmap/ideen\",156,44],[\"Journal des modifications\",\"/fr/changelog\",16,195]]} // {\"name\":\"Feuille de route & idées\",\"tabs\":[[\"Feuille de route\",\"/fr/roadmap\",16,116],[\"Idées\",\"/fr/roadmap/ideen\",156,44],[\"Journal des modifications\",\"/fr/changelog\",16,203]]}",
+  "320 en: Reiterzeile weicht zwischen Seitenarten ab: {\"name\":\"Roadmap & ideas\",\"tabs\":[[\"Roadmap\",\"/en/roadmap\",16,74],[\"Ideas\",\"/en/roadmap/ideen\",114,44],[\"Changelog\",\"/en/changelog\",182,82]]} // {\"name\":\"Roadmap & ideas\",\"tabs\":[[\"Roadmap\",\"/en/roadmap\",16,71],[\"Ideas\",\"/en/roadmap/ideen\",111,44],[\"Changelog\",\"/en/changelog\",179,82]]} // {\"name\":\"Roadmap & ideas\",\"tabs\":[[\"Roadmap\",\"/en/roadmap\",16,71],[\"Ideas\",\"/en/roadmap/ideen\",111,44],[\"Changelog\",\"/en/changelog\",179,85]]}",
+  "320 pt: Reiterzeile weicht zwischen Seitenarten ab: {\"name\":\"Roteiro e ideias\",\"tabs\":[[\"Roteiro\",\"/pt/roadmap\",16,56],[\"Ideias\",\"/pt/roadmap/ideen\",96,45],[\"Registo de alterações\",\"/pt/changelog\",16,163]]} // {\"name\":\"Roteiro e ideias\",\"tabs\":[[\"Roteiro\",\"/pt/roadmap\",16,53],[\"Ideias\",\"/pt/roadmap/ideen\",93,47],[\"Registo de alterações\",\"/pt/changelog\",16,163]]} // {\"name\":\"Roteiro e ideias\",\"tabs\":[[\"Roteiro\",\"/pt/roadmap\",16,53],[\"Ideias\",\"/pt/roadmap/ideen\",93,45],[\"Registo de alterações\",\"/pt/changelog\",16,168]]}"
+ ]
+}

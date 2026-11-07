@@ -1,0 +1,20 @@
+AK-30 · zweiter Durchlauf · je 100 Aufrufe: 7 Adressen anonym (3 Reiter de, 4 alte Adressen) + 5 Adressen angemeldet als user@ (3 Reiter fr, alte Liste, alte Einzeladresse der wartenden Idee 184) = 1200 Anfragen
+Neue Zeilen in var/log/dev.log (Stufe DEBUG):    13600
+Test User                     0
+Test U\.                      0
+Admin User                    0
+Unverified User               0
+user@endlech.lu             500
+admin@endlech.lu              0
+Geplante Idee Nummer          0
+Beschreibung                  0
+QA16B                       100
+Zebrafink                   100
+Kolibri                       0
+qa16b-zebrafink             100
+
+Kanäle der Zeilen mit user@endlech.lu:
+ 500 ] security.DEBUG: User was reloaded from a user provider. 
+
+Zeilen mit dem Titelteil der wartenden Idee (aus der angefragten Adresse):
+ 100 ] request.INFO: Matched route "app_board_legacy_show". {"route":"app_board_legacy_show","route_parameters":{"_route":"app_board_legacy_s

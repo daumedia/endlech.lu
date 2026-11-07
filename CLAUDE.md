@@ -299,6 +299,7 @@ stateless (`token_id: submit`), passt headless via Same-Origin-Referer; Custom-T
 | `api_v1_me / _me_submissions` (GET) | `/api/v1/me[/submissions]` | `Api\V1\MeController` |
 | `app.swagger_ui`      | `/api/docs`    | NelmioApiDoc Swagger-UI |
 | `app_sponsor_index` / `_show` | `/sponsoren`, `/sponsoren/{slug}` | `SponsorController` (Feature 15; entfernter Slug → 301, unsichtbarer → 404) |
+| `app_board_index / _new / _thanks / _show` (+ POST `_vote`, `_withdraw`) | `/roadmap/ideen[/neu\|/eingereicht\|/{id}-{slug}]` | `BoardController` (Feature 06; seit Feature 16 unter `/roadmap`, alte Adressen `/community/ideen…` → 301 über `BoardLegacyRedirectController`) |
 | `app_sitemap`         | `/sitemap.xml` (locale-frei) | `Seo\SitemapController::sitemap()` (Feature 10) |
 | `app_usage_collect`   | `/api/send` (POST, locale-frei) | `Usage\CollectController` (Feature 11, Zählweg zu Umami) |
 
@@ -1190,6 +1191,33 @@ zwischen Requests). Nachweis in `tests/Integration/Roadmap/CommunityRoadmapTest.
 ⚠ **Kein Verzeichnis `public/roadmap`/`public/changelog`** — sonst BF-100. `RouteDirectoryCollisionTest` prüft
 projektweit.
 ⚠ **Pluralformen brauchen den Fall `{0}`** (frische Idee hat null Zustimmungen; ohne `{0}` wirft Symfony → 500).
+
+## Roadmap und Ideen in einem Bereich (Feature 16)
+
+Board (Feature 06) und Roadmap/Changelog (Feature 07) sind ein Bereich **„Roadmap & Ideen"**: gemeinsamer Kopf
+(`roadmap/_area_header.html.twig`) mit Knopf „Idee einreichen" und drei Reitern — Roadmap `/roadmap`, Ideen
+`/roadmap/ideen` (vorher `/community/ideen`), Changelog `/changelog`. Die Fußzeile führt mit **einem** Eintrag
+(`footer.roadmap_ideas`, Gruppe „Mitmachen") hinein. Spec/Entwurf/Plan unter `features/16-roadmap-und-ideen/`.
+
+⚠ **Die Routennamen blieben `app_board_*`, nur der Präfix wechselte.** Mails (`BoardNotifier`), Sitemap,
+canonical, Verwaltung und die Roadmap-Verweise erzeugen ihre Adresse aus dem Namen und zogen ohne Änderung mit.
+Neue Namen hätten ~20 Stellen berührt.
+⚠ **Die alten Adressen antworten mit 301, die sprachfreien Kurzlinks bewusst mit 302.** Ein Kurzlink führt je
+Besucher in eine andere Sprache (ein gespeicherter 301 wäre falsch); `/de/community/ideen` → `/de/roadmap/ideen`
+hängt nur an der Adresse. `BoardLegacyRedirectController` liest keinen Abfrageparameter (kein offener Redirect)
+und fragt die DB nicht ab (verrät nicht, ob eine Nummer existiert). Seine wichtigsten Kunden sind Links in bereits
+verschickten Mails — **nicht entfernen**. Die vier Routen stehen in `SeoRegistry::UNLISTED_ROUTES`.
+⚠ **Über der Reiterleiste stehen nur Etikett und Knopf, die Überschrift der Seite steht darunter** (BF-200). Im
+Band bestimmte ihre Länge die Höhe, die Leiste sprang je Seite um bis zu 128 px. Alle Reiter `font-semibold` (ein
+fetter aktiver schob die anderen zur Seite). Gemessen wird der erste Bildschirm **mit** Cookie-Banner und in der
+längsten Sprache — französisch bei 375 px lag „En cours“ sonst darunter (BF-202; der Reiter heißt dort „Journal“).
+⚠ **Der Bereichsname ist kein `h1`.** Jede Seite bringt ihre eigene Hauptüberschrift; die Einzelseite einer Idee
+hat im Kopf keine. Die Leitzahl des Boards ist ein `h2` über der Liste — ohne sie sprang die Kette von `h1` auf die
+`h3` der Ideen-Karten. **`HeadingOrderTest` sah das nie**, weil die Test-Datenbank keine veröffentlichte Idee führt;
+`RoadmapAreaTest::testAk13KetteLueckenlosMitIdeen` prüft den gefüllten Zustand.
+⚠ **axe meldet auf jeder Seite einen Kontrastverstoß an der Wortmarke im Seitenkopf** (`text-brand` `#01b6ed` auf
+Weiß, 2,35 : 1, ab 1280 px). App-Hülle, nicht Feature 16; WCAG 1.4.3 nimmt Logotypen aus (16/OF-02).
+⚠ **Kein Verzeichnis `public/roadmap`** (BF-100) — gilt jetzt auch für `/roadmap/ideen`.
 
 ## Versioning
 

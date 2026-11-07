@@ -1,0 +1,1443 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://endlech.lu/lb/</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/de/</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/fr/</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/en/</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/pt/</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/lb/about</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/about"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/about"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/about"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/about"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/about"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/about"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/de/about</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/about"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/about"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/about"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/about"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/about"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/about"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/fr/about</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/about"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/about"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/about"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/about"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/about"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/about"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/en/about</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/about"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/about"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/about"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/about"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/about"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/about"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/pt/about</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/about"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/about"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/about"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/about"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/about"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/about"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/lb/criteria</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/criteria"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/criteria"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/criteria"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/criteria"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/criteria"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/criteria"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/de/criteria</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/criteria"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/criteria"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/criteria"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/criteria"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/criteria"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/criteria"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/fr/criteria</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/criteria"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/criteria"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/criteria"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/criteria"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/criteria"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/criteria"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/en/criteria</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/criteria"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/criteria"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/criteria"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/criteria"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/criteria"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/criteria"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/pt/criteria</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/criteria"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/criteria"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/criteria"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/criteria"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/criteria"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/criteria"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/lb/accessibility</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/accessibility"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/accessibility"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/accessibility"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/accessibility"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/accessibility"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/accessibility"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/de/accessibility</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/accessibility"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/accessibility"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/accessibility"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/accessibility"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/accessibility"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/accessibility"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/fr/accessibility</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/accessibility"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/accessibility"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/accessibility"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/accessibility"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/accessibility"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/accessibility"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/en/accessibility</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/accessibility"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/accessibility"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/accessibility"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/accessibility"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/accessibility"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/accessibility"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/pt/accessibility</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/accessibility"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/accessibility"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/accessibility"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/accessibility"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/accessibility"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/accessibility"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/lb/legal</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/legal"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/legal"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/legal"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/legal"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/legal"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/legal"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/de/legal</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/legal"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/legal"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/legal"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/legal"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/legal"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/legal"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/fr/legal</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/legal"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/legal"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/legal"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/legal"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/legal"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/legal"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/en/legal</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/legal"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/legal"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/legal"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/legal"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/legal"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/legal"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/pt/legal</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/legal"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/legal"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/legal"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/legal"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/legal"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/legal"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/lb/open</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/open"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/open"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/open"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/open"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/open"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/open"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/de/open</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/open"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/open"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/open"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/open"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/open"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/open"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/fr/open</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/open"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/open"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/open"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/open"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/open"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/open"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/en/open</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/open"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/open"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/open"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/open"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/open"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/open"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/pt/open</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/open"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/open"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/open"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/open"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/open"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/open"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/lb/presse</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/presse"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/presse"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/presse"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/presse"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/presse"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/presse"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/de/presse</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/presse"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/presse"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/presse"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/presse"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/presse"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/presse"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/fr/presse</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/presse"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/presse"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/presse"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/presse"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/presse"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/presse"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/en/presse</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/presse"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/presse"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/presse"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/presse"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/presse"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/presse"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/pt/presse</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/presse"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/presse"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/presse"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/presse"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/presse"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/presse"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/lb/roadmap</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/roadmap"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/roadmap"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/roadmap"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/roadmap"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/roadmap"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/roadmap"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/de/roadmap</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/roadmap"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/roadmap"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/roadmap"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/roadmap"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/roadmap"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/roadmap"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/fr/roadmap</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/roadmap"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/roadmap"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/roadmap"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/roadmap"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/roadmap"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/roadmap"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/en/roadmap</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/roadmap"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/roadmap"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/roadmap"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/roadmap"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/roadmap"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/roadmap"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/pt/roadmap</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/roadmap"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/roadmap"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/roadmap"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/roadmap"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/roadmap"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/roadmap"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/lb/changelog</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/changelog"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/changelog"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/changelog"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/changelog"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/changelog"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/changelog"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/de/changelog</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/changelog"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/changelog"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/changelog"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/changelog"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/changelog"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/changelog"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/fr/changelog</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/changelog"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/changelog"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/changelog"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/changelog"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/changelog"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/changelog"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/en/changelog</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/changelog"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/changelog"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/changelog"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/changelog"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/changelog"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/changelog"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/pt/changelog</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/changelog"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/changelog"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/changelog"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/changelog"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/changelog"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/changelog"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/lb/vergleich</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/vergleich"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/vergleich"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/vergleich"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/vergleich"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/vergleich"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/vergleich"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/de/vergleich</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/vergleich"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/vergleich"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/vergleich"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/vergleich"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/vergleich"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/vergleich"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/fr/vergleich</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/vergleich"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/vergleich"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/vergleich"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/vergleich"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/vergleich"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/vergleich"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/en/vergleich</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/vergleich"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/vergleich"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/vergleich"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/vergleich"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/vergleich"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/vergleich"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/pt/vergleich</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/vergleich"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/vergleich"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/vergleich"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/vergleich"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/vergleich"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/vergleich"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/lb/vergleich/google-maps</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/vergleich/google-maps"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/vergleich/google-maps"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/vergleich/google-maps"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/vergleich/google-maps"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/vergleich/google-maps"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/vergleich/google-maps"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/de/vergleich/google-maps</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/vergleich/google-maps"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/vergleich/google-maps"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/vergleich/google-maps"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/vergleich/google-maps"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/vergleich/google-maps"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/vergleich/google-maps"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/fr/vergleich/google-maps</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/vergleich/google-maps"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/vergleich/google-maps"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/vergleich/google-maps"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/vergleich/google-maps"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/vergleich/google-maps"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/vergleich/google-maps"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/en/vergleich/google-maps</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/vergleich/google-maps"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/vergleich/google-maps"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/vergleich/google-maps"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/vergleich/google-maps"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/vergleich/google-maps"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/vergleich/google-maps"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/pt/vergleich/google-maps</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/vergleich/google-maps"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/vergleich/google-maps"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/vergleich/google-maps"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/vergleich/google-maps"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/vergleich/google-maps"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/vergleich/google-maps"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/lb/vergleich/wheelmap</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/vergleich/wheelmap"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/vergleich/wheelmap"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/vergleich/wheelmap"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/vergleich/wheelmap"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/vergleich/wheelmap"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/vergleich/wheelmap"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/de/vergleich/wheelmap</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/vergleich/wheelmap"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/vergleich/wheelmap"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/vergleich/wheelmap"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/vergleich/wheelmap"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/vergleich/wheelmap"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/vergleich/wheelmap"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/fr/vergleich/wheelmap</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/vergleich/wheelmap"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/vergleich/wheelmap"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/vergleich/wheelmap"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/vergleich/wheelmap"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/vergleich/wheelmap"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/vergleich/wheelmap"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/en/vergleich/wheelmap</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/vergleich/wheelmap"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/vergleich/wheelmap"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/vergleich/wheelmap"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/vergleich/wheelmap"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/vergleich/wheelmap"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/vergleich/wheelmap"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/pt/vergleich/wheelmap</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/vergleich/wheelmap"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/vergleich/wheelmap"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/vergleich/wheelmap"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/vergleich/wheelmap"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/vergleich/wheelmap"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/vergleich/wheelmap"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/lb/vergleich/tripadvisor</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/vergleich/tripadvisor"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/vergleich/tripadvisor"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/vergleich/tripadvisor"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/vergleich/tripadvisor"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/vergleich/tripadvisor"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/vergleich/tripadvisor"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/de/vergleich/tripadvisor</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/vergleich/tripadvisor"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/vergleich/tripadvisor"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/vergleich/tripadvisor"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/vergleich/tripadvisor"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/vergleich/tripadvisor"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/vergleich/tripadvisor"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/fr/vergleich/tripadvisor</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/vergleich/tripadvisor"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/vergleich/tripadvisor"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/vergleich/tripadvisor"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/vergleich/tripadvisor"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/vergleich/tripadvisor"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/vergleich/tripadvisor"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/en/vergleich/tripadvisor</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/vergleich/tripadvisor"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/vergleich/tripadvisor"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/vergleich/tripadvisor"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/vergleich/tripadvisor"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/vergleich/tripadvisor"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/vergleich/tripadvisor"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/pt/vergleich/tripadvisor</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/vergleich/tripadvisor"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/vergleich/tripadvisor"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/vergleich/tripadvisor"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/vergleich/tripadvisor"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/vergleich/tripadvisor"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/vergleich/tripadvisor"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/lb/restaurants</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/de/restaurants</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/fr/restaurants</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/en/restaurants</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/pt/restaurants</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/lb/partner</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/partner"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/partner"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/partner"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/partner"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/partner"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/partner"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/de/partner</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/partner"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/partner"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/partner"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/partner"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/partner"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/partner"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/fr/partner</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/partner"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/partner"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/partner"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/partner"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/partner"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/partner"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/en/partner</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/partner"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/partner"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/partner"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/partner"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/partner"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/partner"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/pt/partner</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/partner"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/partner"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/partner"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/partner"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/partner"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/partner"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/lb/organisationen</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/organisationen"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/organisationen"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/organisationen"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/organisationen"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/organisationen"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/organisationen"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/de/organisationen</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/organisationen"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/organisationen"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/organisationen"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/organisationen"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/organisationen"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/organisationen"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/fr/organisationen</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/organisationen"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/organisationen"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/organisationen"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/organisationen"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/organisationen"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/organisationen"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/en/organisationen</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/organisationen"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/organisationen"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/organisationen"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/organisationen"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/organisationen"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/organisationen"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/pt/organisationen</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/organisationen"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/organisationen"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/organisationen"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/organisationen"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/organisationen"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/organisationen"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/lb/organisationen/gemeinden</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/organisationen/gemeinden"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/organisationen/gemeinden"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/organisationen/gemeinden"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/organisationen/gemeinden"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/organisationen/gemeinden"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/organisationen/gemeinden"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/de/organisationen/gemeinden</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/organisationen/gemeinden"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/organisationen/gemeinden"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/organisationen/gemeinden"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/organisationen/gemeinden"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/organisationen/gemeinden"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/organisationen/gemeinden"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/fr/organisationen/gemeinden</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/organisationen/gemeinden"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/organisationen/gemeinden"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/organisationen/gemeinden"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/organisationen/gemeinden"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/organisationen/gemeinden"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/organisationen/gemeinden"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/en/organisationen/gemeinden</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/organisationen/gemeinden"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/organisationen/gemeinden"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/organisationen/gemeinden"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/organisationen/gemeinden"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/organisationen/gemeinden"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/organisationen/gemeinden"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/pt/organisationen/gemeinden</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/organisationen/gemeinden"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/organisationen/gemeinden"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/organisationen/gemeinden"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/organisationen/gemeinden"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/organisationen/gemeinden"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/organisationen/gemeinden"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/lb/organisationen/unternehmen</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/organisationen/unternehmen"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/organisationen/unternehmen"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/organisationen/unternehmen"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/organisationen/unternehmen"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/organisationen/unternehmen"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/organisationen/unternehmen"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/de/organisationen/unternehmen</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/organisationen/unternehmen"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/organisationen/unternehmen"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/organisationen/unternehmen"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/organisationen/unternehmen"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/organisationen/unternehmen"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/organisationen/unternehmen"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/fr/organisationen/unternehmen</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/organisationen/unternehmen"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/organisationen/unternehmen"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/organisationen/unternehmen"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/organisationen/unternehmen"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/organisationen/unternehmen"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/organisationen/unternehmen"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/en/organisationen/unternehmen</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/organisationen/unternehmen"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/organisationen/unternehmen"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/organisationen/unternehmen"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/organisationen/unternehmen"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/organisationen/unternehmen"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/organisationen/unternehmen"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/pt/organisationen/unternehmen</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/organisationen/unternehmen"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/organisationen/unternehmen"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/organisationen/unternehmen"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/organisationen/unternehmen"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/organisationen/unternehmen"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/organisationen/unternehmen"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/lb/app</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/app"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/app"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/app"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/app"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/app"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/app"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/de/app</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/app"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/app"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/app"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/app"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/app"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/app"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/fr/app</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/app"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/app"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/app"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/app"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/app"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/app"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/en/app</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/app"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/app"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/app"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/app"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/app"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/app"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/pt/app</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/app"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/app"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/app"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/app"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/app"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/app"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/lb/roadmap/ideen</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/roadmap/ideen"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/roadmap/ideen"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/roadmap/ideen"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/roadmap/ideen"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/roadmap/ideen"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/roadmap/ideen"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/de/roadmap/ideen</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/roadmap/ideen"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/roadmap/ideen"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/roadmap/ideen"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/roadmap/ideen"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/roadmap/ideen"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/roadmap/ideen"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/fr/roadmap/ideen</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/roadmap/ideen"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/roadmap/ideen"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/roadmap/ideen"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/roadmap/ideen"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/roadmap/ideen"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/roadmap/ideen"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/en/roadmap/ideen</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/roadmap/ideen"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/roadmap/ideen"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/roadmap/ideen"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/roadmap/ideen"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/roadmap/ideen"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/roadmap/ideen"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/pt/roadmap/ideen</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/roadmap/ideen"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/roadmap/ideen"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/roadmap/ideen"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/roadmap/ideen"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/roadmap/ideen"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/roadmap/ideen"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/lb/sponsoren</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/sponsoren"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/sponsoren"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/sponsoren"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/sponsoren"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/sponsoren"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/sponsoren"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/de/sponsoren</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/sponsoren"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/sponsoren"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/sponsoren"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/sponsoren"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/sponsoren"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/sponsoren"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/fr/sponsoren</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/sponsoren"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/sponsoren"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/sponsoren"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/sponsoren"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/sponsoren"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/sponsoren"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/en/sponsoren</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/sponsoren"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/sponsoren"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/sponsoren"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/sponsoren"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/sponsoren"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/sponsoren"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/pt/sponsoren</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/sponsoren"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/sponsoren"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/sponsoren"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/sponsoren"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/sponsoren"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/sponsoren"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/lb/restaurants/757</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/757"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/757"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/757"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/757"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/757"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/757"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/de/restaurants/757</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/757"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/757"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/757"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/757"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/757"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/757"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/fr/restaurants/757</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/757"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/757"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/757"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/757"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/757"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/757"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/en/restaurants/757</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/757"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/757"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/757"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/757"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/757"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/757"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/pt/restaurants/757</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/757"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/757"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/757"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/757"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/757"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/757"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/lb/restaurants/758</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/758"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/758"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/758"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/758"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/758"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/758"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/de/restaurants/758</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/758"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/758"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/758"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/758"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/758"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/758"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/fr/restaurants/758</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/758"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/758"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/758"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/758"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/758"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/758"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/en/restaurants/758</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/758"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/758"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/758"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/758"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/758"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/758"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/pt/restaurants/758</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/758"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/758"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/758"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/758"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/758"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/758"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/lb/restaurants/759</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/759"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/759"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/759"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/759"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/759"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/759"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/de/restaurants/759</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/759"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/759"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/759"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/759"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/759"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/759"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/fr/restaurants/759</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/759"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/759"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/759"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/759"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/759"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/759"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/en/restaurants/759</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/759"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/759"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/759"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/759"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/759"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/759"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/pt/restaurants/759</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/759"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/759"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/759"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/759"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/759"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/759"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/lb/restaurants/760</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/760"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/760"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/760"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/760"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/760"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/760"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/de/restaurants/760</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/760"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/760"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/760"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/760"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/760"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/760"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/fr/restaurants/760</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/760"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/760"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/760"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/760"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/760"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/760"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/en/restaurants/760</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/760"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/760"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/760"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/760"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/760"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/760"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/pt/restaurants/760</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/760"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/760"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/760"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/760"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/760"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/760"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/lb/restaurants/761</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/761"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/761"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/761"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/761"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/761"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/761"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/de/restaurants/761</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/761"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/761"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/761"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/761"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/761"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/761"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/fr/restaurants/761</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/761"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/761"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/761"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/761"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/761"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/761"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/en/restaurants/761</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/761"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/761"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/761"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/761"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/761"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/761"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/pt/restaurants/761</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/761"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/761"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/761"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/761"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/761"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/761"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/lb/restaurants/762</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/762"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/762"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/762"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/762"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/762"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/762"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/de/restaurants/762</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/762"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/762"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/762"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/762"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/762"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/762"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/fr/restaurants/762</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/762"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/762"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/762"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/762"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/762"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/762"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/en/restaurants/762</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/762"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/762"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/762"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/762"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/762"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/762"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/pt/restaurants/762</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/762"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/762"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/762"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/762"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/762"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/762"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/lb/restaurants/763</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/763"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/763"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/763"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/763"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/763"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/763"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/de/restaurants/763</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/763"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/763"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/763"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/763"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/763"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/763"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/fr/restaurants/763</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/763"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/763"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/763"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/763"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/763"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/763"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/en/restaurants/763</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/763"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/763"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/763"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/763"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/763"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/763"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/pt/restaurants/763</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/763"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/763"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/763"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/763"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/763"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/763"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/lb/restaurants/764</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/764"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/764"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/764"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/764"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/764"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/764"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/de/restaurants/764</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/764"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/764"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/764"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/764"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/764"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/764"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/fr/restaurants/764</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/764"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/764"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/764"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/764"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/764"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/764"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/en/restaurants/764</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/764"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/764"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/764"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/764"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/764"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/764"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/pt/restaurants/764</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/764"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/764"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/764"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/764"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/764"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/764"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/lb/restaurants/765</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/765"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/765"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/765"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/765"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/765"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/765"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/de/restaurants/765</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/765"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/765"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/765"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/765"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/765"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/765"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/fr/restaurants/765</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/765"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/765"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/765"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/765"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/765"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/765"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/en/restaurants/765</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/765"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/765"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/765"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/765"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/765"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/765"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/pt/restaurants/765</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/765"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/765"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/765"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/765"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/765"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/765"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/lb/restaurants/766</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/766"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/766"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/766"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/766"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/766"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/766"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/de/restaurants/766</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/766"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/766"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/766"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/766"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/766"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/766"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/fr/restaurants/766</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/766"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/766"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/766"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/766"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/766"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/766"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/en/restaurants/766</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/766"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/766"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/766"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/766"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/766"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/766"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/pt/restaurants/766</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/766"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/766"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/766"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/766"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/766"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/766"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/lb/restaurants/767</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/767"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/767"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/767"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/767"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/767"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/767"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/de/restaurants/767</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/767"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/767"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/767"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/767"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/767"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/767"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/fr/restaurants/767</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/767"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/767"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/767"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/767"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/767"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/767"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/en/restaurants/767</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/767"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/767"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/767"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/767"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/767"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/767"/>
+  </url>
+  <url>
+    <loc>https://endlech.lu/pt/restaurants/767</loc>
+    <xhtml:link rel="alternate" hreflang="lb" href="https://endlech.lu/lb/restaurants/767"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://endlech.lu/de/restaurants/767"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://endlech.lu/fr/restaurants/767"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://endlech.lu/en/restaurants/767"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://endlech.lu/pt/restaurants/767"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://endlech.lu/lb/restaurants/767"/>
+  </url>
+</urlset>

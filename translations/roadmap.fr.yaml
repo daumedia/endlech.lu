@@ -1,10 +1,16 @@
 # Feuille de route publique (Feature 07). Voir roadmap.de.yaml pour le choix du domaine.
 meta_title: "Feuille de route – Endlech.lu"
 meta_description: "Ce sur quoi nous travaillons, ce qui vient ensuite et ce que nous ne construisons délibérément pas. Sans dates, avec justification."
-eyebrow: "Ce que nous construisons"
 heading: "Feuille de route"
 intro: "Ce sur quoi nous travaillons, ce qui vient ensuite — et ce que nous ne construisons délibérément pas."
 no_dates_hint: "Aucune date ici. Endlech.lu se construit en parallèle d'une activité principale, et une échéance que personne ne peut tenir n'est pas une information."
+
+area:
+    name: "Feuille de route & idées"
+    tab:
+        roadmap: "Feuille de route"
+        ideas: "Idées"
+        changelog: "Journal"
 
 stage:
     in_progress:
@@ -12,29 +18,22 @@ stage:
         empty: "Rien de neuf en construction actuellement. Ce qui a été terminé en dernier figure dans le journal des modifications."
     planned:
         title: "Prévu"
-        empty: "Rien de fermement prévu — le tableau d'idées est le meilleur endroit pour nous dire ce qui devrait figurer ici."
+        empty: "Rien de fermement prévu — le meilleur moyen de nous dire ce qui devrait figurer ici, c'est une idée sous « Idées »."
     considered:
         title: "À l'étude"
-        empty: "Rien d'autre à l'étude. Les propositions sont les bienvenues sur le tableau d'idées."
+        empty: "Rien d'autre à l'étude. Les propositions sont les bienvenues sous « Idées »."
 
 shelved:
     section_title: "Délibérément non construit"
     section_intro: "Ces points ne viendront pas — en tout cas pas sous cette forme. Ils figurent ici pour que personne ne les attende."
 
 community:
-    heading: "Issu du tableau d'idées"
-    selection_hint: "Voici les dix idées prévues ayant reçu le plus de soutiens. Soutenir une idée sur le tableau, c'est décider de ce qui figure en haut."
-    more: "{1}Une autre idée prévue figure sur le tableau.|]1,Inf[%count% autres idées prévues figurent sur le tableau."
+    heading: "Issu des idées de la communauté"
+    selection_hint: "Voici les dix idées prévues ayant reçu le plus de soutiens. Soutenir une idée sous « Idées », c'est décider de ce qui figure en haut."
+    more: "{1}Une autre idée prévue figure sous « Idées ».|]1,Inf[%count% autres idées prévues figurent sous « Idées »."
     votes: "{0}Aucun soutien pour l'instant|{1}1 soutien|]1,Inf[%count% soutiens"
     source_label: "Idée de la communauté"
-    open_board: "Vers le tableau d'idées"
-
-more:
-    section_title: "À lire aussi"
-    changelog_label: "Journal des modifications"
-    changelog_hint: "Ce qui s'est ajouté ces dernières semaines et derniers mois."
-    board_label: "Tableau d'idées"
-    board_hint: "Proposer une idée ou soutenir celle de quelqu'un d'autre."
+    open_board: "Voir l'idée"
 
 freshness:
     label: "Mise à jour : %date%"

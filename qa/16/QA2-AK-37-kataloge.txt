@@ -1,0 +1,115 @@
+lb messages  board.back_to_board                Zréck bei d'Iddien
+lb messages  board.empty_title                  Nach keng Iddi publizéiert
+lb messages  board.thanks_text                  Mir kucken se un, ier se ëffentlech gëtt. Sou bal se ënner „Iddien“ steet, kriss du eng E-Mail.
+lb messages  flash.board_published              D’Iddi steet elo ëffentlech ënner „Iddien“.
+lb messages  email.board_published_subject      Deng Iddi ass elo ëffentlech
+lb messages  email.board_published_greeting     Deng Iddi steet elo ënner „Roadmap & Iddien“
+lb messages  email.board_published_text         Mir hunn deng Iddi ugekuckt a fräiginn. Si steet vun elo un ëffentlech ënner „Roadmap & Iddien“ — anerer kënne se ënnerstëtzen, an du gesäis do, wat draus gëtt.
+lb messages  email.board_published_title        Deng Iddi ass ëffentlech
+lb roadmap   stage.planned.empty                Näischt fest geplangt — wat hei stoe sollt, seet eis am beschten eng Iddi ënner „Iddien“.
+lb roadmap   stage.considered.empty             Näischt weider ugeduecht. Virschléi si ënner „Iddien“ wëllkomm.
+lb roadmap   community.heading                  Aus den Iddie vun der Community
+lb roadmap   community.selection_hint           Hei stinn déi zéng geplangten Iddie mat de meeschten Zoustëmmungen. Wien ënner „Iddien“ zoustëmmt, entscheet mat, wat dovunner uewe steet.
+lb roadmap   community.more                     {1}Nach eng geplangten Iddi steet ënner „Iddien“.|]1,Inf[%count% weider geplangten Iddie stinn ënner „Iddien“.
+lb roadmap   community.open_board               Bei d'Iddi
+lb roadmap   area.name                          Roadmap & Iddien
+lb roadmap   area.tab.roadmap                   Roadmap
+lb roadmap   area.tab.ideas                     Iddien
+lb roadmap   area.tab.changelog                 Changelog
+de messages  board.back_to_board                Zurück zu den Ideen
+de messages  board.empty_title                  Noch keine Idee veröffentlicht
+de messages  board.thanks_text                  Wir sehen sie an, bevor sie öffentlich wird. Sobald sie unter „Ideen“ steht, bekommst du eine E-Mail.
+de messages  flash.board_published              Die Idee steht jetzt öffentlich unter „Ideen“.
+de messages  email.board_published_subject      Deine Idee ist jetzt öffentlich
+de messages  email.board_published_greeting     Deine Idee steht jetzt unter „Roadmap & Ideen“
+de messages  email.board_published_text         Wir haben deine Idee angesehen und freigegeben. Sie steht ab sofort öffentlich unter „Roadmap & Ideen“ — andere können ihr zustimmen, und du siehst dort, was aus ihr wird.
+de messages  email.board_published_title        Deine Idee ist öffentlich
+de roadmap   stage.planned.empty                Nichts fest eingeplant — was hier stehen sollte, sagt uns am besten eine Idee unter „Ideen“.
+de roadmap   stage.considered.empty             Nichts Weiteres angedacht. Vorschläge sind unter „Ideen“ willkommen.
+de roadmap   community.heading                  Aus den Ideen der Community
+de roadmap   community.selection_hint           Hier stehen die zehn geplanten Ideen mit den meisten Zustimmungen. Wer unter „Ideen“ zustimmt, entscheidet mit, was davon oben steht.
+de roadmap   community.more                     {1}Eine weitere geplante Idee steht unter „Ideen“.|]1,Inf[%count% weitere geplante Ideen stehen unter „Ideen“.
+de roadmap   community.open_board               Zur Idee
+de roadmap   area.name                          Roadmap & Ideen
+de roadmap   area.tab.roadmap                   Roadmap
+de roadmap   area.tab.ideas                     Ideen
+de roadmap   area.tab.changelog                 Changelog
+fr messages  board.back_to_board                Retour aux idées
+fr messages  board.empty_title                  Aucune idée publiée pour l’instant
+fr messages  board.thanks_text                  Nous l’examinons avant sa publication. Vous recevrez un e-mail dès qu’elle figurera sous « Idées ».
+fr messages  flash.board_published              L’idée est maintenant publique sous « Idées ».
+fr messages  email.board_published_subject      Votre idée est maintenant publique
+fr messages  email.board_published_greeting     Votre idée figure maintenant sous « Feuille de route & idées »
+fr messages  email.board_published_text         Nous avons examiné votre idée et l'avons publiée. Elle est désormais visible sous « Feuille de route & idées » — d'autres peuvent la soutenir, et vous pouvez y suivre son évolution.
+fr messages  email.board_published_title        Votre idée est publique
+fr roadmap   stage.planned.empty                Rien de fermement prévu — le meilleur moyen de nous dire ce qui devrait figurer ici, c'est une idée sous « Idées ».
+fr roadmap   stage.considered.empty             Rien d'autre à l'étude. Les propositions sont les bienvenues sous « Idées ».
+fr roadmap   community.heading                  Issu des idées de la communauté
+fr roadmap   community.selection_hint           Voici les dix idées prévues ayant reçu le plus de soutiens. Soutenir une idée sous « Idées », c'est décider de ce qui figure en haut.
+fr roadmap   community.more                     {1}Une autre idée prévue figure sous « Idées ».|]1,Inf[%count% autres idées prévues figurent sous « Idées ».
+fr roadmap   community.open_board               Voir l'idée
+fr roadmap   area.name                          Feuille de route & idées
+fr roadmap   area.tab.roadmap                   Feuille de route
+fr roadmap   area.tab.ideas                     Idées
+fr roadmap   area.tab.changelog                 Journal
+en messages  board.back_to_board                Back to the ideas
+en messages  board.empty_title                  No ideas published yet
+en messages  board.thanks_text                  We review it before it goes public. You will get an email as soon as it is listed under “Ideas”.
+en messages  flash.board_published              The idea is now public under “Ideas”.
+en messages  email.board_published_subject      Your idea is now public
+en messages  email.board_published_greeting     Your idea is now listed under “Roadmap & ideas”
+en messages  email.board_published_text         We have reviewed your idea and published it. It is now visible under “Roadmap & ideas” — others can upvote it, and you can follow what happens to it there.
+en messages  email.board_published_title        Your idea is public
+en roadmap   stage.planned.empty                Nothing firmly planned — an idea under “Ideas” is the best way to tell us what belongs here.
+en roadmap   stage.considered.empty             Nothing else under consideration. Suggestions are welcome under “Ideas”.
+en roadmap   community.heading                  From the community's ideas
+en roadmap   community.selection_hint           These are the ten planned ideas with the most support. Supporting an idea under “Ideas” decides what appears at the top.
+en roadmap   community.more                     {1}One more planned idea is under “Ideas”.|]1,Inf[%count% more planned ideas are under “Ideas”.
+en roadmap   community.open_board               View the idea
+en roadmap   area.name                          Roadmap & ideas
+en roadmap   area.tab.roadmap                   Roadmap
+en roadmap   area.tab.ideas                     Ideas
+en roadmap   area.tab.changelog                 Changelog
+pt messages  board.back_to_board                Voltar às ideias
+pt messages  board.empty_title                  Ainda não há ideias publicadas
+pt messages  board.thanks_text                  Analisamo-la antes de ficar pública. Assim que estiver em «Ideias», receberá um e-mail.
+pt messages  flash.board_published              A ideia está agora publicada em «Ideias».
+pt messages  email.board_published_subject      A sua ideia já é pública
+pt messages  email.board_published_greeting     A sua ideia já está em «Roteiro e ideias»
+pt messages  email.board_published_text         Analisámos a sua ideia e aprovámo-la. A partir de agora está publicada em «Roteiro e ideias» — outras pessoas podem apoiá-la, e é lá que pode acompanhar o que acontece com ela.
+pt messages  email.board_published_title        A sua ideia é pública
+pt roadmap   stage.planned.empty                Nada planeado em concreto — a melhor forma de nos dizer o que deveria estar aqui é uma ideia em «Ideias».
+pt roadmap   stage.considered.empty             Nada mais em ponderação. As sugestões são bem-vindas em «Ideias».
+pt roadmap   community.heading                  Das ideias da comunidade
+pt roadmap   community.selection_hint           Aqui estão as dez ideias planeadas com mais apoios. Quem apoia ideias em «Ideias» ajuda a decidir quais delas aparecem aqui.
+pt roadmap   community.more                     {1}Há mais uma ideia planeada em «Ideias».|]1,Inf[Há mais %count% ideias planeadas em «Ideias».
+pt roadmap   community.open_board               Ver a ideia
+pt roadmap   area.name                          Roteiro e ideias
+pt roadmap   area.tab.roadmap                   Roteiro
+pt roadmap   area.tab.ideas                     Ideias
+pt roadmap   area.tab.changelog                 Registo de alterações
+lb/roadmap []
+lb/roadmap/ideen []
+lb/roadmap/ideen/94-qa16-0 []
+lb/roadmap/ideen/neu []
+lb/roadmap/ideen/eingereicht []
+de/roadmap []
+de/roadmap/ideen []
+de/roadmap/ideen/94-qa16-0 []
+de/roadmap/ideen/neu []
+de/roadmap/ideen/eingereicht []
+fr/roadmap []
+fr/roadmap/ideen []
+fr/roadmap/ideen/94-qa16-0 []
+fr/roadmap/ideen/neu []
+fr/roadmap/ideen/eingereicht []
+en/roadmap []
+en/roadmap/ideen []
+en/roadmap/ideen/94-qa16-0 []
+en/roadmap/ideen/neu []
+en/roadmap/ideen/eingereicht []
+pt/roadmap []
+pt/roadmap/ideen []
+pt/roadmap/ideen/94-qa16-0 []
+pt/roadmap/ideen/neu []
+pt/roadmap/ideen/eingereicht []

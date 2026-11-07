@@ -1,0 +1,45 @@
+== /de/roadmap/ideen
+- navigation "Roadmap & Ideen":
+  - list:
+    - listitem:
+      - link "Roadmap":
+        - /url: /de/roadmap
+    - listitem:
+      - link "Ideen":
+        - /url: /de/roadmap/ideen
+    - listitem:
+      - link "Changelog":
+        - /url: /de/changelog
+  CDP Roadmap [["focusable",true],["url","http://127.0.0.1:8000/de/roadmap"]]
+  CDP Ideen [["focusable",true],["url","http://127.0.0.1:8000/de/roadmap/ideen"]]
+  CDP Changelog [["focusable",true],["url","http://127.0.0.1:8000/de/changelog"]]
+== /de/roadmap/ideen/94-qa16-0
+- navigation "Roadmap & Ideen":
+  - list:
+    - listitem:
+      - link "Roadmap":
+        - /url: /de/roadmap
+    - listitem:
+      - link "Ideen":
+        - /url: /de/roadmap/ideen
+    - listitem:
+      - link "Changelog":
+        - /url: /de/changelog
+  CDP Roadmap [["focusable",true],["url","http://127.0.0.1:8000/de/roadmap"]]
+  CDP Ideen [["focusable",true],["url","http://127.0.0.1:8000/de/roadmap/ideen"]]
+  CDP Changelog [["focusable",true],["url","http://127.0.0.1:8000/de/changelog"]]
+== /fr/changelog
+- navigation "Feuille de route & idées":
+  - list:
+    - listitem:
+      - link "Feuille de route":
+        - /url: /fr/roadmap
+    - listitem:
+      - link "Idées":
+        - /url: /fr/roadmap/ideen
+    - listitem:
+      - link "Journal":
+        - /url: /fr/changelog
+  CDP Feuille de route [["focusable",true],["url","http://127.0.0.1:8000/fr/roadmap"]]
+  CDP Idées [["focusable",true],["url","http://127.0.0.1:8000/fr/roadmap/ideen"]]
+  CDP Journal [["focusable",true],["url","http://127.0.0.1:8000/fr/changelog"]]

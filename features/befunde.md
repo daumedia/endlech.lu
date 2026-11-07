@@ -1,6 +1,6 @@
 # Befunde — projektweit
 
-Stand: 2026-10-28 · Quelle: die `qa-report.md` aller geprüften Features
+Stand: 2026-11-07 · Quelle: die `qa-report.md` aller geprüften Features
 
 Diese Liste wird von `sdd-qa` fortgeschrieben, nicht von Hand. Sie ist die Grundlage
 des Auditberichts, den `/sdd-erfassen abschluss` daraus baut.
@@ -10,6 +10,34 @@ Durchlauf), B23 (34/35 im zweiten Durchlauf), B19 (17/17, davon eines nicht prü
 B14 (28/28), B15 (27/27), B22 (30/30), B17 (25/25) — abgenommen.
 B10 (24/24 im zweiten Durchlauf), B18 (29/29), B11 (18/19, eines nicht prüfbar), B20 (19/20), B21 (20/20), B09 (18/18), B05 (24/24), **B06 (23/23 — das erste Feature ohne eigenen Befund)**, B07 (17/17, eines nicht ausgeführt), B08 (16/16) — abgenommen.
 B12 (15/15 nach der Reparatur), B13 (14/14), B16 (29/29), B24 (16/16) — abgenommen.
+
+**2026-11-07 · Feature `16` (Roadmap und Ideen in einem Bereich), zweiter Durchlauf nach dem Fehlerauftrag: 36/37 bestanden,
+AK-28 durchgefallen, 0 nicht prüfbar; Randfälle 7/7 — Production-ready ja, mit Vorbehalten.** Alle sieben Befunde des ersten
+Durchlaufs sind behoben und am laufenden System gegengeprüft (BF-199 *hoch* mit 4 754 Anfragen über drei Konten; BF-203 nur im
+Bereichskopf — das Muster in neun weiteren Vorlagen bleibt offen). Kein offener Befund ist *hoch* oder *kritisch*. Neu, alle
+nachgestellt: **BF-207** (*mittel*) — die Einzelseite einer Idee hat keine `h1`, axe meldet `page-has-heading-one` in allen
+fünf Sprachen (AK-28); zweimal übersehen — **eine geladene Debug-Toolbar kann das axe-Ergebnis verfälschen**; **BF-206**
+(*mittel*, vorbestehend, projektweit) — der globale `:focus-visible`-Fallback steht ungeschichtet und schlägt jede
+`focus:outline-<farbe>`, auf den Verlaufsbändern 1,07–1,65 : 1 statt Weiß (02/AK-03); BF-208 (*niedrig*, vorbestehend,
+projektweit) — HTML-Entitäten im Textteil der Mails, seit BF-201 „Roadmap &amp; Ideen“; BF-209 (*niedrig*, vorbestehend aus
+06) — die Dubletten-Weiterleitung verrät nach einem handgemachten Admin-POST den Titelteil eines wartenden Originals;
+BF-210 (*niedrig*) — ein AK-37-Prüflauf des Baus kann nicht rot werden. 1947 Tests grün, 40 übersprungen (12 neue
+Reproduktionen `Qa16NachpruefungTest`). Offen nach diesem Durchlauf an 16 bzw. projektweit mitgefunden: 6 (BF-203, BF-206,
+BF-207 *mittel*; BF-208, BF-209, BF-210 *niedrig*). Bericht: `features/16-roadmap-und-ideen/qa-report.md` (erster Durchlauf
+archiviert unter `qa/16/qa-report-erster-durchlauf-2026-11-07.md`), Nachweise `qa/16/QA2-*`.
+
+**2026-11-07 · Feature `16` (Roadmap und Ideen in einem Bereich), erste Prüfung: 35/37 bestanden, AK-05 und AK-11
+durchgefallen, 0 nicht prüfbar; Randfälle 7/7 — Production-ready nein.** Blockierend **BF-199** (*hoch*, vorbestehend aus
+`06`, auf der Produktion erreichbar): Ein Zustimmen mit falschem Token auf eine wartende fremde Idee leitet auf deren
+Einzeladresse weiter — jedes angemeldete Konto, auch ein unbestätigtes, liest die Titelteile der Moderationsschlange mit,
+ohne Deckel. Neu außerdem BF-200 (*mittel*, Entscheidung — die Reiterleiste steht je Seitenart an anderer Höhe, AK-05),
+BF-202 (*mittel* — französisch bei 375 × 800 schiebt der neue Kopf „En cours“ unter das Cookie-Banner, AK-11), BF-203
+(*mittel*, vorbestehend projektweit — Glas-Etikett auf Verlauf unter 4,5 : 1, axe meldet nur „incomplete“), BF-201 (*niedrig*,
+Entscheidung — vier Texte sagen nach OF-01 weiter „Board“), BF-204 (*niedrig*, README), BF-205 (*niedrig* — zwei Prüfläufe
+des Baus können nicht rot werden). AK-28 nach OF-02 als bestanden gewertet (einziger axe-Treffer: Wortmarke der App-Hülle,
+auch auf `main`). Geprüft am Entwicklungsserver, „vorher“ gegen `main` im Wegwerf-Arbeitsbaum an derselben Datenbank.
+1917 Tests grün, 30 übersprungen (zwei Reproduktionen `Qa16RoadmapIdeenTest`). Bericht: `features/16-roadmap-und-ideen/qa-report.md`,
+Nachweise `qa/16/`.
 
 **2026-10-28 · Feature `15` (Sponsoren), Nachprüfung der Überarbeitung (Kurzbeschreibung, Profillinks): 6/7 neue
 Kriterien bestanden, AK-51 durchgefallen, EC-13 durchgefallen, EC-14 bestanden; 16 berührte bisherige Kriterien
@@ -202,6 +230,12 @@ ausliefert, hat sie gebaut, ohne es zu merken.
 
 | ID | Feature | Befund | Grad | Fundstelle | Status |
 |---|---|---|---|---|---|
+| BF-207 | 16 | **AK-28 durchgefallen: Die Einzelseite einer Idee hat keine Hauptüberschrift.** axe-core meldet auf `/<Sprache>/roadmap/ideen/<Nummer>-<Titel>` `page-has-heading-one` — in allen fünf Sprachen, bei 1280 und 375 px (10 von 10 Läufen); OF-02 nimmt nur die Wortmarke aus. Der Ideentitel steht als `h3` in der Karte, der Bereichskopf trägt bewusst keine Überschrift. Seit Feature 06 so (auf `main` derselbe Treffer), aber AK-28 nennt die Einzelseite. ⚠ **Zweimal übersehen; belegte Störgröße ist die Debug-Toolbar:** Mit geladener Toolbar kann axe die Regel als bestanden werten (mit dem Skript des ersten Durchlaufs nachgestellt); beide früheren Messungen liefen gegen den Entwicklungsserver mit Toolbar. Reproduktion: `Qa16NachpruefungTest::testBf207…` (5 Sprachen), `qa/16/QA2-AK-28-einzelseite-ohne-h1.txt` | mittel | `templates/board/show.html.twig`, `templates/partials/_board_idea_card.html.twig` (Titel als `h3`) | offen → `/sdd-build 16` (empfohlen vor `/sdd-deploy 16`, blockiert nicht); soll AK-28 Best-Practice-Regeln ausnehmen: `/sdd-klaeren 16` |
+| BF-206 | 02 / 16 | **Vorbestehend, projektweit: Der globale Fokus-Fallback übersteuert jede Fokusfarbe — `focus:outline-white` ist überall wirkungslos.** `:focus-visible { outline: 2px solid #0e7490 }` steht in `app.css` ungeschichtet, Tailwinds `focus:outline-*` in `@layer utilities`; ungeschichtete Deklarationen schlagen geschichtete unabhängig von der Spezifität. Der Knopf „Idee einreichen“ auf dem Verlaufsband bekommt cyan-700 statt Weiß: **1,46–1,65 : 1** gegen das Band (Pixel, 1280/375 px); auf `main` Board-Kopf 1,27–1,32 : 1, Hero-Knopf der Startseite 1,07–1,20 : 1. Widerspricht 02/AK-03 („auf jedem Untergrund sichtbar — auch auf den farbigen Verlaufsbändern“), WCAG 1.4.11 (3 : 1) und dem Kommentar über der Regel („durch höhere Spezifität“). Ursache per Gegenprobe im Browser: dieselbe Regel in `@layer base` → Weiß. Reproduktion: `Qa16NachpruefungTest::testBf206…`, `qa/16/QA2-BF-206-fokusfarbe-ursache.txt` | mittel | `assets/styles/app.css:98`; betrifft jede Vorlage mit `focus:outline-<farbe>`, sichtbar schwach auf allen Verlaufsbändern | offen → Design-System / Feature 02 (eigenständig, nicht Teil von 16) |
+| BF-208 | projektweit / 16 | **Vorbestehend: Der Textteil der Mails trägt HTML-Entitäten.** Mails ohne `textTemplate` bekommen ihren `text/plain`-Teil von Symfonys `DefaultHtmlToTextConverter` (`strip_tags`, ohne `html_entity_decode`). Freigabe-Mail seit BF-201: „Roadmap **&amp;** Ideen“ (lb, de, en, fr); französische Mails schon auf `main` „l&#039;avons publiée“, „Voir l&#039;idée“; jede Mail `&copy; 2026`. Im MIME-Quelltext aus Mailpit nachgewiesen, auf `main` mit dem Code von `main` gerendert. Reproduktion: `Qa16NachpruefungTest::testBf208…` (5 Sprachen), `qa/16/QA2-AK-23-mails.txt` | niedrig | `src/Board/BoardNotifier.php:62` (ohne Textteil), `templates/email/base.html.twig` (`&copy;`); jede `TemplatedEmail` ohne `textTemplate` | offen (eigenständig; eigener `HtmlToTextConverterInterface`-Dienst mit Entitäten-Auflösung wirkte für alle Mails) |
+| BF-209 | 06 / 16 | **Vorbestehend: Die Dubletten-Weiterleitung verrät den Titelteil eines wartenden Originals.** `show()` leitet eine Dublette auf ihr Original weiter, **bevor** es die Sichtbarkeit prüft; `AdminBoardController::merge()`/`BoardModerator::merge()` nehmen jedes Ziel an (die Auswahl im Formular bietet nur veröffentlichte, ein handgemachter POST jedes). Nachgestellt: veröffentlichte Idee 200 per Admin-POST als Dublette der wartenden 199 → jeder Gast bekommt `302 Location: …/199-qa16d-wartendes-original-pfauenauge`, auch über die alte Adresse und auf `main`. Dieselbe Fehlerklasse wie BF-199, aber nur nach einer Admin-Handlung außerhalb der Oberfläche. Aus dem `code-reviewer` der zweiten QA von 16. Reproduktion: `Qa16NachpruefungTest::testBf209…` | niedrig | `src/Controller/BoardController.php:167` (vor `:188`), `src/Controller/AdminBoardController.php:147`, `src/Board/BoardModerator.php:154` | offen → `/sdd-build 06` oder mit dem nächsten Auftrag an 16 |
+| BF-210 | 16 | Ein Prüflauf des Baus kann nicht rot werden: `RoadmapAreaLocaleTest::testAk37OrtHeisstIdeen` liest als „Überschrift der Community-Gruppe“ das **erste** `h3` der Spalte „Geplant“ — ein kuratiertes Vorhaben. Mutation „Aus dem Ideen-Board / Board / tableau / quadro“ fest im Template: **volle Suite grün** (1941 Tests, 0 Fehlschläge). AK-37 selbst ist unabhängig belegt; `Qa16NachpruefungTest::testAk37GruppenueberschriftUndVerweiseOhneBoard` schließt die Lücke (bei derselben Mutation in allen fünf Sprachen rot). Aus dem `code-reviewer`. Muster BF-205 | niedrig | `tests/Functional/Controller/RoadmapAreaLocaleTest.php:125` | offen → `/sdd-build 16` |
+| BF-203 | 02 / 16 | **Vorbestehend, projektweit: Das Glas-Etikett (weiß auf `bg-white/20` über dem Verlauf, 14 px semibold) liegt unter 4,5 : 1.** Im Kopf „Roadmap & Ideen“ gemessen 3,67–3,79 : 1 (Pixel, 1280 px), das alte Etikett „Was wir bauen“ 3,86–3,98 : 1. axe meldet Verläufe nur als „incomplete“, deshalb ist AK-28 grün. Komponente „Glas“ des Design-Systems, in zehn Vorlagen | mittel | `templates/roadmap/_area_header.html.twig:37`; `docs/design-system.md:406` | **im Bereichskopf von 16 behoben und nachgeprüft 2026-11-07** (zweite QA von 16): Etikett auf `bg-black/20`, an den Pixeln 6,97–9,18 : 1 (4 Seitenarten × de/fr/pt × 1280/375/320 px, `qa/16/QA2-browser-messwerte.json` → `etikett`); Prüflauf `RoadmapAreaTest::testBf203EtikettAufDunklemGlas`. **Offen bleibt das Muster** in den übrigen neun Vorlagen mit Glas-Etikett (Startseite, `/open`, `/presse`, Vergleiche, Partner, Organisationen, Sponsoren, App-Warteliste …) — Auftrag am Design-System, nicht Teil von 16 |
 | BF-188 | 15 | **Ein entfernter Slug, dessen Eintrag noch steht, bleibt überall genannt.** `removedSlugs()` wirkt nur auf die eigene Seite (301 auf `/sponsoren`); `active()`, `former()`, `visible()` lesen `entries()` ungefiltert — Footer, Übersicht, Sitemap (alle fünf Sprachen), Faktenblatt-Zahl und Logoreihe nennen den Sponsor weiter, der Logo-Klick führt per 301 auf die Übersicht, die ihn wieder listet. `design.md`: „Ein entfernter Sponsor ist weder aktiv noch ehemalig“; EC-08: „die Entfernung gewinnt“. Rot wird allein `SponsorRegistryTest` — PHPUnit ist kein Deploy-Gate, und die Anleitung „Entfernen“ in `CLAUDE.md` nennt den Prüflauf nicht. Reproduktion: `Qa15SponsorTest::testBf188…`, `Qa15SponsorSeitenTest::testBf188…` | mittel | `src/Sponsor/SponsorDirectory.php:44`, `:70`, `:104` | offen |
 | BF-190 | 15 | **AK-10 auf kurzen Seiten nicht erfüllt.** Liegt der Footer innerhalb von Chromes Vorlaufzone für `loading="lazy"`, lädt Chrome alle zwölf Logos ohne Scrollen — gemessen mit kaltem Cache bei 390 × 844: Bestätigungsseite der Organisations-Warteliste, Footer 761 px unter dem Sichtbereich, 12 von 12 geladen; Startseite (5400 px), Restaurantliste (4602 px), Sponsorenseiten (1418 px), `/de/app` (2640 px): 0 von 12. Gewicht stets unter 150 KB. Der Entwurf (Entscheidung #6) sah das voraus und beschränkte die Messung auf zwei Seiten, die Spec sagt „eine Seite“. Schärfer nur mit JavaScript-Nachladen, das EC-09 bräche — **Entscheidung nötig** (`/sdd-klaeren 15`). Der Abschlussbericht meldete einen Abruf bei 1716 px; mit kaltem Cache nicht nachstellbar (vermutlich Logos aus dem Browserspeicher) | mittel | `templates/sponsor/_logo.html.twig:33`; `features/15-sponsoren/design.md`, Entscheidung #6 | offen |
 | BF-189 | 15 | Die Logodatei eines entfernten Sponsors bleibt mit 200 ausgeliefert, wenn sie im Verzeichnis liegen bleibt (gleicher Inhalt, gleiche Adresse); `SponsorRegistryTest` bleibt grün. AK-43 verlangt 404. `SponsorRules` prüft „Datei fehlt“, nicht „Datei ohne Eintrag“. Reproduktion: `Qa15SponsorTest::testBf189…` | niedrig | `src/Sponsor/SponsorRules.php:34` | offen |
@@ -297,6 +331,22 @@ Die drei Befunde des ersten `03`-Durchlaufs (BF-77/78/79), BF-81 sowie die vier 
 > Behebungsdatum.
 
 ## Behoben
+
+### Feature 16 · Roadmap und Ideen in einem Bereich — Fehlerauftrag (QA 2026-11-07, behoben 2026-11-07, nachgeprüft 2026-11-07, ausgeliefert: noch nicht)
+
+Ausgeliefert: **noch nicht** — uncommittet auf `feature/16-roadmap-und-ideen`. ⚠ **BF-199 (*hoch*) besteht auf der Produktion
+fort** (Zustimmen unter `/community/ideen/…/zustimmen`), bis der Branch ausgerollt ist. Gegenprobe in der zweiten QA vom
+2026-11-07 (`features/16-roadmap-und-ideen/qa-report.md`, Nachweise `qa/16/QA2-*`). BF-203 ist nur im Bereichskopf behoben
+und steht deshalb weiter unter *Offen*.
+
+| ID | Feature | Befund | Grad | Behebung | Gegenprobe |
+|---|---|---|---|---|---|
+| BF-199 | 06 / 16 | **Vorbestehend, auf der Produktion: Ein Zustimmen mit falschem Token verrät den Titel wartender Ideen.** `vote()` prüft den CSRF-Token vor der Sichtbarkeit; der Fehlerzweig leitet mit `slug` auf die Einzeladresse (`302 Location: /de/roadmap/ideen/140-qa16x-zebrafink-geheimtitel`). Jedes angemeldete Konto — auch ein unbestätigtes, die Registrierung braucht keine Bestätigung zum Anmelden — zählt die Nummern durch und liest die Titelteile der Moderationsschlange; nicht existierende Nummern → 404, wartende → 302. 70 Versuche hintereinander: kein Deckel (der Zustimmungsdeckel wird erst nach der Sichtbarkeitsprüfung gefragt). Die Einzelseite derselben Idee antwortet 404 (AK-33). Auf `main` identisch. Reproduktion: `Qa16RoadmapIdeenTest::testBf199…`, `qa/16/BF-199-zustimmen-verraet-titel.txt` | hoch | **behoben 2026-11-07** (Fehlerauftrag 16): `vote()` prüft die Sichtbarkeit vor dem CSRF-Token; eine wartende fremde Idee antwortet 404 ohne `Location` | Zweite QA: 4 754 Anfragen über drei Konten; Zustimmen mit leerem/falschem Token auf wartende 184/185 als admin@, unverified@, user@ → 12 × 404, kein `Location`, Titel 0 ×; veröffentlichte Idee mit falschem Token → 302 + Meldung, **keine Stimme** (`testBf199Bestaetigtes…`, rot bei abgeschalteter CSRF-Prüfung); `Qa16RoadmapIdeenTest::testBf199…` scharf grün (`qa/16/QA2-AK-29-wartende-ideen.txt`) |
+| BF-200 | 16 | **AK-05 durchgefallen: Die Reiterleiste steht je Seitenart an anderer Höhe.** `h1` und Einleitung stehen im Kopfband über der Reiterleiste; ihre Länge bestimmt die Höhe. 1280 px (de): Roadmap 353, Ideen 353, Changelog 323, Einzelseite 225 px; 375 px (fr): 402/432/411/253 px. Dazu ~3 px waagerecht, weil der fette aktive Reiter breiter ist. So im Entwurf vorgesehen — Entscheidung nötig (Leiste direkt unter Name und Knopf oder AK-05 neu fassen) | mittel | **behoben 2026-11-07** (entschieden in `/sdd-klaeren 16`, Decision Log 19): Band nur mit Etikett und Knopf, `h1` und Einleitung unter der Reiterleiste, alle Reiter `font-semibold` | Browser, 4 Seitenarten × 5 Sprachen × 1280/375/320 px: Oberkante und x-Lage der Leiste je (Breite, Sprache) identisch (173/165/165, fr 320 px 201); `Qa16NachpruefungTest::testAk05Band…` (Band byte-gleich, 5 Sprachen) (`qa/16/QA2-browser-messwerte.json` → `ak05`) |
+| BF-201 | 16 | Nach OF-01 („wo ein Text auf den Ort verweist, heißt er ‚Ideen‘“) sagen vier Texte weiter „Board“ — Leerzustand des Reiters Ideen („Noch keine Idee auf dem Board“), Bestätigungsseite („Sobald sie auf dem Board steht …“), Freigabe-Mail („Deine Idee steht jetzt auf dem Board“, „Community-Board“), Admin-Meldung; fünf Sprachen (fr „tableau“ heißt auch „Tabelle“). AK-37 nennt diese Stellen nicht — Entscheidung über die Reichweite. Reproduktion: `Qa16RoadmapIdeenTest::testBf201…` | niedrig | **behoben 2026-11-07** (Reichweite entschieden in `/sdd-klaeren 16`, Decision Log 20): sechs Schlüssel in fünf Sprachen | 18 Schlüssel × 5 Sprachen ohne „Board/tableau/quadro/Ideeën“, 25 gerenderte Seiten 0 Treffer, Freigabe-Mail in Mailpit ohne „Board“ (`qa/16/QA2-AK-37-kataloge.txt`, `QA2-AK-23-mails.txt`); ⚠ Textteil der Mail: BF-208 |
+| BF-202 | 16 | **AK-11 durchgefallen: Französisch, 375 × 800, erster Besuch — „En cours“ liegt unter dem Cookie-Banner.** Überschrift 661–689 px, Banner ab 601 px (`elementFromPoint` trifft `#cookie-banner-desc`); auf `main` im selben Fall 550–578 px, frei. Die Reiterleiste bricht französisch zweizeilig um. Übrige Sprachen 19–39 px über dem Banner | mittel | **behoben 2026-11-07**: einzeiliges Band, kompakter Knopf auf schmalen Schirmen, Reiter fr „Journal“ | Erster Besuch mit Banner, 1280 und 375 × 800, fünf Sprachen frei; fr/375: „En cours“ endet 566 px, Banner ab 601. Breiten 320–412 gegen `main`: 16 überall 12 px höher, außer fr/pt bei 320 (dort auch auf `main` verdeckt) (`qa/16/QA2-AK-11-in-arbeit-breiten-main-gegen-16.txt`) |
+| BF-204 | 16 | `README.md` nennt das Board weiter unter `/community/ideen` (öffentliches Repository); `CLAUDE.md`, `docs/`, `CHANGELOG.md` sind nachgezogen | niedrig | **behoben 2026-11-07**: `README.md:54` nennt `/roadmap/ideen` und die Weiterleitung | gelesen |
+| BF-205 | 16 | Zwei Prüfläufe des Baus können nicht rot werden: `testAk30…` liest `test.log`, das `fingers_crossed` bis `error` bei 301-Antworten leer lässt (Mutation mit Protokollzeile samt E-Mail: grün); `testAk12UnbestaetigtesKonto…` prüft nur Abwesenheiten (Kopie mit falschem Passwort landet auf `/de/login`: grün). Die Kriterien selbst sind von der QA belegt | niedrig | **behoben 2026-11-07**: Speicher-Handler `pruefung` (`when@test`), `testAk30…` liest ihn nach jeder Anfrage; `testAk12UnbestaetigtesKonto…` verlangt `/de/verify` und die Meldung | Selbst gegengeprüft: Protokollzeile mit E-Mail im Weiterleitungs-Controller → `testAk30…` rot (Controller byte-gleich zurück); Kopie mit falschem Passwort → `testAk12…` rot (Kopie gelöscht) |
 
 ### Feature 12 · Onboarding für neue Nutzer — dritter Fehlerauftrag (QA 2026-10-23, behoben 2026-10-23, nachgeprüft 2026-10-23, ausgeliefert 2026-10-23 mit `v2026.10.23`)
 
@@ -477,6 +527,30 @@ sondern vergessen.
 
 ## Muster
 
+- **Ein Fehlerzweig, der auf das Objekt zurückleitet, nennt es — auch dem, der es nicht sehen darf (BF-199).**
+  `CLAUDE.md` kennt „Besitzprüfung VOR CSRF-Prüfung“ (Passkey) und `withdraw()` hält sich daran; `vote()` daneben nicht.
+  Dort ist die Folge kein falscher Statuscode, sondern ein Datenabfluss: Der CSRF-Fehlerzweig baut die Rückleitung aus
+  `id` **und** `slug`, und der Slug ist der Titel. **Regel: Die Sichtbarkeits- und Besitzprüfung steht vor jeder Prüfung,
+  deren Fehlerzweig das Objekt nennt (Weiterleitung, Meldung, Flash)** — und ein Prüflauf zur Sichtbarkeit ruft jeden
+  Endpunkt mit der fremden Nummer, nicht nur die Leseseite.
+  *Nachtrag 2026-11-07 (zweite QA von 16, BF-209):* Zum zweiten Mal im selben Controller — diesmal nicht der Fehlerzweig,
+  sondern die **Dubletten-Weiterleitung** in `show()`, die vor der Sichtbarkeitsprüfung steht und das Original mit `slug`
+  nennt. Die Regel gilt für jede Weiterleitung, die aus einem Objekt gebaut wird, nicht nur für Fehlerzweige.
+- **„incomplete“ ist bei axe kein „bestanden“ (BF-203).** Auf Verläufen kann axe die Hintergrundfarbe nicht bestimmen
+  und legt den Fall in `incomplete` ab; ein Kriterium „axe meldet null Verstöße“ ist dann grün über einem Text mit
+  3,7 : 1. **Regel: Wer axe als Nachweis nimmt, liest auch `incomplete` und misst die Fälle dort am Pixel** — das
+  Glas-Etikett steht in zehn Vorlagen, jede mit derselben Lücke im Nachweis.
+  *Nachtrag 2026-11-07 (zweite QA von 16, BF-207):* **Und axe läuft gegen eine Seite ohne Debug-Toolbar.** Die Toolbar
+  lädt nach dem Seitenaufbau nach; mit ihr kann axe `page-has-heading-one` auf einer Seite **ohne** `h1` als bestanden
+  werten (nachgestellt).
+  Zwei Messungen (erste QA, Fehlerauftrag) meldeten so „null Verstöße“ über einem echten Treffer. **Regel: `/_wdt` und
+  `/_profiler` im Browser blockieren, nicht nur das Element nach dem Laden entfernen.**
+- **Eine Fokusfarbe ist erst belegt, wenn sie nach dem Übergang gemessen ist (BF-206).** Drei Messungen (Bau, erste QA,
+  Fehlerauftrag) prüften „`outline: solid 2px`“ und hielten den Fokus für sichtbar; dass `focus:outline-white` seit
+  Tailwind v4 wirkungslos ist — die globale Regel steht ungeschichtet, Utilities in `@layer utilities` —, zeigte erst die
+  **Farbe** gegen den Untergrund. Zwei Fallen beim Messen: `motion-safe:transition` blendet `outline-color` ein (sofort
+  gelesen steht `currentColor` da), und eine Kaskadenebene schlägt jede Spezifität. **Regel: Fokusanzeige auf farbigem
+  Grund am Pixel gegen die Nachbarschaft messen, nach dem Übergang; eigene globale Regeln gehören in `@layer base`.**
 - **Der Rückweg einer Abmeldung nach Brevo wird Fall für Fall geflickt (BF-154, BF-157, BF-160, BF-165 bis BF-168, BF-178, BF-181, BF-185).**
   Sieben Befunde in zwei Durchläufen an derselben Zustandsmaschine (`sync_state`, `consent_at`, `revoked_at`,
   `synced_at`, `attempts`), jeder mit eigener Reparatur, jede Reparatur grün gegen ihre Reproduktion — und die nächste
@@ -695,6 +769,14 @@ BF-185 als neu. **Regel: Wege mit Unique-Index, Dateiersatz oder einem Lauf,
   `€` und `EUR` — grün, während „500 Euro“ durchgeht. Im selben Feature steht eine schärfere Definition im
   Integritätstest, angewandt nur auf Testdaten. **Regel: Eine Prüfregel wird gegen die Wortlaute des Kriteriums getestet,
   nicht gegen ihre eigene Implementierung — und dieselbe Frage hat im Feature genau eine Definition.**
+  *Nachtrag 2026-11-07 (Feature 16, BF-205):* Zwei Formen in einem Bau — ein Prüflauf liest eine Protokolldatei, die
+  `fingers_crossed` bei Erfolgsantworten gar nicht schreibt (grün über jeder Protokollzeile), und einer prüft nur
+  Abwesenheiten (grün, auch wenn die Anmeldung scheitert). **Eine Abwesenheit ist nur ein Nachweis, wenn derselbe Lauf
+  zeigt, dass der Weg überhaupt gegangen wurde.**
+  *Nachtrag 2026-11-07 (zweite QA von 16, BF-210):* Im selben Feature ein drittes Mal: Der Prüflauf „Überschrift der
+  Community-Gruppe ohne ‚Board‘“ greift das erste `h3` der Spalte — ein anderes Element. Mit „Ideen-Board“ fest im
+  Template blieb die volle Suite grün. **Ein Selektor, der „das erste“ greift, prüft das gemeinte Element nur, solange
+  davor nichts steht — die Gegenprobe gehört an das Template, nicht an den Katalog.**
 - **Ein Zweig, der vor dem `consume()` zurückkehrt, hebt den Deckel auf (BF-118).** Die
   Konvention „erst verbrauchen, wenn die Handlung stattfindet" (BF-11) hat eine Kehrseite,
   die im Projekt bisher nicht stand: **Jeder `return` zwischen `isAllowed()` und
@@ -765,6 +847,9 @@ BF-185 als neu. **Regel: Wege mit Unique-Index, Dateiersatz oder einem Lauf,
   Befunde sitzen bei **768 px** — dem Umbruchpunkt, ab dem mehrspaltige Layouts und die
   Desktop-Navigation greifen. BF-80 wurde deshalb zweimal übersehen, BF-108 einmal.
   **768 px gehört als dritte Messbreite in jedes Kriterium zur Darstellung.**
+  *Nachtrag 2026-11-07 (Feature 16, BF-202):* Gemessen in einer Sprache, kaputt in der längsten. Der Bau prüfte „„In
+  Arbeit“ über dem Cookie-Banner“ bei 375 px auf Deutsch; französisch bricht die Reiterleiste zweizeilig um, und das
+  Banner ist dort höher. **Messungen am ersten Bildschirm laufen in allen Sprachen und mit sichtbarem Banner.**
 **Nutzertext ohne Umbruchregel sprengt schmale Ansichten — zum zweiten Mal.**
 *(2026-08-30, Feature 06, BF-106; zuvor Feature 03, BF-82)* Beide Male dieselbe Ursache:
 Ein Wort ohne Trennstelle, länger als die Kartenbreite, und die Seite scrollt waagerecht.

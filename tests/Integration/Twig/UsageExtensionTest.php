@@ -61,7 +61,7 @@ final class UsageExtensionTest extends KernelTestCase
         yield 'Anmeldung (AK-08)' => ['app_login', '/de/login', true];
         yield 'Registrierung (AK-08)' => ['app_register', '/de/register', true];
         yield 'Vorschlagsformular (AK-08)' => ['community_vorschlagen', '/de/community/suggest', true];
-        yield 'Ideen-Formular (AK-08)' => ['app_board_new', '/de/community/ideen/neu', true];
+        yield 'Ideen-Formular (AK-08)' => ['app_board_new', '/de/roadmap/ideen/neu', true];
         yield 'Verwaltung (AK-06)' => ['admin_dashboard', '/de/admin', false];
         yield 'Verwaltung, Unterseite (AK-06)' => ['admin_restaurant_index', '/de/admin/restaurants', false];
         yield 'Profil (AK-06)' => ['app_profile', '/de/profile', false];

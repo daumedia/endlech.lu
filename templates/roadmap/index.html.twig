@@ -13,9 +13,11 @@
     Zugehörigkeit eines Eintrags darf sich nicht allein aus seiner Position
     ergeben — im Screenreader gibt es keine Spalten, nur eine Reihenfolge.
 
-    ⚠ **Das Kopfband ist bewusst niedriger als auf /presse und /open** (py-12
-    statt py-20): Die Spalte „In Arbeit" soll auf einem Gerät mit 800 px Höhe ohne
-    Scrollen sichtbar sein (AK-03).
+    ⚠ **Seit Feature 16 kommt der Kopf aus `roadmap/_area_header.html.twig`** — Name
+    „Roadmap & Ideen", Knopf „Idee einreichen", drei Reiter. Er ist bewusst niedrig:
+    Die Spalte „In Arbeit" soll auf einem Gerät mit 800 px Höhe ohne Scrollen sichtbar
+    sein (07/AK-03, 16/AK-11). Der frühere Block „Weiterlesen" ist entfallen; die Reiter
+    führen in einem Klick zu Changelog und Ideen (07/AK-10 → 16/AK-07).
 #}
 
 {% block title %}{{ 'meta_title'|trans({}, 'roadmap') }}{% endblock %}
@@ -25,14 +27,12 @@
 {% endblock %}
 
 {% block body %}
-    {# === KOPFBAND ========================================================= #}
-    <section class="bg-linear-to-r from-cyan-700 to-purple-800 text-white py-12 md:py-16">
-        <div class="container mx-auto px-4 max-w-3xl">
-            <p class="inline-block bg-white/20 text-white text-sm font-semibold px-4 py-1.5 rounded-full mb-4">{{ 'eyebrow'|trans({}, 'roadmap') }}</p>
-            <h1 class="text-3xl md:text-4xl font-bold mb-3 leading-tight">{{ 'heading'|trans({}, 'roadmap') }}</h1>
-            <p class="text-lg text-cyan-50 leading-relaxed">{{ 'intro'|trans({}, 'roadmap') }}</p>
-        </div>
-    </section>
+    {# === BEREICHSKOPF (Feature 16) ======================================= #}
+    {% include 'roadmap/_area_header.html.twig' with {
+        active: 'roadmap',
+        heading: 'heading'|trans({}, 'roadmap'),
+        intro: 'intro'|trans({}, 'roadmap'),
+    } only %}
 
     {# === SPALTEN ========================================================== #}
     <section class="bg-white py-10 md:py-14">
@@ -79,8 +79,14 @@
                                         {% endfor %}
                                     </ul>
                                     {% if community.more > 0 %}
-                                        <p class="mt-3 text-sm text-gray-600">
-                                            {{ 'community.more'|trans({'%count%': community.more}, 'roadmap') }}
+                                        {# Führt auf den Reiter Ideen, gefiltert auf „Geplant" (16/AK-16) —
+                                           vorher stand der Verweis aufs Board im Block „Weiterlesen". #}
+                                        <p class="mt-3 text-sm">
+                                            <a href="{{ path('app_board_index', {status: 'planned'}) }}"
+                                               class="inline-flex items-center min-h-[44px] font-semibold text-cyan-700 hover:text-cyan-800 hover:underline motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-cyan-600">
+                                                {{- 'community.more'|trans({'%count%': community.more}, 'roadmap') -}}
+                                                <span aria-hidden="true" class="ml-1">→</span>
+                                            </a>
                                         </p>
                                     {% endif %}
                                 </div>
@@ -115,27 +121,4 @@
         </div>
     </section>
 
-    {# === WEITERLESEN ====================================================== #}
-    <section class="bg-white py-12" aria-labelledby="more-heading">
-        <div class="container mx-auto px-4">
-            <h2 id="more-heading" class="mb-6 text-2xl font-bold text-gray-900">{{ 'more.section_title'|trans({}, 'roadmap') }}</h2>
-            <ul class="grid gap-4 md:grid-cols-2">
-                {% for link in [
-                    {'route': 'app_changelog_index', 'label': 'more.changelog_label', 'hint': 'more.changelog_hint', 'emoji': '📓'},
-                    {'route': 'app_board_index', 'label': 'more.board_label', 'hint': 'more.board_hint', 'emoji': '💡'}
-                ] %}
-                    <li>
-                        <a href="{{ path(link.route) }}"
-                           class="flex min-h-[48px] items-start gap-3 rounded-xl border border-gray-200 p-4 hover:border-cyan-400 hover:bg-cyan-50/40 motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-cyan-600">
-                            <span aria-hidden="true" class="text-xl">{{ link.emoji }}</span>
-                            <span>
-                                <span class="block font-semibold text-cyan-800">{{ link.label|trans({}, 'roadmap') }}</span>
-                                <span class="block text-sm text-gray-600">{{ link.hint|trans({}, 'roadmap') }}</span>
-                            </span>
-                        </a>
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
-    </section>
 {% endblock %}

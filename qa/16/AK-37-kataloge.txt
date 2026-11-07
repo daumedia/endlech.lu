@@ -1,0 +1,45 @@
+== lb
+stage.planned.empty       Näischt fest geplangt — wat hei stoe sollt, seet eis am beschten eng Iddi ënner „Iddien“.
+stage.considered.empty    Näischt weider ugeduecht. Virschléi si ënner „Iddien“ wëllkomm.
+stage.in_progress.empty   Am Moment gëtt näischt Neies gebaut. Wat zulescht fäerdeg gouf, steet am Changelog.
+community.heading         Aus den Iddie vun der Community
+community.selection_hint  Hei stinn déi zéng geplangten Iddie mat de meeschten Zoustëmmungen. Wien ënner „Iddien“ zoustëmmt, entscheet mat, wat dovunner uewe steet.
+community.more            {1}Nach eng geplangten Iddi steet ënner „Iddien“.|]1,Inf[%count% weider geplangten Iddie stinn ënner „Iddien“.
+community.open_board      Bei d'Iddi
+board.back_to_board       Zréck bei d'Iddien
+== de
+stage.planned.empty       Nichts fest eingeplant — was hier stehen sollte, sagt uns am besten eine Idee unter „Ideen“.
+stage.considered.empty    Nichts Weiteres angedacht. Vorschläge sind unter „Ideen“ willkommen.
+stage.in_progress.empty   Gerade wird nichts Neues gebaut. Was zuletzt fertig wurde, steht im Changelog.
+community.heading         Aus den Ideen der Community
+community.selection_hint  Hier stehen die zehn geplanten Ideen mit den meisten Zustimmungen. Wer unter „Ideen“ zustimmt, entscheidet mit, was davon oben steht.
+community.more            {1}Eine weitere geplante Idee steht unter „Ideen“.|]1,Inf[%count% weitere geplante Ideen stehen unter „Ideen“.
+community.open_board      Zur Idee
+board.back_to_board       Zurück zu den Ideen
+== fr
+stage.planned.empty       Rien de fermement prévu — le meilleur moyen de nous dire ce qui devrait figurer ici, c'est une idée sous « Idées ».
+stage.considered.empty    Rien d'autre à l'étude. Les propositions sont les bienvenues sous « Idées ».
+stage.in_progress.empty   Rien de neuf en construction actuellement. Ce qui a été terminé en dernier figure dans le journal des modifications.
+community.heading         Issu des idées de la communauté
+community.selection_hint  Voici les dix idées prévues ayant reçu le plus de soutiens. Soutenir une idée sous « Idées », c'est décider de ce qui figure en haut.
+community.more            {1}Une autre idée prévue figure sous « Idées ».|]1,Inf[%count% autres idées prévues figurent sous « Idées ».
+community.open_board      Voir l'idée
+board.back_to_board       Retour aux idées
+== en
+stage.planned.empty       Nothing firmly planned — an idea under “Ideas” is the best way to tell us what belongs here.
+stage.considered.empty    Nothing else under consideration. Suggestions are welcome under “Ideas”.
+stage.in_progress.empty   Nothing new is being built right now. What was finished most recently is in the changelog.
+community.heading         From the community's ideas
+community.selection_hint  These are the ten planned ideas with the most support. Supporting an idea under “Ideas” decides what appears at the top.
+community.more            {1}One more planned idea is under “Ideas”.|]1,Inf[%count% more planned ideas are under “Ideas”.
+community.open_board      View the idea
+board.back_to_board       Back to the ideas
+== pt
+stage.planned.empty       Nada planeado em concreto — a melhor forma de nos dizer o que deveria estar aqui é uma ideia em «Ideias».
+stage.considered.empty    Nada mais em ponderação. As sugestões são bem-vindas em «Ideias».
+stage.in_progress.empty   De momento, não se está a construir nada de novo. O que ficou pronto por último está no registo de alterações.
+community.heading         Das ideias da comunidade
+community.selection_hint  Aqui estão as dez ideias planeadas com mais apoios. Quem apoia ideias em «Ideias» ajuda a decidir quais delas aparecem aqui.
+community.more            {1}Há mais uma ideia planeada em «Ideias».|]1,Inf[Há mais %count% ideias planeadas em «Ideias».
+community.open_board      Ver a ideia
+board.back_to_board       Voltar às ideias

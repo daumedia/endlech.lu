@@ -1,0 +1,7 @@
+Deine Idee steht jetzt auf dem Board | ['http://127.0.0.1:8000/de/roadmap/ideen/146-qa16y-neu-einreichung-4']
+  Text-Links: ['http://127.0.0.1:8000/de/roadmap/ideen/146-qa16y-neu-einreichung-4']
+  Board-Wort im Text: [' \r\n        Deine Idee ist jetzt auf dem Board\r\n    \r\n\r\n    \r\n    ', ' ab sofort öffentlich auf dem Community-Board — andere können ihr']
+Deine Idee steht jetzt auf dem Board | ['http://127.0.0.1:8000/de/roadmap/ideen/145-qa16y-neu-einreichung-3']
+  Text-Links: ['http://127.0.0.1:8000/de/roadmap/ideen/145-qa16y-neu-einreichung-3']
+  Board-Wort im Text: [' \r\n        Deine Idee ist jetzt auf dem Board\r\n    \r\n\r\n    \r\n    ', ' ab sofort öffentlich auf dem Community-Board — andere können ihr']
+Statuswechsel 145: new→reviewing, reviewing→planned: keine weitere Mail (async 0, Mailpit gesamt 2) — BoardNotifier kennt nur die Veröffentlichungsmail (06/AK-37)

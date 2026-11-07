@@ -1,0 +1,6 @@
+AK-36 · Datenexport /de/profile/daten als user@endlech.lu, main (8001) gegen 16 (8000), gleiche Datenbank
+Schlüssel (rekursiv) main: 32 | 16: 32 | nur in 16: [] | nur in main: []
+Board-Abschnitte: ['boardIdeas', 'boardVotes']
+  boardIdeas: main 46 Einträge, 16 46, wertgleich: True
+  boardVotes: main 0 Einträge, 16 0, wertgleich: True
+Erstes Element boardIdeas: {"id": 184, "title": "QA16B Zebrafink Geheimtitel", "description": "QA16B Kolibri Geheimbeschreibung", "status": "new", "published": false, "teamResponse": null, "submittedAt": "2026-11-07T13:58:20+00:00"}

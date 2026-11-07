@@ -47,14 +47,13 @@
 {% block body %}
     {% import _self as parts %}
 
-    {# === KOPFBAND ========================================================= #}
-    <section class="bg-linear-to-r from-cyan-700 to-purple-800 text-white py-12 md:py-16">
-        <div class="container mx-auto px-4 max-w-3xl">
-            <p class="inline-block bg-white/20 text-white text-sm font-semibold px-4 py-1.5 rounded-full mb-4">{{ 'eyebrow'|trans({}, 'changelog') }}</p>
-            <h1 class="text-3xl md:text-4xl font-bold mb-3 leading-tight">{{ 'heading'|trans({}, 'changelog') }}</h1>
-            <p class="text-lg text-cyan-50 leading-relaxed">{{ 'intro'|trans({}, 'changelog') }}</p>
-        </div>
-    </section>
+    {# === BEREICHSKOPF (Feature 16) ======================================= #}
+    {% include 'roadmap/_area_header.html.twig' with {
+        active: 'changelog',
+        heading: 'heading'|trans({}, 'changelog'),
+        intro: 'intro'|trans({}, 'changelog'),
+        kopfbreite: 'container mx-auto px-4 max-w-3xl',
+    } only %}
 
     {# === EINTRÄGE ========================================================= #}
     <section class="bg-white py-10 md:py-14">

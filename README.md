@@ -51,7 +51,7 @@ Current development status of the platform.
 
 ### 👤 User & Community
 - [x] **Crowdsourcing:** Five-step wizard to suggest new restaurants, reviewed by an admin before publication.
-- [x] **Ideas Board:** Public board at `/community/ideen` to submit and vote on ideas for the platform.
+- [x] **Ideas Board:** Public board to submit and vote on ideas for the platform — since Feature 16 the “Ideas” tab of the “Roadmap & ideas” area at `/roadmap/ideen` (old `/community/ideen` addresses redirect permanently).
 - [ ] **User Profiles:** Save favorites.
 - [ ] **Reviews:** Comment system for accessibility feedback.
 

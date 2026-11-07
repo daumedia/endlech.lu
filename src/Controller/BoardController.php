@@ -23,13 +23,20 @@ use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * Das öffentliche Community-Board (Feature 06).
+ * Das öffentliche Community-Board (Feature 06), seit Feature 16 der Reiter „Ideen"
+ * im Bereich „Roadmap & Ideen".
+ *
+ * ⚠ **Der Pfad ist `/roadmap/ideen`, die Routennamen blieben `app_board_*`** (Feature
+ * 16, design.md Entscheidung 1). Alles, was eine Adresse aus dem Namen erzeugt — Mails,
+ * Sitemap, canonical, Verwaltung, Roadmap —, zog damit von selbst um. Die alten
+ * Adressen unter `/community/ideen` beantwortet `BoardLegacyRedirectController` mit
+ * einer festen 301; wer hier den Präfix ändert, zieht ihn dort mit.
  *
  * ⚠ **Die Routenreihenfolge ist wesentlich:** `/neu` und `/eingereicht` stehen
  * vor `/{id}-{slug}`, sonst behandelt die Einzelansicht „neu" als Kennung.
  * Zusätzlich abgesichert über `requirements: ['id' => '\d+']`.
  */
-#[Route('/community/ideen')]
+#[Route('/roadmap/ideen')]
 final class BoardController extends AbstractController
 {
     public function __construct(
@@ -199,16 +206,24 @@ final class BoardController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
 
+        // Nur öffentliche Ideen lassen sich unterstützen — sonst wäre die Zahl
+        // an einer wartenden Idee ein Kanal an der Moderation vorbei.
+        //
+        // ⚠ BF-199: Diese Prüfung steht VOR der CSRF-Prüfung. Umgekehrt leitete ein
+        // falscher Token auf `zurueckZurIdee()` — mit dem Titelteil der Idee im
+        // `Location`-Kopf. Jedes angemeldete Konto, auch ein unbestätigtes, las so die
+        // Titel der Moderationsschlange mit, ohne Deckel (der greift erst weiter unten).
+        // Dasselbe Muster wie „Besitzprüfung vor CSRF" beim Zurückziehen und im
+        // `PasskeyController`: Wer hier nichts verloren hat, bekommt 404, egal mit
+        // welchem Token.
+        if (!$idea->isPublished() || !$user->isVerified()) {
+            throw $this->createNotFoundException();
+        }
+
         if (!$this->isCsrfTokenValid('board-vote-' . $idea->getId(), $request->request->getString('_token'))) {
             $this->addFlash('error', $this->translator->trans('flash.invalid_csrf'));
 
             return $this->zurueckZurIdee($idea);
-        }
-
-        // Nur öffentliche Ideen lassen sich unterstützen — sonst wäre die Zahl
-        // an einer wartenden Idee ein Kanal an der Moderation vorbei.
-        if (!$idea->isPublished() || !$user->isVerified()) {
-            throw $this->createNotFoundException();
         }
 
         $limiter = ActionLimiter::for($this->voteLimiter, $user->getUserIdentifier());

@@ -440,6 +440,7 @@ Abzeichen in der Detailansicht zeigen.
 | `_language_switcher` / `_admin_language_switcher` | – | helle bzw. dunkle Fassung desselben Menüs |
 | `_passkey_login` / `_passkey_manage` | – | Anmeldung bzw. Verwaltung |
 | `_cuisine_badges.html.twig` | `restaurant` | orange Tags |
+| `roadmap/_area_header.html.twig` | `active` (`roadmap`/`ideas`/`changelog`), `heading`, `intro` | Bereichskopf „Roadmap & Ideen" (Feature 16): einzeiliges Verlaufsband `py-3 md:py-4` mit Etikett auf **dunklem Glas** (`bg-black/20`, ≥ 7 : 1 — `bg-white/20` maß 3,7 : 1, BF-203) + weißem Knopf, darunter die Reiterleiste, **danach** `h1` + Einleitung auf Weiß (`kopfbreite` bündig zum Inhalt). Über der Leiste steht überall dasselbe, damit sie beim Wechseln stillsteht (BF-200). Reiter = Links mit `aria-current="page"`, alle `font-semibold`, aktiv `border-b-4 border-cyan-700` + dunkle Schrift (Form, nicht nur Farbe; nicht breiter), `min-h-[44px] min-w-[44px]`, umbrechend. Kein `h1` im Band, kein ARIA-Tab-Muster |
 
 ### Stat-Kachel
 

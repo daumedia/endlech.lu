@@ -1,0 +1,8 @@
+1280 de 1-roadmap      Reiterleiste oben bei 353 px
+1280 de 2-ideen        Reiterleiste oben bei 353 px
+1280 de 3-changelog    Reiterleiste oben bei 323 px
+1280 de 4-einzelseite  Reiterleiste oben bei 225 px
+375 fr 1-roadmap      Reiterleiste oben bei 402 px
+375 fr 2-ideen        Reiterleiste oben bei 432 px
+375 fr 3-changelog    Reiterleiste oben bei 411 px
+375 fr 4-einzelseite  Reiterleiste oben bei 253 px
