@@ -21,6 +21,9 @@ repo:
     link_label: "Abrir CHANGELOG.md no GitHub"
 
 release:
+    v2026_11_07:
+        title: "Roteiro e ideias num só lugar"
+        body: "O que estamos a planear e o que a comunidade deseja está agora reunido em «Roteiro e ideias»: três separadores para o roteiro, as ideias e este registo de alterações, acessíveis através de uma única ligação no fundo de cada página. O botão «Enviar ideia» encontra-se em cada um dos três separadores. As ideias mudaram de endereço; as ligações antigas, incluindo as dos e-mails, continuam a levar ao sítio certo."
     v2026_10_28:
         title: "Patrocinadores e uma oferta clara para empresas"
         body: "Empresas e associações podem agora apoiar o Endlech.lu como patrocinadores, com um pacote mensal ou anual. Os patrocinadores aparecem com o seu logótipo no fundo de cada página e têm uma página própria com algumas frases sobre si. O que não recebem também lá está: nenhuma avaliação melhor, nenhum posicionamento preferencial, nenhuma influência sobre as fichas. Ainda não há patrocinadores – a página «Patrocinadores» explica como se tornar um."

@@ -22,6 +22,9 @@ repo:
     link_label: "Ouvrir CHANGELOG.md sur GitHub"
 
 release:
+    v2026_11_07:
+        title: "La feuille de route et les idées réunies"
+        body: "Ce que nous prévoyons et ce que la communauté souhaite figure désormais ensemble sous « Feuille de route & idées » : trois onglets pour la feuille de route, les idées et ce journal des modifications, accessibles depuis une seule entrée en bas de chaque page. Le bouton « Proposer une idée » se trouve sur chacun des trois onglets. Les idées ont changé d’adresse ; les anciens liens, y compris ceux des e-mails, mènent toujours au bon endroit."
     v2026_10_28:
         title: "Des sponsors et une offre claire pour les entreprises"
         body: "Entreprises et associations peuvent désormais soutenir Endlech.lu en tant que sponsor, avec une formule mensuelle ou annuelle. Les sponsors apparaissent avec leur logo en bas de chaque page et disposent d'une page à eux, avec quelques phrases de présentation. Ce qu'ils ne reçoivent pas y figure aussi : aucune meilleure évaluation, aucune place privilégiée, aucune influence sur les fiches. Il n'y a pas encore de sponsor – la rubrique « Sponsors » explique comment le devenir."

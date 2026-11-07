@@ -22,6 +22,9 @@ repo:
     link_label: "Open CHANGELOG.md on GitHub"
 
 release:
+    v2026_11_07:
+        title: "Roadmap and ideas in one place"
+        body: "What we are planning and what the community would like now sit together under “Roadmap & ideas”: three tabs for the roadmap, the ideas and this changelog, reached through a single link at the bottom of every page. The “Submit an idea” button is on all three tabs. The ideas have moved; old links, including those in emails, still lead to the right place."
     v2026_10_28:
         title: "Sponsors, and a clear offer for companies"
         body: "Companies and associations can now support Endlech.lu as a sponsor, with one package, monthly or yearly. Sponsors appear with their logo at the bottom of every page and get a page of their own with a few sentences about themselves. What they do not get is stated there too: no better rating, no preferential placement, no influence on listings. There are no sponsors yet – the “Sponsors” page explains how to become one."

@@ -29,6 +29,11 @@ final readonly class ChangelogRegistry
     public function notes(): array
     {
         return [
+            // SHOWN — jeder Gast merkt es: Roadmap, Ideen und Changelog sind ein Bereich mit drei Reitern, ein
+            // Eintrag am Ende jeder Seite führt hinein, „Idee einreichen“ steht auf jedem Reiter (Feature 16). Der
+            // Herstellerhinweis im Footer (live seit 2026-11-05) und die MwSt-Nummer im Impressum bleiben ungenannt —
+            // ein Gast bemerkt sie nicht als Neuerung.
+            new ReleaseNote('2026.11.07', new \DateTimeImmutable('2026-11-07'), ReleaseVisibility::SHOWN),
             // SILENT, wie `v2026.09.12.3`: Ein Gast bemerkt nur die Roadmap selbst — „In Arbeit“ ist leer, unter
             // „Geplant“ stehen die Features 13 und 14. Die Roadmap ist der Ort, an dem Vorhaben mitgeteilt werden;
             // ein Changelog-Eintrag sagte dasselbe ein zweites Mal und läse sich wie eine Ankündigung.
