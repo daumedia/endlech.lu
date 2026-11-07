@@ -151,14 +151,20 @@ final class RoadmapControllerTest extends AbstractWebTestCase
         }
     }
 
-    /** AK-02: Beide Seiten sind aus der Fußzeile jeder öffentlichen Seite erreichbar. */
-    public function testFusszeileVerweistAufBeideSeiten(): void
+    /**
+     * AK-02 — seit Feature 16 abgelöst durch 16/AK-01, AK-02: Die Fußzeile führt mit genau
+     * einem Eintrag auf die Roadmap; der Changelog ist von dort einen Reiter entfernt.
+     */
+    public function testFusszeileFuehrtUeberDieRoadmapZuBeidenSeiten(): void
     {
         $client = static::createClient();
         $crawler = $client->request('GET', self::LOCALE.'/');
 
-        self::assertGreaterThan(0, $crawler->filter('footer a[href$="/roadmap"]')->count(), 'Fußzeile führt nicht zur Roadmap.');
-        self::assertGreaterThan(0, $crawler->filter('footer a[href$="/changelog"]')->count(), 'Fußzeile führt nicht zum Changelog.');
+        self::assertCount(1, $crawler->filter('footer a[href$="/roadmap"]'), 'Fußzeile führt nicht genau einmal zur Roadmap.');
+        self::assertCount(0, $crawler->filter('footer a[href$="/changelog"]'), 'Der Changelog hat keinen eigenen Fußzeileneintrag mehr.');
+
+        $crawler = $client->click($crawler->filter('footer a[href$="/roadmap"]')->link());
+        self::assertCount(1, $crawler->filter('nav[data-area-tabs] a[href$="/changelog"]'), 'Von der Roadmap ist der Changelog einen Klick entfernt.');
     }
 
     /** AK-04, AK-06, AK-37: Drei Spalten, keine vierte — und nirgends ein Datum. */
@@ -209,16 +215,20 @@ final class RoadmapControllerTest extends AbstractWebTestCase
         self::assertCount(0, $block->filter('section[aria-labelledby^="stage-"]'), 'Der Block darf in keiner Spalte liegen (AK-08).');
     }
 
-    /** AK-10: Von der Roadmap geht es in einem Klick zu Changelog und Board. */
-    public function testWeiterlesenFuehrtZuChangelogUndBoard(): void
+    /**
+     * AK-10 — seit Feature 16 über die Reiter (16/AK-07): Von der Roadmap geht es in einem
+     * Klick zu Changelog und Ideen. Der frühere Block „Weiterlesen" ist entfallen.
+     */
+    public function testReiterFuehrenZuChangelogUndIdeen(): void
     {
         $client = static::createClient();
         $crawler = $client->request('GET', self::LOCALE.'/roadmap');
 
-        $block = $crawler->filter('section[aria-labelledby="more-heading"]');
-        self::assertCount(1, $block);
-        self::assertGreaterThan(0, $block->filter('a[href$="/changelog"]')->count());
-        self::assertGreaterThan(0, $block->filter('a[href*="/community/ideen"]')->count());
+        self::assertCount(0, $crawler->filter('section[aria-labelledby="more-heading"]'), '„Weiterlesen" ist durch die Reiter ersetzt.');
+        $reiter = $crawler->filter('nav[data-area-tabs]');
+        self::assertCount(1, $reiter);
+        self::assertCount(1, $reiter->filter('a[href="'.self::LOCALE.'/changelog"]'));
+        self::assertCount(1, $reiter->filter('a[href="'.self::LOCALE.'/roadmap/ideen"]'));
     }
 
     /**
@@ -301,7 +311,7 @@ final class RoadmapControllerTest extends AbstractWebTestCase
 
         $spalte = $crawler->filter('section[aria-labelledby="stage-planned"]');
         self::assertStringContainsString('Kartenansicht für unterwegs', $spalte->text());
-        self::assertGreaterThan(0, $spalte->filter('a[href*="/community/ideen/"]')->count(), 'Der Verweis ins Board fehlt (AK-15).');
+        self::assertGreaterThan(0, $spalte->filter('a[href*="/roadmap/ideen/"]')->count(), 'Der Verweis ins Board fehlt (AK-15).');
         self::assertStringContainsString('Zustimmungen', $spalte->text(), 'Die Zustimmungszahl fehlt (AK-15).');
         // AK-52: Die Auswahlregel steht auch bei einer einzigen Idee.
         self::assertStringContainsString('zehn geplanten Ideen', $spalte->text(), 'Die Auswahlregel wird nicht ausgewiesen (AK-52).');
@@ -382,12 +392,12 @@ final class RoadmapControllerTest extends AbstractWebTestCase
         self::assertStringContainsString('Une carte interactive', $titel->text());
     }
 
-    /** AK-42: Keine Ressource von einem fremden Host. */
+    /** AK-42 (und 16/AK-32 für den Reiter Ideen): Keine Ressource von einem fremden Host. */
     public function testKeineFremdeRessource(): void
     {
         $client = static::createClient();
 
-        foreach ([self::LOCALE.'/roadmap', self::LOCALE.'/changelog'] as $pfad) {
+        foreach ([self::LOCALE.'/roadmap', self::LOCALE.'/roadmap/ideen', self::LOCALE.'/changelog'] as $pfad) {
             $crawler = $client->request('GET', $pfad);
 
             foreach (['img[src^="http"]', 'script[src^="http"]', 'link[rel="stylesheet"][href^="http"]', 'iframe'] as $selektor) {

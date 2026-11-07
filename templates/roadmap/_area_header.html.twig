@@ -1,0 +1,80 @@
+{#
+    Bereichskopf „Roadmap & Ideen" (Feature 16) — steht über den drei Reitern Roadmap,
+    Ideen und Changelog und über der Einzelseite einer Idee.
+
+    Parameter:
+      active      – 'roadmap' | 'ideas' | 'changelog'
+      heading     – optional, bereits übersetzte Hauptüberschrift der Seite
+      intro       – optional, ein Satz Einleitung unter der Überschrift
+      kopfbreite  – optional, Breitenklassen des Seitenkopfs, damit die Überschrift bündig
+                    mit dem Inhalt der Seite steht (Vorgabe: `container mx-auto px-4`)
+
+    Aufbau seit der ersten QA (design.md, Nachtrag 2026-11-07):
+
+    ⚠ **Über der Reiterleiste steht auf jeder Seitenart dasselbe: Etikett und Knopf** (BF-200,
+    AK-05). Vorher standen Überschrift und Einleitung im Band über den Reitern; ihre Länge
+    bestimmte die Höhe, und die Leiste sprang je Seite um bis zu 128 px. Die Überschrift
+    gehört deshalb UNTER die Leiste — wer sie zurück ins Band holt, holt BF-200 zurück.
+
+    ⚠ **Alle Reiter `font-semibold`, der aktive nur durch Unterstrich und Farbe** (BF-200).
+    Ein fetter aktiver Reiter ist breiter und schob die anderen beim Wechsel ~3 px zur Seite.
+    Farbe trägt trotzdem nicht allein (AK-06): Der 4-px-Unterstrich ist Form.
+
+    ⚠ **Das Etikett liegt auf dunklem Glas (`bg-black/20`), nicht auf `bg-white/20`** (BF-203).
+    Weiß auf hellem Glas über dem Verlauf maß 3,67–3,79 : 1; das Etikett steht am hellen,
+    linken Ende des Verlaufs.
+
+    ⚠ **Das Band ist eine Zeile hoch, der Knopf auf schmalen Schirmen kompakt** (BF-202):
+    Knopf und die Spalte „In Arbeit" müssen bei 800 px Höhe im ersten Bildschirm stehen —
+    gemessen MIT Cookie-Banner, in der längsten Sprache (AK-10, AK-11).
+
+    ⚠ **Der Bereichsname ist KEIN h1** (design.md Entscheidung 9), und die Reiter sind
+    gewöhnliche Links mit `aria-current`, kein ARIA-Tab-Muster (Entscheidung 7, AK-07).
+
+    `data-area-header`, `data-area-band`, `data-area-name` und `data-area-tabs` sind
+    Prüfanker für `RoadmapAreaTest`.
+#}
+{% set _reiter = [
+    {key: 'roadmap', route: 'app_roadmap_index'},
+    {key: 'ideas', route: 'app_board_index'},
+    {key: 'changelog', route: 'app_changelog_index'},
+] %}
+{% set _name = 'area.name'|trans({}, 'roadmap') %}
+<div data-area-header>
+    <section data-area-band class="bg-linear-to-r from-cyan-700 to-purple-800 text-white py-3 md:py-4">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+                <p data-area-name class="inline-block bg-black/20 text-white text-xs sm:text-sm font-semibold px-3 sm:px-4 py-1.5 rounded-full">{{ _name }}</p>
+                <a href="{{ path('app_board_new') }}"
+                   class="inline-flex items-center min-h-[44px] px-3 sm:px-5 rounded-lg bg-white text-cyan-800 text-sm sm:text-base font-semibold focus:outline-2 focus:outline-offset-2 focus:outline-white motion-safe:transition hover:bg-cyan-50">
+                    {{- 'board.submit_cta'|trans -}}
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <nav data-area-tabs aria-label="{{ _name }}" class="border-b border-gray-200 bg-white">
+        <div class="container mx-auto px-4">
+            <ul class="flex flex-wrap gap-x-6">
+                {% for reiter in _reiter %}
+                    {% set _aktiv = reiter.key == active %}
+                    <li>
+                        <a href="{{ path(reiter.route) }}"{% if _aktiv %} aria-current="page"{% endif %}
+                           class="-mb-px inline-flex items-center justify-center min-h-[44px] min-w-[44px] py-2 border-b-4 font-semibold {{ _aktiv ? 'border-cyan-700 text-gray-900' : 'border-transparent text-gray-600 hover:border-gray-300 hover:text-cyan-800' }} motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-cyan-600">
+                            {{- ('area.tab.' ~ reiter.key)|trans({}, 'roadmap') -}}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </nav>
+
+    {% if heading is defined and heading %}
+        <div class="{{ kopfbreite|default('container mx-auto px-4') }} pt-6 md:pt-8">
+            <h1 class="text-3xl md:text-4xl font-bold leading-tight text-gray-900 wrap-anywhere">{{ heading }}</h1>
+            {% if intro is defined and intro %}
+                <p class="mt-2 max-w-3xl text-lg text-gray-600 leading-relaxed">{{ intro }}</p>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>

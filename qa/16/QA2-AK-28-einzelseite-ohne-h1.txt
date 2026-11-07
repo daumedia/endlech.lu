@@ -1,0 +1,59 @@
+http://127.0.0.1:8000 /de/roadmap/ideen/94-qa16-0
+  Toolbar geladen, nicht entfernt: {"v":["button-name×1","color-contrast×1","link-name×2","page-has-heading-one×1"],"pass":false,"h1":[]}
+  Toolbar blockiert und entfernt : {"v":["page-has-heading-one×1"],"pass":false,"h1":[]}
+http://127.0.0.1:8001 /de/community/ideen/94-qa16-0
+  Toolbar geladen, nicht entfernt: {"v":["button-name×1","color-contrast×1","link-name×2","page-has-heading-one×1"],"pass":false,"h1":[]}
+  Toolbar blockiert und entfernt : {"v":["page-has-heading-one×1"],"pass":false,"h1":[]}
+
+AK-28 · axe-core 4.13.0 (Standard-Regelsatz, resultTypes violations+incomplete), angemeldet als user@, Toolbar blockiert und entfernt
+Seitenart × Sprache × Breite → Verstöße (ohne Treffer: leer)
+ 1280 lb roadmap   /lb/roadmap                      color-contrast×1 (Wortmarke .xl:block, OF-02)
+ 1280 lb ideas     /lb/roadmap/ideen                color-contrast×1 (Wortmarke .xl:block, OF-02)
+ 1280 lb changelog /lb/changelog                    color-contrast×1 (Wortmarke .xl:block, OF-02)
+ 1280 lb show      /lb/roadmap/ideen/94-qa16-0      color-contrast×1 (Wortmarke .xl:block, OF-02), page-has-heading-one×1
+ 1280 lb form      /lb/roadmap/ideen/neu            color-contrast×1 (Wortmarke .xl:block, OF-02)
+ 1280 de roadmap   /de/roadmap                      color-contrast×1 (Wortmarke .xl:block, OF-02)
+ 1280 de ideas     /de/roadmap/ideen                color-contrast×1 (Wortmarke .xl:block, OF-02)
+ 1280 de changelog /de/changelog                    color-contrast×1 (Wortmarke .xl:block, OF-02)
+ 1280 de show      /de/roadmap/ideen/94-qa16-0      color-contrast×1 (Wortmarke .xl:block, OF-02), page-has-heading-one×1
+ 1280 de form      /de/roadmap/ideen/neu            color-contrast×1 (Wortmarke .xl:block, OF-02)
+ 1280 fr roadmap   /fr/roadmap                      color-contrast×1 (Wortmarke .xl:block, OF-02)
+ 1280 fr ideas     /fr/roadmap/ideen                color-contrast×1 (Wortmarke .xl:block, OF-02)
+ 1280 fr changelog /fr/changelog                    color-contrast×1 (Wortmarke .xl:block, OF-02)
+ 1280 fr show      /fr/roadmap/ideen/94-qa16-0      color-contrast×1 (Wortmarke .xl:block, OF-02), page-has-heading-one×1
+ 1280 fr form      /fr/roadmap/ideen/neu            color-contrast×1 (Wortmarke .xl:block, OF-02)
+ 1280 en roadmap   /en/roadmap                      color-contrast×1 (Wortmarke .xl:block, OF-02)
+ 1280 en ideas     /en/roadmap/ideen                color-contrast×1 (Wortmarke .xl:block, OF-02)
+ 1280 en changelog /en/changelog                    color-contrast×1 (Wortmarke .xl:block, OF-02)
+ 1280 en show      /en/roadmap/ideen/94-qa16-0      color-contrast×1 (Wortmarke .xl:block, OF-02), page-has-heading-one×1
+ 1280 en form      /en/roadmap/ideen/neu            color-contrast×1 (Wortmarke .xl:block, OF-02)
+ 1280 pt roadmap   /pt/roadmap                      color-contrast×1 (Wortmarke .xl:block, OF-02)
+ 1280 pt ideas     /pt/roadmap/ideen                color-contrast×1 (Wortmarke .xl:block, OF-02)
+ 1280 pt changelog /pt/changelog                    color-contrast×1 (Wortmarke .xl:block, OF-02)
+ 1280 pt show      /pt/roadmap/ideen/94-qa16-0      color-contrast×1 (Wortmarke .xl:block, OF-02), page-has-heading-one×1
+ 1280 pt form      /pt/roadmap/ideen/neu            color-contrast×1 (Wortmarke .xl:block, OF-02)
+  375 lb roadmap   /lb/roadmap                      
+  375 lb ideas     /lb/roadmap/ideen                
+  375 lb changelog /lb/changelog                    
+  375 lb show      /lb/roadmap/ideen/94-qa16-0      page-has-heading-one×1
+  375 lb form      /lb/roadmap/ideen/neu            
+  375 de roadmap   /de/roadmap                      
+  375 de ideas     /de/roadmap/ideen                
+  375 de changelog /de/changelog                    
+  375 de show      /de/roadmap/ideen/94-qa16-0      page-has-heading-one×1
+  375 de form      /de/roadmap/ideen/neu            
+  375 fr roadmap   /fr/roadmap                      
+  375 fr ideas     /fr/roadmap/ideen                
+  375 fr changelog /fr/changelog                    
+  375 fr show      /fr/roadmap/ideen/94-qa16-0      page-has-heading-one×1
+  375 fr form      /fr/roadmap/ideen/neu            
+  375 en roadmap   /en/roadmap                      
+  375 en ideas     /en/roadmap/ideen                
+  375 en changelog /en/changelog                    
+  375 en show      /en/roadmap/ideen/94-qa16-0      page-has-heading-one×1
+  375 en form      /en/roadmap/ideen/neu            
+  375 pt roadmap   /pt/roadmap                      
+  375 pt ideas     /pt/roadmap/ideen                
+  375 pt changelog /pt/changelog                    
+  375 pt show      /pt/roadmap/ideen/94-qa16-0      page-has-heading-one×1
+  375 pt form      /pt/roadmap/ideen/neu            

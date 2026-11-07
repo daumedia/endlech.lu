@@ -97,6 +97,12 @@ final readonly class SeoRegistry
     private const array UNLISTED_ROUTES = [
         'app_board_show' => 'Einzelne Board-Ideen: laut Spec nicht in der Sitemap (Decision Log #1), '
             .'über die verlinkte Übersicht aber auffindbar und deshalb nicht ausgeschlossen',
+        // Feature 16: die alten Adressen des Boards — sie leiten dauerhaft auf `/roadmap/ideen`
+        // weiter und rendern nie eine Seite. Angeboten wird das Ziel, nicht sie.
+        'app_board_legacy_index' => 'Alte Board-Adresse (Feature 16): leitet dauerhaft auf den Reiter Ideen weiter',
+        'app_board_legacy_new' => 'Alte Board-Adresse (Feature 16): leitet dauerhaft auf das Einreichformular weiter',
+        'app_board_legacy_thanks' => 'Alte Board-Adresse (Feature 16): leitet dauerhaft auf die Bestätigungsseite weiter',
+        'app_board_legacy_show' => 'Alte Board-Adresse (Feature 16): leitet dauerhaft auf die Einzelseite der Idee weiter',
         'app_logout' => 'Leitet nur weiter; die Firewall beantwortet den Aufruf, bevor eine Seite entsteht',
         'app_verify_notice' => 'Nicht in der Liste von AK-15 — offene Frage OF-05 in spec.md',
         'app_verify_resend' => 'Nicht in der Liste von AK-15 — offene Frage OF-05 in spec.md',

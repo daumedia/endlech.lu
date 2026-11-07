@@ -49,7 +49,7 @@ final class BoardTargetSizeTest extends AbstractWebTestCase
         $em->persist($idee);
         $em->flush();
 
-        $crawler = $client->request('GET', self::LOCALE . '/community/ideen');
+        $crawler = $client->request('GET', self::LOCALE . '/roadmap/ideen');
         self::assertResponseIsSuccessful();
 
         $verweis = $crawler->filter('article h3 a')->first();
@@ -99,7 +99,7 @@ final class BoardTargetSizeTest extends AbstractWebTestCase
         $em->persist($idee);
         $em->flush();
 
-        $crawler = $client->request('GET', self::LOCALE . '/community/ideen');
+        $crawler = $client->request('GET', self::LOCALE . '/roadmap/ideen');
         self::assertResponseIsSuccessful();
 
         foreach ([['article h3 a', 'Titel'], ['article p', 'Beschreibung']] as [$wahl, $name]) {

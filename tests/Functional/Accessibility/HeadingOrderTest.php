@@ -14,7 +14,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
  * Gefunden bei der QA von Feature `07`: Die Fussleiste überschrieb ihre vier
  * Spalten mit `<h4>`, und weil die letzte Inhaltsüberschrift eine `h2` ist,
  * sprang die Kette **jeder Seite** von h2 auf h4. Nachgemessen auf `/presse`
- * (`…,2,4,4,4`), `/open`, `/about`, `/vergleich` und `/community/ideen` — ein
+ * (`…,2,4,4,4`), `/open`, `/about`, `/vergleich` und `/roadmap/ideen` — ein
  * Fehler in der App-Hülle, der wie ein Fehler des jeweiligen Features aussah und
  * AK-34 sowie AK-38 von Feature `07` blockierte.
  *
@@ -41,7 +41,7 @@ final class HeadingOrderTest extends AbstractWebTestCase
         yield 'Transparenz' => ['/open'];
         yield 'Roadmap' => ['/roadmap'];
         yield 'Changelog' => ['/changelog'];
-        yield 'Ideen-Board' => ['/community/ideen'];
+        yield 'Ideen-Board' => ['/roadmap/ideen'];
         yield 'Impressum' => ['/legal'];
         yield 'Sponsoren' => ['/sponsoren'];
         yield 'Unternehmen und Vereine' => ['/organisationen/unternehmen'];

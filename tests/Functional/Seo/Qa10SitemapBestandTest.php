@@ -139,10 +139,10 @@ final class Qa10SitemapBestandTest extends WebTestCase
         self::assertSame("https://endlech.lu/de/restaurants/$id", $detail['canonical']);
         self::assertSame("https://endlech.lu/fr/restaurants/$id", $detail['sprachen']['fr'] ?? null);
 
-        $board = $verweise($client->request('GET', '/de/community/ideen?page=2&sort=newest'));
+        $board = $verweise($client->request('GET', '/de/roadmap/ideen?page=2&sort=newest'));
         self::assertResponseIsSuccessful();
-        self::assertSame('https://endlech.lu/de/community/ideen?page=2', $board['canonical']);
-        self::assertSame('https://endlech.lu/lb/community/ideen?page=2', $board['sprachen']['x-default'] ?? null);
+        self::assertSame('https://endlech.lu/de/roadmap/ideen?page=2', $board['canonical']);
+        self::assertSame('https://endlech.lu/lb/roadmap/ideen?page=2', $board['sprachen']['x-default'] ?? null);
 
         $anmeldung = $verweise($client->request('GET', '/de/login?page=2'));
         self::assertResponseIsSuccessful();

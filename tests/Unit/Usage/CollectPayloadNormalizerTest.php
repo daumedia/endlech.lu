@@ -65,6 +65,19 @@ final class CollectPayloadNormalizerTest extends TestCase
         self::assertStringNotContainsString('Esch', (string) json_encode($ergebnis));
     }
 
+    /**
+     * Feature 16 · AK-31 · Der Reiter Ideen zählt unter seinem neuen Pfad, ohne Sortierung
+     * und Filter. Der Normalisierer ist pfadunabhängig — der Prüflauf hält fest, dass der
+     * Umzug daran nichts ändert und kein Feld hinzukommt.
+     */
+    public function testReiterIdeenZaehltOhneAbfrageteil(): void
+    {
+        $ergebnis = $this->normalizer()->normalize(self::aufruf(['url' => 'https://endlech.lu/de/roadmap/ideen?sort=newest&status=planned&page=2', 'title' => 'Ideen']));
+
+        self::assertSame('/de/roadmap/ideen', $ergebnis['payload']['url']);
+        self::assertSame(['website', 'hostname', 'url', 'title', 'screen', 'language'], array_keys($ergebnis['payload']));
+    }
+
     /** AK-36 · Der Pfad der Detailseite bleibt — erkennbar ist, welches Restaurant. */
     public function testDetailseiteBehaeltIhreNummer(): void
     {

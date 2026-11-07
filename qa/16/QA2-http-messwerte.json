@@ -1,0 +1,1370 @@
+{
+ "ak01_03": {
+  "seiten": 50,
+  "ok": 50,
+  "fehler": [],
+  "beispiel": {
+   "seite": "/lb/restaurants",
+   "code": 200,
+   "bereichslinks": [
+    {
+     "href": "/lb/roadmap",
+     "text": "Roadmap & Iddien",
+     "target": null,
+     "gruppe": "Matmaachen"
+    }
+   ],
+   "alte_beschriftungen": [],
+   "ok": true
+  }
+ },
+ "ak04": [
+  [
+   "/lb/roadmap",
+   200,
+   null,
+   false
+  ],
+  [
+   "/lb/roadmap/ideen",
+   200,
+   null,
+   false
+  ],
+  [
+   "/lb/changelog",
+   200,
+   null,
+   false
+  ],
+  [
+   "/de/roadmap",
+   200,
+   null,
+   false
+  ],
+  [
+   "/de/roadmap/ideen",
+   200,
+   null,
+   false
+  ],
+  [
+   "/de/changelog",
+   200,
+   null,
+   false
+  ],
+  [
+   "/fr/roadmap",
+   200,
+   null,
+   false
+  ],
+  [
+   "/fr/roadmap/ideen",
+   200,
+   null,
+   false
+  ],
+  [
+   "/fr/changelog",
+   200,
+   null,
+   false
+  ],
+  [
+   "/en/roadmap",
+   200,
+   null,
+   false
+  ],
+  [
+   "/en/roadmap/ideen",
+   200,
+   null,
+   false
+  ],
+  [
+   "/en/changelog",
+   200,
+   null,
+   false
+  ],
+  [
+   "/pt/roadmap",
+   200,
+   null,
+   false
+  ],
+  [
+   "/pt/roadmap/ideen",
+   200,
+   null,
+   false
+  ],
+  [
+   "/pt/changelog",
+   200,
+   null,
+   false
+  ]
+ ],
+ "ak14_16": [
+  {
+   "l": "lb",
+   "code": 200,
+   "spalten": [
+    "stage-in_progress",
+    "stage-planned",
+    "stage-considered"
+   ],
+   "gruppe": 1,
+   "ideen_in_gruppe": 10,
+   "aktualitaet": true,
+   "freshness_text": null,
+   "bewusst_nicht": "Bewosst net gebaut",
+   "weiterlesen": 0,
+   "weiterlesen_text": false,
+   "ideenlinks": 11,
+   "ideenlinks_beispiel": [
+    "/lb/roadmap/ideen/neu",
+    "/lb/roadmap/ideen/94-qa16-0"
+   ],
+   "mehr": [
+    "/lb/roadmap/ideen?status=planned",
+    "2 weider geplangten Iddie stinn ënner „Iddien“.→"
+   ]
+  },
+  {
+   "l": "de",
+   "code": 200,
+   "spalten": [
+    "stage-in_progress",
+    "stage-planned",
+    "stage-considered"
+   ],
+   "gruppe": 1,
+   "ideen_in_gruppe": 10,
+   "aktualitaet": true,
+   "freshness_text": null,
+   "bewusst_nicht": "Bewusst nicht gebaut",
+   "weiterlesen": 0,
+   "weiterlesen_text": false,
+   "ideenlinks": 11,
+   "ideenlinks_beispiel": [
+    "/de/roadmap/ideen/neu",
+    "/de/roadmap/ideen/94-qa16-0"
+   ],
+   "mehr": [
+    "/de/roadmap/ideen?status=planned",
+    "2 weitere geplante Ideen stehen unter „Ideen“.→"
+   ]
+  },
+  {
+   "l": "fr",
+   "code": 200,
+   "spalten": [
+    "stage-in_progress",
+    "stage-planned",
+    "stage-considered"
+   ],
+   "gruppe": 1,
+   "ideen_in_gruppe": 10,
+   "aktualitaet": false,
+   "freshness_text": null,
+   "bewusst_nicht": "Délibérément non construit",
+   "weiterlesen": 0,
+   "weiterlesen_text": false,
+   "ideenlinks": 11,
+   "ideenlinks_beispiel": [
+    "/fr/roadmap/ideen/neu",
+    "/fr/roadmap/ideen/94-qa16-0"
+   ],
+   "mehr": [
+    "/fr/roadmap/ideen?status=planned",
+    "2 autres idées prévues figurent sous « Idées ».→"
+   ]
+  },
+  {
+   "l": "en",
+   "code": 200,
+   "spalten": [
+    "stage-in_progress",
+    "stage-planned",
+    "stage-considered"
+   ],
+   "gruppe": 1,
+   "ideen_in_gruppe": 10,
+   "aktualitaet": false,
+   "freshness_text": null,
+   "bewusst_nicht": "Deliberately not built",
+   "weiterlesen": 0,
+   "weiterlesen_text": false,
+   "ideenlinks": 11,
+   "ideenlinks_beispiel": [
+    "/en/roadmap/ideen/neu",
+    "/en/roadmap/ideen/94-qa16-0"
+   ],
+   "mehr": [
+    "/en/roadmap/ideen?status=planned",
+    "2 more planned ideas are under “Ideas”.→"
+   ]
+  },
+  {
+   "l": "pt",
+   "code": 200,
+   "spalten": [
+    "stage-in_progress",
+    "stage-planned",
+    "stage-considered"
+   ],
+   "gruppe": 1,
+   "ideen_in_gruppe": 10,
+   "aktualitaet": false,
+   "freshness_text": null,
+   "bewusst_nicht": "Conscientemente fora de planos",
+   "weiterlesen": 0,
+   "weiterlesen_text": false,
+   "ideenlinks": 11,
+   "ideenlinks_beispiel": [
+    "/pt/roadmap/ideen/neu",
+    "/pt/roadmap/ideen/94-qa16-0"
+   ],
+   "mehr": [
+    "/pt/roadmap/ideen?status=planned",
+    "Há mais 2 ideias planeadas em «Ideias».→"
+   ]
+  }
+ ],
+ "ak15": {
+  "n": 33,
+  "alle_200_ohne_weiterleitung": false,
+  "liste": [
+   [
+    "/de/roadmap/ideen/neu",
+    302,
+    "http://127.0.0.1:8000/de/login"
+   ],
+   [
+    "/de/roadmap/ideen/94-qa16-0",
+    200,
+    null
+   ],
+   [
+    "/de/roadmap/ideen/95-qa16-1",
+    200,
+    null
+   ],
+   [
+    "/de/roadmap/ideen/96-qa16-2",
+    200,
+    null
+   ],
+   [
+    "/de/roadmap/ideen/97-qa16-3",
+    200,
+    null
+   ],
+   [
+    "/de/roadmap/ideen/98-qa16-4",
+    200,
+    null
+   ],
+   [
+    "/de/roadmap/ideen/99-qa16-5",
+    200,
+    null
+   ],
+   [
+    "/de/roadmap/ideen/100-qa16-6",
+    200,
+    null
+   ],
+   [
+    "/de/roadmap/ideen/101-qa16-7",
+    200,
+    null
+   ],
+   [
+    "/de/roadmap/ideen/102-qa16-8",
+    200,
+    null
+   ],
+   [
+    "/de/roadmap/ideen/103-qa16-9",
+    200,
+    null
+   ],
+   [
+    "/fr/roadmap/ideen/neu",
+    302,
+    "http://127.0.0.1:8000/fr/login"
+   ],
+   [
+    "/fr/roadmap/ideen/94-qa16-0",
+    200,
+    null
+   ],
+   [
+    "/fr/roadmap/ideen/95-qa16-1",
+    200,
+    null
+   ],
+   [
+    "/fr/roadmap/ideen/96-qa16-2",
+    200,
+    null
+   ],
+   [
+    "/fr/roadmap/ideen/97-qa16-3",
+    200,
+    null
+   ],
+   [
+    "/fr/roadmap/ideen/98-qa16-4",
+    200,
+    null
+   ],
+   [
+    "/fr/roadmap/ideen/99-qa16-5",
+    200,
+    null
+   ],
+   [
+    "/fr/roadmap/ideen/100-qa16-6",
+    200,
+    null
+   ],
+   [
+    "/fr/roadmap/ideen/101-qa16-7",
+    200,
+    null
+   ],
+   [
+    "/fr/roadmap/ideen/102-qa16-8",
+    200,
+    null
+   ],
+   [
+    "/fr/roadmap/ideen/103-qa16-9",
+    200,
+    null
+   ],
+   [
+    "/pt/roadmap/ideen/neu",
+    302,
+    "http://127.0.0.1:8000/pt/login"
+   ],
+   [
+    "/pt/roadmap/ideen/94-qa16-0",
+    200,
+    null
+   ],
+   [
+    "/pt/roadmap/ideen/95-qa16-1",
+    200,
+    null
+   ],
+   [
+    "/pt/roadmap/ideen/96-qa16-2",
+    200,
+    null
+   ],
+   [
+    "/pt/roadmap/ideen/97-qa16-3",
+    200,
+    null
+   ],
+   [
+    "/pt/roadmap/ideen/98-qa16-4",
+    200,
+    null
+   ],
+   [
+    "/pt/roadmap/ideen/99-qa16-5",
+    200,
+    null
+   ],
+   [
+    "/pt/roadmap/ideen/100-qa16-6",
+    200,
+    null
+   ],
+   [
+    "/pt/roadmap/ideen/101-qa16-7",
+    200,
+    null
+   ],
+   [
+    "/pt/roadmap/ideen/102-qa16-8",
+    200,
+    null
+   ],
+   [
+    "/pt/roadmap/ideen/103-qa16-9",
+    200,
+    null
+   ]
+  ]
+ },
+ "ak16_ziel": [
+  {
+   "l": "lb",
+   "filter": "planned",
+   "leitzahl": "12",
+   "karten": 13
+  },
+  {
+   "l": "de",
+   "filter": "planned",
+   "leitzahl": "12",
+   "karten": 13
+  },
+  {
+   "l": "fr",
+   "filter": "planned",
+   "leitzahl": "12",
+   "karten": 13
+  },
+  {
+   "l": "en",
+   "filter": "planned",
+   "leitzahl": "12",
+   "karten": 13
+  },
+  {
+   "l": "pt",
+   "filter": "planned",
+   "leitzahl": "12",
+   "karten": 13
+  }
+ ],
+ "ec07_stand_vorkommen": {
+  "/de/roadmap": 1,
+  "/de/changelog": 1,
+  "/de/roadmap/ideen": 0,
+  "/de/roadmap/ideen/94-qa16-0": 0
+ },
+ "ak21_22": {
+  "n": 20,
+  "ok": 20,
+  "liste": [
+   {
+    "alt": "/lb/community/ideen",
+    "code": 301,
+    "location": "/lb/roadmap/ideen",
+    "ok": true,
+    "kette": [
+     301,
+     200
+    ]
+   },
+   {
+    "alt": "/lb/community/ideen/neu",
+    "code": 301,
+    "location": "/lb/roadmap/ideen/neu",
+    "ok": true,
+    "kette": [
+     301,
+     302,
+     200
+    ]
+   },
+   {
+    "alt": "/lb/community/ideen/eingereicht",
+    "code": 301,
+    "location": "/lb/roadmap/ideen/eingereicht",
+    "ok": true,
+    "kette": [
+     301,
+     302,
+     200
+    ]
+   },
+   {
+    "alt": "/lb/community/ideen/94-qa16-0",
+    "code": 301,
+    "location": "/lb/roadmap/ideen/94-qa16-0",
+    "ok": true,
+    "kette": [
+     301,
+     200
+    ]
+   },
+   {
+    "alt": "/de/community/ideen",
+    "code": 301,
+    "location": "/de/roadmap/ideen",
+    "ok": true,
+    "kette": [
+     301,
+     200
+    ]
+   },
+   {
+    "alt": "/de/community/ideen/neu",
+    "code": 301,
+    "location": "/de/roadmap/ideen/neu",
+    "ok": true,
+    "kette": [
+     301,
+     302,
+     200
+    ]
+   },
+   {
+    "alt": "/de/community/ideen/eingereicht",
+    "code": 301,
+    "location": "/de/roadmap/ideen/eingereicht",
+    "ok": true,
+    "kette": [
+     301,
+     302,
+     200
+    ]
+   },
+   {
+    "alt": "/de/community/ideen/94-qa16-0",
+    "code": 301,
+    "location": "/de/roadmap/ideen/94-qa16-0",
+    "ok": true,
+    "kette": [
+     301,
+     200
+    ]
+   },
+   {
+    "alt": "/fr/community/ideen",
+    "code": 301,
+    "location": "/fr/roadmap/ideen",
+    "ok": true,
+    "kette": [
+     301,
+     200
+    ]
+   },
+   {
+    "alt": "/fr/community/ideen/neu",
+    "code": 301,
+    "location": "/fr/roadmap/ideen/neu",
+    "ok": true,
+    "kette": [
+     301,
+     302,
+     200
+    ]
+   },
+   {
+    "alt": "/fr/community/ideen/eingereicht",
+    "code": 301,
+    "location": "/fr/roadmap/ideen/eingereicht",
+    "ok": true,
+    "kette": [
+     301,
+     302,
+     200
+    ]
+   },
+   {
+    "alt": "/fr/community/ideen/94-qa16-0",
+    "code": 301,
+    "location": "/fr/roadmap/ideen/94-qa16-0",
+    "ok": true,
+    "kette": [
+     301,
+     200
+    ]
+   },
+   {
+    "alt": "/en/community/ideen",
+    "code": 301,
+    "location": "/en/roadmap/ideen",
+    "ok": true,
+    "kette": [
+     301,
+     200
+    ]
+   },
+   {
+    "alt": "/en/community/ideen/neu",
+    "code": 301,
+    "location": "/en/roadmap/ideen/neu",
+    "ok": true,
+    "kette": [
+     301,
+     302,
+     200
+    ]
+   },
+   {
+    "alt": "/en/community/ideen/eingereicht",
+    "code": 301,
+    "location": "/en/roadmap/ideen/eingereicht",
+    "ok": true,
+    "kette": [
+     301,
+     302,
+     200
+    ]
+   },
+   {
+    "alt": "/en/community/ideen/94-qa16-0",
+    "code": 301,
+    "location": "/en/roadmap/ideen/94-qa16-0",
+    "ok": true,
+    "kette": [
+     301,
+     200
+    ]
+   },
+   {
+    "alt": "/pt/community/ideen",
+    "code": 301,
+    "location": "/pt/roadmap/ideen",
+    "ok": true,
+    "kette": [
+     301,
+     200
+    ]
+   },
+   {
+    "alt": "/pt/community/ideen/neu",
+    "code": 301,
+    "location": "/pt/roadmap/ideen/neu",
+    "ok": true,
+    "kette": [
+     301,
+     302,
+     200
+    ]
+   },
+   {
+    "alt": "/pt/community/ideen/eingereicht",
+    "code": 301,
+    "location": "/pt/roadmap/ideen/eingereicht",
+    "ok": true,
+    "kette": [
+     301,
+     302,
+     200
+    ]
+   },
+   {
+    "alt": "/pt/community/ideen/94-qa16-0",
+    "code": 301,
+    "location": "/pt/roadmap/ideen/94-qa16-0",
+    "ok": true,
+    "kette": [
+     301,
+     200
+    ]
+   }
+  ]
+ },
+ "ak24": [
+  [
+   "/de/community/ideen?next=https://example.com",
+   301,
+   "/de/roadmap/ideen",
+   true
+  ],
+  [
+   "/de/community/ideen?url=//example.com",
+   301,
+   "/de/roadmap/ideen",
+   true
+  ],
+  [
+   "/de/community/ideen?_target_path=https://example.com",
+   301,
+   "/de/roadmap/ideen",
+   true
+  ],
+  [
+   "/de/community/ideen?redirect=//evil.example",
+   301,
+   "/de/roadmap/ideen",
+   true
+  ],
+  [
+   "/de/community/ideen/94-qa16-0?next=https://example.com",
+   301,
+   "/de/roadmap/ideen/94-qa16-0",
+   true
+  ],
+  [
+   "/de/community/ideen/neu?url=//example.com",
+   301,
+   "/de/roadmap/ideen/neu",
+   true
+  ],
+  [
+   "/de/community/ideen//example.com",
+   404,
+   null,
+   true
+  ],
+  [
+   "/de/community/ideen/%2F%2Fexample.com",
+   404,
+   null,
+   true
+  ],
+  [
+   "/de/community/ideen/94-%2F%2Fexample.com",
+   404,
+   null,
+   true
+  ],
+  [
+   "/de/community/ideen/94-https:%2F%2Fexample.com",
+   404,
+   null,
+   true
+  ],
+  [
+   "/de/community/ideen/94-..%2F..%2Fexample.com",
+   404,
+   null,
+   true
+  ],
+  [
+   "/de/community/ideen/94-%5C%5Cexample.com",
+   301,
+   "/de/roadmap/ideen/94-%5C%5Cexample.com",
+   true
+  ],
+  [
+   "/de/community/ideen/94-x%0d%0aLocation:%20https://example.com",
+   404,
+   null,
+   true
+  ],
+  [
+   "/de/community/ideen/94-@example.com",
+   301,
+   "/de/roadmap/ideen/94-@example.com",
+   true
+  ],
+  [
+   "/de/community/ideen/94-x?_locale=en",
+   301,
+   "/de/roadmap/ideen/94-x",
+   true
+  ],
+  [
+   "/de/community/ideen.example.com",
+   404,
+   null,
+   true
+  ]
+ ],
+ "ec02": [
+  [
+   "/de/community/ideen/94-ganz-alter-titel",
+   301,
+   "/de/roadmap/ideen/94-ganz-alter-titel"
+  ],
+  [
+   "/de/roadmap/ideen/94-ganz-alter-titel",
+   200,
+   null
+  ]
+ ],
+ "ec03": [
+  [
+   "/de/community/ideen/186-qa16b-dublette",
+   301,
+   "/de/roadmap/ideen/186-qa16b-dublette"
+  ],
+  [
+   "/de/roadmap/ideen/186-qa16b-dublette",
+   302,
+   "/de/roadmap/ideen/94-qa16-0"
+  ],
+  [
+   "/de/roadmap/ideen/94-qa16-0",
+   200,
+   null
+  ]
+ ],
+ "ec04": {
+  "/roadmap (fr)": "/fr/roadmap",
+  "/roadmap (pt)": "/pt/roadmap",
+  "/roadmap/ideen": 404,
+  "/roadmap/ideen/94-qa16-0": 404,
+  "/community/ideen": 404
+ },
+ "ec06": [
+  [
+   "/de/community/ideen?status=planned&page=2",
+   301,
+   "/de/roadmap/ideen"
+  ],
+  [
+   "/de/roadmap/ideen",
+   200,
+   null
+  ]
+ ],
+ "ak25": {
+  "eintraege": 160,
+  "roadmap_ideen": [
+   "https://endlech.lu/lb/roadmap/ideen",
+   "https://endlech.lu/de/roadmap/ideen",
+   "https://endlech.lu/fr/roadmap/ideen",
+   "https://endlech.lu/en/roadmap/ideen",
+   "https://endlech.lu/pt/roadmap/ideen"
+  ],
+  "community": 0,
+  "roadmap": 5,
+  "changelog": 5,
+  "xsd_gueltig": true
+ },
+ "ak26": [
+  [
+   "/lb/roadmap/ideen",
+   "https://endlech.lu/lb/roadmap/ideen",
+   [
+    "lb=https://endlech.lu/lb/roadmap/ideen",
+    "de=https://endlech.lu/de/roadmap/ideen",
+    "fr=https://endlech.lu/fr/roadmap/ideen",
+    "en=https://endlech.lu/en/roadmap/ideen",
+    "pt=https://endlech.lu/pt/roadmap/ideen",
+    "x-default=https://endlech.lu/lb/roadmap/ideen"
+   ]
+  ],
+  [
+   "/lb/roadmap/ideen?page=2",
+   "https://endlech.lu/lb/roadmap/ideen?page=2",
+   [
+    "lb=https://endlech.lu/lb/roadmap/ideen?page=2",
+    "de=https://endlech.lu/de/roadmap/ideen?page=2",
+    "fr=https://endlech.lu/fr/roadmap/ideen?page=2",
+    "en=https://endlech.lu/en/roadmap/ideen?page=2",
+    "pt=https://endlech.lu/pt/roadmap/ideen?page=2",
+    "x-default=https://endlech.lu/lb/roadmap/ideen?page=2"
+   ]
+  ],
+  [
+   "/lb/roadmap/ideen?page=2&sort=newest&status=planned",
+   "https://endlech.lu/lb/roadmap/ideen?page=2",
+   [
+    "lb=https://endlech.lu/lb/roadmap/ideen?page=2",
+    "de=https://endlech.lu/de/roadmap/ideen?page=2",
+    "fr=https://endlech.lu/fr/roadmap/ideen?page=2",
+    "en=https://endlech.lu/en/roadmap/ideen?page=2",
+    "pt=https://endlech.lu/pt/roadmap/ideen?page=2",
+    "x-default=https://endlech.lu/lb/roadmap/ideen?page=2"
+   ]
+  ],
+  [
+   "/lb/roadmap/ideen?page=1",
+   "https://endlech.lu/lb/roadmap/ideen",
+   [
+    "lb=https://endlech.lu/lb/roadmap/ideen",
+    "de=https://endlech.lu/de/roadmap/ideen",
+    "fr=https://endlech.lu/fr/roadmap/ideen",
+    "en=https://endlech.lu/en/roadmap/ideen",
+    "pt=https://endlech.lu/pt/roadmap/ideen",
+    "x-default=https://endlech.lu/lb/roadmap/ideen"
+   ]
+  ],
+  [
+   "/lb/roadmap/ideen?sort=newest",
+   "https://endlech.lu/lb/roadmap/ideen",
+   [
+    "lb=https://endlech.lu/lb/roadmap/ideen",
+    "de=https://endlech.lu/de/roadmap/ideen",
+    "fr=https://endlech.lu/fr/roadmap/ideen",
+    "en=https://endlech.lu/en/roadmap/ideen",
+    "pt=https://endlech.lu/pt/roadmap/ideen",
+    "x-default=https://endlech.lu/lb/roadmap/ideen"
+   ]
+  ],
+  [
+   "/de/roadmap/ideen",
+   "https://endlech.lu/de/roadmap/ideen",
+   [
+    "lb=https://endlech.lu/lb/roadmap/ideen",
+    "de=https://endlech.lu/de/roadmap/ideen",
+    "fr=https://endlech.lu/fr/roadmap/ideen",
+    "en=https://endlech.lu/en/roadmap/ideen",
+    "pt=https://endlech.lu/pt/roadmap/ideen",
+    "x-default=https://endlech.lu/lb/roadmap/ideen"
+   ]
+  ],
+  [
+   "/de/roadmap/ideen?page=2",
+   "https://endlech.lu/de/roadmap/ideen?page=2",
+   [
+    "lb=https://endlech.lu/lb/roadmap/ideen?page=2",
+    "de=https://endlech.lu/de/roadmap/ideen?page=2",
+    "fr=https://endlech.lu/fr/roadmap/ideen?page=2",
+    "en=https://endlech.lu/en/roadmap/ideen?page=2",
+    "pt=https://endlech.lu/pt/roadmap/ideen?page=2",
+    "x-default=https://endlech.lu/lb/roadmap/ideen?page=2"
+   ]
+  ],
+  [
+   "/de/roadmap/ideen?page=2&sort=newest&status=planned",
+   "https://endlech.lu/de/roadmap/ideen?page=2",
+   [
+    "lb=https://endlech.lu/lb/roadmap/ideen?page=2",
+    "de=https://endlech.lu/de/roadmap/ideen?page=2",
+    "fr=https://endlech.lu/fr/roadmap/ideen?page=2",
+    "en=https://endlech.lu/en/roadmap/ideen?page=2",
+    "pt=https://endlech.lu/pt/roadmap/ideen?page=2",
+    "x-default=https://endlech.lu/lb/roadmap/ideen?page=2"
+   ]
+  ],
+  [
+   "/de/roadmap/ideen?page=1",
+   "https://endlech.lu/de/roadmap/ideen",
+   [
+    "lb=https://endlech.lu/lb/roadmap/ideen",
+    "de=https://endlech.lu/de/roadmap/ideen",
+    "fr=https://endlech.lu/fr/roadmap/ideen",
+    "en=https://endlech.lu/en/roadmap/ideen",
+    "pt=https://endlech.lu/pt/roadmap/ideen",
+    "x-default=https://endlech.lu/lb/roadmap/ideen"
+   ]
+  ],
+  [
+   "/de/roadmap/ideen?sort=newest",
+   "https://endlech.lu/de/roadmap/ideen",
+   [
+    "lb=https://endlech.lu/lb/roadmap/ideen",
+    "de=https://endlech.lu/de/roadmap/ideen",
+    "fr=https://endlech.lu/fr/roadmap/ideen",
+    "en=https://endlech.lu/en/roadmap/ideen",
+    "pt=https://endlech.lu/pt/roadmap/ideen",
+    "x-default=https://endlech.lu/lb/roadmap/ideen"
+   ]
+  ],
+  [
+   "/fr/roadmap/ideen",
+   "https://endlech.lu/fr/roadmap/ideen",
+   [
+    "lb=https://endlech.lu/lb/roadmap/ideen",
+    "de=https://endlech.lu/de/roadmap/ideen",
+    "fr=https://endlech.lu/fr/roadmap/ideen",
+    "en=https://endlech.lu/en/roadmap/ideen",
+    "pt=https://endlech.lu/pt/roadmap/ideen",
+    "x-default=https://endlech.lu/lb/roadmap/ideen"
+   ]
+  ],
+  [
+   "/fr/roadmap/ideen?page=2",
+   "https://endlech.lu/fr/roadmap/ideen?page=2",
+   [
+    "lb=https://endlech.lu/lb/roadmap/ideen?page=2",
+    "de=https://endlech.lu/de/roadmap/ideen?page=2",
+    "fr=https://endlech.lu/fr/roadmap/ideen?page=2",
+    "en=https://endlech.lu/en/roadmap/ideen?page=2",
+    "pt=https://endlech.lu/pt/roadmap/ideen?page=2",
+    "x-default=https://endlech.lu/lb/roadmap/ideen?page=2"
+   ]
+  ],
+  [
+   "/fr/roadmap/ideen?page=2&sort=newest&status=planned",
+   "https://endlech.lu/fr/roadmap/ideen?page=2",
+   [
+    "lb=https://endlech.lu/lb/roadmap/ideen?page=2",
+    "de=https://endlech.lu/de/roadmap/ideen?page=2",
+    "fr=https://endlech.lu/fr/roadmap/ideen?page=2",
+    "en=https://endlech.lu/en/roadmap/ideen?page=2",
+    "pt=https://endlech.lu/pt/roadmap/ideen?page=2",
+    "x-default=https://endlech.lu/lb/roadmap/ideen?page=2"
+   ]
+  ],
+  [
+   "/fr/roadmap/ideen?page=1",
+   "https://endlech.lu/fr/roadmap/ideen",
+   [
+    "lb=https://endlech.lu/lb/roadmap/ideen",
+    "de=https://endlech.lu/de/roadmap/ideen",
+    "fr=https://endlech.lu/fr/roadmap/ideen",
+    "en=https://endlech.lu/en/roadmap/ideen",
+    "pt=https://endlech.lu/pt/roadmap/ideen",
+    "x-default=https://endlech.lu/lb/roadmap/ideen"
+   ]
+  ],
+  [
+   "/fr/roadmap/ideen?sort=newest",
+   "https://endlech.lu/fr/roadmap/ideen",
+   [
+    "lb=https://endlech.lu/lb/roadmap/ideen",
+    "de=https://endlech.lu/de/roadmap/ideen",
+    "fr=https://endlech.lu/fr/roadmap/ideen",
+    "en=https://endlech.lu/en/roadmap/ideen",
+    "pt=https://endlech.lu/pt/roadmap/ideen",
+    "x-default=https://endlech.lu/lb/roadmap/ideen"
+   ]
+  ],
+  [
+   "/en/roadmap/ideen",
+   "https://endlech.lu/en/roadmap/ideen",
+   [
+    "lb=https://endlech.lu/lb/roadmap/ideen",
+    "de=https://endlech.lu/de/roadmap/ideen",
+    "fr=https://endlech.lu/fr/roadmap/ideen",
+    "en=https://endlech.lu/en/roadmap/ideen",
+    "pt=https://endlech.lu/pt/roadmap/ideen",
+    "x-default=https://endlech.lu/lb/roadmap/ideen"
+   ]
+  ],
+  [
+   "/en/roadmap/ideen?page=2",
+   "https://endlech.lu/en/roadmap/ideen?page=2",
+   [
+    "lb=https://endlech.lu/lb/roadmap/ideen?page=2",
+    "de=https://endlech.lu/de/roadmap/ideen?page=2",
+    "fr=https://endlech.lu/fr/roadmap/ideen?page=2",
+    "en=https://endlech.lu/en/roadmap/ideen?page=2",
+    "pt=https://endlech.lu/pt/roadmap/ideen?page=2",
+    "x-default=https://endlech.lu/lb/roadmap/ideen?page=2"
+   ]
+  ],
+  [
+   "/en/roadmap/ideen?page=2&sort=newest&status=planned",
+   "https://endlech.lu/en/roadmap/ideen?page=2",
+   [
+    "lb=https://endlech.lu/lb/roadmap/ideen?page=2",
+    "de=https://endlech.lu/de/roadmap/ideen?page=2",
+    "fr=https://endlech.lu/fr/roadmap/ideen?page=2",
+    "en=https://endlech.lu/en/roadmap/ideen?page=2",
+    "pt=https://endlech.lu/pt/roadmap/ideen?page=2",
+    "x-default=https://endlech.lu/lb/roadmap/ideen?page=2"
+   ]
+  ],
+  [
+   "/en/roadmap/ideen?page=1",
+   "https://endlech.lu/en/roadmap/ideen",
+   [
+    "lb=https://endlech.lu/lb/roadmap/ideen",
+    "de=https://endlech.lu/de/roadmap/ideen",
+    "fr=https://endlech.lu/fr/roadmap/ideen",
+    "en=https://endlech.lu/en/roadmap/ideen",
+    "pt=https://endlech.lu/pt/roadmap/ideen",
+    "x-default=https://endlech.lu/lb/roadmap/ideen"
+   ]
+  ],
+  [
+   "/en/roadmap/ideen?sort=newest",
+   "https://endlech.lu/en/roadmap/ideen",
+   [
+    "lb=https://endlech.lu/lb/roadmap/ideen",
+    "de=https://endlech.lu/de/roadmap/ideen",
+    "fr=https://endlech.lu/fr/roadmap/ideen",
+    "en=https://endlech.lu/en/roadmap/ideen",
+    "pt=https://endlech.lu/pt/roadmap/ideen",
+    "x-default=https://endlech.lu/lb/roadmap/ideen"
+   ]
+  ],
+  [
+   "/pt/roadmap/ideen",
+   "https://endlech.lu/pt/roadmap/ideen",
+   [
+    "lb=https://endlech.lu/lb/roadmap/ideen",
+    "de=https://endlech.lu/de/roadmap/ideen",
+    "fr=https://endlech.lu/fr/roadmap/ideen",
+    "en=https://endlech.lu/en/roadmap/ideen",
+    "pt=https://endlech.lu/pt/roadmap/ideen",
+    "x-default=https://endlech.lu/lb/roadmap/ideen"
+   ]
+  ],
+  [
+   "/pt/roadmap/ideen?page=2",
+   "https://endlech.lu/pt/roadmap/ideen?page=2",
+   [
+    "lb=https://endlech.lu/lb/roadmap/ideen?page=2",
+    "de=https://endlech.lu/de/roadmap/ideen?page=2",
+    "fr=https://endlech.lu/fr/roadmap/ideen?page=2",
+    "en=https://endlech.lu/en/roadmap/ideen?page=2",
+    "pt=https://endlech.lu/pt/roadmap/ideen?page=2",
+    "x-default=https://endlech.lu/lb/roadmap/ideen?page=2"
+   ]
+  ],
+  [
+   "/pt/roadmap/ideen?page=2&sort=newest&status=planned",
+   "https://endlech.lu/pt/roadmap/ideen?page=2",
+   [
+    "lb=https://endlech.lu/lb/roadmap/ideen?page=2",
+    "de=https://endlech.lu/de/roadmap/ideen?page=2",
+    "fr=https://endlech.lu/fr/roadmap/ideen?page=2",
+    "en=https://endlech.lu/en/roadmap/ideen?page=2",
+    "pt=https://endlech.lu/pt/roadmap/ideen?page=2",
+    "x-default=https://endlech.lu/lb/roadmap/ideen?page=2"
+   ]
+  ],
+  [
+   "/pt/roadmap/ideen?page=1",
+   "https://endlech.lu/pt/roadmap/ideen",
+   [
+    "lb=https://endlech.lu/lb/roadmap/ideen",
+    "de=https://endlech.lu/de/roadmap/ideen",
+    "fr=https://endlech.lu/fr/roadmap/ideen",
+    "en=https://endlech.lu/en/roadmap/ideen",
+    "pt=https://endlech.lu/pt/roadmap/ideen",
+    "x-default=https://endlech.lu/lb/roadmap/ideen"
+   ]
+  ],
+  [
+   "/pt/roadmap/ideen?sort=newest",
+   "https://endlech.lu/pt/roadmap/ideen",
+   [
+    "lb=https://endlech.lu/lb/roadmap/ideen",
+    "de=https://endlech.lu/de/roadmap/ideen",
+    "fr=https://endlech.lu/fr/roadmap/ideen",
+    "en=https://endlech.lu/en/roadmap/ideen",
+    "pt=https://endlech.lu/pt/roadmap/ideen",
+    "x-default=https://endlech.lu/lb/roadmap/ideen"
+   ]
+  ]
+ ],
+ "ak27": [
+  {
+   "seite": "/lb/roadmap",
+   "name": "Roadmap & Iddien",
+   "tabs": [
+    "Roadmap",
+    "Iddien",
+    "Changelog"
+   ],
+   "knopf": "Iddi araichen",
+   "ok": true,
+   "rohe_schluessel": []
+  },
+  {
+   "seite": "/lb/roadmap/ideen",
+   "name": "Roadmap & Iddien",
+   "tabs": [
+    "Roadmap",
+    "Iddien",
+    "Changelog"
+   ],
+   "knopf": "Iddi araichen",
+   "ok": true,
+   "rohe_schluessel": []
+  },
+  {
+   "seite": "/lb/changelog",
+   "name": "Roadmap & Iddien",
+   "tabs": [
+    "Roadmap",
+    "Iddien",
+    "Changelog"
+   ],
+   "knopf": "Iddi araichen",
+   "ok": true,
+   "rohe_schluessel": []
+  },
+  {
+   "seite": "/lb/roadmap/ideen/94-qa16-0",
+   "name": "Roadmap & Iddien",
+   "tabs": [
+    "Roadmap",
+    "Iddien",
+    "Changelog"
+   ],
+   "knopf": "Iddi araichen",
+   "ok": true,
+   "rohe_schluessel": []
+  },
+  {
+   "seite": "/de/roadmap",
+   "name": "Roadmap & Ideen",
+   "tabs": [
+    "Roadmap",
+    "Ideen",
+    "Changelog"
+   ],
+   "knopf": "Idee einreichen",
+   "ok": true,
+   "rohe_schluessel": []
+  },
+  {
+   "seite": "/de/roadmap/ideen",
+   "name": "Roadmap & Ideen",
+   "tabs": [
+    "Roadmap",
+    "Ideen",
+    "Changelog"
+   ],
+   "knopf": "Idee einreichen",
+   "ok": true,
+   "rohe_schluessel": []
+  },
+  {
+   "seite": "/de/changelog",
+   "name": "Roadmap & Ideen",
+   "tabs": [
+    "Roadmap",
+    "Ideen",
+    "Changelog"
+   ],
+   "knopf": "Idee einreichen",
+   "ok": true,
+   "rohe_schluessel": []
+  },
+  {
+   "seite": "/de/roadmap/ideen/94-qa16-0",
+   "name": "Roadmap & Ideen",
+   "tabs": [
+    "Roadmap",
+    "Ideen",
+    "Changelog"
+   ],
+   "knopf": "Idee einreichen",
+   "ok": true,
+   "rohe_schluessel": []
+  },
+  {
+   "seite": "/fr/roadmap",
+   "name": "Feuille de route & idées",
+   "tabs": [
+    "Feuille de route",
+    "Idées",
+    "Journal"
+   ],
+   "knopf": "Proposer une idée",
+   "ok": true,
+   "rohe_schluessel": []
+  },
+  {
+   "seite": "/fr/roadmap/ideen",
+   "name": "Feuille de route & idées",
+   "tabs": [
+    "Feuille de route",
+    "Idées",
+    "Journal"
+   ],
+   "knopf": "Proposer une idée",
+   "ok": true,
+   "rohe_schluessel": []
+  },
+  {
+   "seite": "/fr/changelog",
+   "name": "Feuille de route & idées",
+   "tabs": [
+    "Feuille de route",
+    "Idées",
+    "Journal"
+   ],
+   "knopf": "Proposer une idée",
+   "ok": true,
+   "rohe_schluessel": []
+  },
+  {
+   "seite": "/fr/roadmap/ideen/94-qa16-0",
+   "name": "Feuille de route & idées",
+   "tabs": [
+    "Feuille de route",
+    "Idées",
+    "Journal"
+   ],
+   "knopf": "Proposer une idée",
+   "ok": true,
+   "rohe_schluessel": []
+  },
+  {
+   "seite": "/en/roadmap",
+   "name": "Roadmap & ideas",
+   "tabs": [
+    "Roadmap",
+    "Ideas",
+    "Changelog"
+   ],
+   "knopf": "Submit an idea",
+   "ok": true,
+   "rohe_schluessel": []
+  },
+  {
+   "seite": "/en/roadmap/ideen",
+   "name": "Roadmap & ideas",
+   "tabs": [
+    "Roadmap",
+    "Ideas",
+    "Changelog"
+   ],
+   "knopf": "Submit an idea",
+   "ok": true,
+   "rohe_schluessel": []
+  },
+  {
+   "seite": "/en/changelog",
+   "name": "Roadmap & ideas",
+   "tabs": [
+    "Roadmap",
+    "Ideas",
+    "Changelog"
+   ],
+   "knopf": "Submit an idea",
+   "ok": true,
+   "rohe_schluessel": []
+  },
+  {
+   "seite": "/en/roadmap/ideen/94-qa16-0",
+   "name": "Roadmap & ideas",
+   "tabs": [
+    "Roadmap",
+    "Ideas",
+    "Changelog"
+   ],
+   "knopf": "Submit an idea",
+   "ok": true,
+   "rohe_schluessel": []
+  },
+  {
+   "seite": "/pt/roadmap",
+   "name": "Roteiro e ideias",
+   "tabs": [
+    "Roteiro",
+    "Ideias",
+    "Registo de alterações"
+   ],
+   "knopf": "Enviar ideia",
+   "ok": true,
+   "rohe_schluessel": []
+  },
+  {
+   "seite": "/pt/roadmap/ideen",
+   "name": "Roteiro e ideias",
+   "tabs": [
+    "Roteiro",
+    "Ideias",
+    "Registo de alterações"
+   ],
+   "knopf": "Enviar ideia",
+   "ok": true,
+   "rohe_schluessel": []
+  },
+  {
+   "seite": "/pt/changelog",
+   "name": "Roteiro e ideias",
+   "tabs": [
+    "Roteiro",
+    "Ideias",
+    "Registo de alterações"
+   ],
+   "knopf": "Enviar ideia",
+   "ok": true,
+   "rohe_schluessel": []
+  },
+  {
+   "seite": "/pt/roadmap/ideen/94-qa16-0",
+   "name": "Roteiro e ideias",
+   "tabs": [
+    "Roteiro",
+    "Ideias",
+    "Registo de alterações"
+   ],
+   "knopf": "Enviar ideia",
+   "ok": true,
+   "rohe_schluessel": []
+  }
+ ],
+ "_hinweis": "QA 16, zweiter Durchlauf · HTTP ohne Browser (curl), Dev-Server; Skript /tmp/qa16b/http_checks.php"
+}

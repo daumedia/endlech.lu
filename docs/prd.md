@@ -471,7 +471,9 @@ erste getragen hat.
 
 ## Roadmap
 
-> **Seit Feature `07` steht diese Roadmap öffentlich** unter `/roadmap` — in drei
+> **Seit Feature `07` steht diese Roadmap öffentlich** unter `/roadmap`, seit Feature `16`
+> als Reiter des Bereichs „Roadmap & Ideen“ neben den Ideen (`/roadmap/ideen`, vorher
+> `/community/ideen`) und dem Changelog — in drei
 > Spalten, ohne Termine, jeder Eintrag mit Begründung. Die Zuordnung der Vorhaben zu
 > den Spalten folgt dem Abschnitt *Vorschlag: Reihenfolge* weiter unten; die Texte
 > liegen in der Übersetzungsdomain `roadmap`, die Struktur in

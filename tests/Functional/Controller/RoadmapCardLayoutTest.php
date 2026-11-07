@@ -101,7 +101,7 @@ final class RoadmapCardLayoutTest extends AbstractWebTestCase
         $this->geplanteIdee('Titel für die Musterprüfung', 'bf108-muster');
 
         $verstoesse = [];
-        foreach ([self::LOCALE.'/roadmap', self::LOCALE.'/community/ideen'] as $pfad) {
+        foreach ([self::LOCALE.'/roadmap', self::LOCALE.'/roadmap/ideen'] as $pfad) {
             $crawler = $client->request('GET', $pfad);
             self::assertResponseIsSuccessful();
 

@@ -2,10 +2,26 @@
 
 Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
-![Version](https://img.shields.io/badge/version-2026.10.31-blue)
+![Version](https://img.shields.io/badge/version-2026.11.07-blue)
 ![Status](https://img.shields.io/badge/status-beta-green)
 
 ## [Unreleased]
+
+## [2026.11.07] – Roadmap und Ideen in einem Bereich
+
+### Roadmap und Ideen in einem Bereich (Feature 16)
+
+- **Ein Bereich „Roadmap & Ideen"** mit gemeinsamem Kopf und drei Reitern: Roadmap (`/roadmap`), Ideen
+  (`/roadmap/ideen`, bisher `/community/ideen`) und Changelog (`/changelog`). Der Knopf „Idee einreichen" steht auf
+  jedem Reiter; der aktive Reiter ist fett und unterstrichen und als aktuelle Seite ausgezeichnet.
+- **Alte Adressen leiten dauerhaft (301) weiter**, auch die Links in bereits verschickten Mails
+  (`BoardLegacyRedirectController`). Kein Abfrageparameter wird übernommen, keine Datenbankabfrage.
+- **Fußzeile:** Ein Eintrag „Roadmap & Ideen" unter „Mitmachen" ersetzt „Feedback & Ideen", „Roadmap" und
+  „Changelog". Der Block „Weiterlesen" auf der Roadmap entfällt; der Hinweis auf weitere geplante Ideen führt auf
+  den Reiter Ideen, gefiltert auf „Geplant".
+- **Texte:** Wo ein Text auf den Ort verweist, heißt er „Ideen" statt „Ideen-Board" (fünf Sprachen).
+- **Barrierefreiheit:** Die Überschriftenkette des Reiters Ideen springt nicht mehr von `h1` auf `h3` — die Zahl
+  der offenen Ideen ist jetzt die `h2` der Liste. Reiter sind mindestens 44 × 44 px groß.
 
 ### Herstellerhinweis im Footer
 

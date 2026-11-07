@@ -1,0 +1,24 @@
+AK-29/AK-33 · zweiter Durchlauf 2026-11-07 · Dev-Server, wartende Ideen 184 (Verfasser user@, „QA16B Zebrafink Geheimtitel“ / „QA16B Kolibri Geheimbeschreibung“) und 185 (ohne Verfasser, „QA16B Ohneverfasser Wartetitel“)
+Gesucht (ohne Groß/Klein) in Kopfzeilen und Rumpf jeder Antwort, Weiterleitungen gefolgt: zebrafink|kolibri|ohneverfasser|wartetitel|wartebeschreibung|geheimtitel|geheimbeschreibung
+Wege je Konto × 5 Sprachen: drei Reiter, drei alte Seitenadressen, alte und neue Einzeladressen beider Ideen (mit echtem und falschem Titelteil) × 12 Parametersätze (u. a. ?q=Zebrafink, ?status[]=new, ?id=184, ?page=3)
+Anfragen gesamt: 4754
+Antwortcodes je Konto: {"gast": {"200": 355, "400": 5, "301": 420, "302": 120, "404": 360}, "admin": {"200": 355, "400": 5, "301": 420, "404": 360}, "unbestaetigt": {"200": 355, "400": 5, "301": 420, "302": 60, "404": 360}, "verfasser": {"200": 535, "400": 5, "301": 420, "404": 180}}
+Treffer, die NICHT aus der eigenen Anfrage-Adresse zurückgespiegelt sind (Titelwörter, die nicht in der angefragten Adresse stehen): 180
+   ('verfasser', '/xx/roadmap/ideen/184-qa16b-zebrafink-geheimtitel', 200) 120
+   ('verfasser', '/xx/roadmap/ideen/184-x', 200) 60
+
+BF-199 · Zustimmen mit leerem/falschem Token (POST /de/roadmap/ideen/<id>/zustimmen):
+   ['admin', 184, '', 404, None, False]
+   ['admin', 184, 'falsch', 404, None, False]
+   ['admin', 185, '', 404, None, False]
+   ['admin', 185, 'falsch', 404, None, False]
+   ['unbestaetigt', 184, '', 404, None, False]
+   ['unbestaetigt', 184, 'falsch', 404, None, False]
+   ['unbestaetigt', 185, '', 404, None, False]
+   ['unbestaetigt', 185, 'falsch', 404, None, False]
+   ['verfasser', 184, '', 404, None, False]
+   ['verfasser', 184, 'falsch', 404, None, False]
+   ['verfasser', 185, '', 404, None, False]
+   ['verfasser', 185, 'falsch', 404, None, False]
+   ['admin', 95, 'falsch (veröffentlicht)', 302, '/de/roadmap/ideen/95-qa16-1', False]
+   ['admin', 999999, 'falsch (gibt es nicht)', 404, None, False]

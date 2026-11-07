@@ -1,0 +1,9 @@
+AK-20 · zweiter Durchlauf 2026-11-07 · Dev-Server, gültige Token aus der jeweiligen Seite
+de Zustimmen 97 (gültiger Token) → 302 http://127.0.0.1:8000/de/roadmap/ideen/97-qa16-3   (Stimmen an 97: 0 → 1)
+de Zustimmen 97 (gültiger Token) → 302 http://127.0.0.1:8000/de/roadmap/ideen/97-qa16-3   (Stimmen an 97: 1 → 0)
+pt Zustimmen 97 (gültiger Token) → 302 http://127.0.0.1:8000/pt/roadmap/ideen/97-qa16-3   (0 → 1)
+pt Zustimmen 97 (gültiger Token) → 302 http://127.0.0.1:8000/pt/roadmap/ideen/97-qa16-3   (1 → 0)
+de Zustimmen 187 aus der Liste (Token aus /de/roadmap/ideen?status=planned) → 302 http://127.0.0.1:8000/de/roadmap/ideen/187-qa16c-neu-deckelprobe-1   (Stimmen 0 → 1, danach zurückgenommen → 0)
+   (Ein erster Versuch an Idee 98 nahm ein leeres Token, weil 98 nicht auf der ersten Listenseite stand — 302 zurück auf die Idee ohne Stimme; verworfen und wiederholt.)
+de Zurückziehen 191 (eigene, wartend, admin@) → 302 http://127.0.0.1:8000/de/roadmap/ideen   (Zeile 191 danach: 0)
+Fremde wartende Idee zurückziehen (POST …/184|185/zurueckziehen): admin@ 403, unverified@ 403, Titel 0 × im Dokument

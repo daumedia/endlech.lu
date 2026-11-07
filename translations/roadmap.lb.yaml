@@ -1,10 +1,16 @@
 # Ëffentlech Roadmap (Feature 07). Kuck roadmap.de.yaml fir d'Wiel vun der Domain.
 meta_title: "Roadmap – Endlech.lu"
 meta_description: "Wourun elo geschafft gëtt, wat als Nächst kënnt a wat mir bewosst net bauen. Ouni Datumen, mat Begrënnung."
-eyebrow: "Wat mir bauen"
 heading: "Roadmap"
 intro: "Wourun elo geschafft gëtt, wat als Nächst kënnt — a wat mir bewosst net bauen."
 no_dates_hint: "Hei steet kee Datum. Endlech.lu gëtt niewebäi gebaut, an een Termin, deen näerens gehale ka ginn, ass keng Auskunft."
+
+area:
+    name: "Roadmap & Iddien"
+    tab:
+        roadmap: "Roadmap"
+        ideas: "Iddien"
+        changelog: "Changelog"
 
 stage:
     in_progress:
@@ -12,29 +18,22 @@ stage:
         empty: "Am Moment gëtt näischt Neies gebaut. Wat zulescht fäerdeg gouf, steet am Changelog."
     planned:
         title: "Geplangt"
-        empty: "Näischt fest geplangt — wat hei stoe sollt, seet eis am beschten d'Ideeën-Board."
+        empty: "Näischt fest geplangt — wat hei stoe sollt, seet eis am beschten eng Iddi ënner „Iddien“."
     considered:
         title: "Ugeduecht"
-        empty: "Näischt weider ugeduecht. Virschléi si um Ideeën-Board wëllkomm."
+        empty: "Näischt weider ugeduecht. Virschléi si ënner „Iddien“ wëllkomm."
 
 shelved:
     section_title: "Bewosst net gebaut"
     section_intro: "Dës Punkte kommen net — op alle Fall net esou. Si stinn hei, fir datt keen doropp waart."
 
 community:
-    heading: "Aus dem Ideeën-Board"
-    selection_hint: "Hei stinn déi zéng geplangten Ideeë mat de meeschten Zoustëmmungen. Wien um Board zoustëmmt, entscheet mat, wat dovunner uewe steet."
-    more: "{1}Nach eng geplangten Idee steet um Board.|]1,Inf[%count% weider geplangten Ideeë stinn um Board."
+    heading: "Aus den Iddie vun der Community"
+    selection_hint: "Hei stinn déi zéng geplangten Iddie mat de meeschten Zoustëmmungen. Wien ënner „Iddien“ zoustëmmt, entscheet mat, wat dovunner uewe steet."
+    more: "{1}Nach eng geplangten Iddi steet ënner „Iddien“.|]1,Inf[%count% weider geplangten Iddie stinn ënner „Iddien“."
     votes: "{0}Nach keng Zoustëmmung|{1}1 Zoustëmmung|]1,Inf[%count% Zoustëmmungen"
     source_label: "Community-Idee"
-    open_board: "Op d'Ideeën-Board"
-
-more:
-    section_title: "Weiderliesen"
-    changelog_label: "Changelog"
-    changelog_hint: "Wat an de leschte Wochen a Méint dobäikomm ass."
-    board_label: "Ideeën-Board"
-    board_hint: "Eng eegen Idee araichen oder fir eng friem stëmmen."
+    open_board: "Bei d'Iddi"
 
 freshness:
     label: "Stand: %date%"

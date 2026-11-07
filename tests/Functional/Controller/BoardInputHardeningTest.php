@@ -46,7 +46,7 @@ final class BoardInputHardeningTest extends AbstractWebTestCase
         $client->catchExceptions(false);
         $this->loginAs($client, 'user@endlech.lu');
 
-        $crawler = $client->request('GET', self::LOCALE . '/community/ideen/neu');
+        $crawler = $client->request('GET', self::LOCALE . '/roadmap/ideen/neu');
         $form = $this->formWithField($crawler, 'board_idea[title]', [
             'board_idea[title]' => $titel,
             'board_idea[description]' => $text,
@@ -74,7 +74,7 @@ final class BoardInputHardeningTest extends AbstractWebTestCase
         $client = static::createClient();
         $this->loginAs($client, 'user@endlech.lu');
 
-        $crawler = $client->request('GET', self::LOCALE . '/community/ideen/neu');
+        $crawler = $client->request('GET', self::LOCALE . '/roadmap/ideen/neu');
         $client->submit($this->formWithField($crawler, 'board_idea[title]', [
             'board_idea[title]' => "'; DROP TABLE board_idea; --",
             'board_idea[description]' => "x'; DELETE FROM board_vote; --",

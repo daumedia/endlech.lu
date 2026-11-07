@@ -1,0 +1,2191 @@
+{
+ "ak06": [
+  {
+   "kind": "roadmap",
+   "navFound": true,
+   "tabs": [
+    "Roadmap",
+    "Ideen",
+    "Changelog"
+   ]
+  },
+  {
+   "kind": "ideas",
+   "navFound": true,
+   "tabs": [
+    "Roadmap",
+    "Ideen",
+    "Changelog"
+   ]
+  },
+  {
+   "kind": "changelog",
+   "navFound": true,
+   "tabs": [
+    "Roadmap",
+    "Ideen",
+    "Changelog"
+   ]
+  },
+  {
+   "kind": "show",
+   "navFound": true,
+   "tabs": [
+    "Roadmap",
+    "Ideen",
+    "Changelog"
+   ]
+  }
+ ],
+ "ak07": [
+  {
+   "l": "lb",
+   "from": "roadmap",
+   "i": 0,
+   "href": "/lb/roadmap",
+   "landed": "/lb/roadmap",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "lb",
+   "from": "roadmap",
+   "i": 1,
+   "href": "/lb/roadmap/ideen",
+   "landed": "/lb/roadmap/ideen",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "lb",
+   "from": "roadmap",
+   "i": 2,
+   "href": "/lb/changelog",
+   "landed": "/lb/changelog",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "lb",
+   "from": "ideas",
+   "i": 0,
+   "href": "/lb/roadmap",
+   "landed": "/lb/roadmap",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "lb",
+   "from": "ideas",
+   "i": 1,
+   "href": "/lb/roadmap/ideen",
+   "landed": "/lb/roadmap/ideen",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "lb",
+   "from": "ideas",
+   "i": 2,
+   "href": "/lb/changelog",
+   "landed": "/lb/changelog",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "lb",
+   "from": "changelog",
+   "i": 0,
+   "href": "/lb/roadmap",
+   "landed": "/lb/roadmap",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "lb",
+   "from": "changelog",
+   "i": 1,
+   "href": "/lb/roadmap/ideen",
+   "landed": "/lb/roadmap/ideen",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "lb",
+   "from": "changelog",
+   "i": 2,
+   "href": "/lb/changelog",
+   "landed": "/lb/changelog",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "lb",
+   "from": "show",
+   "i": 0,
+   "href": "/lb/roadmap",
+   "landed": "/lb/roadmap",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "lb",
+   "from": "show",
+   "i": 1,
+   "href": "/lb/roadmap/ideen",
+   "landed": "/lb/roadmap/ideen",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "lb",
+   "from": "show",
+   "i": 2,
+   "href": "/lb/changelog",
+   "landed": "/lb/changelog",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "de",
+   "from": "roadmap",
+   "i": 0,
+   "href": "/de/roadmap",
+   "landed": "/de/roadmap",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "de",
+   "from": "roadmap",
+   "i": 1,
+   "href": "/de/roadmap/ideen",
+   "landed": "/de/roadmap/ideen",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "de",
+   "from": "roadmap",
+   "i": 2,
+   "href": "/de/changelog",
+   "landed": "/de/changelog",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "de",
+   "from": "ideas",
+   "i": 0,
+   "href": "/de/roadmap",
+   "landed": "/de/roadmap",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "de",
+   "from": "ideas",
+   "i": 1,
+   "href": "/de/roadmap/ideen",
+   "landed": "/de/roadmap/ideen",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "de",
+   "from": "ideas",
+   "i": 2,
+   "href": "/de/changelog",
+   "landed": "/de/changelog",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "de",
+   "from": "changelog",
+   "i": 0,
+   "href": "/de/roadmap",
+   "landed": "/de/roadmap",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "de",
+   "from": "changelog",
+   "i": 1,
+   "href": "/de/roadmap/ideen",
+   "landed": "/de/roadmap/ideen",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "de",
+   "from": "changelog",
+   "i": 2,
+   "href": "/de/changelog",
+   "landed": "/de/changelog",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "de",
+   "from": "show",
+   "i": 0,
+   "href": "/de/roadmap",
+   "landed": "/de/roadmap",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "de",
+   "from": "show",
+   "i": 1,
+   "href": "/de/roadmap/ideen",
+   "landed": "/de/roadmap/ideen",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "de",
+   "from": "show",
+   "i": 2,
+   "href": "/de/changelog",
+   "landed": "/de/changelog",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "fr",
+   "from": "roadmap",
+   "i": 0,
+   "href": "/fr/roadmap",
+   "landed": "/fr/roadmap",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "fr",
+   "from": "roadmap",
+   "i": 1,
+   "href": "/fr/roadmap/ideen",
+   "landed": "/fr/roadmap/ideen",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "fr",
+   "from": "roadmap",
+   "i": 2,
+   "href": "/fr/changelog",
+   "landed": "/fr/changelog",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "fr",
+   "from": "ideas",
+   "i": 0,
+   "href": "/fr/roadmap",
+   "landed": "/fr/roadmap",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "fr",
+   "from": "ideas",
+   "i": 1,
+   "href": "/fr/roadmap/ideen",
+   "landed": "/fr/roadmap/ideen",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "fr",
+   "from": "ideas",
+   "i": 2,
+   "href": "/fr/changelog",
+   "landed": "/fr/changelog",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "fr",
+   "from": "changelog",
+   "i": 0,
+   "href": "/fr/roadmap",
+   "landed": "/fr/roadmap",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "fr",
+   "from": "changelog",
+   "i": 1,
+   "href": "/fr/roadmap/ideen",
+   "landed": "/fr/roadmap/ideen",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "fr",
+   "from": "changelog",
+   "i": 2,
+   "href": "/fr/changelog",
+   "landed": "/fr/changelog",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "fr",
+   "from": "show",
+   "i": 0,
+   "href": "/fr/roadmap",
+   "landed": "/fr/roadmap",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "fr",
+   "from": "show",
+   "i": 1,
+   "href": "/fr/roadmap/ideen",
+   "landed": "/fr/roadmap/ideen",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "fr",
+   "from": "show",
+   "i": 2,
+   "href": "/fr/changelog",
+   "landed": "/fr/changelog",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "en",
+   "from": "roadmap",
+   "i": 0,
+   "href": "/en/roadmap",
+   "landed": "/en/roadmap",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "en",
+   "from": "roadmap",
+   "i": 1,
+   "href": "/en/roadmap/ideen",
+   "landed": "/en/roadmap/ideen",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "en",
+   "from": "roadmap",
+   "i": 2,
+   "href": "/en/changelog",
+   "landed": "/en/changelog",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "en",
+   "from": "ideas",
+   "i": 0,
+   "href": "/en/roadmap",
+   "landed": "/en/roadmap",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "en",
+   "from": "ideas",
+   "i": 1,
+   "href": "/en/roadmap/ideen",
+   "landed": "/en/roadmap/ideen",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "en",
+   "from": "ideas",
+   "i": 2,
+   "href": "/en/changelog",
+   "landed": "/en/changelog",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "en",
+   "from": "changelog",
+   "i": 0,
+   "href": "/en/roadmap",
+   "landed": "/en/roadmap",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "en",
+   "from": "changelog",
+   "i": 1,
+   "href": "/en/roadmap/ideen",
+   "landed": "/en/roadmap/ideen",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "en",
+   "from": "changelog",
+   "i": 2,
+   "href": "/en/changelog",
+   "landed": "/en/changelog",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "en",
+   "from": "show",
+   "i": 0,
+   "href": "/en/roadmap",
+   "landed": "/en/roadmap",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "en",
+   "from": "show",
+   "i": 1,
+   "href": "/en/roadmap/ideen",
+   "landed": "/en/roadmap/ideen",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "en",
+   "from": "show",
+   "i": 2,
+   "href": "/en/changelog",
+   "landed": "/en/changelog",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "pt",
+   "from": "roadmap",
+   "i": 0,
+   "href": "/pt/roadmap",
+   "landed": "/pt/roadmap",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "pt",
+   "from": "roadmap",
+   "i": 1,
+   "href": "/pt/roadmap/ideen",
+   "landed": "/pt/roadmap/ideen",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "pt",
+   "from": "roadmap",
+   "i": 2,
+   "href": "/pt/changelog",
+   "landed": "/pt/changelog",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "pt",
+   "from": "ideas",
+   "i": 0,
+   "href": "/pt/roadmap",
+   "landed": "/pt/roadmap",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "pt",
+   "from": "ideas",
+   "i": 1,
+   "href": "/pt/roadmap/ideen",
+   "landed": "/pt/roadmap/ideen",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "pt",
+   "from": "ideas",
+   "i": 2,
+   "href": "/pt/changelog",
+   "landed": "/pt/changelog",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "pt",
+   "from": "changelog",
+   "i": 0,
+   "href": "/pt/roadmap",
+   "landed": "/pt/roadmap",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "pt",
+   "from": "changelog",
+   "i": 1,
+   "href": "/pt/roadmap/ideen",
+   "landed": "/pt/roadmap/ideen",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "pt",
+   "from": "changelog",
+   "i": 2,
+   "href": "/pt/changelog",
+   "landed": "/pt/changelog",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "pt",
+   "from": "show",
+   "i": 0,
+   "href": "/pt/roadmap",
+   "landed": "/pt/roadmap",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "pt",
+   "from": "show",
+   "i": 1,
+   "href": "/pt/roadmap/ideen",
+   "landed": "/pt/roadmap/ideen",
+   "ok": true,
+   "navs": 1
+  },
+  {
+   "l": "pt",
+   "from": "show",
+   "i": 2,
+   "href": "/pt/changelog",
+   "landed": "/pt/changelog",
+   "ok": true,
+   "navs": 1
+  }
+ ],
+ "ak09": [
+  {
+   "l": "lb",
+   "p": "roadmap",
+   "reached": {
+    "/lb/roadmap/ideen/neu": {
+     "press": 10,
+     "outline": "solid 2px rgb(0, 95, 120)",
+     "visible": true,
+     "fv": true
+    },
+    "/lb/roadmap": {
+     "press": 11,
+     "outline": "solid 2px rgb(16, 24, 40)",
+     "visible": true,
+     "fv": true
+    },
+    "/lb/roadmap/ideen": {
+     "press": 12,
+     "outline": "solid 2px rgb(54, 65, 83)",
+     "visible": true,
+     "fv": true
+    },
+    "/lb/changelog": {
+     "press": 13,
+     "outline": "solid 2px rgb(54, 65, 83)",
+     "visible": true,
+     "fv": true
+    }
+   },
+   "enter": {
+    "/lb/roadmap/ideen/neu": "/lb/roadmap",
+    "/lb/roadmap": "/lb/roadmap",
+    "/lb/roadmap/ideen": "/lb/roadmap",
+    "/lb/changelog": "/lb/roadmap"
+   }
+  },
+  {
+   "l": "lb",
+   "p": "roadmap/ideen",
+   "reached": {
+    "/lb/roadmap/ideen/neu": {
+     "press": 10,
+     "outline": "solid 2px rgb(0, 95, 120)",
+     "visible": true,
+     "fv": true
+    },
+    "/lb/roadmap": {
+     "press": 11,
+     "outline": "solid 2px rgb(54, 65, 83)",
+     "visible": true,
+     "fv": true
+    },
+    "/lb/roadmap/ideen": {
+     "press": 12,
+     "outline": "solid 2px rgb(16, 24, 40)",
+     "visible": true,
+     "fv": true
+    },
+    "/lb/changelog": {
+     "press": 13,
+     "outline": "solid 2px rgb(54, 65, 83)",
+     "visible": true,
+     "fv": true
+    }
+   },
+   "enter": {
+    "/lb/roadmap/ideen/neu": "/lb/roadmap/ideen",
+    "/lb/roadmap": "/lb/roadmap/ideen",
+    "/lb/roadmap/ideen": "/lb/roadmap/ideen",
+    "/lb/changelog": "/lb/roadmap/ideen"
+   }
+  },
+  {
+   "l": "lb",
+   "p": "changelog",
+   "reached": {
+    "/lb/roadmap/ideen/neu": {
+     "press": 10,
+     "outline": "solid 2px rgb(0, 95, 120)",
+     "visible": true,
+     "fv": true
+    },
+    "/lb/roadmap": {
+     "press": 11,
+     "outline": "solid 2px rgb(54, 65, 83)",
+     "visible": true,
+     "fv": true
+    },
+    "/lb/roadmap/ideen": {
+     "press": 12,
+     "outline": "solid 2px rgb(54, 65, 83)",
+     "visible": true,
+     "fv": true
+    },
+    "/lb/changelog": {
+     "press": 13,
+     "outline": "solid 2px rgb(16, 24, 40)",
+     "visible": true,
+     "fv": true
+    }
+   },
+   "enter": {
+    "/lb/roadmap/ideen/neu": "/lb/changelog",
+    "/lb/roadmap": "/lb/changelog",
+    "/lb/roadmap/ideen": "/lb/changelog",
+    "/lb/changelog": "/lb/changelog"
+   }
+  },
+  {
+   "l": "de",
+   "p": "roadmap",
+   "reached": {
+    "/de/roadmap/ideen/neu": {
+     "press": 10,
+     "outline": "solid 2px rgb(0, 95, 120)",
+     "visible": true,
+     "fv": true
+    },
+    "/de/roadmap": {
+     "press": 11,
+     "outline": "solid 2px rgb(16, 24, 40)",
+     "visible": true,
+     "fv": true
+    },
+    "/de/roadmap/ideen": {
+     "press": 12,
+     "outline": "solid 2px rgb(54, 65, 83)",
+     "visible": true,
+     "fv": true
+    },
+    "/de/changelog": {
+     "press": 13,
+     "outline": "solid 2px rgb(54, 65, 83)",
+     "visible": true,
+     "fv": true
+    }
+   },
+   "enter": {
+    "/de/roadmap/ideen/neu": "/de/roadmap",
+    "/de/roadmap": "/de/roadmap",
+    "/de/roadmap/ideen": "/de/roadmap",
+    "/de/changelog": "/de/roadmap"
+   }
+  },
+  {
+   "l": "de",
+   "p": "roadmap/ideen",
+   "reached": {
+    "/de/roadmap/ideen/neu": {
+     "press": 10,
+     "outline": "solid 2px rgb(0, 95, 120)",
+     "visible": true,
+     "fv": true
+    },
+    "/de/roadmap": {
+     "press": 11,
+     "outline": "solid 2px rgb(54, 65, 83)",
+     "visible": true,
+     "fv": true
+    },
+    "/de/roadmap/ideen": {
+     "press": 12,
+     "outline": "solid 2px rgb(16, 24, 40)",
+     "visible": true,
+     "fv": true
+    },
+    "/de/changelog": {
+     "press": 13,
+     "outline": "solid 2px rgb(54, 65, 83)",
+     "visible": true,
+     "fv": true
+    }
+   },
+   "enter": {
+    "/de/roadmap/ideen/neu": "/de/roadmap/ideen",
+    "/de/roadmap": "/de/roadmap/ideen",
+    "/de/roadmap/ideen": "/de/roadmap/ideen",
+    "/de/changelog": "/de/roadmap/ideen"
+   }
+  },
+  {
+   "l": "de",
+   "p": "changelog",
+   "reached": {
+    "/de/roadmap/ideen/neu": {
+     "press": 10,
+     "outline": "solid 2px rgb(0, 95, 120)",
+     "visible": true,
+     "fv": true
+    },
+    "/de/roadmap": {
+     "press": 11,
+     "outline": "solid 2px rgb(54, 65, 83)",
+     "visible": true,
+     "fv": true
+    },
+    "/de/roadmap/ideen": {
+     "press": 12,
+     "outline": "solid 2px rgb(54, 65, 83)",
+     "visible": true,
+     "fv": true
+    },
+    "/de/changelog": {
+     "press": 13,
+     "outline": "solid 2px rgb(16, 24, 40)",
+     "visible": true,
+     "fv": true
+    }
+   },
+   "enter": {
+    "/de/roadmap/ideen/neu": "/de/changelog",
+    "/de/roadmap": "/de/changelog",
+    "/de/roadmap/ideen": "/de/changelog",
+    "/de/changelog": "/de/changelog"
+   }
+  },
+  {
+   "l": "fr",
+   "p": "roadmap",
+   "reached": {
+    "/fr/roadmap/ideen/neu": {
+     "press": 10,
+     "outline": "solid 2px rgb(0, 95, 120)",
+     "visible": true,
+     "fv": true
+    },
+    "/fr/roadmap": {
+     "press": 11,
+     "outline": "solid 2px rgb(16, 24, 40)",
+     "visible": true,
+     "fv": true
+    },
+    "/fr/roadmap/ideen": {
+     "press": 12,
+     "outline": "solid 2px rgb(54, 65, 83)",
+     "visible": true,
+     "fv": true
+    },
+    "/fr/changelog": {
+     "press": 13,
+     "outline": "solid 2px rgb(54, 65, 83)",
+     "visible": true,
+     "fv": true
+    }
+   },
+   "enter": {
+    "/fr/roadmap/ideen/neu": "/fr/roadmap",
+    "/fr/roadmap": "/fr/roadmap",
+    "/fr/roadmap/ideen": "/fr/roadmap",
+    "/fr/changelog": "/fr/roadmap"
+   }
+  },
+  {
+   "l": "fr",
+   "p": "roadmap/ideen",
+   "reached": {
+    "/fr/roadmap/ideen/neu": {
+     "press": 10,
+     "outline": "solid 2px rgb(0, 95, 120)",
+     "visible": true,
+     "fv": true
+    },
+    "/fr/roadmap": {
+     "press": 11,
+     "outline": "solid 2px rgb(54, 65, 83)",
+     "visible": true,
+     "fv": true
+    },
+    "/fr/roadmap/ideen": {
+     "press": 12,
+     "outline": "solid 2px rgb(16, 24, 40)",
+     "visible": true,
+     "fv": true
+    },
+    "/fr/changelog": {
+     "press": 13,
+     "outline": "solid 2px rgb(54, 65, 83)",
+     "visible": true,
+     "fv": true
+    }
+   },
+   "enter": {
+    "/fr/roadmap/ideen/neu": "/fr/roadmap/ideen",
+    "/fr/roadmap": "/fr/roadmap/ideen",
+    "/fr/roadmap/ideen": "/fr/roadmap/ideen",
+    "/fr/changelog": "/fr/roadmap/ideen"
+   }
+  },
+  {
+   "l": "fr",
+   "p": "changelog",
+   "reached": {
+    "/fr/roadmap/ideen/neu": {
+     "press": 10,
+     "outline": "solid 2px rgb(0, 95, 120)",
+     "visible": true,
+     "fv": true
+    },
+    "/fr/roadmap": {
+     "press": 11,
+     "outline": "solid 2px rgb(54, 65, 83)",
+     "visible": true,
+     "fv": true
+    },
+    "/fr/roadmap/ideen": {
+     "press": 12,
+     "outline": "solid 2px rgb(54, 65, 83)",
+     "visible": true,
+     "fv": true
+    },
+    "/fr/changelog": {
+     "press": 13,
+     "outline": "solid 2px rgb(16, 24, 40)",
+     "visible": true,
+     "fv": true
+    }
+   },
+   "enter": {
+    "/fr/roadmap/ideen/neu": "/fr/changelog",
+    "/fr/roadmap": "/fr/changelog",
+    "/fr/roadmap/ideen": "/fr/changelog",
+    "/fr/changelog": "/fr/changelog"
+   }
+  },
+  {
+   "l": "en",
+   "p": "roadmap",
+   "reached": {
+    "/en/roadmap/ideen/neu": {
+     "press": 10,
+     "outline": "solid 2px rgb(0, 95, 120)",
+     "visible": true,
+     "fv": true
+    },
+    "/en/roadmap": {
+     "press": 11,
+     "outline": "solid 2px rgb(16, 24, 40)",
+     "visible": true,
+     "fv": true
+    },
+    "/en/roadmap/ideen": {
+     "press": 12,
+     "outline": "solid 2px rgb(54, 65, 83)",
+     "visible": true,
+     "fv": true
+    },
+    "/en/changelog": {
+     "press": 13,
+     "outline": "solid 2px rgb(54, 65, 83)",
+     "visible": true,
+     "fv": true
+    }
+   },
+   "enter": {
+    "/en/roadmap/ideen/neu": "/en/roadmap",
+    "/en/roadmap": "/en/roadmap",
+    "/en/roadmap/ideen": "/en/roadmap",
+    "/en/changelog": "/en/roadmap"
+   }
+  },
+  {
+   "l": "en",
+   "p": "roadmap/ideen",
+   "reached": {
+    "/en/roadmap/ideen/neu": {
+     "press": 10,
+     "outline": "solid 2px rgb(0, 95, 120)",
+     "visible": true,
+     "fv": true
+    },
+    "/en/roadmap": {
+     "press": 11,
+     "outline": "solid 2px rgb(54, 65, 83)",
+     "visible": true,
+     "fv": true
+    },
+    "/en/roadmap/ideen": {
+     "press": 12,
+     "outline": "solid 2px rgb(16, 24, 40)",
+     "visible": true,
+     "fv": true
+    },
+    "/en/changelog": {
+     "press": 13,
+     "outline": "solid 2px rgb(54, 65, 83)",
+     "visible": true,
+     "fv": true
+    }
+   },
+   "enter": {
+    "/en/roadmap/ideen/neu": "/en/roadmap/ideen",
+    "/en/roadmap": "/en/roadmap/ideen",
+    "/en/roadmap/ideen": "/en/roadmap/ideen",
+    "/en/changelog": "/en/roadmap/ideen"
+   }
+  },
+  {
+   "l": "en",
+   "p": "changelog",
+   "reached": {
+    "/en/roadmap/ideen/neu": {
+     "press": 10,
+     "outline": "solid 2px rgb(0, 95, 120)",
+     "visible": true,
+     "fv": true
+    },
+    "/en/roadmap": {
+     "press": 11,
+     "outline": "solid 2px rgb(54, 65, 83)",
+     "visible": true,
+     "fv": true
+    },
+    "/en/roadmap/ideen": {
+     "press": 12,
+     "outline": "solid 2px rgb(54, 65, 83)",
+     "visible": true,
+     "fv": true
+    },
+    "/en/changelog": {
+     "press": 13,
+     "outline": "solid 2px rgb(16, 24, 40)",
+     "visible": true,
+     "fv": true
+    }
+   },
+   "enter": {
+    "/en/roadmap/ideen/neu": "/en/changelog",
+    "/en/roadmap": "/en/changelog",
+    "/en/roadmap/ideen": "/en/changelog",
+    "/en/changelog": "/en/changelog"
+   }
+  },
+  {
+   "l": "pt",
+   "p": "roadmap",
+   "reached": {
+    "/pt/roadmap/ideen/neu": {
+     "press": 10,
+     "outline": "solid 2px rgb(0, 95, 120)",
+     "visible": true,
+     "fv": true
+    },
+    "/pt/roadmap": {
+     "press": 11,
+     "outline": "solid 2px rgb(16, 24, 40)",
+     "visible": true,
+     "fv": true
+    },
+    "/pt/roadmap/ideen": {
+     "press": 12,
+     "outline": "solid 2px rgb(54, 65, 83)",
+     "visible": true,
+     "fv": true
+    },
+    "/pt/changelog": {
+     "press": 13,
+     "outline": "solid 2px rgb(54, 65, 83)",
+     "visible": true,
+     "fv": true
+    }
+   },
+   "enter": {
+    "/pt/roadmap/ideen/neu": "/pt/roadmap",
+    "/pt/roadmap": "/pt/roadmap",
+    "/pt/roadmap/ideen": "/pt/roadmap",
+    "/pt/changelog": "/pt/roadmap"
+   }
+  },
+  {
+   "l": "pt",
+   "p": "roadmap/ideen",
+   "reached": {
+    "/pt/roadmap/ideen/neu": {
+     "press": 10,
+     "outline": "solid 2px rgb(0, 95, 120)",
+     "visible": true,
+     "fv": true
+    },
+    "/pt/roadmap": {
+     "press": 11,
+     "outline": "solid 2px rgb(54, 65, 83)",
+     "visible": true,
+     "fv": true
+    },
+    "/pt/roadmap/ideen": {
+     "press": 12,
+     "outline": "solid 2px rgb(16, 24, 40)",
+     "visible": true,
+     "fv": true
+    },
+    "/pt/changelog": {
+     "press": 13,
+     "outline": "solid 2px rgb(54, 65, 83)",
+     "visible": true,
+     "fv": true
+    }
+   },
+   "enter": {
+    "/pt/roadmap/ideen/neu": "/pt/roadmap/ideen",
+    "/pt/roadmap": "/pt/roadmap/ideen",
+    "/pt/roadmap/ideen": "/pt/roadmap/ideen",
+    "/pt/changelog": "/pt/roadmap/ideen"
+   }
+  },
+  {
+   "l": "pt",
+   "p": "changelog",
+   "reached": {
+    "/pt/roadmap/ideen/neu": {
+     "press": 10,
+     "outline": "solid 2px rgb(0, 95, 120)",
+     "visible": true,
+     "fv": true
+    },
+    "/pt/roadmap": {
+     "press": 11,
+     "outline": "solid 2px rgb(54, 65, 83)",
+     "visible": true,
+     "fv": true
+    },
+    "/pt/roadmap/ideen": {
+     "press": 12,
+     "outline": "solid 2px rgb(54, 65, 83)",
+     "visible": true,
+     "fv": true
+    },
+    "/pt/changelog": {
+     "press": 13,
+     "outline": "solid 2px rgb(16, 24, 40)",
+     "visible": true,
+     "fv": true
+    }
+   },
+   "enter": {
+    "/pt/roadmap/ideen/neu": "/pt/changelog",
+    "/pt/roadmap": "/pt/changelog",
+    "/pt/roadmap/ideen": "/pt/changelog",
+    "/pt/changelog": "/pt/changelog"
+   }
+  }
+ ],
+ "ak12": [
+  {
+   "label": "bestätigt",
+   "l": "de",
+   "loginUrl": "/de/roadmap/ideen/neu",
+   "after": "/de/roadmap/ideen/neu",
+   "formFields": 2,
+   "flash": ""
+  },
+  {
+   "label": "bestätigt",
+   "l": "fr",
+   "loginUrl": "/fr/roadmap/ideen/neu",
+   "after": "/fr/roadmap/ideen/neu",
+   "formFields": 2,
+   "flash": ""
+  },
+  {
+   "label": "unbestätigt",
+   "l": "de",
+   "loginUrl": "/de/roadmap/ideen/neu",
+   "after": "/de/verify",
+   "formFields": 0,
+   "flash": "Bitte bestätige zuerst deine E-Mail-Adresse."
+  },
+  {
+   "label": "unbestätigt",
+   "l": "fr",
+   "loginUrl": "/fr/roadmap/ideen/neu",
+   "after": "/fr/verify",
+   "formFields": 0,
+   "flash": "Veuillez d’abord confirmer votre adresse e-mail."
+  }
+ ],
+ "ak13": [
+  {
+   "l": "lb",
+   "kind": "roadmap",
+   "title": "Roadmap – Endlech.lu",
+   "h1": 1,
+   "gap": null
+  },
+  {
+   "l": "lb",
+   "kind": "ideas",
+   "title": "Iddie fir Endlech.lu · Endlech.lu",
+   "h1": 1,
+   "gap": null
+  },
+  {
+   "l": "lb",
+   "kind": "changelog",
+   "title": "Changelog – Endlech.lu",
+   "h1": 1,
+   "gap": null
+  },
+  {
+   "l": "lb",
+   "kind": "show",
+   "title": "Geplante Idee Nummer 1 für barrierefreie Wege · Iddie fir Endlech.lu · Endlech.lu",
+   "h1": 0,
+   "gap": null
+  },
+  {
+   "l": "lb",
+   "kind": "TITEL EINDEUTIG (3 Reiter)",
+   "unique": true
+  },
+  {
+   "l": "de",
+   "kind": "roadmap",
+   "title": "Roadmap – Endlech.lu",
+   "h1": 1,
+   "gap": null
+  },
+  {
+   "l": "de",
+   "kind": "ideas",
+   "title": "Ideen für Endlech.lu · Endlech.lu",
+   "h1": 1,
+   "gap": null
+  },
+  {
+   "l": "de",
+   "kind": "changelog",
+   "title": "Changelog – Endlech.lu",
+   "h1": 1,
+   "gap": null
+  },
+  {
+   "l": "de",
+   "kind": "show",
+   "title": "Geplante Idee Nummer 1 für barrierefreie Wege · Ideen für Endlech.lu · Endlech.lu",
+   "h1": 0,
+   "gap": null
+  },
+  {
+   "l": "de",
+   "kind": "TITEL EINDEUTIG (3 Reiter)",
+   "unique": true
+  },
+  {
+   "l": "fr",
+   "kind": "roadmap",
+   "title": "Feuille de route – Endlech.lu",
+   "h1": 1,
+   "gap": null
+  },
+  {
+   "l": "fr",
+   "kind": "ideas",
+   "title": "Idées pour Endlech.lu · Endlech.lu",
+   "h1": 1,
+   "gap": null
+  },
+  {
+   "l": "fr",
+   "kind": "changelog",
+   "title": "Journal des modifications – Endlech.lu",
+   "h1": 1,
+   "gap": null
+  },
+  {
+   "l": "fr",
+   "kind": "show",
+   "title": "Geplante Idee Nummer 1 für barrierefreie Wege · Idées pour Endlech.lu · Endlech.lu",
+   "h1": 0,
+   "gap": null
+  },
+  {
+   "l": "fr",
+   "kind": "TITEL EINDEUTIG (3 Reiter)",
+   "unique": true
+  },
+  {
+   "l": "en",
+   "kind": "roadmap",
+   "title": "Roadmap – Endlech.lu",
+   "h1": 1,
+   "gap": null
+  },
+  {
+   "l": "en",
+   "kind": "ideas",
+   "title": "Ideas for Endlech.lu · Endlech.lu",
+   "h1": 1,
+   "gap": null
+  },
+  {
+   "l": "en",
+   "kind": "changelog",
+   "title": "Changelog – Endlech.lu",
+   "h1": 1,
+   "gap": null
+  },
+  {
+   "l": "en",
+   "kind": "show",
+   "title": "Geplante Idee Nummer 1 für barrierefreie Wege · Ideas for Endlech.lu · Endlech.lu",
+   "h1": 0,
+   "gap": null
+  },
+  {
+   "l": "en",
+   "kind": "TITEL EINDEUTIG (3 Reiter)",
+   "unique": true
+  },
+  {
+   "l": "pt",
+   "kind": "roadmap",
+   "title": "Roteiro – Endlech.lu",
+   "h1": 1,
+   "gap": null
+  },
+  {
+   "l": "pt",
+   "kind": "ideas",
+   "title": "Ideias para Endlech.lu · Endlech.lu",
+   "h1": 1,
+   "gap": null
+  },
+  {
+   "l": "pt",
+   "kind": "changelog",
+   "title": "Registo de alterações – Endlech.lu",
+   "h1": 1,
+   "gap": null
+  },
+  {
+   "l": "pt",
+   "kind": "show",
+   "title": "Geplante Idee Nummer 1 für barrierefreie Wege · Ideias para Endlech.lu · Endlech.lu",
+   "h1": 0,
+   "gap": null
+  },
+  {
+   "l": "pt",
+   "kind": "TITEL EINDEUTIG (3 Reiter)",
+   "unique": true
+  }
+ ],
+ "ak27": [
+  {
+   "l": "lb",
+   "kind": "roadmap",
+   "name": "Roadmap & Iddien",
+   "tabs": "Roadmap | Iddien | Changelog",
+   "btn": "Iddi araichen",
+   "raw": []
+  },
+  {
+   "l": "lb",
+   "kind": "ideas",
+   "name": "Roadmap & Iddien",
+   "tabs": "Roadmap | Iddien | Changelog",
+   "btn": "Iddi araichen",
+   "raw": []
+  },
+  {
+   "l": "lb",
+   "kind": "changelog",
+   "name": "Roadmap & Iddien",
+   "tabs": "Roadmap | Iddien | Changelog",
+   "btn": "Iddi araichen",
+   "raw": [
+    "changelog.html.twig"
+   ]
+  },
+  {
+   "l": "lb",
+   "kind": "show",
+   "name": "Roadmap & Iddien",
+   "tabs": "Roadmap | Iddien | Changelog",
+   "btn": "Iddi araichen",
+   "raw": []
+  },
+  {
+   "l": "de",
+   "kind": "roadmap",
+   "name": "Roadmap & Ideen",
+   "tabs": "Roadmap | Ideen | Changelog",
+   "btn": "Idee einreichen",
+   "raw": []
+  },
+  {
+   "l": "de",
+   "kind": "ideas",
+   "name": "Roadmap & Ideen",
+   "tabs": "Roadmap | Ideen | Changelog",
+   "btn": "Idee einreichen",
+   "raw": []
+  },
+  {
+   "l": "de",
+   "kind": "changelog",
+   "name": "Roadmap & Ideen",
+   "tabs": "Roadmap | Ideen | Changelog",
+   "btn": "Idee einreichen",
+   "raw": [
+    "changelog.html.twig"
+   ]
+  },
+  {
+   "l": "de",
+   "kind": "show",
+   "name": "Roadmap & Ideen",
+   "tabs": "Roadmap | Ideen | Changelog",
+   "btn": "Idee einreichen",
+   "raw": []
+  },
+  {
+   "l": "fr",
+   "kind": "roadmap",
+   "name": "Feuille de route & idées",
+   "tabs": "Feuille de route | Idées | Journal des modifications",
+   "btn": "Proposer une idée",
+   "raw": []
+  },
+  {
+   "l": "fr",
+   "kind": "ideas",
+   "name": "Feuille de route & idées",
+   "tabs": "Feuille de route | Idées | Journal des modifications",
+   "btn": "Proposer une idée",
+   "raw": []
+  },
+  {
+   "l": "fr",
+   "kind": "changelog",
+   "name": "Feuille de route & idées",
+   "tabs": "Feuille de route | Idées | Journal des modifications",
+   "btn": "Proposer une idée",
+   "raw": [
+    "changelog.html.twig"
+   ]
+  },
+  {
+   "l": "fr",
+   "kind": "show",
+   "name": "Feuille de route & idées",
+   "tabs": "Feuille de route | Idées | Journal des modifications",
+   "btn": "Proposer une idée",
+   "raw": []
+  },
+  {
+   "l": "en",
+   "kind": "roadmap",
+   "name": "Roadmap & ideas",
+   "tabs": "Roadmap | Ideas | Changelog",
+   "btn": "Submit an idea",
+   "raw": []
+  },
+  {
+   "l": "en",
+   "kind": "ideas",
+   "name": "Roadmap & ideas",
+   "tabs": "Roadmap | Ideas | Changelog",
+   "btn": "Submit an idea",
+   "raw": []
+  },
+  {
+   "l": "en",
+   "kind": "changelog",
+   "name": "Roadmap & ideas",
+   "tabs": "Roadmap | Ideas | Changelog",
+   "btn": "Submit an idea",
+   "raw": [
+    "changelog.html.twig"
+   ]
+  },
+  {
+   "l": "en",
+   "kind": "show",
+   "name": "Roadmap & ideas",
+   "tabs": "Roadmap | Ideas | Changelog",
+   "btn": "Submit an idea",
+   "raw": []
+  },
+  {
+   "l": "pt",
+   "kind": "roadmap",
+   "name": "Roteiro e ideias",
+   "tabs": "Roteiro | Ideias | Registo de alterações",
+   "btn": "Enviar ideia",
+   "raw": []
+  },
+  {
+   "l": "pt",
+   "kind": "ideas",
+   "name": "Roteiro e ideias",
+   "tabs": "Roteiro | Ideias | Registo de alterações",
+   "btn": "Enviar ideia",
+   "raw": []
+  },
+  {
+   "l": "pt",
+   "kind": "changelog",
+   "name": "Roteiro e ideias",
+   "tabs": "Roteiro | Ideias | Registo de alterações",
+   "btn": "Enviar ideia",
+   "raw": [
+    "changelog.html.twig"
+   ]
+  },
+  {
+   "l": "pt",
+   "kind": "show",
+   "name": "Roteiro e ideias",
+   "tabs": "Roteiro | Ideias | Registo de alterações",
+   "btn": "Enviar ideia",
+   "raw": []
+  }
+ ],
+ "ak28": [
+  {
+   "w": 1280,
+   "l": "lb",
+   "kind": "roadmap",
+   "url": "/lb/roadmap",
+   "violations": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "tags": "wcag2aa,wcag143",
+     "n": 1,
+     "targets": [
+      ".xl\\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt"
+     ]
+    }
+   ]
+  },
+  {
+   "w": 1280,
+   "l": "lb",
+   "kind": "ideas",
+   "url": "/lb/roadmap/ideen",
+   "violations": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "tags": "wcag2aa,wcag143",
+     "n": 1,
+     "targets": [
+      ".xl\\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt"
+     ]
+    }
+   ]
+  },
+  {
+   "w": 1280,
+   "l": "lb",
+   "kind": "changelog",
+   "url": "/lb/changelog",
+   "violations": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "tags": "wcag2aa,wcag143",
+     "n": 1,
+     "targets": [
+      ".xl\\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt"
+     ]
+    }
+   ]
+  },
+  {
+   "w": 1280,
+   "l": "lb",
+   "kind": "show",
+   "url": "/lb/roadmap/ideen/94-qa16-0",
+   "violations": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "tags": "wcag2aa,wcag143",
+     "n": 1,
+     "targets": [
+      ".xl\\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt"
+     ]
+    }
+   ]
+  },
+  {
+   "w": 1280,
+   "l": "lb",
+   "kind": "form",
+   "url": "/lb/roadmap/ideen/neu",
+   "violations": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "tags": "wcag2aa,wcag143",
+     "n": 1,
+     "targets": [
+      ".xl\\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt"
+     ]
+    }
+   ]
+  },
+  {
+   "w": 1280,
+   "l": "de",
+   "kind": "roadmap",
+   "url": "/de/roadmap",
+   "violations": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "tags": "wcag2aa,wcag143",
+     "n": 1,
+     "targets": [
+      ".xl\\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt"
+     ]
+    }
+   ]
+  },
+  {
+   "w": 1280,
+   "l": "de",
+   "kind": "ideas",
+   "url": "/de/roadmap/ideen",
+   "violations": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "tags": "wcag2aa,wcag143",
+     "n": 1,
+     "targets": [
+      ".xl\\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt"
+     ]
+    }
+   ]
+  },
+  {
+   "w": 1280,
+   "l": "de",
+   "kind": "changelog",
+   "url": "/de/changelog",
+   "violations": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "tags": "wcag2aa,wcag143",
+     "n": 1,
+     "targets": [
+      ".xl\\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt"
+     ]
+    }
+   ]
+  },
+  {
+   "w": 1280,
+   "l": "de",
+   "kind": "show",
+   "url": "/de/roadmap/ideen/94-qa16-0",
+   "violations": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "tags": "wcag2aa,wcag143",
+     "n": 1,
+     "targets": [
+      ".xl\\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt"
+     ]
+    }
+   ]
+  },
+  {
+   "w": 1280,
+   "l": "de",
+   "kind": "form",
+   "url": "/de/roadmap/ideen/neu",
+   "violations": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "tags": "wcag2aa,wcag143",
+     "n": 1,
+     "targets": [
+      ".xl\\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt"
+     ]
+    }
+   ]
+  },
+  {
+   "w": 1280,
+   "l": "fr",
+   "kind": "roadmap",
+   "url": "/fr/roadmap",
+   "violations": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "tags": "wcag2aa,wcag143",
+     "n": 1,
+     "targets": [
+      ".xl\\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt"
+     ]
+    }
+   ]
+  },
+  {
+   "w": 1280,
+   "l": "fr",
+   "kind": "ideas",
+   "url": "/fr/roadmap/ideen",
+   "violations": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "tags": "wcag2aa,wcag143",
+     "n": 1,
+     "targets": [
+      ".xl\\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt"
+     ]
+    }
+   ]
+  },
+  {
+   "w": 1280,
+   "l": "fr",
+   "kind": "changelog",
+   "url": "/fr/changelog",
+   "violations": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "tags": "wcag2aa,wcag143",
+     "n": 1,
+     "targets": [
+      ".xl\\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt"
+     ]
+    }
+   ]
+  },
+  {
+   "w": 1280,
+   "l": "fr",
+   "kind": "show",
+   "url": "/fr/roadmap/ideen/94-qa16-0",
+   "violations": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "tags": "wcag2aa,wcag143",
+     "n": 1,
+     "targets": [
+      ".xl\\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt"
+     ]
+    }
+   ]
+  },
+  {
+   "w": 1280,
+   "l": "fr",
+   "kind": "form",
+   "url": "/fr/roadmap/ideen/neu",
+   "violations": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "tags": "wcag2aa,wcag143",
+     "n": 1,
+     "targets": [
+      ".xl\\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt"
+     ]
+    }
+   ]
+  },
+  {
+   "w": 1280,
+   "l": "en",
+   "kind": "roadmap",
+   "url": "/en/roadmap",
+   "violations": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "tags": "wcag2aa,wcag143",
+     "n": 1,
+     "targets": [
+      ".xl\\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt"
+     ]
+    }
+   ]
+  },
+  {
+   "w": 1280,
+   "l": "en",
+   "kind": "ideas",
+   "url": "/en/roadmap/ideen",
+   "violations": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "tags": "wcag2aa,wcag143",
+     "n": 1,
+     "targets": [
+      ".xl\\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt"
+     ]
+    }
+   ]
+  },
+  {
+   "w": 1280,
+   "l": "en",
+   "kind": "changelog",
+   "url": "/en/changelog",
+   "violations": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "tags": "wcag2aa,wcag143",
+     "n": 1,
+     "targets": [
+      ".xl\\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt"
+     ]
+    }
+   ]
+  },
+  {
+   "w": 1280,
+   "l": "en",
+   "kind": "show",
+   "url": "/en/roadmap/ideen/94-qa16-0",
+   "violations": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "tags": "wcag2aa,wcag143",
+     "n": 1,
+     "targets": [
+      ".xl\\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt"
+     ]
+    }
+   ]
+  },
+  {
+   "w": 1280,
+   "l": "en",
+   "kind": "form",
+   "url": "/en/roadmap/ideen/neu",
+   "violations": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "tags": "wcag2aa,wcag143",
+     "n": 1,
+     "targets": [
+      ".xl\\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt"
+     ]
+    }
+   ]
+  },
+  {
+   "w": 1280,
+   "l": "pt",
+   "kind": "roadmap",
+   "url": "/pt/roadmap",
+   "violations": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "tags": "wcag2aa,wcag143",
+     "n": 1,
+     "targets": [
+      ".xl\\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt"
+     ]
+    }
+   ]
+  },
+  {
+   "w": 1280,
+   "l": "pt",
+   "kind": "ideas",
+   "url": "/pt/roadmap/ideen",
+   "violations": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "tags": "wcag2aa,wcag143",
+     "n": 1,
+     "targets": [
+      ".xl\\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt"
+     ]
+    }
+   ]
+  },
+  {
+   "w": 1280,
+   "l": "pt",
+   "kind": "changelog",
+   "url": "/pt/changelog",
+   "violations": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "tags": "wcag2aa,wcag143",
+     "n": 1,
+     "targets": [
+      ".xl\\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt"
+     ]
+    }
+   ]
+  },
+  {
+   "w": 1280,
+   "l": "pt",
+   "kind": "show",
+   "url": "/pt/roadmap/ideen/94-qa16-0",
+   "violations": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "tags": "wcag2aa,wcag143",
+     "n": 1,
+     "targets": [
+      ".xl\\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt"
+     ]
+    }
+   ]
+  },
+  {
+   "w": 1280,
+   "l": "pt",
+   "kind": "form",
+   "url": "/pt/roadmap/ideen/neu",
+   "violations": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "tags": "wcag2aa,wcag143",
+     "n": 1,
+     "targets": [
+      ".xl\\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt"
+     ]
+    }
+   ]
+  },
+  {
+   "w": 375,
+   "l": "lb",
+   "kind": "roadmap",
+   "url": "/lb/roadmap",
+   "violations": []
+  },
+  {
+   "w": 375,
+   "l": "lb",
+   "kind": "ideas",
+   "url": "/lb/roadmap/ideen",
+   "violations": []
+  },
+  {
+   "w": 375,
+   "l": "lb",
+   "kind": "changelog",
+   "url": "/lb/changelog",
+   "violations": []
+  },
+  {
+   "w": 375,
+   "l": "lb",
+   "kind": "show",
+   "url": "/lb/roadmap/ideen/94-qa16-0",
+   "violations": []
+  },
+  {
+   "w": 375,
+   "l": "lb",
+   "kind": "form",
+   "url": "/lb/roadmap/ideen/neu",
+   "violations": []
+  },
+  {
+   "w": 375,
+   "l": "de",
+   "kind": "roadmap",
+   "url": "/de/roadmap",
+   "violations": []
+  },
+  {
+   "w": 375,
+   "l": "de",
+   "kind": "ideas",
+   "url": "/de/roadmap/ideen",
+   "violations": []
+  },
+  {
+   "w": 375,
+   "l": "de",
+   "kind": "changelog",
+   "url": "/de/changelog",
+   "violations": []
+  },
+  {
+   "w": 375,
+   "l": "de",
+   "kind": "show",
+   "url": "/de/roadmap/ideen/94-qa16-0",
+   "violations": []
+  },
+  {
+   "w": 375,
+   "l": "de",
+   "kind": "form",
+   "url": "/de/roadmap/ideen/neu",
+   "violations": []
+  },
+  {
+   "w": 375,
+   "l": "fr",
+   "kind": "roadmap",
+   "url": "/fr/roadmap",
+   "violations": []
+  },
+  {
+   "w": 375,
+   "l": "fr",
+   "kind": "ideas",
+   "url": "/fr/roadmap/ideen",
+   "violations": []
+  },
+  {
+   "w": 375,
+   "l": "fr",
+   "kind": "changelog",
+   "url": "/fr/changelog",
+   "violations": []
+  },
+  {
+   "w": 375,
+   "l": "fr",
+   "kind": "show",
+   "url": "/fr/roadmap/ideen/94-qa16-0",
+   "violations": []
+  },
+  {
+   "w": 375,
+   "l": "fr",
+   "kind": "form",
+   "url": "/fr/roadmap/ideen/neu",
+   "violations": []
+  },
+  {
+   "w": 375,
+   "l": "en",
+   "kind": "roadmap",
+   "url": "/en/roadmap",
+   "violations": []
+  },
+  {
+   "w": 375,
+   "l": "en",
+   "kind": "ideas",
+   "url": "/en/roadmap/ideen",
+   "violations": []
+  },
+  {
+   "w": 375,
+   "l": "en",
+   "kind": "changelog",
+   "url": "/en/changelog",
+   "violations": []
+  },
+  {
+   "w": 375,
+   "l": "en",
+   "kind": "show",
+   "url": "/en/roadmap/ideen/94-qa16-0",
+   "violations": []
+  },
+  {
+   "w": 375,
+   "l": "en",
+   "kind": "form",
+   "url": "/en/roadmap/ideen/neu",
+   "violations": []
+  },
+  {
+   "w": 375,
+   "l": "pt",
+   "kind": "roadmap",
+   "url": "/pt/roadmap",
+   "violations": []
+  },
+  {
+   "w": 375,
+   "l": "pt",
+   "kind": "ideas",
+   "url": "/pt/roadmap/ideen",
+   "violations": []
+  },
+  {
+   "w": 375,
+   "l": "pt",
+   "kind": "changelog",
+   "url": "/pt/changelog",
+   "violations": []
+  },
+  {
+   "w": 375,
+   "l": "pt",
+   "kind": "show",
+   "url": "/pt/roadmap/ideen/94-qa16-0",
+   "violations": []
+  },
+  {
+   "w": 375,
+   "l": "pt",
+   "kind": "form",
+   "url": "/pt/roadmap/ideen/neu",
+   "violations": []
+  }
+ ],
+ "ak32": [
+  {
+   "l": "lb",
+   "kind": "roadmap",
+   "requests": 41,
+   "foreign": []
+  },
+  {
+   "l": "lb",
+   "kind": "ideas",
+   "requests": 41,
+   "foreign": []
+  },
+  {
+   "l": "lb",
+   "kind": "changelog",
+   "requests": 41,
+   "foreign": []
+  },
+  {
+   "l": "de",
+   "kind": "roadmap",
+   "requests": 41,
+   "foreign": []
+  },
+  {
+   "l": "de",
+   "kind": "ideas",
+   "requests": 41,
+   "foreign": []
+  },
+  {
+   "l": "de",
+   "kind": "changelog",
+   "requests": 41,
+   "foreign": []
+  },
+  {
+   "l": "fr",
+   "kind": "roadmap",
+   "requests": 41,
+   "foreign": []
+  },
+  {
+   "l": "fr",
+   "kind": "ideas",
+   "requests": 41,
+   "foreign": []
+  },
+  {
+   "l": "fr",
+   "kind": "changelog",
+   "requests": 41,
+   "foreign": []
+  },
+  {
+   "l": "en",
+   "kind": "roadmap",
+   "requests": 41,
+   "foreign": []
+  },
+  {
+   "l": "en",
+   "kind": "ideas",
+   "requests": 41,
+   "foreign": []
+  },
+  {
+   "l": "en",
+   "kind": "changelog",
+   "requests": 41,
+   "foreign": []
+  },
+  {
+   "l": "pt",
+   "kind": "roadmap",
+   "requests": 41,
+   "foreign": []
+  },
+  {
+   "l": "pt",
+   "kind": "ideas",
+   "requests": 41,
+   "foreign": []
+  },
+  {
+   "l": "pt",
+   "kind": "changelog",
+   "requests": 41,
+   "foreign": []
+  }
+ ]
+}

@@ -1,0 +1,42 @@
+Bestand Dev-DB (veröffentlicht, ohne Dubletten / davon geplant):
+  45                12       
+== /de/roadmap/ideen (Profiler 9eb549): 10 Abfragen auf board_idea/board_vote
+   Ideenliste       LIMIT 20             WHERE b0_.published_at IS NOT NULL AND b0_.duplicate_of_id IS NULL AND b0_.status <> ?
+   Ideenliste       LIMIT 20             WHERE b0_.published_at IS NOT NULL AND b0_.duplicate_of_id IS NULL AND b0_.status <> 'done'
+   Zählung          ohne LIMIT           WHERE b0_.published_at IS NOT NULL AND b0_.duplicate_of_id IS NULL AND b0_.status <> ?
+   Zählung          ohne LIMIT           WHERE b0_.published_at IS NOT NULL AND b0_.duplicate_of_id IS NULL AND b0_.status <> ?
+   Zählung          ohne LIMIT           WHERE b0_.published_at IS NOT NULL AND b0_.duplicate_of_id IS NULL AND b0_.status <> 'done'
+   Ideenliste       LIMIT 20             WHERE b0_.published_at IS NOT NULL AND b0_.duplicate_of_id IS NULL AND b0_.status = ?
+   Ideenliste       LIMIT 20             WHERE b0_.published_at IS NOT NULL AND b0_.duplicate_of_id IS NULL AND b0_.status = 'done'
+   Stimmen zu Ids   ohne LIMIT           WHERE b0_.id IN (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+   Stimmen zu Ids   ohne LIMIT           WHERE b0_.id IN ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )
+   Stimmen zu Ids   ohne LIMIT           WHERE b0_.id IN (153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 108)
+== /de/roadmap/ideen?page=3 (Profiler 41a0d2): 9 Abfragen auf board_idea/board_vote
+   Ideenliste       LIMIT 20 OFFSET 40   WHERE b0_.published_at IS NOT NULL AND b0_.duplicate_of_id IS NULL AND b0_.status <> ?
+   Ideenliste       LIMIT 20 OFFSET 40   WHERE b0_.published_at IS NOT NULL AND b0_.duplicate_of_id IS NULL AND b0_.status <> 'done'
+   Zählung          ohne LIMIT           WHERE b0_.published_at IS NOT NULL AND b0_.duplicate_of_id IS NULL AND b0_.status <> ?
+   Zählung          ohne LIMIT           WHERE b0_.published_at IS NOT NULL AND b0_.duplicate_of_id IS NULL AND b0_.status <> ?
+   Zählung          ohne LIMIT           WHERE b0_.published_at IS NOT NULL AND b0_.duplicate_of_id IS NULL AND b0_.status <> 'done'
+   Ideenliste       LIMIT 20             WHERE b0_.published_at IS NOT NULL AND b0_.duplicate_of_id IS NULL AND b0_.status = ?
+   Ideenliste       LIMIT 20             WHERE b0_.published_at IS NOT NULL AND b0_.duplicate_of_id IS NULL AND b0_.status = 'done'
+   Stimmen zu Ids   ohne LIMIT           WHERE b0_.id IN (?, ?, ?, ?, ?)
+   Stimmen zu Ids   ohne LIMIT           WHERE b0_.id IN (104, 105, 106, 107, 108)
+== /de/roadmap/ideen?sort=newest&status=planned (Profiler 592ecb): 9 Abfragen auf board_idea/board_vote
+   Ideenliste       LIMIT 20             WHERE b0_.published_at IS NOT NULL AND b0_.duplicate_of_id IS NULL AND b0_.status <> ? AND b0_.status = ?
+   Ideenliste       LIMIT 20             WHERE b0_.published_at IS NOT NULL AND b0_.duplicate_of_id IS NULL AND b0_.status <> 'done' AND b0_.status = 'planned'
+   Zählung          ohne LIMIT           WHERE b0_.published_at IS NOT NULL AND b0_.duplicate_of_id IS NULL AND b0_.status <> ? AND b0_.status = ?
+   Zählung          ohne LIMIT           WHERE b0_.published_at IS NOT NULL AND b0_.duplicate_of_id IS NULL AND b0_.status <> ? AND b0_.status = ?
+   Zählung          ohne LIMIT           WHERE b0_.published_at IS NOT NULL AND b0_.duplicate_of_id IS NULL AND b0_.status <> 'done' AND b0_.status = 'planned'
+   Ideenliste       LIMIT 20             WHERE b0_.published_at IS NOT NULL AND b0_.duplicate_of_id IS NULL AND b0_.status = ?
+   Ideenliste       LIMIT 20             WHERE b0_.published_at IS NOT NULL AND b0_.duplicate_of_id IS NULL AND b0_.status = 'done'
+   Stimmen zu Ids   ohne LIMIT           WHERE b0_.id IN (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+   Stimmen zu Ids   ohne LIMIT           WHERE b0_.id IN (94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 108)
+== /de/roadmap (Profiler 3af73c): 6 Abfragen auf board_idea/board_vote
+   Ideenliste       LIMIT 10             WHERE b0_.published_at IS NOT NULL AND b0_.duplicate_of_id IS NULL AND b0_.status = ?
+   Ideenliste       LIMIT 10             WHERE b0_.published_at IS NOT NULL AND b0_.duplicate_of_id IS NULL AND b0_.status = 'planned'
+   Zählung          ohne LIMIT           WHERE b0_.published_at IS NOT NULL AND b0_.duplicate_of_id IS NULL AND b0_.status = ?
+   Zählung          ohne LIMIT           WHERE b0_.published_at IS NOT NULL AND b0_.duplicate_of_id IS NULL AND b0_.status = 'planned';
+   Stimmen zu Ids   ohne LIMIT           WHERE b0_.id IN (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+   Stimmen zu Ids   ohne LIMIT           WHERE b0_.id IN (94, 95, 96, 97, 98, 99, 100, 101, 102, 103)
+== /de/community/ideen (Profiler 2480cc): 0 Abfragen auf board_idea/board_vote
+== /de/community/ideen/94-qa16-0 (Profiler 115bc1): 0 Abfragen auf board_idea/board_vote

@@ -1,0 +1,13 @@
+# BF-199 · Zustimmen mit falschem Token verrät den Titelteil wartender Ideen (2026-11-07)
+# Konto: unverified@endlech.lu (unbestätigt, nicht Verfasser). Ideen 140, 141, 147 warten auf Freigabe (published_at NULL).
+## neu (Feature 16, Port 8000)
+POST /de/roadmap/ideen/139/zustimmen  _token=x → 404 
+POST /de/roadmap/ideen/140/zustimmen  _token=x → 302 /de/roadmap/ideen/140-qa16x-zebrafink-geheimtitel
+POST /de/roadmap/ideen/141/zustimmen  _token=x → 302 /de/roadmap/ideen/141-qa16x-waisenkind-ohneverfasser
+POST /de/roadmap/ideen/147/zustimmen  _token=x → 302 /de/roadmap/ideen/147-qa16y-neu-einreichung-5
+## Gegenprobe: Einzelseite derselben Idee für dasselbe Konto
+GET /de/roadmap/ideen/140-qa16x-zebrafink-geheimtitel → 404
+## alt (main, Port 8001)
+POST /de/community/ideen/140/zustimmen _token=x → 302 /de/community/ideen/140-qa16x-zebrafink-geheimtitel
+## Deckel: 70 Versuche hintereinander, keiner gedeckelt
+  70 302

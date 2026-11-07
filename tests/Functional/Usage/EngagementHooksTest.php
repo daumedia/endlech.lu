@@ -35,7 +35,7 @@ final class EngagementHooksTest extends AbstractWebTestCase
         $em->persist($idee);
         $em->flush();
 
-        $pfad = self::LOCALE.'/community/ideen/'.$idee->getId().'-messung-zustimmung';
+        $pfad = self::LOCALE.'/roadmap/ideen/'.$idee->getId().'-messung-zustimmung';
 
         $formular = $this->zustimmFormular($client->request('GET', $pfad));
         self::assertCount(1, $formular);

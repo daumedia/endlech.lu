@@ -10,9 +10,11 @@
 
    Zusagen aus Specs, die hier hängen (Ort frei, Existenz nicht):
    - Feature 03 AK-01: eigener Bereich „Vergleiche" mit je einem Link pro Wettbewerber + „Alle".
-   - Feature 06 AK-80: GENAU ein Rückmeldeweg, auf das eigene Board, ohne `target="_blank"`.
+   - Feature 16 AK-01 bis AK-03 (löst 06/AK-80 und 07/AK-02 ab): GENAU ein Eintrag „Roadmap & Ideen“
+     unter „Mitmachen“ — er ist zugleich der einzige Rückmeldeweg, ohne `target="_blank"`. Roadmap,
+     Ideen und Changelog erreicht man von dort über die Reiter, nicht über weitere Einträge hier.
    - Feature 02 AK-42: „Barrierefreiheit" auf jeder Seite. Feature 05 AK-01: „Presse".
-   - Feature 08 AK-40: App-Warteliste. Feature 07: Roadmap + Changelog.
+   - Feature 08 AK-40: App-Warteliste.
    - BF-80: „Über uns" steht hier, weil die Kopfnavigation es zwischen 768–1023 px nicht zeigt.
    - B26 AK-04: Cookie-Einstellungen, aber nicht im Verwaltungsbereich.
    - Feature 15 AK-01 bis AK-07: Bereich „Sponsoren" auf jeder Seite.
@@ -29,15 +31,13 @@
     ]},
     {titel: 'footer.get_involved', links: [
         {href: path('community_vorschlagen'), label: 'footer.suggest_restaurant'},
-        {href: path('app_board_index'), label: 'footer.feedback'},
+        {href: path('app_roadmap_index'), label: 'footer.roadmap_ideas'},
         {href: path('app_partner'), label: 'footer.partner'},
         {href: path('app_organisations'), label: 'nav.organisations'},
     ]},
     {titel: 'nav.about', links: [
         {href: path('app_about'), label: 'nav.about_short'},
         {href: path('app_open'), label: 'footer.open'},
-        {href: path('app_roadmap_index'), label: 'footer.roadmap'},
-        {href: path('app_changelog_index'), label: 'footer.changelog'},
         {href: path('app_press_index'), label: 'footer.press'},
     ]},
 ] %}

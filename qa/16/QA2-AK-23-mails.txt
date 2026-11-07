@@ -1,0 +1,21 @@
+AK-23 · zweiter Durchlauf 2026-11-07 · Freigabe (Idee 187) und Ablehnung (Idee 188) im Admin von 16, danach Statuswechsel 187 → planned;
+zugestellt mit messenger:consume an Mailpit (Port 51087). Der Statuswechsel erzeugt keine Mail (zwei Handlungen mit Mail, zwei Mails).
+- 2026-11-07T14:23:53.83Z an admin@endlech.lu · „Votre idée est maintenant sur le tableau“ · Links: ['http://127.0.0.1:8001/fr/community/ideen/198-qa16c-idee-fr-zwei']
+- 2026-11-07T14:23:36.953Z an admin@endlech.lu · „Votre idée est maintenant sur le tableau“ · Links: ['http://127.0.0.1:8001/fr/community/ideen/197-qa16c-idee-fr']
+- 2026-11-07T14:22:26.602Z an admin@endlech.lu · „Deine Idee ist jetzt öffentlich“ · Links: ['http://127.0.0.1:8000/de/roadmap/ideen/188-qa16c-neu-deckelprobe-2']
+- 2026-11-07T14:22:26.579Z an admin@endlech.lu · „Deine Idee ist jetzt öffentlich“ · Links: ['http://127.0.0.1:8000/de/roadmap/ideen/187-qa16c-neu-deckelprobe-1']
+- 2026-11-07T13:23:31.372Z an user@endlech.lu · „Deine Idee steht jetzt auf dem Board“ · Links: ['http://127.0.0.1:8000/de/roadmap/ideen/146-qa16y-neu-einreichung-4']
+- 2026-11-07T13:23:31.349Z an user@endlech.lu · „Deine Idee steht jetzt auf dem Board“ · Links: ['http://127.0.0.1:8000/de/roadmap/ideen/145-qa16y-neu-einreichung-3']
+
+BF-208 · text/plain-Teil (roh aus dem MIME-Quelltext):
+-- 16 (Darstellung mit dem Code von 16), de, Idee 187 | Betreff: Deine Idee ist jetzt öffentlich
+   Entitäten: ['&amp;', '&copy;']
+      Deine Idee steht jetzt unter „Roadmap &amp; Ideen“
+      Wir haben deine Idee angesehen und freigegeben. Sie steht ab sofort öffentlich unter „Roadmap &amp; Ideen“ — andere können ihr zustimmen, und du siehst dort, was aus ihr 
+      &copy; 2026 Endlech.lu - Made with love in Luxembourg
+-- main (Freigabe und Darstellung mit dem Code von main), fr, Idee 198 | Betreff: Votre idée est maintenant sur le tableau
+   Entitäten: ['&#039;', '&copy;']
+      Nous avons examiné votre idée et l&#039;avons publiée. Elle est désormais visible sur le tableau communautaire — d&#039;autres peuvent la soutenir, et vous pouvez y suivr
+      Voir l&#039;idée
+      &copy; 2026 Endlech.lu - Made with love in Luxembourg
+Ursache: TemplatedEmail ohne textTemplate; Symfony erzeugt den Textteil mit DefaultHtmlToTextConverter (strip_tags, ohne html_entity_decode).

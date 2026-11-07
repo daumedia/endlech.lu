@@ -1,0 +1,17 @@
+== /de/roadmap/ideen
+   LIMIT 20 | SELECT b0_.id AS id_0, b0_.title AS title_1, b0_.description AS description_2, b0_.slug AS slug_3, b0_.status AS status_4, b0_.locale AS locale_5, b0_.team_response AS te
+   COUNT | SELECT COUNT(*) AS dctrn_count FROM ( SELECT b0_.id AS id_0, b0_.title AS title_1, b0_.description AS description_2, b0_.slug AS slug_3, b0_.status AS status_4, b0_.local
+   LIMIT 20 | SELECT b0_.id AS id_0, b0_.title AS title_1, b0_.description AS description_2, b0_.slug AS slug_3, b0_.status AS status_4, b0_.locale AS locale_5, b0_.team_response AS te
+   COUNT | SELECT b0_.id AS id_0, COUNT(b1_.id) AS sclr_1 FROM board_idea b0_ LEFT JOIN board_vote b1_ ON b0_.id = b1_.idea_id WHERE b0_.id IN ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 
+== /de/roadmap/ideen?page=3&sort=newest
+   LIMIT 20 OFFSET 40 | SELECT b0_.id AS id_0, b0_.title AS title_1, b0_.description AS description_2, b0_.slug AS slug_3, b0_.status AS status_4, b0_.locale AS locale_5, b0_.team_response AS te
+   COUNT | SELECT COUNT(*) AS dctrn_count FROM ( SELECT b0_.id AS id_0, b0_.title AS title_1, b0_.description AS description_2, b0_.slug AS slug_3, b0_.status AS status_4, b0_.local
+   LIMIT 20 | SELECT b0_.id AS id_0, b0_.title AS title_1, b0_.description AS description_2, b0_.slug AS slug_3, b0_.status AS status_4, b0_.locale AS locale_5, b0_.team_response AS te
+   COUNT | SELECT b0_.id AS id_0, COUNT(b1_.id) AS sclr_1 FROM board_idea b0_ LEFT JOIN board_vote b1_ ON b0_.id = b1_.idea_id WHERE b0_.id IN (?, ?, ?, ?, ?) GROUP BY b0_.id
+== /de/roadmap
+== /de/community/ideen
+== /de/changelog
+== /de/roadmap
+   LIMIT 10 | SELECT b0_.id AS id_0, b0_.title AS title_1, b0_.description AS description_2, b0_.slug AS slug_3, b0_.status AS status_4, b0_.locale AS locale_5, b0_.team_response AS te
+   COUNT | SELECT COUNT(b0_.id) AS sclr_0 FROM board_idea b0_ WHERE b0_.published_at IS NOT NULL AND b0_.duplicate_of_id IS NULL AND b0_.status = ?
+   COUNT | SELECT b0_.id AS id_0, COUNT(b1_.id) AS sclr_1 FROM board_idea b0_ LEFT JOIN board_vote b1_ ON b0_.id = b1_.idea_id WHERE b0_.id IN (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) GROUP B

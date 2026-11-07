@@ -1,0 +1,26 @@
+Unterkante der Überschrift „In Arbeit" (px) / Oberkante Cookie-Banner, Höhe 800, erster Besuch (mit Banner) — main gegen 16
+ 320 lb: main  578/621 frei | 16  566/621 frei | 16 ohne Banner 566 frei
+ 320 de: main  598/621 frei | 16  586/621 frei | 16 ohne Banner 586 frei
+ 320 fr: main  628/601 VERDECKT | 16  652/601 VERDECKT | 16 ohne Banner 652 frei
+ 320 en: main  578/621 frei | 16  566/621 frei | 16 ohne Banner 566 frei
+ 320 pt: main  628/601 VERDECKT | 16  659/601 VERDECKT | 16 ohne Banner 659 frei
+ 360 lb: main  578/621 frei | 16  566/621 frei | 16 ohne Banner 566 frei
+ 360 de: main  578/621 frei | 16  566/621 frei | 16 ohne Banner 566 frei
+ 360 fr: main  598/601 frei | 16  586/601 frei | 16 ohne Banner 586 frei
+ 360 en: main  578/621 frei | 16  566/621 frei | 16 ohne Banner 566 frei
+ 360 pt: main  578/621 frei | 16  566/621 frei | 16 ohne Banner 566 frei
+ 375 lb: main  578/621 frei | 16  566/621 frei | 16 ohne Banner 566 frei
+ 375 de: main  578/621 frei | 16  566/621 frei | 16 ohne Banner 566 frei
+ 375 fr: main  578/601 frei | 16  566/601 frei | 16 ohne Banner 566 frei
+ 375 en: main  578/641 frei | 16  566/641 frei | 16 ohne Banner 566 frei
+ 375 pt: main  578/621 frei | 16  566/621 frei | 16 ohne Banner 566 frei
+ 390 lb: main  549/621 frei | 16  537/621 frei | 16 ohne Banner 537 frei
+ 390 de: main  578/621 frei | 16  566/621 frei | 16 ohne Banner 566 frei
+ 390 fr: main  578/601 frei | 16  566/601 frei | 16 ohne Banner 566 frei
+ 390 en: main  578/641 frei | 16  566/641 frei | 16 ohne Banner 566 frei
+ 390 pt: main  578/621 frei | 16  566/621 frei | 16 ohne Banner 566 frei
+ 412 lb: main  549/621 frei | 16  537/621 frei | 16 ohne Banner 537 frei
+ 412 de: main  578/621 frei | 16  566/621 frei | 16 ohne Banner 566 frei
+ 412 fr: main  578/621 frei | 16  566/621 frei | 16 ohne Banner 566 frei
+ 412 en: main  549/641 frei | 16  537/641 frei | 16 ohne Banner 537 frei
+ 412 pt: main  578/621 frei | 16  566/621 frei | 16 ohne Banner 566 frei

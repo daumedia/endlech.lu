@@ -153,7 +153,7 @@ final class AdminBoardControllerTest extends AbstractWebTestCase
         self::assertSame(BoardIdeaStatus::DECLINED, $nachher->getStatus());
         self::assertTrue($nachher->isPublished(), 'Eine Ablehnung ist eine Veröffentlichung.');
 
-        $client->request('GET', self::LOCALE . '/community/ideen?status=declined');
+        $client->request('GET', self::LOCALE . '/roadmap/ideen?status=declined');
         self::assertSelectorTextContains('body', 'Wird abgelehnt');
         self::assertSelectorTextContains('body', 'Passt nicht zum Zweck der Plattform.');
     }

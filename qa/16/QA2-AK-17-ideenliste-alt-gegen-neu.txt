@@ -1,0 +1,20 @@
+?sort=votes: alt 815 Zeilen, Abweichungen 0
+   alt {'karten': 21, 'zustimmungsformulare': 21, 'sortierung': 1, 'statusfilter_optionen': 5, 'blaetterung': 0, 'umgesetzt': 1, 'leitzahl': [('', '44')]}
+   neu {'karten': 21, 'zustimmungsformulare': 21, 'sortierung': 1, 'statusfilter_optionen': 5, 'blaetterung': 0, 'umgesetzt': 1, 'leitzahl': [('44', '')]}
+?sort=newest: alt 815 Zeilen, Abweichungen 0
+   alt {'karten': 21, 'zustimmungsformulare': 21, 'sortierung': 1, 'statusfilter_optionen': 5, 'blaetterung': 0, 'umgesetzt': 1, 'leitzahl': [('', '44')]}
+   neu {'karten': 21, 'zustimmungsformulare': 21, 'sortierung': 1, 'statusfilter_optionen': 5, 'blaetterung': 0, 'umgesetzt': 1, 'leitzahl': [('44', '')]}
+?sort=newest&status=reviewing&page=2: alt 76 Zeilen, Abweichungen 2
+   alt {'karten': 1, 'zustimmungsformulare': 1, 'sortierung': 1, 'statusfilter_optionen': 5, 'blaetterung': 7, 'umgesetzt': 1, 'leitzahl': [('', '11')]}
+   neu {'karten': 1, 'zustimmungsformulare': 1, 'sortierung': 1, 'statusfilter_optionen': 5, 'blaetterung': 7, 'umgesetzt': 1, 'leitzahl': [('11', '')]}
+    -<h2 class="mt-3 text-xl font-bold text-gray-900">Noch keine Idee auf dem Board</h2>
+    +<h2 class="mt-3 text-xl font-bold text-gray-900">Noch keine Idee veröffentlicht</h2>
+?page=2: alt 816 Zeilen, Abweichungen 0
+   alt {'karten': 21, 'zustimmungsformulare': 21, 'sortierung': 1, 'statusfilter_optionen': 5, 'blaetterung': 11, 'umgesetzt': 1, 'leitzahl': [('', '44')]}
+   neu {'karten': 21, 'zustimmungsformulare': 21, 'sortierung': 1, 'statusfilter_optionen': 5, 'blaetterung': 11, 'umgesetzt': 1, 'leitzahl': [('44', '')]}
+?status=planned: alt 513 Zeilen, Abweichungen 0
+   alt {'karten': 13, 'zustimmungsformulare': 13, 'sortierung': 1, 'statusfilter_optionen': 5, 'blaetterung': 0, 'umgesetzt': 1, 'leitzahl': [('', '12')]}
+   neu {'karten': 13, 'zustimmungsformulare': 13, 'sortierung': 1, 'statusfilter_optionen': 5, 'blaetterung': 0, 'umgesetzt': 1, 'leitzahl': [('12', '')]}
+?status=declined: alt 439 Zeilen, Abweichungen 0
+   alt {'karten': 11, 'zustimmungsformulare': 11, 'sortierung': 1, 'statusfilter_optionen': 5, 'blaetterung': 0, 'umgesetzt': 1, 'leitzahl': [('', '10')]}
+   neu {'karten': 11, 'zustimmungsformulare': 11, 'sortierung': 1, 'statusfilter_optionen': 5, 'blaetterung': 0, 'umgesetzt': 1, 'leitzahl': [('10', '')]}

@@ -1,0 +1,29 @@
+AK-34 · zweiter Durchlauf · Konto admin@endlech.lu, Entwicklungsserver 16 (Port 8000) und main (Port 8001, eigener Limiter-Speicher)
+
+Einreichen (Deckel board_submit, 5/Std. am Konto):
+QA16C-neu Nr. 1 → 302 http://127.0.0.1:8000/de/roadmap/ideen/eingereicht 
+QA16C-neu Nr. 2 → 302 http://127.0.0.1:8000/de/roadmap/ideen/eingereicht 
+QA16C-neu Nr. 3 → 302 http://127.0.0.1:8000/de/roadmap/ideen/eingereicht 
+QA16C-neu Nr. 4 → 302 http://127.0.0.1:8000/de/roadmap/ideen/eingereicht 
+QA16C-neu Nr. 5 → 302 http://127.0.0.1:8000/de/roadmap/ideen/eingereicht 
+QA16C-neu Nr. 6 → 429  Zu viele Einreichungen. Bitte versuche es in 60 Minuten erneut.
+QA16C-neu Nr. 7 → 429  Zu viele Einreichungen. Bitte versuche es in 60 Minuten erneut.
+QA16C-main Nr. 1 → 302 http://127.0.0.1:8001/de/community/ideen/eingereicht 
+QA16C-main Nr. 2 → 302 http://127.0.0.1:8001/de/community/ideen/eingereicht 
+QA16C-main Nr. 3 → 302 http://127.0.0.1:8001/de/community/ideen/eingereicht 
+QA16C-main Nr. 4 → 302 http://127.0.0.1:8001/de/community/ideen/eingereicht 
+QA16C-main Nr. 5 → 302 http://127.0.0.1:8001/de/community/ideen/eingereicht 
+QA16C-main Nr. 6 → 429  Zu viele Einreichungen. Bitte versuche es in 60 Minuten erneut.
+QA16C-main Nr. 7 → 429  Zu viele Einreichungen. Bitte versuche es in 60 Minuten erneut.
+
+Zustimmen (Deckel board_vote, 60/Std. am Konto), Idee 96, Meldung auf der Folgeseite:
+Versuch 59 → Folgeseite: ohne Meldung
+Versuch 60 → Folgeseite: ohne Meldung
+Versuch 61 → Folgeseite: Zu viele Zustimmungen. Bitte versuche es in 60 Minuten erneut.
+main: Versuch 59 → Folgeseite: ohne Meldung
+main: Versuch 60 → Folgeseite: ohne Meldung
+main: Versuch 61 → Folgeseite: Zu viele Zustimmungen. Bitte versuche es in 60 Minuten erneut.
+
+Alter Schreibweg nach der Umstellung:
+POST /de/community/ideen/neu → 405
+POST /de/community/ideen/96/zustimmen → 404

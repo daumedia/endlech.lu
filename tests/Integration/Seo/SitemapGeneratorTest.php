@@ -138,7 +138,7 @@ final class SitemapGeneratorTest extends KernelTestCase
                 '#/(admin|profile|api|login|register|passwort-vergessen|passwort-zuruecksetzen|verify|confirmation|abmelden|thanks|suggest|eingereicht)(/|$)#',
                 $adresse,
             );
-            self::assertDoesNotMatchRegularExpression('#/community/ideen/(?!$)#', $adresse, 'Einzelne Ideen gehören nicht hinein.');
+            self::assertDoesNotMatchRegularExpression('#/roadmap/ideen/(?!$)#', $adresse, 'Einzelne Ideen gehören nicht hinein.');
         }
     }
 
