@@ -160,6 +160,8 @@ Barrierefreiheit, nicht nur Sicherheit.
   (AK-14)? — Betreiber
 - **OF-02** · Soll Conditional UI aktiviert werden? Das Paket kann es; es würde die
   Passkey-Anmeldung noch einen Schritt kürzer machen. — Betreiber
+  ✔ **Entschieden: vorerst nicht.** Steht öffentlich unter `/roadmap` im Block „Bewusst nicht
+  gebaut“ (`passkey_conditional_ui`, seit Feature `07`). Festgestellt 2026-11-07.
 - **OF-03** · Ist `WEBAUTHN_RP_ID` auf Produktion gesetzt und korrekt? — Betreiber,
   vor der nächsten Auslieferung
 

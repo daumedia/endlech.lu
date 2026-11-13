@@ -157,6 +157,9 @@ Umgekehrt hängen B16 und B17 daran.
 
 - **OF-02** · Ist der Cron-Eintrag auf Produktion tatsächlich eingerichtet (AK-17)? —
   Betreiber, vor dem nächsten Monatswechsel
+  ✔ **Überholt, festgestellt 2026-11-07:** Seit dem 2026-09-02 gibt es keinen Cron mehr; der
+  Monatslauf hängt am Zeitplan `metrics` (`MetricsScheduleProvider`, `15 3 1 * *`) im
+  Worker. Auf der Produktion führt der Verlauf in `/open.json` den Monat `2026-10`.
 - **OF-03** · Soll `src/Schedule.php` bleiben, obwohl es nicht feuert? Ein Kommentar im
   Code wäre das Mindeste. — Betreiber
   **Entschieden 2026-08-25:** Bleibt, mit Kommentar (BF-48, 2026-08-25). Die Klasse ist in dem Moment richtig, in dem ein Worker dazukommt; der Kommentar verhindert, dass jemand bei einer ausgefallenen Historie hier sucht.

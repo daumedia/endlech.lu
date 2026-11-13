@@ -1,13 +1,19 @@
 # Features
 
-Stand: 2026-09-12 (Release `v2026.09.12.1`) · Stack-Profil: `symfony-doctrine` · Artefaktpfad: `docs/`
+Stand: 2026-11-07 (Release `v2026.11.07`) · Stack-Profil: `symfony-doctrine` · Artefaktpfad: `docs/`
 
-Stand der Rückerfassung: **alle 26 Features rekonstruiert** (2026-08-23).
-Stand der Auslieferung: **17 Bestandsfeatures auf `deployed`** (2026-09-11) — sie waren
-ohnehin live, ihre Reparaturen gingen mit `v2026.08.29` hinaus. **Sechs bleiben auf
-`approved`**, jede mit dem Grund in ihrer Zeile: B01, B14 und B15 wegen des offenen
-BF-119 (*hoch*), B10, B12 und B24 wegen eines `qa-report.md`, der noch das
-„Production-ready: nein" seines ersten Durchlaufs trägt.
+Stand der Rückerfassung: **alle 26 Bestandsfeatures rekonstruiert** (2026-08-23) **und
+geprüft** (Ergebnisse in `features/befunde.md`).
+Stand der Auslieferung: **24 Bestandsfeatures auf `deployed`, zwei auf `approved`**, jedes
+mit dem Grund in seiner Zeile: B10 (auf der Produktion zeigt keine Detailseite den
+Nahverkehrsblock) und B24 (keine QA-Runde für Portugiesisch). Neue Features: 01–12, 15 und
+16 auf `deployed` (09 ist in 11 aufgegangen), 13 und 14 auf `roadmap`, noch ohne Spec.
+Offen am 2026-11-07: 26 Befunde, keiner *hoch* oder *kritisch* (`features/befunde.md`,
+Abschnitt „Offen“). Einen Auditbericht (`/sdd-erfassen abschluss`) gibt es noch nicht.
+
+⚠ Bis 2026-11-07 stand hier der Stand vom 2026-09-12 (17 `deployed`, sechs `approved`) —
+der Kopf wurde bei den Releases dazwischen nicht nachgezogen. Maßgeblich ist die Spalte *Status*
+der Tabelle unten.
 
 
 
@@ -1842,7 +1848,7 @@ AK-49 verlangt ausdrücklich den *Aufruf* des Aufräumlaufs, nicht bloß seine E
 | B21 | Vorschläge prüfen (Admin) | P0 | **deployed** | B19, B11 | 2026-09-11 · war live, auditiert; Reparaturen in v2026.08.29 |
 | B22 | Wartelisten-Verwaltung (Admin) | P1 | **deployed** | B19, B14, B15 | 2026-09-11 · war live, auditiert; Reparaturen in v2026.08.29 |
 | B23 | REST-API v1 (iOS-Backend) | P0 | **deployed** | B01, B05 | 2026-09-11 · war live, auditiert; Reparaturen in v2026.08.29 |
-| B24 | Mehrsprachigkeit | P1 | **approved** | — | 2026-09-15 · **Portugiesisch (pt-PT) als fünfte Sprache, live in `v2026.09.15`** (#133), auf der Produktion nachgeprüft: `/pt/…` 200 mit `lang="pt"`, Sitemap 30 Einträge je Sprache, `robots.txt` sperrt `/pt/…`. `LocaleSubscriber` und Sprachumschalter lesen `enabled_locales`. ⚠ Keine Sprachwahl nach Browsersprache — `/` leitet fest auf `/lb/`. Status bleibt `approved` (keine QA-Runde für pt). Bericht `qa/v2026.09.15/produktion-2026-09-15.md`. — 2026-09-11 · QA 16/16, BF-68 bis BF-72 behoben und in v2026.08.29 live — ⚠ `qa-report.md` trägt noch „Production-ready: nein" aus dem 1. Durchlauf |
+| B24 | Mehrsprachigkeit | P1 | **approved** | — | 2026-11-07 · **Richtigstellung:** Die Sprachwahl nach Browsersprache gibt es seit demselben Tag — `dbc74dd` (2026-09-15, `LocaleRedirectController`) leitet `/` und die sprachfreien Kurzlinks nach Sitzung → `Accept-Language` → `lb`. Der ⚠-Satz im Eintrag darunter ist damit überholt — 2026-09-15 · **Portugiesisch (pt-PT) als fünfte Sprache, live in `v2026.09.15`** (#133), auf der Produktion nachgeprüft: `/pt/…` 200 mit `lang="pt"`, Sitemap 30 Einträge je Sprache, `robots.txt` sperrt `/pt/…`. `LocaleSubscriber` und Sprachumschalter lesen `enabled_locales`. ⚠ Keine Sprachwahl nach Browsersprache — `/` leitet fest auf `/lb/`. Status bleibt `approved` (keine QA-Runde für pt). Bericht `qa/v2026.09.15/produktion-2026-09-15.md`. — 2026-09-11 · QA 16/16, BF-68 bis BF-72 behoben und in v2026.08.29 live — ⚠ `qa-report.md` trägt noch „Production-ready: nein" aus dem 1. Durchlauf |
 | B25 | PWA & mobile Navigation | P1 | **deployed** | — | 2026-09-12 · QA¹ mit sechs Befunden, alle behoben und mit `v2026.09.12.2` ausgeliefert. Auf Produktion nachgeprüft: `CACHE_VERSION=endlech-v3`, und das **ausgelieferte** `sw.js` gegen den Prüflauf gefahren — Avatar nicht gecacht, Restaurantfoto und Porträt schon, API-Wege mit und ohne Sprachpräfix unangetastet |
 | B26 | Cookie-Banner | P2 | **deployed** | — | 2026-09-12 · QA¹: **alle 11 Kriterien bestanden**, Kontraste 5,54–17,75 : 1. Der einzige Befund (BF-146) betraf die Spezifikation; **am Code wurde nichts geändert** — der Auditvermerk ist der Deploy, nicht ein Build |
 

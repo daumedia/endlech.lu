@@ -31,7 +31,7 @@ alles, was beim Ändern schiefgeht.
 | | |
 |---|---|
 | **Artefaktpfad** | `docs/` — auch in Zeile 3 von `docs/prd.md` |
-| **Feature-Inventar** | `features/index.md` — 26 Bestandsfeatures `B01`–`B26`, alle Status `rekonstruiert` |
+| **Feature-Inventar** | `features/index.md` — 26 Bestandsfeatures `B01`–`B26` und die neuen Features `01`–`16`; Status steht dort je Zeile |
 | **Je Feature** | `features/BNN-slug/spec.md` (Akzeptanzkriterien, Fehlbestand) + `design.md` (Struktur, Zugriffsregeln, AK-Abdeckung) |
 | **Projektweite Muster** | `features/fehlbestand-uebersicht.md` — zehn Muster über mehrere Features |
 | **Stack-Profil** | `symfony-doctrine` |
@@ -43,8 +43,10 @@ Datei; umbenennen bräche alle drei.
 Alle Bestandsfeatures tragen das Präfix `B` — daran ist erkennbar, dass ihre `spec.md`
 eine **Rekonstruktion** ist und selbst falsch sein kann, anders als bei einem gegen eine
 Spec gebauten Feature. Weg: `bestand` → `/sdd-erfassen BNN` → `rekonstruiert` →
-`/sdd-qa BNN`. **Stand 2026-08-23 alle 26 auf `rekonstruiert`** — QA steht aus,
-`features/befunde.md` und Auditbericht existieren deshalb noch nicht.
+`/sdd-qa BNN`. **Stand 2026-11-07: alle 26 rekonstruiert und geprüft**, 24 auf `deployed`,
+B10 und B24 auf `approved`. Die Befunde führt `features/befunde.md`; einen Auditbericht
+(`/sdd-erfassen abschluss`) gibt es noch nicht. ⚠ Den Status nicht hier pflegen, sondern im
+Index — dieser Satz stand von August bis November auf „QA steht aus“.
 
 ⚠ **Die `spec.md` eines `B`-Features ist eine Rekonstruktion und kann selbst falsch sein.**
 Sie beschreibt, was der Code tut, nicht was er tun sollte; Kriterien mit ⚠ markieren

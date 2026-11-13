@@ -132,6 +132,11 @@ Drei sprachfreie Endpunkte geben die Daten der Plattform maschinenlesbar heraus:
   **Entschieden 2026-08-25:** Nein (BF-41, 2026-08-25). Der Datensatz enthält weiterhin alle Einträge; was fehlte, war die Erklärung. Die Metadaten tragen jetzt `fieldNotes` zu `verified`, `assessed` und `accessibilityScore` — ohne sie wirkt jede Zeile wie eine geprüfte Angabe und ein `null`-Score wie ein Datenfehler.
 
 - **OF-02** · Steht auf Cloudways ein Cache vor der Anwendung (AK-14)? — Betreiber
+  ✔ **Überholt, festgestellt 2026-11-07:** Cloudways ist seit dem 2026-09-02 abgelöst
+  (Coolify). Auf der Produktion steht kein Cache vor der Anwendung — `/open.json` und
+  `/open/dataset.csv` antworten mit `server: FrankenPHP Caddy`, ohne `Age`, `Via` oder
+  `X-Cache`. Die Last aus AK-14 deckelt stattdessen der Limiter `open_dataset`
+  (`RouteRateLimitSubscriber`).
 
 ## Decision Log
 

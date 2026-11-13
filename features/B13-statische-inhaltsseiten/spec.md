@@ -92,6 +92,8 @@ der Cookie-Banner verweist).
 - **OF-01** · Wann entsteht `docs/datenschutz.md` (FB-01)? Es ist die Eingabe für
   `/sdd-betrieb` und die Grundlage, um AK-07 überhaupt beantworten zu können. —
   Betreiber
+  ✔ **Erledigt, festgestellt 2026-11-07:** `docs/datenschutz.md` besteht (Datenschutzstufe B,
+  bestätigt 2026-08-30).
 - **OF-02** · Soll der Kriterienkatalog die Punktzahl erklären (AK-08)? — Betreiber
   **Entschieden 2026-08-25:** Ja, umgesetzt (BF-66, 2026-08-25). Der Abschnitt „Wie die Punktzahl entsteht" nennt alle acht Merkmale und den Satz, auf den es ankommt: Nicht Erfasstes zählt wie nicht erfüllt.
 

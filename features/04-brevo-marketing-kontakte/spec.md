@@ -261,6 +261,8 @@ Durchgang durch `~/.claude/sdd/sicherheit.md`, alle sechs Abschnitte. Datenschut
 - **OF-01** · Welche Datenschutzstufe gilt für das Projekt? Das PRD legt keine fest, und
   `docs/datenschutz.md` existiert nicht. Diese Spec nimmt **B** an. Zu entscheiden, bevor
   AK-33 umgesetzt wird. — Betreiber
+  ✔ **Erledigt, festgestellt 2026-11-07:** Stufe B ist seit dem 2026-08-30 bestätigt
+  (`docs/datenschutz.md`, Kopf; entschieden in Feature `06`, OF-04).
 - **OF-02** · Wie kann ein bestehendes Konto nachträglich zustimmen? Heute erreicht die
   Checkbox nur den Registriervorgang; wer schon ein Konto hat, hat keinen Weg hinein. Ein
   Schalter im Profil wäre der naheliegende Ort, wurde aber nicht beauftragt. — Betreiber
@@ -282,6 +284,12 @@ Durchgang durch `~/.claude/sdd/sicherheit.md`, alle sechs Abschnitte. Datenschut
   unverhältnismäßig, und der direkte Weg ist ohnehin der bessere. Sie wird wieder
   dringlich, sobald Registrierungen von Fremden eingehen; dann ist der gesamte
   Nutzerbestand ohne diesen Schalter für Kampagnen unerreichbar.
+
+  ✔ **Erledigt mit Feature `12` (ausgeliefert mit `v2026.10.23`), festgestellt 2026-11-07:**
+  Newsletter-Schalter im Profil und in der Einführung. `App\Account\NewsletterSubscription`
+  ist der zweite Aufrufpunkt von `recordUser()` neben `EmailVerificationController`, und
+  `unsubscribe()` stellt über `revokeForAccount()` den Sperrauftrag — beide Richtungen, wie
+  oben verlangt.
 - **OF-03** · Bleibt die Öffnungs- und Klickverfolgung in Brevo eingeschaltet? Sie ist
   dort Vorgabe. Das PRD schließt Web-Analytics aus und begründet das mit Datensparsamkeit
   — ob das auch für Kampagnen gilt, ist nicht entschieden. — Betreiber
@@ -303,6 +311,14 @@ Durchgang durch `~/.claude/sdd/sicherheit.md`, alle sechs Abschnitte. Datenschut
   (`'action': path('app_organisations_submit')`) verlöre den UTM-Query-String, den der
   Partner-Weg ausdrücklich schützt — deshalb braucht sie eine eigene Entscheidung und
   wurde hier **nicht** vorgenommen. — Betreiber
+  **Stand 2026-11-07 — halb erledigt.** Der 405er ist mit BF-151 behoben (2026-09-13,
+  `action` → `app_organisations_submit`). **Der befürchtete Preis ist dabei eingetreten:**
+  Das Ziel trägt keinen Query-String, `WaitlistRequestHelper::resolveSource()` findet beim
+  Absenden kein `utm_source` und fällt auf den Host des Referrers zurück — bei
+  `strict-origin-when-cross-origin` und gleicher Herkunft ist das `endlech.lu`. Seither gilt
+  das auch für die Übersicht, die vorher auf ihre eigene Adresse samt Query postete. Der
+  Partner-Weg (`partner/_form.html.twig`, bewusst ohne `action`) ist nicht betroffen.
+  Offen: Query-String ans Ziel hängen oder die Herkunft anders mitführen. — Betreiber
 - **OF-09** · *(bei der Reparatur von BF-85 offengeblieben)* **Wie soll sich das
   Auftragsbuch bei echter Nebenläufigkeit verhalten?** Der belegte Fall — zwei
   `record()`-Aufrufe in **einem** Vorgang — ist behoben. Zwei **parallele Requests**
