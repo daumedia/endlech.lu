@@ -1,0 +1,78 @@
+{
+  "site": "sc-domain:endlech.lu",
+  "angelegt": "2026-11-15",
+  "letzter_lauf": "2026-11-15",
+  "hypothesen": [
+    {
+      "id": "H-2026-W46-01",
+      "gestellt": "2026-11-15",
+      "loop": "seo",
+      "beobachtung": "Die 30 Detailseiten-URLs (/xx/restaurants/N) bringen 1553 von 1805 Impressions der Site, aber nur 4 von 12 Klicks: CTR 0,26 %, nach Impressions gewichtete Position 11,3. Übrige Site: 252 Impressions, 8 Klicks. Gefunden werden die Seiten fast nur über den Namen des Lokals – /fr/restaurants/3 hat 701 Impressions und 0 Klicks (\"coyote belval\" 431 Imp. auf Pos. 10,4), /fr/restaurants/7 287 Impressions und 1 Klick (\"osteria belval\" 148 auf Pos. 10,2). Der Titel lautete nur \"Name – Endlech.lu\", eine Meta-Description gab es nicht.",
+      "quelle": "growth/snapshots/2026-W46.json",
+      "aenderung": "Titel \"Name: Barrierefreiheit – Endlech.lu\" in allen fünf Sprachen; neue Meta-Description aus den Daten des Eintrags: nur die als vorhanden geführten Merkmale (Rollstuhl, WC, Parkplatz, Assistenzhund, Wickeltisch, Licht), dann die Adresse; ohne Merkmal ein neutraler Satz.",
+      "commit": "5437de0",
+      "branch": "growth/H-2026-W46-01",
+      "deployt": null,
+      "erwartung": {
+        "metrik": "ctr",
+        "zuschnitt": {
+          "werkzeug": "gsc_query",
+          "dimensions": ["page"],
+          "filter": [
+            { "dimension": "page", "operator": "includingRegex", "expression": "^https://endlech\\.lu/(lb|de|fr|en|pt)/restaurants/[0-9]+$" }
+          ],
+          "rechnung": "Summe clicks / Summe impressions über alle Zeilen, 28 Tage, dataState final"
+        },
+        "vorher": 0.00258,
+        "vorher_roh": { "impressions": 1553, "clicks": 4, "position_gewichtet": 11.32, "zeilen": 30 },
+        "ziel": 0.015,
+        "fruehestens": null,
+        "begruendung": "Kaskadenstufe Klicks/CTR: ab Monat 3 nach dem Deploy, also deployt + 3 Monate. Ziel 1,5 % entspricht einer üblichen CTR auf Position ~10 und bei gleichen Impressions rund 23 Klicks in 28 Tagen.",
+        "gegenpruefung": "CTR der übrigen Site im selben Zeitraum: 8 / 252 = 3,2 % (Site gesamt aus abfragen.date: 12 / 1805 = 0,66 %). Steigt die Detailseiten-CTR, aber auch die der übrigen Site im gleichen Maß, war es nicht diese Änderung. Steigt die gewichtete Position deutlich (unter 9), ist eine CTR-Bewegung zum Teil Positionseffekt – dann im Ergebnis trennen."
+      },
+      "status": "offen",
+      "nachgemessen": []
+    },
+    {
+      "id": "H-2026-W46-02",
+      "gestellt": "2026-11-15",
+      "loop": "seo",
+      "beobachtung": "In der Search Console ist keine Sitemap eingereicht (gsc_sitemaps: 0). Die Datei ist gesund (https://endlech.lu/sitemap.xml: 200, 150 URLs, in robots.txt verwiesen). /de/restaurants/6 (Schmelz) und /de/restaurants/9 (Restaurant Parc Merveilleux) sind laut gsc_inspect_url \"URL ist Google nicht bekannt\", obwohl beide in der Sitemap stehen und von /de/restaurants verlinkt sind (diese zuletzt gecrawlt 2026-11-05). Keine der beiden Nummern hat in irgendeiner Sprache eine Impression im Snapshot.",
+      "quelle": "growth/snapshots/2026-W46.json",
+      "aenderung": "Keine Code-Änderung – Maßnahme in der Search Console, von Michael auszuführen: Sitemap https://endlech.lu/sitemap.xml einreichen; per URL-Prüfung \"Indexierung beantragen\" für https://endlech.lu/de/restaurants/6 und https://endlech.lu/de/restaurants/9.",
+      "commit": null,
+      "massnahme": "search-console",
+      "deployt": null,
+      "erwartung": {
+        "metrik": "im_index",
+        "zuschnitt": {
+          "werkzeug": "gsc_inspect_url",
+          "urls": [
+            "https://endlech.lu/de/restaurants/6",
+            "https://endlech.lu/de/restaurants/9"
+          ],
+          "zusatz": "gsc_sitemaps: Sitemap verarbeitet, Fehlerzahl"
+        },
+        "vorher": "0 von 2 bekannt (beide \"URL ist Google nicht bekannt\", geprüft 2026-11-15)",
+        "ziel": "2 von 2 \"indexiert\"",
+        "fruehestens": null,
+        "begruendung": "Kaskadenstufe Indexierung: Woche 1–4. fruehestens = deployt (Datum der Einreichung) + 2 Wochen; bei \"zu-frueh\" nach 4 Wochen erneut."
+      },
+      "status": "offen",
+      "nachgemessen": []
+    }
+  ],
+  "randbedingungen": [
+    {
+      "id": "R-2026-W46-01",
+      "gestellt": "2026-11-15",
+      "quelle": "cro",
+      "werkzeug": "umami",
+      "zeitraum": "2026-10-15 bis 2026-11-11",
+      "beobachtung": "Kette Startseite → Liste → Detailseite (\"*/\", \"*/restaurants\", \"*/restaurants/*\", Fenster 60 Min., umami_conversion_nach_quelle): Suchmaschinen 10 → 8 → 2, alle Besucher 26 → 12 → 2. Suchbesucher steigen zu 10 von 14 auf einer Startseite ein, die übrigen 4 direkt auf einer Detailseite. Detailseite → kontaktweg_genutzt: Suchmaschinen 1 von 4, alle 2 von 7. Gesamt 38 Besucher im Zeitraum – alles unter 100, keine Quoten.",
+      "folge_fuer_loop_1": "Mehr Suchklicks auf die Startseiten bringen Besucher derzeit bis zur Liste, kaum weiter zu einem Lokal. SEO-Arbeit vorerst an den Detailseiten (kürzester Weg zum Inhalt), nicht an Startseiten-Snippets. Den Absprung Liste → Detailseite angehen, bevor Startseiten-Klicks gezielt gesteigert werden.",
+      "gilt_bis": "2027-02-15"
+    }
+  ],
+  "verworfen": []
+}
