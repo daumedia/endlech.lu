@@ -17,13 +17,19 @@
    (Sponsorenseite), wird `alt` leer, sonst läse der Screenreader ihn zweimal.
 
    Parameter: sponsor, size ('sm' | 'lg', Vorgabe 'sm'), link (Vorgabe true),
-   decorative (Vorgabe false).
+   decorative (Vorgabe false), hellerGrund (Vorgabe false).
+
+   ⚠ **Die Fokusfarbe hängt am Grund, nicht an der Kachel** — der Rahmen liegt mit Abstand um
+   die weiße Kachel, also auf dem Grund daneben. cyan-400 im dunklen Footer (9,8 : 1), cyan-700
+   auf hellem Grund (`hellerGrund: true`, Unternehmensseite auf `bg-gray-50`): cyan-400 maß dort
+   1,73 : 1. Bis 2026-11-14 überdeckte der ungeschichtete globale Fallback jede Farbe (BF-206).
 
    ⚠ **`link` NICHT über `|default(true)` lesen** — Twigs `default` ersetzt auch ein
    ausdrückliches `false`. Genau so lag die Kachel auf der Übersicht als Link in der
    Karte, die selbst ein Link ist, und auf der Sponsorenseite stand ein Logo-Link mit
    leerem alt, also ohne Namen (im Selbsttest gefunden, `SponsorAccessibilityTest`). #}
 {%- set _verlinkt = link is defined ? link : true -%}
+{%- set _fokus = (hellerGrund is defined and hellerGrund) ? 'focus:outline-cyan-700' : 'focus:outline-cyan-400' -%}
 {%- set _lg = (size|default('sm')) == 'lg' -%}
 {%- set _flaeche = _lg ? 'h-24 w-60 p-3' : 'h-14 w-36 p-2' -%}
 {%- set _bild -%}
@@ -35,7 +41,7 @@
 {%- endset -%}
 {%- if _verlinkt -%}
     <a href="{{ path('app_sponsor_show', {slug: sponsor.slug}) }}"
-       class="inline-flex items-center justify-center {{ _flaeche }} rounded-lg bg-white ring-1 ring-gray-300 hover:ring-cyan-400 motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-cyan-400">
+       class="inline-flex items-center justify-center {{ _flaeche }} rounded-lg bg-white ring-1 ring-gray-300 hover:ring-cyan-400 motion-safe:transition focus:outline-2 focus:outline-offset-2 {{ _fokus }}">
         {{- _bild -}}
     </a>
 {%- else -%}

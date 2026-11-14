@@ -408,6 +408,8 @@ legal:
     rights_profile_link: "zu meinem Profil"
     retention_title: "Speicherdauer"
     retention_text: "Kontodaten speichern wir, solange das Konto besteht; nach der Löschung verschwinden sie unmittelbar. Wartelisten-Anmeldungen bleiben, bis sie zurückgezogen werden oder das Programm startet. Restaurant-Angaben bleiben dauerhaft — sie sind Sachangaben und werden nach einer Kontolöschung von der Person getrennt. Messdaten der Nutzungsmessung bleiben ohne zeitliche Grenze; sie enthalten keine IP-Adresse und keinen Bezug zu einem Konto."
+    saved_title: "Favoriten, Listen und Notizen"
+    saved_text: "Wer mit einem Konto Lokale merkt, eigene Listen anlegt oder Notizen schreibt, dessen Angaben speichern wir in unserer Datenbank: welche Lokale gemerkt sind, Name und Inhalt der Listen und den Text der Notizen, jeweils mit Zeitpunkt. Sehen kannst nur du sie – weder andere Besucherinnen und Besucher noch das Team von Endlech.lu. Sie liegen in unserer Datenbank beim oben genannten Hoster und gehen an keinen weiteren Dienstleister: nicht an die Fehleranalyse, nicht an den E-Mail-Versand und nicht an die Nutzungsmessung (dort zählen wir nur, dass ein Lokal gemerkt oder eine Liste angelegt wurde, nie welches). Sie stehen in deinem Datenexport und werden mit deinem Konto gelöscht; verschwindet ein Lokal von Endlech.lu, verschwinden auch deine Angaben dazu. Rechtsgrundlage ist die Bereitstellung der Funktionen deines Kontos gemäß Art. 6 Abs. 1 lit. b DSGVO."
 
 criteria:
     score_title: "Wie die Punktzahl entsteht"
@@ -1715,3 +1717,71 @@ sponsor:
         open: "seit %start%"
         closed: "%start% – %end%"
         joiner: " und "
+
+saved:
+    nav: "Gespeichert"
+    title: "Gespeichert"
+    page_title: "Gespeichert – Endlech.lu"
+    intro: "Deine Favoriten und eigenen Listen. Nur du siehst sie."
+    to_search: "Zur Restaurantsuche"
+    back: "Zurück zu „Gespeichert“"
+    login_hint: "Melde dich an, um dir %name% zu merken."
+    heart:
+        add: "%name% merken"
+        remove: "%name% aus Favoriten entfernen"
+    flash:
+        added: "Gemerkt: %name%"
+        removed: "Aus Favoriten entfernt: %name%"
+        lists_saved: "Listen gespeichert."
+        list_created: "Liste „%list%“ angelegt."
+        list_renamed: "Liste umbenannt in „%list%“."
+        list_deleted: "Liste „%list%“ gelöscht."
+        entry_removed: "%name% aus „%list%“ entfernt."
+        note_saved: "Notiz gespeichert."
+        note_deleted: "Notiz gelöscht."
+        rate_limited: "Zu viele Änderungen. Bitte versuche es in %minutes% Minuten erneut."
+    favorites:
+        title: "Favoriten"
+        page_title: "Favoriten – Endlech.lu"
+        count: "{0}Noch nichts gemerkt|{1}1 Lokal|]1,Inf[%count% Lokale"
+        empty: "Noch nichts gemerkt. Tippe in der Suche auf das Herz, um ein Lokal hier zu sammeln."
+    lists:
+        heading: "Meine Listen"
+        empty: "Noch keine eigene Liste. Lege eine an, zum Beispiel für einen Anlass oder einen Ort."
+        count: "{0}0 Lokale|{1}1 Lokal|]1,Inf[%count% Lokale"
+        new_label: "Neue Liste"
+        new_help: "Höchstens 60 Zeichen."
+        create: "Anlegen"
+    list:
+        page_title: "%list% – Endlech.lu"
+        empty: "Diese Liste ist noch leer. Lokale legst du auf ihrer Detailseite unter „In Listen“ hinein."
+        rename_label: "Name der Liste"
+        rename: "Umbenennen"
+        delete: "Liste löschen"
+        remove_entry: "Aus Liste entfernen"
+    delete:
+        page_title: "Liste löschen – Endlech.lu"
+        question: "{0}Liste „%list%“ löschen?|{1}Liste „%list%“ mit 1 Lokal löschen?|]1,Inf[Liste „%list%“ mit %count% Lokalen löschen?"
+        explanation: "Die Lokale selbst, deine Favoriten und deine Notizen bleiben."
+        confirm: "Löschen"
+        cancel: "Abbrechen"
+    panel:
+        lists_heading: "In Listen"
+        lists_none: "Du hast noch keine eigene Liste. Lege hier die erste an – dieses Lokal kommt gleich hinein."
+        new_label: "Neue Liste"
+        new_help: "Dieses Lokal kommt gleich in die neue Liste."
+        save: "Speichern"
+        note_heading: "Deine Notiz"
+        note_label: "Notiz zu %name%"
+        note_help: "Nur für dich sichtbar. Höchstens 500 Zeichen."
+        note_save: "Notiz speichern"
+    card:
+        note: "Deine Notiz"
+    filter:
+        favorites: "Nur meine Favoriten"
+        no_favorites: "Du hast noch keine Favoriten. Tippe auf das Herz eines Lokals, um es hier zu finden."
+        remove: "Filter entfernen"
+    profile:
+        title: "Gespeichert"
+        text: "Deine Favoriten, Listen und Notizen."
+        link: "Zu „Gespeichert“"

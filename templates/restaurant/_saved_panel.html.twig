@@ -1,0 +1,55 @@
+{#
+    Abschnitt „Für dich“ auf der Detailseite (Feature 17): „In Listen“ und „Deine Notiz“.
+    Nur für Angemeldete (AK-07) — ein Gast bekommt hier gar nichts gerendert, auch keinen Namen
+    einer fremden Liste (AK-52).
+
+    Beide sind gewöhnliche Formulare ohne JavaScript; nach dem Speichern führt die Weiterleitung
+    auf `#in-listen` bzw. `#notiz` zurück. Fehler stehen am Feld (`_form_field`, AK-50).
+    Listennamen und Notiz sind Nutzertext: nie übersetzt, immer escaped (AK-37, AK-46).
+#}
+{% if listsForm is not null and noteForm is not null %}
+    {% set _haekchen = listsForm.lists %}
+    <section id="in-listen" aria-labelledby="in-listen-titel" class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6 scroll-mt-24">
+        <h2 id="in-listen-titel" class="text-lg font-bold text-gray-800 mb-4">{{ 'saved.panel.lists_heading'|trans }}</h2>
+        {{ form_start(listsForm, {action: path('app_restaurant_lists_save', {id: restaurant.id}), attr: {novalidate: 'novalidate'}}) }}
+            {% if _haekchen|length > 0 %}
+                <fieldset class="mb-4">
+                    <legend class="sr-only">{{ 'saved.panel.lists_heading'|trans }}</legend>
+                    <ul class="space-y-2">
+                        {% for haekchen in _haekchen %}
+                            <li class="flex items-center gap-3 min-h-[44px]">
+                                {{ form_widget(haekchen, {attr: {class: 'h-5 w-5 rounded border-gray-500 text-cyan-700 focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700'}}) }}
+                                {{ form_label(haekchen, null, {label_attr: {class: 'text-base text-gray-900'}}) }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    {% if _haekchen.vars.errors|length > 0 %}
+                        <p class="mt-1 text-sm font-semibold text-red-700">{% for error in _haekchen.vars.errors %}{{ error.message }} {% endfor %}</p>
+                    {% endif %}
+                </fieldset>
+            {% else %}
+                {% do _haekchen.setRendered %}
+                <p class="mb-4 text-gray-700">{{ 'saved.panel.lists_none'|trans }}</p>
+            {% endif %}
+            {% include 'partials/_form_field.html.twig' with {
+                field: listsForm.newList,
+                help: 'saved.panel.new_help'|trans,
+                autofocus: listsForm.newList.vars.errors|length > 0,
+            } %}
+            <button type="submit" class="mt-4 inline-flex items-center justify-center min-h-[44px] px-5 rounded-lg bg-cyan-700 text-white font-semibold hover:bg-cyan-800 motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700">{{ 'saved.panel.save'|trans }}</button>
+        {{ form_end(listsForm) }}
+    </section>
+
+    <section id="notiz" aria-labelledby="notiz-titel" class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6 scroll-mt-24">
+        <h2 id="notiz-titel" class="text-lg font-bold text-gray-800 mb-4">{{ 'saved.panel.note_heading'|trans }}</h2>
+        {{ form_start(noteForm, {action: path('app_restaurant_note_save', {id: restaurant.id}), attr: {novalidate: 'novalidate'}}) }}
+            {% include 'partials/_form_field.html.twig' with {
+                field: noteForm.text,
+                help: 'saved.panel.note_help'|trans,
+                rows: 4,
+                autofocus: noteForm.text.vars.errors|length > 0,
+            } %}
+            <button type="submit" class="mt-4 inline-flex items-center justify-center min-h-[44px] px-5 rounded-lg bg-cyan-700 text-white font-semibold hover:bg-cyan-800 motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700">{{ 'saved.panel.note_save'|trans }}</button>
+        {{ form_end(noteForm) }}
+    </section>
+{% endif %}

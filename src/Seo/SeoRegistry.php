@@ -83,6 +83,11 @@ final readonly class SeoRegistry
     private const array PAGINATED_ROUTES = [
         'app_restaurant_index',
         'app_board_index',
+        // ⚠ **Nicht hier: `app_saved_favorites`, `app_saved_list_show`** (Feature 17), obwohl sie
+        // `page` lesen. Die Liste gilt nur für angebotene Seiten — `SeoRouteCoverageTest` gleicht
+        // sie ausschließlich mit diesen ab und würde rot. Für eine private Seite gibt es keinen
+        // canonical-Verweis, und den Seitenparameter beim Sprachwechsel trägt der Umschalter selbst
+        // (BF-68); ein Eintrag hier änderte nur Sprachverweise, die keine Suchmaschine je abruft.
     ];
 
     /**
@@ -108,6 +113,14 @@ final readonly class SeoRegistry
         'app_verify_resend' => 'Nicht in der Liste von AK-15 — offene Frage OF-05 in spec.md',
         'app_onboarding' => 'Einführung für neue Konten (Feature 12): nur nach Anmeldung erreichbar, ein Gast '
             .'landet auf der Anmeldeseite — es gibt nichts anzubieten und nichts auszuschließen',
+        // Feature 17: der private Bereich „Gespeichert“. Hinter `access_control` — ein Gast und
+        // eine Suchmaschine landen auf der Anmeldeseite, eine fremde Liste ist 404 (AK-53). In der
+        // Sitemap steht keine dieser Adressen (AK-45).
+        'app_saved_index' => 'Gespeichert (Feature 17): privat, nur nach Anmeldung erreichbar — nichts anzubieten '
+            .'und nichts auszuschließen',
+        'app_saved_favorites' => 'Favoriten (Feature 17): privat, nur nach Anmeldung erreichbar',
+        'app_saved_list_show' => 'Eigene Liste (Feature 17): privat, nur für den Inhaber, sonst 404',
+        'app_saved_list_delete_confirm' => 'Rückfrage zum Löschen einer Liste (Feature 17): privat, nur für den Inhaber',
     ];
 
     /**

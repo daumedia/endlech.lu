@@ -1,0 +1,25 @@
+{#
+    „Favoriten“ (Feature 17, AK-12 bis AK-14): gemerkte Lokale als Karten der Suche, zuletzt
+    gemerkt zuerst, 12 je Seite, Notiz unter der Karte.
+
+    Das Herz auf einer Karte nimmt sie hier mit (AK-14): `RestaurantSavedController::remove()`
+    erkennt am geprüften Feld `ziel` diese Seite und antwortet mit dem neuen Raster (Turbo) bzw.
+    303 mit Anker auf die nächste Karte (ohne JavaScript).
+
+    Zustände: leer → Leertext AK-13 mit Verweis auf die Suche (im Raster); gefüllt → Zahl als
+    `h2`, Karten, Blättern; Deckel/Token → Meldung über die App-Hülle. „Ladend“ ist ein
+    gewöhnlicher Seitenwechsel.
+#}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'saved.favorites.page_title'|trans }}{% endblock %}
+
+{% block body %}
+    {{ include('saved/_kopf.html.twig', {titel: 'saved.favorites.title'|trans, zurueck: true, breite: 'max-w-6xl'}, with_context = false) }}
+
+    <section class="bg-gray-50 py-8 md:py-12">
+        <div class="container mx-auto px-4 max-w-6xl">
+            {{ include('saved/_cards.html.twig', karten, with_context = false) }}
+        </div>
+    </section>
+{% endblock %}

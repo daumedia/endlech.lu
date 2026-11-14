@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Favorite;
 use App\Entity\Restaurant;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -162,6 +163,21 @@ class RestaurantRepository extends ServiceEntityRepository
                     ->setParameter($param, json_encode($langValue));
             }
         }
+        // Feature 17, AK-38: „Nur meine Favoriten“ — eine Bedingung mehr, kombinierbar mit allem
+        // obigen. ⚠ Nur ein `User`-Objekt zählt, nie ein Wert aus der Anfrage: Das Konto setzt
+        // der Controller aus der Sitzung, sonst läse `?favorites_of=7` fremde Favoriten (AK-52).
+        // `EXISTS` statt Join: Ein Join brächte eine Zeile je Favorit mit und änderte nichts an
+        // der Zählung — die Unterabfrage berührt die Ergebniszeilen gar nicht.
+        if (($filters['favorites_of'] ?? null) instanceof User) {
+            $favoriten = $this->getEntityManager()->createQueryBuilder()
+                ->select('fav_filter.id')
+                ->from(Favorite::class, 'fav_filter')
+                ->andWhere('fav_filter.restaurant = r')
+                ->andWhere('fav_filter.user = :favoritesOf');
+
+            $qb->andWhere($qb->expr()->exists($favoriten->getDQL()))
+                ->setParameter('favoritesOf', $filters['favorites_of']);
+        }
 
         match ($sort) {
             'name' => $qb->orderBy('r.name', 'ASC'),
@@ -173,6 +189,53 @@ class RestaurantRepository extends ServiceEntityRepository
             ->setMaxResults($limit);
 
         return new Paginator($qb);
+    }
+
+    /**
+     * Karten zu Nummern, die eine eigene Abfrage geliefert hat — Favoritenseite (zuletzt
+     * gemerkt zuerst) und Listen (Feature 17). Dieselben Joins wie `findPaginated()`, damit die
+     * Karte nichts nachlädt.
+     *
+     * ⚠ **Ohne `setMaxResults()`:** Begrenzt hat schon die Nummernabfrage; hier begrenzte es
+     * Zeilen statt Lokale (BF-64). ⚠ **Die Reihenfolge kommt aus `$ids`**, nicht aus der
+     * Datenbank — `IN (…)` sortiert nach nichts Bestimmtem. Unbekannte Nummern (inzwischen
+     * gelöschtes Lokal) fallen weg.
+     *
+     * @param int[] $ids
+     *
+     * @return list<Restaurant>
+     */
+    public function findForCards(array $ids): array
+    {
+        $ids = array_values(array_unique($ids));
+        if ([] === $ids) {
+            return [];
+        }
+
+        /** @var Restaurant[] $treffer */
+        $treffer = $this->createQueryBuilder('r')
+            ->leftJoin('r.openingHours', 'oh')
+            ->addSelect('oh')
+            ->leftJoin('r.cuisines', 'c')
+            ->addSelect('c')
+            ->andWhere('r.id IN (:ids)')
+            ->setParameter('ids', $ids)
+            ->getQuery()
+            ->getResult();
+
+        $nachNummer = [];
+        foreach ($treffer as $restaurant) {
+            $nachNummer[$restaurant->getId()] = $restaurant;
+        }
+
+        $karten = [];
+        foreach ($ids as $id) {
+            if (isset($nachNummer[$id])) {
+                $karten[] = $nachNummer[$id];
+            }
+        }
+
+        return $karten;
     }
 
     public function countVerified(): int

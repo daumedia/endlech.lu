@@ -1,0 +1,124 @@
+{#
+    Restaurantkarte (Feature 17) — aus `restaurant/index.html.twig` herausgelöst, Inhalt
+    unverändert; dazu Herz, Anker, optional Notiz und ein Platz für eine Kartenaktion.
+
+    Parameter:
+      restaurant  – das Lokal
+      isFavorite  – bool, Merkzustand des angemeldeten Kontos (Vorgabe false; Gäste: false)
+      note        – ?string, eigene Notiz (Vorgabe null). Nur die Seiten unter „Gespeichert“
+                    geben sie mit, die Suche nie.
+
+    Block `karten_aktion` (leer): Platz im Kartenfuß für eine Seite, die die Karte per
+    `{% embed %}` einbindet — etwa „Aus Liste entfernen“ auf einer Listenseite.
+
+    ⚠ **Name bleibt `h3` in einem `article`.** Die Suche führt `h1` → `h2` (Ergebniszahl) →
+    `h3` (Karten); `HeadingOrderTest` prüft die Kette. Die Notiz-Überschrift ist deshalb ein
+    `p`, keine weitere Ebene.
+    ⚠ **Das Herz ist ein Formular und darf nicht in einen Verweis wandern** (verschachtelte
+    interaktive Elemente). Es sitzt im Bildbereich, der kein Link ist.
+    ⚠ **`karte-{id}` und `favorit-{id}` sind Sprungziele** (Weiterleitung ohne JavaScript,
+    Fokus nach dem Entfernen) — beide tragen `scroll-mt-24`, sonst läge die Karte unter der
+    festen Kopfzeile.
+#}
+{% set _gemerkt = isFavorite ?? false %}
+{# Eigener Name: Die Schleife über `accessibilityNotes` unten heißt `note` und überdeckte den Parameter. #}
+{% set _notiz = note ?? null %}
+<article id="karte-{{ restaurant.id }}" class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md motion-safe:transition group flex flex-col scroll-mt-24">
+    <div class="h-40 bg-gray-100 relative {{ restaurant.coverImage is null ? 'flex items-center justify-center text-gray-300 text-5xl' : '' }}">
+        {% if restaurant.coverImage %}
+            <img src="/uploads/restaurants/{{ restaurant.coverImage.filename }}"
+                 alt="{{ restaurant.coverImage.altText ?: restaurant.name }}"
+                 class="w-full h-full object-cover">
+        {% else %}
+            <span aria-hidden="true">{{ restaurant.emoji }}</span>
+        {% endif %}
+        {% if restaurant|is_open_now %}
+            <span class="absolute top-3 right-3 bg-green-700 text-white text-xs font-bold px-2 py-1 rounded shadow-sm">{{ 'status.open'|trans }}</span>
+        {% else %}
+            <span class="absolute top-3 right-3 bg-red-700 text-white text-xs font-bold px-2 py-1 rounded shadow-sm">{{ 'status.closed'|trans }}</span>
+        {% endif %}
+        {# Herz oben links, gegenüber dem Öffnungsstatus; `text-base` hebt die Emoji-Größe des Platzhalters auf. #}
+        <div class="absolute top-2 left-2 text-base">
+            {% include 'partials/_favorite_button.html.twig' with {restaurant: restaurant, isFavorite: _gemerkt, ziel: ziel ?? null} only %}
+        </div>
+    </div>
+    <div class="p-5 flex-grow">
+        <div class="flex justify-between items-start">
+            <div>
+                <div class="flex items-center gap-2 flex-wrap">
+                    <h3 class="text-lg font-bold text-gray-900 group-hover:text-purple-700 motion-safe:transition">{{ restaurant.name }}</h3>
+                    {% include 'partials/_verified_badge.html.twig' with {restaurant: restaurant} %}
+                </div>
+                <p class="text-sm text-gray-500">{{ restaurant.city }}</p>
+                {% include 'partials/_cuisine_badges.html.twig' with {restaurant: restaurant} %}
+            </div>
+            {% if restaurant.rating is not null %}
+                <div class="bg-cyan-50 text-cyan-700 px-2 py-1 rounded text-xs font-bold border border-cyan-100 shrink-0">{{ restaurant.rating }}</div>
+            {% endif %}
+        </div>
+
+        {# Barrierefreiheits-Icons #}
+        <div class="flex gap-2 mt-3 flex-wrap">
+            {% if restaurant.isWheelchairAccessible %}
+                <span title="{{ 'accessibility.wheelchair'|trans }}" class="text-sm bg-green-50 text-green-700 px-2 py-0.5 rounded border border-green-100">♿</span>
+            {% endif %}
+            {% if restaurant.hasAccessibleToilet %}
+                <span title="{{ 'accessibility.toilet'|trans }}" class="text-sm bg-green-50 text-green-700 px-2 py-0.5 rounded border border-green-100">🚻</span>
+            {% endif %}
+            {% if restaurant.allowsAssistanceDogs %}
+                <span title="{{ 'accessibility.dogs'|trans }}" class="text-sm bg-green-50 text-green-700 px-2 py-0.5 rounded border border-green-100">🐕</span>
+            {% endif %}
+            {% if restaurant.hasBrightLighting %}
+                <span title="{{ 'accessibility.lighting'|trans }}" class="text-sm bg-green-50 text-green-700 px-2 py-0.5 rounded border border-green-100">💡</span>
+            {% endif %}
+            {% if restaurant.hasChangingTable %}
+                <span title="{{ 'accessibility.changing_table'|trans }}" class="text-sm bg-green-50 text-green-700 px-2 py-0.5 rounded border border-green-100">🍼</span>
+            {% endif %}
+            {% if restaurant.hasDisabledParking %}
+                <span title="{{ 'accessibility.disabled_parking'|trans }}" class="text-sm bg-green-50 text-green-700 px-2 py-0.5 rounded border border-green-100">🅿️</span>
+            {% endif %}
+            {% if restaurant.isVegan %}
+                <span title="{{ 'dietary.vegan'|trans }}" class="text-sm bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded border border-emerald-100">🌱</span>
+            {% endif %}
+            {% if restaurant.isVegetarian %}
+                <span title="{{ 'dietary.vegetarian'|trans }}" class="text-sm bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded border border-emerald-100">🥗</span>
+            {% endif %}
+            {% if restaurant.isHalal %}
+                <span title="{{ 'dietary.halal'|trans }}" class="text-sm bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded border border-emerald-100">☪️</span>
+            {% endif %}
+        </div>
+
+        {% if restaurant.accessibilityNotes is not empty %}
+            <hr class="my-4 border-gray-100">
+            {# BF-70: Freitext aus der Erfassung, nur in der
+               Originalsprache vorhanden — siehe show.html.twig. #}
+            <div class="space-y-2" lang="de">
+                {% for note in restaurant.accessibilityNotes %}
+                    {% set parts = note|split(':') %}
+                    {% set type = parts|first %}
+                    {% set text = parts[1] %}
+                    {% if type == 'ok' %}
+                        <div class="flex items-center gap-2 text-sm text-gray-600"><span class="text-green-700">✓</span> {{ text }}</div>
+                    {% elseif type == 'warn' %}
+                        <div class="flex items-center gap-2 text-sm text-gray-600"><span class="text-yellow-700">!</span> {{ text }}</div>
+                    {% else %}
+                        <div class="flex items-center gap-2 text-sm text-gray-600">{{ note }}</div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {# Eigene Notiz (AK-12, AK-37): als Text, Zeilenumbrüche über `whitespace-pre-line`,
+           Autoescape bleibt an — es entsteht kein HTML aus der Eingabe. #}
+        {% if _notiz is not null %}
+            <div class="mt-4 rounded-lg bg-gray-50 border border-gray-200 px-3 py-2">
+                <p class="text-xs font-semibold text-gray-700">{{ 'saved.card.note'|trans }}</p>
+                <p class="mt-1 text-sm text-gray-700 whitespace-pre-line">{{ _notiz }}</p>
+            </div>
+        {% endif %}
+    </div>
+    <div class="px-5 py-3 bg-gray-50 border-t border-gray-100 mt-auto">
+        <a href="{{ path('app_restaurant_show', {id: restaurant.id}) }}" class="block text-center text-sm font-semibold text-purple-600 hover:text-purple-800 py-1 rounded focus:outline-2 focus:outline-offset-2 focus:outline-purple-700">{{ 'restaurant.list.view_details'|trans }}</a>
+        {% block karten_aktion %}{% endblock %}
+    </div>
+</article>

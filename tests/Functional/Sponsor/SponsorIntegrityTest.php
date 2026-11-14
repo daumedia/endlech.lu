@@ -36,7 +36,13 @@ final class SponsorIntegrityTest extends AbstractWebTestCase
             return $antwort;
         }
 
-        return (new Crawler($antwort))->filter('main')->html();
+        // Feature 17: Das Herz trägt ein Sicherheitstoken, das je Anfrage neu ausgegeben wird.
+        // Es ist kein Inhalt über ein Restaurant und wird für den Vergleich gleichgesetzt.
+        return (string) preg_replace(
+            '/(name="_token" value=")[^"]*(")/',
+            '$1…$2',
+            (new Crawler($antwort))->filter('main')->html(),
+        );
     }
 
     /** @return iterable<string, array{string}> */

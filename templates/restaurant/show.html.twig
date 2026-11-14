@@ -6,17 +6,24 @@
 
     <div class="min-h-screen bg-gray-50">
 
-        {# --- HERO SECTION: Cover-Foto oder Emoji-Fallback --- #}
+        {# --- HERO SECTION: Cover-Foto oder Emoji-Fallback ---
+           ⚠ Der Fokusrahmen des Titelfotos liegt AUSSERHALB des Fotos — oben am Seitenkopf, unten auf
+           `bg-gray-50`. Deshalb cyan-700, nicht Weiß: Seit der globale Fallback in `@layer base` steht
+           (BF-206), wirkt die Utility, und Weiß maß dort 1,22 : 1 (cyan-700: 5,05 : 1). #}
         {% if restaurant.coverImage %}
         <div class="relative h-72 md:h-96 shadow-md">
             <a href="/uploads/restaurants/{{ restaurant.coverImage.filename }}"
-               class="glightbox block h-full focus:outline-2 focus:outline-offset-2 focus:outline-white" data-gallery="restaurant-gallery" data-description="{{ restaurant.coverImage.altText }}">
+               class="glightbox block h-full focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700" data-gallery="restaurant-gallery" data-description="{{ restaurant.coverImage.altText }}">
                 <img src="/uploads/restaurants/{{ restaurant.coverImage.filename }}" alt="{{ restaurant.coverImage.altText ?: restaurant.name }}"
                      class="w-full h-full object-cover">
             </a>
             <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
             <div class="absolute bottom-0 left-0 right-0 container mx-auto px-4 pb-8 text-white">
-                <h1 class="text-3xl font-bold mb-2">{{ restaurant.name }}</h1>
+                {# Feature 17: das Herz beim Namen (AK-02). #}
+                <div class="flex items-center gap-3 mb-2">
+                    <h1 class="text-3xl font-bold">{{ restaurant.name }}</h1>
+                    {% include 'partials/_favorite_button.html.twig' with {restaurant: restaurant, isFavorite: isFavorite} %}
+                </div>
                 <p class="text-white/80 text-lg">{{ restaurant.city }}{% if restaurant.cuisineNames %} &bull; {{ restaurant.cuisineNames }}{% endif %}</p>
                 {% set isOpen = restaurant|is_open_now %}
                 <div class="flex items-center gap-3 mt-3 flex-wrap">
@@ -44,7 +51,11 @@
         <div class="bg-linear-to-r from-cyan-600 to-purple-700 text-white py-16 shadow-md">
             <div class="container mx-auto px-4 text-center">
                 <div class="text-7xl mb-4" aria-hidden="true">{{ restaurant.emoji }}</div>
-                <h1 class="text-3xl font-bold mb-2">{{ restaurant.name }}</h1>
+                {# Feature 17: das Herz beim Namen (AK-02). #}
+                <div class="flex items-center justify-center gap-3 mb-2">
+                    <h1 class="text-3xl font-bold">{{ restaurant.name }}</h1>
+                    {% include 'partials/_favorite_button.html.twig' with {restaurant: restaurant, isFavorite: isFavorite} %}
+                </div>
                 <p class="text-cyan-100 text-lg">{{ restaurant.city }}{% if restaurant.cuisineNames %} &bull; {{ restaurant.cuisineNames }}{% endif %}</p>
                 {% set isOpen = restaurant|is_open_now %}
                 <div class="flex items-center justify-center gap-3 mt-4 flex-wrap">
@@ -107,7 +118,7 @@
                         <span class="text-2xl" aria-hidden="true">♿</span>
                         <div>
                             <p class="text-sm font-semibold {{ restaurant.isWheelchairAccessible ? 'text-green-700' : 'text-gray-600' }}">{{ 'accessibility.wheelchair'|trans }}</p>
-                            <p class="text-xs {{ restaurant.isWheelchairAccessible ? 'text-green-600' : 'text-gray-600' }}">{{ restaurant.isWheelchairAccessible ? 'accessibility.wheelchair_desc'|trans : 'accessibility.not_available'|trans }}</p>
+                            <p class="text-xs {{ restaurant.isWheelchairAccessible ? 'text-green-800' : 'text-gray-600' }}">{{ restaurant.isWheelchairAccessible ? 'accessibility.wheelchair_desc'|trans : 'accessibility.not_available'|trans }}</p>
                         </div>
                     </div>
 
@@ -116,7 +127,7 @@
                         <span class="text-2xl" aria-hidden="true">🚻</span>
                         <div>
                             <p class="text-sm font-semibold {{ restaurant.hasAccessibleToilet ? 'text-green-700' : 'text-gray-600' }}">{{ 'accessibility.toilet'|trans }}</p>
-                            <p class="text-xs {{ restaurant.hasAccessibleToilet ? 'text-green-600' : 'text-gray-600' }}">{{ restaurant.hasAccessibleToilet ? 'accessibility.available'|trans : 'accessibility.not_available'|trans }}</p>
+                            <p class="text-xs {{ restaurant.hasAccessibleToilet ? 'text-green-800' : 'text-gray-600' }}">{{ restaurant.hasAccessibleToilet ? 'accessibility.available'|trans : 'accessibility.not_available'|trans }}</p>
                         </div>
                     </div>
 
@@ -125,7 +136,7 @@
                         <span class="text-2xl" aria-hidden="true">🐕</span>
                         <div>
                             <p class="text-sm font-semibold {{ restaurant.allowsAssistanceDogs ? 'text-green-700' : 'text-gray-600' }}">{{ 'accessibility.dogs'|trans }}</p>
-                            <p class="text-xs {{ restaurant.allowsAssistanceDogs ? 'text-green-600' : 'text-gray-600' }}">{{ restaurant.allowsAssistanceDogs ? 'accessibility.dogs_desc'|trans : 'accessibility.not_available'|trans }}</p>
+                            <p class="text-xs {{ restaurant.allowsAssistanceDogs ? 'text-green-800' : 'text-gray-600' }}">{{ restaurant.allowsAssistanceDogs ? 'accessibility.dogs_desc'|trans : 'accessibility.not_available'|trans }}</p>
                         </div>
                     </div>
 
@@ -134,7 +145,7 @@
                         <span class="text-2xl" aria-hidden="true">💡</span>
                         <div>
                             <p class="text-sm font-semibold {{ restaurant.hasBrightLighting ? 'text-green-700' : 'text-gray-600' }}">{{ 'accessibility.lighting'|trans }}</p>
-                            <p class="text-xs {{ restaurant.hasBrightLighting ? 'text-green-600' : 'text-gray-600' }}">{{ restaurant.hasBrightLighting ? 'accessibility.available'|trans : 'accessibility.not_available'|trans }}</p>
+                            <p class="text-xs {{ restaurant.hasBrightLighting ? 'text-green-800' : 'text-gray-600' }}">{{ restaurant.hasBrightLighting ? 'accessibility.available'|trans : 'accessibility.not_available'|trans }}</p>
                         </div>
                     </div>
 
@@ -143,7 +154,7 @@
                         <span class="text-2xl" aria-hidden="true">🍼</span>
                         <div>
                             <p class="text-sm font-semibold {{ restaurant.hasChangingTable ? 'text-green-700' : 'text-gray-600' }}">{{ 'accessibility.changing_table'|trans }}</p>
-                            <p class="text-xs {{ restaurant.hasChangingTable ? 'text-green-600' : 'text-gray-600' }}">{{ restaurant.hasChangingTable ? 'accessibility.available'|trans : 'accessibility.not_available'|trans }}</p>
+                            <p class="text-xs {{ restaurant.hasChangingTable ? 'text-green-800' : 'text-gray-600' }}">{{ restaurant.hasChangingTable ? 'accessibility.available'|trans : 'accessibility.not_available'|trans }}</p>
                         </div>
                     </div>
 
@@ -152,7 +163,7 @@
                         <span class="text-2xl" aria-hidden="true">🅿️</span>
                         <div>
                             <p class="text-sm font-semibold {{ restaurant.hasDisabledParking ? 'text-green-700' : 'text-gray-600' }}">{{ 'accessibility.disabled_parking'|trans }}</p>
-                            <p class="text-xs {{ restaurant.hasDisabledParking ? 'text-green-600' : 'text-gray-600' }}">{{ restaurant.hasDisabledParking ? 'accessibility.disabled_parking_desc'|trans : 'accessibility.not_available'|trans }}</p>
+                            <p class="text-xs {{ restaurant.hasDisabledParking ? 'text-green-800' : 'text-gray-600' }}">{{ restaurant.hasDisabledParking ? 'accessibility.disabled_parking_desc'|trans : 'accessibility.not_available'|trans }}</p>
                         </div>
                     </div>
 
@@ -168,7 +179,7 @@
                             <span class="text-2xl" aria-hidden="true">{{ measure.emoji }}</span>
                             <div>
                                 <p class="text-sm font-semibold {{ measure.meets is same as(true) ? 'text-green-700' : (measure.meets is same as(false) ? 'text-amber-700' : 'text-gray-600') }}">{{ measure.label }}</p>
-                                <p class="text-xs {{ measure.meets is same as(true) ? 'text-green-600' : (measure.meets is same as(false) ? 'text-amber-600' : 'text-gray-600') }}">
+                                <p class="text-xs {{ measure.meets is same as(true) ? 'text-green-800' : (measure.meets is same as(false) ? 'text-amber-800' : 'text-gray-600') }}">
                                     {%- if measure.value is null -%}
                                         {{ 'accessibility.not_measured'|trans }}
                                     {%- else -%}
@@ -193,7 +204,7 @@
                         <span class="text-2xl" aria-hidden="true">🌱</span>
                         <div>
                             <p class="text-sm font-semibold {{ restaurant.isVegan ? 'text-green-700' : 'text-gray-600' }}">{{ 'dietary.vegan'|trans }}</p>
-                            <p class="text-xs {{ restaurant.isVegan ? 'text-green-600' : 'text-gray-600' }}">{{ restaurant.isVegan ? 'dietary.available'|trans : 'dietary.not_available'|trans }}</p>
+                            <p class="text-xs {{ restaurant.isVegan ? 'text-green-800' : 'text-gray-600' }}">{{ restaurant.isVegan ? 'dietary.available'|trans : 'dietary.not_available'|trans }}</p>
                         </div>
                     </div>
 
@@ -202,7 +213,7 @@
                         <span class="text-2xl" aria-hidden="true">🥗</span>
                         <div>
                             <p class="text-sm font-semibold {{ restaurant.isVegetarian ? 'text-green-700' : 'text-gray-600' }}">{{ 'dietary.vegetarian'|trans }}</p>
-                            <p class="text-xs {{ restaurant.isVegetarian ? 'text-green-600' : 'text-gray-600' }}">{{ restaurant.isVegetarian ? 'dietary.available'|trans : 'dietary.not_available'|trans }}</p>
+                            <p class="text-xs {{ restaurant.isVegetarian ? 'text-green-800' : 'text-gray-600' }}">{{ restaurant.isVegetarian ? 'dietary.available'|trans : 'dietary.not_available'|trans }}</p>
                         </div>
                     </div>
 
@@ -211,7 +222,7 @@
                         <span class="text-2xl" aria-hidden="true">☪️</span>
                         <div>
                             <p class="text-sm font-semibold {{ restaurant.isHalal ? 'text-green-700' : 'text-gray-600' }}">{{ 'dietary.halal'|trans }}</p>
-                            <p class="text-xs {{ restaurant.isHalal ? 'text-green-600' : 'text-gray-600' }}">{{ restaurant.isHalal ? 'dietary.available'|trans : 'dietary.not_available'|trans }}</p>
+                            <p class="text-xs {{ restaurant.isHalal ? 'text-green-800' : 'text-gray-600' }}">{{ restaurant.isHalal ? 'dietary.available'|trans : 'dietary.not_available'|trans }}</p>
                         </div>
                     </div>
 
@@ -228,7 +239,7 @@
                         <span class="text-2xl" aria-hidden="true">💵</span>
                         <div>
                             <p class="text-sm font-semibold {{ restaurant.acceptsCash ? 'text-green-700' : 'text-gray-600' }}">{{ 'payment.cash'|trans }}</p>
-                            <p class="text-xs {{ restaurant.acceptsCash ? 'text-green-600' : 'text-gray-600' }}">{{ restaurant.acceptsCash ? 'payment.accepted'|trans : 'payment.not_accepted'|trans }}</p>
+                            <p class="text-xs {{ restaurant.acceptsCash ? 'text-green-800' : 'text-gray-600' }}">{{ restaurant.acceptsCash ? 'payment.accepted'|trans : 'payment.not_accepted'|trans }}</p>
                         </div>
                     </div>
 
@@ -237,7 +248,7 @@
                         <span class="text-2xl" aria-hidden="true">💳</span>
                         <div>
                             <p class="text-sm font-semibold {{ restaurant.acceptsCard ? 'text-green-700' : 'text-gray-600' }}">{{ 'payment.card'|trans }}</p>
-                            <p class="text-xs {{ restaurant.acceptsCard ? 'text-green-600' : 'text-gray-600' }}">{{ restaurant.acceptsCard ? 'payment.accepted'|trans : 'payment.not_accepted'|trans }}</p>
+                            <p class="text-xs {{ restaurant.acceptsCard ? 'text-green-800' : 'text-gray-600' }}">{{ restaurant.acceptsCard ? 'payment.accepted'|trans : 'payment.not_accepted'|trans }}</p>
                         </div>
                     </div>
 
@@ -246,7 +257,7 @@
                         <span class="text-2xl" aria-hidden="true">📱</span>
                         <div>
                             <p class="text-sm font-semibold {{ restaurant.acceptsPayconiq ? 'text-green-700' : 'text-gray-600' }}">{{ 'payment.payconiq'|trans }}</p>
-                            <p class="text-xs {{ restaurant.acceptsPayconiq ? 'text-green-600' : 'text-gray-600' }}">{{ restaurant.acceptsPayconiq ? 'payment.accepted'|trans : 'payment.not_accepted'|trans }}</p>
+                            <p class="text-xs {{ restaurant.acceptsPayconiq ? 'text-green-800' : 'text-gray-600' }}">{{ restaurant.acceptsPayconiq ? 'payment.accepted'|trans : 'payment.not_accepted'|trans }}</p>
                         </div>
                     </div>
 
@@ -450,6 +461,9 @@
                     </div>
                 </div>
             {% endif %}
+
+            {# --- FÜR DICH: In Listen und Deine Notiz (Feature 17, nur angemeldet) --- #}
+            {% include 'restaurant/_saved_panel.html.twig' %}
 
             {# --- WEITERE FOTOS (Galerie mit GLightbox, ohne Cover) --- #}
             {% if restaurant.galleryImages is not empty %}

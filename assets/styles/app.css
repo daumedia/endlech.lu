@@ -93,11 +93,21 @@
    Eine echte `outline`, kein box-shadow-Ring: Ringe verschwinden im Windows-
    Kontrastmodus (AK-04). cyan-700 kontrastiert gegen den weißen/gray-50-Grund
    der meisten Seiten; Aktionen auf den farbigen Verlaufsbändern tragen ihre
-   eigene `focus:outline-white`-Utility, die diesen Fallback durch höhere
-   Spezifität überschreibt (AK-03). */
-:focus-visible {
-    outline: 2px solid #0e7490; /* cyan-700 */
-    outline-offset: 2px;
+   eigene `focus:outline-white`-Utility (AK-03).
+
+   ⚠ **In `@layer base`, nicht ungeschichtet** (BF-206, BF-217). Über die
+   Kaskade entscheidet hier die Ebene, nicht die Spezifität: Ungeschichtete
+   Regeln schlagen jede Regel in einer Ebene, also auch Tailwinds
+   `@layer utilities`. Bis 2026-11-14 stand die Regel ungeschichtet, und jede
+   `focus:outline-<farbe>` war wirkungslos — auf den Bändern erschien cyan-700
+   statt Weiß (1,0–1,65 : 1). In `base` liefert die Regel Breite, Stil und
+   Versatz, die Utility nur die Farbe. Wer eine Fokusfarbe setzt, muss sie
+   deshalb auf ihrem Untergrund messen: Sie wirkt jetzt. */
+@layer base {
+    :focus-visible {
+        outline: 2px solid #0e7490; /* cyan-700 */
+        outline-offset: 2px;
+    }
 }
 
 /* Bewegung reduzieren (WCAG 2.3.3 / 2.2.2). Der Netzfang unter der projektweiten

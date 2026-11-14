@@ -35,6 +35,16 @@ final readonly class CollectPayloadNormalizer
      */
     private const string TOKEN = '#[a-f0-9]{64}#i';
 
+    /**
+     * Alles unterhalb einer eigenen Liste (Feature 17, AK-67): Listenseite, Umbenennen, Löschen,
+     * Lokal entfernen. Diese Pfade werden **gekürzt, nicht verworfen** — der Seitenaufruf soll
+     * ankommen, nur ohne Listennummer. Bewusst jedes Segment nach `listen/`, nicht nur Ziffern:
+     * Trüge eine Adresse einmal den Namen statt der Nummer, griffe die Regel unverändert.
+     *
+     * ⚠ Dieselbe Regel steht in `assets/usage/before_send.ts` (`LISTENSEITE`).
+     */
+    private const string LISTENSEITE = '#^/([a-z]{2})/gespeichert/listen/.#';
+
     private string $hostname;
 
     public function __construct(
@@ -74,10 +84,13 @@ final readonly class CollectPayloadNormalizer
             throw new InvalidCollectPayload('hostname');
         }
 
+        $pfad = $this->pfad($eingang['url'] ?? null);
+        $listenpfad = $this->listenpfad($pfad);
+
         $ausgabe = [
             'website' => $this->websiteId,
             'hostname' => $this->hostname,
-            'url' => $this->pfad($eingang['url'] ?? null),
+            'url' => $listenpfad ?? $pfad,
         ];
 
         $herkunft = $this->herkunft($eingang['referrer'] ?? null);
@@ -85,7 +98,10 @@ final readonly class CollectPayloadNormalizer
             $ausgabe['referrer'] = $herkunft;
         }
 
-        if (\is_string($eingang['title'] ?? null)) {
+        // ⚠ Auf Listenseiten entfällt der Titel (AK-64): Er kann den Listennamen tragen, und was
+        // die Vorlage hineinschreibt, sieht diese Klasse nicht. Ohne Titel ist die Zusage
+        // unabhängig von der Vorlage.
+        if (null === $listenpfad && \is_string($eingang['title'] ?? null)) {
             $ausgabe['title'] = mb_substr($eingang['title'], 0, self::MAX_TITLE);
         }
 
@@ -135,6 +151,19 @@ final readonly class CollectPayloadNormalizer
         }
 
         return $pfad;
+    }
+
+    /**
+     * Pfad einer eigenen Liste ohne Nummer, sonst `null` (AK-67). Läuft erst nach `pfad()`:
+     * Was dort verworfen wird (Verwaltung, Profil, Token), bleibt verworfen.
+     */
+    private function listenpfad(string $pfad): ?string
+    {
+        if (1 !== preg_match(self::LISTENSEITE, $pfad, $treffer)) {
+            return null;
+        }
+
+        return '/'.$treffer[1].'/gespeichert/listen';
     }
 
     /** Fremde Herkunft nur als Domain (AK-02); eigene Herkunft und alles Unklare entfällt. */

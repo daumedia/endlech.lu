@@ -18,8 +18,8 @@ use Symfony\Bundle\FrameworkBundle\Test\MailerAssertionsTrait;
  * Feature 16 · Prüfläufe aus der zweiten QA vom 2026-11-07 (`features/16-roadmap-und-ideen/qa-report.md`,
  * Abschnitt „Zweiter Durchlauf“).
  *
- * Die Reproduktionen von BF-206, BF-207 und BF-208 sind übersprungen, solange die Befunde offen sind;
- * scharf mit `QA16_REPRO=1`. Die übrigen Fälle sichern Behebungen aus dem Fehlerauftrag gegen Rückfall,
+ * Die Reproduktionen von BF-207 und BF-208 sind übersprungen, solange die Befunde offen sind;
+ * scharf mit `QA16_REPRO=1`. BF-206 läuft seit der Behebung im Fehlerauftrag 17 (2026-11-14) immer. Die übrigen Fälle sichern Behebungen aus dem Fehlerauftrag gegen Rückfall,
  * die der Bau nur im Browser oder gar nicht abgesichert hat.
  */
 final class Qa16NachpruefungTest extends AbstractWebTestCase
@@ -177,7 +177,8 @@ final class Qa16NachpruefungTest extends AbstractWebTestCase
      */
     public function testBf206GlobalerFokusFallbackLiegtInEinerKaskadenebene(): void
     {
-        self::offen('BF-206');
+        // Scharf seit der Behebung am 2026-11-14 (Fehlerauftrag 17, mit BF-217) — Rückfallschutz.
+
 
         $css = (string) file_get_contents(\dirname(__DIR__, 3) . '/assets/styles/app.css');
         $css = (string) preg_replace('#/\*.*?\*/#s', '', $css);

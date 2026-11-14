@@ -1,0 +1,266 @@
+QA 17 · zweite Prüfung · Glas-Etiketten (BF-203) am Pixel: Weiß gegen jeden Pixel der Inhaltsfläche (Text entfernt); vorher = rgba(255,255,255,.2) nachgestellt
+
+== glas.json
+1280 de/                               11 Restaurants in Luxemburg    jetzt  6.74– 7.47 (Median  7.07)  vorher  3.30– 3.62
+1280 de/open                           Open Startup                   jetzt  8.90– 9.30 (Median  9.14)  vorher  4.18– 4.36
+1280 de/open                           Frei nutzbar                   jetzt  8.10– 8.47 (Median  8.26)  vorher  3.87– 4.01
+1280 de/presse                         Für Presse und Medien          jetzt  8.10– 8.63 (Median  8.36)  vorher  3.87– 4.08
+1280 de/vergleich                      Vergleiche                     jetzt  8.90– 9.30 (Median  9.14)  vorher  4.18– 4.36
+1280 de/partner                        Partnerprogramm                jetzt  8.90– 9.40 (Median  9.14)  vorher  4.18– 4.41
+1280 de/partner                        Unser Versprechen              jetzt  8.10– 8.55 (Median  8.31)  vorher  3.87– 4.04
+1280 de/organisationen                 Gemeinsam                      jetzt  8.90– 9.30 (Median  9.14)  vorher  4.18– 4.36
+1280 de/organisationen                 Für alle gleich                jetzt  8.10– 8.47 (Median  8.27)  vorher  3.87– 4.01
+1280 de/organisationen/gemeinden       Für alle gleich                jetzt  8.10– 8.47 (Median  8.27)  vorher  3.87– 4.01
+1280 de/organisationen/unternehmen     Für alle gleich                jetzt  8.10– 8.47 (Median  8.27)  vorher  3.87– 4.01
+1280 de/sponsoren                      Sponsoring                     jetzt  8.10– 8.39 (Median  8.26)  vorher  3.87– 3.98
+1280 de/app                            Für unterwegs                  jetzt  8.90– 9.34 (Median  9.14)  vorher  4.18– 4.38
+1280 de/roadmap                        Roadmap & Ideen                jetzt  7.49– 7.85 (Median  7.68)  vorher  3.71– 3.82
+1280 de/roadmap/ideen                  Roadmap & Ideen                jetzt  7.49– 7.85 (Median  7.68)  vorher  3.71– 3.82
+1280 de/changelog                      Roadmap & Ideen                jetzt  7.49– 7.85 (Median  7.68)  vorher  3.71– 3.82
+1280 de/restaurants/12                 🇱🇺                             jetzt  6.88– 6.90 (Median  6.90)  vorher  3.36– 3.37
+1280 de/restaurants/12                 🇩🇪                             jetzt  7.02– 7.04 (Median  7.04)  vorher  3.42– 3.43
+1280 de/restaurants/12                 🇫🇷                             jetzt  7.16– 7.23 (Median  7.16)  vorher  3.49– 3.52
+1280 de/restaurants/12                 🇬🇧                             jetzt  7.31– 7.37 (Median  7.36)  vorher  3.55– 3.58
+1280 de/restaurants/12                 🌐                              jetzt  7.47– 7.48 (Median  7.47)  vorher  3.63– 3.64
+1280 de/restaurants/22                 🇱🇺                             jetzt  7.02– 7.04 (Median  7.04)  vorher  3.42– 3.43
+1280 de/restaurants/22                 🇩🇪                             jetzt  7.16– 7.18 (Median  7.16)  vorher  3.49– 3.50
+1280 de/restaurants/22                 🇫🇷                             jetzt  7.31– 7.37 (Median  7.31)  vorher  3.55– 3.58
+1280 de/gespeichert/favoriten          ← Zurück zu „Gespeichert“      jetzt  5.79– 8.22 (Median  7.92)  vorher  3.73– 5.33
+1280 de/gespeichert/listen/53          ← Zurück zu „Gespeichert“      jetzt  5.79– 8.22 (Median  7.92)  vorher  3.73– 5.33
+1280 fr/                               11 restaurants au Luxembourg   jetzt  6.69– 7.47 (Median  7.07)  vorher  3.28– 3.62
+1280 fr/open                           Open Startup                   jetzt  8.90– 9.30 (Median  9.14)  vorher  4.18– 4.36
+1280 fr/open                           Libre d'utilisation            jetzt  8.10– 8.55 (Median  8.30)  vorher  3.87– 4.04
+1280 fr/presse                         Pour la presse et les médias   jetzt  8.10– 8.77 (Median  8.42)  vorher  3.87– 4.13
+1280 fr/vergleich                      Comparaisons                   jetzt  8.90– 9.34 (Median  9.14)  vorher  4.18– 4.38
+1280 fr/partner                        Programme partenaire           jetzt  8.87– 9.46 (Median  9.14)  vorher  4.17– 4.44
+1280 fr/partner                        Notre engagement               jetzt  8.10– 8.55 (Median  8.31)  vorher  3.87– 4.04
+1280 fr/organisationen                 Ensemble                       jetzt  8.96– 9.30 (Median  9.14)  vorher  4.21– 4.36
+1280 fr/organisationen                 Identique pour tous            jetzt  8.10– 8.55 (Median  8.33)  vorher  3.87– 4.04
+1280 fr/organisationen/gemeinden       Identique pour tous            jetzt  8.10– 8.55 (Median  8.33)  vorher  3.87– 4.04
+1280 fr/organisationen/unternehmen     Identique pour tous            jetzt  8.10– 8.55 (Median  8.33)  vorher  3.87– 4.04
+1280 fr/sponsoren                      Sponsoring                     jetzt  8.10– 8.39 (Median  8.26)  vorher  3.87– 3.98
+1280 fr/app                            En déplacement                 jetzt  8.90– 9.34 (Median  9.14)  vorher  4.18– 4.38
+1280 fr/roadmap                        Feuille de route & idées       jetzt  7.49– 7.99 (Median  7.73)  vorher  3.71– 3.85
+1280 fr/roadmap/ideen                  Feuille de route & idées       jetzt  7.49– 7.99 (Median  7.73)  vorher  3.71– 3.85
+1280 fr/changelog                      Feuille de route & idées       jetzt  7.49– 7.99 (Median  7.73)  vorher  3.71– 3.85
+1280 fr/restaurants/12                 🇱🇺                             jetzt  6.88– 6.90 (Median  6.90)  vorher  3.36– 3.37
+1280 fr/restaurants/12                 🇩🇪                             jetzt  7.02– 7.04 (Median  7.04)  vorher  3.42– 3.43
+1280 fr/restaurants/12                 🇫🇷                             jetzt  7.16– 7.23 (Median  7.16)  vorher  3.49– 3.52
+1280 fr/restaurants/12                 🇬🇧                             jetzt  7.31– 7.37 (Median  7.36)  vorher  3.55– 3.58
+1280 fr/restaurants/12                 🌐                              jetzt  7.47– 7.48 (Median  7.47)  vorher  3.63– 3.64
+1280 fr/restaurants/22                 🇱🇺                             jetzt  7.02– 7.04 (Median  7.04)  vorher  3.42– 3.43
+1280 fr/restaurants/22                 🇩🇪                             jetzt  7.16– 7.18 (Median  7.16)  vorher  3.49– 3.50
+1280 fr/restaurants/22                 🇫🇷                             jetzt  7.31– 7.37 (Median  7.31)  vorher  3.55– 3.58
+1280 fr/gespeichert/favoriten          ← Retour à « Enregistrés »     jetzt  5.79– 8.22 (Median  7.90)  vorher  3.73– 5.33
+1280 fr/gespeichert/listen/53          ← Retour à « Enregistrés »     jetzt  5.79– 8.22 (Median  7.90)  vorher  3.73– 5.33
+1280 pt/                               11 restaurantes no Luxemburg   jetzt  6.69– 7.47 (Median  7.07)  vorher  3.28– 3.62
+1280 pt/open                           Open Startup                   jetzt  8.90– 9.30 (Median  9.14)  vorher  4.18– 4.36
+1280 pt/open                           Utilização livre               jetzt  8.10– 8.55 (Median  8.28)  vorher  3.87– 4.04
+1280 pt/presse                         Para imprensa e meios de com   jetzt  8.10– 8.94 (Median  8.50)  vorher  3.87– 4.20
+1280 pt/vergleich                      Comparações                    jetzt  8.90– 9.34 (Median  9.14)  vorher  4.18– 4.38
+1280 pt/partner                        Programa de parceiros          jetzt  8.87– 9.46 (Median  9.14)  vorher  4.17– 4.44
+1280 pt/partner                        A nossa promessa               jetzt  8.10– 8.55 (Median  8.30)  vorher  3.87– 4.04
+1280 pt/organisationen                 Juntos                         jetzt  8.96– 9.24 (Median  9.14)  vorher  4.21– 4.33
+1280 pt/organisationen                 Igual para todos               jetzt  8.10– 8.55 (Median  8.28)  vorher  3.87– 4.04
+1280 pt/organisationen/gemeinden       Igual para todos               jetzt  8.10– 8.55 (Median  8.28)  vorher  3.87– 4.04
+1280 pt/organisationen/unternehmen     Igual para todos               jetzt  8.10– 8.55 (Median  8.28)  vorher  3.87– 4.04
+1280 pt/sponsoren                      Patrocínio                     jetzt  8.10– 8.39 (Median  8.25)  vorher  3.87– 3.98
+1280 pt/app                            Para levar consigo             jetzt  8.90– 9.40 (Median  9.14)  vorher  4.18– 4.41
+1280 pt/roadmap                        Roteiro e ideias               jetzt  7.49– 7.82 (Median  7.66)  vorher  3.71– 3.82
+1280 pt/roadmap/ideen                  Roteiro e ideias               jetzt  7.49– 7.82 (Median  7.66)  vorher  3.71– 3.82
+1280 pt/changelog                      Roteiro e ideias               jetzt  7.49– 7.82 (Median  7.66)  vorher  3.71– 3.82
+1280 pt/restaurants/12                 🇱🇺                             jetzt  6.88– 6.90 (Median  6.90)  vorher  3.36– 3.37
+1280 pt/restaurants/12                 🇩🇪                             jetzt  7.02– 7.04 (Median  7.04)  vorher  3.42– 3.43
+1280 pt/restaurants/12                 🇫🇷                             jetzt  7.16– 7.23 (Median  7.16)  vorher  3.49– 3.52
+1280 pt/restaurants/12                 🇬🇧                             jetzt  7.31– 7.37 (Median  7.36)  vorher  3.55– 3.58
+1280 pt/restaurants/12                 🌐                              jetzt  7.47– 7.48 (Median  7.47)  vorher  3.63– 3.64
+1280 pt/restaurants/22                 🇱🇺                             jetzt  7.02– 7.04 (Median  7.04)  vorher  3.42– 3.43
+1280 pt/restaurants/22                 🇩🇪                             jetzt  7.16– 7.18 (Median  7.16)  vorher  3.49– 3.50
+1280 pt/restaurants/22                 🇫🇷                             jetzt  7.31– 7.37 (Median  7.31)  vorher  3.55– 3.58
+1280 pt/gespeichert/favoriten          ← Voltar a «Guardados»         jetzt  5.79– 8.17 (Median  7.89)  vorher  3.73– 5.33
+1280 pt/gespeichert/listen/53          ← Voltar a «Guardados»         jetzt  5.79– 8.17 (Median  7.89)  vorher  3.73– 5.33
+375 de/                                11 Restaurants in Luxemburg    jetzt  6.09– 8.24 (Median  7.07)  vorher  3.04– 4.03
+375 de/open                            Open Startup                   jetzt  8.57– 9.58 (Median  9.07)  vorher  4.04– 4.50
+375 de/open                            Frei nutzbar                   jetzt  7.70– 8.55 (Median  8.04)  vorher  3.75– 4.04
+375 de/presse                          Für Presse und Medien          jetzt  7.70– 9.24 (Median  8.39)  vorher  3.75– 4.33
+375 de/vergleich                       Vergleiche                     jetzt  8.68– 9.58 (Median  9.14)  vorher  4.09– 4.50
+375 de/partner                         Partnerprogramm                jetzt  8.43– 9.85 (Median  9.14)  vorher  3.99– 4.64
+375 de/partner                         Unser Versprechen              jetzt  7.70– 8.94 (Median  8.26)  vorher  3.75– 4.20
+375 de/organisationen                  Gemeinsam                      jetzt  8.68– 9.64 (Median  9.14)  vorher  4.09– 4.52
+375 de/organisationen                  Für alle gleich                jetzt  7.70– 8.56 (Median  8.11)  vorher  3.75– 4.04
+375 de/organisationen/gemeinden        Für alle gleich                jetzt  7.70– 8.56 (Median  8.11)  vorher  3.75– 4.04
+375 de/organisationen/unternehmen      Für alle gleich                jetzt  7.70– 8.56 (Median  8.11)  vorher  3.75– 4.04
+375 de/sponsoren                       Sponsoring                     jetzt  7.70– 8.46 (Median  8.02)  vorher  3.75– 4.00
+375 de/app                             Für unterwegs                  jetzt  8.63– 9.69 (Median  9.14)  vorher  4.07– 4.55
+375 de/roadmap                         Roadmap & Ideen                jetzt  7.70– 8.63 (Median  8.11)  vorher  3.75– 4.08
+375 de/roadmap/ideen                   Roadmap & Ideen                jetzt  7.70– 8.63 (Median  8.11)  vorher  3.75– 4.08
+375 de/changelog                       Roadmap & Ideen                jetzt  7.70– 8.63 (Median  8.11)  vorher  3.75– 4.08
+375 de/restaurants/12                  🇱🇺                             jetzt  6.52– 6.59 (Median  6.57)  vorher  3.21– 3.24
+375 de/restaurants/12                  🇩🇪                             jetzt  6.97– 7.08 (Median  7.04)  vorher  3.40– 3.45
+375 de/restaurants/12                  🇫🇷                             jetzt  7.44– 7.64 (Median  7.57)  vorher  3.62– 3.71
+375 de/restaurants/12                  🇬🇧                             jetzt  8.12– 8.21 (Median  8.15)  vorher  3.98– 4.02
+375 de/restaurants/12                  🌐                              jetzt  8.78– 8.92 (Median  8.87)  vorher  4.40– 4.50
+375 de/restaurants/22                  🇱🇺                             jetzt  6.97– 7.08 (Median  7.02)  vorher  3.40– 3.45
+375 de/restaurants/22                  🇩🇪                             jetzt  7.47– 7.64 (Median  7.51)  vorher  3.63– 3.71
+375 de/restaurants/22                  🇫🇷                             jetzt  8.06– 8.18 (Median  8.15)  vorher  3.95– 4.01
+375 de/gespeichert/favoriten           ← Zurück zu „Gespeichert“      jetzt  5.77– 9.44 (Median  8.52)  vorher  3.75– 5.88
+375 de/gespeichert/listen/53           ← Zurück zu „Gespeichert“      jetzt  5.77– 9.44 (Median  8.52)  vorher  3.75– 5.88
+375 fr/                                11 restaurants au Luxembourg   jetzt  6.06– 8.36 (Median  7.07)  vorher  3.03– 4.09
+375 fr/open                            Open Startup                   jetzt  8.57– 9.58 (Median  9.07)  vorher  4.04– 4.50
+375 fr/open                            Libre d'utilisation            jetzt  7.70– 8.77 (Median  8.22)  vorher  3.75– 4.13
+375 fr/presse                          Pour la presse et les médias   jetzt  7.70– 9.49 (Median  8.52)  vorher  3.75– 4.46
+375 fr/vergleich                       Comparaisons                   jetzt  8.63– 9.69 (Median  9.14)  vorher  4.07– 4.55
+375 fr/partner                         Programme partenaire           jetzt  8.33– 9.96 (Median  9.14)  vorher  3.95– 4.69
+375 fr/partner                         Notre engagement               jetzt  7.70– 8.87 (Median  8.25)  vorher  3.75– 4.17
+375 fr/organisationen                  Ensemble                       jetzt  8.73– 9.49 (Median  9.14)  vorher  4.11– 4.46
+375 fr/organisationen                  Identique pour tous            jetzt  7.70– 8.94 (Median  8.26)  vorher  3.75– 4.20
+375 fr/organisationen/gemeinden        Identique pour tous            jetzt  7.70– 8.94 (Median  8.27)  vorher  3.75– 4.20
+375 fr/organisationen/unternehmen      Identique pour tous            jetzt  7.70– 8.94 (Median  8.26)  vorher  3.75– 4.20
+375 fr/sponsoren                       Sponsoring                     jetzt  7.70– 8.46 (Median  8.02)  vorher  3.75– 4.00
+375 fr/app                             En déplacement                 jetzt  8.56– 9.72 (Median  9.14)  vorher  4.04– 4.57
+375 fr/roadmap                         Feuille de route & idées       jetzt  7.70– 8.94 (Median  8.25)  vorher  3.75– 4.20
+375 fr/roadmap/ideen                   Feuille de route & idées       jetzt  7.70– 8.94 (Median  8.25)  vorher  3.75– 4.20
+375 fr/changelog                       Feuille de route & idées       jetzt  7.70– 8.94 (Median  8.25)  vorher  3.75– 4.20
+375 fr/restaurants/12                  🇱🇺                             jetzt  6.52– 6.59 (Median  6.57)  vorher  3.21– 3.24
+375 fr/restaurants/12                  🇩🇪                             jetzt  6.97– 7.08 (Median  7.04)  vorher  3.40– 3.45
+375 fr/restaurants/12                  🇫🇷                             jetzt  7.44– 7.64 (Median  7.57)  vorher  3.62– 3.71
+375 fr/restaurants/12                  🇬🇧                             jetzt  8.12– 8.21 (Median  8.15)  vorher  3.98– 4.02
+375 fr/restaurants/12                  🌐                              jetzt  8.78– 8.92 (Median  8.87)  vorher  4.40– 4.50
+375 fr/restaurants/22                  🇱🇺                             jetzt  6.97– 7.08 (Median  7.02)  vorher  3.40– 3.45
+375 fr/restaurants/22                  🇩🇪                             jetzt  7.47– 7.64 (Median  7.51)  vorher  3.63– 3.71
+375 fr/restaurants/22                  🇫🇷                             jetzt  8.06– 8.18 (Median  8.15)  vorher  3.95– 4.01
+375 fr/gespeichert/favoriten           ← Retour à « Enregistrés »     jetzt  5.77– 9.44 (Median  8.48)  vorher  3.75– 5.78
+375 fr/gespeichert/listen/53           ← Retour à « Enregistrés »     jetzt  5.77– 9.44 (Median  8.48)  vorher  3.75– 5.78
+375 pt/                                11 restaurantes no Luxemburg   jetzt  6.02– 8.39 (Median  7.07)  vorher  3.02– 4.11
+375 pt/open                            Open Startup                   jetzt  8.57– 9.58 (Median  9.07)  vorher  4.04– 4.50
+375 pt/open                            Utilização livre               jetzt  7.70– 8.63 (Median  8.13)  vorher  3.75– 4.08
+375 pt/presse                          Para imprensa e meios de com   jetzt  7.70–10.43 (Median  8.92)  vorher  3.75– 4.98
+375 pt/vergleich                       Comparações                    jetzt  8.63– 9.69 (Median  9.14)  vorher  4.07– 4.55
+375 pt/partner                         Programa de parceiros          jetzt  8.33–10.00 (Median  9.14)  vorher  3.95– 4.72
+375 pt/partner                         A nossa promessa               jetzt  7.70– 8.87 (Median  8.25)  vorher  3.75– 4.17
+375 pt/organisationen                  Juntos                         jetzt  8.90– 9.40 (Median  9.14)  vorher  4.18– 4.41
+375 pt/organisationen                  Igual para todos               jetzt  7.70– 8.77 (Median  8.20)  vorher  3.75– 4.13
+375 pt/organisationen/gemeinden        Igual para todos               jetzt  7.70– 8.77 (Median  8.20)  vorher  3.75– 4.13
+375 pt/organisationen/unternehmen      Igual para todos               jetzt  7.70– 8.77 (Median  8.20)  vorher  3.75– 4.13
+375 pt/sponsoren                       Patrocínio                     jetzt  7.70– 8.34 (Median  8.00)  vorher  3.75– 3.96
+375 pt/app                             Para levar consigo             jetzt  8.43– 9.85 (Median  9.14)  vorher  3.99– 4.64
+375 pt/roadmap                         Roteiro e ideias               jetzt  7.70– 8.55 (Median  8.03)  vorher  3.75– 4.04
+375 pt/roadmap/ideen                   Roteiro e ideias               jetzt  7.70– 8.55 (Median  8.03)  vorher  3.75– 4.04
+375 pt/changelog                       Roteiro e ideias               jetzt  7.70– 8.55 (Median  8.03)  vorher  3.75– 4.04
+375 pt/restaurants/12                  🇱🇺                             jetzt  6.52– 6.59 (Median  6.57)  vorher  3.21– 3.24
+375 pt/restaurants/12                  🇩🇪                             jetzt  6.97– 7.08 (Median  7.04)  vorher  3.40– 3.45
+375 pt/restaurants/12                  🇫🇷                             jetzt  7.44– 7.64 (Median  7.57)  vorher  3.62– 3.71
+375 pt/restaurants/12                  🇬🇧                             jetzt  8.12– 8.21 (Median  8.15)  vorher  3.98– 4.02
+375 pt/restaurants/12                  🌐                              jetzt  8.78– 8.92 (Median  8.87)  vorher  4.40– 4.50
+375 pt/restaurants/22                  🇱🇺                             jetzt  6.97– 7.08 (Median  7.02)  vorher  3.40– 3.45
+375 pt/restaurants/22                  🇩🇪                             jetzt  7.47– 7.64 (Median  7.51)  vorher  3.63– 3.71
+375 pt/restaurants/22                  🇫🇷                             jetzt  8.06– 8.18 (Median  8.15)  vorher  3.95– 4.01
+375 pt/gespeichert/favoriten           ← Voltar a «Guardados»         jetzt  5.77– 9.28 (Median  8.45)  vorher  3.75– 5.68
+375 pt/gespeichert/listen/53           ← Voltar a «Guardados»         jetzt  5.77– 9.28 (Median  8.45)  vorher  3.75– 5.68
+320 de/                                11 Restaurants in Luxemburg    jetzt  5.92– 8.46 (Median  7.07)  vorher  2.98– 4.17
+320 de/open                            Open Startup                   jetzt  8.52– 9.67 (Median  9.05)  vorher  4.02– 4.54
+320 de/open                            Frei nutzbar                   jetzt  7.73– 8.63 (Median  8.20)  vorher  3.75– 4.08
+320 de/presse                          Für Presse und Medien          jetzt  7.73– 9.49 (Median  8.54)  vorher  3.75– 4.46
+320 de/vergleich                       Vergleiche                     jetzt  8.68– 9.64 (Median  9.14)  vorher  4.09– 4.52
+320 de/partner                         Partnerprogramm                jetzt  8.29– 9.87 (Median  9.05)  vorher  3.94– 4.65
+320 de/partner                         Unser Versprechen              jetzt  7.65– 9.14 (Median  8.36)  vorher  3.72– 4.29
+320 de/organisationen                  Gemeinsam                      jetzt  8.63– 9.69 (Median  9.14)  vorher  4.07– 4.55
+320 de/organisationen                  Für alle gleich                jetzt  7.73– 8.77 (Median  8.23)  vorher  3.75– 4.13
+320 de/organisationen/gemeinden        Für alle gleich                jetzt  7.73– 8.77 (Median  8.23)  vorher  3.75– 4.13
+320 de/organisationen/unternehmen      Für alle gleich                jetzt  7.73– 8.77 (Median  8.23)  vorher  3.75– 4.13
+320 de/sponsoren                       Sponsoring                     jetzt  7.73– 8.56 (Median  8.14)  vorher  3.75– 4.04
+320 de/app                             Für unterwegs                  jetzt  8.50– 9.72 (Median  9.14)  vorher  4.02– 4.57
+320 de/roadmap                         Roadmap & Ideen                jetzt  7.69– 8.80 (Median  8.23)  vorher  3.75– 4.14
+320 de/roadmap/ideen                   Roadmap & Ideen                jetzt  7.69– 8.80 (Median  8.23)  vorher  3.75– 4.14
+320 de/changelog                       Roadmap & Ideen                jetzt  7.69– 8.80 (Median  8.23)  vorher  3.75– 4.14
+320 de/restaurants/12                  🇱🇺                             jetzt  6.71– 6.78 (Median  6.73)  vorher  3.29– 3.32
+320 de/restaurants/12                  🇩🇪                             jetzt  7.31– 7.40 (Median  7.33)  vorher  3.55– 3.60
+320 de/restaurants/12                  🇫🇷                             jetzt  7.97– 8.10 (Median  8.03)  vorher  3.89– 3.96
+320 de/restaurants/12                  🇬🇧                             jetzt  8.76– 8.92 (Median  8.82)  vorher  4.38– 4.50
+320 de/restaurants/12                  🌐                              jetzt  6.97– 7.08 (Median  7.04)  vorher  3.40– 3.45
+320 de/restaurants/22                  🇱🇺                             jetzt  6.92– 7.08 (Median  7.04)  vorher  3.38– 3.45
+320 de/restaurants/22                  🇩🇪                             jetzt  7.64– 7.72 (Median  7.68)  vorher  3.71– 3.75
+320 de/restaurants/22                  🇫🇷                             jetzt  8.32– 8.45 (Median  8.38)  vorher  4.10– 4.17
+320 de/gespeichert/favoriten           ← Zurück zu „Gespeichert“      jetzt  5.81– 9.94 (Median  8.73)  vorher  3.75– 6.14
+320 de/gespeichert/listen/53           ← Zurück zu „Gespeichert“      jetzt  5.81– 9.94 (Median  8.73)  vorher  3.75– 6.14
+320 fr/                                11 restaurants au Luxembourg   jetzt  5.92– 8.52 (Median  7.07)  vorher  2.98– 4.20
+320 fr/open                            Open Startup                   jetzt  8.52– 9.67 (Median  9.05)  vorher  4.02– 4.54
+320 fr/open                            Libre d'utilisation            jetzt  7.73– 9.01 (Median  8.34)  vorher  3.75– 4.23
+320 fr/presse                          Pour la presse et les médias   jetzt  7.73– 9.94 (Median  8.73)  vorher  3.75– 4.68
+320 fr/vergleich                       Comparaisons                   jetzt  8.50– 9.72 (Median  9.14)  vorher  4.02– 4.57
+320 fr/partner                         Programme partenaire           jetzt  8.19–10.06 (Median  9.07)  vorher  3.90– 4.76
+320 fr/partner                         Notre engagement               jetzt  7.65– 9.10 (Median  8.34)  vorher  3.72– 4.27
+320 fr/organisationen                  Ensemble                       jetzt  8.68– 9.58 (Median  9.14)  vorher  4.09– 4.50
+320 fr/organisationen                  Identique pour tous            jetzt  7.73– 9.24 (Median  8.45)  vorher  3.75– 4.33
+320 fr/organisationen/gemeinden        Identique pour tous            jetzt  7.73– 9.24 (Median  8.45)  vorher  3.75– 4.33
+320 fr/organisationen/unternehmen      Identique pour tous            jetzt  7.73– 9.24 (Median  8.45)  vorher  3.75– 4.33
+320 fr/sponsoren                       Sponsoring                     jetzt  7.73– 8.56 (Median  8.14)  vorher  3.75– 4.04
+320 fr/app                             En déplacement                 jetzt  8.45– 9.85 (Median  9.14)  vorher  4.00– 4.64
+320 fr/roadmap                         Feuille de route & idées       jetzt  7.69– 9.24 (Median  8.42)  vorher  3.75– 4.33
+320 fr/roadmap/ideen                   Feuille de route & idées       jetzt  7.69– 9.24 (Median  8.42)  vorher  3.75– 4.33
+320 fr/changelog                       Feuille de route & idées       jetzt  7.69– 9.24 (Median  8.42)  vorher  3.75– 4.33
+320 fr/restaurants/12                  🇱🇺                             jetzt  6.71– 6.78 (Median  6.73)  vorher  3.29– 3.32
+320 fr/restaurants/12                  🇩🇪                             jetzt  7.31– 7.40 (Median  7.33)  vorher  3.55– 3.60
+320 fr/restaurants/12                  🇫🇷                             jetzt  7.97– 8.10 (Median  8.03)  vorher  3.89– 3.96
+320 fr/restaurants/12                  🇬🇧                             jetzt  8.76– 8.92 (Median  8.82)  vorher  4.38– 4.50
+320 fr/restaurants/12                  🌐                              jetzt  6.97– 7.08 (Median  7.04)  vorher  3.40– 3.45
+320 fr/restaurants/22                  🇱🇺                             jetzt  6.92– 7.08 (Median  7.04)  vorher  3.38– 3.45
+320 fr/restaurants/22                  🇩🇪                             jetzt  7.64– 7.72 (Median  7.68)  vorher  3.71– 3.75
+320 fr/restaurants/22                  🇫🇷                             jetzt  8.32– 8.45 (Median  8.38)  vorher  4.10– 4.17
+320 fr/gespeichert/favoriten           ← Retour à « Enregistrés »     jetzt  5.81– 9.85 (Median  8.70)  vorher  3.75– 6.05
+320 fr/gespeichert/listen/53           ← Retour à « Enregistrés »     jetzt  5.81– 9.85 (Median  8.70)  vorher  3.75– 6.05
+320 pt/                                11 restaurantes no Luxemburg   jetzt  5.89– 8.61 (Median  7.07)  vorher  2.98– 4.27
+320 pt/open                            Open Startup                   jetzt  8.52– 9.67 (Median  9.05)  vorher  4.02– 4.54
+320 pt/open                            Utilização livre               jetzt  7.73– 8.80 (Median  8.25)  vorher  3.75– 4.14
+320 pt/presse                          Para imprensa e meios de com   jetzt  7.73–10.88 (Median  9.14)  vorher  3.75– 5.31
+320 pt/vergleich                       Comparações                    jetzt  8.56– 9.72 (Median  9.14)  vorher  4.04– 4.57
+320 pt/partner                         Programa de parceiros          jetzt  8.19–10.06 (Median  9.07)  vorher  3.90– 4.76
+320 pt/partner                         A nossa promessa               jetzt  7.65– 9.10 (Median  8.34)  vorher  3.72– 4.27
+320 pt/organisationen                  Juntos                         jetzt  8.80– 9.44 (Median  9.14)  vorher  4.14– 4.43
+320 pt/organisationen                  Igual para todos               jetzt  7.73– 8.94 (Median  8.29)  vorher  3.75– 4.20
+320 pt/organisationen/gemeinden        Igual para todos               jetzt  7.73– 8.94 (Median  8.29)  vorher  3.75– 4.20
+320 pt/organisationen/unternehmen      Igual para todos               jetzt  7.73– 8.94 (Median  8.29)  vorher  3.75– 4.20
+320 pt/sponsoren                       Patrocínio                     jetzt  7.73– 8.55 (Median  8.08)  vorher  3.75– 4.04
+320 pt/app                             Para levar consigo             jetzt  8.39– 9.96 (Median  9.14)  vorher  3.97– 4.69
+320 pt/roadmap                         Roteiro e ideias               jetzt  7.69– 8.69 (Median  8.18)  vorher  3.75– 4.10
+320 pt/roadmap/ideen                   Roteiro e ideias               jetzt  7.69– 8.69 (Median  8.18)  vorher  3.75– 4.10
+320 pt/changelog                       Roteiro e ideias               jetzt  7.69– 8.69 (Median  8.18)  vorher  3.75– 4.10
+320 pt/restaurants/12                  🇱🇺                             jetzt  6.71– 6.78 (Median  6.73)  vorher  3.29– 3.32
+320 pt/restaurants/12                  🇩🇪                             jetzt  7.31– 7.40 (Median  7.33)  vorher  3.55– 3.60
+320 pt/restaurants/12                  🇫🇷                             jetzt  7.97– 8.10 (Median  8.03)  vorher  3.89– 3.96
+320 pt/restaurants/12                  🇬🇧                             jetzt  8.76– 8.92 (Median  8.82)  vorher  4.38– 4.50
+320 pt/restaurants/12                  🌐                              jetzt  6.97– 7.08 (Median  7.04)  vorher  3.40– 3.45
+320 pt/restaurants/22                  🇱🇺                             jetzt  6.92– 7.08 (Median  7.04)  vorher  3.38– 3.45
+320 pt/restaurants/22                  🇩🇪                             jetzt  7.64– 7.72 (Median  7.68)  vorher  3.71– 3.75
+320 pt/restaurants/22                  🇫🇷                             jetzt  8.32– 8.45 (Median  8.38)  vorher  4.10– 4.17
+320 pt/gespeichert/favoriten           ← Voltar a «Guardados»         jetzt  5.81– 9.69 (Median  8.63)  vorher  3.75– 5.98
+320 pt/gespeichert/listen/53           ← Voltar a «Guardados»         jetzt  5.81– 9.69 (Median  8.63)  vorher  3.75– 5.98
+
+== glas-titelfoto.json
+1280 de/restaurants/22                 🇱🇺                             jetzt 11.01–11.53 (Median 11.23)  vorher  5.04– 5.27
+1280 de/restaurants/22                 🇩🇪                             jetzt 11.10–11.68 (Median 11.33)  vorher  5.08– 5.33
+1280 de/restaurants/22                 🇫🇷                             jetzt 11.24–11.66 (Median 11.47)  vorher  5.13– 5.31
+1280 fr/restaurants/22                 🇱🇺                             jetzt 11.01–11.53 (Median 11.23)  vorher  5.04– 5.27
+1280 fr/restaurants/22                 🇩🇪                             jetzt 11.10–11.68 (Median 11.33)  vorher  5.08– 5.33
+1280 fr/restaurants/22                 🇫🇷                             jetzt 11.24–11.66 (Median 11.47)  vorher  5.13– 5.31
+1280 pt/restaurants/22                 🇱🇺                             jetzt 11.01–11.53 (Median 11.23)  vorher  5.04– 5.27
+1280 pt/restaurants/22                 🇩🇪                             jetzt 11.10–11.68 (Median 11.33)  vorher  5.08– 5.33
+1280 pt/restaurants/22                 🇫🇷                             jetzt 11.24–11.66 (Median 11.47)  vorher  5.13– 5.31
+375 de/restaurants/22                  🇱🇺                             jetzt  9.18– 9.81 (Median  9.41)  vorher  4.26– 4.52
+375 de/restaurants/22                  🇩🇪                             jetzt  9.18– 9.81 (Median  9.37)  vorher  4.26– 4.52
+375 de/restaurants/22                  🇫🇷                             jetzt  9.43–10.08 (Median  9.62)  vorher  4.36– 4.63
+375 fr/restaurants/22                  🇱🇺                             jetzt  9.18– 9.81 (Median  9.41)  vorher  4.26– 4.52
+375 fr/restaurants/22                  🇩🇪                             jetzt  9.18– 9.81 (Median  9.37)  vorher  4.26– 4.52
+375 fr/restaurants/22                  🇫🇷                             jetzt  9.43–10.08 (Median  9.62)  vorher  4.36– 4.63
+375 pt/restaurants/22                  🇱🇺                             jetzt  9.18– 9.81 (Median  9.41)  vorher  4.26– 4.52
+375 pt/restaurants/22                  🇩🇪                             jetzt  9.18– 9.81 (Median  9.37)  vorher  4.26– 4.52
+375 pt/restaurants/22                  🇫🇷                             jetzt  9.43–10.08 (Median  9.62)  vorher  4.36– 4.63
+320 de/restaurants/22                  🇱🇺                             jetzt  9.15– 9.74 (Median  9.44)  vorher  4.25– 4.49
+320 de/restaurants/22                  🇩🇪                             jetzt  9.33– 9.97 (Median  9.59)  vorher  4.32– 4.58
+320 de/restaurants/22                  🇫🇷                             jetzt  9.50–10.12 (Median  9.80)  vorher  4.39– 4.64
+320 fr/restaurants/22                  🇱🇺                             jetzt  9.15– 9.74 (Median  9.44)  vorher  4.25– 4.49
+320 fr/restaurants/22                  🇩🇪                             jetzt  9.33– 9.97 (Median  9.59)  vorher  4.32– 4.58
+320 fr/restaurants/22                  🇫🇷                             jetzt  9.50–10.12 (Median  9.80)  vorher  4.39– 4.64
+320 pt/restaurants/22                  🇱🇺                             jetzt  9.15– 9.74 (Median  9.44)  vorher  4.25– 4.49
+320 pt/restaurants/22                  🇩🇪                             jetzt  9.33– 9.97 (Median  9.59)  vorher  4.32– 4.58
+320 pt/restaurants/22                  🇫🇷                             jetzt  9.50–10.12 (Median  9.80)  vorher  4.39– 4.64

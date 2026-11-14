@@ -31,7 +31,7 @@ alles, was beim Ändern schiefgeht.
 | | |
 |---|---|
 | **Artefaktpfad** | `docs/` — auch in Zeile 3 von `docs/prd.md` |
-| **Feature-Inventar** | `features/index.md` — 26 Bestandsfeatures `B01`–`B26` und die neuen Features `01`–`16`; Status steht dort je Zeile |
+| **Feature-Inventar** | `features/index.md` — 26 Bestandsfeatures `B01`–`B26` und die neuen Features `01`–`18`; Status steht dort je Zeile |
 | **Je Feature** | `features/BNN-slug/spec.md` (Akzeptanzkriterien, Fehlbestand) + `design.md` (Struktur, Zugriffsregeln, AK-Abdeckung) |
 | **Projektweite Muster** | `features/fehlbestand-uebersicht.md` — zehn Muster über mehrere Features |
 | **Stack-Profil** | `symfony-doctrine` |
@@ -100,7 +100,7 @@ Konto voraussetzt — dort wechselt die IP mühelos, das Konto nicht (siehe `pas
 
 ## Konvention: Die Prüfung gehört dorthin, wo der Wert hereinkommt
 
-Viermal derselbe Fehler (BF-27, BF-51, BF-62 zweimal): Ein ungeprüfter Wert fällt in die
+Fünfmal derselbe Fehler (BF-27, BF-51, BF-62 zweimal, BF-211): Ein ungeprüfter Wert fällt in die
 nächste Schicht und kommt dort als **HTTP 500** heraus statt als Meldung.
 
 - ⚠ **`'empty_data' => ''` ist Pflicht**, sobald der Entity-Setter striktes `string`
@@ -110,6 +110,13 @@ nächste Schicht und kommt dort als **HTTP 500** heraus statt als Meldung.
   `AsciiSlugger` macht aus „ß" ein „ss", aus einem japanischen Zeichen bis zu drei
   Buchstaben: 80 × „ß" = 160 Zeichen, 80 × „日" = 239. Der `SQLSTATE[22001]` wandert dann
   von `name` auf `slug`.
+- ⚠ **Ebenso bei Kleinschreibung** (BF-211): `mb_strtolower("İ")` sind zwei Codepunkte. Ein
+  abgeleiteter Schlüssel, der so breit ist wie sein Ausgangswert, braucht eine Abbildung, die die
+  Länge hält (`mb_convert_case(…, MB_CASE_LOWER_SIMPLE)`, `SavedText::nameKey()`).
+- ⚠ **Eine Zahl aus der Anfrage braucht auch eine Obergrenze** (BF-212, BF-213, BF-214). `\d+` im
+  Routenmuster passt auf `99999999999999999999`, das `int $id` nicht annimmt (TypeError); eine
+  Seitenzahl `PHP_INT_MAX` läuft in `(seite - 1) * n` zu `float` über. Nummern im Pfad mit `\d{1,10}`
+  (deckt `INT` ab), Seitenzahlen **vor** dem Rechnen klemmen bzw. abweisen.
 
 ## Konvention: Übersetzungsschlüssel werden getestet, nicht gehofft
 
@@ -542,6 +549,9 @@ ein Adresswechsel wurde ohne Bestätigung wirksam (hob BF-19 auf, lag auf der Pr
 seither nur in einer Variablen. **Wer zwischen Validierung und Zurücksetzen einen Dienst ruft, holt BF-175 zurück.**
 ⚠️ **Der Deckel `email_change` zählt an der BESTÄTIGTEN Adresse** (BF-176) — nach `handleRequest()` liefert
 `getUserIdentifier()` die Eingabe; jede neue Wunschadresse bekam ein frisches Kontingent.
+⚠️ **`ProfileType` prüft die Adresse strikt und mit `Length(max: 180)`, `new Address()` der Wunschadresse steht vor
+allem, was schreibt** (BF-184, Muster BF-119) — vorher endete `../../etc/passwd@example.lu` als 500 mit stehender
+Vormerkung, 181 Zeichen in `SQLSTATE[22001]`. `name` und `email` tragen `'empty_data' => ''` (BF-182).
 
 ⚠️ **Zwei Mails, die wichtigere geht an die ALTE Adresse.** Ein Konto-Übernehmer sitzt im neuen Postfach; nur die
 Warnung an die alte Adresse erreicht den rechtmäßigen Inhaber. Vorlagen `email/email_change.html.twig` (Knopf),
@@ -661,7 +671,8 @@ auf eine fremde Adresse bei unverändertem Kontingent. Unsichtbar, weil der Limi
 ⚠️ **E-Mail-Prüfung mit `Email::VALIDATION_MODE_STRICT`** (BF-119). Der HTML5-Default lässt Adressen durch, die
 `Mime\Address` (RFC 2822) ablehnt — und `register()` speichert **vor** dem Versand, bei einem 500er blieb eine Zeile
 stehen. ⚠️ **Seit 2026-09-11 prüfen alle vier Wege strikt** (`PartnerWaitlistType` B14, `OrganisationWaitlistType`
-B15, `RegistrationType` B01 nachgezogen). ⚠ **Noch nicht ausgeliefert:** auf Produktion erzeugt eine RFC-widrige
+B15, `RegistrationType` B01 nachgezogen; seit 2026-11-14 als fünfter `ProfileType` B04, BF-184 — offen bleiben
+`PasswordResetRequestType`, `AccessibilityReportType`, `RestaurantSuggestionType`, `RestaurantType`, OF-BF119a). ⚠ **Noch nicht ausgeliefert:** auf Produktion erzeugt eine RFC-widrige
 Adresse dort weiterhin einen 500er + bleibende Zeile, bis Branch `fix/bf-119-email-validierung` gemerged ist.
 
 ⚠️ **Die zweite Hälfte der Reparatur steht im Service, nicht im Formular.** In
@@ -747,7 +758,9 @@ und verbindet es bei jeder Rückkehr aus dem Zwischenspeicher neu — gemessen: 
 **vollen** Seitenaufruf verbindet Stimulus vor dem `defer`-Zählskript; `#send` versucht es deshalb einmal beim
 `load`-Ereignis erneut (BF-179). Ein Prüflauf ohne Browser sieht beides nicht.
 ⚠ **`AvatarUploadService` arbeitet unter einer Sperre je Konto und räumt auch den frisch gelesenen alten Namen weg**
-(BF-173) — sonst bleiben bei gleichzeitigen Uploads Dateien ohne Konto liegen.
+(BF-173) — sonst bleiben bei gleichzeitigen Uploads Dateien ohne Konto liegen. `delete()` setzt den Verweis per SQL
+auf `NULL` (BF-186: `null` → `null` ist für Doctrine keine Änderung, der `flush()` schrieb nichts), `AccountDeleter`
+ruft `delete()` immer, nicht nur bei einem Namen an der Entity.
 ⚠ **Kein Verzeichnis `public/einfuehrung` anlegen** (BF-100).
 
 ## Sponsoren (`/sponsoren`, Feature 15)
@@ -999,6 +1012,10 @@ Löst den Input-Klassenstring ab, der in `community/vorschlagen.html.twig` **zeh
 Bewusst ein Include, **kein** Form-Theme (ein Theme schlüge global auf Wizard/Admin/Profil durch).
 Der Fehlercontainer existiert auch im Gutfall leer (`aria-describedby` zeigt nie ins Leere). Fokus ist echtes
 `outline` statt `box-shadow`-Ring (Ringe verschwinden im Windows-Kontrastmodus; deshalb nirgends `outline-none`).
+⚠ **Der globale Fokus-Fallback (`:focus-visible`, cyan-700) steht in `assets/styles/app.css` in `@layer base`**
+(BF-206, BF-217). Ungeschichtet schlug er jede `focus:outline-<farbe>` aus `@layer utilities` — bis 2026-11-14 war
+`focus:outline-white` auf allen Verlaufsbändern wirkungslos (1,0–1,65 : 1). Seither wirkt jede gesetzte Fokusfarbe:
+**Weiß nur auf dunklem Grund** — auf Weiß ist der Rahmen unsichtbar.
 **Fokus ohne JS:** erstes fehlerhaftes Feld bekommt serverseitig `autofocus` (Browser + Turbo fokussieren beim
 422-Render nativ). **FAQ ohne `aria-expanded`:** `<details>/<summary>` meldet seinen Zustand selbst; ein
 handgeschriebenes `aria-expanded` ließe sich ohne JS nicht aktualisieren.
@@ -1220,6 +1237,64 @@ hat im Kopf keine. Die Leitzahl des Boards ist ein `h2` über der Liste — ohne
 ⚠ **axe meldet auf jeder Seite einen Kontrastverstoß an der Wortmarke im Seitenkopf** (`text-brand` `#01b6ed` auf
 Weiß, 2,35 : 1, ab 1280 px). App-Hülle, nicht Feature 16; WCAG 1.4.3 nimmt Logotypen aus (16/OF-02).
 ⚠ **Kein Verzeichnis `public/roadmap`** (BF-100) — gilt jetzt auch für `/roadmap/ideen`.
+
+## Favoriten und Listen (`/gespeichert`, Feature 17)
+
+Herz auf jeder Restaurantkarte und auf der Detailseite, eigene benannte Listen (privat), eine private Notiz je Lokal,
+Seite „Gespeichert“ (Favoriten, Listen, Rückfrage), Filter „Nur meine Favoriten“ in der Suche. Spec/Entwurf/Plan unter
+`features/17-favoriten-und-listen/`, Geschäftslogik in `App\Saved\`, Controller `SavedController` +
+`RestaurantSavedController`. Vier Tabellen (`favorite`, `saved_list`, `saved_list_entry`, `restaurant_note`).
+
+⚠ **Die Kaskade liegt in der Datenbank.** Alle Fremdschlüssel `ON DELETE CASCADE`, Beziehungen nur einseitig —
+`User` und `Restaurant` kennen die Tabellen nicht. Kontolöschung (`AccountDeleter`) und Restaurantverwaltung tun dafür
+nichts; wer dort eine Rückbeziehung mit `orphanRemoval` „ergänzt“, lädt beim Löschen jede Sammlung mit.
+⚠ **Besitz über die Abfrage, kein Voter.** Jede Repository-Methode nimmt das Konto als Pflichtargument;
+`SavedListRepository::findOneOwned(id, user)` ist der einzige Weg zu einer Liste. Fremde und unbekannte Nummer enden
+identisch in 404 — **Besitz vor Token** (BF-199). Im Häkchen-Formular der Detailseite prüft der Controller die
+übermittelten Listennummern **vor** dem Verarbeiten (eine fremde → 404, kein 422-Formularfehler).
+⚠ **`saved_list.name_key` mit Kollation `utf8mb4_bin`**, nicht der Index auf `name`: MySQLs Standardkollation ist
+akzentblind („Café“ = „Cafe“). Namen und Notizen normalisiert allein `App\Saved\SavedText` (trim, NFC, `\r\n` → `\n`
+**vor** dem Zählen) — Formular und Dienst zählen dieselbe Länge. ⚠ **Der Schlüssel entsteht mit
+`MB_CASE_LOWER_SIMPLE`, nicht `mb_strtolower()`** (BF-211): sonst wird „İ“ zu zwei Zeichen, 31 davon sprengten
+`name_key` (HTTP 500). „İstanbul“ und „Istanbul“ sind deshalb eine Dublette.
+⚠ **Listen- und Lokalnummern im Pfad `\d{1,10}`** (`SavedController::NUMMER`, BF-212), die Seitenzahl beim
+Entfernen geklemmt (`SavedCards::clampPage()`, BF-213) — sonst HTTP 500 über Zahlen jenseits `PHP_INT_MAX`.
+⚠ **Schreibsperre je Konto** (`SavedWriteLock`, `LockFactory`, `flock`): Doppelklick und zwei Tabs laufen nacheinander.
+Die Unique-Verletzung abzufangen reicht nicht — sie schließt den EntityManager; die 25er-Grenze prüft kein Index.
+Wirkt nur, solange die App in **einem** Container läuft.
+⚠ **Das Herz hat zwei Absichten, keinen Umschalter** (`…/merken`, `…/nicht-mehr-merken`): Eine veraltete Seite nimmt
+sonst ein gemerktes Lokal heraus. Deckel `saved_change` (120/h am Konto, Schlüssel `konto-{id}`), verbraucht nur bei
+tatsächlicher Änderung (BF-11).
+⚠ **Token für das Herz je Handlungsart (`favorit`), nicht je Lokal** — auch Gäste rendern Herzen; je Lokal sammelte
+jede Gast-Sitzung beim Stöbern hunderte Token.
+⚠ **Turbo verliert den Anker einer Weiterleitung** (fetch, `response.url` ohne `#…`). Gemessen nach der Anmeldung über
+das Herz und nach „In Listen“/„Notiz speichern“: Seite stand oben. Deshalb Flash-Art **`scroll_to`** (nur
+`favorit-<Zahl>`, `in-listen`, `notiz`) → `scroll_to_controller.ts` rollt **nach** `turbo:load` (Turbo setzt die
+Position sonst selbst auf oben). Ohne JavaScript trägt der echte Anker.
+⚠ **Turbo 8 deaktiviert den Absendeknopf während des Sendens — der Fokus geht verloren**, auch wenn der Stream per
+`method="morph"` dasselbe Element behält. `favorite_button_controller.ts` stellt ihn nach dem Stream zurück (AK-48).
+Bewusst nicht global per `Turbo.config.forms.submitter = "aria-disabled"`.
+⚠ **Meldungen aus Streams gehen in `#meldung-live`** (`base.html.twig`, `role="status"`, leer im Dokument, bevor etwas
+hineinkommt — ein neu eingefügter Bereich wird nicht zuverlässig angesagt).
+⚠ **Private Seiten Angemeldeter tragen `Cache-Control: no-store` und `turbo-cache-control: no-cache`**
+(`App\Saved\PrivatePages`: `app_saved_*`, Suche, Detailseite). Ohne beides zeigte „Zurück“ nach dem Abmelden Listen
+und Notizen aus Turbos Speicher bzw. dem Back-Forward-Cache. Gegen Safari noch nicht geprüft.
+⚠ **Sentry sendet keinen Anfragerumpf mehr** (`max_request_body_size: never`). sentry/sentry 4.30 hängt ihn sonst bis
+10 KB an jedes Ereignis — **unabhängig von `send_default_pii`**; bis 2026-11-14 gingen so Passwortfelder und
+Board-Texte mit. **`doctrine.dbal.logging: false` steht in `when@prod` ausdrücklich** — mit SQL-Protokoll schriebe
+`fingers_crossed` bei jedem Fehler die Notiz nach stderr (`SavedPrivacyLeakTest` liest beide Zeilen).
+⚠ **Listenpfade werden für Umami gekürzt** (`/xx/gespeichert/listen/…` → `/xx/gespeichert/listen`, ohne Titel) — in
+`CollectPayloadNormalizer` **und** `before_send.ts`. Ereignisse `herz_gesetzt`, `liste_angelegt` ohne Daten; der
+Favoriten-Filter zählt im bestehenden `filter_angewandt` (Schlüssel `favorites`).
+⚠ **Untere Leiste: angemeldet „Gespeichert“ statt „Über uns“** (17/OF-04) — fünf Punkte passen bei 320 px nicht
+einzeilig (lb „Restauranten“, pt „O meu perfil“). Kein fünfter Punkt.
+⚠ **Kartenpartial `partials/_restaurant_card.html.twig`** gilt für Suche und Gespeichert-Seiten; `ziel` an das Herz
+durchreichen (ohne kehrt das Herz im Stream-Raster zur Formularadresse zurück — so gefunden).
+⚠ **Die Suche liest den Paginator einmal als Array** (`iterator_to_array`) — `Paginator::getIterator()` fragt bei jedem
+Durchlauf neu, `SavedState` und Template hätten die Seite doppelt geladen.
+⚠ **Kein Verzeichnis `public/gespeichert`** (BF-100). Die vier GET-Routen stehen in `SeoRegistry::UNLISTED_ROUTES`,
+**nicht** in `PAGINATED_ROUTES` (`SeoRouteCoverageTest` gleicht dort nur angebotene Seiten ab).
+⚠ **`bin/sicherung-pruefen.sh` kennt die vier Tabellen** — wer eine weitere anlegt, ergänzt sie dort.
 
 ## Versioning
 

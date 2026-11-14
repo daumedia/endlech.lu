@@ -1,0 +1,91 @@
+{#
+    „Gespeichert“ (Feature 17, AK-11, AK-13, AK-16 bis AK-20): oben die Kachel „Favoriten“ mit
+    Zahl, darunter „Meine Listen“ — zuletzt angelegte zuerst, je Zeile Name und Zahl — und das
+    Formular „Neue Liste“.
+
+    Zustände: leer → beide Leertexte AK-13 (Favoriten mit Verweis auf die Suche); Fehler →
+    422, Meldung am Feld „Neue Liste“, Fokus im Feld (AK-17 bis AK-20, AK-50); gefüllt → AK-11.
+
+    ⚠ **Die ganze Kachel bzw. Zeile ist Ziel, der Verweis bleibt der Name.** Ein Pseudo-Element
+    (`after:absolute after:inset-0`) streckt den Verweis über die Fläche; die Zahl steht daneben
+    und gehört nicht zum Verweistext — der hieße sonst „Kirchberg 4 Lokale“ (Muster „Karten“
+    aus Inclusive Components, Pickering).
+    ⚠ Listennamen sind Nutzertext: nie `trans`, nie `raw` (AK-46). Die Zahlen kommen aus einer
+    gruppierten Abfrage; eine leere Liste fehlt darin und zählt 0.
+#}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'saved.page_title'|trans }}{% endblock %}
+
+{% block body %}
+    {{ include('saved/_kopf.html.twig', {titel: 'saved.title'|trans, intro: 'saved.intro'|trans}, with_context = false) }}
+
+    <div class="bg-gray-50 py-8 md:py-12">
+        <div class="container mx-auto px-4 max-w-3xl space-y-10">
+
+            {# === FAVORITEN ================================================ #}
+            <section id="gespeichert-favoriten" aria-labelledby="gespeichert-favoriten-titel"
+                     class="relative rounded-2xl border-2 border-gray-300 bg-white p-5 md:p-6 {{ favoritenZahl > 0 ? 'hover:border-cyan-700 motion-safe:transition' }}">
+                <div class="flex items-center gap-4">
+                    <span class="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-cyan-50 text-3xl" aria-hidden="true">❤️</span>
+                    <div class="min-w-0 flex-1">
+                        <h2 id="gespeichert-favoriten-titel" class="text-xl md:text-2xl font-bold text-gray-900">
+                            {% if favoritenZahl > 0 %}
+                                <a href="{{ path('app_saved_favorites') }}"
+                                   class="rounded after:absolute after:inset-0 after:rounded-2xl hover:underline focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700">{{ 'saved.favorites.title'|trans }}</a>
+                            {% else %}
+                                {{ 'saved.favorites.title'|trans }}
+                            {% endif %}
+                        </h2>
+                        {% if favoritenZahl > 0 %}
+                            <p id="gespeichert-favoriten-zahl" class="mt-0.5 text-gray-700">{{ 'saved.favorites.count'|trans({'%count%': favoritenZahl}) }}</p>
+                        {% endif %}
+                    </div>
+                    {% if favoritenZahl > 0 %}
+                        <span class="shrink-0 text-2xl font-bold text-cyan-700" aria-hidden="true">→</span>
+                    {% endif %}
+                </div>
+
+                {% if favoritenZahl == 0 %}
+                    <p class="mt-4 text-gray-700 leading-relaxed">{{ 'saved.favorites.empty'|trans }}</p>
+                    <a href="{{ path('app_restaurant_index') }}"
+                       class="mt-4 inline-flex items-center justify-center min-h-[44px] px-5 rounded-lg bg-cyan-700 text-white font-semibold hover:bg-cyan-800 motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700">
+                        {{ 'saved.to_search'|trans }}
+                    </a>
+                {% endif %}
+            </section>
+
+            {# === MEINE LISTEN ============================================== #}
+            <section id="gespeichert-listen" aria-labelledby="gespeichert-listen-titel">
+                <h2 id="gespeichert-listen-titel" class="text-2xl font-bold text-gray-900">{{ 'saved.lists.heading'|trans }}</h2>
+
+                {% if listen is empty %}
+                    <p class="mt-3 text-gray-700 leading-relaxed">{{ 'saved.lists.empty'|trans }}</p>
+                {% else %}
+                    <ul class="mt-4 divide-y divide-gray-200 overflow-hidden rounded-2xl border-2 border-gray-300 bg-white">
+                        {% for liste in listen %}
+                            <li class="relative flex items-center justify-between gap-4 px-5 py-1.5 hover:bg-cyan-50 motion-safe:transition">
+                                <a href="{{ path('app_saved_list_show', {id: liste.id}) }}"
+                                   class="min-w-0 min-h-[44px] inline-flex items-center rounded font-semibold text-cyan-800 wrap-anywhere after:absolute after:inset-0 hover:underline focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700">{{ liste.name }}</a>
+                                <span data-anzahl class="shrink-0 text-sm text-gray-700">{{ 'saved.lists.count'|trans({'%count%': zahlen[liste.id] ?? 0}) }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                {# Neue Liste — Fehler am Feld, Fokus im Feld (AK-17 bis AK-20, AK-50). #}
+                <div class="mt-6 rounded-2xl border-2 border-gray-300 bg-white p-5 md:p-6">
+                    {{ form_start(formular, {attr: {novalidate: 'novalidate', class: 'space-y-3'}}) }}
+                        {% include 'partials/_form_field.html.twig' with {
+                            field: formular.name,
+                            help: 'saved.lists.new_help'|trans,
+                            autofocus: formular.name.vars.errors|length > 0,
+                        } %}
+                        <button type="submit" class="inline-flex items-center justify-center min-h-[44px] px-5 rounded-lg bg-cyan-700 text-white font-semibold hover:bg-cyan-800 motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700">{{ 'saved.lists.create'|trans }}</button>
+                    {{ form_end(formular) }}
+                </div>
+            </section>
+
+        </div>
+    </div>
+{% endblock %}

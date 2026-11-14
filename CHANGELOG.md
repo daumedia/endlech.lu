@@ -7,6 +7,34 @@ Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
 ## [Unreleased]
 
+### Favoriten und Listen (Feature 17)
+
+- **Herz auf jeder Restaurantkarte und auf der Detailseite:** Angemeldet merkt es ein Lokal oder nimmt es wieder
+  heraus. Ein Gast landet über das Herz auf der Anmeldung; danach ist das Lokal gemerkt und die Seite steht wieder
+  am Herz.
+- **Eigene Listen** (privat, höchstens 25, Namen bis 60 Zeichen, keine zwei gleichen). Lokale kommen über die
+  Detailseite in eine oder mehrere Listen; eine Liste wird nur nach Rückfrage gelöscht.
+- **Eine private Notiz je Lokal** (bis 500 Zeichen) auf der Detailseite.
+- **Seite „Gespeichert“** (`/gespeichert`) mit Favoriten und Listen, dazu der Filter „Nur meine Favoriten“ in der
+  Suche. In der unteren Leiste ersetzt „Gespeichert“ für Angemeldete den Punkt „Über uns“.
+- **Datenschutz:** Alles bleibt privat, auch die Verwaltung sieht nichts. Der Datenexport enthält Favoriten, Listen
+  und Notizen, die Kontolöschung nimmt alles mit. Private Seiten werden weder vom Browser noch von Turbo
+  zwischengespeichert. Sentry bekommt keinen Anfragerumpf mehr. Deckel: 120 Änderungen je Stunde am Konto.
+- **Migration** `Version20261113221129` legt vier Tabellen an (`favorite`, `saved_list`, `saved_list_entry`,
+  `restaurant_note`) — vor dem Code einspielen.
+
+### Behoben
+
+- **Fokusrahmen auf den Farbbändern sichtbar:** Die globale Fokusregel steht in `@layer base`; gesetzte Fokusfarben
+  (Weiß auf den Verlaufsbändern) wirken wieder (BF-206).
+- **Glas-Etikett** auf Startseite, `/open`, `/presse`, Vergleichen, Partner-, Organisations-, Sponsoren- und
+  App-Seite auf dunklem Glas, Kontrast mindestens 4,5 : 1 (BF-203).
+- **Kontraste:** aktiver Punkt der unteren Leiste (BF-215), kleine Schrift auf der Detailseite (BF-216).
+- **Suche:** Eine riesige Seitenzahl antwortet mit 404 statt mit einem Serverfehler (BF-214).
+- **Profil:** Ein Name aus Leerzeichen und eine ungültige oder zu lange neue Adresse zeigen eine Meldung statt eines
+  Serverfehlers (BF-182, BF-184). Profilbild entfernen und Konto löschen räumen das Bild auch neben einem
+  gleichzeitigen Upload ab (BF-186).
+
 ## [2026.11.07] – Roadmap und Ideen in einem Bereich
 
 ### Roadmap und Ideen in einem Bereich (Feature 16)
