@@ -81,6 +81,15 @@ class AvatarUploadService
                     unlink($path);
                 }
             }
+
+            // ⚠ BF-186: Den Verweis in der Datenbank ausdrücklich löschen, nicht nur an der Entity. Trug sie
+            // beim Anfragebeginn noch kein Bild, während ein Upload daneben schon eines gespeichert hatte, ist
+            // `setAvatarFilename(null)` für Doctrine keine Änderung (`null` → `null`) — der `flush()` schrieb
+            // nichts, das Konto verwies auf die eben gelöschte Datei (kaputtes Bild in Kopfzeile und Profil).
+            // Unter der Sperre, also zwischen Lesen und Schreiben kein fremder Upload.
+            if (null !== $user->getId()) {
+                $this->em->getConnection()->executeStatement('UPDATE `user` SET avatar_filename = NULL WHERE id = ?', [$user->getId()]);
+            }
             $user->setAvatarFilename(null);
             $this->em->flush();
         } finally {

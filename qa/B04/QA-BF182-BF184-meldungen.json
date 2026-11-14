@@ -1,0 +1,70 @@
+{
+ "lb-1280": {
+  "posts": [
+   {
+    "url": "/lb/profile/edit",
+    "status": 422
+   }
+  ],
+  "fehler": [
+   "Gëff w.e.g. däin Numm an.",
+   "Den Numm muss mindestens 2 Zeechen laang sinn.",
+   "D’E-Mail-Adress dierf héchstens 180 Zeeche laang sinn."
+  ],
+  "breite": [
+   1280,
+   1280
+  ]
+ },
+ "lb-375": {
+  "posts": [
+   {
+    "url": "/lb/profile/edit",
+    "status": 422
+   }
+  ],
+  "fehler": [
+   "Gëff w.e.g. däin Numm an.",
+   "Den Numm muss mindestens 2 Zeechen laang sinn.",
+   "D’E-Mail-Adress dierf héchstens 180 Zeeche laang sinn."
+  ],
+  "breite": [
+   375,
+   375
+  ]
+ },
+ "de-375": {
+  "posts": [
+   {
+    "url": "/de/profile/edit",
+    "status": 422
+   }
+  ],
+  "fehler": [
+   "Bitte gib deinen Namen ein.",
+   "Der Name muss mindestens 2 Zeichen lang sein.",
+   "Die E-Mail-Adresse darf höchstens 180 Zeichen lang sein."
+  ],
+  "breite": [
+   375,
+   375
+  ]
+ },
+ "fr-375": {
+  "posts": [
+   {
+    "url": "/fr/profile/edit",
+    "status": 422
+   }
+  ],
+  "fehler": [
+   "Veuillez saisir votre nom.",
+   "Le nom doit comporter au moins 2 caractères.",
+   "L’adresse e-mail ne peut pas dépasser 180 caractères."
+  ],
+  "breite": [
+   375,
+   375
+  ]
+ }
+}

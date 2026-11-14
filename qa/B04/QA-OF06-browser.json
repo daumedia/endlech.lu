@@ -1,0 +1,227 @@
+{
+ "name-zu-kurz-js": {
+  "erst": [
+   {
+    "url": "/de/profile/edit",
+    "status": 422
+   }
+  ],
+  "nachMeldung": {
+   "url": "/de/profile",
+   "profilAction": null,
+   "passwortAction": "/de/profile/password",
+   "titel": "Mein Profil – Endlech.lu",
+   "fehler": [
+    "Der Name muss mindestens 2 Zeichen lang sein."
+   ],
+   "h1": "a"
+  },
+  "zweit": [
+   {
+    "url": "/de/profile",
+    "status": 405
+   }
+  ],
+  "nachKorrektur": {
+   "url": "/de/profile",
+   "profilAction": "/de/profile/edit",
+   "passwortAction": "/de/profile/password",
+   "titel": "Mein Profil – Endlech.lu",
+   "fehler": [],
+   "h1": "QA Carl"
+  }
+ },
+ "name-leerzeichen-bf182-js": {
+  "erst": [
+   {
+    "url": "/de/profile/edit",
+    "status": 422
+   }
+  ],
+  "nachMeldung": {
+   "url": "/de/profile",
+   "profilAction": null,
+   "passwortAction": "/de/profile/password",
+   "titel": "Mein Profil – Endlech.lu",
+   "fehler": [
+    "Bitte gib deinen Namen ein.",
+    "Der Name muss mindestens 2 Zeichen lang sein."
+   ],
+   "h1": ""
+  },
+  "zweit": [
+   {
+    "url": "/de/profile",
+    "status": 405
+   }
+  ],
+  "nachKorrektur": {
+   "url": "/de/profile",
+   "profilAction": "/de/profile/edit",
+   "passwortAction": "/de/profile/password",
+   "titel": "Mein Profil – Endlech.lu",
+   "fehler": [],
+   "h1": "QA Carl"
+  }
+ },
+ "adresse-rfc-bf184-js": {
+  "erst": [
+   {
+    "url": "/de/profile/edit",
+    "status": 422
+   }
+  ],
+  "nachMeldung": {
+   "url": "/de/profile",
+   "profilAction": null,
+   "passwortAction": "/de/profile/password",
+   "titel": "Mein Profil – Endlech.lu",
+   "fehler": [
+    "Bitte gib eine gültige E-Mail-Adresse ein."
+   ],
+   "h1": "QA Carl"
+  },
+  "zweit": [
+   {
+    "url": "/de/profile",
+    "status": 405
+   }
+  ],
+  "nachKorrektur": {
+   "url": "/de/profile",
+   "profilAction": "/de/profile/edit",
+   "passwortAction": "/de/profile/password",
+   "titel": "Mein Profil – Endlech.lu",
+   "fehler": [],
+   "h1": "QA Carl"
+  }
+ },
+ "bild-zu-gross-js": {
+  "erst": [
+   {
+    "url": "/de/profile/edit",
+    "status": 422
+   }
+  ],
+  "nachMeldung": {
+   "url": "/de/profile",
+   "profilAction": null,
+   "passwortAction": "/de/profile/password",
+   "titel": "Mein Profil – Endlech.lu",
+   "fehler": [
+    "Das Profilbild darf maximal 2000000 bytes groß sein."
+   ],
+   "h1": "QA Carl"
+  },
+  "zweit": [
+   {
+    "url": "/de/profile",
+    "status": 405
+   }
+  ],
+  "nachKorrektur": {
+   "url": "/de/profile",
+   "profilAction": "/de/profile/edit",
+   "passwortAction": "/de/profile/password",
+   "titel": "Mein Profil – Endlech.lu",
+   "fehler": [],
+   "h1": "QA Carl"
+  }
+ },
+ "passwort-zu-kurz-js": {
+  "erst": [
+   {
+    "url": "/de/profile/password",
+    "status": 422
+   }
+  ],
+  "nachMeldung": {
+   "url": "/de/profile",
+   "profilAction": "/de/profile/edit",
+   "passwortAction": null,
+   "titel": "Mein Profil – Endlech.lu",
+   "fehler": [
+    "Das neue Passwort muss mindestens 8 Zeichen lang sein."
+   ],
+   "h1": "QA Carl"
+  },
+  "zweit": [
+   {
+    "url": "/de/profile",
+    "status": 405
+   }
+  ],
+  "nachKorrektur": {
+   "url": "/de/profile",
+   "profilAction": "/de/profile/edit",
+   "passwortAction": "/de/profile/password",
+   "titel": "Mein Profil – Endlech.lu",
+   "fehler": [],
+   "h1": "QA Carl"
+  }
+ },
+ "name-zu-kurz-ohnejs": {
+  "erst": [
+   {
+    "url": "/de/profile/edit",
+    "status": 422
+   }
+  ],
+  "nachMeldung": {
+   "url": "/de/profile/edit",
+   "profilAction": null,
+   "passwortAction": "/de/profile/password",
+   "titel": "Mein Profil – Endlech.lu",
+   "fehler": [
+    "Der Name muss mindestens 2 Zeichen lang sein."
+   ],
+   "h1": "a"
+  },
+  "zweit": [
+   {
+    "url": "/de/profile/edit",
+    "status": 302
+   }
+  ],
+  "nachKorrektur": {
+   "url": "/de/profile",
+   "profilAction": "/de/profile/edit",
+   "passwortAction": "/de/profile/password",
+   "titel": "Mein Profil – Endlech.lu",
+   "fehler": [],
+   "h1": "QA Carl Korrigiert"
+  }
+ },
+ "passwort-zu-kurz-ohnejs": {
+  "erst": [
+   {
+    "url": "/de/profile/password",
+    "status": 422
+   }
+  ],
+  "nachMeldung": {
+   "url": "/de/profile/password",
+   "profilAction": "/de/profile/edit",
+   "passwortAction": null,
+   "titel": "Mein Profil – Endlech.lu",
+   "fehler": [
+    "Das neue Passwort muss mindestens 8 Zeichen lang sein."
+   ],
+   "h1": "QA Carl Korrigiert"
+  },
+  "zweit": [
+   {
+    "url": "/de/profile/password",
+    "status": 302
+   }
+  ],
+  "nachKorrektur": {
+   "url": "/de/profile",
+   "profilAction": "/de/profile/edit",
+   "passwortAction": "/de/profile/password",
+   "titel": "Mein Profil – Endlech.lu",
+   "fehler": [],
+   "h1": "QA Carl Korrigiert"
+  }
+ }
+}

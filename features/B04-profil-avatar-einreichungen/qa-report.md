@@ -1,306 +1,319 @@
-# B04 · Profil, Avatar & Einreichungen — Testbericht
+# B04 · Profil, Avatar & eigene Einreichungen — Testbericht
 
-Stand: 2026-08-24 · zweiter Durchlauf, nach der Reparatur von BF-19 und BF-20
-Vorstufe: `review` · Branch `fix/b04-profil-qa` · Commit `c3a2592`
+Stand: 2026-11-14 · Geprüft gegen `spec.md` (Rekonstruktion vom 2026-08-23, fortgeschrieben bis 2026-11-14) · in eigener
+Session, ohne Bauverlauf · Vorstufe `building` (Fehlerauftrag BF-182, BF-184, BF-186) · Branch
+`feature/17-favoriten-und-listen`, uncommittet neben Feature 17 · Suchliste: `build-report.md`
+
+Frühere Durchläufe (2026-08-24) und die Nachträge aus den QA-Runden von Feature 12 sind archiviert unter
+`qa/B04/qa-report-bis-2026-11-14-archiv.md`. Nachweise dieses Durchlaufs: `qa/B04/`.
 
 ## Fazit
 
-**Production-ready: ja** — mit drei mittleren Befunden, die keinen Hauptweg blockieren.
+**Production-ready: ja** — mit einem mittleren und drei niedrigen Befunden, keiner davon *hoch* oder *kritisch*.
 
-18 von 19 Akzeptanzkriterien bestanden, eines durchgefallen (EC-04). Die beiden
-Befunde des ersten Durchlaufs sind belegt behoben: Eine geänderte E-Mail-Adresse wird
-nur noch vorgemerkt, und die Passwortänderung greift ab dem sechsten Versuch nicht mehr.
-Beides an der Grenze nachgemessen, nicht nur am Erfolgsweg.
+Die drei Befunde des Auftrags sind behoben, jeder am laufenden Server und mit einer Gegenprobe belegt: Wird die
+Reparatur zeilenweise zurückgebaut, wird der Prüflauf rot und der Server antwortet wieder mit HTTP 500. Ein leerer
+Name, eine leere, RFC-widrige oder zu lange Adresse ergeben jetzt 422 mit Meldung am Feld (lb, de, fr geprüft). Keine
+dieser Eingaben legt eine Vormerkung an, verschickt eine Mail oder verbraucht einen Platz im Deckel: Nach 17
+abgewiesenen Eingaben gingen drei gültige Wechsel noch durch. Alle 19 Kriterien sind bestanden. Durchgefallen ist EC-04.
 
-Drei neue Befunde, alle *mittel*:
+**Neu: BF-226 (*mittel*)**. Das ist der vom Bau als OF-06 gemeldete Fehler, im Browser auf fünf Wegen bestätigt. Nach
+jeder Meldung am Profil- **oder** Passwortformular geht das korrigierte Formular mit Turbo an `POST /xx/profile` und
+endet mit **405**. Die Korrektur ist dabei verloren. Er ist vorbestehend. Seit der Reparatur erreichen ihn zwei
+Eingabeklassen mehr, die vorher sofort mit 500 endeten: der leere Name und die RFC-widrige oder zu lange Adresse. Das
+ist ein Mehr an Reichweite, kein Rückschritt: Diese Wege funktionierten vorher gar nicht. Dazu kommen drei niedrige
+Befunde:
 
-- **BF-21** — die Adressänderung selbst hat keinen Deckel. Zehn Durchläufe erzeugten
-  zwanzig Mails, davon zehn an ein frei gewähltes fremdes Postfach. Der Befund ist eine
-  **Nebenwirkung der Reparatur**: Vorher verschickte dieser Weg gar keine Mail.
-- **BF-22** — ein ungültiges Stammdatenformular mit geänderter Adresse meldet den Nutzer
-  ab. Bestand schon vorher; die Reparatur sitzt genau an dieser Stelle und hätte ihn
-  mit einer Zeile miterledigt.
-- **BF-23** — der Bestätigungstoken steht auch im `request`-Kanal („Matched route"), und
-  der ist in `prod` **nicht** ausgeschlossen. Damit war **BF-06 nur halb behoben**, und
-  zwar für B01 genauso wie für B04.
+- **BF-227**: OF-07, am Server nachgestellt. Kontolöschung und Upload aus einer zweiten Sitzung lassen das Bild
+  öffentlich liegen.
+- **BF-228**: Hinweis des `code-reviewer`, am Server bestätigt. Beim erreichten Adress-Deckel entscheidet das Bild, ob
+  eine Namensänderung gespeichert wird.
+- **BF-229**: mitgefunden, außerhalb von B04. Ein Prüflauf kippt an der Reihenfolge der Küchen-Etiketten.
 
-Nächster Aufruf: `/sdd-qa B23` (Rang 1 der Risikoreihenfolge; B05 steht in Rang 4).
-Die Erfassung läuft weiter — kein Befund ist
-*hoch* oder *kritisch*. Die drei neuen stehen in `features/befunde.md`.
+**Nächster Aufruf:** `/sdd-deploy B04`. Die Reparatur liegt uncommittet auf dem Branch von Feature 17 und geht mit dessen
+Auslieferung live. Bis dahin bestehen BF-182 und BF-184 (HTTP 500) auf der Produktion fort. Vorher oder danach,
+blockiert nicht: `/sdd-klaeren B04` über BF-226, BF-227 und BF-228, dann `/sdd-build B04`.
 
-## Was seit dem ersten Durchlauf anders ist
+| | Anzahl |
+|---|---|
+| Akzeptanzkriterien geprüft | 19 von 19 (AK-01 bis AK-18, AK-12a; AK-19 bis AK-21 gestrichen → Feature 18, nicht geprüft) |
+| davon bestanden | 19 |
+| davon durchgefallen | 0 |
+| **nicht prüfbar** | 0 |
+| Edge Cases belegt | 5 von 5 — 4 bestanden, **EC-04 durchgefallen** (BF-226) |
+| Befunde des Auftrags behoben | 3 von 3 (BF-182, BF-184, BF-186) |
+| Tests neu geschrieben | 6 (5 Reproduktionen, übersprungen bis zur Behebung; 1 Gegenprobe) |
+| Tests grün | Reproduktionen scharf 5 von 5 rot aus dem erwarteten Grund; Gegenprobe grün |
+| Volle Suite gelaufen | 2 320 Tests, 0 Fehlschläge, 43 übersprungen (vor den neuen Tests); 2 326 Tests, 1 Fehlschlag (BF-229, Flackern, 15 von 15 Wiederholungen grün), 48 übersprungen |
+| Regression: berührte Features | 5 (01, 12, B03, B02, 17), Hauptweg bestanden 5 |
 
-| | erster Durchlauf (2026-08-24, vormittags) | dieser |
-|---|---|---|
-| AK-12 E-Mail-Änderung | ❌ sofort wirksam, `is_verified` blieb 1 | ✅ vorgemerkt, zwei Mails, 24-Stunden-Frist |
-| AK-14 Passwort-Deckel | ❌ acht Versuche, alle angenommen | ✅ fünf erlaubt, der sechste gesperrt |
-| AK-12a (neu) | — | ✅ abgelaufen und fremdvergeben beide ohne Serverfehler |
-| EC-04 | ✅ (nur der 422 geprüft) | ❌ der 422 kommt, aber die Sitzung stirbt danach |
+## Die drei Befunde des Auftrags
 
-EC-04 war im ersten Durchlauf zu flach geprüft: Nur der Antwortcode wurde angesehen,
-nicht der Zustand danach. Das ist keine Regression durch die Reparatur — nachgewiesen
-am Vorgängerstand (`git show HEAD~1`), der an dieser Stelle identisch ist.
+| Befund | behoben | am Server | Gegenprobe |
+|---|---|---|---|
+| **BF-182** · Name/Adresse leer → 500 | ✅ ja | Name `'   '`, `''`, fehlend, Tab/Zeilenumbruch, NBSP → **422** „Bitte gib deinen Namen ein.“; Adresse `''`, `'   '`, fehlend → **422** „Bitte gib deine E-Mail-Adresse ein.“. DB unverändert, 0 Mails, Sitzung danach 200 | `empty_data` am Namen entfernt → Server **500** „Expected argument of type "string", "null" given at property path "name"“, `Qa12Nachpruefung4Test::testBf182…` und `Bf182Bf184ProfilEingabenTest::testBf182LeererName…` (3/3) rot |
+| **BF-184** · RFC-widrig / > 180 Zeichen → 500 | ✅ ja | 17 Eingaben → je **422** mit Meldung, keine Vormerkung, 0 Mails, darunter `../../etc/passwd@example.lu`, `anna..muster@…`, `.anna@…`, `anna.@…`, 181 und 10 010 Zeichen, `<script>…@x.de` (escaped), SQL, Emoji, `anna@[127.0.0.1]`, Zeilenumbruch mit `Bcc:`. **Danach** drei gültige Wechsel (180 Zeichen, `jean-luc@télécom.lu` → Mail an `xn--tlcom-bsab.lu`, Adresse mit Leerzeichen getrimmt) angenommen, der vierte vom Deckel abgewiesen. Damit hat keine abgewiesene Eingabe einen Deckelplatz verbraucht | strikte Prüfung entfernt → Server **500**, aber **ohne** Vormerkung (die Adressprüfung vor dem `flush()` greift); `testBf184…` 4/4 rot. `Length(180)` entfernt → Server **500** `SQLSTATE[22001]`, `testBf184AdresseUeber180…` rot |
+| **BF-186** · Entfernen/Kontolöschung neben Upload | ✅ ja | Upload und „Entfernen“ gleichzeitig, 15 Durchgänge (0–300 ms): 0 tote Verweise, 0 Waisen. ⚠ Das Fenster ist am Entwicklungsserver **nicht erreichbar**: Auch ohne Reparatur trafen es 57 Durchgänge nicht (`QA-BF186-server-race-ohne-reparatur.ausgabe.txt`). Am Server ist also nur „kein Rückschritt“ belegt | SQL-`NULL` in `delete()` entfernt → `Qa12…::testBf186…` und `Bf186AvatarEntfernenTest` (1/3) rot; alte Bedingung im `AccountDeleter` → `Bf186…` (Kontolöschung) rot |
+
+Nach jeder Gegenprobe ist die Datei aus einer Sicherung zurückgeschrieben. Die md5-Summen aller vier Dateien sind
+identisch mit dem Stand vor der Prüfung (`qa/B04/QA-server-nachweise.ausgabe.txt`). Die drei Reproduktionen von
+Feature 12 laufen scharf (`QA12_REPRO=1`) grün; BF-185 (Feature 12, nicht dieser Auftrag) bleibt rot.
 
 ## Akzeptanzkriterien im Einzelnen
 
+Geprüft am laufenden Server (Port 8000, Entwicklungsmodus) mit eigenen Konten `qab04-*@example.test`. Mails gelesen
+aus der Warteschlange `messenger_messages` (Empfänger, Betreff, Vorlage, Link); es lief kein Worker.
+
 | AK | Ergebnis | Nachweis |
 |---|---|---|
-| AK-01 | ✅ bestanden | Gast auf `/de/profile` → **302** nach `/de/login` |
-| AK-02 | ✅ bestanden | angemeldet → **200** |
-| AK-03 | ✅ bestanden | Name auf „Geänderter Name" → 302, DB trägt ihn, Meldung „Profil erfolgreich aktualisiert."; **keine** Mail ausgelöst (Regressionsrisiko des `edit()`-Umbaus, eigens geprüft) |
-| AK-04 | ✅ bestanden | PNG hochgeladen → `avatar_filename = 6a8c62e0e0c3a3.04020943.png`, Datei über `/uploads/avatars/…` mit **200** abrufbar |
-| AK-05 | ✅ bestanden | 3-MB-Datei → **422** |
-| AK-06 | ✅ bestanden | zweiter Upload: `…04020943.png` → `…00432173.png`; die alte Datei liefert **404** |
-| AK-07 | ✅ bestanden | Löschen mit gültigem Token → „Profilbild erfolgreich entfernt.", DB `NULL`, Datei **404** |
-| AK-08 | ✅ bestanden | `_token=falsch` → „Ungültiges CSRF-Token.", Avatar bleibt in der DB stehen |
-| AK-09 | ✅ bestanden | falsches aktuelles Passwort → „Das aktuelle Passwort ist nicht korrekt." |
-| AK-10 | ✅ bestanden | Wechsel gelingt; neues Passwort meldet an (200), altes wird abgewiesen (302) |
-| AK-11 | ✅ bestanden | Profil verlinkt `167, 168, 171` — exakt die drei mit `submitted_by_id = 114` |
-| **AK-12** | ✅ bestanden | Adresse auf `angreifer@qa.example` → 302; DB: `email` **unverändert**, `pending_email` gesetzt, Token 64 Zeichen, Frist `2026-08-25 15:29:37`. Zwei Mails (Warnung an die alte, Bestätigung an die neue). Anmeldung mit der vorgemerkten Adresse → **302**, mit der bisherigen → **200** |
-| **AK-12a** | ✅ bestanden | Adresse in der Zwischenzeit fremd vergeben → **302**, kein 500, Vorgang abgeräumt. Frist zurückdatiert → **302**, Vorgang abgeräumt |
-| AK-13 | ✅ bestanden | zwei Sitzungen, in s1 gewechselt: s1 → **200**, s2 → **302** |
-| **AK-14** | ✅ bestanden | Zähler frisch: Versuche 1–5 „Passwort nicht korrekt", **6 und 7 gesperrt**. Kontoweit (andere Sitzung desselben Kontos ebenfalls gesperrt), aber **nicht** kontoübergreifend (Admin-Konto unberührt) |
-| AK-15 | ✅ bestanden | PHP-Datei als `.png` mit gefälschtem `Content-Type` → **422**, Avatar in der DB unverändert |
-| AK-16 | ✅ bestanden | `GET /uploads/avatars/<datei>` → **200** ohne Anmeldung (bewusste Eigenschaft, kein Fehler) |
-| AK-17 | ✅ bestanden | `?user=113&id=113` ändert nichts — weiterhin `167, 168, 171` |
-| AK-18 | ✅ bestanden | `DrittesPW123`, `GanzNeuesPW1`, `raten1` → je **0 Treffer** in `var/log/` |
+| AK-01 | ✅ bestanden | Gast `GET /{lb,de,fr,en,pt}/profile` → **302** auf `/{locale}/login`; ebenso `POST …/profile/edit`, `…/password`, `…/avatar/delete`, `GET …/profile/daten` |
+| AK-02 | ✅ bestanden | angemeldet **200**: Formulare `profile` → `/de/profile/edit`, `change_password` → `/de/profile/password`, Abschnitt „Passkeys“ mit sichtbarem Knopf „🔑 Passkey hinzufügen“ (Chromium), „Meine Einreichungen“; `qa/B04/QA-AK02-profil-{1280,375}.png`, kein waagrechter Überstand (375/375) |
+| AK-03 | ✅ bestanden | curl: Name → 302, Meldung „Profil erfolgreich aktualisiert.“, Kopfzeile trägt den Namen, keine Mail. Browser (Turbo): dasselbe, ohne Konsolenfehler (`QA-AK03-AK04-hauptweg-1280.png`) |
+| AK-04 | ✅ bestanden | JPEG, PNG, WebP und eine PNG mit **genau 2 000 000 Bytes** → 302, Datei unter `/uploads/avatars/…` mit 200 und richtigem `Content-Type`, `<img>` im Profil; im Browser per Dateiauswahl ebenso |
+| AK-05 | ✅ bestanden | 2 000 001 Bytes, 3,6 MB, GIF, PHP-Skript als `.png` → je **422**, Avatar in der DB unverändert |
+| AK-06 | ✅ bestanden | vier Uploads nacheinander: die drei alten Dateien je **404**, im Verzeichnis nur die neueste |
+| AK-07 | ✅ bestanden | gültiges Token → „Profilbild erfolgreich entfernt.“, DB `NULL`, Datei **404**; im Browser mit Bestätigungsdialog ebenso |
+| AK-08 | ✅ bestanden | `_token` leer, `falsch`, fehlend → „Ungültiges CSRF-Token. …“, Avatar und Datei bleiben (200) |
+| AK-09 | ✅ bestanden | falsches aktuelles Passwort → „Das aktuelle Passwort ist nicht korrekt.“, Hash unverändert |
+| AK-10 | ✅ bestanden | Grenzwert: 7 Zeichen → 422 „mindestens 8 Zeichen“, ungleich → 422 „stimmen nicht überein“, **8 Zeichen** → „Passwort erfolgreich geändert.“; neues meldet an, altes nicht |
+| AK-11 | ✅ bestanden | Anlagedaten der drei Einreichungen von `user@endlech.lu` vorübergehend gespreizt → Reihenfolge 14, 17, 13 (absteigend), je Name, Stadt, „Eingereicht am …“, „⏳ Ausstehend“ bzw. „Verifiziert“; Daten danach zurückgesetzt |
+| AK-12 | ✅ bestanden | Wechsel → `email` unverändert, `pending_email` gesetzt, Token 64 Zeichen, Frist **+24 h**; zwei Mails: Bestätigung (mit Link) an die neue, Warnung (ohne Link) an die alte. Anmeldung mit der vorgemerkten 302 → `/login`, mit der bisherigen ok; Link → Adresse getauscht, Vormerkung leer; danach alte Adresse abgewiesen |
+| AK-12a | ✅ bestanden | vorgemerkte Adresse inzwischen vergeben → 302, „Diese E-Mail-Adresse wird inzwischen bereits verwendet.“, Vorgang abgeräumt; Frist zurückdatiert → „Der Bestätigungslink ist abgelaufen …“, abgeräumt; kein 500 |
+| AK-13 | ✅ bestanden | zwei Sitzungen + ein reines `REMEMBERME`-Cookie: nach dem Wechsel eigene Sitzung **200**, zweite **302**, `REMEMBERME` allein vorher 200, danach **302** |
+| AK-14 | ✅ bestanden | Versuche 1–5 „nicht korrekt“, **6 und 7 gesperrt**; zweite Sitzung desselben Kontos mit richtigem Passwort ebenfalls gesperrt (Hash unverändert); anderes Konto unberührt |
+| AK-15 | ✅ bestanden | PHP-Datei als `avatar.png` mit `Content-Type: image/png` → **422**, Avatar unverändert |
+| AK-16 | ✅ bestanden | `GET /uploads/avatars/<datei>` ohne Cookie → **200** `image/webp`; Verzeichnisliste 404 |
+| AK-17 | ✅ bestanden | `?user=4&id=4&submittedBy=4` → weiterhin nur 14, 17, 13 |
+| AK-18 | ✅ bestanden | neun verwendete Passwörter (`QaB04-pass1`, `NeuesPW8`, `rate1` …) in `var/log/dev.log`: je **0 Treffer** |
+| AK-19–21 | — | gestrichen 2026-11-14, an Feature `18` übergeben (Auftrag: nicht prüfen) |
 
 ## Edge Cases
 
 | EC | Ergebnis | Nachweis |
 |---|---|---|
-| EC-01 | ✅ bestanden | Änderung auf `admin@endlech.lu` → **422**, DB unverändert, kein Vorgang angelegt |
-| EC-02 | ✅ bestanden | Datei ohne Endung, MIME `image/png` → gespeichert als `…96004464.png`, abrufbar |
-| EC-03 | ✅ bestanden | zwei parallele Uploads → genau eine Datei im Bestand, keine Kollision |
-| **EC-04** | ❌ durchgefallen | 422 kommt und die Seite wird gerendert — **danach ist die Sitzung tot**: der nächste Aufruf von `/de/profile` liefert 302 nach `/de/login`. Siehe BF-22 |
-| EC-05 | ✅ bestanden | Datei aus dem Dateisystem entfernt, DB-Eintrag bleibt → Profilseite **200**, kein Fehler |
+| EC-01 | ✅ bestanden | `admin@endlech.lu` und `ADMIN@ENDLECH.LU` → 422 „Diese E-Mail-Adresse wird bereits verwendet.“, keine Vormerkung. ⚠ Die Spec beschreibt die Meldung noch als „hartkodiert deutsch“; sie ist übersetzt (`/en/` → „This email address is already in use.“) — die Rekonstruktion ist an dieser Stelle veraltet |
+| EC-02 | ✅ bestanden | PNG ohne Endung, gesendet als `application/octet-stream` → gespeichert als `….png` |
+| EC-03 | ✅ bestanden | fünf Runden mit je drei gleichzeitigen Uploads → je genau eine Datei, Verweis vorhanden |
+| **EC-04** | ❌ durchgefallen | 422 kommt, Seite wird gerendert, Passwortfelder leer, Sitzung bleibt (BF-22 bleibt behoben). **Aber das neu gerenderte Formular lässt sich mit JavaScript nicht abschicken:** Die Korrektur geht an `POST /de/profile` → **405**. Siehe BF-226 |
+| EC-05 | ✅ bestanden | Datei aus dem Verzeichnis entfernt, Verweis bleibt → Profil 200, Bild 404 (danach zurückgelegt) |
+
+## Regression
+
+**Volle Testsuite:** `php bin/phpunit`.
+
+- **Vor den neuen Tests:** 2 320 Tests, 16 814 Assertions, 0 Fehlschläge, 43 übersprungen, wie im Abschlussbericht.
+  Die 43 Übersprungenen sind Reproduktionen offener Befunde: Qa16 11, Qa15 11, `ComparisonEdgeCaseTest` 7, Qa17 7,
+  Qa12 3 (davon BF-185 in `Qa12Nachpruefung4Test`) und vier einzelne.
+- **Mit den neuen Tests:** 2 326 Tests, 1 Fehlschlag, 48 übersprungen. Der Fehlschlag ist
+  `SponsorIntegrityTest::testAk08…@Liste nach Name`: zwei Abrufe von `/de/restaurants?sort=name` unterschieden sich nur
+  in der Reihenfolge zweier Küchen-Etiketten. Die Datei lief danach dreimal grün, der Fall allein zwölfmal grün. Das ist
+  BF-229, außerhalb von B04, nicht BF-225.
+
+**Berührt laut `git diff --name-only main` und *Systemweite Änderungen*.** Der Branch trägt zusätzlich das abgenommene
+Feature 17. Dem Auftrag gehören:
+
+- `src/Form/ProfileType.php`, `src/Controller/ProfileController.php` (`edit()`), `src/Service/AvatarUploadService.php`
+- `src/Account/AccountDeleter.php`
+- `translations/validators.{lb,de,fr,en,pt}.yaml` (`user.email_max`)
+- `CLAUDE.md`
+- `tests/Functional/Controller/Qa12Nachpruefung4Test.php`: drei `offen()` entfernt, sonst unverändert, per Diff geprüft
+
+| Feature | Warum berührt | Hauptweg | Nachweis |
+|---|---|---|---|
+| 01 Betroffenenrechte | `AccountDeleter` ruft `delete()` jetzt immer | ✅ bestanden | Konto mit Bild: falsches Passwort → Meldung; richtiges → 302 `/de/`, Zeile weg, Bild 404, Sitzung → `/login`, Anmeldung scheitert, Abschiedsmail in der Warteschlange. Export `/de/profile/daten` → 200 JSON, `no-store`. `AccountDeletionTest`, `Bf136KontoloeschungLimiterTest` grün |
+| 12 Onboarding | teilt `AvatarUploadService`, Reproduktionsdatei geändert | ✅ bestanden | Bild in der Einführung hochgeladen → 302, Datei 200; Newsletter-Schalter im Profil an/aus mit Meldung, Doppel-Abo ohne Wechsel; `ProfileNewsletterTest`, `Qa12Nachpruefung3Test` (scharf) grün |
+| B03 Passkeys | eingebunden auf derselben Seite | ✅ bestanden | `POST /passkey/register/options` angemeldet 200 mit Challenge, als Gast 302; `PasskeyControllerTest` grün |
+| B02 Anmeldung | Profil hinter `IS_AUTHENTICATED_REMEMBERED` | ✅ bestanden | alle Anmeldungen der Prüfung (sechs Konten, Browser und curl) 302 auf `/de/`; Remember-me (AK-13) |
+| 17 Favoriten und Listen | geteilte Hunks in `validators.*.yaml`, `CLAUDE.md`; Karte „Gespeichert“ im Profil | ✅ bestanden | `CatalogueCompletenessTest` grün (fünf Kataloge gleich), Karte im Profil sichtbar, Suite ohne Fehlschlag in 17 |
 
 ## Sicherheitsprüfung
 
-Durchlauf nach `references/angriff.md`, auf die durch die Reparatur neu entstandene
-Fläche zugespitzt.
+Durchlauf nach `references/angriff.md`, zugespitzt auf die Fläche der Reparatur. Ausgeführt, nicht gelesen.
 
-| Prüfung | Ergebnis |
-|---|---|
-| **Fremder Zugriff** | `?user=113` ändert die Einreichungsliste nicht — `findBySubmitter($this->getUser())` nimmt keine ID aus der Anfrage |
-| **Token raten** | 64 Hex-Zeichen aus `random_bytes(32)`. `aaaa…` (64×) → 302 auf die Startseite mit „Ungültiger Bestätigungslink."; zu kurz → **404**, die Route greift gar nicht |
-| **Pfadwechsel** | `/verify/email-change/../../admin` → 302, kein Durchgriff |
-| **Eingaben** | `<script>alert(1)</script>@x.de`, `a@b.de'; DROP TABLE user; --`, 300 Zeichen, `nur-text` — DB in allen vier Fällen unverändert, kein Serverfehler, keine rohe Datenbankmeldung |
-| **Rate Limits** | Passwortänderung gedeckelt (siehe AK-14). **Adressänderung nicht** → BF-21 |
-| **Personendaten in Protokollen** | Passwörter: 0 Treffer. **Token: 31 Zeilen im `request`-Kanal, 147 im `doctrine`-Kanal** → BF-23 |
-| **Geheimnisse** | keine im Feature-Umfang berührt |
-
-### Zwei Prüfungen, die nichts ergaben — und warum sie trotzdem hier stehen
-
-**Nur die Schreibweise ändern.** `USER@endlech.lu` statt `user@endlech.lu` läuft am
-Bestätigungsweg vorbei und wird sofort übernommen (`strcasecmp` sieht keinen
-Unterschied). Folgenlos, weil dasselbe Postfach dahintersteht und die Sitzung bestehen
-bleibt (gemessen: 200). Kein Befund, aber der Grund, warum `strcasecmp` und nicht `!==`
-dort richtig ist: Mit `!==` löste jede Groß-/Kleinschreibung einen vollen
-Bestätigungsvorgang samt zwei Mails aus.
-
-**Konto über die vorgemerkte Adresse übernehmen.** Der Versuch, sich mit
-`angreifer@qa.example` anzumelden, während sie nur vorgemerkt ist, endet mit 302. Das
-ist die Kehrseite, an der die Reparatur steht oder fällt — ohne sie wäre die Vormerkung
-Kosmetik.
+| Prüfung | Ergebnis | Beleg |
+|---|---|---|
+| Zugriff auf fremde ID (IDOR) | bestanden | Profil liest keine ID: `?user=4…` ohne Wirkung (AK-17); Massenzuweisung `profile[roles][]=ROLE_ADMIN`, `profile[avatarFilename]=../../../.env`, `profile[id]=4` → 422, Rollen und Bild unverändert; fremder Passkey → 403 (`PasskeyControllerTest`) |
+| Rate Limit greift | bestanden | `password_change`: sechster Versuch gesperrt, kontoweit (AK-14). `email_change`: vierter Wechsel gesperrt, auch mit Bild ohne Übernahme der Adresse (BF-175/176 bleiben behoben); **abgewiesene Eingaben verbrauchen nichts** (17 Abweisungen, danach 3 Wechsel). `account_delete` per Prüflauf |
+| PII in Logs | bestanden | Passwörter 0 Treffer (AK-18). Der Bestätigungstoken steht im Entwicklungsprotokoll im Kanal `request` (2×) und `doctrine` (5×); in `prod` sind beide ausgeschlossen (`monolog.yaml`, BF-23) |
+| PII an externe Dienste | bestanden | Mails nur an die vom Nutzer genannte und die bestätigte Adresse (Warteschlange gelesen); IDN-Adresse als Punycode. Brevo nur über den Newsletter-Schalter (Feature 12, unverändert) |
+| Zugriffsregeln serverseitig | bestanden | alle Profilrouten als Gast → `/login` (AK-01); Passkey-Optionen als Gast 302 |
+| Eingaben | bestanden | Name: leer, Leerzeichen, Tab, NBSP → 422. Adresse: 17 Angriffseingaben → 422 (BF-184). Upload: falsche Endung, Übergröße, PHP mit Bild-MIME → 422 (AK-05, AK-15). Kein 500, nichts roh ausgegeben |
+| Löschen | **BF-227** | Kontolöschung räumt Zeile, Bild, Sitzung (Feature 01). Mit einem Upload aus einer zweiten Sitzung im selben Augenblick bleibt das Bild öffentlich liegen: 5 von 31 Durchgängen |
+| Geheimnisse im Repository | bestanden | Auftrag berührt keine Schlüssel; keine neue Konfiguration |
 
 ## Fehler
 
-### BF-21 · Adressänderung ohne Rate Limit — mittel
+### BF-226 · Nach einer Meldung im Profil scheitert die Korrektur mit HTTP 405 — mittel
 
-**Betrifft:** AK-12 (Nebenwirkung der Reparatur, kein Kriterium)
+**Betrifft:** EC-04 (bisher OF-06 in `spec.md`). Vorbestehend; dieselbe Zeile steht auf `main`
+(`createForm(ProfileType::class, $user)` ohne `action`), und der Bau hat den Fehler dort im Browser gemessen.
 
-**Reproduktion:**
-1. Als `user@endlech.lu` anmelden
-2. Zehnmal hintereinander `POST /de/profile/edit` mit `profile[email]=opfer@qa.example`
+**Reproduktion (Chromium, Turbo aktiv):**
+1. Anmelden, `/de/profile` öffnen.
+2. Name „a“ eingeben, „Änderungen speichern“: `POST /de/profile/edit` → 422 mit Meldung. Die Adresse im Browser bleibt
+   `/de/profile`, das neu gerenderte `<form name="profile">` hat **kein** `action`.
+3. Name zu „QA Carl Korrigiert“ ändern, erneut speichern.
 
-**Erwartet:** eine Sperre nach wenigen Versuchen
-**Tatsächlich:** zehnmal 302, **20 Mails** in Mailpit — zehn an `opfer@qa.example`, zehn
-an die eigene Adresse. Keine Sperre.
+**Erwartet:** 302, Name gespeichert.
+**Tatsächlich:** `POST /de/profile` → **405**. Die Seite kommt mit dem alten Namen zurück, ohne Meldung; die Korrektur
+ist verloren. Gemessen auf fünf Wegen, alle 405:
+- Name zu kurz
+- Name aus Leerzeichen (BF-182)
+- RFC-widrige Adresse (BF-184)
+- zu großes Bild
+- **Passwortformular** (neues Passwort zu kurz, `changePassword()` baut `ChangePasswordType` ohne `action`)
 
-**Ort:** `src/Controller/ProfileController.php::edit()` — kein Limiter
+Ohne JavaScript gelingt die Korrektur (302), weil die Adresse dann `/de/profile/edit` ist. Nachweise:
+`qa/B04/QA-OF06-*.png`, `QA-OF06-browser.json`, Reproduktion
+`QaB04NachpruefungTest::testBf226ProfilformularBehaeltNachEinerMeldungSeinZiel`, `…PasswortformularBehaelt…` (scharf
+rot: `null` statt `/de/profile/edit` bzw. `/de/profile/password`); Gegenprobe `testGegenprobeProfilseiteNimmtKeinPostAn`
+(405).
 
-**Warum das zählt:** Der Empfänger ist frei wählbar und muss dem Konto nicht gehören.
-Damit ist der Weg ein Mail-Versender auf fremde Adressen, gedeckt von der Absenderdomäne
-von Endlech.lu — das trifft die Brevo-Quota und die Zustellreputation. Der Bruder-Befund
-BF-02 (Registrierung) lief als *hoch*, weil er **ohne Konto** ausnutzbar war; hier
-braucht es ein bestätigtes Konto, deshalb *mittel*.
+**Reichweite:** jede Meldung am Profil- oder Passwortformular. Der häufigste Auslöser dürfte ein Handyfoto über 2 MB
+sein. Seit der Reparatur von BF-182 und BF-184 kommen der leere Name und die RFC-widrige oder zu lange Adresse hinzu;
+sie endeten vorher schon beim ersten Absenden mit 500. Mehr Reichweite also, aber kein Rückschritt. In der Produktion
+nicht gemessen, was nach der 405 erscheint; im Entwicklungsmodus lädt Turbo die Profilseite neu (Screenshot `…-2-korrektur.png`).
 
-**Vorschlag:** Limiter wie `verify_resend` (3 je Stunde), gezählt am Konto. Der Vorgang
-ist selten und bewusst; ein enger Deckel stört niemanden. Zusätzlich erwägen, den
-laufenden Vorgang zu entwerten, statt bei jedem Aufruf einen neuen anzulegen.
+**Ort:** `src/Controller/ProfileController.php:115` (`edit()`) und `:329` (`changePassword()`).
 
-**Drittes Auftreten desselben Musters** (M-01 in `fehlbestand-uebersicht.md`): Der
-API-Weg ist gedeckelt, der Browser-Weg nicht. Nach BF-02 (Registrierung), BF-13
-(Anmeldung) und BF-18 (Passkey-Challenge) ist das kein Einzelfall mehr, sondern eine
-fehlende Konvention: **Jeder Weg, der eine Mail auslöst oder ein Geheimnis prüft,
-braucht einen Limiter — unabhängig davon, ob eine App oder ein Browser ihn geht.**
+**Vorschlag:** `'action' => $this->generateUrl('app_profile_edit')` bzw. `('app_profile_password')` in beiden
+`createForm`-Aufrufen. Muster BF-151; die Turbo-Mechanik „Adresse bleibt stehen“ ist seit BF-153 bekannt.
 
-### BF-22 · Ungültiges Stammdatenformular meldet den Nutzer ab — mittel
+### BF-227 · Kontolöschung neben einem Upload lässt das Bild öffentlich liegen — niedrig
 
-**Betrifft:** EC-04
+**Betrifft:** Löschen (Feature 01, Art. 17), bisher OF-07 in `spec.md`. Der Fehler ist vorbestehend; die Reparatur von
+BF-186 hat das Fenster verkleinert, aber nicht geschlossen.
 
-**Reproduktion:**
-1. Als `user@endlech.lu` anmelden, `/de/profile` → 200
-2. `POST /de/profile/edit` mit `profile[email]=kaputt` (oder einer vergebenen Adresse)
-3. Antwort: **422**, Seite wird gerendert
-4. `/de/profile` erneut aufrufen
+**Reproduktion (am Server, `qa/B04/QA-OF07-kontoloeschung-neben-upload.ausgabe.txt`):**
+1. Ein Konto in **zwei Sitzungen** anmelden, also zwei Geräte. Zwei Tabs eines Browsers teilen die Sitzung und wurden
+   in 18 Durchgängen nie getroffen.
+2. In Sitzung 1 „Konto löschen“ mit richtigem Passwort abschicken.
+3. 365–385 ms später in Sitzung 2 ein Profilbild hochladen.
 
-**Erwartet:** 200 — der Nutzer korrigiert seine Eingabe
-**Tatsächlich:** **302 nach `/de/login`**. Wortlos abgemeldet, Eingaben verloren.
+**Erwartet:** Nach der Löschung liegt keine Bilddatei des Kontos mehr im Verzeichnis.
+**Tatsächlich:** In 5 von 31 Durchgängen meldet der Upload Erfolg (302 → `/de/profile`), die Zeile ist weg, die Datei
+bleibt liegen und ist unter `/uploads/avatars/<name>` ohne Anmeldung abrufbar (**200**). `app:uploads:prune` listet sie
+(„5 Datei(en) ohne Zeile“), läuft aber nur von Hand.
 
-**Gegenprobe zur Eingrenzung:** Ein ungültiges Formular **ohne** Adressbezug
-(`profile[name]=X`, zu kurz) → 422 und danach **200**. Es liegt also an der Adresse,
-nicht am ungültigen Formular an sich.
+**Ort:** `src/Account/AccountDeleter.php:69` gibt die Sperre mit `delete()` frei, bevor `em->remove($user)` die Zeile
+löscht. `src/Service/AvatarUploadService.php:22-60` prüft unter der Sperre nicht, ob das Konto noch besteht. Reproduktion
+`tests/Integration/Service/QaB04KontoloeschungNebenUploadTest.php` (zwei Fälle: Upload zwischen Bildentfernung und
+Zeilenlöschung, Upload danach). Die zweite Sitzung läuft dort über das echte `upload()` mit Sperre; beide Fälle sind
+scharf rot.
 
-**Ort:** `src/Controller/ProfileController.php::edit()` — `handleRequest()` setzt
-`$user->setEmail()` auch dann, wenn die Validierung anschließend scheitert. Der
-veränderte Nutzer wandert in die Sitzung; beim nächsten Request passt der Anmeldename
-nicht mehr zum Konto und Symfony meldet ab.
+**Warum niedrig:** Es braucht den Kontoinhaber selbst, zwei Geräte und ein Fenster von etwa 20 ms. Der Dateiname ist
+nirgends verlinkt.
 
-**Bestand vor der Reparatur** — nachgewiesen an `git show HEAD~1:src/Controller/ProfileController.php`:
-dort steht `handleRequest()` ohne jeden Reset. Die Reparatur hat den Fall nicht
-verursacht, aber auch nicht mitgenommen, obwohl die dafür nötige Variable
-(`$bisherigeAdresse`) inzwischen zwei Zeilen darüber steht.
+**Vorschlag:** Die Sperre im `AccountDeleter` bis nach dem Löschen der Zeile halten, und `upload()` prüft unter der
+Sperre, ob die Zeile noch existiert. Andernfalls verwirft es die Datei.
 
-**Vorschlag:** Im ungültigen Zweig `$user->setEmail($bisherigeAdresse)` zurücksetzen —
-dieselbe Zeile, die im gültigen Zweig schon steht. Nebenwirkung mit Wert: Der
-eingegebene Wert bleibt trotzdem im Feld stehen, weil das Formular ihn aus dem
-Submit-Zustand rendert, nicht aus der Entity.
+### BF-228 · Beim erreichten Adress-Deckel hängt die Namensänderung am Bild — niedrig
 
-### BF-23 · Bestätigungstoken im `request`-Kanal — mittel
+**Betrifft:** AK-03 und AK-12 im Zusammenspiel. Der Fehler ist vorbestehend, seit der Reparatur von BF-175
+(`v2026.10.23`). Hinweis des `code-reviewer`, am Server bestätigt.
 
-**Betrifft:** AK-18 (Kriterium bestanden, weil es nur Passwörter nennt), B01 gleichermaßen
+**Reproduktion:** Deckel `email_change` erreicht (drei Wechsel in der Stunde). Dann in **einem** Absenden einen neuen
+Namen und eine neue Adresse schicken:
+- **ohne Bild:** Meldung „Zu viele Adressänderungen …“, der **Name ist nicht gespeichert**.
+- **mit Bild:** dieselbe Meldung, aber **Name und Bild sind gespeichert**.
 
-**Reproduktion:**
-```
-$ grep -n "verify/email-change" var/log/dev.log | tail -1
-request.INFO: Matched route "app_email_change_confirm".
-  {"route":"app_email_change_confirm","route_parameters":{…,"token":"d831e667…"}}
-```
-Kanalverteilung der Zeilen mit einem 64-Hex-Token in `var/log/dev.log`:
-`doctrine: 147 Zeilen`, **`request: 31 Zeilen`**. Für `app_verify_email` (B01) sind es
-22 Treffer im selben Kanal.
+In beiden Fällen nennt die Meldung nur die Adresse.
 
-**Erwartet:** Kein gültiger Token in einem Protokoll, das auf Production geschrieben wird
-**Tatsächlich:** `config/packages/monolog.yaml` schließt im `prod`-Block
-`["!deprecation", "!doctrine"]` aus — `request` läuft durch. Der `fingers_crossed`-Handler
-schreibt bei jedem Fehler ab WARNING seinen gesamten Puffer nach `php://stderr`, samt der
-`Matched route`-Zeile mit dem Token darin.
+**Erwartet:** Dieselbe Eingabe hat beim Namen dasselbe Ergebnis, mit oder ohne Bild.
+**Tatsächlich:** Der `flush()` des Upload-Dienstes nimmt den Namen mit. Der Deckel-Zweig kehrt ohne eigenen `flush()`
+zurück (`qa/B04/QA-server-nachweise.ausgabe.txt`).
 
-**Damit war BF-06 nur halb behoben.** Dort wurde der `doctrine`-Kanal geschlossen — der
-Weg über die gebundenen Abfrageparameter. Der zweite Weg, die Route selbst, blieb offen
-und betrifft beide Token-Routen.
+**Ort:** `src/Controller/ProfileController.php:140-156`. Reproduktion
+`QaB04NachpruefungTest::testBf228NamensaenderungBeimErreichtenDeckelHaengtNichtAmBild`; sie prüft die Gleichheit, nicht
+eine Richtung, und ist scharf rot.
 
-**Ort:** `config/packages/monolog.yaml` (prod-Handler `main`)
+**Vorschlag:** Den Deckel vor dem Upload prüfen, also vor allem, was schreibt. Dann den Namen und das Bild entweder
+speichern und die Meldung entsprechend fassen, oder beides verwerfen.
 
-**Vorschlag:** Entweder den `request`-Kanal in `prod` mit ausschließen — dann fehlt im
-Fehlerfall die Route, was die Fehlersuche spürbar verschlechtert — oder einen Processor,
-der `route_parameters.token` maskiert. Die zweite Fassung ist die bessere: Sie trifft
-genau das Feld und lässt den Rest stehen. Zu prüfen ist zusätzlich das
-**Zugriffsprotokoll des Webservers**, das die vollständige URL unabhängig von Monolog
-mitschreibt; dort hilft nur, den Token nicht im Pfad zu führen.
+### BF-229 · Prüflauf kippt an der Reihenfolge der Küchen-Etiketten — niedrig (mitgefunden, außerhalb von B04)
+
+**Betrifft:** Feature 15 (`SponsorIntegrityTest`) und B05, Restaurantliste.
+
+**Reproduktion:** Die volle Suite vom 2026-11-14 (zweiter Lauf) war rot in
+`SponsorIntegrityTest::testAk08SponsorenAendernNichtsAnRestaurants@Liste nach Name`. Zwei Abrufe von
+`/de/restaurants?sort=name` unterschieden sich nur in der Reihenfolge zweier Etiketten:
+- „Vegetarisch“/„Vegan“ bei „Cloche d'Or“
+- „Französisch“/„Mediterran“ bei „Kirchberg“
+
+Die Datei lief danach dreimal grün, der Fall allein zwölfmal; sechs Abrufe am Server waren gleich.
+
+**Ort:** `src/Entity/Restaurant.php:34-36`. `$cuisines` ist ohne `#[ORM\OrderBy]` gemappt, die Etiketten folgen der
+Zeilenreihenfolge der Abfrage. Nicht BF-225 (dort `generatedAt` im JSON-Zweig).
+
+**Vorschlag:** `#[ORM\OrderBy(['name' => 'ASC'])]` an `$cuisines`. Dann stehen die Etiketten auf jeder Seite gleich, und
+der Prüflauf vergleicht Gleiches.
 
 ## Hinweise ohne Fehlerstatus
 
-- **Der Deckel auf der Passwortänderung zählt auch erfolgreiche Wechsel.** Nach fünf
-  legitimen Änderungen in 15 Minuten ist gesperrt. Vertretbar — wer sein Passwort
-  fünfmal in einer Viertelstunde wechselt, hat ein anderes Problem —, aber es steht
-  nirgends.
-- **Die Bestätigung eines Adresswechsels setzt `is_verified` nicht auf `1`.** Wer sein
-  Konto nie bestätigt hat und dann die Adresse wechselt, hat den Zugriff auf das neue
-  Postfach damit bewiesen, gilt aber weiter als unbestätigt. Kein Fehler nach der Spec,
-  aber eine Frage an den Betreiber (als OF-05 aufgenommen).
-- **Fehlerzweige des Bestätigungslinks leiten auf `/de/profile`.** Für einen Gast heißt
-  das: Weiterleitung auf die Anmeldung. Die Flash-Meldung überlebt (gemessen: Endstation
-  `/de/` mit 200), aber der Weg ist ein Umweg.
-- **`code-reviewer`-Agent nicht eingesetzt.** Die Sitzungsvorgaben untersagen den Aufruf
-  von Subagenten ohne ausdrückliche Anforderung. Die Codequalitätsprüfung erfolgte
-  manuell; die drei Befunde stammen aus dem Angriffsdurchlauf, nicht aus der Lektüre.
+- **„Das Profilbild darf maximal 2000000 bytes groß sein.“** Diese Meldung erscheint bei Dateien von 2 000 001 bis etwa
+  2 005 000 Bytes. Symfony wählt die Einheit so, dass sich Grenze und Größe sichtbar unterscheiden. Eine Datei knapp
+  darüber zeigt „2000 kB“, alles ab etwa 2,05 MB „2 MB“. Das ist kosmetisch und gilt nur in diesem schmalen Band; „bytes“
+  bleibt dabei auf Englisch.
+- **Zwei Meldungen bei leerem Namen:** „Bitte gib deinen Namen ein.“ und „mindestens 2 Zeichen“. Der Bau hat das so
+  gelassen (`Length(min: 2)` prüft auch die leere Zeichenkette).
+- **Unbekannte Zusatzfelder** werden mit 422 abgewiesen, ohne sichtbare Meldung (kein `form_errors` am Wurzelformular).
+  Das erreicht nur eine gebaute Anfrage, kein Browser.
+- **Ein Bestätigungslink, den ein Gast anklickt,** tauscht die Adresse und leitet dann auf `/login` (Hinweis aus dem
+  August, unverändert).
+- **axe** (Profil, 1280/375 px, ohne Symfony-Toolbar) findet nur Bekanntes:
+  - die Wortmarke (16/OF-02)
+  - „Passkey hinzufügen“ mit 3,61 : 1 (BF-223, B03)
 
-## Regressionstests
+  `qa/B04/QA-AK02-axe.json`.
+- **EC-01 in der Spec ist veraltet:** Die Meldung bei vergebener Adresse ist übersetzt. Die Spec ist eine Rekonstruktion
+  und gehört bei Gelegenheit berichtigt.
+- **Die strikte Adressprüfung im Formular und die `new Address()` im Controller** prüfen dieselbe Norm. Die Gegenprobe
+  zeigt, dass die zweite nicht doppelt ist: Ohne die strikte Prüfung endet die RFC-widrige Adresse mit 500, aber
+  **ohne** Vormerkung.
+- **Nicht nachgestellt:** Ob die Einführung (Feature 12) dieselbe 405 wie BF-226 hat, ist geprüft, und sie hat sie
+  nicht. Die POST-Route `…/einfuehrung/profilbild` liegt auf derselben Adresse wie die Bildschirmseite. Das
+  Bildformular hat auf der 422-Seite ebenfalls kein `action`, landet aber zufällig richtig. Sobald sich eine der beiden
+  Adressen ändert, entsteht BF-226 dort neu.
 
-Sieben neue Tests in `tests/Functional/Controller/ProfileControllerTest.php`:
-`testEmailAenderungWirdNurVorgemerkt`, `testEmailAenderungBenachrichtigtBeideAdressen`,
-`testBestaetigungUebernimmtDieNeueAdresse`,
-`testAbgelaufenerBestaetigungslinkWechseltNicht`,
-`testBereitsVergebeneAdresseFuehrtNichtZumFehler`,
-`testOffenerVorgangLaesstSichAbbrechen`, `testNamensaenderungLoestKeinenAdresswechselAus`.
+## `code-reviewer`
 
-Gesamtsuite: **330 Tests, 1137 Assertions, 1 übersprungen, 0 Fehler.**
+Der Agent hat die geänderten Dateien gelesen. Verifiziert und übernommen ist ein Fund: **BF-228**, am Server
+nachgestellt und mit Reproduktion belegt.
 
-Der Deckel selbst ist nicht als Test abgebildet: In `when@test` steht das Limit auf
-10000, sonst summierten sich die Versuche über die Suite. Nachweis ist die
-Reproduktion oben — dieselbe Regelung wie bei BF-02 und BF-13.
+- Sein Hinweis auf das Restfenster der Kontolöschung deckt sich mit BF-227. Am Server ist er bestätigt.
+- **Verworfen ist seine Aussage zu BF-151:** Er meinte, das Formular auf der 422-Seite gehe an `/profile/edit`. Im
+  Browser stimmt das nur ohne JavaScript; mit Turbo bleibt die Adresse `/profile` stehen (BF-226).
+- Sein Hinweis, das SQL-`UPDATE` in `delete()` laufe an der Unit of Work vorbei, ist kein Fehler. Zurzeit ist dort
+  keine fremde Änderung offen, weil `edit()` die Adresse vor dem Upload zurücksetzt. Er bleibt als Hinweis stehen.
+
+## Neue Tests
+
+| Datei | Fälle | Deckt ab |
+|---|---|---|
+| `tests/Functional/Controller/QaB04NachpruefungTest.php` | 4 (3 Reproduktionen, übersprungen bis zur Behebung; 1 Gegenprobe immer) | BF-226 Profil- und Passwortformular, Gegenprobe 405 auf `POST /profile`, BF-228 |
+| `tests/Integration/Service/QaB04KontoloeschungNebenUploadTest.php` | 2 Reproduktionen, übersprungen | BF-227: Upload zwischen Bildentfernung und Zeilenlöschung bzw. danach, über das echte `upload()` mit Sperre |
+
+Scharf: `QAB04_REPRO=1 php bin/phpunit tests/Functional/Controller/QaB04NachpruefungTest.php tests/Integration/Service/QaB04KontoloeschungNebenUploadTest.php`.
+Ergebnis: 5 Reproduktionen rot aus dem erwarteten Grund, Gegenprobe grün. Wer einen Befund behebt, entfernt den Aufruf
+`offen(…)` und ändert sonst nichts an der Prüfung.
+
+## Testdaten
+
+Verwendet und wieder entfernt wurden:
+- sechs eigene Konten per SQL und 53 Wegwerfkonten für den Löschlauf und seine Zeitmessung (alle gelöscht)
+- 67 Nachrichten in `messenger_messages`
+- eine Zeile in `marketing_contact`
+- alle Bilddateien, darunter die fünf Waisen aus BF-227
+
+Die Anlagedaten der Restaurants 13, 14 und 17 sind zurückgesetzt. Die Tabelle `user` ist zeichengleich mit dem Stand vor
+der Prüfung (`diff` leer). Die drei Fixture-Konten sind unverändert; im Verzeichnis `public/uploads/avatars/` liegt nur
+`.gitkeep`.
 
 ## Nächster Schritt
 
-`/sdd-qa B23`. B04 geht auf `approved`; ausgeliefert ist noch nichts — die
-Reparaturen von B01, B02 und B04 liegen zusammen auf `dev` und warten auf `/sdd-deploy`.
+`/sdd-deploy B04`. Die Reparatur von BF-182, BF-184 und BF-186 geht mit dem Branch `feature/17-favoriten-und-listen`
+live, also mit `/sdd-deploy 17`. Bis dahin liefert die Produktion bei leerem Namen und bei RFC-widriger oder zu langer
+Adresse weiterhin HTTP 500.
 
-## Nachtrag 2026-10-23 · BF-164, BF-159 (Profil), BF-173 behoben (nicht ausgeliefert)
-
-Gefunden in der QA von Feature 12. Behoben auf `feature/12-onboarding`, Fehlerauftrag ohne eigenen
-`review`-Status (Muster BF-151/B15):
-- **BF-164** — Das Formular „Profilbild entfernen" steht hinter dem Profilformular, der Knopf hängt
-  sich über `form="profil-bild-entfernen"` daran. `Bf164ProfilFormularTest`, Browser: Speichern mit
-  Bild gelingt.
-- **BF-159 (Profilhälfte)** — Ein Upload über `post_max_size` zeigt im Profil „Das Profilbild darf
-  maximal 2 MB groß sein." (`AvatarConstraints::bodyWasDiscarded()`/`tooLargeMessage()`).
-- **BF-173** — `AvatarUploadService` arbeitet unter einer Sperre je Konto und räumt den frisch aus der
-  Datenbank gelesenen alten Namen mit weg (`Bf173AvatarVerwaistTest`).
-Nächster Schritt: `/sdd-qa B04` bzw. die Nachprüfung in `/sdd-qa 12`.
-
-## Nachprüfung 2026-10-23 · BF-164, BF-159, BF-173 behoben — zwei neue Befunde (QA Feature 12, dritter Durchlauf)
-
-- **BF-164 behoben** — im Browser, Konto mit Bild: jeder Knopf gehört zu seinem Formular, Speichern per Klick und per Enter
-  gelingt, „Profilbild entfernen" entfernt (`qa/12/nachpruefung2/bf164-browser.ausgabe.txt`).
-- **BF-159 (Profilhälfte) behoben** — 21,6 MB gegen die Grenzen des Produktionsbildes → Fehlermeldung „Das Profilbild darf
-  maximal 2 MB groß sein." (`a04-upload.ausgabe.txt`).
-- **BF-173 behoben** — vier gleichzeitige Uploads eines Kontos (vier Arbeitsprozesse, auch Produktionsmodus), fünf
-  Durchgänge: 0 verwaiste Dateien.
-- **Neu, vorbestehend auf der Produktion: BF-175 (hoch)** — ein Adresswechsel wird ohne Bestätigung wirksam, wenn im selben
-  Absenden ein Profilbild hochgeladen wird und der Deckel `email_change` erreicht ist: `AvatarUploadService::upload()` ruft
-  `flush()`, während `handleRequest()` die neue Adresse schon in die Entity geschrieben hat; der Deckel-Zweig setzt nicht
-  zurück. Hebt BF-19 auf (`a05-adresswechsel-mit-bild.ausgabe.txt`, `Qa12Nachpruefung3Test::testBf175…`).
-- **Neu, vorbestehend: BF-176 (mittel)** — der Deckel `email_change` zählt an der gewünschten Adresse statt am Konto
-  (`a05b-deckel-schluessel.ausgabe.txt`, `testBf176…`).
-
-- **Neu: BF-180 (niedrig, B04/12)** — „Profilbild entfernen" liegt nicht unter der Sperre aus BF-173; gleichzeitig mit einem
-  Upload bleibt die neue Datei ohne Konto liegen (`a13-avatar-loeschen-gleichzeitig.ausgabe.txt`, `testBf180…`).
-
-Status bleibt `deployed` mit Vermerk; **nächster Schritt `/sdd-build B04`** (BF-175, BF-176, BF-180) — BF-175 betrifft laufenden Code.
-
-## Nachtrag 2026-10-23 · BF-175, BF-176, BF-180 behoben (nicht ausgeliefert)
-
-Behoben auf `feature/12-onboarding` im dritten Fehlerauftrag zu Feature 12, ohne eigenen `review`-Status (Muster
-BF-151/B15):
-- **BF-175** — `ProfileController::edit()` setzt die Adresse direkt nach der Validierung auf die bestätigte zurück,
-  **vor** dem Upload und vor jedem anderen Schreiben; die gewünschte Adresse lebt nur noch in einer Variablen. Der
-  `flush()` des Upload-Dienstes findet damit keine fremde Änderung mehr. ⚠ **Auf der Produktion besteht der Fehler
-  fort**, bis der Branch ausgerollt ist. `Qa12Nachpruefung3Test::testBf175…` scharf grün.
-- **BF-176** — Der Deckel `email_change` zählt an der bestätigten Adresse (vor `handleRequest()` gelesen), nicht an
-  der Eingabe. `testBf176…` scharf grün.
-- **BF-180** — `AvatarUploadService::delete()` läuft unter derselben Sperre je Konto wie `upload()` und löscht den
-  Namen aus der Entity und den frisch aus der Datenbank gelesenen. `testBf180…` scharf grün.
-`ProfileControllerTest` und `AvatarUploadServiceTest` unverändert grün. Nächster Schritt: Nachprüfung in `/sdd-qa 12`.
-
-## Nachprüfung 2026-10-23 · BF-175, BF-176, BF-180 behoben — drei neue, vorbestehende Befunde (QA Feature 12, vierter Durchlauf)
-
-- **BF-175 behoben** — am laufenden Server: drei Adresswechsel, der vierte mit Bild bei erreichtem Deckel → Flash „Zu viele
-  Adressänderungen …", `email` unverändert, nur vorgemerkt; Anmeldung mit der neuen Adresse scheitert, „Passwort vergessen"
-  erzeugt dafür keinen Token (`qa/12/nachpruefung3/a05-adresswechsel-mit-bild.ausgabe.txt`). ⚠ **Auf der Produktion
-  besteht der Fehler fort**, bis `feature/12-onboarding` ausgerollt ist.
-- **BF-176 behoben** — acht Wechsel auf acht neue Adressen: drei angenommen, ab dem vierten abgewiesen (`a05b`).
-- **BF-180 behoben** — Upload und „Entfernen" gleichzeitig, vier Arbeitsprozesse, zehn Durchgänge: 0 verwaiste Dateien (`a13`).
-- Hauptweg im Browser: Profil mit Bild per Klick und per Enter gespeichert, Bild bleibt (`bf156-bf164-browser.ausgabe.txt`).
-- **Neu, vorbestehend: BF-182 (mittel)** — ein Name aus Leerzeichen ergibt **HTTP 500** (`ProfileType`: `'empty_data' => ''`
-  fehlt; der Browser schickt das ab). Leeres Adressfeld ebenso, dort hält der Browser es ab (`a15`, `a15b`,
-  `Qa12Nachpruefung4Test::testBf182…`).
-- **Neu, vorbestehend: BF-184 (mittel)** — ein Adresswechsel auf eine RFC-widrige (`../../etc/passwd@example.lu`) oder über
-  180 Zeichen lange Adresse ergibt **HTTP 500**; die RFC-widrige bleibt vorgemerkt. Das Profil ist der fünfte Adresseingang,
-  den BF-119 nicht nachgezogen hat (`a16`, `testBf184…`).
-- **Neu: BF-186 (niedrig, B04/12)** — „Entfernen" mit einer Entity, die beim Anfragebeginn kein Bild trug, löscht die
-  inzwischen gespeicherte Datei und lässt den Verweis stehen; dieselbe Lücke im `AccountDeleter` (`testBf186…`).
-
-Status bleibt `deployed` mit Vermerk (kein Befund *hoch* offen); nächster Schritt `/sdd-build B04` mit BF-182, BF-184, BF-186.
+Danach, nicht blockierend: `/sdd-klaeren B04` über BF-226 (*mittel*), BF-227 und BF-228 (*niedrig*), dann `/sdd-build
+B04` und erneut `/sdd-qa B04`. BF-229 gehört zu Feature 15 bzw. B05.

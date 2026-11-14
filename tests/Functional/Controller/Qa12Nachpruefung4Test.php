@@ -152,7 +152,6 @@ final class Qa12Nachpruefung4Test extends AbstractWebTestCase
      */
     public function testBf182NameAusLeerzeichenZeigtEineMeldungStattHttp500(): void
     {
-        $this->offen('BF-182');
         $client = $this->client();
         $client->loginUser($this->konto($client));
 
@@ -171,7 +170,6 @@ final class Qa12Nachpruefung4Test extends AbstractWebTestCase
      */
     public function testBf184AdresswechselAufRfcWidrigeAdresseZeigtEineMeldung(): void
     {
-        $this->offen('BF-184');
         $client = $this->client();
         $client->loginUser($this->konto($client));
 
@@ -244,7 +242,6 @@ final class Qa12Nachpruefung4Test extends AbstractWebTestCase
      */
     public function testBf186EntfernenMitLeeremEntityNamenHinterlaesstKeinenTotenVerweis(): void
     {
-        $this->offen('BF-186');
         $client = $this->client();
         $user = $this->konto($client);
         self::assertNull($user->getAvatarFilename());
