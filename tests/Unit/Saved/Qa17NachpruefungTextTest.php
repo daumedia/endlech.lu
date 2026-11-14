@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  * Feature 17 · Vergleichsschlüssel der Listennamen nach der Behebung von BF-211 — aus der zweiten QA vom 2026-11-14.
  *
  * Läuft immer: die Fälle, die vor und nach BF-211 gleich gelten müssen (AK-19, EC-07).
- * Übersprungen, solange offen: BF-220 (scharf mit `QA17_REPRO=1`).
+ * BF-220 läuft seit der Behebung am 2026-11-14 ebenfalls immer (Rückfallschutz).
  */
 final class Qa17NachpruefungTextTest extends TestCase
 {
@@ -47,10 +47,7 @@ final class Qa17NachpruefungTextTest extends TestCase
      */
     public function testBf220GriechischesSchlussSigmaGiltAlsDieselbeListe(): void
     {
-        if ('1' !== getenv('QA17_REPRO')) {
-            self::markTestSkipped('BF-220 offen — Reproduktion, siehe features/17-favoriten-und-listen/qa-report.md. Scharf mit QA17_REPRO=1.');
-        }
-
+        // Scharf seit der Behebung am 2026-11-14 (zweiter Fehlerauftrag 17) — Rückfallschutz.
         self::assertSame(SavedText::nameKey('οδος'), SavedText::nameKey('ΟΔΟΣ'));
     }
 }

@@ -63,7 +63,7 @@ final class Qa17NachpruefungTest extends AbstractWebTestCase
      */
     public function testBf218HerzImKopfDerDetailseiteNichtMitDerAmBandUnsichtbarenFokusfarbe(): void
     {
-        self::offen('BF-218');
+        // Scharf seit der Behebung am 2026-11-14 (zweiter Fehlerauftrag 17) — Rückfallschutz.
 
         $client = static::createClient();
         $id = static::getContainer()->get(RestaurantRepository::class)->findAllIdsAscending()[0];

@@ -469,6 +469,8 @@ Jede Frage aus `~/.claude/sdd/sicherheit.md`, mit der Antwort für dieses Featur
   ↪ **Bewertet in der zweiten QA vom 2026-11-14:** keine offene Frage, sondern **AK-49 durchgefallen** — AK-49 verlangt
   den sichtbaren Fokusrahmen für jedes Herz. Gemessen auch mit eingesetztem Titelfoto: größte Pixeländerung 1,56 bzw.
   2,48 : 1, also ebenfalls unsichtbar. Befund **BF-218** (*mittel*) in `features/befunde.md`, Behebung über `/sdd-build 17`.
+  ↪ **Nachgeprüft in der dritten QA vom 2026-11-14: behoben.** Rahmen innen auf der weißen Fläche des Knopfs; mit drei echten
+  Titelfotos und ohne Foto, im Kopf und in der Karte, Chromium und WebKit: schwächster Strahl 13,05 : 1 (`qa-report.md`).
 
 ## Decision Log
 

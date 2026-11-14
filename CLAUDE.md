@@ -1290,6 +1290,13 @@ Favoriten-Filter zählt im bestehenden `filter_angewandt` (Schlüssel `favorites
 einzeilig (lb „Restauranten“, pt „O meu perfil“). Kein fünfter Punkt.
 ⚠ **Kartenpartial `partials/_restaurant_card.html.twig`** gilt für Suche und Gespeichert-Seiten; `ziel` an das Herz
 durchreichen (ohne kehrt das Herz im Stream-Raster zur Formularadresse zurück — so gefunden).
+⚠ **Das Herz trägt seinen Fokusrahmen innen auf der eigenen weißen Fläche** (`focus:-outline-offset-4`, gray-900;
+BF-218). Außen lag er auf Verlauf bzw. Foto (1,0–2,5 : 1, in der Karte über einem mittelhellen Foto 1,3 : 1). Keine
+Fokusfarbe je Lage — der Turbo-Stream rendert den Knopf neu, ohne zu wissen, wo er steht.
+⚠ **Ein Listenname in einem Flex-Element braucht `min-w-0 wrap-anywhere`** (BF-219) — `break-word` am `body` wirkt dort
+nicht, 60 Zeichen ohne Leerzeichen schoben „In Listen“ bei 320 px auf 583 px. ⚠ **`SavedText::nameKey()` = einfache
+Kleinschreibung, dann einfache Faltung** (BF-220): Kleinschreibung allein ließ „ΟΔΟΣ“ und „οδος“ zu, Faltung allein
+„İ“ unverändert. Beide sind 1 : 1 je Codepunkt (BF-211 bleibt gedeckt).
 ⚠ **Die Suche liest den Paginator einmal als Array** (`iterator_to_array`) — `Paginator::getIterator()` fragt bei jedem
 Durchlauf neu, `SavedState` und Template hätten die Seite doppelt geladen.
 ⚠ **Kein Verzeichnis `public/gespeichert`** (BF-100). Die vier GET-Routen stehen in `SeoRegistry::UNLISTED_ROUTES`,

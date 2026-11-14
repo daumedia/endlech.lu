@@ -30,10 +30,17 @@ final class SavedText
      * Namens, und `name_key` ist so breit wie `name` — 31 „İ“ ergaben HTTP 500. Die einfache
      * Abbildung ersetzt jeden Codepunkt durch genau einen, der Schlüssel ist so lang wie der Name.
      * Folge: „İstanbul“ und „Istanbul“ gelten als derselbe Name.
+     *
+     * ⚠ **Danach die einfache Faltung** (BF-220). Die einfache Kleinschreibung kennt keinen
+     * Kontext: „ΟΔΟΣ“ ergab `οδοσ`, „οδος“ blieb `οδος` — zwei Listen. Die Faltung bildet das
+     * Schluss-Sigma auf „σ“ ab und ist ebenfalls 1 : 1 je Codepunkt. Allein reicht sie nicht:
+     * „İ“ hat keine einfache Faltung und bliebe „İ“ — deshalb erst klein, dann falten.
      */
     public static function nameKey(string $wert): string
     {
-        return mb_convert_case(self::name($wert), \MB_CASE_LOWER_SIMPLE, 'UTF-8');
+        $klein = mb_convert_case(self::name($wert), \MB_CASE_LOWER_SIMPLE, 'UTF-8');
+
+        return mb_convert_case($klein, \MB_CASE_FOLD_SIMPLE, 'UTF-8');
     }
 
     /**

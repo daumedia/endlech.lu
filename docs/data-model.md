@@ -875,7 +875,7 @@ in einer Liste stehen, ohne Favorit zu sein, und umgekehrt.
 | `id` | `id` | `integer` PK | – | AUTO; steht in der Adresse `/{_locale}/gespeichert/listen/{id}` |
 | `user` | `user_id` | FK → `` `user` `` | nein | Inhaber; **`ON DELETE CASCADE`** |
 | `name` | `name` | `varchar(60)` | nein | angezeigter Name: Randleerraum entfernt, Unicode-NFC (`App\Saved\SavedText::name()`) |
-| `nameKey` | `name_key` | `varchar(60)`, Kollation **`utf8mb4_bin`** | nein | Vergleichsschlüssel: derselbe Name in Kleinbuchstaben (`SavedText::nameKey()`, einfache Abbildung — gleiche Länge wie `name`) |
+| `nameKey` | `name_key` | `varchar(60)`, Kollation **`utf8mb4_bin`** | nein | Vergleichsschlüssel: derselbe Name in Kleinbuchstaben, danach gefaltet (`SavedText::nameKey()`, einfache Abbildungen — gleiche Länge wie `name`; die Faltung macht „ς“ zu „σ“, BF-220) |
 | `createdAt` | `created_at` | `datetime` | nein | angelegt am — Reihenfolge auf „Gespeichert“ (zuletzt angelegt zuerst) und im Export |
 
 **Konstanten:** `MAX_NAME_LENGTH = 60`, `MAX_PER_USER = 25` (17/AK-18, AK-20). Die

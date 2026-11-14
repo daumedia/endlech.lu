@@ -1,0 +1,144 @@
+# QA17 dritte Prüfung · BF-218 am Pixel (2026-11-14)
+# Maß: je Pixel Kontrastverhältnis ohne/mit Tastaturfokus; je Strahl aus der Knopfmitte das Maximum; schwächster von 360 Strahlen.
+# Echte Titelfotos (Unsplash): hell = Salatschale auf hellem Grund (Lokal 12), mittel = gedeckter Tisch (14), dunkel = Restaurant innen (18). 1280 px DPR 1, 375 px DPR 2.
+## jetzt (mit Reparatur)
+jetzt	chromium	1280px	kopf-verlauf-13	schwächster Strahl 13.60:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 255 px²	Knopf 44×44	Fokus favorit-knopf-13	solid 2px oklch(0.21 0.034 264.665) off -4px fv=true
+jetzt	chromium	1280px	kopf-verlauf-20	schwächster Strahl 13.79:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 256 px²	Knopf 44×44	Fokus favorit-knopf-20	solid 2px oklch(0.21 0.034 264.665) off -4px fv=true
+jetzt	chromium	1280px	kopf-foto-hell-12	schwächster Strahl 13.79:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 252 px²	Knopf 44×44	Fokus favorit-knopf-12	solid 2px oklch(0.21 0.034 264.665) off -4px fv=true
+jetzt	chromium	1280px	kopf-foto-mittel-14	schwächster Strahl 13.79:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 252 px²	Knopf 44×44	Fokus favorit-knopf-14	solid 2px oklch(0.21 0.034 264.665) off -4px fv=true
+jetzt	chromium	1280px	kopf-foto-dunkel-18	schwächster Strahl 13.79:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 252 px²	Knopf 44×44	Fokus favorit-knopf-18	solid 2px oklch(0.21 0.034 264.665) off -4px fv=true
+jetzt	chromium	1280px	karte-suche-foto-hell-12	schwächster Strahl 13.79:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 252 px²	Knopf 44×44	Fokus favorit-knopf-12	solid 2px oklch(0.21 0.034 264.665) off -4px fv=true
+jetzt	chromium	1280px	karte-suche-foto-mittel-14	schwächster Strahl 13.79:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 251 px²	Knopf 44×44	Fokus favorit-knopf-14	solid 2px oklch(0.21 0.034 264.665) off -4px fv=true
+jetzt	chromium	1280px	karte-suche-foto-dunkel-18	schwächster Strahl 13.79:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 251 px²	Knopf 44×44	Fokus favorit-knopf-18	solid 2px oklch(0.21 0.034 264.665) off -4px fv=true
+jetzt	chromium	1280px	karte-suche-ohne-foto-15	schwächster Strahl 13.79:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 252 px²	Knopf 44×44	Fokus favorit-knopf-15	solid 2px oklch(0.21 0.034 264.665) off -4px fv=true
+jetzt	chromium	1280px	karte-favoriten-foto-hell-12	schwächster Strahl 13.79:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 252 px²	Knopf 44×44	Fokus favorit-knopf-12	solid 2px oklch(0.21 0.034 264.665) off -4px fv=true
+jetzt	chromium	1280px	karte-favoriten-foto-dunkel-18	schwächster Strahl 13.79:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 252 px²	Knopf 44×44	Fokus favorit-knopf-18	solid 2px oklch(0.21 0.034 264.665) off -4px fv=true
+jetzt	chromium	1280px	karte-favoriten-ohne-foto-16	schwächster Strahl 13.79:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 252 px²	Knopf 44×44	Fokus favorit-knopf-16	solid 2px oklch(0.21 0.034 264.665) off -4px fv=true
+jetzt	chromium	1280px	karte-liste-foto-mittel-14	schwächster Strahl 13.79:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 252 px²	Knopf 44×44	Fokus favorit-knopf-14	solid 2px oklch(0.21 0.034 264.665) off -4px fv=true
+jetzt	chromium	1280px	karte-liste-foto-dunkel-18	schwächster Strahl 13.05:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 251 px²	Knopf 44×44	Fokus favorit-knopf-18	solid 2px oklch(0.21 0.034 264.665) off -4px fv=true
+jetzt	chromium	375px	kopf-verlauf-13	schwächster Strahl 17.75:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 241 px²	Knopf 44×44	Fokus favorit-knopf-13	solid 2px oklch(0.21 0.034 264.665) off -4px fv=true
+jetzt	chromium	375px	kopf-verlauf-20	schwächster Strahl 17.75:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 241 px²	Knopf 44×44	Fokus favorit-knopf-20	solid 2px oklch(0.21 0.034 264.665) off -4px fv=true
+jetzt	chromium	375px	kopf-foto-hell-12	schwächster Strahl 17.75:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 241 px²	Knopf 44×44	Fokus favorit-knopf-12	solid 2px oklch(0.21 0.034 264.665) off -4px fv=true
+jetzt	chromium	375px	kopf-foto-mittel-14	schwächster Strahl 17.75:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 241 px²	Knopf 44×44	Fokus favorit-knopf-14	solid 2px oklch(0.21 0.034 264.665) off -4px fv=true
+jetzt	chromium	375px	kopf-foto-dunkel-18	schwächster Strahl 17.75:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 241 px²	Knopf 44×44	Fokus favorit-knopf-18	solid 2px oklch(0.21 0.034 264.665) off -4px fv=true
+jetzt	chromium	375px	karte-suche-foto-hell-12	schwächster Strahl 17.75:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 241 px²	Knopf 44×44	Fokus favorit-knopf-12	solid 2px oklch(0.21 0.034 264.665) off -4px fv=true
+jetzt	chromium	375px	karte-suche-foto-mittel-14	schwächster Strahl 17.75:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 241 px²	Knopf 44×44	Fokus favorit-knopf-14	solid 2px oklch(0.21 0.034 264.665) off -4px fv=true
+jetzt	chromium	375px	karte-suche-foto-dunkel-18	schwächster Strahl 17.75:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 241 px²	Knopf 44×44	Fokus favorit-knopf-18	solid 2px oklch(0.21 0.034 264.665) off -4px fv=true
+jetzt	chromium	375px	karte-suche-ohne-foto-15	schwächster Strahl 17.75:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 241 px²	Knopf 44×44	Fokus favorit-knopf-15	solid 2px oklch(0.21 0.034 264.665) off -4px fv=true
+jetzt	chromium	375px	karte-favoriten-foto-hell-12	schwächster Strahl 17.75:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 241 px²	Knopf 44×44	Fokus favorit-knopf-12	solid 2px oklch(0.21 0.034 264.665) off -4px fv=true
+jetzt	chromium	375px	karte-favoriten-foto-dunkel-18	schwächster Strahl 17.75:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 243 px²	Knopf 44×44	Fokus favorit-knopf-18	solid 2px oklch(0.21 0.034 264.665) off -4px fv=true
+jetzt	chromium	375px	karte-favoriten-ohne-foto-16	schwächster Strahl 17.75:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 241 px²	Knopf 44×44	Fokus favorit-knopf-16	solid 2px oklch(0.21 0.034 264.665) off -4px fv=true
+jetzt	chromium	375px	karte-liste-foto-mittel-14	schwächster Strahl 17.75:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 241 px²	Knopf 44×44	Fokus favorit-knopf-14	solid 2px oklch(0.21 0.034 264.665) off -4px fv=true
+jetzt	chromium	375px	karte-liste-foto-dunkel-18	schwächster Strahl 17.75:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 241 px²	Knopf 44×44	Fokus favorit-knopf-18	solid 2px oklch(0.21 0.034 264.665) off -4px fv=true
+jetzt	webkit	1280px	kopf-verlauf-13	schwächster Strahl 13.05:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 252 px²	Knopf 44×44	Fokus favorit-knopf-13	solid 2px oklch(0.21 0.034 264.665009) off -4px fv=true
+jetzt	webkit	1280px	kopf-verlauf-20	schwächster Strahl 13.05:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 252 px²	Knopf 44×44	Fokus favorit-knopf-20	solid 2px oklch(0.21 0.034 264.665009) off -4px fv=true
+jetzt	webkit	1280px	kopf-foto-hell-12	schwächster Strahl 13.05:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 252 px²	Knopf 44×44	Fokus favorit-knopf-12	solid 2px oklch(0.21 0.034 264.665009) off -4px fv=true
+jetzt	webkit	1280px	kopf-foto-mittel-14	schwächster Strahl 13.05:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 252 px²	Knopf 44×44	Fokus favorit-knopf-14	solid 2px oklch(0.21 0.034 264.665009) off -4px fv=true
+jetzt	webkit	1280px	kopf-foto-dunkel-18	schwächster Strahl 13.05:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 252 px²	Knopf 44×44	Fokus favorit-knopf-18	solid 2px oklch(0.21 0.034 264.665009) off -4px fv=true
+jetzt	webkit	1280px	karte-suche-foto-hell-12	schwächster Strahl 13.05:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 252 px²	Knopf 44×44	Fokus favorit-knopf-12	solid 2px oklch(0.21 0.034 264.665009) off -4px fv=true
+jetzt	webkit	1280px	karte-suche-foto-mittel-14	schwächster Strahl 13.05:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 252 px²	Knopf 44×44	Fokus favorit-knopf-14	solid 2px oklch(0.21 0.034 264.665009) off -4px fv=true
+jetzt	webkit	1280px	karte-suche-foto-dunkel-18	schwächster Strahl 13.05:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 252 px²	Knopf 44×44	Fokus favorit-knopf-18	solid 2px oklch(0.21 0.034 264.665009) off -4px fv=true
+jetzt	webkit	1280px	karte-suche-ohne-foto-15	schwächster Strahl 13.05:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 252 px²	Knopf 44×44	Fokus favorit-knopf-15	solid 2px oklch(0.21 0.034 264.665009) off -4px fv=true
+jetzt	webkit	1280px	karte-favoriten-foto-hell-12	schwächster Strahl 13.05:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 252 px²	Knopf 44×44	Fokus favorit-knopf-12	solid 2px oklch(0.21 0.034 264.665009) off -4px fv=true
+jetzt	webkit	1280px	karte-favoriten-foto-dunkel-18	schwächster Strahl 13.05:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 252 px²	Knopf 44×44	Fokus favorit-knopf-18	solid 2px oklch(0.21 0.034 264.665009) off -4px fv=true
+jetzt	webkit	1280px	karte-favoriten-ohne-foto-16	schwächster Strahl 13.05:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 252 px²	Knopf 44×44	Fokus favorit-knopf-16	solid 2px oklch(0.21 0.034 264.665009) off -4px fv=true
+jetzt	webkit	1280px	karte-liste-foto-mittel-14	schwächster Strahl 13.05:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 252 px²	Knopf 44×44	Fokus favorit-knopf-14	solid 2px oklch(0.21 0.034 264.665009) off -4px fv=true
+jetzt	webkit	1280px	karte-liste-foto-dunkel-18	schwächster Strahl 13.05:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 252 px²	Knopf 44×44	Fokus favorit-knopf-18	solid 2px oklch(0.21 0.034 264.665009) off -4px fv=true
+jetzt	webkit	375px	kopf-verlauf-13	schwächster Strahl 17.75:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 243 px²	Knopf 44×44	Fokus favorit-knopf-13	solid 2px oklch(0.21 0.034 264.665009) off -4px fv=true
+jetzt	webkit	375px	kopf-verlauf-20	schwächster Strahl 17.75:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 243 px²	Knopf 44×44	Fokus favorit-knopf-20	solid 2px oklch(0.21 0.034 264.665009) off -4px fv=true
+jetzt	webkit	375px	kopf-foto-hell-12	schwächster Strahl 17.75:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 243 px²	Knopf 44×44	Fokus favorit-knopf-12	solid 2px oklch(0.21 0.034 264.665009) off -4px fv=true
+jetzt	webkit	375px	kopf-foto-mittel-14	schwächster Strahl 17.75:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 243 px²	Knopf 44×44	Fokus favorit-knopf-14	solid 2px oklch(0.21 0.034 264.665009) off -4px fv=true
+jetzt	webkit	375px	kopf-foto-dunkel-18	schwächster Strahl 17.75:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 243 px²	Knopf 44×44	Fokus favorit-knopf-18	solid 2px oklch(0.21 0.034 264.665009) off -4px fv=true
+jetzt	webkit	375px	karte-suche-foto-hell-12	schwächster Strahl 17.75:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 243 px²	Knopf 44×44	Fokus favorit-knopf-12	solid 2px oklch(0.21 0.034 264.665009) off -4px fv=true
+jetzt	webkit	375px	karte-suche-foto-mittel-14	schwächster Strahl 17.75:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 243 px²	Knopf 44×44	Fokus favorit-knopf-14	solid 2px oklch(0.21 0.034 264.665009) off -4px fv=true
+jetzt	webkit	375px	karte-suche-foto-dunkel-18	schwächster Strahl 17.75:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 243 px²	Knopf 44×44	Fokus favorit-knopf-18	solid 2px oklch(0.21 0.034 264.665009) off -4px fv=true
+jetzt	webkit	375px	karte-suche-ohne-foto-15	schwächster Strahl 17.75:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 243 px²	Knopf 44×44	Fokus favorit-knopf-15	solid 2px oklch(0.21 0.034 264.665009) off -4px fv=true
+jetzt	webkit	375px	karte-favoriten-foto-hell-12	schwächster Strahl 17.75:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 243 px²	Knopf 44×44	Fokus favorit-knopf-12	solid 2px oklch(0.21 0.034 264.665009) off -4px fv=true
+jetzt	webkit	375px	karte-favoriten-foto-dunkel-18	schwächster Strahl 17.75:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 243 px²	Knopf 44×44	Fokus favorit-knopf-18	solid 2px oklch(0.21 0.034 264.665009) off -4px fv=true
+jetzt	webkit	375px	karte-favoriten-ohne-foto-16	schwächster Strahl 17.75:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 243 px²	Knopf 44×44	Fokus favorit-knopf-16	solid 2px oklch(0.21 0.034 264.665009) off -4px fv=true
+jetzt	webkit	375px	karte-liste-foto-mittel-14	schwächster Strahl 17.75:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 243 px²	Knopf 44×44	Fokus favorit-knopf-14	solid 2px oklch(0.21 0.034 264.665009) off -4px fv=true
+jetzt	webkit	375px	karte-liste-foto-dunkel-18	schwächster Strahl 17.75:1	Strahlen≥3:1 360/360	max 17.75	Fläche≥3:1 243 px²	Knopf 44×44	Fokus favorit-knopf-18	solid 2px oklch(0.21 0.034 264.665009) off -4px fv=true
+## mutiert (Klassen vor der Reparatur: focus:outline-offset-2 focus:outline-cyan-700)
+mutiert	chromium	1280px	kopf-verlauf-13	schwächster Strahl 1.00:1	Strahlen≥3:1 0/360	max 1.06	Fläche≥3:1 0 px²	Knopf 44×44	Fokus favorit-knopf-13	solid 2px oklch(0.52 0.105 223.128) off 2px fv=true
+mutiert	chromium	1280px	kopf-verlauf-20	schwächster Strahl 1.01:1	Strahlen≥3:1 0/360	max 1.06	Fläche≥3:1 0 px²	Knopf 44×44	Fokus favorit-knopf-20	solid 2px oklch(0.52 0.105 223.128) off 2px fv=true
+mutiert	chromium	1280px	kopf-foto-hell-12	schwächster Strahl 1.04:1	Strahlen≥3:1 42/360	max 3.66	Fläche≥3:1 23 px²	Knopf 44×44	Fokus favorit-knopf-12	solid 2px oklch(0.52 0.105 223.128) off 2px fv=true
+mutiert	chromium	1280px	kopf-foto-mittel-14	schwächster Strahl 1.02:1	Strahlen≥3:1 58/360	max 3.83	Fläche≥3:1 32 px²	Knopf 44×44	Fokus favorit-knopf-14	solid 2px oklch(0.52 0.105 223.128) off 2px fv=true
+mutiert	chromium	1280px	kopf-foto-dunkel-18	schwächster Strahl 1.05:1	Strahlen≥3:1 229/360	max 3.98	Fläche≥3:1 133 px²	Knopf 44×44	Fokus favorit-knopf-18	solid 2px oklch(0.52 0.105 223.128) off 2px fv=true
+mutiert	chromium	1280px	karte-suche-foto-hell-12	schwächster Strahl 3.43:1	Strahlen≥3:1 360/360	max 4.35	Fläche≥3:1 242 px²	Knopf 44×44	Fokus favorit-knopf-12	solid 2px oklch(0.52 0.105 223.128) off 2px fv=true
+mutiert	chromium	1280px	karte-suche-foto-mittel-14	schwächster Strahl 1.10:1	Strahlen≥3:1 117/360	max 5.19	Fläche≥3:1 73 px²	Knopf 44×44	Fokus favorit-knopf-14	solid 2px oklch(0.52 0.105 223.128) off 2px fv=true
+mutiert	chromium	1280px	karte-suche-foto-dunkel-18	schwächster Strahl 1.07:1	Strahlen≥3:1 302/360	max 3.98	Fläche≥3:1 186 px²	Knopf 44×44	Fokus favorit-knopf-18	solid 2px oklch(0.52 0.105 223.128) off 2px fv=true
+mutiert	chromium	1280px	karte-suche-ohne-foto-15	schwächster Strahl 3.87:1	Strahlen≥3:1 360/360	max 4.80	Fläche≥3:1 264 px²	Knopf 44×44	Fokus favorit-knopf-15	solid 2px oklch(0.52 0.105 223.128) off 2px fv=true
+mutiert	chromium	1280px	karte-favoriten-foto-hell-12	schwächster Strahl 3.44:1	Strahlen≥3:1 360/360	max 4.31	Fläche≥3:1 242 px²	Knopf 44×44	Fokus favorit-knopf-12	solid 2px oklch(0.52 0.105 223.128) off 2px fv=true
+mutiert	chromium	1280px	karte-favoriten-foto-dunkel-18	schwächster Strahl 1.31:1	Strahlen≥3:1 324/360	max 3.98	Fläche≥3:1 196 px²	Knopf 44×44	Fokus favorit-knopf-18	solid 2px oklch(0.52 0.105 223.128) off 2px fv=true
+mutiert	chromium	1280px	karte-favoriten-ohne-foto-16	schwächster Strahl 3.87:1	Strahlen≥3:1 360/360	max 4.80	Fläche≥3:1 264 px²	Knopf 44×44	Fokus favorit-knopf-16	solid 2px oklch(0.52 0.105 223.128) off 2px fv=true
+mutiert	chromium	1280px	karte-liste-foto-mittel-14	schwächster Strahl 1.07:1	Strahlen≥3:1 228/360	max 5.18	Fläche≥3:1 145 px²	Knopf 44×44	Fokus favorit-knopf-14	solid 2px oklch(0.52 0.105 223.128) off 2px fv=true
+mutiert	chromium	1280px	karte-liste-foto-dunkel-18	schwächster Strahl 1.33:1	Strahlen≥3:1 324/360	max 3.98	Fläche≥3:1 194 px²	Knopf 44×44	Fokus favorit-knopf-18	solid 2px oklch(0.52 0.105 223.128) off 2px fv=true
+mutiert	chromium	375px	kopf-verlauf-13	schwächster Strahl 1.11:1	Strahlen≥3:1 0/360	max 1.25	Fläche≥3:1 0 px²	Knopf 44×44	Fokus favorit-knopf-13	solid 2px oklch(0.52 0.105 223.128) off 2px fv=true
+mutiert	chromium	375px	kopf-verlauf-20	schwächster Strahl 1.11:1	Strahlen≥3:1 0/360	max 1.25	Fläche≥3:1 0 px²	Knopf 44×44	Fokus favorit-knopf-20	solid 2px oklch(0.52 0.105 223.128) off 2px fv=true
+mutiert	chromium	375px	kopf-foto-hell-12	schwächster Strahl 1.15:1	Strahlen≥3:1 0/360	max 2.75	Fläche≥3:1 0 px²	Knopf 44×44	Fokus favorit-knopf-12	solid 2px oklch(0.52 0.105 223.128) off 2px fv=true
+mutiert	chromium	375px	kopf-foto-mittel-14	schwächster Strahl 1.04:1	Strahlen≥3:1 41/360	max 3.61	Fläche≥3:1 21 px²	Knopf 44×44	Fokus favorit-knopf-14	solid 2px oklch(0.52 0.105 223.128) off 2px fv=true
+mutiert	chromium	375px	kopf-foto-dunkel-18	schwächster Strahl 1.16:1	Strahlen≥3:1 118/360	max 3.96	Fläche≥3:1 45 px²	Knopf 44×44	Fokus favorit-knopf-18	solid 2px oklch(0.52 0.105 223.128) off 2px fv=true
+mutiert	chromium	375px	karte-suche-foto-hell-12	schwächster Strahl 4.04:1	Strahlen≥3:1 360/360	max 4.43	Fläche≥3:1 277 px²	Knopf 44×44	Fokus favorit-knopf-12	solid 2px oklch(0.52 0.105 223.128) off 2px fv=true
+mutiert	chromium	375px	karte-suche-foto-mittel-14	schwächster Strahl 1.09:1	Strahlen≥3:1 243/360	max 5.25	Fläche≥3:1 160 px²	Knopf 44×44	Fokus favorit-knopf-14	solid 2px oklch(0.52 0.105 223.128) off 2px fv=true
+mutiert	chromium	375px	karte-suche-foto-dunkel-18	schwächster Strahl 1.69:1	Strahlen≥3:1 344/360	max 3.98	Fläche≥3:1 238 px²	Knopf 44×44	Fokus favorit-knopf-18	solid 2px oklch(0.52 0.105 223.128) off 2px fv=true
+mutiert	chromium	375px	karte-suche-ohne-foto-15	schwächster Strahl 4.71:1	Strahlen≥3:1 360/360	max 4.80	Fläche≥3:1 285 px²	Knopf 44×44	Fokus favorit-knopf-15	solid 2px oklch(0.52 0.105 223.128) off 2px fv=true
+mutiert	chromium	375px	karte-favoriten-foto-hell-12	schwächster Strahl 4.04:1	Strahlen≥3:1 360/360	max 4.43	Fläche≥3:1 277 px²	Knopf 44×44	Fokus favorit-knopf-12	solid 2px oklch(0.52 0.105 223.128) off 2px fv=true
+mutiert	chromium	375px	karte-favoriten-foto-dunkel-18	schwächster Strahl 1.55:1	Strahlen≥3:1 344/360	max 3.98	Fläche≥3:1 237 px²	Knopf 44×44	Fokus favorit-knopf-18	solid 2px oklch(0.52 0.105 223.128) off 2px fv=true
+mutiert	chromium	375px	karte-favoriten-ohne-foto-16	schwächster Strahl 4.75:1	Strahlen≥3:1 360/360	max 4.80	Fläche≥3:1 285 px²	Knopf 44×44	Fokus favorit-knopf-16	solid 2px oklch(0.52 0.105 223.128) off 2px fv=true
+mutiert	chromium	375px	karte-liste-foto-mittel-14	schwächster Strahl 1.12:1	Strahlen≥3:1 242/360	max 5.25	Fläche≥3:1 160 px²	Knopf 44×44	Fokus favorit-knopf-14	solid 2px oklch(0.52 0.105 223.128) off 2px fv=true
+mutiert	chromium	375px	karte-liste-foto-dunkel-18	schwächster Strahl 1.55:1	Strahlen≥3:1 344/360	max 3.98	Fläche≥3:1 238 px²	Knopf 44×44	Fokus favorit-knopf-18	solid 2px oklch(0.52 0.105 223.128) off 2px fv=true
+mutiert	webkit	1280px	kopf-verlauf-13	schwächster Strahl 1.01:1	Strahlen≥3:1 0/360	max 1.06	Fläche≥3:1 0 px²	Knopf 44×44	Fokus favorit-knopf-13	solid 2px oklch(0.52 0.105 223.128006) off 2px fv=true
+mutiert	webkit	1280px	kopf-verlauf-20	schwächster Strahl 1.01:1	Strahlen≥3:1 0/360	max 1.06	Fläche≥3:1 0 px²	Knopf 44×44	Fokus favorit-knopf-20	solid 2px oklch(0.52 0.105 223.128006) off 2px fv=true
+mutiert	webkit	1280px	kopf-foto-hell-12	schwächster Strahl 1.06:1	Strahlen≥3:1 44/360	max 3.69	Fläche≥3:1 23 px²	Knopf 44×44	Fokus favorit-knopf-12	solid 2px oklch(0.52 0.105 223.128006) off 2px fv=true
+mutiert	webkit	1280px	kopf-foto-mittel-14	schwächster Strahl 1.05:1	Strahlen≥3:1 58/360	max 3.83	Fläche≥3:1 35 px²	Knopf 44×44	Fokus favorit-knopf-14	solid 2px oklch(0.52 0.105 223.128006) off 2px fv=true
+mutiert	webkit	1280px	kopf-foto-dunkel-18	schwächster Strahl 1.07:1	Strahlen≥3:1 225/360	max 3.98	Fläche≥3:1 133 px²	Knopf 44×44	Fokus favorit-knopf-18	solid 2px oklch(0.52 0.105 223.128006) off 2px fv=true
+mutiert	webkit	1280px	karte-suche-foto-hell-12	schwächster Strahl 3.35:1	Strahlen≥3:1 360/360	max 4.35	Fläche≥3:1 247 px²	Knopf 44×44	Fokus favorit-knopf-12	solid 2px oklch(0.52 0.105 223.128006) off 2px fv=true
+mutiert	webkit	1280px	karte-suche-foto-mittel-14	schwächster Strahl 1.12:1	Strahlen≥3:1 119/360	max 5.23	Fläche≥3:1 73 px²	Knopf 44×44	Fokus favorit-knopf-14	solid 2px oklch(0.52 0.105 223.128006) off 2px fv=true
+mutiert	webkit	1280px	karte-suche-foto-dunkel-18	schwächster Strahl 1.15:1	Strahlen≥3:1 296/360	max 3.98	Fläche≥3:1 181 px²	Knopf 44×44	Fokus favorit-knopf-18	solid 2px oklch(0.52 0.105 223.128006) off 2px fv=true
+mutiert	webkit	1280px	karte-suche-ohne-foto-15	schwächster Strahl 3.71:1	Strahlen≥3:1 360/360	max 4.80	Fläche≥3:1 260 px²	Knopf 44×44	Fokus favorit-knopf-15	solid 2px oklch(0.52 0.105 223.128006) off 2px fv=true
+mutiert	webkit	1280px	karte-favoriten-foto-hell-12	schwächster Strahl 3.33:1	Strahlen≥3:1 360/360	max 4.35	Fläche≥3:1 247 px²	Knopf 44×44	Fokus favorit-knopf-12	solid 2px oklch(0.52 0.105 223.128006) off 2px fv=true
+mutiert	webkit	1280px	karte-favoriten-foto-dunkel-18	schwächster Strahl 1.30:1	Strahlen≥3:1 320/360	max 3.98	Fläche≥3:1 194 px²	Knopf 44×44	Fokus favorit-knopf-18	solid 2px oklch(0.52 0.105 223.128006) off 2px fv=true
+mutiert	webkit	1280px	karte-favoriten-ohne-foto-16	schwächster Strahl 3.71:1	Strahlen≥3:1 360/360	max 4.80	Fläche≥3:1 260 px²	Knopf 44×44	Fokus favorit-knopf-16	solid 2px oklch(0.52 0.105 223.128006) off 2px fv=true
+mutiert	webkit	1280px	karte-liste-foto-mittel-14	schwächster Strahl 1.08:1	Strahlen≥3:1 232/360	max 5.20	Fläche≥3:1 146 px²	Knopf 44×44	Fokus favorit-knopf-14	solid 2px oklch(0.52 0.105 223.128006) off 2px fv=true
+mutiert	webkit	1280px	karte-liste-foto-dunkel-18	schwächster Strahl 1.26:1	Strahlen≥3:1 320/360	max 3.98	Fläche≥3:1 194 px²	Knopf 44×44	Fokus favorit-knopf-18	solid 2px oklch(0.52 0.105 223.128006) off 2px fv=true
+mutiert	webkit	375px	kopf-verlauf-13	schwächster Strahl 1.11:1	Strahlen≥3:1 0/360	max 1.24	Fläche≥3:1 0 px²	Knopf 44×44	Fokus favorit-knopf-13	solid 2px oklch(0.52 0.105 223.128006) off 2px fv=true
+mutiert	webkit	375px	kopf-verlauf-20	schwächster Strahl 1.12:1	Strahlen≥3:1 0/360	max 1.24	Fläche≥3:1 0 px²	Knopf 44×44	Fokus favorit-knopf-20	solid 2px oklch(0.52 0.105 223.128006) off 2px fv=true
+mutiert	webkit	375px	kopf-foto-hell-12	schwächster Strahl 1.27:1	Strahlen≥3:1 0/360	max 2.79	Fläche≥3:1 0 px²	Knopf 44×44	Fokus favorit-knopf-12	solid 2px oklch(0.52 0.105 223.128006) off 2px fv=true
+mutiert	webkit	375px	kopf-foto-mittel-14	schwächster Strahl 1.05:1	Strahlen≥3:1 35/360	max 3.57	Fläche≥3:1 19 px²	Knopf 44×44	Fokus favorit-knopf-14	solid 2px oklch(0.52 0.105 223.128006) off 2px fv=true
+mutiert	webkit	375px	kopf-foto-dunkel-18	schwächster Strahl 1.13:1	Strahlen≥3:1 64/360	max 3.94	Fläche≥3:1 30 px²	Knopf 44×44	Fokus favorit-knopf-18	solid 2px oklch(0.52 0.105 223.128006) off 2px fv=true
+mutiert	webkit	375px	karte-suche-foto-hell-12	schwächster Strahl 4.12:1	Strahlen≥3:1 360/360	max 4.43	Fläche≥3:1 278 px²	Knopf 44×44	Fokus favorit-knopf-12	solid 2px oklch(0.52 0.105 223.128006) off 2px fv=true
+mutiert	webkit	375px	karte-suche-foto-mittel-14	schwächster Strahl 1.10:1	Strahlen≥3:1 237/360	max 5.25	Fläche≥3:1 159 px²	Knopf 44×44	Fokus favorit-knopf-14	solid 2px oklch(0.52 0.105 223.128006) off 2px fv=true
+mutiert	webkit	375px	karte-suche-foto-dunkel-18	schwächster Strahl 1.85:1	Strahlen≥3:1 343/360	max 3.98	Fläche≥3:1 238 px²	Knopf 44×44	Fokus favorit-knopf-18	solid 2px oklch(0.52 0.105 223.128006) off 2px fv=true
+mutiert	webkit	375px	karte-suche-ohne-foto-15	schwächster Strahl 4.75:1	Strahlen≥3:1 360/360	max 4.80	Fläche≥3:1 286 px²	Knopf 44×44	Fokus favorit-knopf-15	solid 2px oklch(0.52 0.105 223.128006) off 2px fv=true
+mutiert	webkit	375px	karte-favoriten-foto-hell-12	schwächster Strahl 4.11:1	Strahlen≥3:1 360/360	max 4.43	Fläche≥3:1 278 px²	Knopf 44×44	Fokus favorit-knopf-12	solid 2px oklch(0.52 0.105 223.128006) off 2px fv=true
+mutiert	webkit	375px	karte-favoriten-foto-dunkel-18	schwächster Strahl 1.68:1	Strahlen≥3:1 343/360	max 3.98	Fläche≥3:1 237 px²	Knopf 44×44	Fokus favorit-knopf-18	solid 2px oklch(0.52 0.105 223.128006) off 2px fv=true
+mutiert	webkit	375px	karte-favoriten-ohne-foto-16	schwächster Strahl 4.75:1	Strahlen≥3:1 360/360	max 4.80	Fläche≥3:1 286 px²	Knopf 44×44	Fokus favorit-knopf-16	solid 2px oklch(0.52 0.105 223.128006) off 2px fv=true
+mutiert	webkit	375px	karte-liste-foto-mittel-14	schwächster Strahl 1.05:1	Strahlen≥3:1 237/360	max 5.23	Fläche≥3:1 160 px²	Knopf 44×44	Fokus favorit-knopf-14	solid 2px oklch(0.52 0.105 223.128006) off 2px fv=true
+mutiert	webkit	375px	karte-liste-foto-dunkel-18	schwächster Strahl 1.68:1	Strahlen≥3:1 343/360	max 3.98	Fläche≥3:1 237 px²	Knopf 44×44	Fokus favorit-knopf-18	solid 2px oklch(0.52 0.105 223.128006) off 2px fv=true
+## nach dem Turbo-Stream (AK-48)
+chromium /de/restaurants Runde 1: Fokus favorit-knopf-15 (focus-visible true), Name „Le Jardin Brasserie aus Favoriten entfernen“, Ansage „Gemerkt: Le Jardin Brasserie“, Herz top 378→378, Adresse /de/restaurants, Rahmen schwächster Strahl 17.75:1
+chromium /de/restaurants Runde 2: Fokus favorit-knopf-15 (focus-visible true), Name „Le Jardin Brasserie merken“, Ansage „Aus Favoriten entfernt: Le Jardin Brasserie“, Herz top 378→378, Adresse /de/restaurants, Rahmen schwächster Strahl 17.75:1
+chromium /de/restaurants/13 Runde 1: Fokus favorit-knopf-13 (focus-visible true), Name „Umami Corner aus Favoriten entfernen“, Ansage „Gemerkt: Umami Corner“, Herz top 249→309, Adresse /de/restaurants/13, Rahmen schwächster Strahl 17.75:1
+chromium /de/restaurants/13 Runde 2: Fokus favorit-knopf-13 (focus-visible true), Name „Umami Corner merken“, Ansage „Aus Favoriten entfernt: Umami Corner“, Herz top 309→309, Adresse /de/restaurants/13, Rahmen schwächster Strahl 17.75:1
+chromium /de/restaurants/12 Runde 1: Fokus favorit-knopf-12 (focus-visible true), Name „Pizzeria Bella Vista merken“, Ansage „Aus Favoriten entfernt: Pizzeria Bella Vista“, Herz top 187→247, Adresse /de/restaurants/12, Rahmen schwächster Strahl 17.75:1
+chromium /de/restaurants/12 Runde 2: Fokus favorit-knopf-12 (focus-visible true), Name „Pizzeria Bella Vista aus Favoriten entfernen“, Ansage „Gemerkt: Pizzeria Bella Vista“, Herz top 247→247, Adresse /de/restaurants/12, Rahmen schwächster Strahl 17.75:1
+webkit /de/restaurants Runde 1: Fokus favorit-knopf-15 (focus-visible true), Name „Le Jardin Brasserie aus Favoriten entfernen“, Ansage „Gemerkt: Le Jardin Brasserie“, Herz top 378→378, Adresse /de/restaurants, Rahmen schwächster Strahl 17.75:1
+webkit /de/restaurants Runde 2: Fokus favorit-knopf-15 (focus-visible true), Name „Le Jardin Brasserie merken“, Ansage „Aus Favoriten entfernt: Le Jardin Brasserie“, Herz top 378→378, Adresse /de/restaurants, Rahmen schwächster Strahl 17.75:1
+webkit /de/restaurants/13 Runde 1: Fokus favorit-knopf-13 (focus-visible true), Name „Umami Corner aus Favoriten entfernen“, Ansage „Gemerkt: Umami Corner“, Herz top 249→309, Adresse /de/restaurants/13, Rahmen schwächster Strahl 17.75:1
+webkit /de/restaurants/13 Runde 2: Fokus favorit-knopf-13 (focus-visible true), Name „Umami Corner merken“, Ansage „Aus Favoriten entfernt: Umami Corner“, Herz top 309→309, Adresse /de/restaurants/13, Rahmen schwächster Strahl 17.75:1
+webkit /de/restaurants/12 Runde 1: Fokus favorit-knopf-12 (focus-visible true), Name „Pizzeria Bella Vista merken“, Ansage „Aus Favoriten entfernt: Pizzeria Bella Vista“, Herz top 187→247, Adresse /de/restaurants/12, Rahmen schwächster Strahl 17.75:1
+webkit /de/restaurants/12 Runde 2: Fokus favorit-knopf-12 (focus-visible true), Name „Pizzeria Bella Vista aus Favoriten entfernen“, Ansage „Gemerkt: Pizzeria Bella Vista“, Herz top 247→247, Adresse /de/restaurants/12, Rahmen schwächster Strahl 17.75:1
+## Rest AK-49 und Kontrastmodus
+Herz 12 „Pizzeria Bella Vista aus Favoriten entfernen“: 44×44 px, Symbol fill gefüllt, Farbe rgb(231,0,11) auf Weiß 4.77:1
+Herz 15 „Le Jardin Brasserie merken“: 44×44 px, Symbol fill keine (Umriss), Farbe rgb(54,65,83) auf Weiß 10.30:1
+Kontrastmodus Herz 12: Fläche mit ≥ 3:1 Änderung 234 px², outline rgba(5, 0, 73, 0.8) solid, Fokus favorit-knopf-12
+Kontrastmodus Herz 15: Fläche mit ≥ 3:1 Änderung 234 px², outline rgba(5, 0, 73, 0.8) solid, Fokus favorit-knopf-15
+## Lage des Herzens nach dem Umschalten
+chromium /de/restaurants scrollY 0: Herz top 2997 → 378 (-2619 px)
+chromium /de/restaurants scrollY 300: Herz top 2697 → 378 (-2319 px)
+chromium /de/restaurants/13 scrollY 0: Herz top 249 → 309 (+60 px)
+chromium /de/restaurants/13 scrollY 100: Herz top 149 → 149 (+0 px)
+webkit /de/restaurants scrollY 0: Herz top 3031 → 378 (-2653 px)
+webkit /de/restaurants scrollY 300: Herz top 2731 → 378 (-2353 px)
+webkit /de/restaurants/13 scrollY 0: Herz top 249 → 309 (+60 px)
+webkit /de/restaurants/13 scrollY 100: Herz top 149 → 149 (+0 px)

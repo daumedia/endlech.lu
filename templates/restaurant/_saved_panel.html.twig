@@ -6,6 +6,11 @@
     Beide sind gewöhnliche Formulare ohne JavaScript; nach dem Speichern führt die Weiterleitung
     auf `#in-listen` bzw. `#notiz` zurück. Fehler stehen am Feld (`_form_field`, AK-50).
     Listennamen und Notiz sind Nutzertext: nie übersetzt, immer escaped (AK-37, AK-46).
+
+    ⚠ **Die Beschriftung eines Häkchens trägt `min-w-0 wrap-anywhere`** (BF-219). Sie steht in
+    `li.flex`; dort verkleinert `overflow-wrap: break-word` (am `body`) die Mindestbreite nicht,
+    und ein Listenname ohne Leerzeichen schob die Seite bei 320 px auf 583 px Breite. Das
+    Kästchen trägt `shrink-0`. Dieselbe Kombination wie auf „Gespeichert“.
 #}
 {% if listsForm is not null and noteForm is not null %}
     {% set _haekchen = listsForm.lists %}
@@ -18,8 +23,8 @@
                     <ul class="space-y-2">
                         {% for haekchen in _haekchen %}
                             <li class="flex items-center gap-3 min-h-[44px]">
-                                {{ form_widget(haekchen, {attr: {class: 'h-5 w-5 rounded border-gray-500 text-cyan-700 focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700'}}) }}
-                                {{ form_label(haekchen, null, {label_attr: {class: 'text-base text-gray-900'}}) }}
+                                {{ form_widget(haekchen, {attr: {class: 'h-5 w-5 shrink-0 rounded border-gray-500 text-cyan-700 focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700'}}) }}
+                                {{ form_label(haekchen, null, {label_attr: {class: 'min-w-0 wrap-anywhere text-base text-gray-900'}}) }}
                             </li>
                         {% endfor %}
                     </ul>

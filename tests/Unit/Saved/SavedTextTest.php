@@ -59,6 +59,21 @@ final class SavedTextTest extends TestCase
         self::assertSame(SavedText::nameKey('Istanbul'), SavedText::nameKey("\u{0130}stanbul"));
     }
 
+    /**
+     * BF-220: Die einfache Kleinschreibung aus BF-211 kennt keinen Kontext — „Σ“ wird immer „σ“, das
+     * Schluss-Sigma „ς“ bleibt „ς“. „ΟΔΟΣ“ und „οδος“ waren damit zwei Namen. Alle drei Formen müssen
+     * denselben Schlüssel ergeben, ohne dass er länger wird als der Name.
+     */
+    public function testBf220SigmaInJederFormErgibtDenselbenSchluessel(): void
+    {
+        $schluessel = SavedText::nameKey('οδος');
+
+        foreach (['ΟΔΟΣ', 'Οδος', 'οδοσ', 'ΟΔΟς'] as $schreibweise) {
+            self::assertSame($schluessel, SavedText::nameKey($schreibweise), $schreibweise);
+        }
+        self::assertSame(4, SavedText::length($schluessel));
+    }
+
     public function testAk35ZeilenumbruchZaehltAlsEinZeichen(): void
     {
         $text = SavedText::note("eins\r\nzwei\rdrei");

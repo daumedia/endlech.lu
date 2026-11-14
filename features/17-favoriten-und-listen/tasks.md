@@ -633,3 +633,84 @@ die Kaskadenebene fest. Skripte und Rohdaten außerhalb des Projekts unter `/tmp
 
 **Übergabe:** `/sdd-qa 17` **in einer neuen Session** — mit Regressionsprüfung der Bänder anderer Seiten (BF-206 wirkt
 projektweit). Status bleibt `building`.
+
+## Abschlussbericht · 2026-11-14 · Zweiter Fehlerauftrag (BF-218, BF-219, BF-220)
+
+Eingang **Fehlerauftrag** (`qa-report.md` zweiter Durchlauf, Status `review` → `building`). Umfang laut
+`features/befunde.md`, „zur Behebung freigegeben … → `/sdd-build 17`“. Nicht im Auftrag: BF-221 bis BF-225, T29.
+
+### 1 · Umgesetzt
+
+Alle drei Befunde behoben, je mit Messung bzw. Reproduktion vorher und nachher; Einzelheiten unter dem Fehler in
+`qa-report.md`.
+
+- **BF-218 (AK-49)** — Das Herz trägt seinen Fokusrahmen **innen auf der eigenen weißen Fläche**
+  (`focus:outline-2 focus:-outline-offset-4 focus:outline-gray-900`), in Karte und Kopf gleich. Schwächster von 360
+  Strahlen um den Knopf, Chromium: Kopf auf dem Verlauf **1,01 / 1,10 → 13,43 / 13,62 : 1** (1280 / 375 px); Kopf über
+  einem weißen Titelfoto **1,65 / 2,11 → 13,62 : 1**; Karte über einem Foto #808080 **1,30 → 13,43–13,79 : 1**. Mit
+  vier eingesetzten Titelfotos (weiß, #c8c8c8, #808080, schwarz) überall 13,43–13,79 : 1, alle 360 Winkel ≥ 3 : 1;
+  WebKit 13,05 : 1. Nach dem Herz-Stream bleibt der Fokus auf dem Knopf (AK-48).
+- **BF-219** — Beschriftung der Häkchen in „In Listen“ `min-w-0 wrap-anywhere`, Kästchen `shrink-0`: Detailseite mit
+  34- und 60-stelligem Namen `scrollWidth` **583 → 320 px** (320 px) bzw. **583 → 375 px** (375 px). Alle übrigen
+  Stellen mit Listennamen durchgesehen und gemessen, keine weitere betroffen.
+- **BF-220** — `SavedText::nameKey()`: einfache Kleinschreibung, danach einfache Faltung. „ΟΔΟΣ“ 303, „οδος“ und
+  „Οδοσ“ **422** mit Meldung (laufender Server, ohne JavaScript). BF-211 bleibt gedeckt (Codepunkt-Test grün).
+
+3 von 3 Befunden; abgedeckt AK-49 (Herz in Karte und Kopf), AK-19 (Dublette ohne Unterschied der Schreibweise),
+WCAG 1.4.10 an „In Listen“.
+
+### 2 · Offene Akzeptanzkriterien
+
+Keine aus dem Auftrag. Weiterhin offen bzw. außerhalb des Auftrags (unverändert aus dem Bericht der QA): AK-48 mit
+VoiceOver, AK-51 (Abnahme des Betreibers), AK-63 in echtem Safari, AK-70 erst mit T29 im Release-Commit; BF-221 bis
+BF-225 in `features/befunde.md`.
+
+### 3 · Getroffene Annahmen
+
+- **BF-218 abweichend vom Vorschlag der QA** (Fokusfarbe je Lage: Weiß im Kopf, cyan-700 in der Karte). Gemessen per
+  eingesetztem Stil: Weiß außen hält auf dem Verlauf (4,6–5,1 : 1), über einem weißen Titelfoto aber nur 2,16 / 1,59 : 1.
+  Und die **Karte hat denselben Befund**, sobald ein Lokal ein Titelfoto hat (cyan-700 außen über #808080: 1,30 : 1) —
+  die Dev-Daten haben keine Fotos, die QA sah dort `bg-gray-100`. Eine Farbe je Lage hätte zudem einen Parameter durch
+  den Turbo-Stream gebraucht, der den Knopf ohne Kenntnis der Lage neu rendert. Innen ändert sich Weiß zu gray-900 —
+  unabhängig vom Grund. **Die Karte ist damit mitgezogen** (gleiche Vorlage, gleiches AK-49).
+- **gray-900 statt cyan-700 für den inneren Rahmen.** Auch cyan-700 innen bestünde (4,39–4,50 : 1); gray-900 hat den
+  größeren Abstand (13 : 1) und folgt der Farbe des Herz-Symbols (gray-700). Der Prüflauf der QA verbietet zudem
+  `focus:outline-cyan-700` am Knopf im Kopf — er bleibt unverändert.
+- **BF-220: erst klein, dann falten.** Die Faltung allein ließe „İ“ unverändert („İstanbul“ ≠ „Istanbul“, gegen die
+  Entscheidung aus BF-211). Nebenwirkung: „ſ“ = „s“ und „µ“ (Mikro) = „μ“ gelten jetzt als gleich. **Keine
+  Datenmigration** — Feature 17 ist nicht ausgeliefert; die eine Liste der Dev-Datenbank (ASCII) hat denselben Schlüssel.
+- **Messungen gegen die Entwicklungsdatenbank** über den laufenden Server (Vorgabe des Auftrags), Konto `user@endlech.lu`.
+  Titelfotos für Lokal 22 waren synthetische Flächen (weiß, #c8c8c8, #808080, schwarz), als Zeile in `restaurant_image`
+  und Datei eingesetzt; Listen „Wochenendausflugsrestaurantauswahl“ (34), ein 60-stelliger Name und „ΟΔΟΣ“ angelegt.
+  Alles danach entfernt (Zeilen, Dateien, Listen); die Herzen an Lokal 12 und 22 wurden gesetzt und zurückgenommen.
+- ⚠ **Die volle Suite leert `public/uploads/restaurants/`** (Aufräumen in Prüfläufen) — die eingesetzten Fotos waren nach
+  dem Lauf weg; für die Vorlage neu angelegt. Die Messwerte oben stammen aus der Zeit davor.
+
+### 4 · Systemweite Änderungen
+
+| Änderung | Datei | Wirkung über die Befunde hinaus |
+|---|---|---|
+| Fokusrahmen des Herzens innen, gray-900 | `templates/partials/_favorite_button.html.twig` | **Karte** auf Suche, „Gespeichert“, Favoriten und Listenseiten (nicht nur der Kopf der Detailseite) |
+| Umbruch langer Listennamen | `templates/restaurant/_saved_panel.html.twig` | nur „In Listen“ |
+| Vergleichsschlüssel gefaltet | `src/Saved/SavedText.php` | Dublettenprüfung beim Anlegen, Umbenennen und auf der Detailseite |
+| Referenz | `docs/design-system.md` (Fokus: Ausnahme „Rahmen innen“), `docs/data-model.md` (`name_key`), `CLAUDE.md` (Feature-17-Abschnitt, zwei Zeilen) | — |
+
+Keine neue Abhängigkeit, keine Migration, keine Konfiguration, keine Übersetzung.
+
+### 5 · Tests
+
+| | Anzahl |
+|---|---|
+| Tests neu geschrieben | 4 (`SavedTextTest::testBf220…`, `SavedListServiceTest::testBf220…`, `RestaurantListsAndNoteTest::testBf219…`, `DetailHeartVariantsTest::testBf218…`) |
+| davon rot gesehen, dann grün | 4 (`'οδοσ'` ≠ `'οδος'`; kein `NAME_DUPLICATE`; `min-w-0` fehlt; `focus:-outline-offset-4` fehlt) |
+| Reproduktionen der QA scharf geschaltet | 2 (`Qa17NachpruefungTest::testBf218…`, `Qa17NachpruefungTextTest::testBf220…`) — mit `QA17_REPRO=1` rot gesehen, jetzt immer grün |
+| gelaufen in der letzten Verifikation | **2 330, 0 Fehlschläge, 44 übersprungen** (volle Suite, 1:20 min; enthält auch den Auftrag B04) |
+
+Die Prüfläufe zu BF-218 und BF-219 halten **Klassen** fest; der Nachweis ist die Messung im Browser (Skripte und Rohdaten
+außerhalb des Projekts unter `/tmp/build17b/`: `bin/bf218-*.js`, `bin/bf219*.js`, `bin/bf220.js`, `out/bf218-nachher.txt`).
+Verifikation: `lint:twig` 151 Dateien OK; `npm run typecheck` und `npm run lint` ohne Befund; `--testsuite Unit` 611 grün
+(11 übersprungen); `lint:container` und `doctrine:schema:validate` **rot wie vorher** (Webauthn-Alias; `DATETIME`-Typen und
+ältere Indexnamen an `user` — keine Entity geändert); `make fix-check` gibt es nicht, `php-cs-fixer` ist nicht installiert.
+
+**Übergabe:** `/sdd-qa 17` **in einer neuen Session** — mit Regressionsblick auf das Herz in der Karte (Suche,
+„Gespeichert“) und, wenn möglich, mit echtem Titelfoto. Status bleibt `building`.

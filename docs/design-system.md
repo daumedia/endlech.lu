@@ -490,6 +490,11 @@ cyan-700, auch `focus:outline-white` auf den Verläufen (1,0–1,65 : 1). Seithe
 gesetzte Farbe. **Wer eine Fokusfarbe wählt, misst sie auf ihrem Untergrund:** Weiß nur
 auf Verlauf und dunklem Grund, `cyan-400` nur auf der dunklen Fußzeile.
 
+**Ausnahme: Ein Knopf mit eigener weißer Fläche auf wechselndem Grund** (Foto, Verlauf) trägt
+den Rahmen **innen**: `focus:outline-2 focus:-outline-offset-4 focus:outline-gray-900`. Außen
+gibt es dort keine Farbe, die auf jedem Grund 3 : 1 hält; innen ändert sich Weiß zu gray-900
+(13 : 1). Einziger Fall bisher: das Herz (Feature 17, BF-218 — Karte und Kopf der Detailseite).
+
 > Aus dem Kopfkommentar von `_form_field.html.twig`: Ringe per `box-shadow`
 > verschwinden im Windows-Kontrastmodus. Eine echte `outline` bleibt.
 

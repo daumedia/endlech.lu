@@ -79,6 +79,20 @@ final class SavedListServiceTest extends KernelTestCase
         self::assertSame(1, $this->listen($konto));
     }
 
+    /**
+     * BF-220: Das griechische Schluss-Sigma ist die Kleinschreibung von „Σ“ am Wortende — „ΟΔΟΣ“ und „οδος“
+     * unterscheiden sich nur in der Schreibweise (Decision Log 11). Nach BF-211 legte der Dienst beide an.
+     */
+    public function testBf220GriechischesSchlussSigmaIstEineDublette(): void
+    {
+        $konto = $this->konto('liste-sigma@example.test');
+        self::assertFalse($this->service->create($konto, 'ΟΔΟΣ')->isRejected());
+
+        self::assertSame(SavedListResult::NAME_DUPLICATE, $this->service->create($konto, 'οδος')->error);
+        self::assertSame(SavedListResult::NAME_DUPLICATE, $this->service->create($konto, 'Οδοσ')->error);
+        self::assertSame(1, $this->listen($konto));
+    }
+
     public function testAk19AkzentIstKeineDublette(): void
     {
         $konto = $this->konto('liste-akzent@example.test');

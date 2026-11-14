@@ -77,6 +77,31 @@ final class RestaurantListsAndNoteTest extends AbstractWebTestCase
         self::assertSame('in-listen', $danach->filter('[data-controller="scroll-to"]')->attr('data-scroll-to-id-value'));
     }
 
+    /**
+     * BF-219 (WCAG 1.4.10): Ein Listenname ohne Leerzeichen sprengte „In Listen“ — das `<label>` steht in
+     * `li.flex`, und `overflow-wrap: break-word` (am `body`) verkleinert dort die Mindestbreite nicht.
+     * 34 Zeichen ergaben bei 320 px eine Seite von 367 px. Die Beschriftung muss schrumpfen dürfen und
+     * überall umbrechen; das Kästchen behält seine Größe. Gemessen wird im Browser — dieser Fall hält
+     * die Klassen fest, die den Umbruch tragen (wie auf „Gespeichert“, `saved/index.html.twig`).
+     */
+    public function testBf219LangerListennameBrichtInDerBeschriftungUm(): void
+    {
+        $client = static::createClient();
+        $konto = $this->loginAs($client, self::KONTO);
+        $liste = $this->liste($client, $konto, str_repeat('Wochenendausflug', 3).'auswahl');
+
+        $seite = $client->request('GET', $this->detail($this->lokal($client)));
+
+        $kaestchen = $seite->filter('#in-listen input[type=checkbox][value="'.$liste->getId().'"]');
+        self::assertCount(1, $kaestchen);
+        $beschriftung = $seite->filter('#in-listen label[for="'.$kaestchen->attr('id').'"]');
+        self::assertCount(1, $beschriftung);
+        $klassen = explode(' ', (string) $beschriftung->attr('class'));
+        self::assertContains('min-w-0', $klassen);
+        self::assertContains('wrap-anywhere', $klassen);
+        self::assertContains('shrink-0', explode(' ', (string) $kaestchen->attr('class')));
+    }
+
     public function testAk23NeueListeEnthaeltDasLokalUndWirdGezaehlt(): void
     {
         $client = static::createClient();
