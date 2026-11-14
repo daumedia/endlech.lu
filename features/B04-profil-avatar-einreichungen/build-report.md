@@ -105,3 +105,61 @@ Feature 17 so vermerkt. `make fix-check` gibt es im `Makefile` nicht, `php-cs-fi
 Codestil nicht maschinell geprüft.
 
 Nächster Schritt: `/sdd-qa B04` in frischer Sitzung. Status bleibt `building`.
+
+## Abschlussbericht · 2026-11-14 · Fehlerauftrag BF-226
+
+Eingang **Fehlerauftrag** (`qa-report.md`, Status `review` → `building`, Rücksprung durch Claude unter dem Sitzungsziel
+„deploy ready“). Auftrag: BF-226 aus `features/befunde.md`. Nicht im Auftrag: BF-227, BF-228, BF-229. Branch
+`feature/17-favoriten-und-listen`, nicht committet.
+
+### 1 · Umgesetzt
+
+Nach einer Meldung am Profil- oder Passwortformular geht die Korrektur mit Turbo wieder an die POST-Route und wird
+gespeichert, statt mit HTTP 405 verloren zu gehen. `ProfileController::edit()` baut `ProfileType` und
+`changePassword()` baut `ChangePasswordType` mit ausdrücklichem `action` (Muster BF-151) — wie `index()` und die jeweils
+andere Hälfte es schon taten. 1 von 1 Befund behoben (EC-04).
+
+Im Browser nachgestellt (Chromium, Turbo aktiv, Wegwerfkonto), alle fünf Wege aus dem Bericht — Name zu kurz, Name aus
+Leerzeichen, RFC-widrige Adresse, Bild über 2 MB, neues Passwort zu kurz:
+
+| | Erstes Absenden | Formular danach | Korrektur |
+|---|---|---|---|
+| vorher | 422, Adresse bleibt `/de/profile` | ohne `action`, keine Meldung | **405 `POST /de/profile`**, Eingabe verloren |
+| nachher | 422, Adresse bleibt `/de/profile` | `action` = `/de/profile/edit` bzw. `/de/profile/password`, Meldung am Feld | **302**, „Profil erfolgreich aktualisiert.“ bzw. „Passwort erfolgreich geändert.“, gespeichert |
+
+Ohne JavaScript nachher ebenso 422 → 302 (wie vorher). In `lb` (1280 und 375 px) und `pt` (Passwort) wiederholt.
+
+### 2 · Offene Akzeptanzkriterien
+
+Keine aus dem Auftrag. Offen außerhalb des Auftrags: BF-227 und BF-228 (*niedrig*, B04), BF-229 (Feature 15 / B05).
+
+### 3 · Getroffene Annahmen
+
+- **Nur die beiden Formulare aus dem Befund.** Die übrigen Formulare der Profilseite (Bild entfernen, Adresswechsel
+  abbrechen, Newsletter, Passkeys umbenennen/entfernen, Konto löschen, Abmelden) tragen ihr Ziel schon im Template —
+  durchgesehen, nicht geändert.
+- **Wegwerfkonto `build-b04@example.test`** in der Entwicklungsdatenbank (Passwort-Hash von `user@endlech.lu`
+  übernommen), danach gelöscht. Die Fixture-Konten sind unverändert.
+- **Kein Eintrag in `CLAUDE.md`**, um die Dateien der beiden Aufträge getrennt zu halten; die Regel steht als
+  Kommentar an beiden Stellen im Controller, und das Muster BF-151 ist in `CLAUDE.md` bereits beschrieben.
+
+### 4 · Systemweite Änderungen
+
+Keine. Geändert sind nur `src/Controller/ProfileController.php` (zwei `createForm`-Aufrufe) und der Prüflauf der QA.
+Keine Abhängigkeit, keine Migration, keine Konfiguration, keine Übersetzung.
+
+### 5 · Tests
+
+| | Anzahl |
+|---|---|
+| Tests neu geschrieben | 0 — die Reproduktionen der QA prüfen genau das Verhalten |
+| Reproduktionen der QA scharf geschaltet | 2 (`QaB04NachpruefungTest::testBf226Profilformular…`, `…Passwortformular…`) — mit `QAB04_REPRO=1` rot gesehen (`null` statt `/de/profile/edit` bzw. `/de/profile/password`), jetzt immer grün |
+| gelaufen in der letzten Verifikation | **2 330, 0 Fehlschläge, 44 übersprungen** (volle Suite, enthält auch den zweiten Fehlerauftrag 17) |
+
+Die Gegenprobe `testGegenprobeProfilseiteNimmtKeinPostAn` bleibt 405. Die eigentliche Wirkung (Turbo lässt die Adresse
+stehen) ist mit dem Symfony-Testclient nicht nachstellbar — er schickt ein Formular ohne `action` an die Adresse der
+422-Antwort, nicht an die im Browser angezeigte; Nachweis deshalb im Browser (`/tmp/build17b/bin/bf226.js`).
+Verifikation: `php -l` ohne Befund; Profil-, Passkey-, Avatar- und Adresswechsel-Prüfläufe 80 grün (4 übersprungen);
+`lint:container` und `doctrine:schema:validate` rot wie vorher, ohne Bezug.
+
+Nächster Schritt: `/sdd-qa B04` in frischer Sitzung. Status bleibt `building`.

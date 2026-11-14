@@ -1,0 +1,205 @@
+# QA B04 · Nachprüfung BF-226 · 2026-11-14 · Kriterien und Regression am laufenden Server (curl, Port 8000, dev)
+
+### AK-01 Gast
+GET /lb/profile → 302 http://localhost:8000/lb/login
+GET /de/profile → 302 http://localhost:8000/de/login
+GET /fr/profile → 302 http://localhost:8000/fr/login
+GET /en/profile → 302 http://localhost:8000/en/login
+GET /pt/profile → 302 http://localhost:8000/pt/login
+POST /de/profile/edit (Gast) → 302 http://localhost:8000/de/login
+POST /de/profile/password (Gast) → 302 http://localhost:8000/de/login
+POST /de/profile/avatar/delete (Gast) → 302 http://localhost:8000/de/login
+POST /de/profile/loeschen (Gast) → 302 http://localhost:8000/de/login
+POST /de/profile/newsletter (Gast) → 302 http://localhost:8000/de/login
+GET /de/profile/daten (Gast) → 302 http://localhost:8000/de/login
+
+### AK-02 angemeldet
+Anmeldung → 302 http://localhost:8000/de/
+GET /de/profile → 200
+<form name="profile" method="post" action="/de/profile/edit"
+<form name="change_password" method="post" action="/de/profile/password"
+   1 Meine Einreichungen    1 Passkey hinzufügen    4 Passkeys 
+
+### AK-03 Name
+POST edit name → 302 http://localhost:8000/de/profile
+Folgeseite: Newsletter|Newsletter abonnieren|Profil erfolgreich aktualisiert.| Kopfzeile trägt Namen: 4× · DB: QA C Neuer Name · Mails: 0
+
+### AK-04 Formate und Grenze
+bild.jpg (24793 B) → 302 http://localhost:8000/de/profile · DB=6af8979b8de992.96173227.jpg · GET /uploads/avatars/6af8979b8de992.96173227.jpg → 200 image/jpeg
+klein.png (7833 B) → 302 http://localhost:8000/de/profile · DB=6af8979ba772b1.19965304.png · GET /uploads/avatars/6af8979ba772b1.19965304.png → 200 image/png
+bild.webp (4988 B) → 302 http://localhost:8000/de/profile · DB=6af8979bc073d8.09834497.webp · GET /uploads/avatars/6af8979bc073d8.09834497.webp → 200 image/webp
+png-2000000.png (2000000 B) → 302 http://localhost:8000/de/profile · DB=6af8979bdb2542.06614771.png · GET /uploads/avatars/6af8979bdb2542.06614771.png → 200 image/png
+Profil zeigt <img …/uploads/avatars/6af8979bdb2542.06614771.png>: 3×
+
+### AK-06 alte Dateien
+Verzeichnis (Konto qab04c-ak): 1 Datei(en) insgesamt; aktuelle: 6af8979bdb2542.06614771.png
+
+### AK-05 / AK-15 Ablehnung
+png-2000001.png (2000001 B, gesendet als image/png) → 422  · Meldung: Das Profilbild darf maximal 2000000 bytes groß sein.|Newsletter|Newsletter abonnieren| · Avatar unverändert: ja
+gross.png (2607833 B, gesendet als image/png) → 422  · Meldung: Die Datei ist zu groß. Die maximal zulässige Größe beträgt 2 MB.|Newsletter|Newsletter abonnieren| · Avatar unverändert: ja
+bild.gif (14 B, gesendet als image/png) → 422  · Meldung: Newsletter|Newsletter abonnieren| · Avatar unverändert: ja
+skript.png (16 B, gesendet als image/png) → 422  · Meldung: Newsletter|Newsletter abonnieren| · Avatar unverändert: ja
+EC-02 PNG ohne Endung als octet-stream → 302 http://localhost:8000/de/profile · DB=6af8979cba1288.82851330.png
+AK-06: vorheriges Bild 6af8979bdb2542.06614771.png → 404  · Dateien im Verzeichnis: 1
+
+### AK-16 öffentlich
+ohne Cookie GET /uploads/avatars/6af8979cba1288.82851330.png → 200 image/png · Verzeichnis /uploads/avatars/ → 404 
+
+### AK-08 CSRF beim Entfernen
+_token='' → 302 http://localhost:8000/de/profile · Folgeseite: Newsletter|Newsletter abonnieren|Profil erfolgreich aktualisiert.|Ungültiges CSRF-Token. Bitte versuche es erneut.| · DB=6af8979cba1288.82851330.png · Datei 200 
+_token='falsch' → 302 http://localhost:8000/de/profile · Folgeseite: Newsletter|Newsletter abonnieren|Ungültiges CSRF-Token. Bitte versuche es erneut.| · DB=6af8979cba1288.82851330.png · Datei 200 
+_token fehlt → 302 http://localhost:8000/de/profile · Folgeseite: Newsletter|Newsletter abonnieren|Ungültiges CSRF-Token. Bitte versuche es erneut.| · DB=6af8979cba1288.82851330.png
+
+### AK-07 Entfernen
+gültiges Token → 302 http://localhost:8000/de/profile · Folgeseite: Newsletter|Newsletter abonnieren|Profilbild erfolgreich entfernt.| · DB=NULL · Datei /uploads/avatars/6af8979cba1288.82851330.png → 404 
+
+### EC-03 drei gleichzeitige Uploads
+Runde 1: DB=6af8979dcbd9a6.69475315.png · Dateien im Verzeichnis: 1 · Verweis 200: 200 
+Runde 2: DB=6af8979e06efd2.69915444.png · Dateien im Verzeichnis: 1 · Verweis 200: 200 
+Runde 3: DB=6af8979e380658.53235553.png · Dateien im Verzeichnis: 1 · Verweis 200: 200 
+
+### AK-09 falsches aktuelles Passwort
+falsch → 302 http://localhost:8000/de/profile
+  Folgeseite: Das aktuelle Passwort ist nicht korrekt.| · Hash unverändert: ja
+
+### AK-10 Grenzwert
+7 Zeichen → 422  · Das neue Passwort muss mindestens 8 Zeichen lang sein.|
+ungleich → 422  · Die Passwörter stimmen nicht überein.|
+8 Zeichen → 302 http://localhost:8000/de/profile
+  Folgeseite: Passwort erfolgreich geändert.|
+  Anmeldung neu → 302 http://localhost:8000/de/ · alt → 302 http://localhost:8000/de/login
+
+### AK-13 fremde Sitzungen und REMEMBERME
+REMEMBERME vorhanden: 1
+vorher: s1 200 · s2 200 · nur REMEMBERME 200
+Wechsel in s1 → 302 http://localhost:8000/de/profile
+nachher: s1 200 · s2 302 http://localhost:8000/de/login · nur REMEMBERME 302 http://localhost:8000/de/login
+
+### AK-14 Deckel password_change am Konto
+Versuch 1 → Das aktuelle Passwort ist nicht korrekt.|
+Versuch 2 → Das aktuelle Passwort ist nicht korrekt.|
+Versuch 3 → Das aktuelle Passwort ist nicht korrekt.|
+Versuch 4 → Das aktuelle Passwort ist nicht korrekt.|
+Versuch 5 → Das aktuelle Passwort ist nicht korrekt.|
+Versuch 6 → Zu viele Versuche. Bitte warte 15 Minuten, bevor du das Passwort erneut änderst.|
+Versuch 7 → Zu viele Versuche. Bitte warte 15 Minuten, bevor du das Passwort erneut änderst.|
+zweite Sitzung, RICHTIGES Passwort → 302 http://localhost:8000/de/profile
+  Zu viele Versuche. Bitte warte 15 Minuten, bevor du das Passwort erneut änderst.| · Hash unverändert: ja
+anderes Konto, falsch → Das aktuelle Passwort ist nicht korrekt.|
+
+### AK-12 Adresswechsel
+Wechsel → 302 http://localhost:8000/de/profile
+  Fast geschafft: Wir haben einen Bestätigungslink an qab04c-adr-neu@example.test geschickt. Deine bisherige Adresse bleibt gültig, bis du ihn anklickst.|
+  DB: qab04c-adr@example.test · name=QA C Adresse · pending=qab04c-adr-neu@example.test · tokenlänge=64 · frist=1440 min · bild=NULL
+  Mails: an neue 2 · an alte (ohne neue) 1
+  Mail 81: Bestätigung (email_change) · Link enthalten: ja
+  Mail 82: Warnung (email_change_notice) · Link enthalten: nein
+  Anmeldung mit vorgemerkter → 302 http://localhost:8000/de/login · mit bisheriger → 302 http://localhost:8000/de/
+  Link → 302 http://localhost:8000/de/login
+  
+  DB: qab04c-adr-neu@example.test · name=QA C Adresse · pending=NULL · tokenlänge=0 · frist=- min · bild=NULL
+  Anmeldung alte → 302 http://localhost:8000/de/login · neue → 302 http://localhost:8000/de/
+
+### AK-12a vergebene / abgelaufene Vormerkung
+vergeben → 302 http://localhost:8000/de/profile
+  Diese E-Mail-Adresse wird inzwischen bereits verwendet.|Fast geschafft: Wir haben einen Bestätigungslink an qab04c-vergeben@example.test geschickt. Deine bisherige Adresse bleibt gültig, bis du ihn anklickst.| · DB: qab04c-adra@example.test · name=QA C Adresse A · pending=NULL · tokenlänge=0 · frist=- min · bild=NULL
+abgelaufen → 302 http://localhost:8000/de/profile
+  Der Bestätigungslink ist abgelaufen. Bitte gib die neue Adresse erneut ein.|Fast geschafft: Wir haben einen Bestätigungslink an qab04c-ablauf@example.test geschickt. Deine bisherige Adresse bleibt gültig, bis du ihn anklickst.| · DB: qab04c-adra@example.test · name=QA C Adresse A · pending=NULL · tokenlänge=0 · frist=- min · bild=NULL
+
+### EC-01 vergebene Adresse
+admin@endlech.lu → 422  · Diese E-Mail-Adresse wird bereits verwendet.| · DB: qab04c-adra@example.test · name=QA C Adresse A · pending=NULL · tokenlänge=0 · frist=- min · bild=NULL
+ADMIN@ENDLECH.LU → 422  · Diese E-Mail-Adresse wird bereits verwendet.|
+
+### BF-176 Deckel email_change am bestätigten Konto (3/h), drei verschiedene Wunschadressen
+Wechsel 1 → 302 http://localhost:8000/de/profile · Fast geschafft: Wir haben einen Bestätigungslink an qab04c-d176-wunsch1@example. · pending=qab04c-d176-wunsch1@example.test
+Wechsel 2 → 302 http://localhost:8000/de/profile · Fast geschafft: Wir haben einen Bestätigungslink an qab04c-d176-wunsch2@example. · pending=qab04c-d176-wunsch2@example.test
+Wechsel 3 → 302 http://localhost:8000/de/profile · Fast geschafft: Wir haben einen Bestätigungslink an qab04c-d176-wunsch3@example. · pending=qab04c-d176-wunsch3@example.test
+Wechsel 4 → 302 http://localhost:8000/de/profile · Zu viele Adressänderungen. Bitte versuche es in einer Stunde erneut.| · pending=qab04c-d176-wunsch3@example.test
+Wechsel 5 → 302 http://localhost:8000/de/profile · Zu viele Adressänderungen. Bitte versuche es in einer Stunde erneut.| · pending=qab04c-d176-wunsch3@example.test
+Mails insgesamt: 6
+
+### BF-175 / BF-228 Deckel erreicht + Bild + Namensänderung
+mit Bild → 302 http://localhost:8000/de/profile
+  Zu viele Adressänderungen. Bitte versuche es in einer Stunde erneut.|
+  DB: qab04c-d176@example.test · name=QA C 176 Neuer Name · pending=qab04c-d176-wunsch3@example.test · tokenlänge=64 · frist=1439 min · bild=6af897ee817db4.16642898.png · Konto unter Übernahmeadresse: 0
+  Anmeldung mit Übernahmeadresse → 302 http://localhost:8000/de/login
+ohne Bild → 302 http://localhost:8000/de/profile
+  Zu viele Adressänderungen. Bitte versuche es in einer Stunde erneut.|
+  DB: qab04c-d176@example.test · name=QA C 176 Neuer Name · pending=qab04c-d176-wunsch3@example.test · tokenlänge=64 · frist=1439 min · bild=6af897ee817db4.16642898.png
+
+### BF-182 / BF-184 Eingaben (Konto mit freiem Deckel)
+Name '\ \ \ ' → 422  · Bitte gib deinen Namen ein.|Der Name muss mindestens 2 Zeichen lang sein.|
+Name '''' → 422  · Bitte gib deinen Namen ein.|Der Name muss mindestens 2 Zeichen lang sein.|
+Name '$'\t'' → 422  · Bitte gib deinen Namen ein.|Der Name muss mindestens 2 Zeichen lang sein.|
+Name '  ' → 422  · Bitte gib deinen Namen ein.|Der Name muss mindestens 2 Zeichen lang sein.|
+Adresse ../../etc/passwd@example.lu (27) → 422  · Bitte gib eine gültige E-Mail-Adresse ein.| · roh im HTML: 0
+Adresse anna..muster@example.lu (23) → 422  · Bitte gib eine gültige E-Mail-Adresse ein.| · roh im HTML: 0
+Adresse .anna@example.lu (16) → 422  · Bitte gib eine gültige E-Mail-Adresse ein.| · roh im HTML: 0
+Adresse anna.@example.lu (16) → 422  · Bitte gib eine gültige E-Mail-Adresse ein.| · roh im HTML: 0
+Adresse aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa (182) → 422  · Bitte gib eine gültige E-Mail-Adresse ein.|Die E-Mail-Adresse darf höchstens 180 · roh im HTML: 0
+Adresse \<script\>alert\(1\)\</script\>@x.de (30) → 422  · Bitte gib eine gültige E-Mail-Adresse ein.| · roh im HTML: 0
+Adresse x\'\;\ drop\ table\ user\;\ --@x.de (28) → 422  · Bitte gib eine gültige E-Mail-Adresse ein.| · roh im HTML: 0
+Adresse \ \ \  (3) → 422  · Bitte gib deine E-Mail-Adresse ein.| · roh im HTML: 0
+DB danach: qab04c-eing@example.test · name=QA C Eingaben · pending=NULL · tokenlänge=0 · frist=- min · bild=NULL · Mails: 0
+180 Zeichen → 422  · pending-Länge: NULL
+
+### AK-11 / AK-17 Einreichungen (Anlagedaten von 13, 14, 17 vorübergehend gespreizt)
+  Profil: Meine Einreichungen| |🍔| Burger & Co. | Dudelange · Eingereicht am 12.11.2026 | ⏳ Ausstehend | |☕| Café Nordstad | Diekirch · Eingereicht am 11.11.2026 | ⏳ Ausstehend | |🍜| Umami Corner | Esch-Belval · Eingereicht am 10.11.2026 | ⏳ Ausstehend | |Passkeys| |Mit einem Passkey meldest du dich per Face ID, Touch ID oder Geräte-PIN an. Dein Passwort bleibt daneben bestehen.| |Du hast noch keinen Passkey hinterlegt.| |passkey-ui#unsupported webauthn:registration:options:request->passkey-ui#start webauthn:registration:error->passkey-ui#ceremonyError webauthn:registration:options:error->passkey-ui#serverError webauthn:registration:verify:error->passkey-ui#serverError"> | 🔑 Passkey hinzufügen | || |N
+  ?user=4&id=4&submittedBy=4: Bella Vista 0 · Sushi Zen 0 · Umami Corner 1
+
+### EC-05 Datei weg, Verweis bleibt
+Profil → 200 · Bild → 404 
+
+### AK-18 Passwörter im Protokoll
+falsch1=0 Abc12345=0 Abc1234=0 Abc12346=0 QaSitzung8=0 rate1=0 rate7=0 Neu12341=0 Richtig88=0 QaB04neu8=0 kurz7ab=0 user123=0 
+181 Zeichen → 422 · Die E-Mail-Adresse darf höchstens 180 Zeichen lang sein.| · pending-Länge: NULL · Mails: 0
+180 Zeichen → 302 ·  · pending-Länge: 180 · Mails: 2
+
+### Massenzuweisung
+profile[roles][]=ROLE_ADMIN → 422 · [] · NULL · id=144 · verified=1
+profile[avatarFilename]=../../../.env → 422 · [] · NULL · id=144 · verified=1
+profile[id]=4 → 422 · [] · NULL · id=144 · verified=1
+profile[isVerified]=0 → 422 · [] · NULL · id=144 · verified=1
+POST /de/profile (Gegenprobe) → 405
+
+### Fremder Passkey (IDOR)
+B: POST /de/profile/passkeys/2/umbenennen → 403
+B: POST /de/profile/passkeys/2/loeschen → 403
+B: POST /de/profile/passkeys/999999/loeschen → 404
+Passkey von A danach: 1 · Mac
+Gast: POST /passkey/register/options → 302 http://localhost:8000/lb/login
+
+### Einführung (Feature 12): zweites Absenden nach Meldung, Turbo
+{"posts":["POST /de/login → 302","POST /de/einfuehrung/profilbild → 422","POST /de/einfuehrung/profilbild → 302"],"nachMeldung":{"url":"/de/einfuehrung/profilbild","action":null},"nachKorrektur":"/de/einfuehrung/profilbild"}
+
+### BF-175-Mutation (Reparatur von BF-175 zurückgebaut, danach wiederhergestellt)
+MUTATION (BF-175 zurück), Deckel erreicht + Bild → 302 · Konto: 148 email=qab04c-mut175-uebernahme@example.test pending=qab04c-mut175-w3@example.test
+Anmeldung mit Übernahmeadresse → 302 http://localhost:8000/de/
+WIEDERHERGESTELLT, Deckel erreicht + Bild → 302 · Konto: email=qab04c-mut175b@example.test pending=qab04c-mut175b-w3@example.test
+ ✘ Bf 175 adresse bleibt beim erreichten deckel mit bild unbestaetigt
+   │ Die Adresse darf erst mit dem Bestätigungslink wechseln (BF-19, BF-175).
+ ✔ Bf 175 adresswechsel mit bild und erreichtem deckel wird nicht wirksam
+Tests: 2, Assertions: 7, Failures: 1.
+ ✘ Bf 175 adresse bleibt beim erreichten deckel mit bild unbestaetigt
+   │ Die Adresse darf erst mit dem Bestätigungslink wechseln (BF-19, BF-175).
+ ✔ Bf 175 adresswechsel mit bild und erreichtem deckel wird nicht wirksam
+Tests: 2, Assertions: 7, Failures: 1.
+Prüfsummen gleich
+
+### Reproduktionen offener Befunde, scharf (QAB04_REPRO=1)
+ ✘ Bf 227 upload zwischen bildentfernung und zeilenloeschung hinterlaesst keine datei
+ ✘ Bf 227 upload nach der kontoloeschung hinterlaesst keine datei
+ ✔ Bf 226 profilformular behaelt nach einer meldung sein ziel
+ ✔ Bf 226 passwortformular behaelt nach einer meldung sein ziel
+ ✔ Gegenprobe profilseite nimmt kein post an
+ ✘ Bf 228 namensaenderung beim erreichten deckel haengt nicht am bild
+Tests: 6, Assertions: 14, Failures: 3.
+
+### Volle Suite
+suite-1: Tests: 2345, Assertions: 16914, Skipped: 44. EXIT 0
+suite-2: Tests: 2345, Assertions: 16914, Skipped: 44. EXIT 0
+suite-3: Tests: 2346, Assertions: 16922, Skipped: 44. EXIT 0
+Sitzung danach: 200
+
+### EC-04 Passwortfelder nach 422 leer, Sitzung bleibt
+Profil 422 → Passwortfelder ohne value (currentPassword, newPassword_first, newPassword_second); Passwort 422 → ebenso; danach GET /de/profile 200 (Zeile darüber)

@@ -84,7 +84,7 @@ final class QaB04NachpruefungTest extends AbstractWebTestCase
      */
     public function testBf226ProfilformularBehaeltNachEinerMeldungSeinZiel(): void
     {
-        $this->offen('BF-226');
+        // Scharf seit der Behebung am 2026-11-14 (Fehlerauftrag B04, BF-226) — Rückfallschutz.
         $client = $this->client();
         $client->loginUser($this->konto($client, 'qab04-ziel@example.org'));
 
@@ -105,7 +105,7 @@ final class QaB04NachpruefungTest extends AbstractWebTestCase
      */
     public function testBf226PasswortformularBehaeltNachEinerMeldungSeinZiel(): void
     {
-        $this->offen('BF-226');
+        // Scharf seit der Behebung am 2026-11-14 (Fehlerauftrag B04, BF-226) — Rückfallschutz.
         $client = $this->client();
         $client->loginUser($this->konto($client, 'qab04-ziel-pw@example.org'));
 
@@ -156,6 +156,11 @@ final class QaB04NachpruefungTest extends AbstractWebTestCase
         foreach (['ohne' => false, 'mit' => true] as $fall => $mitBild) {
             $adresse = 'qab04-deckel-'.$fall.'@example.org';
             $user = $this->konto($client, $adresse, 'Qa Alter Name');
+            // ⚠ QA 2026-11-14 (Nachprüfung BF-226): erst leeren. Der Deckel liegt im Testlauf in einem dateibasierten
+            // Speicher und überlebt den Lauf; nach einem früheren scharfen Lauf wies `consume(10000)` ab und verbrauchte
+            // nichts — der Deckel war nicht erreicht, die Reproduktion wurde grün, ohne dass BF-228 behoben war
+            // (gemessen: 2 929 Restplätze). Muster `RoadmapIdeenAdresseTest`.
+            $fabrik->create($adresse)->reset();
             $fabrik->create($adresse)->consume(10000);
             $client->loginUser($user);
 
@@ -182,5 +187,51 @@ final class QaB04NachpruefungTest extends AbstractWebTestCase
             'Qa Neuer Name' === $ergebnis['mit'],
             'Dieselbe Namensänderung wird ohne Bild verworfen und mit Bild gespeichert: '.json_encode($ergebnis),
         );
+    }
+
+    /**
+     * Rückfallschutz für BF-175 (QA 2026-11-14, Nachprüfung BF-226) — läuft immer, keine Reproduktion.
+     *
+     * Beim erreichten Deckel `email_change` und einem Bild im selben Absenden darf die eingegebene Adresse nicht
+     * wirksam werden. Der bestehende Prüflauf `Qa12Nachpruefung3Test::testBf175…` erschöpft den Deckel mit
+     * `consume(10000)`, ohne ihn vorher zu leeren; nach jedem früheren Lauf der Datei weist der Speicher das ab, der
+     * Deckel ist nicht erreicht, und der Prüflauf bleibt mit zurückgebautem BF-175 grün (BF-230). Dieser Fall leert
+     * den Deckel und **prüft die Vorbedingung mit**: Kommt die Deckel-Meldung nicht, ist er rot statt grün.
+     */
+    public function testBf175AdresseBleibtBeimErreichtenDeckelMitBildUnbestaetigt(): void
+    {
+        $client = $this->client();
+        $adresse = 'qab04-bf175@example.org';
+        $user = $this->konto($client, $adresse, 'Qa Deckel Bild');
+        $fabrik = $client->getContainer()->get('limiter.email_change');
+        $fabrik->create($adresse)->reset();
+        self::assertTrue($fabrik->create($adresse)->consume(10000)->isAccepted(), 'Vorbedingung: Deckel erschöpft.');
+        $client->loginUser($user);
+
+        $crawler = $client->request('GET', self::LOCALE.'/profile');
+        $form = $crawler->filter('form[name="profile"]')->form([
+            'profile[email]' => 'qab04-bf175-uebernahme@example.org',
+        ]);
+        $form['profile[avatar]']->upload($this->png());
+        $client->submit($form);
+        self::assertResponseRedirects(self::LOCALE.'/profile');
+        $client->followRedirect();
+        self::assertSelectorTextContains('body', 'Zu viele Adressänderungen', 'Vorbedingung: der Deckel-Zweig wurde erreicht.');
+
+        $zeile = $this->em($client)->getConnection()->fetchAssociative(
+            'SELECT email, pending_email, avatar_filename FROM `user` WHERE id = ?',
+            [$user->getId()],
+        );
+        if (\is_string($zeile['avatar_filename'] ?? null)) {
+            $this->aufzuraeumen[] = self::AVATARE.'/'.$zeile['avatar_filename'];
+        }
+        self::assertSame($adresse, $zeile['email'] ?? null, 'Die Adresse darf erst mit dem Bestätigungslink wechseln (BF-19, BF-175).');
+        self::assertNull($zeile['pending_email'] ?? null, 'Beim erreichten Deckel entsteht keine Vormerkung.');
+        self::assertSame(0, (int) $this->em($client)->getConnection()->fetchOne(
+            'SELECT COUNT(*) FROM `user` WHERE email = ?',
+            ['qab04-bf175-uebernahme@example.org'],
+        ));
+
+        $fabrik->create($adresse)->reset();
     }
 }

@@ -1,0 +1,45 @@
+Anmeldung Passwort → Adresse: /de/
+AK-02 Turbo aktiv: true
+AK-02 Formulare: ["- → /de/logout","- → /de/profile/newsletter","profile → /de/profile/edit","change_password → /de/profile/password","- → /de/profile/loeschen","- → /de/logout"]
+AK-02 Passkey-Knopf sichtbar: true
+AK-02 axe 1280: [{"id":"button-name","impact":"critical","ziele":["#sfToolbarToggleButton-8be1fb"],"info":"Element does not have inner text that is visible to screen readers"},{"id":"color-contrast","impact":"serious","ziele":[".xl\\:block",".min-h-\\[48px\\]",".sf-toolbar-icon > .sf-toolbar-status-green.sf-toolbar-status"],"info":"Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt (24px), font weight: bold). Expected contrast ratio of 3:1"}]
+AK-03 Flash: ["Profil erfolgreich aktualisiert.","Passkeys","Mit einem Passkey meldest du dich per Face ID, Touch ID oder Geräte-PIN an. Dein Passwort bleibt daneben bestehen.","Du hast noch keinen Passkey hinterlegt."]
+AK-03 Kopfzeile: true
+AK-04 Flash: ["Profil erfolgreich aktualisiert.","Passkeys","Mit einem Passkey meldest du dich per Face ID, Touch ID oder Geräte-PIN an. Dein Passwort bleibt daneben bestehen.","Du hast noch keinen Passkey hinterlegt."]
+AK-04 DB: 6af8984ca0bd29.83760873.jpg
+AK-04 <img> im Profil: 3
+Newsletter Knopf vorher: Newsletter abonnieren
+Newsletter an → Flash: ["Du hast den Newsletter abonniert.","Passkeys","Mit einem Passkey meldest du dich per Face ID, Touch ID oder Geräte-PIN an. Dein Passwort bleibt daneben bestehen.","Du hast noch keinen Passkey hinterlegt."]
+Newsletter an → DB: 2026-11-14 17:20:13 · marketing_contact=1
+Newsletter Knopf danach: Newsletter abbestellen
+Newsletter aus → Flash: ["Du hast den Newsletter abbestellt.","Passkeys","Mit einem Passkey meldest du dich per Face ID, Touch ID oder Geräte-PIN an. Dein Passwort bleibt daneben bestehen.","Du hast noch keinen Passkey hinterlegt."]
+Newsletter aus → DB: NULL · contact=2026-11-14 17:20:14/blacklist_pending
+Passkey angelegt → DB: ERROR 1052 (23000) at line 1: Column 'name' in field list is ambiguous
+Passkey angelegt → Seite: ["Passkeys","Mit einem Passkey meldest du dich per Face ID, Touch ID oder Geräte-PIN an. Dein Passwort bleibt daneben bestehen.","Angelegt am 14.11.2026 · noch nicht benutzt","🔑 Passkey hinzufügen"]
+Passkey umbenannt → DB: QA Schl�ssel
+Abgemeldet → Adresse: /de/
+Passkey-Anmeldeknopf sichtbar: true
+Passkey-Anmeldung → Adresse: /de/
+Profil nach Passkey-Anmeldung: /de/profile
+Passkey zuletzt benutzt: 2026-11-14 17:20:22
+Dialog: Passkey „QA Schlüssel“ wirklich entfernen? Du kannst dich danach nicht mehr dami
+Passkey entfernt → DB: 0
+Dialog: Profilbild wirklich entfernen?
+AK-07 Flash: ["Profilbild erfolgreich entfernt.","Passkeys","Mit einem Passkey meldest du dich per Face ID, Touch ID oder Geräte-PIN an. Dein Passwort bleibt daneben bestehen.","Du hast noch keinen Passkey hinterlegt."]
+AK-07 DB: NULL
+AK-07 Datei: 404
+375 scrollWidth/innerWidth: [375,375]
+Dialog: Dein Konto wird endgültig gelöscht. Das lässt sich nicht rückgängig machen. Fort
+Löschen falsches Passwort → Flash: ["Das aktuelle Passwort ist nicht korrekt."]
+Löschen falsches Passwort → Zeile: 1
+Dialog: Dein Konto wird endgültig gelöscht. Das lässt sich nicht rückgängig machen. Fort
+Löschen → Adresse: /de/
+Löschen → Flash: ["Dein Konto wurde gelöscht."]
+Löschen → Zeile: 0
+Löschen → Passkeys/Favoriten/Listen/Notizen: 0/0/0/0
+Löschen → Bild: 404
+Löschen → Abschiedsmail in der Warteschlange: 1
+Löschen → Profil danach: /de/login
+Löschen → Anmeldung danach: /de/login
+POSTs: ["POST /de/login → 302","POST /de/profile/edit → 302","POST /de/profile/edit → 302","POST /de/profile/newsletter → 302","POST /de/profile/newsletter → 302","POST /passkey/register/options → 200","POST /passkey/register → 201","POST /de/profile/passkeys/1/umbenennen → 302","POST /de/logout → 302","POST /passkey/login/options → 200","POST /de/login → 302","POST /de/profile/passkeys/1/loeschen → 302","POST /de/profile/avatar/delete → 302","POST /de/profile/edit → 302","POST /de/profile/loeschen → 302","POST /de/profile/loeschen → 302","POST /de/login → 302"]
+Konsolenfehler: []

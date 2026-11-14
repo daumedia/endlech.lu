@@ -112,7 +112,12 @@ final class ProfileController extends AbstractController
             return $this->redirectToRoute('app_profile');
         }
 
-        $profileForm = $this->createForm(ProfileType::class, $user);
+        // ⚠ BF-226 (Muster BF-151): Das Formular trägt sein Ziel ausdrücklich. Nach einer Meldung (422)
+        // lässt Turbo die Adresse `/xx/profile` stehen; ohne `action` ging die Korrektur an
+        // `POST /xx/profile` (nur GET) → 405, die Eingabe war verloren. Ohne JavaScript fiel es nicht auf.
+        $profileForm = $this->createForm(ProfileType::class, $user, [
+            'action' => $this->generateUrl('app_profile_edit'),
+        ]);
         $profileForm->handleRequest($request);
 
         if ($profileForm->isSubmitted() && $profileForm->isValid()) {
@@ -326,7 +331,11 @@ final class ProfileController extends AbstractController
     public function changePassword(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $em): Response
     {
         $user = $this->getUser();
-        $passwordForm = $this->createForm(ChangePasswordType::class);
+        // ⚠ BF-226: Ziel ausdrücklich, wie in `edit()` — sonst geht die Korrektur nach einer Meldung an
+        // `POST /xx/profile` → 405.
+        $passwordForm = $this->createForm(ChangePasswordType::class, null, [
+            'action' => $this->generateUrl('app_profile_password'),
+        ]);
         $passwordForm->handleRequest($request);
 
         if ($passwordForm->isSubmitted() && $passwordForm->isValid()) {

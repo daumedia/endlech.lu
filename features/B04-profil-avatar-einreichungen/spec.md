@@ -211,6 +211,8 @@ ob sie geprüft wurden. Auf derselben Seite verwaltet er seine Passkeys (B03).
   (Nachtrag), `selbsttest-*-zweites-absenden-1280-de.png`. — Betreiber
   → **QA 2026-11-14: als BF-226 erfasst** (*mittel*, EC-04 durchgefallen). Im Browser auf fünf Wegen bestätigt, auch am
   Passwortformular (405). Ein Code-Befund, keine offene Frage: Nächster Schritt über `/sdd-klaeren B04`.
+  → **QA 2026-11-14 (Nachprüfung): BF-226 behoben**, EC-04 bestanden — im Browser mit Turbo 422 → 302 auf allen fünf
+  Wegen (`qa-report.md`).
 - **OF-07** *(neu 2026-11-14, `/sdd-build B04`)* · **Restfenster der Kontolöschung neben einem Upload.**
   `AccountDeleter` räumt das Bild jetzt immer über `AvatarUploadService::delete()` ab (unter der Sperre, frisch
   gelesener Name, BF-186). Ein Upload, der die Sperre erst **nach** diesem Schritt bekommt und vor oder nach dem
