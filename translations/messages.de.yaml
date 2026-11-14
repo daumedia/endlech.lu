@@ -192,7 +192,9 @@ restaurant:
         no_results_help: "Hilf uns und schlage ein Restaurant vor!"
         view_details: "Details ansehen"
     detail:
-        title: "%name% – Endlech.lu"
+        title: "%name%: Barrierefreiheit – Endlech.lu"
+        meta_description: "%name% – Barrierefreiheit: %features%. Alle Angaben auf Endlech.lu."
+        meta_description_no_features: "%name% – Barrierefreiheit und Kontakt auf Endlech.lu."
         back_to_list: "Zurück zur Liste"
         rating: "Bewertung"
         of_10: "von 10"

@@ -2,6 +2,32 @@
 
 {% block title %}{{ 'restaurant.detail.title'|trans({'%name%': restaurant.name}) }}{% endblock %}
 
+{# Kurzbeschreibung fürs Suchergebnis (growth/memory.json, H-2026-W46-01). Die Seite rankt vor allem für den
+   Namen des Lokals; die Beschreibung sagt, was hier anders ist als auf der Website des Lokals.
+   ⚠ Genannt wird nur, was die Seite selbst als vorhanden zeigt — nie ein „nein": `false` heißt im Bestand
+   auch „nicht erfasst" (siehe TriState). Reihenfolge nach Gewicht für die Suche, nicht nach der Seite.
+   ⚠ Mit Feature 14 (Merkmale dreiwertig) hier `.isYes()` prüfen: Ein Enum-Fall ist in Twig immer wahr,
+   die Beschreibung nennte sonst auch „Nein" und „Weiß nicht" als vorhanden.
+   Die Adresse (`city` trägt sie ganz) steht am Ende, weil Google dort zuerst kürzt. #}
+{% block meta_description %}
+    {%- set _merkmale = [] -%}
+    {%- for _merkmal in [
+        {vorhanden: restaurant.isWheelchairAccessible, label: 'accessibility.wheelchair'|trans},
+        {vorhanden: restaurant.hasAccessibleToilet, label: 'accessibility.toilet'|trans},
+        {vorhanden: restaurant.hasDisabledParking, label: 'accessibility.disabled_parking'|trans},
+        {vorhanden: restaurant.allowsAssistanceDogs, label: 'accessibility.dogs'|trans},
+        {vorhanden: restaurant.hasChangingTable, label: 'accessibility.changing_table'|trans},
+        {vorhanden: restaurant.hasBrightLighting, label: 'accessibility.lighting'|trans},
+    ] -%}
+        {%- if _merkmal.vorhanden %}{% set _merkmale = _merkmale|merge([_merkmal.label]) %}{% endif -%}
+    {%- endfor -%}
+    {%- set _beschreibung = _merkmale is empty
+        ? 'restaurant.detail.meta_description_no_features'|trans({'%name%': restaurant.name})
+        : 'restaurant.detail.meta_description'|trans({'%name%': restaurant.name, '%features%': _merkmale|join(', ')}) -%}
+    {%- set _adresse = restaurant.city|trim -%}
+    <meta name="description" content="{{ _adresse is empty ? _beschreibung : _beschreibung ~ ' ' ~ _adresse ~ '.' }}">
+{% endblock %}
+
 {% block body %}
 
     <div class="min-h-screen bg-gray-50">
