@@ -293,13 +293,28 @@ Durchgang durch `~/.claude/sdd/sicherheit.md`, alle sechs Abschnitte. Datenschut
 - **OF-03** · Bleibt die Öffnungs- und Klickverfolgung in Brevo eingeschaltet? Sie ist
   dort Vorgabe. Das PRD schließt Web-Analytics aus und begründet das mit Datensparsamkeit
   — ob das auch für Kampagnen gilt, ist nicht entschieden. — Betreiber
+  ✖ **Beantwortet 2026-11-14 (Betreiber): ausschalten.** Öffnungs- und Klickverfolgung werden in den
+  Brevo-Einstellungen abgeschaltet — eine Handlung des Betreibers, kein Code. Damit stimmt die Datenschutzerklärung
+  ohne Änderung; Preis sind fehlende Öffnungs- und Klickraten. ⚠ Bis der Betreiber die Einstellung bestätigt, ist sie
+  nicht als umgesetzt zu werten.
 - **OF-04** · Welche Herkunft gilt bei einer Adresse aus mehreren Quellen (EC-01) — die
   erste, die letzte, oder eine Mehrfachzuordnung? — Betreiber
+  ✔ **Erledigt, festgestellt 2026-11-14:** beantwortet am 2026-10-23 über `12/OF-03` (Betreiber: „so lassen“) — es
+  gilt **die zuletzt eingetragene Herkunft** (`MarketingContactRegistry::record()`); wer schon als Wartelisten-Kontakt
+  in Brevo steht, bekommt beim späteren Abonnieren keine Willkommens-Mail.
 - **OF-05** · Was geschieht bei einem harten Bounce oder einer Spam-Beschwerde? Bewusst
   nicht als Kriterium aufgenommen; es wird im Betrieb auftreten und braucht dann eine
   Regel. — Betreiber
+  ✔ **Erledigt, festgestellt 2026-11-14:** seit dem Bau (2026-08-30) im Code geregelt. `BrevoWebhookController`
+  behandelt `hardBounce` und `spam` wie eine Abmeldung: Die Adresse wird gesperrt und die Einwilligung an der Quelle
+  entwertet (`BLOCKING_EVENTS`, `CONSENT_WITHDRAWING_EVENTS`). Bei einer Beschwerde schützt das zusätzlich die
+  Zustellbarkeit der Domain.
 - **OF-06** · Gibt es eine Löschfrist für Werbe-Kontakte, die jahrelang nicht reagieren?
   Der Bestand kennt bis heute keine Aufräumroutine (B14/FB-02). — Betreiber
+  ⏳ **Zurückgestellt 2026-11-14 (Betreiber) — Auslöser: 2028-08-30**, zwei Jahre nach dem ersten Kontakt
+  (Vorschlag). Vorher reagiert niemand „jahrelang nicht“. Dann wird eine Regel festgelegt (Erinnerung, danach
+  Löschung); die Sperrzeilen Abgemeldeter bleiben ausgenommen. Ob „reagiert“ messbar ist, hängt seit OF-03 (✖) an
+  erneuter Bestätigung, nicht an Öffnungen.
 - **OF-07** · *(beim Bau am 2026-08-29 gefunden, gehört zu **B15**, nicht zu diesem
   Feature)* **Das Organisations-Formular ist auf den drei Zielgruppenseiten nicht
   absendbar.** `form_start()` in `templates/organisation/_form.html.twig` setzt kein
@@ -319,6 +334,10 @@ Durchgang durch `~/.claude/sdd/sicherheit.md`, alle sechs Abschnitte. Datenschut
   das auch für die Übersicht, die vorher auf ihre eigene Adresse samt Query postete. Der
   Partner-Weg (`partner/_form.html.twig`, bewusst ohne `action`) ist nicht betroffen.
   Offen: Query-String ans Ziel hängen oder die Herkunft anders mitführen. — Betreiber
+  ⏳ **Zurückgestellt 2026-11-14 (Betreiber) — Auslöser: bevor ein Link mit `utm_source` auf `/organisationen`
+  verschickt oder geschaltet wird** (Anschreiben an Gemeinden, Anzeige). Dann zuerst eine neue Zeile im Index
+  („Herkunft der Organisationsanfragen erhalten“, B15/04) — Abfrageteil ans Ziel hängen oder als verstecktes Feld
+  mitführen.
 - **OF-09** · *(bei der Reparatur von BF-85 offengeblieben)* **Wie soll sich das
   Auftragsbuch bei echter Nebenläufigkeit verhalten?** Der belegte Fall — zwei
   `record()`-Aufrufe in **einem** Vorgang — ist behoben. Zwei **parallele Requests**
@@ -329,12 +348,19 @@ Durchgang durch `~/.claude/sdd/sicherheit.md`, alle sechs Abschnitte. Datenschut
   vom Hauptvorgang entkoppelter `flush()` für den Marketing-Teil — das ändert die
   Transaktionsführung von Feature `01` und braucht eine eigene Entscheidung.
   Eintrittswahrscheinlichkeit gering, Wirkung auf den Betroffenen hoch. — Betreiber
+  ⏳ **Zurückgestellt 2026-11-14 (Betreiber) — Auslöser: die erste Sentry-Meldung einer Unique-Verletzung an
+  `marketing_contact`.** Bei der heutigen Nutzerzahl kaum zu erwarten; ein zweiter Klick auf denselben Link sollte
+  nach Lesart des Codes gelingen (der zurückgerollte Token bleibt gültig, die Zeile des anderen Vorgangs steht) —
+  nicht nachgestellt. Die Umstellung der Transaktionsführung von `01` wäre dann ein eigenes Feature.
 - **OF-08** · *(beim Bau gefunden)* **`ORIGIN` reicht für den Herkunftssatz der ersten
   Kampagne nicht, wenn sie an mehrere Zielgruppen zugleich geht.** „Warteliste für das
   Partnerprogramm" stimmt nur für `PARTNER`. Entweder je Segment eine eigene Kampagne
   oder ein allgemeinerer Satz — ein falscher Herkunftssatz ist schlimmer als ein
   allgemeiner, weil er etwas über die Person behauptet, das nicht stimmt (siehe
   `erste-kampagne.md`). — Betreiber
+  ✔ **Beantwortet 2026-11-14 (Betreiber): Satz je Herkunft in einer Kampagne.** Die Vorlage wählt den Herkunftssatz
+  per Bedingung auf das Brevo-Attribut `ORIGIN`; kann der Tarif keine Bedingungen, gibt es je Gruppe eine eigene
+  Kampagne. Festgehalten in `erste-kampagne.md`, kein Code.
 
 ## Decision Log
 
@@ -351,3 +377,8 @@ Durchgang durch `~/.claude/sdd/sicherheit.md`, alle sechs Abschnitte. Datenschut
 | 9 | Bestandsübertragung ohne Bestätigung | nein, Trockenlauf zuerst | ein falsch gefilterter Lauf ist nicht zurückzuholen — die Mails sind dann raus |
 | 10 | Kampagnen aus Endlech.lu auslösen | nein | Inhalt und Versand bleiben in Brevo; das hält die Kostenseite und die Versandlogik aus dem Produkt heraus |
 | 11 | Sichtbarkeit des Sync-Stands | Spalte in der bestehenden Wartelisten-Verwaltung | Sentry zeigt Ausfälle, aber keine Lücken — eine nicht übertragene Adresse erzeugt keinen Fehler |
+| 12 | Öffnungs- und Klickverfolgung (OF-03) | aus (2026-11-14, Betreiber) | dieselbe Datensparsamkeit wie auf der Website; die Datenschutzerklärung bleibt wahr |
+| 13 | Löschfrist für Werbe-Kontakte (OF-06) | ⏳ bis 2028-08-30 (Vorschlag) | vorher gibt es keinen jahrelang stillen Kontakt |
+| 14 | Herkunftssatz bei mehreren Gruppen (OF-08) | ein Satz je `ORIGIN` per Bedingung, sonst je Gruppe eine Kampagne (2026-11-14, Betreiber) | ein falscher Herkunftssatz behauptet etwas über die Person |
+| 15 | Parallele Bestätigungen (OF-09) | ⏳ bis zur ersten Sentry-Meldung (2026-11-14, Betreiber) | selten und durch erneuten Klick heilbar; eine Transaktionsumstellung kostet heute mehr, als sie bringt |
+| 16 | UTM-Herkunft im Organisationsformular (OF-07) | ⏳ bis zum ersten UTM-Link auf `/organisationen` (2026-11-14, Betreiber) | ohne solche Links gibt es keine Herkunft, die verloren gehen kann |

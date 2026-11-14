@@ -164,6 +164,9 @@ Barrierefreiheit, nicht nur Sicherheit.
   gebaut“ (`passkey_conditional_ui`, seit Feature `07`). Festgestellt 2026-11-07.
 - **OF-03** · Ist `WEBAUTHN_RP_ID` auf Produktion gesetzt und korrekt? — Betreiber,
   vor der nächsten Auslieferung
+  ✔ **Geprüft 2026-11-14 (gemessen bei `/sdd-klaeren`, keine Entscheidung nötig): ja.** `WEBAUTHN_RP_ID` steht in der
+  Variablenliste der App in Coolify (Wert über die API nicht lesbar), und die Anmelde-Challenge von
+  `https://endlech.lu/passkey/login/options` nennt `rpId: endlech.lu`. Ohne die Variable stünde dort `localhost` aus `.env`.
 
 ## Decision Log
 

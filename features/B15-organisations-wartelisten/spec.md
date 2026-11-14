@@ -194,6 +194,10 @@ Alles aus B14 gilt hier gleichermaßen — der Unterbau ist derselbe:
   zur Übersicht). Vorher endete derselbe Weg in einer 405-Fehlerseite, es ist also eine Verbesserung, keine
   Verschlechterung. Offen ist, ob der Fehlerfall die Zielgruppenseite erneut rendern soll — das wäre neues
   Verhalten und steht nicht im Auftrag. — Betreiber.
+  *Berichtigung 2026-11-14 (Betreiber, über BF-153):* „unter `/organisationen`“ gilt nur ohne JavaScript. Mit Turbo,
+  dem Normalfall, **bleibt die Adresse der Zielgruppenseite stehen**, während der Inhalt zur Übersicht wechselt
+  (gemessen von der QA auf `/de/organisationen/vereine`, das seit 2026-10-14 auf `unternehmen` weiterleitet;
+  dieselbe Mechanik bei 429). Adresse und Inhalt passen im Fehlerfall also nicht zusammen. Die Frage bleibt offen.
 - **OF-BF119a** · Fünf weitere `new Email(...)` stehen weiterhin im HTML5-Default —
   `ProfileType`, `PasswordResetRequestType`, `AccessibilityReportType`,
   `RestaurantSuggestionType`, `RestaurantType`. Die ersten drei lösen einen Mailversand
@@ -201,6 +205,7 @@ Alles aus B14 gilt hier gleichermaßen — der Unterbau ist derselbe:
   letzten speichern die Adresse nur. Beim Bauen von BF-119 gemessen, **bewusst nicht
   mitrepariert**: Der Auftrag nannte drei Formulare, und was nicht im Auftrag steht,
   wird nicht gebaut. — Betreiber
+  *Teilstand 2026-11-14 (Betreiber, über BF-184):* `ProfileType` wird mit `/sdd-build B04` auf die strikte Prüfung gebracht. Offen bleiben `PasswordResetRequestType`, `AccessibilityReportType`, `RestaurantSuggestionType` und `RestaurantType`.
 
 - **OF-BF119b** · `WaitlistConfirmationService::notifyRequester()` (die zweite Mail)
   konstruiert die Adresse erst beim `->to()`. Ein Reihenfolgeproblem ist das nicht — die

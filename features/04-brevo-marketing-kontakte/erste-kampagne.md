@@ -23,7 +23,9 @@ Kontaktaufnahme zugestimmt; dass daraus jetzt eine Mail wird, ist für sie
 womöglich überraschend.
 
 **Deshalb nennt der erste Absatz die Herkunft der Adresse, bevor irgendetwas
-anderes gesagt wird.** Nicht als Fußnote, nicht im Kleingedruckten am Ende. Wer
+anderes gesagt wird.** *(Seit 2026-11-14, `OF-08`: Geht die Kampagne an mehrere Gruppen,
+wählt die Vorlage den Satz per Bedingung auf das Attribut `ORIGIN` — jeder liest seine eigene Herkunft. Kann der
+Brevo-Tarif keine Bedingungen, je Gruppe eine eigene Kampagne. Nie ein Satz, der nur für eine Gruppe stimmt.)* Nicht als Fußnote, nicht im Kleingedruckten am Ende. Wer
 nicht innerhalb der ersten drei Zeilen versteht, warum er diese Mail bekommt,
 liest sie als Spam — und meldet sie im Zweifel auch so. Eine
 Spam-Beschwerdequote schadet der Zustellrate aller künftigen Mails, auch der

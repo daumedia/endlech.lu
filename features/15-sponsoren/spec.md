@@ -118,9 +118,14 @@ liegt vollständig in der Vergangenheit, und keiner läuft gerade.
   dieselbe Reihenfolge, dieselben Werte.
 - **AK-09** · Angenommen, eine Restaurant-Detailseite wird aufgerufen, wenn alles außer dem Footer
   betrachtet wird, dann kommt dort weder ein Sponsorlogo noch ein Sponsorname vor.
-- **AK-10** · Angenommen, zwölf Sponsoren sind aktiv, wenn eine Seite auf einem Telefon geöffnet und
-  nicht gescrollt wird, dann ist noch keine Logodatei geladen; die Logos im Footer wiegen zusammen
-  höchstens 150 KB, keins mehr als 25 KB.
+- **AK-10** · Angenommen, zwölf Sponsoren sind aktiv, wenn die Startseite oder die Restaurantliste auf einem
+  Telefon (390 px) geöffnet und nicht gescrollt wird, dann ist noch keine Logodatei geladen. Die Logos laden
+  verzögert (`loading="lazy"`); auf kurzen Seiten darf der Browser sie vorab laden. Auf jeder Seite wiegen die
+  Logos im Footer zusammen höchstens 150 KB, keins mehr als 25 KB. *(Neu gefasst 2026-11-14 nach BF-190,
+  Betreiber. Vorher stand hier „wenn eine Seite auf einem Telefon geöffnet und nicht gescrollt wird, dann ist
+  noch keine Logodatei geladen; die Logos im Footer wiegen zusammen höchstens 150 KB, keins mehr als 25 KB“.
+  Liegt der Footer in der Vorlaufzone des Browsers für verzögertes Laden, lädt Chrome alle Logos ohne Scrollen —
+  schärfer ginge es nur mit JavaScript im Footer jeder Seite. Die 390 px stammen aus dem Entwurf, Entscheidung #6.)*
 
 ### Übersicht `/sponsoren`
 
@@ -424,3 +429,4 @@ Aus `~/.claude/sdd/sicherheit.md`, einzeln durchgegangen:
 | 31 | Weg in die Kette | **Überarbeitung von 15 vor dem Deploy**, nicht als eigenes Feature (2026-10-28, Betreiber) | ausgeliefert wird das Feature einmal vollständig |
 | 32 | Ehemalige und Profillinks | **Beschreibung bleibt, Profillinks entfallen** (beim Schreiben vorgeschlagen, 2026-10-28) | dieselbe Begründung wie #23: nicht mehr bezahlt, und ein Profil kann den Inhaber wechseln |
 | 33 | Welche Plattformen | **Instagram, Facebook, LinkedIn** (2026-10-28, Betreiber, mit der Auswahl angeboten) | die drei, die Vereine und Unternehmen in Luxemburg tragen; weitere sind ein Nachtrag |
+| 34 | Logos auf kurzen Seiten (BF-190) | **AK-10 gilt für Startseite und Restaurantliste; auf kurzen Seiten darf der Browser vorab laden** (2026-11-14, Betreiber) | die Gewichtsgrenze trägt die Zusage auf jeder Seite; ein Nachlade-Skript im Footer jeder Seite kostet mehr, als es spart |

@@ -238,8 +238,10 @@ bekommt einen roten Prüflauf — so ist es gewollt.
 - **EC-05** · Die Restaurantliste hat mehrere Seiten (ab dem siebten Restaurant) → jede
   Folgeseite nennt sich selbst mit ihrer Seitenzahl als maßgeblich (AK-13), wie Google es
   empfiehlt. In der Sitemap stehen die Folgeseiten trotzdem nicht; jede Detailseite steht
-  dort selbst. Eine Seitenzahl jenseits der letzten Seite nennt sich ebenfalls selbst —
-  unschädlich, weil nichts auf sie verlinkt.
+  dort selbst. Eine Seitenzahl jenseits der letzten Seite antwortet mit 404, ohne Verweis auf eine
+  maßgebliche Adresse. *(Neu gefasst 2026-11-14 nach OF-08/BF-148, Betreiber. Vorher stand hier „Eine
+  Seitenzahl jenseits der letzten Seite nennt sich ebenfalls selbst — unschädlich, weil nichts auf sie
+  verlinkt.“ Gemessen antwortet die Liste dort mit 404 (B05, BF-60).)*
 - **EC-06** · Jemand ruft `http://endlech.lu/sitemap.xml` oder eine Variante mit `www` auf →
   alle Adressen in der Sitemap lauten trotzdem auf `https://endlech.lu/` (AK-03).
 
@@ -296,6 +298,8 @@ bekommt einen roten Prüflauf — so ist es gewollt.
   letzten Seite nennt sich ebenfalls selbst" — gemessen antwortet die Liste mit **404** und nennt
   nichts. Vorschlag: den Satz durch „antwortet mit 404, ohne Verweis" ersetzen. `sdd-build` darf die
   Spec außerhalb dieses Abschnitts nicht ändern. — Betreiber.
+  ✔ **Beantwortet 2026-11-14 (Betreiber): EC-05 an die Messung angepasst** — „antwortet mit 404, ohne Verweis“.
+  BF-148 gilt damit als entschieden durch Neufassung; bestätigt `/sdd-qa 10`.
 
 ## Decision Log
 
@@ -317,3 +321,4 @@ bekommt einen roten Prüflauf — so ist es gewollt.
 | 14 | `/` in die Sitemap? | Nein; die vier Startseiten mit Sprachsegment stehen darin | `/` ist eine Weiterleitung, keine Seite |
 | 15 | Folgeseiten der Restaurantliste: canonical auf Seite 1 oder auf sich selbst? (OF-01, beim Systemdesign) | Auf sich selbst mit Seitenzahl; Sortier- und Filterparameter entfallen | Wörtliche Empfehlung von Google; kostet im Entwurf eine Zeile |
 | 16 | Ausschluss im Quelltext oder als Kopfzeile? (OF-04, beim Systemdesign) | Kopfzeile `X-Robots-Tag: noindex` auf allen 16 Wegen | Zwei Wege sind reine Weiterleitungen ohne Quelltext; eine Stelle statt sechzehn; laut Google gleichwertig |
+| 17 | Seitenzahl jenseits der letzten Seite (OF-08, BF-148) | EC-05 sagt jetzt „404, ohne Verweis“ (2026-11-14, Betreiber) | die Spec beschrieb ein Verhalten, das die Liste nie hatte; gemessen 404 |
