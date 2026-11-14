@@ -47,9 +47,6 @@ item:
     map:
         title: "Vue cartographique"
         reason: "Les coordonnées de chaque établissement existent déjà. Il manque la carte qui montre ce qui se trouve à proximité."
-    favourites:
-        title: "Favoris"
-        reason: "Retenir des établissements sans les rechercher à chaque fois — la première utilité d'un compte au-delà des propositions."
     computed_score:
         title: "Score calculé sur chaque fiche de restaurant"
         reason: "La note affichée sur chaque fiche de restaurant est aujourd'hui attribuée à la main et n'est expliquée nulle part. Elle sera remplacée par le score à huit critères qui figure déjà sur la page de transparence — calculé de la même manière pour chaque établissement, et vérifiable."

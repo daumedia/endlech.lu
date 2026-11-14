@@ -46,9 +46,6 @@ item:
     map:
         title: "Vista de mapa"
         reason: "As coordenadas de cada estabelecimento já existem. Falta o mapa que mostra o que há por perto."
-    favourites:
-        title: "Favoritos"
-        reason: "Guardar estabelecimentos sem ter de os procurar sempre de novo — a primeira utilidade de uma conta para além de enviar sugestões."
     computed_score:
         title: "Pontuação calculada em cada cartão de restaurante"
         reason: "O número em cada cartão de restaurante é hoje atribuído à mão e não é explicado em lado nenhum. Será substituído pela pontuação de oito características que já consta da página de transparência — calculada da mesma forma para cada estabelecimento, e verificável."

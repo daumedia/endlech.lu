@@ -2,10 +2,12 @@
 
 Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
-![Version](https://img.shields.io/badge/version-2026.11.07-blue)
+![Version](https://img.shields.io/badge/version-2026.11.14-blue)
 ![Status](https://img.shields.io/badge/status-beta-green)
 
 ## [Unreleased]
+
+## [2026.11.14] – Favoriten und Listen
 
 ### Favoriten und Listen (Feature 17)
 
@@ -34,6 +36,10 @@ Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 - **Profil:** Ein Name aus Leerzeichen und eine ungültige oder zu lange neue Adresse zeigen eine Meldung statt eines
   Serverfehlers (BF-182, BF-184). Profilbild entfernen und Konto löschen räumen das Bild auch neben einem
   gleichzeitigen Upload ab (BF-186).
+- **Profil:** Nach einer Fehlermeldung wird die Korrektur gespeichert, statt mit „Methode nicht erlaubt“ (405) zu
+  enden — im Profil- und im Passwortformular (BF-226).
+- **Herz:** Der Fokusrahmen ist auf dem Farbverlauf und über jedem Titelfoto sichtbar (BF-218); lange Listennamen
+  ohne Leerzeichen brechen um (BF-219); „ΟΔΟΣ“ und „οδος“ gelten als derselbe Listenname (BF-220).
 
 ## [2026.11.07] – Roadmap und Ideen in einem Bereich
 

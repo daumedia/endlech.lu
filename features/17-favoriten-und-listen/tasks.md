@@ -268,11 +268,13 @@ Bildschirm“ in `design.md`). Wer nur den gefüllten baut, baut die Hälfte.
       Herz mit Absicht, `no-store` privater Seiten, Sentry-Rumpf, Pfadkürzung an zwei
       Stellen, Leiste vier Punkte). — Aufgabe ohne AK, Projektregel (CLAUDE.md: „Bei
       Änderungen am Datenmodell … die passende Datei mitziehen“)
-- [ ] **T29** · Beim Release (nicht im Feature-Commit): `RoadmapRegistry` ohne
+- [x] **T29** · Beim Release (nicht im Feature-Commit): `RoadmapRegistry` ohne
       `favourites`, Texte des Eintrags in `roadmap.*.yaml` entfernen;
       `ChangelogRegistry::notes()` mit `ReleaseVisibility::SHOWN` und Text in allen
       `changelog.*.yaml`; dazu die fünf Release-Stellen aus CLAUDE.md, *Versioning*.
       — `AK-70`
+      *Erledigt 2026-11-14 im Release-Commit `v2026.11.14` (Roadmap ohne `favourites`, ChangelogRegistry SHOWN,
+      fünf Changelog-Kataloge, CHANGELOG.md, README-Badge, `app.version`). Git-Tag und GitHub-Release folgen in `/sdd-deploy`.*
 
 ## Abdeckung
 
