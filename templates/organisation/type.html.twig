@@ -59,7 +59,7 @@
             {% if _sponsoren is not empty %}
                 <div class="mb-8 text-center">
                     <h3 class="text-sm font-bold uppercase tracking-wider text-gray-700 mb-3">{{ 'organisation.company.sponsors_row_title'|trans }}</h3>
-                    {{ include('sponsor/_logo_row.html.twig', {sponsors: _sponsoren, class: 'justify-center'}) }}
+                    {{ include('sponsor/_logo_row.html.twig', {sponsors: _sponsoren, class: 'justify-center', hellerGrund: true}) }}
                 </div>
             {% endif %}
         {% endif %}

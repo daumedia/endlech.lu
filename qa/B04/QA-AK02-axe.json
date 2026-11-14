@@ -1,0 +1,43 @@
+{
+ "profil-1280": {
+  "axe": [
+   {
+    "id": "color-contrast",
+    "impact": "serious",
+    "n": 2,
+    "ziel": [
+     ".xl\\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font si :: <span class=\"hidden xl:block text-2xl font-bold text-brand tracking-tight\">\n                        Endlech<span class=\"",
+     ".min-h-\\[48px\\] :: Element has insufficient color contrast of 3.61 (foreground color: #ffffff, background color: #0092b8, font si :: <button type=\"button\" data-action=\"passkey-register#reg...\" data-passkey-ui-targ...=\"button\" class=\"w-full min-h-[48px] "
+    ]
+   }
+  ],
+  "passkey": {
+   "text": "🔑 Passkey hinzufügen",
+   "sichtbar": true
+  },
+  "breite": [
+   1280,
+   1280
+  ]
+ },
+ "profil-375": {
+  "axe": [
+   {
+    "id": "color-contrast",
+    "impact": "serious",
+    "n": 1,
+    "ziel": [
+     ".min-h-\\[48px\\] :: Element has insufficient color contrast of 3.61 (foreground color: #ffffff, background color: #0092b8, font si :: <button type=\"button\" data-action=\"passkey-register#reg...\" data-passkey-ui-targ...=\"button\" class=\"w-full min-h-[48px] "
+    ]
+   }
+  ],
+  "passkey": {
+   "text": "🔑 Passkey hinzufügen",
+   "sichtbar": true
+  },
+  "breite": [
+   375,
+   375
+  ]
+ }
+}

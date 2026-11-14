@@ -27,6 +27,7 @@ user:
     name_min: "Den Numm muss mindestens {{ limit }} Zeechen laang sinn."
     email_blank: "Gëff w.e.g. deng E-Mail-Adress an."
     email_invalid: "Gëff w.e.g. eng gëlteg E-Mail-Adress an."
+    email_max: "D’E-Mail-Adress dierf héchstens {{ limit }} Zeeche laang sinn."
     password_blank: "Gëff w.e.g. e Passwuert an."
     password_min: "D'Passwuert muss mindestens {{ limit }} Zeechen laang sinn."
 
@@ -130,3 +131,10 @@ app_waitlist:
     email_invalid: "Dës E-Mail-Adress gesäit net gëlteg aus."
     email_max: "D’E-Mail-Adress dierf héchstens 180 Zeeche laang sinn."
     consent_required: "Ouni dëst Averständnis kënne mir Iech net Bescheed ginn."
+
+saved:
+    name_blank: "Gëff der Lëscht w.e.g. en Numm."
+    name_too_long: "Den Numm däerf héchstens 60 Zeeche laang sinn."
+    name_duplicate: "Eng Lëscht mat dësem Numm hues du schonn."
+    limit_reached: "Du hues schonn 25 Lëschten. Läsch eng, fir eng nei unzeleeën."
+    note_too_long: "D'Notiz däerf héchstens 500 Zeeche laang sinn."

@@ -29,6 +29,10 @@ final readonly class ChangelogRegistry
     public function notes(): array
     {
         return [
+            // SHOWN — jedes Konto merkt es: Herz auf Karte und Detailseite, eigene Listen, eine private Notiz je
+            // Lokal, die Seite „Gespeichert“ und der Favoritenfilter (Feature 17). Fokus- und Kontrastbehebungen
+            // und die Profilreparaturen (B04) bleiben ungenannt — ein Gast bemerkt sie nicht als Neuerung.
+            new ReleaseNote('2026.11.14', new \DateTimeImmutable('2026-11-14'), ReleaseVisibility::SHOWN),
             // SHOWN — jeder Gast merkt es: Roadmap, Ideen und Changelog sind ein Bereich mit drei Reitern, ein
             // Eintrag am Ende jeder Seite führt hinein, „Idee einreichen“ steht auf jedem Reiter (Feature 16). Der
             // Herstellerhinweis im Footer (live seit 2026-11-05) und die MwSt-Nummer im Impressum bleiben ungenannt —

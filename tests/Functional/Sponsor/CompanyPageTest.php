@@ -65,6 +65,25 @@ final class CompanyPageTest extends AbstractWebTestCase
         self::assertSame('/de/sponsoren/acme', $anfrage->filter('img[alt="Acme S.à r.l."]')->closest('a')?->attr('href'));
     }
 
+    /**
+     * Fehlerauftrag 17 (Folge von BF-206): Seit der globale Fokus-Fallback in `@layer base` steht,
+     * wirkt die Fokusfarbe der Kachel. Der Rahmen liegt auf dem Grund neben der weißen Kachel —
+     * cyan-400 (für den dunklen Footer) maß auf `bg-gray-50` 1,73 : 1, cyan-700 5,05 : 1.
+     */
+    public function testFokusfarbeDerKachelPasstZumGrund(): void
+    {
+        $client = static::createClient();
+        TestSponsors::use($client, TestSponsors::all());
+        $crawler = $client->request('GET', '/de/organisationen/unternehmen');
+
+        $reihe = (string) $crawler->filter('#anfrage img[alt="Acme S.à r.l."]')->closest('a')?->attr('class');
+        $fusszeile = (string) $crawler->filter('footer img[alt="Acme S.à r.l."]')->closest('a')?->attr('class');
+
+        self::assertStringContainsString('focus:outline-cyan-700', $reihe, 'Auf hellem Grund');
+        self::assertStringNotContainsString('focus:outline-cyan-400', $reihe);
+        self::assertStringContainsString('focus:outline-cyan-400', $fusszeile, 'Im dunklen Footer');
+    }
+
     public function testAk31OhneAktivenSponsorKeineReihe(): void
     {
         $anfrage = $this->seite([TestSponsors::ehemals()])->filter('#anfrage');

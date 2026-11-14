@@ -1,0 +1,47 @@
+QA B04 · 2026-11-14 · Auszüge der Prüfungen am laufenden Server (http://127.0.0.1:8000, Entwicklungsmodus, Dev-DB `endlech`)
+Eigene Konten qab04-*@example.test (per SQL angelegt, danach entfernt). Formulare per curl mit Origin/Referer (zustandsloses CSRF).
+
+── BF-182 · leerer Name / leere Adresse (Konto qab04-b) ─────────────────────────────────────────────
+name='   '      -> 422 | Bitte gib deinen Namen ein.|Der Name muss mindestens 2 Zeichen lang sein. | db=QA Bert
+name=''         -> 422 | (dieselben Meldungen) | db=QA Bert
+name fehlt      -> 422 | (dieselben Meldungen)
+name=Tab/NL     -> 422 | (dieselben Meldungen)
+name=NBSP       -> 422 | (dieselben Meldungen) | db unverändert
+email=''        -> 422 | Bitte gib deine E-Mail-Adresse ein. | db=qab04-b@example.test, keine Vormerkung
+email='   '     -> 422 | dito
+email fehlt     -> 422 | dito
+Sitzung danach: 200 | neue Mails: 0
+
+── BF-184 · RFC-widrige / lange / Angriffs-Adressen (Konto qab04-c, Deckel email_change frisch) ───────
+../../etc/passwd@example.lu, anna..muster@, .anna@, anna.@, 181 Zeichen, 10 010 Zeichen, <script>alert(1)</script>@x.de,
+a@b.de'; DROP TABLE user; --, 😀@example.lu, anna@[127.0.0.1], "anna muster"@example.lu, anna@localhost, nur-text,
+"a@b, c@d", @example.lu, "anna@example.lu\nBcc: x@y.z"
+  -> je 422 mit Meldung am Feld, keine Vormerkung, 0 Mails, <script> nirgends roh im Dokument
+Danach 3 gültige Wechsel (180 Zeichen, jean-luc@télécom.lu, "  qab04-c-neu@example.test  ") -> 302, vorgemerkt,
+  je 2 Mails (Bestätigung an neu — IDN als xn--tlcom-bsab.lu —, Warnung an alt); der 4. -> „Zu viele Adressänderungen“
+  => 17 abgewiesene Eingaben haben keinen Deckelplatz verbraucht.
+
+── Gegenproben (Reparatur je Zeile zurückgebaut, Server + Prüflauf, danach wiederhergestellt, md5 identisch) ──
+ohne 'empty_data' am Namen   : Server 500 „Expected argument of type "string", "null" given at property path "name"“;
+                               Qa12Nachpruefung4Test::testBf182 rot; Bf182Bf184ProfilEingabenTest::testBf182LeererName 3/3 rot
+ohne VALIDATION_MODE_STRICT  : Server 500 „Email "../../etc/passwd@example.lu" does not comply with addr-spec of RFC 2822“
+                               — OHNE Vormerkung (die Adressprüfung vor dem flush() im Controller greift);
+                               Qa12…::testBf184 rot; Bf182Bf184…::testBf184RfcWidrige 4/4 rot
+ohne Length(max: 180)        : Server 500 „SQLSTATE[22001] … Data too long for column 'pending_…'“;
+                               Bf182Bf184…::testBf184AdresseUeber180 rot
+ohne SQL-NULL in delete()    : Qa12…::testBf186 rot; Bf186AvatarEntfernenTest 1/3 rot
+alte Bedingung AccountDeleter: Bf186AvatarEntfernenTest 1/3 rot (Kontolöschung)
+md5 nach Wiederherstellung   : ProfileType 4cf1df73…, AvatarUploadService a76c2973…, AccountDeleter 8f157bbb…, ProfileController 3fa3aeb4…
+
+── BF-186 am Server ──────────────────────────────────────────────────────────────────────────────────
+Upload und „Entfernen“ gleichzeitig (Konto ohne Bild, Versatz 0–300 ms): mit Reparatur 15 Durchgänge, 0 tote Verweise,
+0 Waisen. Gegenprobe ohne Reparatur: 57 Durchgänge (15 grob + 42 fein, 20–80 ms), 0 Treffer — das Fenster ist am
+Entwicklungsserver nicht erreichbar; Nachweis über Prüflauf + Gegenprobe (siehe QA-BF186-server-race-ohne-reparatur.ausgabe.txt).
+
+── BF-175/BF-176 (Regression) ─────────────────────────────────────────────────────────────────────────
+Konto qab04-a nach bestätigtem Wechsel: 3 Wechsel auf 3 verschiedene Adressen angenommen, 4. mit Bild ->
+„Zu viele Adressänderungen“, email unverändert, keine Mail, Anmeldung mit der 4. Adresse 302 -> /login, Sitzung 200.
+
+── BF-228 (neu) ──────────────────────────────────────────────────────────────────────────────────────
+Deckel erreicht; Name „QA Anna Ohne Bild“ + neue Adresse, ohne Bild -> Meldung Deckel, Name NICHT gespeichert („QA Anna Neu“)
+Name „QA Anna Mit Bild“ + neue Adresse + Bild -> Meldung Deckel, Name UND Bild gespeichert („QA Anna Mit Bild“)

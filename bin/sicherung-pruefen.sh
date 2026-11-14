@@ -67,10 +67,11 @@ fi
 # ableitet, prüft gegen sich selbst. Wer eine Migration mit neuer Tabelle schreibt,
 # ergänzt sie hier — sonst gilt eine Sicherung als vollständig, in der sie fehlt.
 ERWARTETE_TABELLEN=(
-    app_waitlist_entry board_idea board_vote cache_items cuisine finance_entry
-    marketing_contact messenger_messages metric_snapshot opening_hour
-    ordering_option organisation_waitlist_entry partner_waitlist_entry restaurant
-    restaurant_cuisine restaurant_image restaurant_suggestion user
+    app_waitlist_entry board_idea board_vote cache_items cuisine favorite
+    finance_entry marketing_contact messenger_messages metric_snapshot
+    opening_hour ordering_option organisation_waitlist_entry
+    partner_waitlist_entry restaurant restaurant_cuisine restaurant_image
+    restaurant_note restaurant_suggestion saved_list saved_list_entry user
     webauthn_credential
 )
 

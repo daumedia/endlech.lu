@@ -27,6 +27,7 @@ user:
     name_min: "Der Name muss mindestens {{ limit }} Zeichen lang sein."
     email_blank: "Bitte gib deine E-Mail-Adresse ein."
     email_invalid: "Bitte gib eine gültige E-Mail-Adresse ein."
+    email_max: "Die E-Mail-Adresse darf höchstens {{ limit }} Zeichen lang sein."
     password_blank: "Bitte gib ein Passwort ein."
     password_min: "Das Passwort muss mindestens {{ limit }} Zeichen lang sein."
 
@@ -130,3 +131,10 @@ app_waitlist:
     email_invalid: "Diese E-Mail-Adresse sieht nicht gültig aus."
     email_max: "Die E-Mail-Adresse darf höchstens 180 Zeichen lang sein."
     consent_required: "Ohne diese Zustimmung können wir dir nicht Bescheid geben."
+
+saved:
+    name_blank: "Bitte gib der Liste einen Namen."
+    name_too_long: "Der Name darf höchstens 60 Zeichen lang sein."
+    name_duplicate: "Eine Liste mit diesem Namen hast du schon."
+    limit_reached: "Du hast bereits 25 Listen. Lösche eine, um eine neue anzulegen."
+    note_too_long: "Die Notiz darf höchstens 500 Zeichen lang sein."

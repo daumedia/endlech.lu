@@ -403,7 +403,14 @@ Zwei Formen:
 |---|---|---|
 | **Tag** (eckig) | `text-xs bg-green-50 text-green-700 px-2 py-0.5 rounded border border-green-100` | Merkmale, Küchen (orange), Sprachen |
 | **Pill** (rund) | `bg-purple-100 text-purple-700 text-xs font-semibold px-2.5 py-1 rounded-full` | Status, Linien, Kategorien |
-| **Glas** (auf Verlauf) | `inline-block bg-white/20 text-white text-sm font-semibold px-4 py-1.5 rounded-full` | Hero-Auszeichnung |
+| **Glas** (auf Verlauf) | `inline-block bg-black/20 text-white text-sm font-semibold px-4 py-1.5 rounded-full` | Hero-Auszeichnung |
+
+⚠ **Glas ist dunkel (`bg-black/20`), nicht hell.** Weiß auf `bg-white/20` maß über den
+Verläufen 2,95–4,21 : 1 (BF-203, an den Pixeln; axe meldet Verläufe nur als „incomplete“
+und hält sie deshalb für bestanden). Auf `bg-black/20` sind es 5,9–10,7 : 1 (neun Vorlagen mit zwölf Etiketten, de/fr/pt,
+1280/375/320 px; im Bereichskopf von 16 6,97–9,18 : 1). Dasselbe gilt für die Sprach-Abzeichen
+im Kopf der Detailseite (`_hero_badges.html.twig`, `bg-black/20 backdrop-blur-sm`, 6,5–8,9 : 1) —
+wo das System keine Flaggen-Emoji kennt (Windows), steht dort weißer Text.
 
 Die Statusfarben kommen aus PHP, nicht aus dem Template:
 
@@ -474,6 +481,19 @@ focus:outline-2 focus:outline-offset-2 focus:outline-<farbe>-700
 
 Die Outline-Farbe spiegelt die Farbe des Elements. **Nirgends steht
 `outline-none`.**
+
+Ohne eigene Farbe greift der globale Fallback in `assets/styles/app.css`
+(`:focus-visible { outline: 2px solid cyan-700; outline-offset: 2px }`). ⚠ **Er steht in
+`@layer base`** (BF-206): Ungeschichtet schlug er jede `focus:outline-<farbe>` aus
+`@layer utilities`, unabhängig von der Spezifität — bis 2026-11-14 zeigte jede Vorlage
+cyan-700, auch `focus:outline-white` auf den Verläufen (1,0–1,65 : 1). Seither wirkt die
+gesetzte Farbe. **Wer eine Fokusfarbe wählt, misst sie auf ihrem Untergrund:** Weiß nur
+auf Verlauf und dunklem Grund, `cyan-400` nur auf der dunklen Fußzeile.
+
+**Ausnahme: Ein Knopf mit eigener weißer Fläche auf wechselndem Grund** (Foto, Verlauf) trägt
+den Rahmen **innen**: `focus:outline-2 focus:-outline-offset-4 focus:outline-gray-900`. Außen
+gibt es dort keine Farbe, die auf jedem Grund 3 : 1 hält; innen ändert sich Weiß zu gray-900
+(13 : 1). Einziger Fall bisher: das Herz (Feature 17, BF-218 — Karte und Kopf der Detailseite).
 
 > Aus dem Kopfkommentar von `_form_field.html.twig`: Ringe per `box-shadow`
 > verschwinden im Windows-Kontrastmodus. Eine echte `outline` bleibt.

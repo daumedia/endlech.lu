@@ -61,9 +61,12 @@ final readonly class AccountDeleter
         // Konto ohne Bild zurück — ärgerlich, aber reparierbar. Umgekehrt bliebe
         // ein Bild ohne Konto liegen, und genau das ist der Fehler, den BF-53
         // beschreibt.
-        if (null !== $user->getAvatarFilename()) {
-            $this->avatars->delete($user);
-        }
+        //
+        // ⚠ BF-186: Immer aufrufen, nicht nur bei einem Namen an der Entity. `delete()` liest den Namen
+        // unter der Sperre aus BF-173 frisch aus der Datenbank; hatte ein Upload daneben ein Bild
+        // gespeichert, während diese Anfrage das Konto noch ohne Bild geladen hatte, blieb dessen Datei
+        // nach der Löschung liegen. Ohne Bild tut `delete()` nichts.
+        $this->avatars->delete($user);
 
         // Feature 08 / AK-50: Die Vormerkung für die App steht unter derselben
         // Adresse und geht mit dem Konto. Sie muss **vor** `scheduleRemoval()`

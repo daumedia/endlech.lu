@@ -8,8 +8,12 @@ use App\Entity\User;
 use App\Repository\AppWaitlistEntryRepository;
 use App\Repository\BoardIdeaRepository;
 use App\Repository\BoardVoteRepository;
+use App\Repository\FavoriteRepository;
+use App\Repository\RestaurantNoteRepository;
 use App\Repository\RestaurantRepository;
 use App\Repository\RestaurantSuggestionRepository;
+use App\Repository\SavedListEntryRepository;
+use App\Repository\SavedListRepository;
 
 /**
  * Stellt alles zusammen, was zu einem Konto gespeichert ist (Art. 20 DSGVO).
@@ -32,6 +36,10 @@ final readonly class AccountDataExporter
         private BoardIdeaRepository $boardIdeas,
         private BoardVoteRepository $boardVotes,
         private AppWaitlistEntryRepository $appWaitlist,
+        private FavoriteRepository $favorites,
+        private SavedListRepository $savedLists,
+        private SavedListEntryRepository $savedListEntries,
+        private RestaurantNoteRepository $notes,
     ) {
     }
 
@@ -145,6 +153,47 @@ final readonly class AccountDataExporter
                 'marketingConsentAt' => $appEntry->getMarketingConsentAt()?->format(\DateTimeInterface::ATOM),
                 'betaLinkSentAt' => $appEntry->getBetaLinkSentAt()?->format(\DateTimeInterface::ATOM),
             ],
+            // Feature 17 / AK-60: Gemerktes, eigene Listen und Notizen. Rein ergänzend —
+            // deshalb bleibt die Formatkennung `v1`. Das Lokal steht mit Nummer und Namen
+            // darin: Die Nummer allein sagte in der heruntergeladenen Datei niemandem etwas.
+            'favorites' => array_map(
+                static fn ($favorite) => [
+                    'restaurantId' => $favorite->getRestaurant()->getId(),
+                    'restaurantName' => $favorite->getRestaurant()->getName(),
+                    'savedAt' => $favorite->getCreatedAt()->format(\DateTimeInterface::ATOM),
+                ],
+                $this->favorites->findByUserNewestFirst($user),
+            ),
+            // Ohne die interne Nummer der Liste: Sie beschreibt nichts an der Person und
+            // taugt außerhalb des Systems zu nichts. Je Liste eine Abfrage für die Einträge —
+            // höchstens 25 Listen (`SavedList::MAX_PER_USER`), und der Export ist gedeckelt.
+            'savedLists' => array_map(
+                fn ($list) => [
+                    'name' => $list->getName(),
+                    'createdAt' => $list->getCreatedAt()->format(\DateTimeInterface::ATOM),
+                    'restaurants' => array_map(
+                        static fn ($entry) => [
+                            'restaurantId' => $entry->getRestaurant()->getId(),
+                            'restaurantName' => $entry->getRestaurant()->getName(),
+                            'addedAt' => $entry->getAddedAt()->format(\DateTimeInterface::ATOM),
+                        ],
+                        $this->savedListEntries->findByListNewestFirst($list),
+                    ),
+                ],
+                $this->savedLists->findByUser($user),
+            ),
+            // ⚠ Der Notiztext kann eine Gesundheitsangabe tragen. Hier gehört er hin — die
+            // Auskunft geht an die Person selbst, die ihn geschrieben hat. Nirgendwo sonst
+            // verlässt er das System (siehe `RestaurantNote`).
+            'notes' => array_map(
+                static fn ($note) => [
+                    'restaurantId' => $note->getRestaurant()->getId(),
+                    'restaurantName' => $note->getRestaurant()->getName(),
+                    'text' => $note->getText(),
+                    'updatedAt' => $note->getUpdatedAt()->format(\DateTimeInterface::ATOM),
+                ],
+                $this->notes->findByUser($user),
+            ),
         ];
     }
 }

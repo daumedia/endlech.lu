@@ -1,0 +1,26 @@
+{#
+    Antwort mit Turbo auf „Aus Liste entfernen“ (AK-26) und auf das Herz auf „Favoriten“ (AK-14)
+    (Feature 17) — oder nur die Meldung, wenn der Deckel bei „Aus Liste entfernen“ greift
+    (`karten` ist dann null, das Raster bleibt, wie es ist).
+
+    1. Das Kartenraster der Seite wird **gemorpht** (`method="morph"`): Unveränderte Karten bleiben
+       dieselben Elemente, die Seite springt nicht. Das Fokusziel trägt
+       `data-controller="focus-after-stream"`; Stimulus verbindet ihn beim Morphen und setzt den
+       Fokus (`assets/controllers/focus_after_stream_controller.ts`).
+    2. Die Meldung geht in den dauerhaften Ansagebereich `#meldung-live` der App-Hülle — ein
+       Bereich, der schon im Dokument steht, wird zuverlässig angesagt; ein neu eingefügter nicht.
+
+    Kein Messauslöser: Entfernen zählt nicht, weder aus einer Liste noch aus den Favoriten (AK-66).
+#}
+{% if karten is not null %}
+<turbo-stream action="replace" method="morph" target="gespeichert-karten">
+    <template>
+        {{ include('saved/_cards.html.twig', karten, with_context = false) }}
+    </template>
+</turbo-stream>
+{% endif %}
+<turbo-stream action="update" target="meldung-live">
+    <template>
+        <p class="{{ meldungArt == 'error' ? 'bg-red-50 border-red-400 text-red-800' : 'bg-green-50 border-green-400 text-green-800' }} border-l-4 px-4 py-3 rounded-r-lg mb-4 text-sm font-medium">{{ meldung }}</p>
+    </template>
+</turbo-stream>

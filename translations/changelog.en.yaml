@@ -22,6 +22,9 @@ repo:
     link_label: "Open CHANGELOG.md on GitHub"
 
 release:
+    v2026_11_14:
+        title: "Save restaurants and keep your own lists"
+        body: "With an account you can now save a restaurant to your favourites with the heart on every restaurant card and on its detail page. On the detail page you can create your own lists – say, “Lunch near work” – and write a private note about each restaurant. You will find everything under “Saved”, and the search can show only your favourites. Only you can see your favourites, lists and notes."
     v2026_11_07:
         title: "Roadmap and ideas in one place"
         body: "What we are planning and what the community would like now sit together under “Roadmap & ideas”: three tabs for the roadmap, the ideas and this changelog, reached through a single link at the bottom of every page. The “Submit an idea” button is on all three tabs. The ideas have moved; old links, including those in emails, still lead to the right place."

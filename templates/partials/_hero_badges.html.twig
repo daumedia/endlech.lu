@@ -16,9 +16,11 @@
             </span>
         {% endif %}
 
-        {# Sprach-Flag-Badges #}
+        {# Sprach-Flag-Badges.
+           ⚠ Dunkles Glas (`bg-black/20`), nicht `bg-white/20` (BF-203): Weiß auf hellem Glas maß
+           3,2–4,5 : 1. Wo das System keine Flaggen-Emoji kennt (Windows), steht hier Text („DE“). #}
         {% for lang in restaurant.spokenLanguages %}
-            <span class="inline-flex items-center bg-white/20 backdrop-blur-sm text-white text-sm font-medium px-2.5 py-1 rounded-full border border-white/30"
+            <span class="inline-flex items-center bg-black/20 backdrop-blur-sm text-white text-sm font-medium px-2.5 py-1 rounded-full border border-white/30"
                   title="{{ lang.label }}">
                 {{ lang.flag }}
             </span>

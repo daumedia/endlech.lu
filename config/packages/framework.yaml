@@ -241,6 +241,15 @@ framework:
             policy: 'sliding_window'
             limit: 60
             interval: '1 hour'
+        # Feature 17: alle Änderungen an Favoriten, Listen und Notizen — ein gemeinsames
+        # Kontingent, am KONTO (der Weg setzt eine Sitzung voraus; die IP wechselt
+        # mühelos, das Konto nicht). Wer beim Stöbern 30 Lokale merkt und sortiert, stößt
+        # nie daran; ein Skript kommt auf höchstens 120 Schreibvorgänge je Stunde.
+        # Verbraucht wird nur, wenn tatsächlich gespeichert wurde (BF-11, AK-58).
+        saved_change:
+            policy: 'sliding_window'
+            limit: 120
+            interval: '1 hour'
 
 when@test:
     framework:
@@ -350,6 +359,10 @@ when@test:
                 limit: 10000
                 interval: '1 hour'
             board_vote:
+                policy: 'sliding_window'
+                limit: 10000
+                interval: '1 hour'
+            saved_change:
                 policy: 'sliding_window'
                 limit: 10000
                 interval: '1 hour'

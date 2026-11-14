@@ -114,6 +114,17 @@ ob sie geprüft wurden. Auf derselben Seite verwaltet er seine Passkeys (B03).
   lässt sich nicht unterschieben, weil keine ID aus der Anfrage gelesen wird.
 - **AK-18** · Angenommen, die Passwortänderung läuft, wenn die Logs gelesen werden,
   dann steht dort weder das alte noch das neue Passwort im Klartext.
+- ~~**AK-19** *(aus OF-03, neu 2026-11-14, Betreiber)* · Angenommen, ein angemeldetes Konto lädt ein Profilbild
+  hoch, wenn die Datei gespeichert wird, dann ist sie neu kodiert, höchstens 512 × 512 px groß (Vorschlag) und
+  enthält keine Metadaten (EXIF, GPS) mehr. Bereits gespeicherte Profilbilder sind einmalig ebenso umgewandelt.~~ *gestrichen 2026-11-14 (Betreiber): an Feature `18` (Kontoschutz im Profil) übergeben — die Erweiterung eines Bestandsfeatures bekommt eine eigene Nummer.*
+- ~~**AK-20** *(aus OF-04, neu 2026-11-14, Betreiber)* · Angenommen, ein angemeldetes Konto ändert sein Passwort im
+  Profil, wenn der Wechsel gelingt, dann geht eine Mail an die hinterlegte Adresse: Das Passwort wurde geändert, mit
+  Zeitpunkt und dem Weg „Passwort vergessen“, falls es nicht der Inhaber war. Die Mail enthält kein Passwort. Bei
+  einem gescheiterten Versuch geht keine Mail.~~ *gestrichen 2026-11-14 (Betreiber): an Feature `18` (Kontoschutz im Profil) übergeben — die Erweiterung eines Bestandsfeatures bekommt eine eigene Nummer.*
+- ~~**AK-21** *(aus OF-05, neu 2026-11-14, Betreiber)* · Angenommen, ein unbestätigtes Konto bestätigt einen
+  Adresswechsel über den Link in der Mail, wenn der Wechsel wirksam wird, dann gilt das Konto als bestätigt — mit
+  denselben Folgen wie die Erstbestätigung (Einführung beim nächsten Anmelden, Brevo-Abgleich). Ein bereits
+  bestätigtes Konto bleibt bestätigt, die Einführung kommt nicht erneut.~~ *gestrichen 2026-11-14 (Betreiber): an Feature `18` (Kontoschutz im Profil) übergeben — die Erweiterung eines Bestandsfeatures bekommt eine eigene Nummer.*
 
 ## Edge Cases
 
@@ -148,10 +159,12 @@ ob sie geprüft wurden. Auf derselben Seite verwaltet er seine Passkeys (B03).
   Warnmail an die bisherige Adresse ist dort der eigentliche Schutz — wer übernimmt,
   liest die Bestätigung im neuen Postfach ohnehin mit); beim Passwortwechsel fehlt sie
   weiterhin.
+  *Seit 2026-11-14 an Feature `18` übergeben (OF-04).*
 - **FB-06 · Avatare werden nicht verkleinert oder neu kodiert.** Die hochgeladene Datei
   wird unverändert abgelegt (im Bestand liegt eine mit 1,1 MB). *Folge:* Metadaten wie
   GPS-Koordinaten aus einem Handyfoto bleiben in der öffentlich abrufbaren Datei
   erhalten.
+  *Seit 2026-11-14 an Feature `18` übergeben (OF-03).*
 - ~~**FB-07 · Kein Rate Limit auf der Passwortänderung.**~~ **Behoben am 2026-08-24**
   (BF-20) — siehe AK-14.
 - **FB-08 · Dateiname ist nicht kryptografisch zufällig.** `uniqid('', true)` ist
@@ -173,11 +186,42 @@ ob sie geprüft wurden. Auf derselben Seite verwaltet er seine Passkeys (B03).
 - **OF-04** · Soll auch die **Passwortänderung** eine Benachrichtigung an die
   hinterlegte Adresse auslösen (FB-05)? Die Mechanik dafür steht seit 2026-08-24
   bereit. — Betreiber
+  ✔ **Beantwortet 2026-11-14 (Betreiber): ja.** Nach einem gelungenen Wechsel geht eine Mail an die hinterlegte
+  Adresse, mit Hinweis auf „Passwort vergessen“ — umgesetzt in Feature `18`. Der Deckel `password_change` deckt den Weg bereits.
 - **OF-05** · Soll die Bestätigung eines Adresswechsels `is_verified` auf `1` setzen?
   Wer sein Konto nie bestätigt hat und dann die Adresse wechselt, hat den Zugriff auf
   das neue Postfach damit bewiesen, gilt aber weiter als unbestätigt. — Betreiber
+  ✔ **Beantwortet 2026-11-14 (Betreiber): ja, wie die Erstbestätigung** — umgesetzt in Feature `18` — Status, Einführung beim nächsten
+  Anmelden (`user.onboarding_due`, Feature 12) und Brevo-Abgleich wie in `app_verify_email`. Berührt 12 und 04;
+  der Bau prüft dort die Reihenfolge, auf die `EmailVerificationController` schon achtet („NACH setIsVerified(true)“).
 - **OF-03** · Sollen Avatare beim Upload neu kodiert werden (FB-06)? Ohne
   Bildbibliothek im Projekt wäre das eine neue Abhängigkeit. — Betreiber
+  ✔ **Beantwortet 2026-11-14 (Betreiber): ja, einschließlich des Bestands.** Neue Uploads werden verkleinert und
+  ohne Metadaten neu kodiert, vorhandene Avatare wandelt ein einmaliger Befehl um — umgesetzt in Feature `18`. Dafür kommt die
+  PHP-Erweiterung GD ins Laufzeit-Image (`Dockerfile`), keine Composer-Abhängigkeit. 512 px ist ein Vorschlag.
+- **OF-06** *(neu 2026-11-14, `/sdd-build B04`, außerhalb des Auftrags gefunden)* · **Nach einer Meldung am
+  Profilformular scheitert das zweite Absenden mit HTTP 405.** `ProfileController::edit()` rendert die Seite bei
+  ungültigem Formular (422) mit einem `ProfileType` **ohne** `action`; Turbo lässt dabei die Adresse `/xx/profile`
+  stehen, der Browser schickt die Korrektur an `POST /xx/profile` (nur GET) → 405, die Korrektur geht verloren. Im
+  Browser gemessen mit Name „a“ (Meldung, dann „Test User“): auf `main` **und** nach dem Bau gleich, also vorbestehend
+  — betrifft jeden 422-Weg des Profils (zu kurzer Name, vergebene Adresse, falsches Bildformat) und seit BF-182/BF-184
+  auch leeren Namen und RFC-widrige Adresse, die vorher als 500 endeten. Im Code gleich, nicht gemessen: das
+  Passwortformular nach einer Meldung in `changePassword()`. Muster BF-151 („Wer ein Formular auf mehreren Seiten
+  rendert, gibt ihm ein Ziel“). Nicht behoben, weil nicht im Auftrag. Belege: `/tmp/b04vorlage/protokoll.txt`
+  (Nachtrag), `selbsttest-*-zweites-absenden-1280-de.png`. — Betreiber
+  → **QA 2026-11-14: als BF-226 erfasst** (*mittel*, EC-04 durchgefallen). Im Browser auf fünf Wegen bestätigt, auch am
+  Passwortformular (405). Ein Code-Befund, keine offene Frage: Nächster Schritt über `/sdd-klaeren B04`.
+  → **QA 2026-11-14 (Nachprüfung): BF-226 behoben**, EC-04 bestanden — im Browser mit Turbo 422 → 302 auf allen fünf
+  Wegen (`qa-report.md`).
+- **OF-07** *(neu 2026-11-14, `/sdd-build B04`)* · **Restfenster der Kontolöschung neben einem Upload.**
+  `AccountDeleter` räumt das Bild jetzt immer über `AvatarUploadService::delete()` ab (unter der Sperre, frisch
+  gelesener Name, BF-186). Ein Upload, der die Sperre erst **nach** diesem Schritt bekommt und vor oder nach dem
+  Entfernen der Zeile fertig wird, hinterlässt weiterhin eine Datei ohne Konto — `UPDATE` auf eine gelöschte Zeile
+  trifft nichts und meldet keinen Fehler. Schließen ließe es sich nur, wenn der Upload unter der Sperre prüft, ob das
+  Konto noch besteht; das ändert den Upload-Weg und stand nicht im Auftrag. Nicht nachgestellt, nur im Code
+  nachvollzogen (zwei Tabs: Konto löschen und Bild hochladen in derselben Sekunde). — Betreiber
+  → **QA 2026-11-14: als BF-227 erfasst** (*niedrig*). Am Server mit zwei Sitzungen nachgestellt: 5 von 31 Durchgängen
+  ließen ein öffentlich abrufbares Bild zurück. Zwei Tabs eines Browsers teilen die Sitzung und trafen nie.
 
 ## Decision Log
 
@@ -189,3 +233,6 @@ ob sie geprüft wurden. Auf derselben Seite verwaltet er seine Passkeys (B03).
 | 4 | Upload im Web-Root | `public/uploads/avatars` | direkte Auslieferung ohne Controller — schnell, aber öffentlich (AK-16) |
 | 5 | CSRF beim Avatar-Löschen von Hand | `isCsrfTokenValid('delete-avatar', …)` | es ist kein Symfony-Formular, sondern ein nackter POST |
 | 6 | Passwortänderung ohne Abmeldung | so | Grund nicht erkennbar — siehe FB-04 |
+| 7 | Avatare neu kodieren (OF-03) | ja, mit Bestand (2026-11-14, Betreiber) | ein Handyfoto trägt GPS-Koordinaten in eine öffentlich abrufbare Datei; GD statt neuer Bibliothek → Feature `18` |
+| 8 | Mail nach Passwortwechsel (OF-04) | ja (2026-11-14, Betreiber) | ein Wechsel aus einer gekaperten Sitzung bliebe sonst unbemerkt; Mechanik und Deckel sind da → Feature `18` |
+| 9 | Adresswechsel bestätigt das Konto (OF-05) | ja, wie die Erstbestätigung (2026-11-14, Betreiber) | eine Bedeutung von „bestätigt“; der Klick beweist den Zugriff auf das Postfach → Feature `18` |

@@ -13,12 +13,18 @@
  * Seitenwechsels, eine Markierung im neuen Seiteninhalt käme also womöglich zu spät. Die Adresse
  * steht dagegen im Zählaufruf selbst. Dieselben Regeln prüft die Weiterleitung auf dem Server
  * (`CollectPayloadNormalizer`) — dort als Grenze, hier, damit gar nichts erst abgeht (AK-06, AK-07).
+ *
+ * Eigene Listen (Feature 17, AK-67) werden **gekürzt, nicht verworfen**: Der Aufruf geht ab, aber
+ * unter `/{xx}/gespeichert/listen` ohne Nummer und ohne Seitentitel (er kann den Listennamen
+ * tragen, AK-64). `Feature17UsageEventsTest` liest das Muster `LISTENSEITE` aus dieser Datei und
+ * prüft es gegen dieselben Fälle wie den Server — die Konstante deshalb einzeilig lassen.
  */
 
 type Nutzlast = { url?: string } & Record<string, unknown>;
 
 const AUSGENOMMENE_PFADE = /^\/[a-z]{2}\/(admin|profile)(\/|$)/;
 const TOKEN = /[a-f0-9]{64}/i;
+const LISTENSEITE = /^\/([a-z]{2})\/gespeichert\/listen\/./;
 
 export function vorVersand(_typ: string, nutzlast: Nutzlast | null | undefined): Nutzlast | null {
     if (!nutzlast) {
@@ -29,17 +35,29 @@ export function vorVersand(_typ: string, nutzlast: Nutzlast | null | undefined):
         return null;
     }
 
-    const pfad = pfadAus(nutzlast.url);
-    if (null === pfad || AUSGENOMMENE_PFADE.test(pfad) || TOKEN.test(pfad)) {
+    const adresse = adresseAus(nutzlast.url);
+    if (null === adresse || AUSGENOMMENE_PFADE.test(adresse.pathname) || TOKEN.test(adresse.pathname)) {
         return null;
     }
 
-    return nutzlast;
+    const liste = LISTENSEITE.exec(adresse.pathname);
+    if (null === liste) {
+        return nutzlast;
+    }
+
+    adresse.pathname = `/${liste[1]}/gespeichert/listen`;
+    adresse.search = '';
+    adresse.hash = '';
+
+    const gekuerzt: Nutzlast = { ...nutzlast, url: adresse.toString() };
+    delete gekuerzt.title;
+
+    return gekuerzt;
 }
 
-function pfadAus(adresse: string | undefined): string | null {
+function adresseAus(adresse: string | undefined): URL | null {
     try {
-        return new URL(adresse ?? '', window.location.href).pathname;
+        return new URL(adresse ?? '', window.location.href);
     } catch {
         return null;
     }

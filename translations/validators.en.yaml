@@ -27,6 +27,7 @@ user:
     name_min: "The name must be at least {{ limit }} characters long."
     email_blank: "Please enter your email address."
     email_invalid: "Please enter a valid email address."
+    email_max: "The email address may be at most {{ limit }} characters long."
     password_blank: "Please enter a password."
     password_min: "The password must be at least {{ limit }} characters long."
 
@@ -130,3 +131,10 @@ app_waitlist:
     email_invalid: "This email address does not look valid."
     email_max: "The email address may be at most 180 characters long."
     consent_required: "Without this consent we cannot let you know."
+
+saved:
+    name_blank: "Please give the list a name."
+    name_too_long: "The name can be 60 characters at most."
+    name_duplicate: "You already have a list with this name."
+    limit_reached: "You already have 25 lists. Delete one to create a new one."
+    note_too_long: "The note can be 500 characters at most."

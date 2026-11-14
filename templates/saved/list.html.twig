@@ -1,0 +1,47 @@
+{#
+    Eine eigene Liste (Feature 17, AK-25 bis AK-28): Name als Hauptüberschrift, am Kopf das
+    Umbenennen und der Verweis „Liste löschen“, darunter die Karten der Suche mit „Aus Liste
+    entfernen“, 12 je Seite.
+
+    Zustände: leer → Leertext AK-27 mit Verweis auf die Suche (im Raster); Fehler → Umbenennen mit
+    422, Meldung am Feld, Fokus im Feld (AK-50); gefüllt → Zahl als `h2`, Karten, Blättern.
+
+    ⚠ **Die Überschrift trägt den gespeicherten Namen, das Feld die Eingabe.** Nach einem
+    abgewiesenen Umbenennen (422) steht im Feld, was eingegeben wurde (AK-18), oben weiter der
+    Name, den die Liste hat. Der Seitentitel darf den Namen führen: Die Messung schickt den
+    Titel einer Listenseite nicht an Umami (Feature 11, AK-64).
+    ⚠ **„Liste löschen“ ist ein Verweis auf die Rückfrage, kein Formular** — gelöscht wird erst
+    dort (AK-29). Er steht neben „Umbenennen“, aber rechts abgesetzt und in Rot.
+#}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'saved.list.page_title'|trans({'%list%': liste.name}) }}{% endblock %}
+
+{% block body %}
+    {{ include('saved/_kopf.html.twig', {titel: liste.name, zurueck: true, breite: 'max-w-6xl'}, with_context = false) }}
+
+    {# === KOPFAKTIONEN: Umbenennen, Liste löschen ======================== #}
+    <section class="border-b border-gray-200 bg-white py-6">
+        <div class="container mx-auto px-4 max-w-6xl">
+            {{ form_start(formular, {attr: {novalidate: 'novalidate', class: 'max-w-xl space-y-3'}}) }}
+                {% include 'partials/_form_field.html.twig' with {
+                    field: formular.name,
+                    help: 'saved.lists.new_help'|trans,
+                    autofocus: formular.name.vars.errors|length > 0,
+                } %}
+                <div class="flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
+                    <button type="submit" class="inline-flex items-center justify-center min-h-[44px] px-5 rounded-lg bg-cyan-700 text-white font-semibold hover:bg-cyan-800 motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700">{{ 'saved.list.rename'|trans }}</button>
+                    <a href="{{ path('app_saved_list_delete_confirm', {id: liste.id}) }}"
+                       class="inline-flex items-center min-h-[44px] px-1 rounded text-sm font-semibold text-red-700 underline underline-offset-2 hover:text-red-900 focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700">{{ 'saved.list.delete'|trans }}</a>
+                </div>
+            {{ form_end(formular) }}
+        </div>
+    </section>
+
+    {# === KARTEN ========================================================== #}
+    <section class="bg-gray-50 py-8 md:py-12">
+        <div class="container mx-auto px-4 max-w-6xl">
+            {{ include('saved/_cards.html.twig', karten, with_context = false) }}
+        </div>
+    </section>
+{% endblock %}

@@ -27,6 +27,7 @@ user:
     name_min: "Le nom doit comporter au moins {{ limit }} caractères."
     email_blank: "Veuillez saisir votre adresse e-mail."
     email_invalid: "Veuillez saisir une adresse e-mail valide."
+    email_max: "L’adresse e-mail ne peut pas dépasser {{ limit }} caractères."
     password_blank: "Veuillez saisir un mot de passe."
     password_min: "Le mot de passe doit comporter au moins {{ limit }} caractères."
 
@@ -130,3 +131,10 @@ app_waitlist:
     email_invalid: "Cette adresse e-mail ne semble pas valide."
     email_max: "L’adresse e-mail ne peut pas dépasser 180 caractères."
     consent_required: "Sans cet accord, nous ne pouvons pas vous prévenir."
+
+saved:
+    name_blank: "Veuillez donner un nom à la liste."
+    name_too_long: "Le nom ne doit pas dépasser 60 caractères."
+    name_duplicate: "Vous avez déjà une liste portant ce nom."
+    limit_reached: "Vous avez déjà 25 listes. Supprimez-en une pour en créer une nouvelle."
+    note_too_long: "La note ne doit pas dépasser 500 caractères."

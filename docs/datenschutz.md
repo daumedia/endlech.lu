@@ -15,8 +15,9 @@ eine Lücke in der Erklärung — nicht in dieser Datei.
 > Gesundheit. Ein Konto führt Name, E-Mail-Adresse und Avatar. Eine Angabe nach
 > Art. 9 kann ausschließlich **unaufgefordert im Freitext** erscheinen — in der
 > Nachricht einer Wartelisten-Anmeldung, im Meldeformular auf
-> `/barrierefreiheit` oder seit Feature `06` in einer Board-Idee. Für genau
-> diesen Fall gelten die Maßnahmen unten.
+> `/barrierefreiheit`, seit Feature `06` in einer Board-Idee und seit Feature `17`
+> in der privaten Notiz zu einem Lokal oder im Namen einer eigenen Liste (beide nie
+> veröffentlicht). Für genau diesen Fall gelten die Maßnahmen unten.
 >
 > ⚠ **Wer ein Feld ergänzt, das eine Gesundheitsangabe strukturiert erfasst —
 > ein Ankreuzfeld „Rollstuhl", eine Auswahl „Art der Einschränkung" —, hebt
@@ -219,10 +220,12 @@ je um einen Wert erweitert, prüft diesen Satz zuerst.
 reagieren, gibt es nicht.** Zeilen mit gesetztem `revoked_at` bleiben als Sperre
 unbegrenzt stehen, damit der nächste Abgleich die Adresse nicht erneut einträgt.
 Das ist derselbe fehlende Aufräumschritt wie bei den Wartelisten (B14/FB-02).
+*Zurückgestellt 2026-11-14 (Betreiber) bis 2028-08-30, zwei Jahre nach dem ersten Kontakt (Vorschlag); dann wird die Regel festgelegt.*
 
 ⚠ **Offen (OF-03): Öffnungs- und Klickverfolgung** ist in Brevo standardmäßig
 eingeschaltet. Das PRD schließt Web-Analytics aus und begründet das mit
 Datensparsamkeit; ob das auch für Kampagnen gilt, ist nicht entschieden.
+*Entschieden 2026-11-14 (Betreiber): ausschalten.* Die Einstellung nimmt der Betreiber in Brevo vor; bis er sie bestätigt, gilt sie nicht als umgesetzt.
 
 ### Community Feedback Board (Feature 06, seit 2026-08-30)
 
@@ -256,6 +259,10 @@ Text *ist* das Produkt. Eingegrenzt wird er dreifach:
   Die eine Mail an den Verfasser führt **Titel und Link, nicht den Volltext**;
   Fehlerberichte an Sentry enthalten keine Beitragstexte
   (`zend.exception_ignore_args=On`).
+  ⚠ **Das galt nur für Stacktraces** (festgestellt beim Entwurf von Feature 17,
+  2026-11-13): Den **Anfragerumpf** einer fehlerhaften Anfrage — und damit einen
+  abgeschickten Beitragstext — sendet Sentry bis zur Auslieferung von Feature 17 mit.
+  Siehe Sentry unter „Weitere Verarbeiter“.
 
 **Löschung und Auskunft**
 
@@ -342,6 +349,115 @@ Reichweite — das ist seine Handlung, nicht die der Plattform.
 | ⚠ **Grenze** | Das Repository ist öffentlich. Ein entfernter Eintrag bleibt im **Git-Verlauf** auffindbar; der Sponsor stimmt dem in der Vereinbarung zu (15/OF-01, entschieden 2026-10-28) |
 | **Weitergabe** | Keine. Die Links zur Website und zu den Profilen des Sponsors geben dem Ziel höchstens den Ursprung `endlech.lu` weiter (`Referrer-Policy`); gezählt werden nur Seitenaufrufe (Feature 11), keine Klicks. Von Instagram, Facebook und LinkedIn wird nichts eingebettet oder geladen — was die Plattform nach einem Klick erfasst, liegt außerhalb von Endlech.lu |
 
+### Favoriten, Listen und Notizen (Feature 17, noch nicht ausgeliefert)
+
+Gebaut, Stand 2026-11-14. ⚠ **Beim Ausrollen in der Überschrift „noch nicht
+ausgeliefert“ durch „seit JJJJ-MM-TT“ ersetzen** — wie bei den übrigen Abschnitten.
+Unterlagen: `features/17-favoriten-und-listen/` (Spec mit Sicherheitskatalog, Entwurf,
+Plan).
+
+| | |
+|---|---|
+| **Zweck** | Ein angemeldetes Konto merkt sich Lokale (Herz), sammelt sie in eigenen, benannten Listen und hält zu einem Lokal eine private Notiz fest. Alles bleibt privat: nur der Kontoinhaber sieht es |
+| **Rechtsgrundlage** | Art. 6 Abs. 1 lit. b DSGVO — Bereitstellung der Funktionen des Kontos. So auch in `/legal` (Abschnitt `#gespeichert`, Schlüssel `legal.saved_title`/`legal.saved_text`, fünf Sprachen, 17/AK-68) |
+| **Empfänger** | keine. Die Inhalte liegen in der eigenen Datenbank beim Hoster (Hostinger, siehe unten) und gehen an keinen weiteren Dienstleister — nicht an Brevo, nicht an Sentry, nicht an Umami. Das Feature verschickt keine Mail |
+| **Speicherort** | eigene Datenbank (`favorite`, `saved_list`, `saved_list_entry`, `restaurant_note`) |
+| **Wer darf** | jedes angemeldete Konto, **auch ein unbestätigtes** (17/AK-69, Decision Log 13: alles ist privat und wirkt auf niemanden sonst) |
+
+**Verarbeitete Daten**
+
+| Tabelle | Inhalt |
+|---|---|
+| `favorite` | welches Konto welches Lokal gemerkt hat, mit Zeitpunkt |
+| `saved_list` | Name der Liste (Freitext, höchstens 60 Zeichen), derselbe Name in Kleinbuchstaben als Vergleichsschlüssel (`name_key`), angelegt am; höchstens 25 Listen je Konto |
+| `saved_list_entry` | welches Lokal in welcher Liste steht, mit Zeitpunkt — das Konto ergibt sich über die Liste |
+| `restaurant_note` | Text der Notiz (Freitext, höchstens 500 Zeichen), höchstens eine je Konto und Lokal, zuletzt geändert am |
+
+Dazu, **nur in der Sitzung eines Gastes**: Tippt ein Abgemeldeter aufs Herz, merkt sich
+seine Sitzung die Lokalnummer (`gespeichert.merkwunsch`) und die Seite, auf die er nach
+der Anmeldung zurückkehrt. Gespeichert wird erst nach der Anmeldung; endet die Sitzung
+vorher, verfällt der Wunsch (17/AK-08 bis AK-10, EC-01).
+
+⚠ **Die Notiz ist Freitext, in dem eine Gesundheitsangabe stehen kann** — „Rampe für
+Papas Rollstuhl zu steil“; ebenso ein Listenname. Das ist genau der Fall aus dem Kopf
+dieser Datei: **unaufgefordert, privat, nie veröffentlicht.** Die Datenschutzstufe
+bleibt **B** (17, Decision Log 21). Kein Feld fragt nach Bedarf oder Einschränkung; das
+Notizfeld trägt nur den Hinweis „Nur für dich sichtbar.“ und bewusst **keinen** Hinweis
+„bitte keine Gesundheitsangaben“ — anders als beim Board wird die Notiz nicht
+veröffentlicht, und ihr Zweck ist genau so eine Angabe (Decision Log 22). Die Grenze von
+500 Zeichen ist auch Datensparsamkeit: Je länger der Freitext, desto wahrscheinlicher die
+Gesundheitsangabe (Decision Log 10).
+
+⚠ **Wer daraus ein strukturiertes Feld macht** — ein Ankreuzfeld „für Rollstuhl“, eine
+Auswahl „wofür gemerkt“ —, hebt die Einstufung auf (siehe Kopf).
+
+**Schutzmaßnahmen**
+
+- **Besitz über die Abfrage.** Jede Repository-Methode nimmt das Konto als
+  Pflichtargument; eine Liste findet nur „Nummer **und** Konto“
+  (`SavedListRepository::findOneOwned()`). Eine fremde Nummer endet in 404 — ohne Namen,
+  ohne Zahl, gleich wie eine Nummer, die es nicht gibt (17/AK-52 bis AK-54). Das Konto
+  kommt immer aus der Sitzung, kein Formular nimmt eine Kontokennung entgegen.
+- **Keine Verwaltungsansicht.** Keine Seite unter `/admin` zeigt Favoriten, Listen,
+  Listennamen, Notizen oder deren Anzahl — weder je Konto noch zusammengezählt; `ROLE_ADMIN`
+  sieht wie jedes Konto nur das eigene (17/AK-59, `SavedPrivacyLeakTest`).
+- **Sentry ohne Anfragerumpf** — `max_request_body_size: never` (siehe Sentry unter
+  „Weitere Verarbeiter“, 17/AK-65). Ohne die Zeile stünde der Notiztext eines
+  fehlgeschlagenen Speicherns im Fehlerbericht.
+- **Kein SQL-Protokoll in Produktion** — `doctrine.dbal.logging: false` unter `when@prod`
+  (`config/packages/doctrine.yaml`), ausdrücklich, obwohl es der Vorgabe entspricht. Mit
+  Protokoll stünde jeder gebundene Parameter darin, auch ein Notiztext, und
+  `fingers_crossed` schriebe bei einem Fehler den ganzen Puffer nach stderr. Der Kanal
+  `doctrine` ist in `monolog.yaml` zusätzlich ausgeschlossen (17/AK-64).
+- **Nutzungsmessung ohne Inhalt.** Zwei Ereignisse ohne Datenfeld — `herz_gesetzt` und
+  `liste_angelegt`; ein mitgeschicktes Feld verwirft das Ereignis. Der Filter „Nur meine
+  Favoriten“ zählt nur als Schlüssel `favorites` im bestehenden Ereignis
+  `filter_angewandt`. Kein Lokal, kein Listenname, keine Nummer. Herz entfernen, Notiz
+  speichern, Umbenennen, Löschen und Aus-Liste-entfernen zählen gar nicht. Pfade unter
+  `/{xx}/gespeichert/listen/…` werden auf `/{xx}/gespeichert/listen` **gekürzt** und ohne
+  Seitentitel weitergegeben (der Titel kann den Listennamen tragen) — in
+  `CollectPayloadNormalizer` **und** in `assets/usage/before_send.ts` (17/AK-64, AK-66,
+  AK-67).
+- **Keine Anzeige nach dem Abmelden.** Auf `app_saved_*`, `app_restaurant_index` und
+  `app_restaurant_show` (`App\Saved\PrivatePages`) trägt die Antwort für ein angemeldetes
+  Konto `Cache-Control: no-store, private` und der Seitenkopf
+  `<meta name="turbo-cache-control" content="no-cache">` — „Zurück“ nach dem Abmelden lädt
+  vom Server, nicht aus Turbos Schnappschuss oder dem Back-Forward-Cache (17/AK-63).
+  ⚠ Im Browser nachgeprüft nur in Chromium; **Safari ist offen**
+  (`qa/17/browser-durchgang-2026-11-14.md`). Offline zeigt die installierte App die
+  Offline-Seite, keine zwischengespeicherte Liste (`public/sw.js` speichert keine
+  Navigationen, aus dem Quelltext belegt, 17/EC-11).
+
+**Löschung**
+
+- **Mit dem Konto:** Favoriten, Listen samt Einträgen und Notizen fallen per
+  Datenbank-Kaskade (`ON DELETE CASCADE` über `user_id`, Einträge über `list_id`) — die
+  Kontolöschung aus Feature 01 braucht dafür keine eigene Zeile; es bleibt nichts zurück,
+  eine Aufbewahrungspflicht gibt es nicht (17/AK-61).
+- **Mit dem Lokal:** Löscht die Verwaltung ein Lokal, verschwinden alle Favoriten,
+  Listeneinträge und Notizen dazu bei allen Konten — still, ohne Mail, ohne Hinweis
+  (Kaskade über `restaurant_id`, 17/AK-62, Decision Log 18).
+- **Einzeln durch den Nutzer:** Herz entfernen, Lokal aus einer Liste nehmen, Liste löschen
+  (ihre Einträge fallen mit, Herz und Notizen bleiben), Notiz leeren — eine leere Notiz ist
+  keine Zeile, das Leeren löscht sie.
+- **Keine eigene Frist.** Ein Favorit lebt bis zum Entfernen, eine Liste bis zum Löschen,
+  eine Notiz bis zum Leeren — jeweils höchstens so lange wie Konto und Lokal.
+- ⚠ **Unbestätigte Konten werden nie aufgeräumt** (B01) — ihre Notizen liegen damit
+  unbefristet. Gehört zu B01, nicht zu Feature 17; notiert, weil dieses Feature dort
+  erstmals Freitext ablegt (**17/OF-03**, offen, eigener Auftrag an B01).
+
+**Auskunft:** Der Datenexport des Kontos (`AccountDataExporter`, Format unverändert
+`endlech.lu account export v1`, rein ergänzend) führt drei neue Schlüssel (17/AK-60):
+
+| Schlüssel | Inhalt |
+|---|---|
+| `favorites` | je Favorit Lokalnummer, Name des Lokals, gemerkt am (`savedAt`) |
+| `savedLists` | je Liste Name, angelegt am, die Lokale je mit Nummer, Name und Zeitpunkt (`addedAt`) — ohne die interne Listennummer |
+| `notes` | je Notiz Lokalnummer, Name des Lokals, Text, zuletzt geändert (`updatedAt`) |
+
+Der Notiztext steht im Export, weil die Auskunft an die Person selbst geht, die ihn
+geschrieben hat — es ist der einzige Weg, auf dem er das System verlässt.
+
 ### Hostinger (Hosting, seit 2026-09-02)
 
 ⚠ **Der Auftragsverarbeiter ist Hostinger, nicht Coolify.** Coolify ist *selbst
@@ -410,8 +526,29 @@ Unterlage — dokumentiert wäre sonst der Weg vom Projekt zum VPS der Überwach
 | Dienst | Zweck | Sitz | Bemerkung |
 |---|---|---|---|
 | **Hostinger** (Hosting) | Betrieb der Anwendung, des Messenger-Workers und der Datenbank | Zypern (EU); Server in **Deutschland** | Siehe eigener Abschnitt unten. ⚠ **Nicht Coolify** — das ist selbst betriebene Software und sieht die Daten nur auf dem eigenen Server |
-| Sentry | Fehler-Tracking | EU (`ingest.de.sentry.io`, Frankfurt) | `send_default_pii: false` — keine IP-Adressen, Cookies, Request-Header oder Nutzerdaten. `zend.exception_ignore_args` bleibt auf `On`, damit keine Funktionsargumente (und damit keine Passwörter) in Stacktraces landen |
+| Sentry | Fehler-Tracking | EU (`ingest.de.sentry.io`, Frankfurt) | `send_default_pii: false` — keine IP-Adressen, Cookies, Request-Header oder Nutzerdaten. `zend.exception_ignore_args` bleibt auf `On`, damit keine Funktionsargumente (und damit keine Passwörter) in Stacktraces landen. **Seit Feature 17 `max_request_body_size: never`** — kein Anfragerumpf; ⚠ wirksam erst mit dessen Auslieferung, siehe unten |
 | Mobilité (HAFAS) | Haltestellen in der Nähe | Luxemburg | Es gehen **Koordinaten eines Restaurants** hin, keine Nutzerdaten |
+
+⚠ **Sentry erhielt den Anfragerumpf — trotz `send_default_pii: false`.** Festgestellt beim
+Entwurf von Feature 17 (2026-11-13): `sentry/sentry` (im Projekt 4.30.0) hängt an jedes
+Ereignis aus einer fehlerhaften Anfrage deren Rumpf bis 10 KB an (Option
+`max_request_body_size`, Vorgabe `medium`), **unabhängig von `send_default_pii`** —
+nachgesehen in `vendor/sentry/sentry/src/Integration/RequestIntegration.php` und
+`Options.php`. Betroffen waren Passwortfelder (Registrierung, Passwortwechsel,
+Kontolöschung) und Board-Texte; `zend.exception_ignore_args` deckt nur Funktionsargumente
+in Stacktraces, nicht den Rumpf. Damit hielt auch die Zusage auf `/legal`
+(`legal.error_tracking_text`: „IP-Adressen und Nutzerdaten werden dabei nicht
+übertragen.“) nicht vollständig.
+
+- **Behoben im Code:** `config/packages/sentry.yaml`, `when@prod`:
+  `max_request_body_size: never` — für alle Wege, nicht nur die Notiz (17, `design.md`,
+  Technische Entscheidung 12: ein Filter je Feld vergisst das nächste Feld). Adresse,
+  Methode und Stacktrace reichen zur Fehlersuche. `SentryRequestBodyTest` liest den Wert
+  aus der Produktionskonfiguration.
+- ⚠ **Wirksam erst mit der Auslieferung von Feature 17** (Stand 2026-11-14: nicht
+  ausgeliefert). Bis dahin sendet die Produktion den Rumpf weiter.
+- **Offen (Betreiber):** In Sentry prüfen, ob dort bereits Ereignisse mit Anfragerumpf
+  liegen — insbesondere aus Registrierung, Passwortwechsel, Kontolöschung und Board.
 
 ---
 

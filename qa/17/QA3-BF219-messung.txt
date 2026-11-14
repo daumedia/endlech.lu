@@ -1,0 +1,17 @@
+# QA17 dritte Prüfung · BF-219 waagerechter Überlauf (Listen „Wochenendausflugsrestaurantauswahl“ 34, 60-stelliger Name)
+vorher-mutiert chromium 320px Lokal 12: scrollWidth 534 / clientWidth 320, rechte Kante Beschriftungen 534
+vorher-mutiert chromium 320px Lokal 22: scrollWidth 534 / clientWidth 320, rechte Kante Beschriftungen 534
+vorher-mutiert chromium 375px Lokal 12: scrollWidth 534 / clientWidth 375, rechte Kante Beschriftungen 534
+vorher-mutiert chromium 375px Lokal 22: scrollWidth 534 / clientWidth 375, rechte Kante Beschriftungen 534
+vorher-mutiert webkit 320px Lokal 12: scrollWidth 534 / clientWidth 320, rechte Kante Beschriftungen 534
+vorher-mutiert webkit 320px Lokal 22: scrollWidth 534 / clientWidth 320, rechte Kante Beschriftungen 534
+vorher-mutiert webkit 375px Lokal 12: scrollWidth 534 / clientWidth 375, rechte Kante Beschriftungen 534
+vorher-mutiert webkit 375px Lokal 22: scrollWidth 534 / clientWidth 375, rechte Kante Beschriftungen 534
+jetzt chromium 320px Lokal 12: scrollWidth 320 / clientWidth 320, rechte Kante Beschriftungen 279
+jetzt chromium 320px Lokal 22: scrollWidth 320 / clientWidth 320, rechte Kante Beschriftungen 279
+jetzt chromium 375px Lokal 12: scrollWidth 375 / clientWidth 375, rechte Kante Beschriftungen 334
+jetzt chromium 375px Lokal 22: scrollWidth 375 / clientWidth 375, rechte Kante Beschriftungen 334
+jetzt webkit 320px Lokal 12: scrollWidth 320 / clientWidth 320, rechte Kante Beschriftungen 279
+jetzt webkit 320px Lokal 22: scrollWidth 320 / clientWidth 320, rechte Kante Beschriftungen 279
+jetzt webkit 375px Lokal 12: scrollWidth 375 / clientWidth 375, rechte Kante Beschriftungen 334
+jetzt webkit 375px Lokal 22: scrollWidth 375 / clientWidth 375, rechte Kante Beschriftungen 334

@@ -1,0 +1,18 @@
+D302 U302 d=0 db=6af876d1585f77.58311645.png neue_dateien=[6af876d1585f77.58311645.png ] -> ok
+D302 U302 d=0 db=6af876d1afe617.04618678.png neue_dateien=[6af876d1afe617.04618678.png ] -> ok
+U302 D302 d=0.01 db=NULL neue_dateien=[] -> ok
+U302 D302 d=0.02 db=NULL neue_dateien=[] -> ok
+U302 D302 d=0.03 db=NULL neue_dateien=[] -> ok
+U302 D302 d=0.04 db=NULL neue_dateien=[] -> ok
+U302 D302 d=0.05 db=NULL neue_dateien=[] -> ok
+U302 D302 d=0.06 db=NULL neue_dateien=[] -> ok
+U302 D302 d=0.08 db=NULL neue_dateien=[] -> ok
+U302 D302 d=0.1 db=NULL neue_dateien=[] -> ok
+U302 D302 d=0.12 db=NULL neue_dateien=[] -> ok
+U302 D302 d=0.15 db=NULL neue_dateien=[] -> ok
+U302 D302 d=0.2 db=NULL neue_dateien=[] -> ok
+U302 D302 d=0.25 db=NULL neue_dateien=[] -> ok
+U302 D302 d=0.3 db=NULL neue_dateien=[] -> ok
+Durchgänge 15, tote Verweise 0, verwaiste Dateien 0
+
+Durchgänge 42, tote Verweise 0, verwaiste Dateien 0

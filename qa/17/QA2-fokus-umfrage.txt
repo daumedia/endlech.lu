@@ -1,0 +1,80 @@
+QA 17 · zweite Prüfung 2026-11-14 · Fokus-Umfrage am Pixel (Chromium, Tastaturfokus, jetzt gegen alte ungeschichtete Regel per <style> nachgestellt)
+Skript /tmp/qa17b/bin/fokus.js; sichtbar = Pixel mit >= 3:1 Änderung >= Umfang
+
+== 1280 px
+Elemente 2311, Fehler 0, ohne Fokus 0
+Rückschritte 0, neu sichtbar 34, schwach jetzt und vorher 15
+--- Rückschritte
+--- neu sichtbar (Seite, Text, Fokusklasse, Band)
+  /de/                                       4 × focus:outline-offset-2 focus:outline-white | from-cyan-600
+  /de/                                       2 × focus:outline-offset-2 focus:outline-white | from-purple-700
+  /de/about                                  1 × focus:outline-offset-2 focus:outline-white | from-cyan-600
+  /de/app                                    1 × focus:outline-offset-2 focus:outline-white | from-cyan-700
+  /de/changelog                              1 × focus:outline-offset-2 focus:outline-white | from-cyan-700
+  /de/gespeichert/favoriten                  1 × focus:outline-offset-2 focus:outline-white | from-cyan-700
+  /de/gespeichert/listen/51                  1 × focus:outline-offset-2 focus:outline-white | from-cyan-700
+  /de/gespeichert/listen/53                  1 × focus:outline-offset-2 focus:outline-white | from-cyan-700
+  /de/open                                   6 × focus:outline-offset-2 focus:outline-white | from-cyan-700
+  /de/organisationen/gemeinden               1 × focus-visible:outline-offset-2 focus-visible:outline-white | from-cyan-700
+  /de/organisationen/unternehmen             1 × focus-visible:outline-offset-2 focus-visible:outline-white | from-cyan-700
+  /de/partner                                1 × focus:outline-offset-2 focus:outline-white | from-cyan-700
+  /de/presse                                 7 × focus:outline-offset-2 focus:outline-white | from-cyan-700
+  /de/roadmap                                1 × focus:outline-offset-2 focus:outline-white | from-cyan-700
+  /de/roadmap/ideen                          1 × focus:outline-offset-2 focus:outline-white | from-cyan-700
+  /de/vergleich/google-maps                  2 × focus:outline-offset-2 focus:outline-white | from-cyan-700
+  /de/vergleich/wheelmap                     2 × focus:outline-offset-2 focus:outline-white | from-cyan-700
+--- schwach (jetzt und vorher nicht sichtbar)
+  gast /de/restaurants | select | Küche |  | None | 1x80 n3 0 / 162 max 1 vorher 0 | solid 2px rgb(14, 116, 144) off 2px
+  gast /de/restaurants | input | Küche |  | None | 224x26 n3 0 / 500 max 2.69 vorher 0 | none 3px rgb(48, 48, 48) off 2px
+  gast /de/restaurants?wheelchair=1&page=2 | select | Küche |  | None | 1x80 n3 0 / 162 max 1 vorher 0 | solid 2px rgb(14, 116, 144) off 2px
+  gast /de/restaurants?wheelchair=1&page=2 | input | Küche |  | None | 224x26 n3 0 / 500 max 2.69 vorher 0 | none 3px rgb(48, 48, 48) off 2px
+  gast /de/restaurants/12 | button | Pizzeria Bella Vista merken | focus:outline-offset-2 focus:outline-cyan-700 | from-cyan-600 | 44x44 n3 0 / 176 max 1.06 vorher 0 | solid 2px oklch(0.52 0.105 223.128) off 2px
+  gast /de/restaurants/22 | button | Brasserie du Grund merken | focus:outline-offset-2 focus:outline-cyan-700 | from-cyan-600 | 44x44 n3 0 / 176 max 1.07 vorher 0 | solid 2px oklch(0.52 0.105 223.128) off 2px
+  gast /de/vergleich/wheelmap | div | Merkmalsvergleich zwischen Endlech.lu un | focus:outline-offset-2 focus:outline-cyan-700 | None | 864x1645 n3 3276 / 5018 max 5.05 vorher 3276 | solid 2px oklch(0.52 0.105 223.128) off 2px
+  gast /de/vergleich/google-maps | div | Merkmalsvergleich zwischen Endlech.lu un | focus:outline-offset-2 focus:outline-cyan-700 | None | 864x1504 n3 3276 / 4736 max 5.05 vorher 3276 | solid 2px oklch(0.52 0.105 223.128) off 2px
+  konto /de/restaurants?favorites=1 | select | Küche |  | None | 1x80 n3 0 / 162 max 1 vorher 0 | solid 2px rgb(14, 116, 144) off 2px
+  konto /de/restaurants?favorites=1 | input | Küche |  | None | 224x26 n3 0 / 500 max 2.69 vorher 0 | none 3px rgb(48, 48, 48) off 2px
+  konto /de/restaurants | select | Küche |  | None | 1x80 n3 0 / 162 max 1 vorher 0 | solid 2px rgb(14, 116, 144) off 2px
+  konto /de/restaurants | input | Küche |  | None | 224x26 n3 0 / 500 max 2.69 vorher 0 | none 3px rgb(48, 48, 48) off 2px
+  konto /de/restaurants/12 | button | Pizzeria Bella Vista aus Favoriten entfe | focus:outline-offset-2 focus:outline-cyan-700 | from-cyan-600 | 44x44 n3 0 / 176 max 1.06 vorher 0 | solid 2px oklch(0.52 0.105 223.128) off 2px
+  konto /de/restaurants/13 | button | Umami Corner merken | focus:outline-offset-2 focus:outline-cyan-700 | from-cyan-600 | 44x44 n3 0 / 176 max 1.06 vorher 0 | solid 2px oklch(0.52 0.105 223.128) off 2px
+  admin /de/admin/restaurants/12/bearbeiten | select | Französisch Asiatisch Japanisch Chinesis |  | None | 1x80 n3 0 / 162 max 1 vorher 0 | solid 2px rgb(14, 116, 144) off 2px
+
+== 375 px
+Elemente 2180, Fehler 0, ohne Fokus 0
+Rückschritte 0, neu sichtbar 34, schwach jetzt und vorher 15
+--- Rückschritte
+--- neu sichtbar (Seite, Text, Fokusklasse, Band)
+  /de/                                       4 × focus:outline-offset-2 focus:outline-white | from-cyan-600
+  /de/                                       2 × focus:outline-offset-2 focus:outline-white | from-purple-700
+  /de/about                                  1 × focus:outline-offset-2 focus:outline-white | from-cyan-600
+  /de/app                                    1 × focus:outline-offset-2 focus:outline-white | from-cyan-700
+  /de/changelog                              1 × focus:outline-offset-2 focus:outline-white | from-cyan-700
+  /de/gespeichert/favoriten                  1 × focus:outline-offset-2 focus:outline-white | from-cyan-700
+  /de/gespeichert/listen/51                  1 × focus:outline-offset-2 focus:outline-white | from-cyan-700
+  /de/gespeichert/listen/53                  1 × focus:outline-offset-2 focus:outline-white | from-cyan-700
+  /de/open                                   6 × focus:outline-offset-2 focus:outline-white | from-cyan-700
+  /de/organisationen/gemeinden               1 × focus-visible:outline-offset-2 focus-visible:outline-white | from-cyan-700
+  /de/organisationen/unternehmen             1 × focus-visible:outline-offset-2 focus-visible:outline-white | from-cyan-700
+  /de/partner                                1 × focus:outline-offset-2 focus:outline-white | from-cyan-700
+  /de/presse                                 7 × focus:outline-offset-2 focus:outline-white | from-cyan-700
+  /de/roadmap                                1 × focus:outline-offset-2 focus:outline-white | from-cyan-700
+  /de/roadmap/ideen                          1 × focus:outline-offset-2 focus:outline-white | from-cyan-700
+  /de/vergleich/google-maps                  2 × focus:outline-offset-2 focus:outline-white | from-cyan-700
+  /de/vergleich/wheelmap                     2 × focus:outline-offset-2 focus:outline-white | from-cyan-700
+--- schwach (jetzt und vorher nicht sichtbar)
+  gast /de/restaurants | select | Küche |  | None | 1x80 n3 0 / 162 max 1 vorher 0 | solid 2px rgb(14, 116, 144) off 2px
+  gast /de/restaurants | input | Küche |  | None | 263x26 n3 0 / 578 max 2.69 vorher 0 | none 3px rgb(48, 48, 48) off 2px
+  gast /de/restaurants?wheelchair=1&page=2 | select | Küche |  | None | 1x80 n3 0 / 162 max 1 vorher 0 | solid 2px rgb(14, 116, 144) off 2px
+  gast /de/restaurants?wheelchair=1&page=2 | input | Küche |  | None | 263x26 n3 0 / 578 max 2.69 vorher 0 | none 3px rgb(48, 48, 48) off 2px
+  gast /de/restaurants/12 | button | Pizzeria Bella Vista merken | focus:outline-offset-2 focus:outline-cyan-700 | from-cyan-600 | 44x44 n3 0 / 176 max 1.33 vorher 0 | solid 2px oklch(0.52 0.105 223.128) off 2px
+  gast /de/restaurants/22 | button | Brasserie du Grund merken | focus:outline-offset-2 focus:outline-cyan-700 | from-cyan-600 | 44x44 n3 0 / 176 max 1.32 vorher 0 | solid 2px oklch(0.52 0.105 223.128) off 2px
+  konto /de/restaurants?favorites=1 | select | Küche |  | None | 1x80 n3 0 / 162 max 1 vorher 0 | solid 2px rgb(14, 116, 144) off 2px
+  konto /de/restaurants?favorites=1 | input | Küche |  | None | 263x26 n3 0 / 578 max 2.69 vorher 0 | none 3px rgb(48, 48, 48) off 2px
+  konto /de/restaurants | select | Küche |  | None | 1x80 n3 0 / 162 max 1 vorher 0 | solid 2px rgb(14, 116, 144) off 2px
+  konto /de/restaurants | input | Küche |  | None | 263x26 n3 0 / 578 max 2.69 vorher 0 | none 3px rgb(48, 48, 48) off 2px
+  konto /de/restaurants/12 | button | Pizzeria Bella Vista aus Favoriten entfe | focus:outline-offset-2 focus:outline-cyan-700 | from-cyan-600 | 44x44 n3 0 / 176 max 1.33 vorher 0 | solid 2px oklch(0.52 0.105 223.128) off 2px
+  konto /de/restaurants/13 | button | Umami Corner merken | focus:outline-offset-2 focus:outline-cyan-700 | from-cyan-600 | 44x44 n3 0 / 176 max 1.24 vorher 0 | solid 2px oklch(0.52 0.105 223.128) off 2px
+  admin /de/admin/restaurants/12/bearbeiten | select | Französisch Asiatisch Japanisch Chinesis |  | None | 1x80 n3 0 / 162 max 1 vorher 0 | solid 2px rgb(14, 116, 144) off 2px
+  admin /de/admin/restaurants/12/bearbeiten | a | × |  | None | 21x18 n3 44 / 78 max 4.79 vorher 44 | solid 2px rgb(14, 116, 144) off 2px
+  admin /de/admin/restaurants/12/bearbeiten | a | × |  | None | 21x18 n3 44 / 78 max 4.79 vorher 44 | solid 2px rgb(14, 116, 144) off 2px

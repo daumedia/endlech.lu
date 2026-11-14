@@ -1,0 +1,43 @@
+375 gast /de/restaurants/15 | color-contrast | .mt-0\.5 :: Element has insufficient color contrast of 2.48 (foreground color: #99a1af, background color: #f9fafb, font size: 9.0pt 
+375 gast /de/restaurants/16 | color-contrast | .mt-0\.5 :: Element has insufficient color contrast of 2.48 (foreground color: #99a1af, background color: #f9fafb, font size: 9.0pt 
+375 gast /de/restaurants/19 | color-contrast | .items-start.p-4.border-gray-100:nth-child(1) > .mt-0\.5.text-gray-400.shrink-0 :: Element has insufficient color contrast of 2.48 (foreground color: #99a1af, background color: #f9fafb, font size: 9.0
+375 gast /de/restaurants/19 | color-contrast | .items-start.p-4.border-gray-100:nth-child(2) > .mt-0\.5.text-gray-400.shrink-0 :: Element has insufficient color contrast of 2.48 (foreground color: #99a1af, background color: #f9fafb, font size: 9.0
+375 gast /de/restaurants/21 | color-contrast | .mt-0\.5.text-gray-400.font-medium :: Element has insufficient color contrast of 2.48 (foreground color: #99a1af, background color: #f9fafb, font size: 9.0pt 
+1280 gast /de/ | color-contrast | .xl\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt
+1280 gast /de/restaurants | color-contrast | .xl\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt
+1280 gast /de/restaurants/12 | color-contrast | .xl\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt
+1280 gast /de/restaurants/13 | color-contrast | .xl\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt
+1280 gast /de/restaurants/14 | color-contrast | .xl\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt
+1280 gast /de/restaurants/15 | color-contrast | .xl\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt
+1280 gast /de/restaurants/15 | color-contrast | .mt-0\.5 :: Element has insufficient color contrast of 2.48 (foreground color: #99a1af, background color: #f9fafb, font size: 9.0pt 
+1280 gast /de/restaurants/16 | color-contrast | .xl\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt
+1280 gast /de/restaurants/16 | color-contrast | .mt-0\.5 :: Element has insufficient color contrast of 2.48 (foreground color: #99a1af, background color: #f9fafb, font size: 9.0pt 
+1280 gast /de/restaurants/17 | color-contrast | .xl\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt
+1280 gast /de/restaurants/18 | color-contrast | .xl\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt
+1280 gast /de/restaurants/19 | color-contrast | .xl\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt
+1280 gast /de/restaurants/19 | color-contrast | .items-start.p-4.border-gray-100:nth-child(1) > .mt-0\.5.text-gray-400.shrink-0 :: Element has insufficient color contrast of 2.48 (foreground color: #99a1af, background color: #f9fafb, font size: 9.0
+1280 gast /de/restaurants/19 | color-contrast | .items-start.p-4.border-gray-100:nth-child(2) > .mt-0\.5.text-gray-400.shrink-0 :: Element has insufficient color contrast of 2.48 (foreground color: #99a1af, background color: #f9fafb, font size: 9.0
+1280 gast /de/restaurants/20 | color-contrast | .xl\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt
+1280 gast /de/restaurants/21 | color-contrast | .xl\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt
+1280 gast /de/restaurants/21 | color-contrast | .mt-0\.5.text-gray-400.font-medium :: Element has insufficient color contrast of 2.48 (foreground color: #99a1af, background color: #f9fafb, font size: 9.0pt 
+1280 gast /de/restaurants/22 | color-contrast | .xl\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt
+1280 gast /de/open | color-contrast | .xl\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt
+1280 gast /de/presse | color-contrast | .xl\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt
+1280 gast /de/vergleich | color-contrast | .xl\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt
+1280 gast /de/partner | color-contrast | .xl\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt
+1280 gast /de/organisationen | color-contrast | .xl\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt
+1280 gast /de/organisationen/unternehmen | color-contrast | .xl\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt
+1280 gast /de/sponsoren | color-contrast | .xl\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt
+1280 gast /de/app | color-contrast | .xl\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt
+1280 gast /de/roadmap | color-contrast | .xl\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt
+1280 gast /de/about | color-contrast | .xl\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt
+375 konto /de/profile | color-contrast | .min-h-\[48px\] :: Element has insufficient color contrast of 3.61 (foreground color: #ffffff, background color: #0092b8, font size: 12.0pt
+1280 konto /de/gespeichert | color-contrast | .xl\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt
+1280 konto /de/gespeichert/favoriten | color-contrast | .xl\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt
+1280 konto /de/gespeichert/listen/53 | color-contrast | .xl\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt
+1280 konto /de/gespeichert/listen/51 | color-contrast | .xl\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt
+1280 konto /de/gespeichert/listen/53/loeschen | color-contrast | .xl\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt
+1280 konto /de/restaurants?favorites=1 | color-contrast | .xl\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt
+1280 konto /de/restaurants/12 | color-contrast | .xl\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt
+1280 konto /de/profile | color-contrast | .xl\:block :: Element has insufficient color contrast of 2.35 (foreground color: #01b6ed, background color: #ffffff, font size: 18.0pt
+1280 konto /de/profile | color-contrast | .min-h-\[48px\] :: Element has insufficient color contrast of 3.61 (foreground color: #ffffff, background color: #0092b8, font size: 12.0pt

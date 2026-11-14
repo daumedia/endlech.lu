@@ -28,6 +28,9 @@ repo:
     link_label: "CHANGELOG.md auf GitHub öffnen"
 
 release:
+    v2026_11_14:
+        title: "Lokale merken und in eigenen Listen sammeln"
+        body: "Mit einem Konto können Sie Lokale jetzt mit dem Herz auf jeder Restaurantkarte und auf der Detailseite merken. Auf der Detailseite legen Sie eigene Listen an – etwa „Mittagessen nahe der Arbeit“ – und schreiben eine private Notiz zu jedem Lokal. Alles finden Sie unter „Gespeichert“, und die Suche zeigt auf Wunsch nur Ihre Favoriten. Ihre Favoriten, Listen und Notizen sehen nur Sie."
     v2026_11_07:
         title: "Roadmap und Ideen an einem Ort"
         body: "Was wir vorhaben und was sich die Community wünscht, steht jetzt zusammen unter „Roadmap & Ideen“: drei Reiter für die Roadmap, die Ideen und diesen Changelog, erreichbar über einen einzigen Eintrag am Ende jeder Seite. Den Knopf „Idee einreichen“ finden Sie auf jedem der drei Reiter. Die Ideen sind umgezogen; alte Links, auch aus E-Mails, führen weiter an die richtige Stelle."

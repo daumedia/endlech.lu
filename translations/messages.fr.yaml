@@ -408,6 +408,8 @@ legal:
     rights_profile_link: "vers mon profil"
     retention_title: "Durée de conservation"
     retention_text: "Les données de compte sont conservées tant que le compte existe ; après suppression, elles disparaissent immédiatement. Les inscriptions aux listes d’attente restent jusqu’à leur retrait ou le lancement du programme. Les informations sur les restaurants restent durablement — ce sont des données factuelles, dissociées de la personne après une suppression de compte. Les données de mesure d’audience sont conservées sans limite de durée ; elles ne contiennent ni adresse IP ni lien avec un compte."
+    saved_title: "Favoris, listes et notes"
+    saved_text: "Si vous enregistrez des établissements, créez vos propres listes ou rédigez des notes avec un compte, nous conservons ces informations dans notre base de données : les établissements enregistrés, le nom et le contenu des listes ainsi que le texte des notes, chaque fois avec la date. Vous êtes la seule personne à pouvoir les voir – ni les autres visiteurs, ni l'équipe d'Endlech.lu. Elles se trouvent dans notre base de données chez l'hébergeur mentionné ci-dessus et ne sont transmises à aucun autre prestataire : ni à l'analyse des erreurs, ni à l'envoi des e-mails, ni à la mesure d'audience (nous y comptons seulement qu'un établissement a été enregistré ou qu'une liste a été créée, jamais lequel). Elles figurent dans votre export de données et sont supprimées avec votre compte ; si un établissement disparaît d'Endlech.lu, vos informations à son sujet disparaissent aussi. La base juridique est la fourniture des fonctions de votre compte (art. 6, § 1, point b, du RGPD)."
 
 criteria:
     score_title: "Comment le score est calculé"
@@ -1715,3 +1717,71 @@ sponsor:
         open: "depuis %start%"
         closed: "%start% – %end%"
         joiner: " et "
+
+saved:
+    nav: "Enregistrés"
+    title: "Enregistrés"
+    page_title: "Enregistrés – Endlech.lu"
+    intro: "Vos favoris et vos propres listes. Vous êtes la seule personne à les voir."
+    to_search: "Vers la recherche de restaurants"
+    back: "Retour à « Enregistrés »"
+    login_hint: "Connectez-vous pour enregistrer %name%."
+    heart:
+        add: "Ajouter %name% aux favoris"
+        remove: "Retirer %name% des favoris"
+    flash:
+        added: "Ajouté aux favoris : %name%"
+        removed: "Retiré des favoris : %name%"
+        lists_saved: "Listes enregistrées."
+        list_created: "Liste « %list% » créée."
+        list_renamed: "Liste renommée en « %list% »."
+        list_deleted: "Liste « %list% » supprimée."
+        entry_removed: "%name% retiré de « %list% »."
+        note_saved: "Note enregistrée."
+        note_deleted: "Note supprimée."
+        rate_limited: "Trop de modifications. Veuillez réessayer dans %minutes% minutes."
+    favorites:
+        title: "Favoris"
+        page_title: "Favoris – Endlech.lu"
+        count: "{0}Rien d'enregistré pour l'instant|{1}1 établissement|]1,Inf[%count% établissements"
+        empty: "Rien d'enregistré pour l'instant. Touchez le cœur dans la recherche pour réunir un établissement ici."
+    lists:
+        heading: "Mes listes"
+        empty: "Pas encore de liste à vous. Créez-en une, par exemple pour une occasion ou un lieu."
+        count: "{0}0 établissement|{1}1 établissement|]1,Inf[%count% établissements"
+        new_label: "Nouvelle liste"
+        new_help: "60 caractères au maximum."
+        create: "Créer"
+    list:
+        page_title: "%list% – Endlech.lu"
+        empty: "Cette liste est encore vide. Ajoutez des établissements depuis leur page, sous « Dans mes listes »."
+        rename_label: "Nom de la liste"
+        rename: "Renommer"
+        delete: "Supprimer la liste"
+        remove_entry: "Retirer de la liste"
+    delete:
+        page_title: "Supprimer la liste – Endlech.lu"
+        question: "{0}Supprimer la liste « %list% » ?|{1}Supprimer la liste « %list% » (1 établissement) ?|]1,Inf[Supprimer la liste « %list% » (%count% établissements) ?"
+        explanation: "Les établissements eux-mêmes, vos favoris et vos notes sont conservés."
+        confirm: "Supprimer"
+        cancel: "Annuler"
+    panel:
+        lists_heading: "Dans mes listes"
+        lists_none: "Vous n'avez pas encore de liste à vous. Créez ici la première – cet établissement y est ajouté aussitôt."
+        new_label: "Nouvelle liste"
+        new_help: "Cet établissement est ajouté aussitôt à la nouvelle liste."
+        save: "Enregistrer"
+        note_heading: "Votre note"
+        note_label: "Note sur %name%"
+        note_help: "Visible uniquement par vous. 500 caractères au maximum."
+        note_save: "Enregistrer la note"
+    card:
+        note: "Votre note"
+    filter:
+        favorites: "Seulement mes favoris"
+        no_favorites: "Vous n'avez pas encore de favoris. Touchez le cœur d'un établissement pour le retrouver ici."
+        remove: "Retirer le filtre"
+    profile:
+        title: "Enregistrés"
+        text: "Vos favoris, listes et notes."
+        link: "Vers « Enregistrés »"

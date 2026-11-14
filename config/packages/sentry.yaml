@@ -11,6 +11,14 @@ when@prod:
             release: 'endlech@%app.version%'
             # Keine IP-Adressen, Cookies, Request-Header oder User-Daten an Sentry.
             send_default_pii: false
+            # ⚠ Feature 17 (AK-65): kein Anfragerumpf. sentry/sentry hängt den Rumpf
+            # einer Anfrage, die in einen Fehler läuft, bis 10 KB an jedes Ereignis –
+            # UNABHÄNGIG von send_default_pii (Vorgabe `medium`). Bis 2026-11-13 gingen
+            # so Passwortfelder (Registrierung, Passwortwechsel, Kontolöschung) und
+            # Board-Texte mit; seither stünden dort private Notizen. Die Zusage auf
+            # /legal („Nutzerdaten werden nicht übertragen“) hält erst mit dieser Zeile.
+            # Adresse, Methode und Stacktrace reichen zur Fehlersuche.
+            max_request_body_size: never
             # Strukturierte Logs aktivieren; den passenden Handler registriert
             # config/packages/monolog.yaml (enable_logs allein reicht nicht).
             enable_logs: true

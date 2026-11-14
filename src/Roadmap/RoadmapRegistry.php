@@ -34,7 +34,6 @@ final readonly class RoadmapRegistry
         return [
             new RoadmapItem('reviews', RoadmapStage::PLANNED),
             new RoadmapItem('map', RoadmapStage::PLANNED),
-            new RoadmapItem('favourites', RoadmapStage::PLANNED),
             // Features 13 und 14, beide aus Feature 12 (OF-01, OF-02) hervorgegangen.
             new RoadmapItem('computed_score', RoadmapStage::PLANNED),
             new RoadmapItem('not_recorded', RoadmapStage::PLANNED),

@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\RateLimiter\RateLimiterFactoryInterface;
 use Symfony\Component\Routing\Attribute\Route;
@@ -111,7 +112,12 @@ final class ProfileController extends AbstractController
             return $this->redirectToRoute('app_profile');
         }
 
-        $profileForm = $this->createForm(ProfileType::class, $user);
+        // ⚠ BF-226 (Muster BF-151): Das Formular trägt sein Ziel ausdrücklich. Nach einer Meldung (422)
+        // lässt Turbo die Adresse `/xx/profile` stehen; ohne `action` ging die Korrektur an
+        // `POST /xx/profile` (nur GET) → 405, die Eingabe war verloren. Ohne JavaScript fiel es nicht auf.
+        $profileForm = $this->createForm(ProfileType::class, $user, [
+            'action' => $this->generateUrl('app_profile_edit'),
+        ]);
         $profileForm->handleRequest($request);
 
         if ($profileForm->isSubmitted() && $profileForm->isValid()) {
@@ -128,12 +134,20 @@ final class ProfileController extends AbstractController
             // dauerhaft am Konto.
             $user->setEmail($bisherigeAdresse);
 
+            // ⚠ BF-184 (Muster BF-119): Ist das überhaupt eine Adresse? — VOR allem, was schreibt.
+            // `new Address()` prüft gegen RFC 2822 wie der spätere Versand. Stand die Prüfung erst beim
+            // `->to()` hinter dem `flush()`, war die Vormerkung schon gespeichert und ein Deckelplatz
+            // verbraucht, der Nutzer sah HTTP 500. Seit der strikten Prüfung im Formular ist der Fall über
+            // das Formular nicht mehr erreichbar; die Zeile bleibt, weil Formular und Versand sonst zwei
+            // Normen hätten. Das Ergebnis geht unten an `->to()`, damit niemand sie für doppelt hält.
+            $empfaenger = $adresseGeaendert ? new Address((string) $gewuenschteAdresse) : null;
+
             $avatarFile = $profileForm->get('avatar')->getData();
             if ($avatarFile instanceof UploadedFile) {
                 $avatarService->upload($avatarFile, $user);
             }
 
-            if ($adresseGeaendert) {
+            if (null !== $empfaenger) {
                 // ⚠ BF-176: am KONTO zählen. Mit `getUserIdentifier()` war der Schlüssel nach
                 // `handleRequest()` die GEWÜNSCHTE Adresse — jede neue Adresse brachte ein neues
                 // Kontingent, acht Wechsel auf acht Adressen liefen alle durch (16 Mails).
@@ -146,12 +160,12 @@ final class ProfileController extends AbstractController
                     return $this->redirectToRoute('app_profile');
                 }
 
-                $token = $user->requestEmailChange($gewuenschteAdresse);
+                $token = $user->requestEmailChange($empfaenger->getAddress());
                 $em->flush();
 
                 $limiter->consume();
 
-                $this->sendeAdressbestaetigung($request, $mailer, $user, $bisherigeAdresse, $gewuenschteAdresse, $token);
+                $this->sendeAdressbestaetigung($request, $mailer, $user, $bisherigeAdresse, $empfaenger, $token);
 
                 $this->addFlash('info', $this->translator->trans('flash.profile_email_pending', ['%email%' => $gewuenschteAdresse]));
 
@@ -317,7 +331,11 @@ final class ProfileController extends AbstractController
     public function changePassword(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $em): Response
     {
         $user = $this->getUser();
-        $passwordForm = $this->createForm(ChangePasswordType::class);
+        // ⚠ BF-226: Ziel ausdrücklich, wie in `edit()` — sonst geht die Korrektur nach einer Meldung an
+        // `POST /xx/profile` → 405.
+        $passwordForm = $this->createForm(ChangePasswordType::class, null, [
+            'action' => $this->generateUrl('app_profile_password'),
+        ]);
         $passwordForm->handleRequest($request);
 
         if ($passwordForm->isSubmitted() && $passwordForm->isValid()) {
@@ -379,7 +397,7 @@ final class ProfileController extends AbstractController
         MailerInterface $mailer,
         \App\Entity\User $user,
         string $bisherigeAdresse,
-        string $neueAdresse,
+        Address $neueAdresse,
         string $token,
     ): void {
         $confirmUrl = $this->generateUrl(
@@ -396,7 +414,7 @@ final class ProfileController extends AbstractController
             ->context([
                 'user' => $user,
                 'oldEmail' => $bisherigeAdresse,
-                'newEmail' => $neueAdresse,
+                'newEmail' => $neueAdresse->getAddress(),
                 'confirmUrl' => $confirmUrl,
             ]);
 
@@ -407,7 +425,7 @@ final class ProfileController extends AbstractController
             ->htmlTemplate('email/email_change_notice.html.twig')
             ->context([
                 'user' => $user,
-                'newEmail' => $neueAdresse,
+                'newEmail' => $neueAdresse->getAddress(),
             ]);
 
         try {

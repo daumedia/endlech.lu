@@ -104,7 +104,9 @@ final class PwaTest extends AbstractWebTestCase
 
         $aktiv = $leiste->filter('a[aria-current="page"]');
         self::assertCount(1, $aktiv, 'AK-12: Genau ein Feld gehört zur aktuellen Seite.');
-        self::assertStringContainsString('text-cyan-600', (string) $aktiv->attr('class'), 'AK-12: Farbe und aria-current gehören zusammen.');
+        // BF-215: cyan-700 (5,4 : 1), nicht cyan-600 — 12 px Schrift auf Weiß maß mit cyan-600 3,61 : 1.
+        self::assertStringContainsString(' text-cyan-700', (string) $aktiv->attr('class'), 'AK-12: Farbe und aria-current gehören zusammen.');
+        self::assertStringNotContainsString(' text-cyan-600', (string) $aktiv->attr('class'), 'BF-215: cyan-600 liegt unter 4,5 : 1.');
     }
 
     /**

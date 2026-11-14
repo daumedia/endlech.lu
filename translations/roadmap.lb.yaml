@@ -47,9 +47,6 @@ item:
     map:
         title: "Kaartenusiicht"
         reason: "D'Koordinate leien un all Lokal scho vir. Et feelt d'Kaart, déi weist, wat an der Noperschaft ass."
-    favourites:
-        title: "Favoritten"
-        reason: "Lokaler markéieren, ouni se all Kéier nei ze sichen — den éischten Notzen vun engem Kont iwwer d'Araiche eraus."
     computed_score:
         title: "Berechent Punktzuel op all Restaurantkaart"
         reason: "D'Zuel op all Restaurantkaart gëtt haut mat der Hand vergi an néierens erkläert. Amplaz kënnt d'Punktzuel aus aacht Merkmaler, déi schonn op der Transparenzsäit steet — fir all Lokal op déiselwecht Aart gerechent a fir jiddereen ze verstoen."

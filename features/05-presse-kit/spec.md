@@ -331,8 +331,15 @@ zwei Nummern für dieselbe Prüfung machen den Testbericht doppeldeutig.
   Gesundheitsangabe zu Werbe- und Pressezwecken liegt eine besondere Kategorie nach Art. 9
   vor — auch wenn die betroffene Person sie selbst offenlegt. Entscheidet Michael; die
   Antwort gehört in `docs/datenschutz.md`, nicht hierher.
+  **Stand 2026-11-07 — zur Hälfte erledigt.** Die Stufe ist entschieden: B, bestätigt am
+  2026-08-30 (`docs/datenschutz.md`). Die zweite Hälfte steht dort nicht: Die Begründung der
+  Stufe nennt nur Daten, die die Plattform **erhebt**; die eigene Gesundheitsangabe des
+  Betreibers in `person.bio`, die die Presseseite veröffentlicht, kommt in der Datei nicht
+  vor. — Michael
 - **OF-02** · Wer erstellt die vier Vektormarken aus VB-01, und bis wann? Ohne sie ist das
   Feature nicht auslieferbar. Entscheidet Michael.
+  ✔ **Erledigt, festgestellt 2026-11-07:** Die vier Marken sind aus `logo.png` nachgezeichnet
+  und liegen samt gepacktem Paket unter `public/presse-kit/` (BF-94, behoben 2026-08-30).
 - **OF-03** · Welche Antwortzeit wird in AK-28 zugesagt? Die Referenzseite verspricht
   „Antwort in der Regel am selben Werktag". Für einen Alleinbetrieb (PRD, Risiko 3) ist das
   eine Zusage, die im Urlaub bricht. Vorschlag: „innerhalb von zwei Werktagen". Entscheidet

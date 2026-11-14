@@ -79,6 +79,9 @@ Handlungsaufruf.
 
 - **OF-01** · Soll `/` den `Accept-Language`-Header auswerten (FB-03)? Bei vier
   gepflegten Sprachen und einem mehrsprachigen Land wäre es naheliegend. — Betreiber
+  ✔ **Umgesetzt am 2026-09-15** (`dbc74dd`, `LocaleRedirectController`): `/` und die
+  sprachfreien Kurzlinks leiten in die Sprache des Besuchers — Sitzung → `Accept-Language` →
+  `lb`. Festgestellt 2026-11-07.
 
 ## Decision Log
 

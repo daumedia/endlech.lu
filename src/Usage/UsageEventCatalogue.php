@@ -43,6 +43,14 @@ final readonly class UsageEventCatalogue
     /** Bildschirmnummern der Einführung — mehr als vier gibt es nicht. */
     public const array ONBOARDING_STEPS = ['1', '2', '3', '4'];
 
+    /**
+     * Favoriten und Listen (Feature 17, AK-66). Gezählt wird nur, **dass** es geschah — kein
+     * Lokal, kein Listenname, keine Nummer (AK-64). Beide tragen deshalb kein Datenfeld; ein
+     * mitgeschicktes verwirft das Ereignis. Entfernen, Umbenennen, Löschen und Notizen zählen nicht.
+     */
+    public const string HEART_SET = 'herz_gesetzt';
+    public const string LIST_CREATED = 'liste_angelegt';
+
     /** Filter mit Ja/Nein-Wert, wie sie die Restaurantliste als Abfrageparameter liest. */
     public const array FILTER_KEYS = [
         'verified',
@@ -56,6 +64,9 @@ final readonly class UsageEventCatalogue
         'vegan',
         'vegetarian',
         'halal',
+        // Feature 17, AK-66: „Nur meine Favoriten“ — gezählt wird, dass der Filter gesetzt war,
+        // nie wessen Favoriten (Technische Entscheidung 10: kein eigenes Ereignis).
+        'favorites',
     ];
 
     /**
@@ -86,6 +97,8 @@ final readonly class UsageEventCatalogue
             self::ONBOARDING_STARTED,
             self::ONBOARDING_COMPLETED,
             self::ONBOARDING_LEFT,
+            self::HEART_SET,
+            self::LIST_CREATED,
         ];
     }
 

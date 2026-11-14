@@ -1,0 +1,27 @@
+{#
+    Antwort auf das Herz mit Turbo (Feature 17, AK-01, AK-48).
+
+    1. Das Herz-Formular wird **gemorpht**, nicht ersetzt: Idiomorph behält das Knopf-Element mit
+       derselben Kennung, der Tastaturfokus bleibt darauf, und VoiceOver liest den neuen Namen.
+       (`method="morph"` wertet Turbo 8.0.23 für `replace` aus.)
+    2. Die Meldung geht in den dauerhaften Ansagebereich `#meldung-live` (role="status") der
+       App-Hülle — ein Bereich, der schon im Dokument steht, wird zuverlässig angesagt; ein neu
+       eingefügter nicht.
+    3. Beim tatsächlichen Merken der unsichtbare Messauslöser (BF-171: erst nach gelungener
+       Handlung; BF-177: `data-turbo-temporary`, sonst zählte jede Rückkehr aus dem Speicher).
+
+    Ohne JavaScript wird diese Vorlage nie erreicht: Der Controller leitet dann mit Meldung um.
+#}
+<turbo-stream action="replace" method="morph" target="favorit-{{ restaurant.id }}">
+    <template>
+        {{ include('partials/_favorite_button.html.twig', {restaurant: restaurant, isFavorite: isFavorite, ziel: ziel}) }}
+    </template>
+</turbo-stream>
+<turbo-stream action="update" target="meldung-live">
+    <template>
+        <p class="{{ meldungArt == 'error' ? 'bg-red-50 border-red-400 text-red-800' : 'bg-green-50 border-green-400 text-green-800' }} border-l-4 px-4 py-3 rounded-r-lg mb-4 text-sm font-medium">{{ meldung }}</p>
+        {% if usageEvent %}
+            <div hidden data-turbo-temporary data-controller="usage-event" data-usage-event-name-value="{{ usageEvent }}" data-usage-event-on-connect-value="true"></div>
+        {% endif %}
+    </template>
+</turbo-stream>

@@ -53,9 +53,6 @@ item:
     map:
         title: "Kartenansicht"
         reason: "Die Koordinaten liegen an jedem Lokal bereits vor. Es fehlt die Karte, die zeigt, was in der Nähe ist."
-    favourites:
-        title: "Favoriten"
-        reason: "Lokale merken, ohne sie jedes Mal neu zu suchen — der erste Nutzen eines Kontos über das Einreichen hinaus."
     computed_score:
         title: "Berechnete Punktzahl auf jeder Restaurantkarte"
         reason: "Die Zahl auf jeder Restaurantkarte wird heute von Hand vergeben und nirgends erklärt. An ihre Stelle tritt die Punktzahl aus acht Merkmalen, die schon auf der Transparenzseite steht — für jedes Lokal gleich gerechnet und nachvollziehbar."

@@ -35,6 +35,12 @@ when@test:
 
 when@prod:
     doctrine:
+        dbal:
+            # ⚠ Feature 17 (AK-64): Kein SQL-Protokoll in Produktion — ausdrücklich, obwohl es der
+            # Vorgabe (`%kernel.debug%`) entspricht. Mit Protokoll stünde jeder Parameter darin,
+            # auch der Text einer privaten Notiz, und `fingers_crossed` schreibt bei einem Fehler
+            # den ganzen Puffer der Anfrage nach stderr. `SavedPrivacyLeakTest` liest diese Zeile.
+            logging: false
         orm:
             query_cache_driver:
                 type: pool

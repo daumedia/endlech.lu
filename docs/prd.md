@@ -140,8 +140,15 @@ geöffnet, Stadt, Küche, Sprachen, vegan/vegetarisch/halal, nur verifizierte) �
 Detailseite mit Öffnungszeiten, Kontakt, Fotos, Türbreite, Tischabstand und
 Haltestellen in der Nähe.
 
-**Offener Punkt:** Kein Konto nötig, aber auch keine Möglichkeit, Favoriten zu
-speichern oder eine eigene Erfahrung zu hinterlassen.
+**Offener Punkt:** Kein Konto nötig, aber auch keine Möglichkeit, ~~Favoriten zu
+speichern oder~~ eine eigene Erfahrung zu hinterlassen.
+
+**Favoriten sind mit Feature `17` gebaut** (Stand 2026-11-14, **noch nicht
+ausgeliefert**): Wer ein Konto hat, merkt ein Lokal mit einem Tipp aufs Herz, sammelt
+Lokale in eigenen, privaten Listen, hält je Lokal eine private Notiz fest und findet alles
+auf der Seite „Gespeichert“; in der Suche filtert „Nur meine Favoriten“. Damit bringt ein
+Konto einen Nutzen über das Einreichen hinaus. **Offen bleiben Bewertungen und eigene
+Erfahrungen** — die Notiz ist privat und keine Bewertung.
 
 ### 2. Restaurantbetreiber
 
@@ -487,7 +494,7 @@ erste getragen hat.
 | Vorhaben | Beleg |
 |---|---|
 | **Kartenansicht** | `CHANGELOG.md`: „**Map:** Kartenansicht der Locations. *(geplant)*" — die Koordinaten liegen bereits an jedem Restaurant |
-| **Favoriten** | README, unerledigt: „User Profiles: Save favorites" |
+| ~~**Favoriten**~~ — **umgesetzt in Feature `17`** (gebaut, Stand 2026-11-14, noch nicht ausgeliefert) | README, unerledigt: „User Profiles: Save favorites". ⚠ Steht bis zum Release weiter öffentlich unter „Geplant“ (`RoadmapRegistry`, Eintrag `favourites`); die Roadmap-Durchsicht beim Release nimmt ihn heraus (17/AK-70, Aufgabe T29). Erst dann diese Zeile löschen |
 | **Bewertungen und Kommentare** | README, unerledigt: „Reviews: Comment system for accessibility feedback" |
 | **Native iOS-App** | `/api/v1` ist ausdrücklich als deren Backend gebaut; Kostenposten `APPLE_DEVELOPER` läuft bereits |
 | **Chat-Widget** | Stand bis 2026-08-30 nur auf dem externen Board `endlech.userjot.com` (Status „Planned") und in keinem Projektartefakt. Mit Feature `06` hierher überführt; das externe Board wird abgeschaltet |
@@ -524,7 +531,10 @@ statt ein neues zu geben.
 vorzeigbar macht.
 
 **Danach — Favoriten.** Klein, in sich abgeschlossen, gibt dem Konto einen
-Nutzen über das Einreichen hinaus.
+Nutzen über das Einreichen hinaus. — **Gebaut als Feature `17`** (Stand 2026-11-14,
+noch nicht ausgeliefert), vor Bewertungen und Karte: mehr als hier vorgeschlagen — zum
+Herz kamen eigene Listen, eine private Notiz je Lokal und der Filter „Nur meine
+Favoriten“.
 
 **Zuletzt — iOS-App.** Die PWA deckt den mobilen Fall bereits ab. Eine native App
 kostet laufend Geld und Pflegeaufwand; sie lohnt sich, wenn es genug Inhalt gibt,

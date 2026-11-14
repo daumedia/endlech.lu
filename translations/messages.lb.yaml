@@ -408,6 +408,8 @@ legal:
     rights_profile_link: "bei mäi Profil"
     retention_title: "Späicherdauer"
     retention_text: "Kontdonnéeë späichere mir, soulaang de Kont besteet; no der Läschung verschwanne se direkt. Waardelëscht-Umeldunge bleiwen, bis se zréckgezu ginn oder d Programm ufänkt. Restaurant-Uginn bleiwen dauerhaft — si si Sachuginn a ginn no enger Kontläschung vun der Persoun getrennt. Miessdonnéeë vun der Notzungsmiessung bleiwen ouni zäitlech Grenz; si enthalen keng IP-Adress a kee Bezuch zu engem Kont."
+    saved_title: "Favoritten, Lëschten an Notizen"
+    saved_text: "Wann s du mat engem Kont Lokaler markéiers, eege Lëschten ulees oder Notize schreiws, späichere mir dës Uginn an eiser Datebank: wéi eng Lokaler markéiert sinn, Numm an Inhalt vun de Lëschten an den Text vun den Notizen, all Kéier mat Zäitpunkt. Gesinn kanns just du se – weder aner Visiteuren nach d'Team vun Endlech.lu. Si leien an eiser Datebank beim uewe genannten Hoster a ginn u keen anere Prestataire weider: net un d'Feeleranalys, net un den E-Mail-Versand an net un d'Notzungsmiessung (do zielen mir just, datt e Lokal markéiert oder eng Lëscht ugeluecht gouf, ni wéi eent). Si stinn an dengem Datenexport a ginn mat dengem Kont geläscht; verschwënnt e Lokal vun Endlech.lu, verschwannen och deng Uginn dozou. Rechtsgrondlag ass d'Bereetstellung vun de Funktioune vun dengem Kont no Art. 6 Abs. 1 lit. b DSGVO."
 
 criteria:
     score_title: "Wéi d Punktzuel entsteet"
@@ -1715,3 +1717,71 @@ sponsor:
         open: "zënter %start%"
         closed: "%start% – %end%"
         joiner: " an "
+
+saved:
+    nav: "Gespäichert"
+    title: "Gespäichert"
+    page_title: "Gespäichert – Endlech.lu"
+    intro: "Deng Favoritten an deng eege Lëschten. Just du gesäis se."
+    to_search: "Bei d'Restaurantsich"
+    back: "Zréck bei „Gespäichert“"
+    login_hint: "Mell dech un, fir %name% ze markéieren."
+    heart:
+        add: "%name% markéieren"
+        remove: "%name% aus de Favoritten huelen"
+    flash:
+        added: "Markéiert: %name%"
+        removed: "Aus de Favoritte geholl: %name%"
+        lists_saved: "Lëschte gespäichert."
+        list_created: "Lëscht „%list%“ ugeluecht."
+        list_renamed: "Lëscht ëmbenannt an „%list%“."
+        list_deleted: "Lëscht „%list%“ geläscht."
+        entry_removed: "%name% aus „%list%“ geholl."
+        note_saved: "Notiz gespäichert."
+        note_deleted: "Notiz geläscht."
+        rate_limited: "Ze vill Ännerungen. Probéier et w.e.g. an %minutes% Minutten nach eng Kéier."
+    favorites:
+        title: "Favoritten"
+        page_title: "Favoritten – Endlech.lu"
+        count: "{0}Nach näischt markéiert|{1}1 Lokal|]1,Inf[%count% Lokaler"
+        empty: "Nach näischt markéiert. Tipp an der Sich op d'Häerz, fir e Lokal hei ze sammelen."
+    lists:
+        heading: "Meng Lëschten"
+        empty: "Nach keng eege Lëscht. Lee eng un, zum Beispill fir en Uloss oder eng Plaz."
+        count: "{0}0 Lokaler|{1}1 Lokal|]1,Inf[%count% Lokaler"
+        new_label: "Nei Lëscht"
+        new_help: "Héchstens 60 Zeechen."
+        create: "Uleeën"
+    list:
+        page_title: "%list% – Endlech.lu"
+        empty: "Dës Lëscht ass nach eidel. Lokaler dees du op hirer Detailsäit ënner „A Lëschten“ derbäi."
+        rename_label: "Numm vun der Lëscht"
+        rename: "Ëmbenennen"
+        delete: "Lëscht läschen"
+        remove_entry: "Aus der Lëscht huelen"
+    delete:
+        page_title: "Lëscht läschen – Endlech.lu"
+        question: "{0}Lëscht „%list%“ läschen?|{1}Lëscht „%list%“ mat 1 Lokal läschen?|]1,Inf[Lëscht „%list%“ mat %count% Lokaler läschen?"
+        explanation: "D'Lokaler selwer, deng Favoritten an deng Notize bleiwen."
+        confirm: "Läschen"
+        cancel: "Ofbriechen"
+    panel:
+        lists_heading: "A Lëschten"
+        lists_none: "Du hues nach keng eege Lëscht. Lee hei déi éischt un – dëst Lokal kënnt direkt dran."
+        new_label: "Nei Lëscht"
+        new_help: "Dëst Lokal kënnt direkt an déi nei Lëscht."
+        save: "Späicheren"
+        note_heading: "Deng Notiz"
+        note_label: "Notiz zu %name%"
+        note_help: "Just fir dech ze gesinn. Héchstens 500 Zeechen."
+        note_save: "Notiz späicheren"
+    card:
+        note: "Deng Notiz"
+    filter:
+        favorites: "Just meng Favoritten"
+        no_favorites: "Du hues nach keng Favoritten. Tipp op d'Häerz vun engem Lokal, fir et hei ze fannen."
+        remove: "Filter ewechhuelen"
+    profile:
+        title: "Gespäichert"
+        text: "Deng Favoritten, Lëschten an Notizen."
+        link: "Bei „Gespäichert“"

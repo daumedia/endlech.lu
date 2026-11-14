@@ -13,6 +13,15 @@
                 <p class="text-gray-500 text-sm">{{ 'login.subtitle'|trans }}</p>
             </div>
 
+            {# Feature 17, AK-08: Ein Gast hat aufs Herz getippt — der Hinweis bleibt, solange der
+               Wunsch besteht, auch nach einem Fehlversuch (AK-10). Der Name wird mit dem ganzen
+               Satz maskiert (`trans` ist nicht als sicher markiert). #}
+            {% if merkwunsch %}
+                <div id="merkwunsch-hinweis" class="bg-blue-50 border-l-4 border-blue-400 text-blue-800 px-4 py-3 rounded-r-lg mb-4" role="status">
+                    <p class="text-sm font-medium">{{ 'saved.login_hint'|trans({'%name%': merkwunsch}) }}</p>
+                </div>
+            {% endif %}
+
             {% include 'partials/_flash_messages.html.twig' %}
 
             {% if error %}

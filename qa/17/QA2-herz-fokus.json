@@ -1,0 +1,140 @@
+{
+ "1280 Karte (Suche) Herz": {
+  "outline": "solid 2px oklch(0.52 0.105 223.128)",
+  "offset": "2px",
+  "fv": true,
+  "ringPixel": 200,
+  "min": 1,
+  "median": 1,
+  "max": 3.99,
+  "n3": 184,
+  "umfang": 176
+ },
+ "1280 Karte farben": [
+  {
+   "name": "Brasserie du Grund merken",
+   "icon": "oklch(0.373 0.034 259.733)",
+   "fill": "none",
+   "bg": "rgb(255, 255, 255)",
+   "w": 44,
+   "h": 44
+  },
+  {
+   "name": "Burger & Co. aus Favoriten entfernen",
+   "icon": "oklch(0.577 0.245 27.325)",
+   "fill": "currentColor",
+   "bg": "rgb(255, 255, 255)",
+   "w": 44,
+   "h": 44
+  }
+ ],
+ "1280 Detail 12 Kopf": {
+  "titelfoto": false,
+  "band": "bg-linear-to-r from-cyan-600 to-purple-700"
+ },
+ "1280 Detail 12 Herz": {
+  "outline": "solid 2px oklch(0.52 0.105 223.128)",
+  "offset": "2px",
+  "fv": true,
+  "ringPixel": 200,
+  "min": 1,
+  "median": 1,
+  "max": 1.05,
+  "n3": 0,
+  "umfang": 176
+ },
+ "1280 Detail 22 Kopf": {
+  "titelfoto": true
+ },
+ "1280 Detail 22 Herz": {
+  "outline": "solid 2px oklch(0.52 0.105 223.128)",
+  "offset": "2px",
+  "fv": true,
+  "ringPixel": 200,
+  "min": 1,
+  "median": 1,
+  "max": 1.56,
+  "n3": 0,
+  "umfang": 176
+ },
+ "1280 Detail 22 Titelfoto-Verweis": {
+  "outline": "solid 2px oklch(0.52 0.105 223.128)",
+  "offset": "2px",
+  "fv": true,
+  "ringPixel": 2560,
+  "min": 4.54,
+  "median": 5.05,
+  "max": 5.05,
+  "n3": 5120,
+  "umfang": 3328
+ },
+ "375 Karte (Suche) Herz": {
+  "outline": "solid 2px oklch(0.52 0.105 223.128)",
+  "offset": "2px",
+  "fv": true,
+  "ringPixel": 200,
+  "min": 1,
+  "median": 1,
+  "max": 3.98,
+  "n3": 192,
+  "umfang": 176
+ },
+ "375 Karte farben": [
+  {
+   "name": "Brasserie du Grund merken",
+   "icon": "oklch(0.373 0.034 259.733)",
+   "fill": "none",
+   "bg": "rgb(255, 255, 255)",
+   "w": 44,
+   "h": 44
+  },
+  {
+   "name": "Burger & Co. aus Favoriten entfernen",
+   "icon": "oklch(0.577 0.245 27.325)",
+   "fill": "currentColor",
+   "bg": "rgb(255, 255, 255)",
+   "w": 44,
+   "h": 44
+  }
+ ],
+ "375 Detail 12 Kopf": {
+  "titelfoto": false,
+  "band": "bg-linear-to-r from-cyan-600 to-purple-700"
+ },
+ "375 Detail 12 Herz": {
+  "outline": "solid 2px oklch(0.52 0.105 223.128)",
+  "offset": "2px",
+  "fv": true,
+  "ringPixel": 200,
+  "min": 1,
+  "median": 1,
+  "max": 1.27,
+  "n3": 0,
+  "umfang": 176
+ },
+ "375 Detail 22 Kopf": {
+  "titelfoto": true
+ },
+ "375 Detail 22 Herz": {
+  "outline": "solid 2px oklch(0.52 0.105 223.128)",
+  "offset": "2px",
+  "fv": true,
+  "ringPixel": 200,
+  "min": 1,
+  "median": 1,
+  "max": 2.48,
+  "n3": 0,
+  "umfang": 176
+ },
+ "375 Detail 22 Titelfoto-Verweis": {
+  "outline": "solid 2px oklch(0.52 0.105 223.128)",
+  "offset": "2px",
+  "fv": true,
+  "ringPixel": 750,
+  "min": 4.54,
+  "median": 5.05,
+  "max": 5.05,
+  "n3": 1500,
+  "umfang": 1326
+ }
+}

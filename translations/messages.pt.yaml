@@ -408,6 +408,8 @@ legal:
     rights_profile_link: "ir para o meu perfil"
     retention_title: "Prazo de conservação"
     retention_text: "Conservamos os dados da conta enquanto a conta existir; após a eliminação, desaparecem imediatamente. As inscrições em listas de espera mantêm-se até serem retiradas ou até ao arranque do programa. As informações sobre restaurantes mantêm-se permanentemente — são dados factuais e, após a eliminação de uma conta, são desassociadas da pessoa. Os dados da medição de utilização são conservados sem limite de tempo; não contêm endereço IP nem qualquer ligação a uma conta."
+    saved_title: "Favoritos, listas e notas"
+    saved_text: "Se guardar estabelecimentos, criar as suas próprias listas ou escrever notas com uma conta, conservamos essas informações na nossa base de dados: quais os estabelecimentos guardados, o nome e o conteúdo das listas e o texto das notas, sempre com a data. Só o titular da conta as pode ver – nem os outros visitantes nem a equipa do Endlech.lu. Ficam na nossa base de dados junto do fornecedor de alojamento acima indicado e não são transmitidas a nenhum outro prestador de serviços: nem à análise de erros, nem ao envio de e-mails, nem à medição de utilização (aí contamos apenas que um estabelecimento foi guardado ou que uma lista foi criada, nunca qual). Constam da sua exportação de dados e são apagadas juntamente com a sua conta; se um estabelecimento deixar de constar do Endlech.lu, as suas informações sobre ele também desaparecem. O fundamento jurídico é a disponibilização das funções da sua conta, nos termos do art. 6.º, n.º 1, alínea b), do RGPD."
 
 criteria:
     score_title: "Como é calculada a pontuação"
@@ -1715,3 +1717,71 @@ sponsor:
         open: "desde %start%"
         closed: "%start% – %end%"
         joiner: " e "
+
+saved:
+    nav: "Guardados"
+    title: "Guardados"
+    page_title: "Guardados – Endlech.lu"
+    intro: "Os seus favoritos e as suas próprias listas. Apenas visíveis para si."
+    to_search: "Ir para a pesquisa de restaurantes"
+    back: "Voltar a «Guardados»"
+    login_hint: "Inicie sessão para guardar %name%."
+    heart:
+        add: "Guardar %name% nos favoritos"
+        remove: "Retirar %name% dos favoritos"
+    flash:
+        added: "Guardado: %name%"
+        removed: "Retirado dos favoritos: %name%"
+        lists_saved: "Listas guardadas."
+        list_created: "Lista «%list%» criada."
+        list_renamed: "Lista renomeada para «%list%»."
+        list_deleted: "Lista «%list%» eliminada."
+        entry_removed: "%name% retirado de «%list%»."
+        note_saved: "Nota guardada."
+        note_deleted: "Nota eliminada."
+        rate_limited: "Demasiadas alterações. Tente novamente dentro de %minutes% minutos."
+    favorites:
+        title: "Favoritos"
+        page_title: "Favoritos – Endlech.lu"
+        count: "{0}Ainda nada guardado|{1}1 estabelecimento|]1,Inf[%count% estabelecimentos"
+        empty: "Ainda nada guardado. Toque no coração na pesquisa para reunir aqui um estabelecimento."
+    lists:
+        heading: "As minhas listas"
+        empty: "Ainda não tem nenhuma lista própria. Crie uma, por exemplo para uma ocasião ou um local."
+        count: "{0}0 estabelecimentos|{1}1 estabelecimento|]1,Inf[%count% estabelecimentos"
+        new_label: "Nova lista"
+        new_help: "No máximo 60 caracteres."
+        create: "Criar"
+    list:
+        page_title: "%list% – Endlech.lu"
+        empty: "Esta lista ainda está vazia. Adicione estabelecimentos na página de cada um, em «Nas listas»."
+        rename_label: "Nome da lista"
+        rename: "Mudar o nome"
+        delete: "Eliminar lista"
+        remove_entry: "Retirar da lista"
+    delete:
+        page_title: "Eliminar lista – Endlech.lu"
+        question: "{0}Eliminar a lista «%list%»?|{1}Eliminar a lista «%list%» com 1 estabelecimento?|]1,Inf[Eliminar a lista «%list%» com %count% estabelecimentos?"
+        explanation: "Os próprios estabelecimentos, os seus favoritos e as suas notas mantêm-se."
+        confirm: "Eliminar"
+        cancel: "Cancelar"
+    panel:
+        lists_heading: "Nas listas"
+        lists_none: "Ainda não tem nenhuma lista própria. Crie aqui a primeira – este estabelecimento entra logo nela."
+        new_label: "Nova lista"
+        new_help: "Este estabelecimento entra logo na nova lista."
+        save: "Guardar"
+        note_heading: "A sua nota"
+        note_label: "Nota sobre %name%"
+        note_help: "Apenas visível para si. No máximo 500 caracteres."
+        note_save: "Guardar nota"
+    card:
+        note: "A sua nota"
+    filter:
+        favorites: "Só os meus favoritos"
+        no_favorites: "Ainda não tem favoritos. Toque no coração de um estabelecimento para o encontrar aqui."
+        remove: "Remover filtro"
+    profile:
+        title: "Guardados"
+        text: "Os seus favoritos, listas e notas."
+        link: "Ir para «Guardados»"

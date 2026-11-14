@@ -218,6 +218,7 @@ Teilt sich `WaitlistConfirmationService`, `WaitlistEntryInterface`,
   letzten speichern die Adresse nur. Beim Bauen von BF-119 gemessen, **bewusst nicht
   mitrepariert**: Der Auftrag nannte drei Formulare, und was nicht im Auftrag steht,
   wird nicht gebaut. — Betreiber
+  *Teilstand 2026-11-14 (Betreiber, über BF-184):* `ProfileType` wird mit `/sdd-build B04` auf die strikte Prüfung gebracht. Offen bleiben `PasswordResetRequestType`, `AccessibilityReportType`, `RestaurantSuggestionType` und `RestaurantType`.
 
 - **OF-BF119b** · `WaitlistConfirmationService::notifyRequester()` (die zweite Mail)
   konstruiert die Adresse erst beim `->to()`. Ein Reihenfolgeproblem ist das nicht — die

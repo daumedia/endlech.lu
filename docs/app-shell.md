@@ -130,6 +130,29 @@ Adresse aus der Anfrage. Eine neue öffentliche Seite gehört ins Seitenverzeich
 Dazu gehören `/sitemap.xml` (Route) und `/robots.txt` (statische Datei unter `public/`), siehe
 `CLAUDE.md`, Abschnitt „Sitemap, robots.txt und maßgebliche Adressen".
 
+**Private Seiten Angemeldeter** (Feature 17, AK-63). Zeigt eine Seite einem angemeldeten Konto
+Gespeichertes — alle `app_saved_*`, dazu `app_restaurant_index` und `app_restaurant_show`
+(gefüllte Herzen, Listen, Notiz) —, steht im Kopf
+`<meta name="turbo-cache-control" content="no-cache">`, und die Antwort trägt
+`Cache-Control: no-store, private`. Turbo legt dann keinen Schnappschuss an, der Browser keinen
+Eintrag im Back-Forward-Cache: „Zurück“ nach dem Abmelden lädt vom Server. Für Gäste fehlen
+beide.
+
+| Baustein | Aufgabe |
+|---|---|
+| `App\Saved\PrivatePages` | die **eine** Routenliste und die Bedingung „angemeldet **und** private Route“ |
+| Twig `is_private_page()` (`App\Twig\PrivatePageExtension`) | das Meta-Element; fragt die **Hauptanfrage** |
+| `App\EventSubscriber\PrivatePageCacheSubscriber` | die Kopfzeile, Priorität −900 — nach allen übrigen Antwort-Zuhörern, vor dem Session-Zuhörer (−1000), dessen Cache-Control sie per `NO_AUTO_CACHE_CONTROL_HEADER` abbestellt |
+
+⚠ **Das Meta-Element trägt kein `data-turbo-track`.** Es wechselt je Seite; mit Verfolgung läse
+Turbo jeden Wechsel als neuen Stand und lüde die ganze Seite neu (siehe `CLAUDE.md`,
+„Frontend“).
+
+⚠ **Wer eine Seite anlegt, die Gespeichertes eines Kontos zeigt, trägt sie in `PrivatePages`
+ein** — sonst fehlen Kopfzeile und Meta-Element dort, und kein Prüflauf ohne Browser merkt es.
+Im Browser nachgeprüft ist das Verhalten bisher nur in Chromium, Safari ist offen
+(`qa/17/browser-durchgang-2026-11-14.md`).
+
 ---
 
 ## Kopfzeile
@@ -182,6 +205,7 @@ Bis 2026-10-14 stand dort ein vierter Eintrag `🤲 nav.for_associations` → `�
 | Element | Sichtbarkeit | Bedingung |
 |---|---|---|
 | Sprachumschalter | `hidden md:block` | immer |
+| **„Gespeichert“** (`saved.nav`) → `app_saved_index` | `hidden md:inline-flex`; ab `md` nur das Herz, der Text erst ab `lg` (`sr-only lg:not-sr-only` — der zugängliche Name bleibt derselbe) | angemeldet; aktiv (`text-cyan-700`, `aria-current="page"`) auf allen `app_saved_*` (Feature 17, AK-43) |
 | Avatar + Name → `app_profile` | `hidden md:inline-flex` | angemeldet |
 | `nav.admin` → `admin_dashboard` | `hidden md:inline-block` | `ROLE_ADMIN` |
 | `nav.logout` | `hidden md:inline-block` | angemeldet |
@@ -192,6 +216,13 @@ Der Registrieren-Knopf ist der einzige Bedienpunkt der Kopfzeile ohne
 `hidden md:`-Schranke: violetter Vollknopf, `rounded-full`, mit
 `hover:-translate-y-0.5`.
 
+⚠ **Breite des angemeldeten Kontobereichs mit „Gespeichert“ — nachgemessen 2026-11-14**
+(Feature 17, Vorschau-Browser, Konto angemeldet, `/xx/restaurants`): bei 768, 900, 1024 und
+1280 px in de, bei 768 und 1024 px auch in fr und pt **kein Überlauf** (`scrollWidth` des
+Kopfinhalts = `clientWidth`), Kopfzeile durchgehend 81 px hoch, kein Umbruch. Der Überlauf
+aus BF-80 ist damit nicht zurück. Der neue Verweis braucht ab `md` ein Symbol und ab `lg`
+ein Wort mehr Platz — wer dort weitere Einträge ergänzt, misst erneut.
+
 ---
 
 ## Hauptbereich und Flash-Meldungen
@@ -200,6 +231,26 @@ Zwischen Kopfzeile und Inhalt steht ein fester Container mit
 `partials/_flash_messages.html.twig` — auf **jeder** Seite, auch wenn keine Meldung
 vorliegt. Die Admin-Shell bindet dasselbe Partial ein zweites Mal in ihrem
 Inhaltsbereich ein.
+
+**Ansagebereich `#meldung-live`** (Feature 17, AK-48). Im selben Container, direkt unter den
+Meldungen, steht auf jeder Seite ein leeres
+`<div id="meldung-live" role="status" aria-live="polite" aria-atomic="true">`. Turbo-Streams
+schreiben ihre Meldung dort hinein (`action="update"`), ohne die Seite neu zu laden — heute das
+Herz („Gemerkt: …“) und das Entfernen einer Karte auf „Favoriten“ bzw. aus einer Liste
+(`saved/favorite.stream.html.twig`, `saved/cards.stream.html.twig`).
+⚠ **Er muss leer im Dokument stehen, bevor etwas hineinkommt** — einen neu eingefügten
+Live-Bereich sagen Screenreader nicht zuverlässig an. Ohne Inhalt ist er stumm und unsichtbar.
+
+**Unsichtbare Meldungsarten.** Zwei Flash-Arten erzeugen keinen Kasten, sondern ein
+verborgenes Element (`hidden`) mit Stimulus-Controller, beide mit `data-turbo-temporary`
+(BF-177 — sonst wirkten sie bei jeder Rückkehr aus Turbos Zwischenspeicher erneut):
+
+| Art | Seit | Wirkung |
+|---|---|---|
+| `usage_event` | Feature 12 (BF-171) | löst ein Messereignis aus `UsageEventCatalogue` aus — erst **nach** gelungener Handlung, auf der Folgeseite (Controller `usage-event`) |
+| `scroll_to` | Feature 17 (AK-09, AK-51) | Rücksprung nach einer Weiterleitung mit Anker: rollt zum Element und fokussiert dessen Knopf (Controller `scroll-to`). **Turbo verliert den Anker** einer Weiterleitung, weil es ihr per `fetch` folgt — im Browser gemessen stand die Seite oben, das Herz 2000 px tiefer. Übernommen werden nur `favorit-{Nummer}`, `in-listen` und `notiz`; der Wert kommt vom Server, das Muster im Partial schützt trotzdem vor einem untergeschobenen Flash |
+
+Alle übrigen Arten erscheinen als Kasten mit `role="alert"` (Farbe nach `success`/`error`/sonst).
 
 ```
 <main class="flex-grow pb-16 md:pb-0 print:pb-0">
@@ -221,6 +272,14 @@ Die vier Bildschirme unter `/{locale}/einfuehrung/{willkommen|eintraege|profilbi
 stehen im gewöhnlichen Seitengerüst — Kopfzeile, Flash-Meldungen, Fußzeile und
 Bottom-Navigation bleiben, man kommt jederzeit hinaus. Erreichbar auch über
 „Einführung ansehen" im Profil.
+
+**Seit Feature 17 setzt auch das Herz eines Gastes eine Zielseite.** Tippt ein Abgemeldeter
+aufs Herz, merkt sich die Firewall die Seite des Herzens samt Anker `#favorit-{Nummer}` als
+Ziel und die Sitzung den Merkwunsch; die Anmeldeseite zeigt „Melde dich an, um dir … zu
+merken.“ mit dem Namen des Lokals (`saved.login_hint`). Ein zweiter Zuhörer auf `LoginSuccessEvent`
+(`App\EventSubscriber\PendingFavoriteSubscriber`, nur Firewall `main`) löst den Wunsch nach der
+Anmeldung ein — für Passwort und Passkey gleichermaßen — und lässt die Antwort unangetastet.
+Die Zielseite gewinnt damit gegen die Einführung; die bleibt fällig (17/EC-04).
 
 ---
 
@@ -311,11 +370,31 @@ Beschriftung. Der aktive Zustand kommt aus einem Routenvergleich und setzt
 |---|---|---|
 | `nav.home` | `app_home` | `app_home` |
 | `nav.restaurants` | `app_restaurant_index` | `app_restaurant_index`, `app_restaurant_show` |
-| `nav.about_short` | `app_about` | `app_about` |
+| **angemeldet:** `saved.nav` („Gespeichert“, Herz) · **abgemeldet:** `nav.about_short` | `app_saved_index` bzw. `app_about` | **jeder** Route mit Präfix `app_saved_` (Übersicht, Favoriten, Listen, Rückfrage) bzw. `app_about` |
 | `nav.profile` / `nav.login` | `app_profile` bzw. `app_login` | je nach Anmeldestatus |
+
+Angemeldet also **Start · Restaurants · Gespeichert · Profil**, abgemeldet unverändert
+Start · Restaurants · Über uns · Anmelden (Feature 17, AK-41).
+
+⚠ **„Gespeichert“ steht an der Stelle von „Über uns“, nicht als fünfter Punkt**
+(Entscheidung 17/OF-04 vom 2026-11-13, Decision Log 25). Fünf Punkte ließen bei 320 px je
+64 px, und schon heute stehen dort Beschriftungen mit zwölf Zeichen (lb „Restauranten“, pt
+„Restaurantes“, „O meu perfil“), in 12-px-Inter rund 74 px breit. Vier Punkte behalten 80 px
+und einzeilige Beschriftungen in allen fünf Sprachen (gemessen 2026-11-14: je 76 × 60 px bei
+320 px). „Über uns“ ist Information ohne Handlung und bleibt über die Fußzeile erreichbar.
+**Wer einen fünften Punkt ergänzt, fasst AK-42 von Feature 17 an.**
+
+Der aktive Zustand prüft neben der Liste `active` seit Feature 17 auch ein optionales
+`activePrefix` — sonst müsste jede neue Seite des Bereichs „Gespeichert“ einzeln eingetragen
+werden.
 
 Die Leiste trägt ein `aria-label` aus `nav.bottom_navigation`; die Symbole sind
 `aria-hidden`.
+
+⚠ **Der aktive Punkt verfehlt den Kontrast für kleinen Text:** `text-cyan-600` auf Weiß bei
+12 px misst 3,61 : 1, nötig sind 4,5 : 1 (axe, 2026-11-14). Bestand aus B25, nicht durch
+Feature 17 verursacht — betrifft seitdem aber auch „Gespeichert“
+(`qa/17/browser-durchgang-2026-11-14.md`).
 
 ### Cookie-Banner — `partials/_cookie_banner.html.twig`
 
@@ -381,8 +460,14 @@ Entscheidung.
 
 Der einzige `app_logout`-Link im gesamten Projekt steht in `base.html.twig:122` und
 trägt `hidden md:inline-block`. Ein Burger-Menü existiert nicht; die
-Bottom-Navigation führt zu Startseite, Restaurants, Über uns und Profil. Die
-Profilseite enthält keinen Abmeldeknopf.
+Bottom-Navigation führt angemeldet zu Startseite, Restaurants, Gespeichert und Profil
+(bis Feature 17: Über uns statt Gespeichert). Die Profilseite enthält keinen
+Abmeldeknopf.
+
+⚠ **Überholt, festgestellt 2026-11-14 beim Nachziehen von Feature 17:** Die Profilseite
+trägt seit Feature 02 ein Abmeldeformular (`templates/profile/index.html.twig`, „die
+Bottom-Nav führt hierher“). Der Befund ist damit vermutlich erledigt, aber nicht neu
+geprüft.
 
 Gewicht: Die Anwendung ist ausdrücklich als installierbare iPhone-App gebaut
 (Issue #83). Auf genau diesem Gerät kann sich ein angemeldeter Nutzer nicht abmelden,

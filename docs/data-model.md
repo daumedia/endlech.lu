@@ -26,20 +26,23 @@ Implementierungs-Fallstricke in [`../CLAUDE.md`](../CLAUDE.md)
 
 ## Überblick
 
-Zwölf eigene Entities, gruppiert nach fachlichem Zweck. Dazu kommen drei Mappings
+Zwanzig eigene Entities, gruppiert nach fachlichem Zweck. Dazu kommen drei Mappings
 aus dem WebAuthn-Bundle (`Webauthn\CredentialRecord`,
 `Webauthn\PublicKeyCredentialEntity`, `Webauthn\PublicKeyCredentialUserEntity`) —
-`php bin/console doctrine:mapping:info` meldet deshalb 15.
+`php bin/console doctrine:mapping:info` meldet deshalb 23 (nachgezählt 2026-11-14).
 
 | Gruppe | Entities | Zweck |
 |---|---|---|
 | **Kern** | `Restaurant`, `RestaurantImage`, `OpeningHour`, `OrderingOption`, `Cuisine` | Das Verzeichnis selbst: Häuser, Fotos, Öffnungszeiten, Bestellwege, Küchen |
-| **Community & Konto** | `RestaurantSuggestion`, `User`, `WebauthnCredential` | Vorschläge aus der Community, Konten, Passkeys |
-| **Vertrieb** | `PartnerWaitlistEntry`, `OrganisationWaitlistEntry` | Zwei Wartelisten mit Double-Opt-In (Restaurants bzw. Gemeinden/Unternehmen und Vereine) |
+| **Community & Konto** | `RestaurantSuggestion`, `User`, `WebauthnCredential`, `BoardIdea`, `BoardVote` | Vorschläge aus der Community, Konten, Passkeys, Ideen-Board (Feature 06) |
+| **Gespeichert** (Feature 17) | `Favorite`, `SavedList`, `SavedListEntry`, `RestaurantNote` | Was ein Konto für sich festhält: gemerkte Lokale, eigene Listen, private Notizen — nur für den Inhaber sichtbar |
+| **Vertrieb** | `PartnerWaitlistEntry`, `OrganisationWaitlistEntry`, `AppWaitlistEntry`, `MarketingContact` | Drei Wartelisten mit Double-Opt-In (Restaurants, Gemeinden/Unternehmen und Vereine, mobile App) und das Auftragsbuch für Brevo (Feature 04) |
 | **Transparenz** | `FinanceEntry`, `MetricSnapshot` | Was der Betrieb kostet und wie sich die Kennzahlen entwickeln — Grundlage von `/open` |
 
-Elf Enums (alle `string`-backed) liegen in `src/Enum/`, zwölf Repositories in
-`src/Repository/`, 26 Migrationen in `migrations/`.
+Sechzehn Enums (alle `string`-backed) liegen in `src/Enum/`, zwanzig Repositories in
+`src/Repository/`, 40 Migrationen in `migrations/` (nachgezählt 2026-11-14; bis dahin
+stand hier „zwölf Entities, elf Enums, zwölf Repositories, 26 Migrationen“ — die Zahlen
+waren mit mehreren Features nicht mitgezogen worden).
 
 ⚠ **Zwei Features haben bewusst keine Entity und tauchen hier deshalb nicht auf:**
 Feature `03` (Vergleichsseiten, `App\Comparison\`) und Feature `05` (Presse-Kit,
@@ -88,6 +91,14 @@ erDiagram
     RESTAURANT }o--o{ CUISINE : "restaurant_cuisine"
     RESTAURANT ||--o{ PARTNER_WAITLIST_ENTRY : "zugeordnet · SET NULL"
 
+    USER ||--o{ FAVORITE : "Herz · CASCADE"
+    RESTAURANT ||--o{ FAVORITE : "gemerkt · CASCADE"
+    USER ||--o{ SAVED_LIST : "eigene Listen · CASCADE"
+    SAVED_LIST ||--o{ SAVED_LIST_ENTRY : "Einträge · CASCADE"
+    RESTAURANT ||--o{ SAVED_LIST_ENTRY : "in Liste · CASCADE"
+    USER ||--o{ RESTAURANT_NOTE : "Notiz · CASCADE"
+    RESTAURANT ||--o{ RESTAURANT_NOTE : "notiert · CASCADE"
+
     FINANCE_ENTRY {
         int id PK
     }
@@ -112,6 +123,17 @@ erDiagram
 
 `PartnerWaitlistEntry::$restaurant` bleibt `null`, bis das Haus tatsächlich im
 Verzeichnis steht — die Anmeldung geht der Aufnahme voraus.
+
+**Die vier Tabellen aus Feature 17 hängen nur in eine Richtung.** `Favorite`,
+`SavedList`, `SavedListEntry` und `RestaurantNote` kennen Konto und Lokal; `User` und
+`Restaurant` kennen sie nicht (keine Rückbeziehung im Mapping, keine Änderung an
+beiden Tabellen). Jede ihrer Kanten kaskadiert **in der Datenbank** — Kontolöschung und
+Restaurantverwaltung räumen mit ab, ohne eine Zeile Code dafür.
+
+⚠ **Das Diagramm ist nicht vollständig:** `BOARD_IDEA`/`BOARD_VOTE` (Feature 06),
+`MARKETING_CONTACT` (Feature 04) und `APP_WAITLIST_ENTRY` (Feature 08) fehlen. Ihre
+Beziehungen — bei den letzten beiden bewusst keine — stehen in der Entity-Referenz;
+nachgetragen wurde hier 2026-11-14 nur Feature 17.
 
 ---
 
@@ -810,9 +832,161 @@ eine Abweichung.
 
 ---
 
+### Favorite
+
+`src/Entity/Favorite.php` · Tabelle `favorite` · `FavoriteRepository`
+
+Ein gemerktes Lokal — das Herz (Feature 17). Privat: Nur das Konto selbst sieht seine
+Favoriten, auch die Verwaltung nicht (17/AK-59).
+
+| Property | Spalte | Typ | Null | Anmerkung |
+|---|---|---|---|---|
+| `id` | `id` | `integer` PK | – | AUTO |
+| `user` | `user_id` | FK → `` `user` `` | nein | **`ON DELETE CASCADE`** |
+| `restaurant` | `restaurant_id` | FK → `restaurant` | nein | **`ON DELETE CASCADE`** |
+| `createdAt` | `created_at` | `datetime` | nein | gemerkt am — Reihenfolge auf „Favoriten“ (zuletzt gemerkt zuerst) und im Datenexport |
+
+Keine Setter: Ein Favorit wird angelegt oder gelöscht, nie geändert.
+
+**Relationen:** `user` und `restaurant` je ManyToOne, **einseitig** — weder `User` noch
+`Restaurant` führt eine Sammlung `favorites`.
+
+**Indizes:** `UNIQ_favorite_user_restaurant (user_id, restaurant_id)` — ein Lokal je
+Konto höchstens einmal (17/AK-05); `IDX_favorite_user_created (user_id, created_at)`
+für die Seite „Favoriten“.
+
+> **Der eindeutige Index ist die letzte Instanz, nicht die einzige.** `FavoriteService`
+> prüft vorher unter der Schreibsperre des Kontos (`App\Saved\SavedWriteLock`, Sperre
+> `gespeichert-{id}`). Liefe ein zweiter Eintrag erst in den Index, schlösse die
+> Unique-Verletzung Doctrines EntityManager — jede weitere Arbeit derselben Anfrage
+> scheiterte danach (17, `design.md`, Technische Entscheidung 8).
+
+---
+
+### SavedList
+
+`src/Entity/SavedList.php` · Tabelle `saved_list` · `SavedListRepository`
+
+Eine eigene, benannte Liste von Lokalen (Feature 17) — unabhängig vom Herz: Ein Lokal kann
+in einer Liste stehen, ohne Favorit zu sein, und umgekehrt.
+
+| Property | Spalte | Typ | Null | Anmerkung |
+|---|---|---|---|---|
+| `id` | `id` | `integer` PK | – | AUTO; steht in der Adresse `/{_locale}/gespeichert/listen/{id}` |
+| `user` | `user_id` | FK → `` `user` `` | nein | Inhaber; **`ON DELETE CASCADE`** |
+| `name` | `name` | `varchar(60)` | nein | angezeigter Name: Randleerraum entfernt, Unicode-NFC (`App\Saved\SavedText::name()`) |
+| `nameKey` | `name_key` | `varchar(60)`, Kollation **`utf8mb4_bin`** | nein | Vergleichsschlüssel: derselbe Name in Kleinbuchstaben, danach gefaltet (`SavedText::nameKey()`, einfache Abbildungen — gleiche Länge wie `name`; die Faltung macht „ς“ zu „σ“, BF-220) |
+| `createdAt` | `created_at` | `datetime` | nein | angelegt am — Reihenfolge auf „Gespeichert“ (zuletzt angelegt zuerst) und im Export |
+
+**Konstanten:** `MAX_NAME_LENGTH = 60`, `MAX_PER_USER = 25` (17/AK-18, AK-20). Die
+25er-Grenze prüft `SavedListService` unter der Schreibsperre — ein Index kann sie nicht
+ausdrücken.
+
+**Relation:** `user` ManyToOne, einseitig. Die Einträge hängen an `SavedListEntry`;
+`SavedList` kennt sie nicht.
+
+**Indizes:** `UNIQ_saved_list_user_name (user_id, name_key)` — kein Konto hat zwei
+Listen gleichen Namens, ein anderes Konto darf denselben Namen tragen (17/AK-19);
+`IDX_saved_list_user_created (user_id, created_at)` für die Übersicht.
+
+> ⚠ **Warum `name_key` und kein eindeutiger Index auf `name`.** Die Standardkollation
+> von MySQL 8 (`utf8mb4_0900_ai_ci`) ist nicht nur groß/klein-blind, sondern auch
+> **akzentblind**: Ein Index auf `name` hielte „Café“ und „Cafe“ für dieselbe Liste. Die
+> Spec verlangt nur „Groß/klein egal“ (17/AK-19). Der kleingeschriebene Schlüssel mit
+> **binärer** Kollation macht genau das, und Index und Prüfung im `SavedListService`
+> sind deckungsgleich — „ kirchberg “ neben „Kirchberg“ ist eine Dublette, „Café“ neben
+> „Cafe“ nicht.
+>
+> **Name und Schlüssel setzt nur `rename(name, nameKey)`, immer gemeinsam** — auch der
+> Konstruktor ruft es. Ein Setter je Feld ließe beide auseinanderlaufen.
+>
+> ⚠ **Der Schlüssel ist so lang wie der Name — dafür sorgt die *einfache* Kleinschreibung**
+> (`MB_CASE_LOWER_SIMPLE`, BF-211). `mb_strtolower()` machte aus „İ“ (U+0130) zwei Codepunkte;
+> 31 davon in einem gültigen Namen sprengten `varchar(60)` (HTTP 500). Folge der einfachen
+> Abbildung: „İstanbul“ und „Istanbul“ sind eine Dublette.
+
+---
+
+### SavedListEntry
+
+`src/Entity/SavedListEntry.php` · Tabelle `saved_list_entry` · `SavedListEntryRepository`
+
+Ein Lokal in einer eigenen Liste (Feature 17).
+
+| Property | Spalte | Typ | Null | Anmerkung |
+|---|---|---|---|---|
+| `id` | `id` | `integer` PK | – | AUTO |
+| `list` | `list_id` | FK → `saved_list` | nein | **`ON DELETE CASCADE`** |
+| `restaurant` | `restaurant_id` | FK → `restaurant` | nein | **`ON DELETE CASCADE`** |
+| `addedAt` | `added_at` | `datetime` | nein | hinzugefügt am — Reihenfolge der Listenseite (zuletzt hinzugefügt zuerst) und im Export |
+
+**Relationen:** `list` und `restaurant` je ManyToOne, einseitig.
+
+**Indizes:** `UNIQ_saved_list_entry_list_restaurant (list_id, restaurant_id)` — ein
+Lokal je Liste höchstens einmal, auch bei Doppelklick oder zweitem Tab (17/AK-31);
+`IDX_saved_list_entry_list_added (list_id, added_at)` für die Listenseite.
+
+> **Kein eigener Kontobezug.** Der Inhaber ergibt sich über die Liste; die Kaskade läuft
+> Konto → Liste → Eintrag. Verschwindet eine Liste, verschwinden ihre Einträge — Herz und
+> Notiz der Lokale bleiben unberührt (17/AK-30).
+
+---
+
+### RestaurantNote
+
+`src/Entity/RestaurantNote.php` · Tabelle `restaurant_note` · `RestaurantNoteRepository`
+
+Die private Notiz eines Kontos zu einem Lokal (Feature 17) — höchstens eine je Konto und
+Lokal. Sie gehört zum Lokal, nicht zu einer Liste, und geht auch ohne Herz und ohne Liste.
+
+| Property | Spalte | Typ | Null | Anmerkung |
+|---|---|---|---|---|
+| `id` | `id` | `integer` PK | – | AUTO |
+| `user` | `user_id` | FK → `` `user` `` | nein | Verfasser; **`ON DELETE CASCADE`** |
+| `restaurant` | `restaurant_id` | FK → `restaurant` | nein | **`ON DELETE CASCADE`** |
+| `text` | `text` | `varchar(500)` | nein | Freitext: Zeilenumbrüche als `\n`, Randleerraum entfernt, Unicode-NFC (`SavedText::note()`) |
+| `updatedAt` | `updated_at` | `datetime` | nein | zuletzt geändert — `setText()` setzt ihn mit; im Export |
+
+**Konstante:** `MAX_LENGTH = 500` (17/AK-35). Kein `createdAt` — abweichend von der
+Konvention oben; der Datenexport nennt „zuletzt geändert“ (17/AK-60).
+
+**Relationen:** `user` und `restaurant` je ManyToOne, einseitig.
+
+**Index:** `UNIQ_restaurant_note_user_restaurant (user_id, restaurant_id)` — eine Notiz je
+Konto und Lokal; zwei Geräte überschreiben einander, die zuletzt gespeicherte gilt (17/EC-06).
+
+> **Eine leere Notiz ist keine Zeile.** Wer das Feld leert — auch auf bloße Leerzeichen
+> oder Zeilenumbrüche —, löscht die Zeile (`RestaurantNoteService`, 17/AK-36, EC-08).
+> `text = ''` kommt in der Tabelle nicht vor.
+>
+> **`\r\n` → `\n` vor dem Zählen.** Ein Formular schickt einen Zeilenumbruch als zwei
+> Zeichen, der Nutzer zählt einen. Ohne die Umwandlung schlüge eine Notiz mit 490
+> Zeichen und sechs Absätzen an der Grenze fehl.
+>
+> ⚠ **Freitext, in dem eine Gesundheitsangabe stehen kann** („Rampe für Papas Rollstuhl
+> zu steil“). Er verlässt das System nicht — kein Protokoll, keine Messung, kein
+> Fehlerbericht, keine Verwaltungsansicht; allein der Datenexport an die Person selbst
+> führt ihn. Einordnung: [`datenschutz.md`](datenschutz.md), Abschnitt „Favoriten, Listen
+> und Notizen“.
+
+**Löschregeln der vier Tabellen aus Feature 17** — alle in der Datenbank, keine Zeile
+Anwendungscode (Muster `BoardVote`; 17/AK-30, AK-61, AK-62):
+
+| Wenn gelöscht wird … | … verschwinden | über |
+|---|---|---|
+| ein Konto (Feature 01) | seine Favoriten, Listen samt Einträgen, Notizen | `user_id` bzw. `user_id` → `list_id` |
+| ein Lokal (B20) | alle Favoriten, Listeneinträge und Notizen dazu, bei allen Konten — still, ohne Meldung | `restaurant_id` |
+| eine Liste | ihre Einträge; Herz und Notizen bleiben | `list_id` |
+
+Doctrine löscht ein Lokal per `remove()` als SQL-`DELETE`; die Kaskade greift in der
+Datenbank, obwohl das Entity keine Rückbeziehung kennt. `SavedCascadeTest` prüft alle drei
+Fälle.
+
+---
+
 ## Enum-Referenz
 
-Elf Enums, alle `string`-backed, alle in `src/Enum/`. Das wiederkehrende Muster:
+Sechzehn Enums, alle `string`-backed, alle in `src/Enum/`. Das wiederkehrende Muster:
 `transKey()` liefert den Übersetzungsschlüssel, `label()` den übersetzten Text,
 `emoji()` ein Symbol, `badgeClasses()` die Tailwind-Farben für ein Abzeichen.
 
@@ -1032,13 +1206,14 @@ eigenen öffentlichen Methoden.
 | `findBySubmitter(User)` | `Restaurant[]` | Einreichungen eines Nutzers, neueste zuerst |
 | `findMetricRows(?\DateTimeImmutable $createdUntil)` | `list<array>` | Rohdaten als Arrays für die Open-Startup-Auswertung; der Zeitfilter erlaubt nachträglich erzeugte Monats-Snapshots |
 | `findAllForExport()` | `Restaurant[]` | vollständiger Datensatz für den CC-BY-Export |
+| `findForCards(array $ids)` | `list<Restaurant>` | **Feature 17:** Karten zu Nummern, die eine eigene Abfrage geliefert hat (Favoriten, Listen) — mit `openingHours` + `cuisines` per Join, **ohne** `setMaxResults()` (BF-64), Reihenfolge aus `$ids`, unbekannte Nummern fallen weg |
 
 **`findPaginated()` im Detail**
 
 Sortierung über `$sort`: `name` (A–Z), `newest` (`createdAt` DESC), sonst
 `rating` DESC als Vorgabe.
 
-Vierzehn kombinierbare Filterschlüssel:
+Fünfzehn kombinierbare Filterschlüssel (der fünfzehnte seit Feature 17):
 
 | Schlüssel | Wirkung |
 |---|---|
@@ -1049,6 +1224,7 @@ Vierzehn kombinierbare Filterschlüssel:
 | `cuisine` | Liste von `Cuisine`-IDs (JOIN) |
 | `lang` | gesprochene Sprachen, **UND**-verknüpft — das Haus muss alle gewählten sprechen |
 | `open` | gerade geöffnet |
+| `favorites_of` | nur Lokale, die dieses Konto gemerkt hat (`EXISTS`-Unterabfrage auf `favorite`). ⚠ Wirkt nur mit einem **`User`-Objekt**, nie mit einem Wert aus der Anfrage — `RestaurantController::index()` setzt es aus der Sitzung, und nur für Angemeldete mit `?favorites=1` (17/AK-38, AK-39, AK-52) |
 
 Zwei Stellen verdienen Aufmerksamkeit:
 
@@ -1161,6 +1337,59 @@ Vormerkungen fallen.
 > auf `pending` und entginge dem Lauf — obwohl nie jemand bestätigt hat und
 > damit keine Einwilligung vorliegt (dieselbe Zweideutigkeit wie BF-89).
 
+### Repositories aus Feature 17 — das Konto ist immer Pflichtargument
+
+⚠ **Jede Methode, die Zeilen eines Kontos liefert, nimmt das Konto als Argument** — direkt
+oder über eine Liste, die zuvor über das Konto geholt wurde. Eine vergessene
+Besitzprüfung ist damit kein möglicher Fehler, sondern ein fehlendes Argument
+(17, `design.md`, Zugriffsregeln: „Besitz über die Abfrage, kein Voter“).
+
+### FavoriteRepository
+
+| Methode | Rückgabe | Zweck |
+|---|---|---|
+| `findOneByUserAndRestaurant(User, Restaurant)` | `?Favorite` | Merkzustand eines Lokals; Prüfung vor dem Anlegen |
+| `findFavoriteRestaurantIds(User, int[] $restaurantIds)` | `int[]` | welche Lokale einer Kartenseite gemerkt sind — **eine** Abfrage je Seite (`App\Saved\SavedState`) |
+| `countByUser(User)` | `int` | Zahl auf „Gespeichert“, Gesamtzahl fürs Blättern von „Favoriten“, Leertext beim Favoriten-Filter (17/AK-40) |
+| `findRestaurantIdsPage(User, int $offset, int $limit)` | `int[]` | eine Seite „Favoriten“ als Lokalnummern, zuletzt gemerkt zuerst — **ohne Joins**, die Karten lädt danach `RestaurantRepository::findForCards()` (BF-64) |
+| `findByUserNewestFirst(User)` | `Favorite[]` | Datenexport (17/AK-60), mit Lokal |
+
+### SavedListRepository
+
+| Methode | Rückgabe | Zweck |
+|---|---|---|
+| `findOneOwned(int $id, User)` | `?SavedList` | **der einzige Weg zu einer einzelnen Liste** — „Nummer **und** Konto“ |
+| `findByUser(User)` | `SavedList[]` | alle eigenen Listen, zuletzt angelegte zuerst (höchstens 25) |
+| `countByUser(User)` | `int` | für die 25er-Grenze |
+| `findOneByUserAndKey(User, string $nameKey)` | `?SavedList` | Dublettenprüfung über `name_key` |
+| `countEntriesPerList(User)` | `array<int, int>` | Zahl der Lokale je eigener Liste in einer gruppierten Abfrage; leere Listen fehlen im Ergebnis |
+
+> ⚠ **Es gibt keine Abfrage, die eine Liste nur über ihre Nummer liefert.** Eine fremde
+> Nummer findet über `findOneOwned()` schlicht nichts und endet in 404 — identisch zu einer
+> Nummer, die es nicht gibt (17/AK-53, AK-54). Das geerbte `find()` benutzt Feature 17
+> nicht; wer es für eine Liste einführt, hebt genau diese Zusage auf.
+
+### SavedListEntryRepository
+
+Einträge werden nur über eine Liste gelesen, die der Aufrufer zuvor über
+`SavedListRepository::findOneOwned()` geholt hat — oder über das Konto selbst.
+
+| Methode | Rückgabe | Zweck |
+|---|---|---|
+| `findOneByListAndRestaurant(SavedList, Restaurant)` | `?SavedListEntry` | steht das Lokal schon in der Liste? |
+| `countByList(SavedList)` | `int` | Gesamtzahl fürs Blättern der Listenseite und Zahl in der Rückfrage („… mit 4 Lokalen löschen?“) |
+| `findRestaurantIdsPage(SavedList, int $offset, int $limit)` | `int[]` | eine Listenseite als Lokalnummern, zuletzt hinzugefügt zuerst — ohne Joins, wie bei `FavoriteRepository` |
+| `findListIdsContaining(User, Restaurant)` | `int[]` | in welchen **eigenen** Listen das Lokal steht — Häkchen „In Listen“ der Detailseite |
+| `findByListNewestFirst(SavedList)` | `SavedListEntry[]` | Datenexport, mit Lokal |
+
+### RestaurantNoteRepository
+
+| Methode | Rückgabe | Zweck |
+|---|---|---|
+| `findOneByUserAndRestaurant(User, Restaurant)` | `?RestaurantNote` | die Notiz der Detailseite |
+| `findTextsFor(User, int[] $restaurantIds)` | `array<int, string>` | Notizen zu einer Kartenseite in **einer** Abfrage, Lokalnummer → Text (`SavedState`) |
+| `findByUser(User)` | `RestaurantNote[]` | Datenexport, zuletzt geändert zuerst, mit Lokal |
+
 ### Ohne eigene Methoden
 
 `OpeningHourRepository`, `OrderingOptionRepository`
@@ -1198,7 +1427,8 @@ Ergebnis-Array.** Lägen sie darin und wären nur im Template verborgen, wären 
 Sammelabzug davon wäre eine Adressliste, kein Barrierefreiheits-Datensatz.
 
 **Es gibt kein Soft-Delete.** Gelöschte Restaurants sind weg; ihre Fotos,
-Öffnungszeiten und Bestellwege gehen per `ON DELETE CASCADE` mit. Was
+Öffnungszeiten und Bestellwege gehen per `ON DELETE CASCADE` mit — seit Feature 17
+auch die Favoriten, Listeneinträge und Notizen aller Konten dazu. Was
 eigenständig weiterlebt — wer eingereicht, wer verifiziert hat — wird auf `null`
 gesetzt.
 
@@ -1206,15 +1436,17 @@ gesetzt.
 
 ## Migrations-Historie
 
-35 Migrationen, Namespace `DoctrineMigrations`, Verzeichnis `migrations/`.
-Format `VersionYYYYMMDDHHMMSS.php`.
+40 Migrationen (Stand 2026-11-14), Namespace `DoctrineMigrations`, Verzeichnis
+`migrations/`. Format `VersionYYYYMMDDHHMMSS.php`.
 
 ⚠ **Die Tabelle unten ist nicht vollständig: Sechs Migrationen vom 24. und
 25. August 2026 fehlen** (`20260824120000`, `20260824160000`, `20260825120000`,
 `20260825130000`, `20260825140000`, `20260825150000`) — sie stammen aus Feature `01`
 und `02`. Der Rückstand ist hier vermerkt und nicht gefüllt, weil das Nachtragen
 fremder Features eine eigene Prüfung braucht: Was in einer Referenz steht, muss
-jemand gegen den Code gehalten haben.
+jemand gegen den Code gehalten haben. **Ebenso fehlt `20260902200000`** (Tabelle
+`cache_items` für den Merkposten der Zeitpläne, beschrieben in `CLAUDE.md`, „Zeitpläne
+statt System-Cron“) — beim Nachzählen am 2026-11-14 aufgefallen.
 
 | Version | Inhalt |
 |---|---|
@@ -1285,3 +1517,20 @@ Beirat gestrichen. Reine Datenmigration: `organisation_waitlist_entry.type`
 `marketing_contact.origin` `association` → `company`, übertragene und nicht
 gesperrte Kontakte zurück auf `pending`, damit Brevo die neue Herkunft bekommt.
 `down()` wirft — welche Zeile ein Verein war, steht danach nirgends mehr.
+
+**`Version20261113221129`** (2026-11-13) — Feature 17, Favoriten und Listen: vier
+`CREATE TABLE` (`favorite`, `saved_list`, `saved_list_entry`, `restaurant_note`) mit
+sieben Fremdschlüsseln, alle `ON DELETE CASCADE`; `saved_list.name_key` mit
+`COLLATE utf8mb4_bin`. **Rein ergänzend** — keine bestehende Tabelle ändert sich, auch
+`user` und `restaurant` nicht. Von Hand auf diese vier Tabellen gekürzt:
+`doctrine:migrations:diff` erzeugte gegen die lokale Entwicklungsdatenbank, die weit
+hinter dem Migrationsstand lag, zusätzlich das halbe Schema. `down()` entfernt die vier
+Tabellen. `bin/sicherung-pruefen.sh` führt sie in `ERWARTETE_TABELLEN`.
+
+⚠ **Migration vor dem Containertausch.** Der alte Code liest die neuen Tabellen nicht —
+der neue aber liest `favorite` auf **jeder Such- und Detailseite eines angemeldeten
+Kontos** (Zustand der Herzen). Läuft die Migration erst als Post-Deployment-Befehl,
+werfen diese Seiten zwischen Containertausch und Migration einen Fehler. Weg: der
+einmalige Pre-Deployment-Befehl aus `CLAUDE.md`, „Deployment“ — oder das kurze Fenster
+bewusst in Kauf nehmen (17, `design.md`, Abschnitt Migration). Gäste trifft es nicht:
+Für sie fragt keine Seite die neuen Tabellen ab.

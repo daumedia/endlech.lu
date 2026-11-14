@@ -1,0 +1,112 @@
+{#
+    Kartenraster der Seiten „Favoriten“ und Liste (Feature 17) — dieselbe Vorlage für die Seite
+    und für den Turbo-Stream nach „Aus Liste entfernen“ bzw. nach dem Herz auf „Favoriten“, damit
+    beide dasselbe zeigen.
+
+    Parameter (alle aus `App\Saved\SavedCards`):
+      lokale              – Restaurant[] der Seite, in Anzeigereihenfolge
+      gespeichert         – SavedPage: Herz-Zustand und Notiz je Lokal (eine Abfrage je Art)
+      liste               – SavedList oder null (Favoriten); nur mit Liste „Aus Liste entfernen“
+      entfernenToken      – Kennung des Sitzungstokens der Liste, sonst null
+      gesamt, zahlText    – Zahl aller Lokale und ihr Übersetzungsschlüssel (Überschrift)
+      seite, letzteSeite  – Blättern
+      blaetternRoute, blaetternParameter – Ziel der Blätter-Verweise
+      ziel                – Seite, auf die das Herz ohne JavaScript zurückführt (mit `page`)
+      fokusKarte          – Lokalnummer, deren Karte nach einem Stream den Fokus bekommt
+                            (AK-14, AK-26); sonst null
+      fokusLeer           – true: der Leertext bekommt ihn (keine Karte mehr übrig)
+      leertext            – Übersetzungsschlüssel des Leertexts
+
+    Die Karte ist **dieselbe wie in der Suche** (`partials/_restaurant_card.html.twig`, AK-12),
+    mit eigener Notiz darunter (AK-34) und — nur auf einer Listenseite — „Aus Liste entfernen“ im
+    Block `karten_aktion`.
+
+    ⚠ **Kennungen nicht ändern.** `gespeichert-karten` ist das Ziel des Streams (replace mit
+    morph), `karte-{id}` (aus dem Kartenpartial) und `gespeichert-leer` sind Anker der
+    Weiterleitung ohne JavaScript.
+    ⚠ **`data-controller="focus-after-stream"` steht nur im Stream** (`fokusKarte`/`fokusLeer`
+    sind auf einer gewöhnlich geladenen Seite leer) — sonst nähme die Seite beim Laden den Fokus
+    weg. Markiert wird der Umschlag `<li>` der Karte samt `tabindex="-1"`: Das Kartenpartial führt
+    keinen Namensverweis, und der Fokus soll auf der Karte stehen, nicht auf einem Knopf, den ein
+    zweites Drücken von Enter gleich mit auslöste.
+    ⚠ **Die Überschrift über den Karten steht im Raster, nicht darüber.** Die Karten tragen `h3`
+    (Kette der Suche: `h1` → `h2` Zahl → `h3`), und nach dem Entfernen muss die Zahl mitziehen —
+    der Stream ersetzt nur dieses Element.
+    ⚠ **„Aus Liste entfernen“ ohne `aria-label`** (WCAG 2.5.3): Der zugängliche Name beginnt mit
+    dem sichtbaren Text, der Lokalname folgt verborgen. Ein `aria-label` „X aus „L“ entfernen“
+    stellte den sichtbaren Text ans Ende — wer per Sprachsteuerung „Aus Liste entfernen“ sagt,
+    träfe den Knopf nicht.
+    ⚠ **Notiz und Listenname sind Nutzertext:** nie `trans`, nie `raw` (AK-37, AK-46).
+
+    Das Blättern steht innerhalb des Rasters: Nach dem Entfernen kann sich die Seitenzahl ändern,
+    und der Stream ersetzt beides zusammen.
+#}
+{% set _liste = liste ?? null %}
+{% set _fokusKarte = fokusKarte ?? null %}
+{% set _fokusLeer = fokusLeer ?? false %}
+<div id="gespeichert-karten">
+    {% if lokale is empty %}
+        <div class="rounded-2xl border-2 border-dashed border-gray-300 bg-white px-6 py-10 text-center">
+            <p class="mx-auto flex h-14 w-14 items-center justify-center rounded-xl bg-cyan-50 text-3xl" aria-hidden="true">{{ _liste is null ? '🤍' : '📋' }}</p>
+            <p id="gespeichert-leer" tabindex="-1"
+               class="mx-auto mt-4 max-w-md text-gray-800 leading-relaxed scroll-mt-24 rounded focus:outline-2 focus:outline-offset-4 focus:outline-cyan-700"
+               {%- if _fokusLeer %} data-fokus-nach-aktualisierung data-controller="focus-after-stream"{% endif %}>{{ leertext|trans }}</p>
+            <a href="{{ path('app_restaurant_index') }}"
+               class="mt-6 inline-flex items-center justify-center min-h-[44px] px-5 rounded-lg bg-cyan-700 text-white font-semibold hover:bg-cyan-800 motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700">
+                {{ 'saved.to_search'|trans }}
+            </a>
+        </div>
+    {% else %}
+        <h2 id="gespeichert-karten-titel" class="text-xl font-bold text-gray-900">{{ zahlText|trans({'%count%': gesamt}) }}</h2>
+        <ul class="mt-4 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3" aria-labelledby="gespeichert-karten-titel">
+            {% for lokal in lokale %}
+                {# `grid` streckt die Karte auf die Höhe der Zeile, wie im Raster der Suche. #}
+                <li class="grid rounded-xl scroll-mt-24 focus:outline-2 focus:outline-offset-4 focus:outline-cyan-700"
+                    {%- if _fokusKarte == lokal.id %} tabindex="-1" data-fokus-nach-aktualisierung data-controller="focus-after-stream"{% endif %}>
+                    {% embed 'partials/_restaurant_card.html.twig' with {
+                        restaurant: lokal,
+                        isFavorite: gespeichert.isFavorite(lokal.id),
+                        note: gespeichert.noteFor(lokal.id),
+                        ziel: ziel,
+                        liste: _liste,
+                        entfernenToken: entfernenToken,
+                        seite: seite,
+                    } only %}
+                        {% block karten_aktion %}
+                            {% if liste is not null %}
+                                <form method="post" action="{{ path('app_saved_list_entry_remove', {id: liste.id, restaurant: restaurant.id}) }}" class="mt-2">
+                                    <input type="hidden" name="_token" value="{{ csrf_token(entfernenToken) }}">
+                                    <input type="hidden" name="page" value="{{ seite }}">
+                                    <button type="submit"
+                                            class="inline-flex w-full items-center justify-center min-h-[44px] px-4 rounded-lg border border-gray-400 bg-white text-sm font-semibold text-gray-800 hover:border-red-700 hover:text-red-800 motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700">
+                                        {{- 'saved.list.remove_entry'|trans -}}<span class="sr-only">: {{ restaurant.name }}</span>
+                                    </button>
+                                </form>
+                            {% endif %}
+                        {% endblock %}
+                    {% endembed %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% if letzteSeite > 1 %}
+        {% set _verweis = 'px-4 py-2 min-h-[44px] min-w-[44px] inline-flex items-center justify-center rounded-lg border text-sm motion-safe:transition focus:outline-2 focus:outline-offset-2 focus:outline-cyan-700' %}
+        <nav class="flex flex-wrap justify-center items-center gap-2 mt-10" aria-label="{{ 'pagination.page_of'|trans({'%current%': seite, '%last%': letzteSeite}) }}">
+            {% if seite > 1 %}
+                <a href="{{ path(blaetternRoute, blaetternParameter|merge(seite - 1 > 1 ? {page: seite - 1} : {})) }}"
+                   class="{{ _verweis }} border-gray-300 bg-white text-gray-800 hover:border-cyan-700">← {{ 'pagination.previous'|trans }}</a>
+            {% endif %}
+            {% for p in 1..letzteSeite %}
+                <a href="{{ path(blaetternRoute, blaetternParameter|merge(p > 1 ? {page: p} : {})) }}"
+                   class="{{ _verweis }} {{ p == seite ? 'bg-cyan-700 text-white border-cyan-700 font-bold' : 'bg-white text-gray-800 border-gray-300 hover:border-cyan-700' }}"
+                   {% if p == seite %}aria-current="page"{% endif %}>{{ p }}</a>
+            {% endfor %}
+            {% if seite < letzteSeite %}
+                <a href="{{ path(blaetternRoute, blaetternParameter|merge({page: seite + 1})) }}"
+                   class="{{ _verweis }} border-gray-300 bg-white text-gray-800 hover:border-cyan-700">{{ 'pagination.next'|trans }} →</a>
+            {% endif %}
+        </nav>
+        <p class="text-center text-sm text-gray-700 mt-3">{{ 'pagination.page_of'|trans({'%current%': seite, '%last%': letzteSeite}) }}</p>
+    {% endif %}
+</div>
