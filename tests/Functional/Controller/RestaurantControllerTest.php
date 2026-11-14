@@ -116,6 +116,52 @@ final class RestaurantControllerTest extends AbstractWebTestCase
         self::assertResponseIsSuccessful();
     }
 
+    /**
+     * Growth H-2026-W46-01: Titel und Kurzbeschreibung fürs Suchergebnis. Genannt wird nur, was vorhanden
+     * ist — `false` heißt im Bestand auch „nicht erfasst", ein „nein" im Suchergebnis wäre erfunden.
+     */
+    public function testShowKurzbeschreibungNenntNurVorhandeneMerkmale(): void
+    {
+        $client = static::createClient();
+        $restaurant = (new Restaurant())
+            ->setName('Kurzbeschreibung Mit '.uniqid())
+            ->setCity('1, Rue de la Gare, 3555 Dudelange')
+            ->setIsWheelchairAccessible(true)
+            ->setHasDisabledParking(true);
+        $em = $client->getContainer()->get(EntityManagerInterface::class);
+        $em->persist($restaurant);
+        $em->flush();
+
+        $crawler = $client->request('GET', self::LOCALE.'/restaurants/'.$restaurant->getId());
+
+        self::assertResponseIsSuccessful();
+        self::assertSame($restaurant->getName().': Barrierefreiheit – Endlech.lu', $crawler->filter('title')->text());
+
+        $beschreibung = $crawler->filter('meta[name="description"]');
+        self::assertCount(1, $beschreibung);
+        self::assertSame(
+            $restaurant->getName().' – Barrierefreiheit: Rollstuhlgerecht, Behindertenparkplatz. Alle Angaben auf Endlech.lu. 1, Rue de la Gare, 3555 Dudelange.',
+            $beschreibung->attr('content'),
+        );
+    }
+
+    public function testShowKurzbeschreibungOhneMerkmaleBehauptetNichts(): void
+    {
+        $client = static::createClient();
+        $restaurant = (new Restaurant())->setName('Kurzbeschreibung Ohne '.uniqid())->setCity('Esch-sur-Alzette');
+        $em = $client->getContainer()->get(EntityManagerInterface::class);
+        $em->persist($restaurant);
+        $em->flush();
+
+        $crawler = $client->request('GET', '/fr/restaurants/'.$restaurant->getId());
+
+        self::assertResponseIsSuccessful();
+        self::assertSame(
+            $restaurant->getName().' – accessibilité et contact sur Endlech.lu. Esch-sur-Alzette.',
+            $crawler->filter('meta[name="description"]')->attr('content'),
+        );
+    }
+
     public function testShowUnknownReturns404(): void
     {
         $client = static::createClient();

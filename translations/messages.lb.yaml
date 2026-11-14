@@ -192,7 +192,9 @@ restaurant:
         no_results_help: "Hëllef eis a schlo e Restaurant vir!"
         view_details: "Detailer kucken"
     detail:
-        title: "%name% – Endlech.lu"
+        title: "%name%: Barrierefreiheet – Endlech.lu"
+        meta_description: "%name% – Barrierefreiheet: %features%. All d'Informatiounen op Endlech.lu."
+        meta_description_no_features: "%name% – Barrierefreiheet a Kontakt op Endlech.lu."
         back_to_list: "Zréck op d'Lëscht"
         rating: "Bewäertung"
         of_10: "vun 10"
