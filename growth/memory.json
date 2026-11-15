@@ -12,7 +12,7 @@
       "aenderung": "Titel \"Name: Barrierefreiheit – Endlech.lu\" in allen fünf Sprachen; neue Meta-Description aus den Daten des Eintrags: nur die als vorhanden geführten Merkmale (Rollstuhl, WC, Parkplatz, Assistenzhund, Wickeltisch, Licht), dann die Adresse; ohne Merkmal ein neutraler Satz.",
       "commit": "5437de0",
       "branch": "growth/H-2026-W46-01",
-      "deployt": null,
+      "deployt": "2026-11-15",
       "erwartung": {
         "metrik": "ctr",
         "zuschnitt": {
@@ -26,7 +26,7 @@
         "vorher": 0.00258,
         "vorher_roh": { "impressions": 1553, "clicks": 4, "position_gewichtet": 11.32, "zeilen": 30 },
         "ziel": 0.015,
-        "fruehestens": null,
+        "fruehestens": "2027-02-15",
         "begruendung": "Kaskadenstufe Klicks/CTR: ab Monat 3 nach dem Deploy, also deployt + 3 Monate. Ziel 1,5 % entspricht einer üblichen CTR auf Position ~10 und bei gleichen Impressions rund 23 Klicks in 28 Tagen.",
         "gegenpruefung": "CTR der übrigen Site im selben Zeitraum: 8 / 252 = 3,2 % (Site gesamt aus abfragen.date: 12 / 1805 = 0,66 %). Steigt die Detailseiten-CTR, aber auch die der übrigen Site im gleichen Maß, war es nicht diese Änderung. Steigt die gewichtete Position deutlich (unter 9), ist eine CTR-Bewegung zum Teil Positionseffekt – dann im Ergebnis trennen."
       },

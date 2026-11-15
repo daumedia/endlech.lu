@@ -7,6 +7,10 @@ Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 
 ## [Unreleased]
 
+- **Suchmaschinen:** Die Detailseiten eines Restaurants tragen den Titel „Name: Barrierefreiheit – Endlech.lu“ und eine
+  Kurzbeschreibung aus den erfassten Merkmalen und der Adresse, in allen fünf Sprachen (Growth-Hypothese H-2026-W46-01).
+  ⚠ Seit 2026-11-15 live — ausgerollt zusammen mit `v2026.11.14`, ohne eigenes Release.
+
 ## [2026.11.14] – Favoriten und Listen
 
 ### Favoriten und Listen (Feature 17)
