@@ -90,7 +90,13 @@
       "korrektur": {
         "am": "2026-11-16",
         "text": "Die Beobachtung sagt: von /de/restaurants verlinkt. Das stimmt nur über Seite 2: /de/restaurants (Seite 1, sortiert nach Bewertung, 6 je Seite) und /de/ verlinken die Lokale 1, 2, 3, 4, 7, 8. 5, 6 und 9 stehen nur auf /de/restaurants?sort=rating&page=2. Laut gsc_inspect_url am 2026-11-16 zuletzt gecrawlt am 2026-09-27; die fr-Fassung am 2026-11-04. Gleiches Bild in fr und en."
-      }
+      },
+      "hinweise": [
+        {
+          "am": "2026-11-16",
+          "text": "\"Indexierung beantragen\" für /de/restaurants/6 und /9 ist per API nicht möglich (die URL Inspection API ist nur lesend, die Indexing API gilt nur für Stellenanzeigen und Livestreams). Bleibt ein Handgriff in der Search Console. Wird er nach dem 2026-11-15 ausgeführt, beginnt die Frist für diesen Teil mit dem Datum des Klicks; fruehestens dann auf Klickdatum + 2 Wochen setzen."
+        }
+      ]
     }
   ],
   "randbedingungen": [
@@ -168,7 +174,13 @@
       "faellig_ab": "2026-12-14",
       "bedingung": null,
       "status": "offen",
-      "erledigt": null
+      "erledigt": null,
+      "hinweise": [
+        {
+          "am": "2026-11-16",
+          "text": "Themenliste entschieden: config.json themen um \"barrierefrei restaurant in der nähe\", \"rollstuhlgerecht restaurant in der nähe\" und \"restaurant accessible chaise roulante\" ergänzt. Gegen den Snapshot 2026-W47 gerechnet: 3 von 10 Themen mit Impressions (4 + 3 + 2 Imp., Pos. 1,0–3,0, alle auf /de/ bzw. /fr/). Der erste Aufschubgrund ist damit weg. Die Abfrage bei DataForSEO kostet Geld und läuft erst nach Freigabe durch Michael; bis dahin gilt faellig_ab."
+        }
+      ]
     }
   ]
 }

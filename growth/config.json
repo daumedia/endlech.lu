@@ -15,14 +15,17 @@
     "restaurant accessible luxembourg",
     "wheelchair accessible restaurant luxembourg",
     "barrièrefräi restaurant lëtzebuerg",
-    "restaurante acessível luxemburgo"
+    "restaurante acessível luxemburgo",
+    "barrierefrei restaurant in der nähe",
+    "rollstuhlgerecht restaurant in der nähe",
+    "restaurant accessible chaise roulante"
   ],
   "umami": {
     "website_id": "b943d685-4a21-4e06-ba5c-4de3ccdc0178",
     "zeitzone": "Europe/Luxembourg",
     "conversion_events": [
+      "*/",
       "*/restaurants",
-      "filter_angewandt",
       "*/restaurants/*",
       "kontaktweg_genutzt"
     ],
