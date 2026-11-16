@@ -1,7 +1,7 @@
 {
   "site": "sc-domain:endlech.lu",
   "angelegt": "2026-11-15",
-  "letzter_lauf": "2026-11-15",
+  "letzter_lauf": "2026-11-16",
   "hypothesen": [
     {
       "id": "H-2026-W46-01",
@@ -17,21 +17,38 @@
         "metrik": "ctr",
         "zuschnitt": {
           "werkzeug": "gsc_query",
-          "dimensions": ["page"],
+          "dimensions": [
+            "page"
+          ],
           "filter": [
-            { "dimension": "page", "operator": "includingRegex", "expression": "^https://endlech\\.lu/(lb|de|fr|en|pt)/restaurants/[0-9]+$" }
+            {
+              "dimension": "page",
+              "operator": "includingRegex",
+              "expression": "^https://endlech\\.lu/(lb|de|fr|en|pt)/restaurants/[0-9]+$"
+            }
           ],
           "rechnung": "Summe clicks / Summe impressions über alle Zeilen, 28 Tage, dataState final"
         },
         "vorher": 0.00258,
-        "vorher_roh": { "impressions": 1553, "clicks": 4, "position_gewichtet": 11.32, "zeilen": 30 },
+        "vorher_roh": {
+          "impressions": 1553,
+          "clicks": 4,
+          "position_gewichtet": 11.32,
+          "zeilen": 30
+        },
         "ziel": 0.015,
         "fruehestens": "2027-02-15",
         "begruendung": "Kaskadenstufe Klicks/CTR: ab Monat 3 nach dem Deploy, also deployt + 3 Monate. Ziel 1,5 % entspricht einer üblichen CTR auf Position ~10 und bei gleichen Impressions rund 23 Klicks in 28 Tagen.",
         "gegenpruefung": "CTR der übrigen Site im selben Zeitraum: 8 / 252 = 3,2 % (Site gesamt aus abfragen.date: 12 / 1805 = 0,66 %). Steigt die Detailseiten-CTR, aber auch die der übrigen Site im gleichen Maß, war es nicht diese Änderung. Steigt die gewichtete Position deutlich (unter 9), ist eine CTR-Bewegung zum Teil Positionseffekt – dann im Ergebnis trennen."
       },
       "status": "offen",
-      "nachgemessen": []
+      "nachgemessen": [],
+      "hinweise": [
+        {
+          "am": "2026-11-16",
+          "text": "Nicht nachgemessen: Der Zeitraum des Snapshots 2026-W47 endet am 2026-11-13, der Deploy war am 2026-11-15. Live geprüft am 2026-11-16: Titel und Beschreibung stehen auf https://endlech.lu/fr/restaurants/3. Gegenprüfung beim Nachmessen genauso rechnen wie beim Anlegen: 252 Impressions = Site gesamt (abfragen.date) minus Detailseiten (abfragen.page). Die Seitenebene allein ergibt für die übrige Site andere Werte (W46: 322 Imp., 8 Kl.)."
+        }
+      ]
     },
     {
       "id": "H-2026-W46-02",
@@ -42,7 +59,7 @@
       "aenderung": "Keine Code-Änderung – Maßnahme in der Search Console, von Michael auszuführen: Sitemap https://endlech.lu/sitemap.xml einreichen; per URL-Prüfung \"Indexierung beantragen\" für https://endlech.lu/de/restaurants/6 und https://endlech.lu/de/restaurants/9.",
       "commit": null,
       "massnahme": "search-console",
-      "deployt": null,
+      "deployt": "2026-11-15",
       "erwartung": {
         "metrik": "im_index",
         "zuschnitt": {
@@ -55,11 +72,25 @@
         },
         "vorher": "0 von 2 bekannt (beide \"URL ist Google nicht bekannt\", geprüft 2026-11-15)",
         "ziel": "2 von 2 \"indexiert\"",
-        "fruehestens": null,
+        "fruehestens": "2026-11-29",
         "begruendung": "Kaskadenstufe Indexierung: Woche 1–4. fruehestens = deployt (Datum der Einreichung) + 2 Wochen; bei \"zu-frueh\" nach 4 Wochen erneut."
       },
-      "status": "offen",
-      "nachgemessen": []
+      "status": "zu-frueh",
+      "nachgemessen": [
+        {
+          "am": "2026-11-16",
+          "wert": "0 von 2 indexiert: /de/restaurants/6 \"Gefunden – zurzeit nicht indexiert\", /de/restaurants/9 \"URL ist Google nicht bekannt\"",
+          "zeitraum": "Indexprüfung 2026-11-16 (inspektion.geprueft)",
+          "quelle": "growth/snapshots/2026-W47.json",
+          "bewertet": false,
+          "hinweis": "Vor fruehestens (2026-11-29) – notiert, nicht bewertet."
+        }
+      ],
+      "deployt_beleg": "gsc_sitemaps im Snapshot 2026-W47: https://endlech.lu/sitemap.xml eingereicht 2026-11-14T23:32:12Z (00:32 Ortszeit am 15.11.), verarbeitet 2026-11-14T23:32:14Z, 0 Fehler, 150 URLs. Ob für /de/restaurants/6 und /9 auch Indexierung beantragt wurde, geht aus den Daten nicht hervor.",
+      "korrektur": {
+        "am": "2026-11-16",
+        "text": "Die Beobachtung sagt: von /de/restaurants verlinkt. Das stimmt nur über Seite 2: /de/restaurants (Seite 1, sortiert nach Bewertung, 6 je Seite) und /de/ verlinken die Lokale 1, 2, 3, 4, 7, 8. 5, 6 und 9 stehen nur auf /de/restaurants?sort=rating&page=2. Laut gsc_inspect_url am 2026-11-16 zuletzt gecrawlt am 2026-09-27; die fr-Fassung am 2026-11-04. Gleiches Bild in fr und en."
+      }
     }
   ],
   "randbedingungen": [
@@ -71,8 +102,73 @@
       "zeitraum": "2026-10-15 bis 2026-11-11",
       "beobachtung": "Kette Startseite → Liste → Detailseite (\"*/\", \"*/restaurants\", \"*/restaurants/*\", Fenster 60 Min., umami_conversion_nach_quelle): Suchmaschinen 10 → 8 → 2, alle Besucher 26 → 12 → 2. Suchbesucher steigen zu 10 von 14 auf einer Startseite ein, die übrigen 4 direkt auf einer Detailseite. Detailseite → kontaktweg_genutzt: Suchmaschinen 1 von 4, alle 2 von 7. Gesamt 38 Besucher im Zeitraum – alles unter 100, keine Quoten.",
       "folge_fuer_loop_1": "Mehr Suchklicks auf die Startseiten bringen Besucher derzeit bis zur Liste, kaum weiter zu einem Lokal. SEO-Arbeit vorerst an den Detailseiten (kürzester Weg zum Inhalt), nicht an Startseiten-Snippets. Den Absprung Liste → Detailseite angehen, bevor Startseiten-Klicks gezielt gesteigert werden.",
-      "gilt_bis": "2027-02-15"
+      "gilt_bis": "2027-02-15",
+      "nachbelegt": [
+        {
+          "am": "2026-11-16",
+          "zeitraum": "2026-10-17 bis 2026-11-13",
+          "beobachtung": "Gleiche Kette, umami_conversion_nach_quelle: Suchmaschinen 11 → 8 → 2, alle Besucher 29 → 12 → 2. Detailseite → kontaktweg_genutzt (umami_funnel): alle 2 von 8. Hält, gilt_bis unverändert."
+        }
+      ]
     }
   ],
-  "verworfen": []
+  "verworfen": [],
+  "wiedervorlagen": [
+    {
+      "id": "W-2026-W47-01",
+      "gestellt": "2026-11-16",
+      "quelle": "growth/laeufe/2026-W47.md",
+      "was": "Startseite /xx/ und Liste /xx/restaurants (Seite 1, 6 je Seite, RestaurantController::LIMIT) verlinken 6 von 9 Lokalen. 5, 6 und 9 sind nur über ?page=2 erreichbar. /de/restaurants?page=2 hat Google zuletzt am 2026-09-27 gecrawlt. Im Snapshot 2026-W47 sind alle zehn URLs von 6 und 9 nicht im Index (5x \"Gefunden – zurzeit nicht indexiert\", 5x \"URL ist Google nicht bekannt\"); 5 ist in allen Sprachen indexiert. Wenn 6 und 9 am Stichtag weiter draußen sind: alle Lokale auf Seite 1 bringen (LIMIT anheben, bei 9 Lokalen etwa 12) und als Hypothese auf im_index messen. Das wirkt auch auf den Absprung Liste → Detailseite aus R-2026-W46-01.",
+      "warum_nicht_jetzt": "H-2026-W46-02 misst genau die Indexierung von /de/restaurants/6 und /9 (Sitemap eingereicht 2026-11-15, fällig 2026-11-29). Eine Änderung an der Verlinkung jetzt ließe sich von der Einreichung nicht trennen.",
+      "faellig_ab": "2026-11-29",
+      "bedingung": "Im frischen Snapshot ist mindestens eine der zehn URLs unten nicht verdict PASS",
+      "urls": [
+        "https://endlech.lu/lb/restaurants/6",
+        "https://endlech.lu/lb/restaurants/9",
+        "https://endlech.lu/de/restaurants/6",
+        "https://endlech.lu/de/restaurants/9",
+        "https://endlech.lu/fr/restaurants/6",
+        "https://endlech.lu/fr/restaurants/9",
+        "https://endlech.lu/en/restaurants/6",
+        "https://endlech.lu/en/restaurants/9",
+        "https://endlech.lu/pt/restaurants/6",
+        "https://endlech.lu/pt/restaurants/9"
+      ],
+      "status": "offen",
+      "erledigt": null
+    },
+    {
+      "id": "W-2026-W47-02",
+      "gestellt": "2026-11-16",
+      "quelle": "growth/laeufe/2026-W46.md",
+      "was": "Frage 2 aus 2026-W46 und 2026-W47: \"coyote belval\" (W47: 435 Imp., Pos. 10,4), \"osteria belval\" (158, 10,3), \"coyote cafe belval\" (28, 10,1), \"coyotte belval\" (20, 10,3) hängen auf /fr/restaurants/3 und /7 knapp vor Seite 1. Prüfen, ob Inhalt oder interne Verlinkung dieser Detailseiten die Position verbessern kann.",
+      "warum_nicht_jetzt": "Dieselben Seiten wie H-2026-W46-01 (Titel und Beschreibung, deployt 2026-11-15). Eine zweite Änderung an ihnen ließe sich bei der Nachmessung nicht trennen. Im Bericht 2026-W46 ohne ID aufgeschoben, hier nachgetragen.",
+      "faellig_ab": "2027-02-15",
+      "bedingung": "H-2026-W46-01 ist nachgemessen (Status nicht offen/zu-frueh)",
+      "status": "offen",
+      "erledigt": null
+    },
+    {
+      "id": "W-2026-W47-03",
+      "gestellt": "2026-11-16",
+      "quelle": "growth/laeufe/2026-W46.md",
+      "was": "Startseite, Restaurantliste, Kriterien und Über uns haben keine Meta-Description (Stand 2026-11-15). Startseiten zusammen: rund 105 Impressions in 28 Tagen (W46). Prüfen, ob die Seiten jetzt genug Impressions für eine CTR-Hypothese haben und ob R-2026-W46-01 noch gilt.",
+      "warum_nicht_jetzt": "Zu wenig Impressions für eine messbare CTR. R-2026-W46-01: Mehr Startseiten-Besucher kommen derzeit kaum bei einem Lokal an. Im Bericht 2026-W46 ohne ID aufgeschoben, hier nachgetragen.",
+      "faellig_ab": "2027-02-15",
+      "bedingung": null,
+      "status": "offen",
+      "erledigt": null
+    },
+    {
+      "id": "W-2026-W47-04",
+      "gestellt": "2026-11-16",
+      "quelle": "growth/laeufe/2026-W46.md",
+      "was": "Alle sieben Themen aus config.json haben keine Impression (W46 und W47). Die Kernabsicht kommt nur als \"… in der nähe\" / \"… chaise roulante\" an. Erst die Themenliste klären (offene Frage 2 an Michael), dann einmalig Suchvolumen über DataForSEO (kostet je Abfrage) für Themen und Varianten in lb/de/fr/en/pt. Danach entscheiden, ob eigene Themenseiten (z. B. je Gemeinde) sich lohnen.",
+      "warum_nicht_jetzt": "Die Themenliste ist noch nicht entschieden. Mit 9 Lokalen wäre eine Seite je Ort dünn. Längste Wirkungskette. Im Bericht 2026-W46 ohne ID aufgeschoben, hier nachgetragen.",
+      "faellig_ab": "2026-12-14",
+      "bedingung": null,
+      "status": "offen",
+      "erledigt": null
+    }
+  ]
 }

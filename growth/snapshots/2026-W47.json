@@ -1,0 +1,4038 @@
+{
+  "erzeugt": "2026-11-16T17:12:11.362Z",
+  "woche": "2026-W47",
+  "site": "sc-domain:endlech.lu",
+  "zeitraum": {
+    "startDate": "2026-10-17",
+    "endDate": "2026-11-13"
+  },
+  "dataState": "final",
+  "abfragen": {
+    "query_page": {
+      "zeilen": 210,
+      "rows": [
+        {
+          "query": "restaurant accessible chaise roulante",
+          "page": "https://endlech.lu/fr/",
+          "clicks": 2,
+          "impressions": 2,
+          "ctr": 1,
+          "position": 1
+        },
+        {
+          "query": "barrierefreies restaurant in der nähe",
+          "page": "https://endlech.lu/de/",
+          "clicks": 1,
+          "impressions": 1,
+          "ctr": 1,
+          "position": 2
+        },
+        {
+          "query": "gregorius tetange",
+          "page": "https://endlech.lu/en/restaurants/1",
+          "clicks": 1,
+          "impressions": 2,
+          "ctr": 0.5,
+          "position": 31.5
+        },
+        {
+          "query": "adega velha",
+          "page": "https://endlech.lu/pt/",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 85
+        },
+        {
+          "query": "adega velha",
+          "page": "https://endlech.lu/pt/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 86
+        },
+        {
+          "query": "am bureck bertrange",
+          "page": "https://endlech.lu/en/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 100
+        },
+        {
+          "query": "an der flesch",
+          "page": "https://endlech.lu/de/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 60
+        },
+        {
+          "query": "an der flesch",
+          "page": "https://endlech.lu/lb/",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 46
+        },
+        {
+          "query": "b13 bertrange",
+          "page": "https://endlech.lu/fr/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 53
+        },
+        {
+          "query": "baran konz",
+          "page": "https://endlech.lu/fr/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 43
+        },
+        {
+          "query": "baran konz",
+          "page": "https://endlech.lu/pt/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 73
+        },
+        {
+          "query": "barrierefrei restaurants in der nähe",
+          "page": "https://endlech.lu/de/",
+          "clicks": 0,
+          "impressions": 2,
+          "ctr": 0,
+          "position": 2.5
+        },
+        {
+          "query": "barrierefreie restaurants in der nähe",
+          "page": "https://endlech.lu/de/",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 2
+        },
+        {
+          "query": "bausch brouch",
+          "page": "https://endlech.lu/fr/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 96
+        },
+        {
+          "query": "belval coyote",
+          "page": "https://endlech.lu/fr/restaurants/3",
+          "clicks": 0,
+          "impressions": 14,
+          "ctr": 0,
+          "position": 10.071428571428571
+        },
+        {
+          "query": "belval pizza",
+          "page": "https://endlech.lu/de/restaurants/7",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 12
+        },
+        {
+          "query": "belval restaurant",
+          "page": "https://endlech.lu/fr/restaurants/7",
+          "clicks": 0,
+          "impressions": 2,
+          "ctr": 0,
+          "position": 44
+        },
+        {
+          "query": "belval restaurant schmelz",
+          "page": "https://endlech.lu/pt/restaurants/2",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 79
+        },
+        {
+          "query": "black mamba wilwerdange",
+          "page": "https://endlech.lu/pt/",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 62
+        },
+        {
+          "query": "bloen eck",
+          "page": "https://endlech.lu/de/restaurants",
+          "clicks": 0,
+          "impressions": 3,
+          "ctr": 0,
+          "position": 60.333333333333336
+        },
+        {
+          "query": "brasserie l'oeuf",
+          "page": "https://endlech.lu/fr/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 74
+        },
+        {
+          "query": "brasserie uelzechtdall",
+          "page": "https://endlech.lu/de/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 65
+        },
+        {
+          "query": "buggi",
+          "page": "https://endlech.lu/en/restaurants/4",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 8
+        },
+        {
+          "query": "buggi",
+          "page": "https://endlech.lu/fr/restaurants/4",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 6
+        },
+        {
+          "query": "buggi restaurant",
+          "page": "https://endlech.lu/de/restaurants/4",
+          "clicks": 0,
+          "impressions": 3,
+          "ctr": 0,
+          "position": 9.666666666666666
+        },
+        {
+          "query": "buggi restaurant",
+          "page": "https://endlech.lu/en/restaurants/4",
+          "clicks": 0,
+          "impressions": 4,
+          "ctr": 0,
+          "position": 9.75
+        },
+        {
+          "query": "buggi restaurant",
+          "page": "https://endlech.lu/fr/restaurants/4",
+          "clicks": 0,
+          "impressions": 4,
+          "ctr": 0,
+          "position": 11.25
+        },
+        {
+          "query": "buggi schifflange",
+          "page": "https://endlech.lu/fr/restaurants/4",
+          "clicks": 0,
+          "impressions": 4,
+          "ctr": 0,
+          "position": 9
+        },
+        {
+          "query": "buggy restaurant",
+          "page": "https://endlech.lu/en/restaurants/4",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 9
+        },
+        {
+          "query": "buggy restaurant",
+          "page": "https://endlech.lu/fr/restaurants/4",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 13
+        },
+        {
+          "query": "cafe coyote",
+          "page": "https://endlech.lu/en/restaurants/3",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 10
+        },
+        {
+          "query": "cafe coyote",
+          "page": "https://endlech.lu/fr/restaurants/3",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 9
+        },
+        {
+          "query": "cafe coyote",
+          "page": "https://endlech.lu/pt/restaurants/3",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 11
+        },
+        {
+          "query": "cafe coyote belval",
+          "page": "https://endlech.lu/fr/restaurants/3",
+          "clicks": 0,
+          "impressions": 8,
+          "ctr": 0,
+          "position": 10.5
+        },
+        {
+          "query": "cafe douriense",
+          "page": "https://endlech.lu/fr/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 40
+        },
+        {
+          "query": "café coyote belval",
+          "page": "https://endlech.lu/fr/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 35
+        },
+        {
+          "query": "café coyote belval",
+          "page": "https://endlech.lu/fr/restaurants/3",
+          "clicks": 0,
+          "impressions": 18,
+          "ctr": 0,
+          "position": 8.722222222222221
+        },
+        {
+          "query": "café coyote belval",
+          "page": "https://endlech.lu/pt/restaurants/3",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 30
+        },
+        {
+          "query": "cavalli room restaurant",
+          "page": "https://endlech.lu/en/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 60
+        },
+        {
+          "query": "cayote cafe",
+          "page": "https://endlech.lu/en/restaurants/3",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 12
+        },
+        {
+          "query": "chalet laangwiss",
+          "page": "https://endlech.lu/en/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 42
+        },
+        {
+          "query": "chalet langwiss",
+          "page": "https://endlech.lu/pt/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 61
+        },
+        {
+          "query": "coyote",
+          "page": "https://endlech.lu/en/restaurants/3",
+          "clicks": 0,
+          "impressions": 6,
+          "ctr": 0,
+          "position": 8.333333333333332
+        },
+        {
+          "query": "coyote",
+          "page": "https://endlech.lu/fr/restaurants/3",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 9
+        },
+        {
+          "query": "coyote",
+          "page": "https://endlech.lu/pt/restaurants/3",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 8
+        },
+        {
+          "query": "coyote bar",
+          "page": "https://endlech.lu/en/restaurants/3",
+          "clicks": 0,
+          "impressions": 3,
+          "ctr": 0,
+          "position": 11
+        },
+        {
+          "query": "coyote bar",
+          "page": "https://endlech.lu/fr/restaurants/3",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 11
+        },
+        {
+          "query": "coyote belval",
+          "page": "https://endlech.lu/de/restaurants/3",
+          "clicks": 0,
+          "impressions": 2,
+          "ctr": 0,
+          "position": 11.5
+        },
+        {
+          "query": "coyote belval",
+          "page": "https://endlech.lu/en/restaurants/3",
+          "clicks": 0,
+          "impressions": 10,
+          "ctr": 0,
+          "position": 9.8
+        },
+        {
+          "query": "coyote belval",
+          "page": "https://endlech.lu/fr/restaurants",
+          "clicks": 0,
+          "impressions": 2,
+          "ctr": 0,
+          "position": 35.5
+        },
+        {
+          "query": "coyote belval",
+          "page": "https://endlech.lu/fr/restaurants/3",
+          "clicks": 0,
+          "impressions": 435,
+          "ctr": 0,
+          "position": 10.413793103448276
+        },
+        {
+          "query": "coyote belval",
+          "page": "https://endlech.lu/pt/",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 67
+        },
+        {
+          "query": "coyote belval",
+          "page": "https://endlech.lu/pt/restaurants/3",
+          "clicks": 0,
+          "impressions": 3,
+          "ctr": 0,
+          "position": 9.333333333333334
+        },
+        {
+          "query": "coyote cafe",
+          "page": "https://endlech.lu/de/restaurants/3",
+          "clicks": 0,
+          "impressions": 16,
+          "ctr": 0,
+          "position": 15.25
+        },
+        {
+          "query": "coyote cafe",
+          "page": "https://endlech.lu/en/restaurants/3",
+          "clicks": 0,
+          "impressions": 4,
+          "ctr": 0,
+          "position": 8.75
+        },
+        {
+          "query": "coyote cafe",
+          "page": "https://endlech.lu/fr/restaurants/3",
+          "clicks": 0,
+          "impressions": 3,
+          "ctr": 0,
+          "position": 10
+        },
+        {
+          "query": "coyote cafe",
+          "page": "https://endlech.lu/pt/restaurants/3",
+          "clicks": 0,
+          "impressions": 2,
+          "ctr": 0,
+          "position": 9.5
+        },
+        {
+          "query": "coyote cafe belval",
+          "page": "https://endlech.lu/de/restaurants/3",
+          "clicks": 0,
+          "impressions": 3,
+          "ctr": 0,
+          "position": 9.666666666666666
+        },
+        {
+          "query": "coyote cafe belval",
+          "page": "https://endlech.lu/en/restaurants/3",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 12
+        },
+        {
+          "query": "coyote cafe belval",
+          "page": "https://endlech.lu/fr/restaurants/3",
+          "clicks": 0,
+          "impressions": 28,
+          "ctr": 0,
+          "position": 10.142857142857142
+        },
+        {
+          "query": "coyote cafe luxembourg",
+          "page": "https://endlech.lu/de/restaurants/3",
+          "clicks": 0,
+          "impressions": 2,
+          "ctr": 0,
+          "position": 10
+        },
+        {
+          "query": "coyote café",
+          "page": "https://endlech.lu/fr/restaurants/3",
+          "clicks": 0,
+          "impressions": 5,
+          "ctr": 0,
+          "position": 10.6
+        },
+        {
+          "query": "coyote café belval",
+          "page": "https://endlech.lu/fr/restaurants/3",
+          "clicks": 0,
+          "impressions": 3,
+          "ctr": 0,
+          "position": 9.666666666666666
+        },
+        {
+          "query": "coyote esch",
+          "page": "https://endlech.lu/de/restaurants/3",
+          "clicks": 0,
+          "impressions": 3,
+          "ctr": 0,
+          "position": 6
+        },
+        {
+          "query": "coyote esch",
+          "page": "https://endlech.lu/en/restaurants/3",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 12
+        },
+        {
+          "query": "coyote esch",
+          "page": "https://endlech.lu/fr/restaurants/3",
+          "clicks": 0,
+          "impressions": 16,
+          "ctr": 0,
+          "position": 9
+        },
+        {
+          "query": "coyote kaffee",
+          "page": "https://endlech.lu/en/restaurants/3",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 4
+        },
+        {
+          "query": "coyote luxembourg",
+          "page": "https://endlech.lu/de/restaurants/3",
+          "clicks": 0,
+          "impressions": 8,
+          "ctr": 0,
+          "position": 17.75
+        },
+        {
+          "query": "coyote luxembourg",
+          "page": "https://endlech.lu/en/restaurants/3",
+          "clicks": 0,
+          "impressions": 2,
+          "ctr": 0,
+          "position": 14.5
+        },
+        {
+          "query": "coyote luxembourg",
+          "page": "https://endlech.lu/pt/restaurants/3",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 78
+        },
+        {
+          "query": "coyote restaurant",
+          "page": "https://endlech.lu/de/restaurants/3",
+          "clicks": 0,
+          "impressions": 3,
+          "ctr": 0,
+          "position": 11.333333333333334
+        },
+        {
+          "query": "coyotte",
+          "page": "https://endlech.lu/en/restaurants/3",
+          "clicks": 0,
+          "impressions": 2,
+          "ctr": 0,
+          "position": 10.5
+        },
+        {
+          "query": "coyotte",
+          "page": "https://endlech.lu/pt/restaurants/3",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 12
+        },
+        {
+          "query": "coyotte belval",
+          "page": "https://endlech.lu/en/restaurants/3",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 5
+        },
+        {
+          "query": "coyotte belval",
+          "page": "https://endlech.lu/fr/restaurants/3",
+          "clicks": 0,
+          "impressions": 20,
+          "ctr": 0,
+          "position": 10.3
+        },
+        {
+          "query": "coyotte cafe",
+          "page": "https://endlech.lu/en/restaurants/3",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 8
+        },
+        {
+          "query": "de buggi schifflange",
+          "page": "https://endlech.lu/fr/restaurants/4",
+          "clicks": 0,
+          "impressions": 7,
+          "ctr": 0,
+          "position": 7.428571428571429
+        },
+        {
+          "query": "de buggy",
+          "page": "https://endlech.lu/fr/restaurants/4",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 8
+        },
+        {
+          "query": "duelemer stuff",
+          "page": "https://endlech.lu/fr/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 59
+        },
+        {
+          "query": "echternach restaurant",
+          "page": "https://endlech.lu/en/restaurants/8",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 36
+        },
+        {
+          "query": "ehlerange restaurant",
+          "page": "https://endlech.lu/en/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 59
+        },
+        {
+          "query": "elch bertrange",
+          "page": "https://endlech.lu/fr/",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 67
+        },
+        {
+          "query": "elch bertrange",
+          "page": "https://endlech.lu/fr/restaurants",
+          "clicks": 0,
+          "impressions": 2,
+          "ctr": 0,
+          "position": 77
+        },
+        {
+          "query": "elch restaurant",
+          "page": "https://endlech.lu/en/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 56
+        },
+        {
+          "query": "elch restaurant",
+          "page": "https://endlech.lu/fr/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 68
+        },
+        {
+          "query": "elch restaurant luxembourg",
+          "page": "https://endlech.lu/fr/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 92
+        },
+        {
+          "query": "encas entreprise",
+          "page": "https://endlech.lu/fr/organisationen/unternehmen",
+          "clicks": 0,
+          "impressions": 6,
+          "ctr": 0,
+          "position": 26.5
+        },
+        {
+          "query": "feulen restaurant",
+          "page": "https://endlech.lu/en/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 57
+        },
+        {
+          "query": "food house belval",
+          "page": "https://endlech.lu/fr/restaurants/2",
+          "clicks": 0,
+          "impressions": 3,
+          "ctr": 0,
+          "position": 80
+        },
+        {
+          "query": "google.lu",
+          "page": "https://endlech.lu/en/vergleich/google-maps",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 6
+        },
+        {
+          "query": "googlelu",
+          "page": "https://endlech.lu/en/vergleich/google-maps",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 10
+        },
+        {
+          "query": "goosty",
+          "page": "https://endlech.lu/fr/restaurants/2",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 44
+        },
+        {
+          "query": "gregorius",
+          "page": "https://endlech.lu/de/restaurants/1",
+          "clicks": 0,
+          "impressions": 5,
+          "ctr": 0,
+          "position": 7.4
+        },
+        {
+          "query": "gregorius",
+          "page": "https://endlech.lu/en/restaurants/1",
+          "clicks": 0,
+          "impressions": 5,
+          "ctr": 0,
+          "position": 9.2
+        },
+        {
+          "query": "gregorius",
+          "page": "https://endlech.lu/fr/restaurants/1",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 6
+        },
+        {
+          "query": "gregorius kayl",
+          "page": "https://endlech.lu/en/restaurants/1",
+          "clicks": 0,
+          "impressions": 2,
+          "ctr": 0,
+          "position": 8
+        },
+        {
+          "query": "gregorius kayl",
+          "page": "https://endlech.lu/fr/restaurants/1",
+          "clicks": 0,
+          "impressions": 3,
+          "ctr": 0,
+          "position": 10.333333333333334
+        },
+        {
+          "query": "gregorius restaurant",
+          "page": "https://endlech.lu/de/restaurants/1",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 10
+        },
+        {
+          "query": "gregorius tetange",
+          "page": "https://endlech.lu/de/restaurants/1",
+          "clicks": 0,
+          "impressions": 2,
+          "ctr": 0,
+          "position": 10
+        },
+        {
+          "query": "gregorius tetange",
+          "page": "https://endlech.lu/fr/restaurants/1",
+          "clicks": 0,
+          "impressions": 3,
+          "ctr": 0,
+          "position": 9.333333333333334
+        },
+        {
+          "query": "gregorius tetange",
+          "page": "https://endlech.lu/pt/restaurants/1",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 12
+        },
+        {
+          "query": "halal ?",
+          "page": "https://endlech.lu/en/restaurants/5",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 1
+        },
+        {
+          "query": "hard rock cafe luxembourg",
+          "page": "https://endlech.lu/en/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 51
+        },
+        {
+          "query": "juegdschlass restaurant luxembourg",
+          "page": "https://endlech.lu/en/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 50
+        },
+        {
+          "query": "kicheneck luxembourg",
+          "page": "https://endlech.lu/en/restaurants",
+          "clicks": 0,
+          "impressions": 3,
+          "ctr": 0,
+          "position": 79
+        },
+        {
+          "query": "l osteria belval",
+          "page": "https://endlech.lu/de/restaurants/7",
+          "clicks": 0,
+          "impressions": 2,
+          "ctr": 0,
+          "position": 11.5
+        },
+        {
+          "query": "l osteria belval",
+          "page": "https://endlech.lu/fr/restaurants/7",
+          "clicks": 0,
+          "impressions": 8,
+          "ctr": 0,
+          "position": 11.875
+        },
+        {
+          "query": "l'osteria belval",
+          "page": "https://endlech.lu/fr/restaurants/7",
+          "clicks": 0,
+          "impressions": 18,
+          "ctr": 0,
+          "position": 12.166666666666666
+        },
+        {
+          "query": "l'osteria esch sur alzette",
+          "page": "https://endlech.lu/de/restaurants/7",
+          "clicks": 0,
+          "impressions": 5,
+          "ctr": 0,
+          "position": 10.2
+        },
+        {
+          "query": "l'osteria esch sur alzette",
+          "page": "https://endlech.lu/fr/restaurants/7",
+          "clicks": 0,
+          "impressions": 4,
+          "ctr": 0,
+          "position": 9.5
+        },
+        {
+          "query": "l'osteria luxembourg belval",
+          "page": "https://endlech.lu/fr/restaurants/7",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 13
+        },
+        {
+          "query": "l'osteria luxembourg belval fotos",
+          "page": "https://endlech.lu/fr/restaurants/7",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 10
+        },
+        {
+          "query": "lake side echternach",
+          "page": "https://endlech.lu/de/restaurants/8",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 21
+        },
+        {
+          "query": "lakeside echternach",
+          "page": "https://endlech.lu/de/restaurants/8",
+          "clicks": 0,
+          "impressions": 4,
+          "ctr": 0,
+          "position": 35.25
+        },
+        {
+          "query": "lakeside echternach",
+          "page": "https://endlech.lu/en/restaurants/8",
+          "clicks": 0,
+          "impressions": 6,
+          "ctr": 0,
+          "position": 42.166666666666664
+        },
+        {
+          "query": "lakeside echternach",
+          "page": "https://endlech.lu/fr/restaurants/8",
+          "clicks": 0,
+          "impressions": 6,
+          "ctr": 0,
+          "position": 54
+        },
+        {
+          "query": "lakeside echternach",
+          "page": "https://endlech.lu/lb/restaurants/8",
+          "clicks": 0,
+          "impressions": 2,
+          "ctr": 0,
+          "position": 68
+        },
+        {
+          "query": "lakeside echternach",
+          "page": "https://endlech.lu/pt/restaurants/8",
+          "clicks": 0,
+          "impressions": 2,
+          "ctr": 0,
+          "position": 66
+        },
+        {
+          "query": "lakeside email",
+          "page": "https://endlech.lu/en/restaurants/8",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 5
+        },
+        {
+          "query": "le friquet's luxembourg",
+          "page": "https://endlech.lu/en/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 63
+        },
+        {
+          "query": "le perroquet rumelange",
+          "page": "https://endlech.lu/fr/",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 43
+        },
+        {
+          "query": "lenger stuff",
+          "page": "https://endlech.lu/en/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 91
+        },
+        {
+          "query": "lenger stuff",
+          "page": "https://endlech.lu/pt/",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 93
+        },
+        {
+          "query": "lentze parc",
+          "page": "https://endlech.lu/fr/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 62
+        },
+        {
+          "query": "losteria belval",
+          "page": "https://endlech.lu/de/restaurants/7",
+          "clicks": 0,
+          "impressions": 2,
+          "ctr": 0,
+          "position": 10.5
+        },
+        {
+          "query": "losteria belval",
+          "page": "https://endlech.lu/fr/restaurants/7",
+          "clicks": 0,
+          "impressions": 16,
+          "ctr": 0,
+          "position": 10.6875
+        },
+        {
+          "query": "millewee gasperich",
+          "page": "https://endlech.lu/pt/",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 80
+        },
+        {
+          "query": "niederfeulen restaurant",
+          "page": "https://endlech.lu/en/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 100
+        },
+        {
+          "query": "op der breck",
+          "page": "https://endlech.lu/en/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 63
+        },
+        {
+          "query": "op der gare clemency",
+          "page": "https://endlech.lu/pt/",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 89
+        },
+        {
+          "query": "op der trap",
+          "page": "https://endlech.lu/fr/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 95
+        },
+        {
+          "query": "osteria belval",
+          "page": "https://endlech.lu/de/restaurants/7",
+          "clicks": 0,
+          "impressions": 8,
+          "ctr": 0,
+          "position": 11.625
+        },
+        {
+          "query": "osteria belval",
+          "page": "https://endlech.lu/en/restaurants/7",
+          "clicks": 0,
+          "impressions": 2,
+          "ctr": 0,
+          "position": 10
+        },
+        {
+          "query": "osteria belval",
+          "page": "https://endlech.lu/fr/restaurants/7",
+          "clicks": 0,
+          "impressions": 158,
+          "ctr": 0,
+          "position": 10.259493670886076
+        },
+        {
+          "query": "osteria belval menu",
+          "page": "https://endlech.lu/en/restaurants/7",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 14
+        },
+        {
+          "query": "osteria belval menu",
+          "page": "https://endlech.lu/fr/restaurants/7",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 65
+        },
+        {
+          "query": "osteria esch",
+          "page": "https://endlech.lu/fr/restaurants/7",
+          "clicks": 0,
+          "impressions": 8,
+          "ctr": 0,
+          "position": 10.25
+        },
+        {
+          "query": "owstellgleis",
+          "page": "https://endlech.lu/lb/",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 98
+        },
+        {
+          "query": "owstellgleis luxembourg",
+          "page": "https://endlech.lu/en/",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 61
+        },
+        {
+          "query": "owstellgleis restaurant luxembourg",
+          "page": "https://endlech.lu/en/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 82
+        },
+        {
+          "query": "paiement terrasse restaurant luxembourg",
+          "page": "https://endlech.lu/fr/organisationen",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 67
+        },
+        {
+          "query": "phenicia luxembourg",
+          "page": "https://endlech.lu/en/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 67
+        },
+        {
+          "query": "piperis reichlange",
+          "page": "https://endlech.lu/fr/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 49
+        },
+        {
+          "query": "piperis reichlange",
+          "page": "https://endlech.lu/pt/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 55
+        },
+        {
+          "query": "pizzeria belval",
+          "page": "https://endlech.lu/fr/restaurants/7",
+          "clicks": 0,
+          "impressions": 3,
+          "ctr": 0,
+          "position": 11
+        },
+        {
+          "query": "pombalito differdange",
+          "page": "https://endlech.lu/pt/",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 83
+        },
+        {
+          "query": "relais bausch",
+          "page": "https://endlech.lu/en/",
+          "clicks": 0,
+          "impressions": 2,
+          "ctr": 0,
+          "position": 57.5
+        },
+        {
+          "query": "relais bausch",
+          "page": "https://endlech.lu/fr/",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 66
+        },
+        {
+          "query": "restaurant bei der giedel",
+          "page": "https://endlech.lu/fr/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 57
+        },
+        {
+          "query": "restaurant belval",
+          "page": "https://endlech.lu/fr/restaurants/7",
+          "clicks": 0,
+          "impressions": 4,
+          "ctr": 0,
+          "position": 56.25
+        },
+        {
+          "query": "restaurant belval coyote",
+          "page": "https://endlech.lu/fr/restaurants/3",
+          "clicks": 0,
+          "impressions": 2,
+          "ctr": 0,
+          "position": 12
+        },
+        {
+          "query": "restaurant boulaide luxembourg",
+          "page": "https://endlech.lu/fr/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 77
+        },
+        {
+          "query": "restaurant buggi",
+          "page": "https://endlech.lu/fr/restaurants/4",
+          "clicks": 0,
+          "impressions": 6,
+          "ctr": 0,
+          "position": 10.166666666666666
+        },
+        {
+          "query": "restaurant buggi schifflange",
+          "page": "https://endlech.lu/de/restaurants/4",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 9
+        },
+        {
+          "query": "restaurant buggi schifflange",
+          "page": "https://endlech.lu/fr/",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 43
+        },
+        {
+          "query": "restaurant buggi schifflange",
+          "page": "https://endlech.lu/fr/restaurants/4",
+          "clicks": 0,
+          "impressions": 2,
+          "ctr": 0,
+          "position": 19
+        },
+        {
+          "query": "restaurant buggy",
+          "page": "https://endlech.lu/de/restaurants/4",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 9
+        },
+        {
+          "query": "restaurant buggy schifflange",
+          "page": "https://endlech.lu/fr/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 67
+        },
+        {
+          "query": "restaurant buggy schifflange",
+          "page": "https://endlech.lu/fr/restaurants/4",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 12
+        },
+        {
+          "query": "restaurant burmerange",
+          "page": "https://endlech.lu/fr/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 86
+        },
+        {
+          "query": "restaurant bürgi",
+          "page": "https://endlech.lu/de/restaurants/4",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 8
+        },
+        {
+          "query": "restaurant echternach lac",
+          "page": "https://endlech.lu/en/restaurants/8",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 27
+        },
+        {
+          "query": "restaurant ehlerange",
+          "page": "https://endlech.lu/en/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 58
+        },
+        {
+          "query": "restaurant elch bertrange",
+          "page": "https://endlech.lu/fr/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 63
+        },
+        {
+          "query": "restaurant gregorius",
+          "page": "https://endlech.lu/fr/restaurants/1",
+          "clicks": 0,
+          "impressions": 4,
+          "ctr": 0,
+          "position": 8.75
+        },
+        {
+          "query": "restaurant iris echternach",
+          "page": "https://endlech.lu/fr/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 45
+        },
+        {
+          "query": "restaurant la ciociara walferdange luxembourg",
+          "page": "https://endlech.lu/en/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 94
+        },
+        {
+          "query": "restaurant la ciociara walferdange luxembourg",
+          "page": "https://endlech.lu/fr/restaurants",
+          "clicks": 0,
+          "impressions": 2,
+          "ctr": 0,
+          "position": 88.5
+        },
+        {
+          "query": "restaurant lakeside echternach",
+          "page": "https://endlech.lu/de/restaurants/8",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 31
+        },
+        {
+          "query": "restaurant lakeside echternach",
+          "page": "https://endlech.lu/en/restaurants/8",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 11
+        },
+        {
+          "query": "restaurant osier walferdange",
+          "page": "https://endlech.lu/fr/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 89
+        },
+        {
+          "query": "restaurant osteria di niederanven",
+          "page": "https://endlech.lu/en/restaurants/7",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 42
+        },
+        {
+          "query": "restaurant rollstuhlgerecht in der nähe",
+          "page": "https://endlech.lu/de/",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 2
+        },
+        {
+          "query": "restaurant rugova mondercange",
+          "page": "https://endlech.lu/fr/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 52
+        },
+        {
+          "query": "restaurant senningen",
+          "page": "https://endlech.lu/en/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 49
+        },
+        {
+          "query": "restaurants no website",
+          "page": "https://endlech.lu/en/",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 1
+        },
+        {
+          "query": "resto coyote",
+          "page": "https://endlech.lu/fr/restaurants/3",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 5
+        },
+        {
+          "query": "rollstuhlgerechtes restaurant in der nähe",
+          "page": "https://endlech.lu/de/",
+          "clicks": 0,
+          "impressions": 2,
+          "ctr": 0,
+          "position": 3
+        },
+        {
+          "query": "romantica moutfort",
+          "page": "https://endlech.lu/fr/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 58
+        },
+        {
+          "query": "réseau acceptation chèques repas luxembourg",
+          "page": "https://endlech.lu/fr/organisationen",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 63
+        },
+        {
+          "query": "schmelz belval",
+          "page": "https://endlech.lu/en/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 53
+        },
+        {
+          "query": "schrainerei restaurant",
+          "page": "https://endlech.lu/fr/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 48
+        },
+        {
+          "query": "snooze",
+          "page": "https://endlech.lu/fr/restaurants/2",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 45
+        },
+        {
+          "query": "snooze belval",
+          "page": "https://endlech.lu/en/restaurants/2",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 11
+        },
+        {
+          "query": "snooze belval",
+          "page": "https://endlech.lu/fr/",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 48
+        },
+        {
+          "query": "snooze belval",
+          "page": "https://endlech.lu/fr/restaurants",
+          "clicks": 0,
+          "impressions": 3,
+          "ctr": 0,
+          "position": 53.333333333333336
+        },
+        {
+          "query": "snooze belval",
+          "page": "https://endlech.lu/fr/restaurants/2",
+          "clicks": 0,
+          "impressions": 4,
+          "ctr": 0,
+          "position": 19.75
+        },
+        {
+          "query": "snooze luxembourg",
+          "page": "https://endlech.lu/en/restaurants/2",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 43
+        },
+        {
+          "query": "snooze luxembourg",
+          "page": "https://endlech.lu/fr/restaurants/2",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 21
+        },
+        {
+          "query": "snooze restaurant luxembourg",
+          "page": "https://endlech.lu/de/restaurants/2",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 6
+        },
+        {
+          "query": "snooze restaurant luxembourg",
+          "page": "https://endlech.lu/en/restaurants",
+          "clicks": 0,
+          "impressions": 2,
+          "ctr": 0,
+          "position": 60
+        },
+        {
+          "query": "snooze restaurant luxembourg",
+          "page": "https://endlech.lu/en/restaurants/2",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 35
+        },
+        {
+          "query": "snooze restaurant luxembourg",
+          "page": "https://endlech.lu/fr/restaurants/2",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 19
+        },
+        {
+          "query": "snooze room",
+          "page": "https://endlech.lu/en/restaurants/2",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 11
+        },
+        {
+          "query": "stroller friendly restaurants near me",
+          "page": "https://endlech.lu/en/",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 13
+        },
+        {
+          "query": "talho ferreira gasperich",
+          "page": "https://endlech.lu/de/legal",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 85
+        },
+        {
+          "query": "the ash belval",
+          "page": "https://endlech.lu/fr/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 39
+        },
+        {
+          "query": "the game bar",
+          "page": "https://endlech.lu/de/restaurants/5",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 7
+        },
+        {
+          "query": "the game kirchberg",
+          "page": "https://endlech.lu/de/restaurants/5",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 46
+        },
+        {
+          "query": "the game kirchberg",
+          "page": "https://endlech.lu/fr/restaurants/5",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 31
+        },
+        {
+          "query": "the game luxembourg",
+          "page": "https://endlech.lu/de/restaurants/5",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 6
+        },
+        {
+          "query": "the game luxembourg",
+          "page": "https://endlech.lu/fr/restaurants/5",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 43
+        },
+        {
+          "query": "the game sports bar",
+          "page": "https://endlech.lu/de/restaurants/5",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 8
+        },
+        {
+          "query": "the game sportsbar & steakhouse",
+          "page": "https://endlech.lu/de/restaurants/5",
+          "clicks": 0,
+          "impressions": 4,
+          "ctr": 0,
+          "position": 13
+        },
+        {
+          "query": "the game sportsbar & steakhouse",
+          "page": "https://endlech.lu/en/restaurants/5",
+          "clicks": 0,
+          "impressions": 2,
+          "ctr": 0,
+          "position": 10.5
+        },
+        {
+          "query": "the pyg irish bar",
+          "page": "https://endlech.lu/en/restaurants",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 64
+        },
+        {
+          "query": "thillsmillen mamer",
+          "page": "https://endlech.lu/pt/",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 75
+        },
+        {
+          "query": "umami",
+          "page": "https://endlech.lu/en/legal",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 24
+        },
+        {
+          "query": "wellebau mamer",
+          "page": "https://endlech.lu/pt/",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 92
+        },
+        {
+          "query": "ŕestaurante abertos agora",
+          "page": "https://endlech.lu/pt/",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 7
+        }
+      ]
+    },
+    "date": {
+      "zeilen": 28,
+      "rows": [
+        {
+          "date": "2026-10-17",
+          "clicks": 1,
+          "impressions": 30,
+          "ctr": 0.03333333333333333,
+          "position": 20.366666666666667
+        },
+        {
+          "date": "2026-10-18",
+          "clicks": 0,
+          "impressions": 37,
+          "ctr": 0,
+          "position": 23.756756756756758
+        },
+        {
+          "date": "2026-10-19",
+          "clicks": 0,
+          "impressions": 38,
+          "ctr": 0,
+          "position": 12.842105263157896
+        },
+        {
+          "date": "2026-10-20",
+          "clicks": 0,
+          "impressions": 40,
+          "ctr": 0,
+          "position": 17.4
+        },
+        {
+          "date": "2026-10-21",
+          "clicks": 0,
+          "impressions": 42,
+          "ctr": 0,
+          "position": 13.071428571428571
+        },
+        {
+          "date": "2026-10-22",
+          "clicks": 2,
+          "impressions": 92,
+          "ctr": 0.021739130434782608,
+          "position": 13.565217391304348
+        },
+        {
+          "date": "2026-10-23",
+          "clicks": 0,
+          "impressions": 110,
+          "ctr": 0,
+          "position": 15.363636363636363
+        },
+        {
+          "date": "2026-10-24",
+          "clicks": 1,
+          "impressions": 77,
+          "ctr": 0.012987012987012988,
+          "position": 16.480519480519483
+        },
+        {
+          "date": "2026-10-25",
+          "clicks": 1,
+          "impressions": 60,
+          "ctr": 0.016666666666666666,
+          "position": 12.95
+        },
+        {
+          "date": "2026-10-26",
+          "clicks": 0,
+          "impressions": 59,
+          "ctr": 0,
+          "position": 14.627118644067796
+        },
+        {
+          "date": "2026-10-27",
+          "clicks": 0,
+          "impressions": 67,
+          "ctr": 0,
+          "position": 8.761194029850746
+        },
+        {
+          "date": "2026-10-28",
+          "clicks": 0,
+          "impressions": 56,
+          "ctr": 0,
+          "position": 12.75
+        },
+        {
+          "date": "2026-10-29",
+          "clicks": 0,
+          "impressions": 86,
+          "ctr": 0,
+          "position": 12.093023255813954
+        },
+        {
+          "date": "2026-10-30",
+          "clicks": 0,
+          "impressions": 89,
+          "ctr": 0,
+          "position": 11.415730337078651
+        },
+        {
+          "date": "2026-10-31",
+          "clicks": 1,
+          "impressions": 91,
+          "ctr": 0.01098901098901099,
+          "position": 10.285714285714286
+        },
+        {
+          "date": "2026-11-01",
+          "clicks": 1,
+          "impressions": 67,
+          "ctr": 0.014925373134328358,
+          "position": 10.35820895522388
+        },
+        {
+          "date": "2026-11-02",
+          "clicks": 0,
+          "impressions": 69,
+          "ctr": 0,
+          "position": 11.956521739130435
+        },
+        {
+          "date": "2026-11-03",
+          "clicks": 2,
+          "impressions": 63,
+          "ctr": 0.031746031746031744,
+          "position": 16
+        },
+        {
+          "date": "2026-11-04",
+          "clicks": 0,
+          "impressions": 78,
+          "ctr": 0,
+          "position": 14.935897435897436
+        },
+        {
+          "date": "2026-11-05",
+          "clicks": 0,
+          "impressions": 69,
+          "ctr": 0,
+          "position": 15.884057971014492
+        },
+        {
+          "date": "2026-11-06",
+          "clicks": 0,
+          "impressions": 74,
+          "ctr": 0,
+          "position": 16.7972972972973
+        },
+        {
+          "date": "2026-11-07",
+          "clicks": 0,
+          "impressions": 93,
+          "ctr": 0,
+          "position": 15.021505376344086
+        },
+        {
+          "date": "2026-11-08",
+          "clicks": 1,
+          "impressions": 60,
+          "ctr": 0.016666666666666666,
+          "position": 15.933333333333334
+        },
+        {
+          "date": "2026-11-09",
+          "clicks": 0,
+          "impressions": 58,
+          "ctr": 0,
+          "position": 10.137931034482758
+        },
+        {
+          "date": "2026-11-10",
+          "clicks": 0,
+          "impressions": 57,
+          "ctr": 0,
+          "position": 13.912280701754385
+        },
+        {
+          "date": "2026-11-11",
+          "clicks": 2,
+          "impressions": 65,
+          "ctr": 0.03076923076923077,
+          "position": 12.953846153846154
+        },
+        {
+          "date": "2026-11-12",
+          "clicks": 0,
+          "impressions": 70,
+          "ctr": 0,
+          "position": 14.1
+        },
+        {
+          "date": "2026-11-13",
+          "clicks": 2,
+          "impressions": 53,
+          "ctr": 0.03773584905660377,
+          "position": 14.283018867924529
+        }
+      ]
+    },
+    "page": {
+      "zeilen": 83,
+      "rows": [
+        {
+          "page": "https://endlech.lu/de/",
+          "clicks": 5,
+          "impressions": 38,
+          "ctr": 0.13157894736842105,
+          "position": 4.578947368421053
+        },
+        {
+          "page": "https://endlech.lu/fr/",
+          "clicks": 4,
+          "impressions": 26,
+          "ctr": 0.15384615384615385,
+          "position": 18.846153846153847
+        },
+        {
+          "page": "https://endlech.lu/en/restaurants",
+          "clicks": 1,
+          "impressions": 39,
+          "ctr": 0.02564102564102564,
+          "position": 56.97435897435897
+        },
+        {
+          "page": "https://endlech.lu/en/restaurants/1",
+          "clicks": 1,
+          "impressions": 24,
+          "ctr": 0.041666666666666664,
+          "position": 8.916666666666668
+        },
+        {
+          "page": "https://endlech.lu/en/restaurants/7",
+          "clicks": 1,
+          "impressions": 23,
+          "ctr": 0.043478260869565216,
+          "position": 10.826086956521738
+        },
+        {
+          "page": "https://endlech.lu/fr/restaurants/4",
+          "clicks": 1,
+          "impressions": 68,
+          "ctr": 0.014705882352941176,
+          "position": 8.985294117647058
+        },
+        {
+          "page": "https://endlech.lu/fr/restaurants/7",
+          "clicks": 1,
+          "impressions": 309,
+          "ctr": 0.003236245954692557,
+          "position": 10.967637540453074
+        },
+        {
+          "page": "https://endlech.lu/de/about",
+          "clicks": 0,
+          "impressions": 2,
+          "ctr": 0,
+          "position": 6
+        },
+        {
+          "page": "https://endlech.lu/de/app",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 2
+        },
+        {
+          "page": "https://endlech.lu/de/changelog",
+          "clicks": 0,
+          "impressions": 3,
+          "ctr": 0,
+          "position": 3
+        },
+        {
+          "page": "https://endlech.lu/de/criteria",
+          "clicks": 0,
+          "impressions": 2,
+          "ctr": 0,
+          "position": 7
+        },
+        {
+          "page": "https://endlech.lu/de/legal",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 85
+        },
+        {
+          "page": "https://endlech.lu/de/presse",
+          "clicks": 0,
+          "impressions": 4,
+          "ctr": 0,
+          "position": 7.5
+        },
+        {
+          "page": "https://endlech.lu/de/restaurants",
+          "clicks": 0,
+          "impressions": 7,
+          "ctr": 0,
+          "position": 46.142857142857146
+        },
+        {
+          "page": "https://endlech.lu/de/restaurants/1",
+          "clicks": 0,
+          "impressions": 21,
+          "ctr": 0,
+          "position": 8.619047619047619
+        },
+        {
+          "page": "https://endlech.lu/de/restaurants/2",
+          "clicks": 0,
+          "impressions": 12,
+          "ctr": 0,
+          "position": 7.083333333333333
+        },
+        {
+          "page": "https://endlech.lu/de/restaurants/3",
+          "clicks": 0,
+          "impressions": 86,
+          "ctr": 0,
+          "position": 10.55813953488372
+        },
+        {
+          "page": "https://endlech.lu/de/restaurants/4",
+          "clicks": 0,
+          "impressions": 21,
+          "ctr": 0,
+          "position": 8.523809523809524
+        },
+        {
+          "page": "https://endlech.lu/de/restaurants/5",
+          "clicks": 0,
+          "impressions": 11,
+          "ctr": 0,
+          "position": 13.363636363636363
+        },
+        {
+          "page": "https://endlech.lu/de/restaurants/7",
+          "clicks": 0,
+          "impressions": 44,
+          "ctr": 0,
+          "position": 9.681818181818182
+        },
+        {
+          "page": "https://endlech.lu/de/restaurants/8",
+          "clicks": 0,
+          "impressions": 17,
+          "ctr": 0,
+          "position": 20.058823529411764
+        },
+        {
+          "page": "https://endlech.lu/de/vergleich/google-maps",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 4
+        },
+        {
+          "page": "https://endlech.lu/de/vergleich/tripadvisor",
+          "clicks": 0,
+          "impressions": 2,
+          "ctr": 0,
+          "position": 9.5
+        },
+        {
+          "page": "https://endlech.lu/en/",
+          "clicks": 0,
+          "impressions": 21,
+          "ctr": 0,
+          "position": 38.04761904761905
+        },
+        {
+          "page": "https://endlech.lu/en/about",
+          "clicks": 0,
+          "impressions": 7,
+          "ctr": 0,
+          "position": 5
+        },
+        {
+          "page": "https://endlech.lu/en/app",
+          "clicks": 0,
+          "impressions": 3,
+          "ctr": 0,
+          "position": 5
+        },
+        {
+          "page": "https://endlech.lu/en/changelog",
+          "clicks": 0,
+          "impressions": 4,
+          "ctr": 0,
+          "position": 3.75
+        },
+        {
+          "page": "https://endlech.lu/en/legal",
+          "clicks": 0,
+          "impressions": 2,
+          "ctr": 0,
+          "position": 18.5
+        },
+        {
+          "page": "https://endlech.lu/en/organisationen",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 10
+        },
+        {
+          "page": "https://endlech.lu/en/organisationen/unternehmen",
+          "clicks": 0,
+          "impressions": 2,
+          "ctr": 0,
+          "position": 23
+        },
+        {
+          "page": "https://endlech.lu/en/organisationen/vereine",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 7
+        },
+        {
+          "page": "https://endlech.lu/en/presse",
+          "clicks": 0,
+          "impressions": 3,
+          "ctr": 0,
+          "position": 10
+        },
+        {
+          "page": "https://endlech.lu/en/restaurants/2",
+          "clicks": 0,
+          "impressions": 16,
+          "ctr": 0,
+          "position": 11.6875
+        },
+        {
+          "page": "https://endlech.lu/en/restaurants/3",
+          "clicks": 0,
+          "impressions": 67,
+          "ctr": 0,
+          "position": 9.611940298507463
+        },
+        {
+          "page": "https://endlech.lu/en/restaurants/4",
+          "clicks": 0,
+          "impressions": 24,
+          "ctr": 0,
+          "position": 8.916666666666668
+        },
+        {
+          "page": "https://endlech.lu/en/restaurants/5",
+          "clicks": 0,
+          "impressions": 23,
+          "ctr": 0,
+          "position": 10.347826086956522
+        },
+        {
+          "page": "https://endlech.lu/en/restaurants/8",
+          "clicks": 0,
+          "impressions": 16,
+          "ctr": 0,
+          "position": 26.375
+        },
+        {
+          "page": "https://endlech.lu/en/roadmap",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 4
+        },
+        {
+          "page": "https://endlech.lu/en/vergleich/google-maps",
+          "clicks": 0,
+          "impressions": 10,
+          "ctr": 0,
+          "position": 7.5
+        },
+        {
+          "page": "https://endlech.lu/en/vergleich/tripadvisor",
+          "clicks": 0,
+          "impressions": 8,
+          "ctr": 0,
+          "position": 5.875
+        },
+        {
+          "page": "https://endlech.lu/en/vergleich/wheelmap",
+          "clicks": 0,
+          "impressions": 4,
+          "ctr": 0,
+          "position": 6
+        },
+        {
+          "page": "https://endlech.lu/fr/about",
+          "clicks": 0,
+          "impressions": 5,
+          "ctr": 0,
+          "position": 4.6
+        },
+        {
+          "page": "https://endlech.lu/fr/accessibility",
+          "clicks": 0,
+          "impressions": 8,
+          "ctr": 0,
+          "position": 2.375
+        },
+        {
+          "page": "https://endlech.lu/fr/app",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 9
+        },
+        {
+          "page": "https://endlech.lu/fr/changelog",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 5
+        },
+        {
+          "page": "https://endlech.lu/fr/community/ideen",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 9
+        },
+        {
+          "page": "https://endlech.lu/fr/criteria",
+          "clicks": 0,
+          "impressions": 4,
+          "ctr": 0,
+          "position": 6
+        },
+        {
+          "page": "https://endlech.lu/fr/legal",
+          "clicks": 0,
+          "impressions": 2,
+          "ctr": 0,
+          "position": 5.5
+        },
+        {
+          "page": "https://endlech.lu/fr/open",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 4
+        },
+        {
+          "page": "https://endlech.lu/fr/organisationen",
+          "clicks": 0,
+          "impressions": 2,
+          "ctr": 0,
+          "position": 65
+        },
+        {
+          "page": "https://endlech.lu/fr/organisationen/gemeinden",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 10
+        },
+        {
+          "page": "https://endlech.lu/fr/organisationen/unternehmen",
+          "clicks": 0,
+          "impressions": 8,
+          "ctr": 0,
+          "position": 21.75
+        },
+        {
+          "page": "https://endlech.lu/fr/presse",
+          "clicks": 0,
+          "impressions": 5,
+          "ctr": 0,
+          "position": 4
+        },
+        {
+          "page": "https://endlech.lu/fr/restaurants",
+          "clicks": 0,
+          "impressions": 43,
+          "ctr": 0,
+          "position": 60.30232558139535
+        },
+        {
+          "page": "https://endlech.lu/fr/restaurants/1",
+          "clicks": 0,
+          "impressions": 25,
+          "ctr": 0,
+          "position": 9.12
+        },
+        {
+          "page": "https://endlech.lu/fr/restaurants/2",
+          "clicks": 0,
+          "impressions": 30,
+          "ctr": 0,
+          "position": 19.466666666666665
+        },
+        {
+          "page": "https://endlech.lu/fr/restaurants/3",
+          "clicks": 0,
+          "impressions": 703,
+          "ctr": 0,
+          "position": 10.059743954480796
+        },
+        {
+          "page": "https://endlech.lu/fr/restaurants/5",
+          "clicks": 0,
+          "impressions": 6,
+          "ctr": 0,
+          "position": 17
+        },
+        {
+          "page": "https://endlech.lu/fr/restaurants/8",
+          "clicks": 0,
+          "impressions": 11,
+          "ctr": 0,
+          "position": 43.45454545454545
+        },
+        {
+          "page": "https://endlech.lu/fr/vergleich/google-maps",
+          "clicks": 0,
+          "impressions": 2,
+          "ctr": 0,
+          "position": 9.5
+        },
+        {
+          "page": "https://endlech.lu/fr/vergleich/tripadvisor",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 10
+        },
+        {
+          "page": "https://endlech.lu/lb/",
+          "clicks": 0,
+          "impressions": 5,
+          "ctr": 0,
+          "position": 29.6
+        },
+        {
+          "page": "https://endlech.lu/lb/changelog",
+          "clicks": 0,
+          "impressions": 3,
+          "ctr": 0,
+          "position": 8
+        },
+        {
+          "page": "https://endlech.lu/lb/organisationen/vereine",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 8
+        },
+        {
+          "page": "https://endlech.lu/lb/presse",
+          "clicks": 0,
+          "impressions": 3,
+          "ctr": 0,
+          "position": 1
+        },
+        {
+          "page": "https://endlech.lu/lb/restaurants",
+          "clicks": 0,
+          "impressions": 8,
+          "ctr": 0,
+          "position": 3.375
+        },
+        {
+          "page": "https://endlech.lu/lb/restaurants/3",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 4
+        },
+        {
+          "page": "https://endlech.lu/lb/restaurants/7",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 6
+        },
+        {
+          "page": "https://endlech.lu/lb/restaurants/8",
+          "clicks": 0,
+          "impressions": 2,
+          "ctr": 0,
+          "position": 68
+        },
+        {
+          "page": "https://endlech.lu/lb/roadmap",
+          "clicks": 0,
+          "impressions": 4,
+          "ctr": 0,
+          "position": 7
+        },
+        {
+          "page": "https://endlech.lu/pt/",
+          "clicks": 0,
+          "impressions": 22,
+          "ctr": 0,
+          "position": 52.54545454545455
+        },
+        {
+          "page": "https://endlech.lu/pt/changelog",
+          "clicks": 0,
+          "impressions": 3,
+          "ctr": 0,
+          "position": 5
+        },
+        {
+          "page": "https://endlech.lu/pt/organisationen",
+          "clicks": 0,
+          "impressions": 2,
+          "ctr": 0,
+          "position": 8
+        },
+        {
+          "page": "https://endlech.lu/pt/organisationen/unternehmen",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 3
+        },
+        {
+          "page": "https://endlech.lu/pt/presse",
+          "clicks": 0,
+          "impressions": 3,
+          "ctr": 0,
+          "position": 2
+        },
+        {
+          "page": "https://endlech.lu/pt/restaurants",
+          "clicks": 0,
+          "impressions": 7,
+          "ctr": 0,
+          "position": 56.857142857142854
+        },
+        {
+          "page": "https://endlech.lu/pt/restaurants/1",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 12
+        },
+        {
+          "page": "https://endlech.lu/pt/restaurants/2",
+          "clicks": 0,
+          "impressions": 3,
+          "ctr": 0,
+          "position": 54
+        },
+        {
+          "page": "https://endlech.lu/pt/restaurants/3",
+          "clicks": 0,
+          "impressions": 16,
+          "ctr": 0,
+          "position": 17.9375
+        },
+        {
+          "page": "https://endlech.lu/pt/restaurants/4",
+          "clicks": 0,
+          "impressions": 4,
+          "ctr": 0,
+          "position": 24.25
+        },
+        {
+          "page": "https://endlech.lu/pt/restaurants/7",
+          "clicks": 0,
+          "impressions": 2,
+          "ctr": 0,
+          "position": 10
+        },
+        {
+          "page": "https://endlech.lu/pt/restaurants/8",
+          "clicks": 0,
+          "impressions": 3,
+          "ctr": 0,
+          "position": 70
+        },
+        {
+          "page": "https://endlech.lu/pt/roadmap",
+          "clicks": 0,
+          "impressions": 1,
+          "ctr": 0,
+          "position": 6
+        }
+      ]
+    },
+    "device": {
+      "zeilen": 3,
+      "rows": [
+        {
+          "device": "DESKTOP",
+          "clicks": 7,
+          "impressions": 692,
+          "ctr": 0.010115606936416185,
+          "position": 20.820809248554912
+        },
+        {
+          "device": "MOBILE",
+          "clicks": 5,
+          "impressions": 1152,
+          "ctr": 0.004340277777777778,
+          "position": 9.78298611111111
+        },
+        {
+          "device": "TABLET",
+          "clicks": 2,
+          "impressions": 6,
+          "ctr": 0.3333333333333333,
+          "position": 6
+        }
+      ]
+    }
+  },
+  "sitemaps": [
+    {
+      "pfad": "https://endlech.lu/sitemap.xml",
+      "typ": "sitemap",
+      "eingereicht": "2026-11-14T23:32:12.228Z",
+      "verarbeitet": "2026-11-14T23:32:14.163Z",
+      "ausstehend": false,
+      "fehler": "0",
+      "warnungen": "0",
+      "inhalt": [
+        {
+          "type": "web",
+          "submitted": "150",
+          "indexed": "0"
+        }
+      ]
+    }
+  ],
+  "inspektion": {
+    "geprueft": "2026-11-16T17:12:13.477Z",
+    "site": "sc-domain:endlech.lu",
+    "quellen": {
+      "sitemap": 150,
+      "vorrang": 0
+    },
+    "urls": [
+      {
+        "url": "https://endlech.lu/lb/",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-10-23T20:58:01Z",
+        "googleCanonical": "https://endlech.lu/lb/",
+        "userCanonical": "https://endlech.lu/lb/",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/de/",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-12T18:27:16Z",
+        "googleCanonical": "https://endlech.lu/de/",
+        "userCanonical": "https://endlech.lu/de/",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/fr/",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T16:56:28Z",
+        "googleCanonical": "https://endlech.lu/fr/",
+        "userCanonical": "https://endlech.lu/fr/",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/en/",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T18:28:53Z",
+        "googleCanonical": "https://endlech.lu/en/",
+        "userCanonical": "https://endlech.lu/en/",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/pt/",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-06T10:02:36Z",
+        "googleCanonical": "https://endlech.lu/pt/",
+        "userCanonical": "https://endlech.lu/pt/",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/lb/about",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T18:03:11Z",
+        "googleCanonical": "https://endlech.lu/lb/about",
+        "userCanonical": "https://endlech.lu/lb/about",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/de/about",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-10-20T00:21:40Z",
+        "googleCanonical": "https://endlech.lu/de/about",
+        "userCanonical": "https://endlech.lu/de/about",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/fr/about",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-06T08:09:35Z",
+        "googleCanonical": "https://endlech.lu/fr/about",
+        "userCanonical": "https://endlech.lu/fr/about",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/en/about",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T19:06:06Z",
+        "googleCanonical": "https://endlech.lu/en/about",
+        "userCanonical": "https://endlech.lu/en/about",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/pt/about",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-10-21T06:49:20Z",
+        "googleCanonical": "https://endlech.lu/pt/about",
+        "userCanonical": "https://endlech.lu/pt/about",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/lb/criteria",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-10-20T09:40:39Z",
+        "googleCanonical": "https://endlech.lu/lb/criteria",
+        "userCanonical": "https://endlech.lu/lb/criteria",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/de/criteria",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-06T09:46:12Z",
+        "googleCanonical": "https://endlech.lu/de/criteria",
+        "userCanonical": "https://endlech.lu/de/criteria",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/fr/criteria",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-10-31T19:34:05Z",
+        "googleCanonical": "https://endlech.lu/fr/criteria",
+        "userCanonical": "https://endlech.lu/fr/criteria",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/en/criteria",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T15:39:13Z",
+        "googleCanonical": "https://endlech.lu/en/criteria",
+        "userCanonical": "https://endlech.lu/en/criteria",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/pt/criteria",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-10-19T23:42:32Z",
+        "googleCanonical": "https://endlech.lu/pt/criteria",
+        "userCanonical": "https://endlech.lu/pt/criteria",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/lb/accessibility",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-10-15T00:02:53Z",
+        "googleCanonical": "https://endlech.lu/lb/accessibility",
+        "userCanonical": "https://endlech.lu/lb/accessibility",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/de/accessibility",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-16T09:50:34Z",
+        "googleCanonical": "https://endlech.lu/de/accessibility",
+        "userCanonical": "https://endlech.lu/de/accessibility",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/fr/accessibility",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-12T02:14:00Z",
+        "googleCanonical": "https://endlech.lu/fr/accessibility",
+        "userCanonical": "https://endlech.lu/fr/accessibility",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/en/accessibility",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-03T16:27:48Z",
+        "googleCanonical": "https://endlech.lu/en/accessibility",
+        "userCanonical": "https://endlech.lu/en/accessibility",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/pt/accessibility",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T02:39:14Z",
+        "googleCanonical": "https://endlech.lu/pt/accessibility",
+        "userCanonical": "https://endlech.lu/pt/accessibility",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/lb/legal",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-06T19:18:26Z",
+        "googleCanonical": "https://endlech.lu/lb/legal",
+        "userCanonical": "https://endlech.lu/lb/legal",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/de/legal",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T18:26:03Z",
+        "googleCanonical": "https://endlech.lu/de/legal",
+        "userCanonical": "https://endlech.lu/de/legal",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/fr/legal",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T18:32:43Z",
+        "googleCanonical": "https://endlech.lu/fr/legal",
+        "userCanonical": "https://endlech.lu/fr/legal",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/en/legal",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T17:03:03Z",
+        "googleCanonical": "https://endlech.lu/en/legal",
+        "userCanonical": "https://endlech.lu/en/legal",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/pt/legal",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-10-28T13:36:33Z",
+        "googleCanonical": "https://endlech.lu/pt/legal",
+        "userCanonical": "https://endlech.lu/pt/legal",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/lb/open",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T17:43:06Z",
+        "googleCanonical": "https://endlech.lu/lb/open",
+        "userCanonical": "https://endlech.lu/lb/open",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/de/open",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T18:54:55Z",
+        "googleCanonical": "https://endlech.lu/de/open",
+        "userCanonical": "https://endlech.lu/de/open",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/fr/open",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-10-30T19:04:07Z",
+        "googleCanonical": "https://endlech.lu/fr/open",
+        "userCanonical": "https://endlech.lu/fr/open",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/en/open",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T17:23:06Z",
+        "googleCanonical": "https://endlech.lu/en/open",
+        "userCanonical": "https://endlech.lu/en/open",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/pt/open",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T14:08:37Z",
+        "googleCanonical": "https://endlech.lu/pt/open",
+        "userCanonical": "https://endlech.lu/pt/open",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/lb/presse",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-10-21T20:52:52Z",
+        "googleCanonical": "https://endlech.lu/lb/presse",
+        "userCanonical": "https://endlech.lu/lb/presse",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/de/presse",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-06T20:00:30Z",
+        "googleCanonical": "https://endlech.lu/de/presse",
+        "userCanonical": "https://endlech.lu/de/presse",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/fr/presse",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-10-19T14:09:00Z",
+        "googleCanonical": "https://endlech.lu/fr/presse",
+        "userCanonical": "https://endlech.lu/fr/presse",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/en/presse",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T04:13:30Z",
+        "googleCanonical": "https://endlech.lu/en/presse",
+        "userCanonical": "https://endlech.lu/en/presse",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/pt/presse",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T16:46:28Z",
+        "googleCanonical": "https://endlech.lu/pt/presse",
+        "userCanonical": "https://endlech.lu/pt/presse",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/lb/roadmap",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-10-21T06:45:49Z",
+        "googleCanonical": "https://endlech.lu/lb/roadmap",
+        "userCanonical": "https://endlech.lu/lb/roadmap",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/de/roadmap",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-06T19:04:09Z",
+        "googleCanonical": "https://endlech.lu/de/roadmap",
+        "userCanonical": "https://endlech.lu/de/roadmap",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/fr/roadmap",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T16:47:10Z",
+        "googleCanonical": "https://endlech.lu/fr/roadmap",
+        "userCanonical": "https://endlech.lu/fr/roadmap",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/en/roadmap",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T16:03:05Z",
+        "googleCanonical": "https://endlech.lu/en/roadmap",
+        "userCanonical": "https://endlech.lu/en/roadmap",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/pt/roadmap",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-06T09:34:14Z",
+        "googleCanonical": "https://endlech.lu/pt/roadmap",
+        "userCanonical": "https://endlech.lu/pt/roadmap",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/lb/changelog",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T15:53:01Z",
+        "googleCanonical": "https://endlech.lu/lb/changelog",
+        "userCanonical": "https://endlech.lu/lb/changelog",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/de/changelog",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-05T23:51:49Z",
+        "googleCanonical": "https://endlech.lu/de/changelog",
+        "userCanonical": "https://endlech.lu/de/changelog",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/fr/changelog",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-13T23:46:25Z",
+        "googleCanonical": "https://endlech.lu/fr/changelog",
+        "userCanonical": "https://endlech.lu/fr/changelog",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/en/changelog",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-10-31T01:04:06Z",
+        "googleCanonical": "https://endlech.lu/en/changelog",
+        "userCanonical": "https://endlech.lu/en/changelog",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/pt/changelog",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T05:37:46Z",
+        "googleCanonical": "https://endlech.lu/pt/changelog",
+        "userCanonical": "https://endlech.lu/pt/changelog",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/lb/vergleich",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-06T13:17:01Z",
+        "googleCanonical": "https://endlech.lu/lb/vergleich",
+        "userCanonical": "https://endlech.lu/lb/vergleich",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/de/vergleich",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T15:13:03Z",
+        "googleCanonical": "https://endlech.lu/de/vergleich",
+        "userCanonical": "https://endlech.lu/de/vergleich",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/fr/vergleich",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-15T23:46:32Z",
+        "googleCanonical": "https://endlech.lu/fr/vergleich",
+        "userCanonical": "https://endlech.lu/fr/vergleich",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/en/vergleich",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-05T01:42:56Z",
+        "googleCanonical": "https://endlech.lu/en/vergleich",
+        "userCanonical": "https://endlech.lu/en/vergleich",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/pt/vergleich",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-10-19T23:43:59Z",
+        "googleCanonical": "https://endlech.lu/pt/vergleich",
+        "userCanonical": "https://endlech.lu/pt/vergleich",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/lb/vergleich/google-maps",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T18:20:17Z",
+        "googleCanonical": "https://endlech.lu/lb/vergleich/google-maps",
+        "userCanonical": "https://endlech.lu/lb/vergleich/google-maps",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/de/vergleich/google-maps",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-05T05:35:47Z",
+        "googleCanonical": "https://endlech.lu/de/vergleich/google-maps",
+        "userCanonical": "https://endlech.lu/de/vergleich/google-maps",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/fr/vergleich/google-maps",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-08T14:56:32Z",
+        "googleCanonical": "https://endlech.lu/fr/vergleich/google-maps",
+        "userCanonical": "https://endlech.lu/fr/vergleich/google-maps",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/en/vergleich/google-maps",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-05T10:48:22Z",
+        "googleCanonical": "https://endlech.lu/en/vergleich/google-maps",
+        "userCanonical": "https://endlech.lu/en/vergleich/google-maps",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/pt/vergleich/google-maps",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T15:45:06Z",
+        "googleCanonical": "https://endlech.lu/pt/vergleich/google-maps",
+        "userCanonical": "https://endlech.lu/pt/vergleich/google-maps",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/lb/vergleich/wheelmap",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-06T19:39:03Z",
+        "googleCanonical": "https://endlech.lu/lb/vergleich/wheelmap",
+        "userCanonical": "https://endlech.lu/lb/vergleich/wheelmap",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/de/vergleich/wheelmap",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-15T16:58:58Z",
+        "googleCanonical": "https://endlech.lu/de/vergleich/wheelmap",
+        "userCanonical": "https://endlech.lu/de/vergleich/wheelmap",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/fr/vergleich/wheelmap",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T16:48:30Z",
+        "googleCanonical": "https://endlech.lu/fr/vergleich/wheelmap",
+        "userCanonical": "https://endlech.lu/fr/vergleich/wheelmap",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/en/vergleich/wheelmap",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-06T18:36:58Z",
+        "googleCanonical": "https://endlech.lu/en/vergleich/wheelmap",
+        "userCanonical": "https://endlech.lu/en/vergleich/wheelmap",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/pt/vergleich/wheelmap",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T17:06:28Z",
+        "googleCanonical": "https://endlech.lu/pt/vergleich/wheelmap",
+        "userCanonical": "https://endlech.lu/pt/vergleich/wheelmap",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/lb/vergleich/tripadvisor",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-11T23:43:02Z",
+        "googleCanonical": "https://endlech.lu/lb/vergleich/tripadvisor",
+        "userCanonical": "https://endlech.lu/lb/vergleich/tripadvisor",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/de/vergleich/tripadvisor",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-12T23:51:58Z",
+        "googleCanonical": "https://endlech.lu/de/vergleich/tripadvisor",
+        "userCanonical": "https://endlech.lu/de/vergleich/tripadvisor",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/fr/vergleich/tripadvisor",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T18:08:50Z",
+        "googleCanonical": "https://endlech.lu/fr/vergleich/tripadvisor",
+        "userCanonical": "https://endlech.lu/fr/vergleich/tripadvisor",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/en/vergleich/tripadvisor",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T13:01:14Z",
+        "googleCanonical": "https://endlech.lu/en/vergleich/tripadvisor",
+        "userCanonical": "https://endlech.lu/en/vergleich/tripadvisor",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/pt/vergleich/tripadvisor",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-10-24T22:11:21Z",
+        "googleCanonical": "https://endlech.lu/pt/vergleich/tripadvisor",
+        "userCanonical": "https://endlech.lu/pt/vergleich/tripadvisor",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/lb/restaurants",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-12T00:36:16Z",
+        "googleCanonical": "https://endlech.lu/lb/restaurants",
+        "userCanonical": "https://endlech.lu/lb/restaurants",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/de/restaurants",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-05T04:13:53Z",
+        "googleCanonical": "https://endlech.lu/de/restaurants",
+        "userCanonical": "https://endlech.lu/de/restaurants",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/fr/restaurants",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-05T04:47:35Z",
+        "googleCanonical": "https://endlech.lu/fr/restaurants",
+        "userCanonical": "https://endlech.lu/fr/restaurants",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/en/restaurants",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-05T03:40:53Z",
+        "googleCanonical": "https://endlech.lu/en/restaurants",
+        "userCanonical": "https://endlech.lu/en/restaurants",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/pt/restaurants",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T16:53:10Z",
+        "googleCanonical": "https://endlech.lu/pt/restaurants",
+        "userCanonical": "https://endlech.lu/pt/restaurants",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/lb/partner",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-06T12:29:52Z",
+        "googleCanonical": "https://endlech.lu/lb/partner",
+        "userCanonical": "https://endlech.lu/lb/partner",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/de/partner",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-06T17:26:04Z",
+        "googleCanonical": "https://endlech.lu/de/partner",
+        "userCanonical": "https://endlech.lu/de/partner",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/fr/partner",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-10-25T07:24:14Z",
+        "googleCanonical": "https://endlech.lu/fr/partner",
+        "userCanonical": "https://endlech.lu/fr/partner",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/en/partner",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T16:11:03Z",
+        "googleCanonical": "https://endlech.lu/en/partner",
+        "userCanonical": "https://endlech.lu/en/partner",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/pt/partner",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T22:39:35Z",
+        "googleCanonical": "https://endlech.lu/pt/partner",
+        "userCanonical": "https://endlech.lu/pt/partner",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/lb/organisationen",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T18:00:58Z",
+        "googleCanonical": "https://endlech.lu/lb/organisationen",
+        "userCanonical": "https://endlech.lu/lb/organisationen",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/de/organisationen",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-10-27T14:12:12Z",
+        "googleCanonical": "https://endlech.lu/de/organisationen",
+        "userCanonical": "https://endlech.lu/de/organisationen",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/fr/organisationen",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-05T17:10:30Z",
+        "googleCanonical": "https://endlech.lu/fr/organisationen",
+        "userCanonical": "https://endlech.lu/fr/organisationen",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/en/organisationen",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T16:54:30Z",
+        "googleCanonical": "https://endlech.lu/en/organisationen",
+        "userCanonical": "https://endlech.lu/en/organisationen",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/pt/organisationen",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-08T13:05:35Z",
+        "googleCanonical": "https://endlech.lu/pt/organisationen",
+        "userCanonical": "https://endlech.lu/pt/organisationen",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/lb/organisationen/gemeinden",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-05T20:31:55Z",
+        "googleCanonical": "https://endlech.lu/lb/organisationen/gemeinden",
+        "userCanonical": "https://endlech.lu/lb/organisationen/gemeinden",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/de/organisationen/gemeinden",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T16:27:07Z",
+        "googleCanonical": "https://endlech.lu/de/organisationen/gemeinden",
+        "userCanonical": "https://endlech.lu/de/organisationen/gemeinden",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/fr/organisationen/gemeinden",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T11:33:09Z",
+        "googleCanonical": "https://endlech.lu/fr/organisationen/gemeinden",
+        "userCanonical": "https://endlech.lu/fr/organisationen/gemeinden",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/en/organisationen/gemeinden",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T16:23:01Z",
+        "googleCanonical": "https://endlech.lu/en/organisationen/gemeinden",
+        "userCanonical": "https://endlech.lu/en/organisationen/gemeinden",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/pt/organisationen/gemeinden",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T17:27:01Z",
+        "googleCanonical": "https://endlech.lu/pt/organisationen/gemeinden",
+        "userCanonical": "https://endlech.lu/pt/organisationen/gemeinden",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/lb/organisationen/unternehmen",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-06T19:29:14Z",
+        "googleCanonical": "https://endlech.lu/lb/organisationen/unternehmen",
+        "userCanonical": "https://endlech.lu/lb/organisationen/unternehmen",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/de/organisationen/unternehmen",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T16:59:10Z",
+        "googleCanonical": "https://endlech.lu/de/organisationen/unternehmen",
+        "userCanonical": "https://endlech.lu/de/organisationen/unternehmen",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/fr/organisationen/unternehmen",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T17:54:34Z",
+        "googleCanonical": "https://endlech.lu/fr/organisationen/unternehmen",
+        "userCanonical": "https://endlech.lu/fr/organisationen/unternehmen",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/en/organisationen/unternehmen",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T17:38:41Z",
+        "googleCanonical": "https://endlech.lu/en/organisationen/unternehmen",
+        "userCanonical": "https://endlech.lu/en/organisationen/unternehmen",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/pt/organisationen/unternehmen",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T19:59:59Z",
+        "googleCanonical": "https://endlech.lu/pt/organisationen/unternehmen",
+        "userCanonical": "https://endlech.lu/pt/organisationen/unternehmen",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/lb/app",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-10-21T12:37:35Z",
+        "googleCanonical": "https://endlech.lu/lb/app",
+        "userCanonical": "https://endlech.lu/lb/app",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/de/app",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T18:23:11Z",
+        "googleCanonical": "https://endlech.lu/de/app",
+        "userCanonical": "https://endlech.lu/de/app",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/fr/app",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-10-31T17:34:05Z",
+        "googleCanonical": "https://endlech.lu/fr/app",
+        "userCanonical": "https://endlech.lu/fr/app",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/en/app",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T16:50:30Z",
+        "googleCanonical": "https://endlech.lu/en/app",
+        "userCanonical": "https://endlech.lu/en/app",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/pt/app",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-05T10:18:24Z",
+        "googleCanonical": "https://endlech.lu/pt/app",
+        "userCanonical": "https://endlech.lu/pt/app",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/lb/roadmap/ideen",
+        "verdict": "NEUTRAL",
+        "coverageState": "URL ist Google nicht bekannt",
+        "lastCrawlTime": null,
+        "googleCanonical": null,
+        "userCanonical": null,
+        "pageFetchState": "PAGE_FETCH_STATE_UNSPECIFIED",
+        "robotsTxtState": "ROBOTS_TXT_STATE_UNSPECIFIED"
+      },
+      {
+        "url": "https://endlech.lu/de/roadmap/ideen",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-12T04:40:01Z",
+        "googleCanonical": "https://endlech.lu/de/roadmap/ideen",
+        "userCanonical": "https://endlech.lu/de/roadmap/ideen",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/fr/roadmap/ideen",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-13T04:54:58Z",
+        "googleCanonical": "https://endlech.lu/fr/roadmap/ideen",
+        "userCanonical": "https://endlech.lu/fr/roadmap/ideen",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/en/roadmap/ideen",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-13T05:07:59Z",
+        "googleCanonical": "https://endlech.lu/en/roadmap/ideen",
+        "userCanonical": "https://endlech.lu/en/roadmap/ideen",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/pt/roadmap/ideen",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-14T01:26:24Z",
+        "googleCanonical": "https://endlech.lu/pt/roadmap/ideen",
+        "userCanonical": "https://endlech.lu/pt/roadmap/ideen",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/lb/sponsoren",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-08T21:51:44Z",
+        "googleCanonical": "https://endlech.lu/lb/sponsoren",
+        "userCanonical": "https://endlech.lu/lb/sponsoren",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/de/sponsoren",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-02T10:19:07Z",
+        "googleCanonical": "https://endlech.lu/de/sponsoren",
+        "userCanonical": "https://endlech.lu/de/sponsoren",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/fr/sponsoren",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-10-30T19:34:05Z",
+        "googleCanonical": "https://endlech.lu/fr/sponsoren",
+        "userCanonical": "https://endlech.lu/fr/sponsoren",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/en/sponsoren",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-02T17:04:06Z",
+        "googleCanonical": "https://endlech.lu/en/sponsoren",
+        "userCanonical": "https://endlech.lu/en/sponsoren",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/pt/sponsoren",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-10-30T20:04:05Z",
+        "googleCanonical": "https://endlech.lu/pt/sponsoren",
+        "userCanonical": "https://endlech.lu/pt/sponsoren",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/lb/restaurants/1",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T18:11:44Z",
+        "googleCanonical": "https://endlech.lu/lb/restaurants/1",
+        "userCanonical": "https://endlech.lu/lb/restaurants/1",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/de/restaurants/1",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-08T02:45:27Z",
+        "googleCanonical": "https://endlech.lu/de/restaurants/1",
+        "userCanonical": "https://endlech.lu/de/restaurants/1",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/fr/restaurants/1",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T18:06:03Z",
+        "googleCanonical": "https://endlech.lu/fr/restaurants/1",
+        "userCanonical": "https://endlech.lu/fr/restaurants/1",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/en/restaurants/1",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-15T19:37:21Z",
+        "googleCanonical": "https://endlech.lu/en/restaurants/1",
+        "userCanonical": "https://endlech.lu/en/restaurants/1",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/pt/restaurants/1",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-01T10:49:05Z",
+        "googleCanonical": "https://endlech.lu/pt/restaurants/1",
+        "userCanonical": "https://endlech.lu/pt/restaurants/1",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/lb/restaurants/2",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-16T05:23:27Z",
+        "googleCanonical": "https://endlech.lu/lb/restaurants/2",
+        "userCanonical": "https://endlech.lu/lb/restaurants/2",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/de/restaurants/2",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-06T03:16:40Z",
+        "googleCanonical": "https://endlech.lu/de/restaurants/2",
+        "userCanonical": "https://endlech.lu/de/restaurants/2",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/fr/restaurants/2",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-05T04:19:41Z",
+        "googleCanonical": "https://endlech.lu/fr/restaurants/2",
+        "userCanonical": "https://endlech.lu/fr/restaurants/2",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/en/restaurants/2",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-10-30T20:19:06Z",
+        "googleCanonical": "https://endlech.lu/en/restaurants/2",
+        "userCanonical": "https://endlech.lu/en/restaurants/2",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/pt/restaurants/2",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-15T05:59:56Z",
+        "googleCanonical": "https://endlech.lu/pt/restaurants/2",
+        "userCanonical": "https://endlech.lu/pt/restaurants/2",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/lb/restaurants/3",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T16:51:01Z",
+        "googleCanonical": "https://endlech.lu/lb/restaurants/3",
+        "userCanonical": "https://endlech.lu/lb/restaurants/3",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/de/restaurants/3",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T09:21:33Z",
+        "googleCanonical": "https://endlech.lu/de/restaurants/3",
+        "userCanonical": "https://endlech.lu/de/restaurants/3",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/fr/restaurants/3",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-10-29T06:22:06Z",
+        "googleCanonical": "https://endlech.lu/fr/restaurants/3",
+        "userCanonical": "https://endlech.lu/fr/restaurants/3",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/en/restaurants/3",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-10-30T01:05:18Z",
+        "googleCanonical": "https://endlech.lu/en/restaurants/3",
+        "userCanonical": "https://endlech.lu/en/restaurants/3",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/pt/restaurants/3",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T10:11:33Z",
+        "googleCanonical": "https://endlech.lu/pt/restaurants/3",
+        "userCanonical": "https://endlech.lu/pt/restaurants/3",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/lb/restaurants/4",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T17:51:45Z",
+        "googleCanonical": "https://endlech.lu/lb/restaurants/4",
+        "userCanonical": "https://endlech.lu/lb/restaurants/4",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/de/restaurants/4",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T18:43:58Z",
+        "googleCanonical": "https://endlech.lu/de/restaurants/4",
+        "userCanonical": "https://endlech.lu/de/restaurants/4",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/fr/restaurants/4",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-15T18:03:43Z",
+        "googleCanonical": "https://endlech.lu/fr/restaurants/4",
+        "userCanonical": "https://endlech.lu/fr/restaurants/4",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/en/restaurants/4",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-13T21:16:25Z",
+        "googleCanonical": "https://endlech.lu/en/restaurants/4",
+        "userCanonical": "https://endlech.lu/en/restaurants/4",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/pt/restaurants/4",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T18:14:36Z",
+        "googleCanonical": "https://endlech.lu/pt/restaurants/4",
+        "userCanonical": "https://endlech.lu/pt/restaurants/4",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/lb/restaurants/5",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T17:41:18Z",
+        "googleCanonical": "https://endlech.lu/lb/restaurants/5",
+        "userCanonical": "https://endlech.lu/lb/restaurants/5",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/de/restaurants/5",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-10-19T14:19:24Z",
+        "googleCanonical": "https://endlech.lu/de/restaurants/5",
+        "userCanonical": "https://endlech.lu/de/restaurants/5",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/fr/restaurants/5",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-10-20T13:42:39Z",
+        "googleCanonical": "https://endlech.lu/fr/restaurants/5",
+        "userCanonical": "https://endlech.lu/fr/restaurants/5",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/en/restaurants/5",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-10-05T03:49:19Z",
+        "googleCanonical": "https://endlech.lu/en/restaurants/5",
+        "userCanonical": "https://endlech.lu/en/restaurants/5",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/pt/restaurants/5",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-10-07T06:26:46Z",
+        "googleCanonical": "https://endlech.lu/pt/restaurants/5",
+        "userCanonical": "https://endlech.lu/pt/restaurants/5",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/lb/restaurants/6",
+        "verdict": "NEUTRAL",
+        "coverageState": "Gefunden – zurzeit nicht indexiert",
+        "lastCrawlTime": null,
+        "googleCanonical": null,
+        "userCanonical": null,
+        "pageFetchState": "PAGE_FETCH_STATE_UNSPECIFIED",
+        "robotsTxtState": "ROBOTS_TXT_STATE_UNSPECIFIED"
+      },
+      {
+        "url": "https://endlech.lu/de/restaurants/6",
+        "verdict": "NEUTRAL",
+        "coverageState": "Gefunden – zurzeit nicht indexiert",
+        "lastCrawlTime": null,
+        "googleCanonical": null,
+        "userCanonical": null,
+        "pageFetchState": "PAGE_FETCH_STATE_UNSPECIFIED",
+        "robotsTxtState": "ROBOTS_TXT_STATE_UNSPECIFIED"
+      },
+      {
+        "url": "https://endlech.lu/fr/restaurants/6",
+        "verdict": "NEUTRAL",
+        "coverageState": "Gefunden – zurzeit nicht indexiert",
+        "lastCrawlTime": null,
+        "googleCanonical": null,
+        "userCanonical": null,
+        "pageFetchState": "PAGE_FETCH_STATE_UNSPECIFIED",
+        "robotsTxtState": "ROBOTS_TXT_STATE_UNSPECIFIED"
+      },
+      {
+        "url": "https://endlech.lu/en/restaurants/6",
+        "verdict": "NEUTRAL",
+        "coverageState": "URL ist Google nicht bekannt",
+        "lastCrawlTime": null,
+        "googleCanonical": null,
+        "userCanonical": null,
+        "pageFetchState": "PAGE_FETCH_STATE_UNSPECIFIED",
+        "robotsTxtState": "ROBOTS_TXT_STATE_UNSPECIFIED"
+      },
+      {
+        "url": "https://endlech.lu/pt/restaurants/6",
+        "verdict": "NEUTRAL",
+        "coverageState": "URL ist Google nicht bekannt",
+        "lastCrawlTime": null,
+        "googleCanonical": null,
+        "userCanonical": null,
+        "pageFetchState": "PAGE_FETCH_STATE_UNSPECIFIED",
+        "robotsTxtState": "ROBOTS_TXT_STATE_UNSPECIFIED"
+      },
+      {
+        "url": "https://endlech.lu/lb/restaurants/7",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-10-13T21:43:29Z",
+        "googleCanonical": "https://endlech.lu/lb/restaurants/7",
+        "userCanonical": "https://endlech.lu/lb/restaurants/7",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/de/restaurants/7",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-10-27T21:03:39Z",
+        "googleCanonical": "https://endlech.lu/de/restaurants/7",
+        "userCanonical": "https://endlech.lu/de/restaurants/7",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/fr/restaurants/7",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T16:52:34Z",
+        "googleCanonical": "https://endlech.lu/fr/restaurants/7",
+        "userCanonical": "https://endlech.lu/fr/restaurants/7",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/en/restaurants/7",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-10-24T23:04:39Z",
+        "googleCanonical": "https://endlech.lu/en/restaurants/7",
+        "userCanonical": "https://endlech.lu/en/restaurants/7",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/pt/restaurants/7",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T16:45:02Z",
+        "googleCanonical": "https://endlech.lu/pt/restaurants/7",
+        "userCanonical": "https://endlech.lu/pt/restaurants/7",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/lb/restaurants/8",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-14T16:48:13Z",
+        "googleCanonical": "https://endlech.lu/lb/restaurants/8",
+        "userCanonical": "https://endlech.lu/lb/restaurants/8",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/de/restaurants/8",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-05T21:11:20Z",
+        "googleCanonical": "https://endlech.lu/de/restaurants/8",
+        "userCanonical": "https://endlech.lu/de/restaurants/8",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/fr/restaurants/8",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-04T18:57:32Z",
+        "googleCanonical": "https://endlech.lu/fr/restaurants/8",
+        "userCanonical": "https://endlech.lu/fr/restaurants/8",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/en/restaurants/8",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-11-06T09:18:18Z",
+        "googleCanonical": "https://endlech.lu/en/restaurants/8",
+        "userCanonical": "https://endlech.lu/en/restaurants/8",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/pt/restaurants/8",
+        "verdict": "PASS",
+        "coverageState": "Gesendet und indexiert",
+        "lastCrawlTime": "2026-10-21T18:09:13Z",
+        "googleCanonical": "https://endlech.lu/pt/restaurants/8",
+        "userCanonical": "https://endlech.lu/pt/restaurants/8",
+        "pageFetchState": "SUCCESSFUL",
+        "robotsTxtState": "ALLOWED"
+      },
+      {
+        "url": "https://endlech.lu/lb/restaurants/9",
+        "verdict": "NEUTRAL",
+        "coverageState": "Gefunden – zurzeit nicht indexiert",
+        "lastCrawlTime": null,
+        "googleCanonical": null,
+        "userCanonical": null,
+        "pageFetchState": "PAGE_FETCH_STATE_UNSPECIFIED",
+        "robotsTxtState": "ROBOTS_TXT_STATE_UNSPECIFIED"
+      },
+      {
+        "url": "https://endlech.lu/de/restaurants/9",
+        "verdict": "NEUTRAL",
+        "coverageState": "URL ist Google nicht bekannt",
+        "lastCrawlTime": null,
+        "googleCanonical": null,
+        "userCanonical": null,
+        "pageFetchState": "PAGE_FETCH_STATE_UNSPECIFIED",
+        "robotsTxtState": "ROBOTS_TXT_STATE_UNSPECIFIED"
+      },
+      {
+        "url": "https://endlech.lu/fr/restaurants/9",
+        "verdict": "NEUTRAL",
+        "coverageState": "URL ist Google nicht bekannt",
+        "lastCrawlTime": null,
+        "googleCanonical": null,
+        "userCanonical": null,
+        "pageFetchState": "PAGE_FETCH_STATE_UNSPECIFIED",
+        "robotsTxtState": "ROBOTS_TXT_STATE_UNSPECIFIED"
+      },
+      {
+        "url": "https://endlech.lu/en/restaurants/9",
+        "verdict": "NEUTRAL",
+        "coverageState": "URL ist Google nicht bekannt",
+        "lastCrawlTime": null,
+        "googleCanonical": null,
+        "userCanonical": null,
+        "pageFetchState": "PAGE_FETCH_STATE_UNSPECIFIED",
+        "robotsTxtState": "ROBOTS_TXT_STATE_UNSPECIFIED"
+      },
+      {
+        "url": "https://endlech.lu/pt/restaurants/9",
+        "verdict": "NEUTRAL",
+        "coverageState": "Gefunden – zurzeit nicht indexiert",
+        "lastCrawlTime": null,
+        "googleCanonical": null,
+        "userCanonical": null,
+        "pageFetchState": "PAGE_FETCH_STATE_UNSPECIFIED",
+        "robotsTxtState": "ROBOTS_TXT_STATE_UNSPECIFIED"
+      }
+    ]
+  }
+}

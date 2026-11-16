@@ -1,0 +1,533 @@
+{
+  "erzeugt": "2026-11-16T17:15:32.145Z",
+  "woche": "2026-W47",
+  "werkzeug": "umami",
+  "website_id": "b943d685-4a21-4e06-ba5c-4de3ccdc0178",
+  "zeitraum": {
+    "startDate": "2026-10-17",
+    "endDate": "2026-11-13"
+  },
+  "abfragen": {
+    "stats": {
+      "tool": "umami_stats",
+      "argumente": {
+        "websiteId": "b943d685-4a21-4e06-ba5c-4de3ccdc0178",
+        "startDate": "2026-10-17",
+        "endDate": "2026-11-13",
+        "timezone": "Europe/Luxembourg"
+      },
+      "antwort": {
+        "website": "b943d685-4a21-4e06-ba5c-4de3ccdc0178",
+        "zeitraum": {
+          "startDate": "2026-10-17",
+          "endDate": "2026-11-13",
+          "tage": 28,
+          "zeitzone": "Europe/Luxembourg"
+        },
+        "filter": null,
+        "seitenaufrufe": 89,
+        "besucher": 42,
+        "besuche": 44,
+        "abspruenge": 24,
+        "verweildauer_sekunden": 755,
+        "kleine_zahl": "Unter 100 Besuchen — keine Raten.",
+        "vorzeitraum": {
+          "seitenaufrufe": 78,
+          "besucher": 35,
+          "besuche": 41,
+          "abspruenge": 24,
+          "verweildauer_sekunden": 5521
+        }
+      }
+    },
+    "path": {
+      "tool": "umami_metrics",
+      "argumente": {
+        "websiteId": "b943d685-4a21-4e06-ba5c-4de3ccdc0178",
+        "startDate": "2026-10-17",
+        "endDate": "2026-11-13",
+        "timezone": "Europe/Luxembourg",
+        "type": "path"
+      },
+      "antwort": {
+        "website": "b943d685-4a21-4e06-ba5c-4de3ccdc0178",
+        "zeitraum": {
+          "startDate": "2026-10-17",
+          "endDate": "2026-11-13",
+          "tage": 28,
+          "zeitzone": "Europe/Luxembourg"
+        },
+        "dimension": "path",
+        "einheit": "Besucher",
+        "filter": null,
+        "zeilen": 30,
+        "kleine_zahl": "Summe unter 100 — Anteile nicht als Prozent berichten.",
+        "rows": [
+          {
+            "wert": "/de/restaurants",
+            "anzahl": 10
+          },
+          {
+            "wert": "/de/",
+            "anzahl": 10
+          },
+          {
+            "wert": "/en/",
+            "anzahl": 8
+          },
+          {
+            "wert": "/de/sponsoren",
+            "anzahl": 6
+          },
+          {
+            "wert": "/lb/",
+            "anzahl": 5
+          },
+          {
+            "wert": "/fr/",
+            "anzahl": 5
+          },
+          {
+            "wert": "/de/partner",
+            "anzahl": 3
+          },
+          {
+            "wert": "/de/open",
+            "anzahl": 3
+          },
+          {
+            "wert": "/en/restaurants",
+            "anzahl": 3
+          },
+          {
+            "wert": "/fr/restaurants",
+            "anzahl": 2
+          },
+          {
+            "wert": "/en/register",
+            "anzahl": 2
+          },
+          {
+            "wert": "/en/restaurants/7",
+            "anzahl": 2
+          },
+          {
+            "wert": "/en/restaurants/1",
+            "anzahl": 1
+          },
+          {
+            "wert": "/pt/verify",
+            "anzahl": 1
+          },
+          {
+            "wert": "/de/restaurants/6",
+            "anzahl": 1
+          },
+          {
+            "wert": "/de/restaurants/5",
+            "anzahl": 1
+          },
+          {
+            "wert": "/fr/restaurants/2",
+            "anzahl": 1
+          },
+          {
+            "wert": "/fr/restaurants/4",
+            "anzahl": 1
+          },
+          {
+            "wert": "/fr/restaurants/7",
+            "anzahl": 1
+          },
+          {
+            "wert": "/de/register",
+            "anzahl": 1
+          },
+          {
+            "wert": "/lb/criteria",
+            "anzahl": 1
+          },
+          {
+            "wert": "/lb/restaurants",
+            "anzahl": 1
+          },
+          {
+            "wert": "/pt/",
+            "anzahl": 1
+          },
+          {
+            "wert": "/pt/community/suggest",
+            "anzahl": 1
+          },
+          {
+            "wert": "/pt/login",
+            "anzahl": 1
+          },
+          {
+            "wert": "/pt/partner",
+            "anzahl": 1
+          },
+          {
+            "wert": "/pt/register",
+            "anzahl": 1
+          },
+          {
+            "wert": "/pt/restaurants",
+            "anzahl": 1
+          },
+          {
+            "wert": "/pt/roadmap",
+            "anzahl": 1
+          },
+          {
+            "wert": "/de/restaurants/8",
+            "anzahl": 1
+          }
+        ]
+      }
+    },
+    "event": {
+      "tool": "umami_metrics",
+      "argumente": {
+        "websiteId": "b943d685-4a21-4e06-ba5c-4de3ccdc0178",
+        "startDate": "2026-10-17",
+        "endDate": "2026-11-13",
+        "timezone": "Europe/Luxembourg",
+        "type": "event"
+      },
+      "antwort": {
+        "website": "b943d685-4a21-4e06-ba5c-4de3ccdc0178",
+        "zeitraum": {
+          "startDate": "2026-10-17",
+          "endDate": "2026-11-13",
+          "tage": 28,
+          "zeitzone": "Europe/Luxembourg"
+        },
+        "dimension": "event",
+        "einheit": "Ereignisse",
+        "filter": null,
+        "zeilen": 2,
+        "kleine_zahl": "Summe unter 100 — Anteile nicht als Prozent berichten.",
+        "rows": [
+          {
+            "wert": "filter_angewandt",
+            "anzahl": 14
+          },
+          {
+            "wert": "kontaktweg_genutzt",
+            "anzahl": 3
+          }
+        ]
+      }
+    },
+    "channel": {
+      "tool": "umami_metrics",
+      "argumente": {
+        "websiteId": "b943d685-4a21-4e06-ba5c-4de3ccdc0178",
+        "startDate": "2026-10-17",
+        "endDate": "2026-11-13",
+        "timezone": "Europe/Luxembourg",
+        "type": "channel"
+      },
+      "antwort": {
+        "website": "b943d685-4a21-4e06-ba5c-4de3ccdc0178",
+        "zeitraum": {
+          "startDate": "2026-10-17",
+          "endDate": "2026-11-13",
+          "tage": 28,
+          "zeitzone": "Europe/Luxembourg"
+        },
+        "dimension": "channel",
+        "einheit": "Besucher",
+        "filter": null,
+        "zeilen": 4,
+        "kleine_zahl": "Summe unter 100 — Anteile nicht als Prozent berichten.",
+        "rows": [
+          {
+            "wert": "direct",
+            "anzahl": 22
+          },
+          {
+            "wert": "organicSearch",
+            "anzahl": 16
+          },
+          {
+            "wert": "organicSocial",
+            "anzahl": 3
+          },
+          {
+            "wert": "referral",
+            "anzahl": 2
+          }
+        ]
+      }
+    },
+    "funnel": {
+      "tool": "umami_funnel",
+      "argumente": {
+        "websiteId": "b943d685-4a21-4e06-ba5c-4de3ccdc0178",
+        "startDate": "2026-10-17",
+        "endDate": "2026-11-13",
+        "timezone": "Europe/Luxembourg",
+        "schritte": [
+          "*/restaurants",
+          "filter_angewandt",
+          "*/restaurants/*",
+          "kontaktweg_genutzt"
+        ],
+        "fenster_minuten": 60
+      },
+      "antwort": {
+        "website": "b943d685-4a21-4e06-ba5c-4de3ccdc0178",
+        "zeitraum": {
+          "startDate": "2026-10-17",
+          "endDate": "2026-11-13",
+          "tage": 28,
+          "zeitzone": "Europe/Luxembourg"
+        },
+        "fenster_minuten": 60,
+        "filter": null,
+        "einstieg": 17,
+        "abschluss": 1,
+        "staerkster_absprung": {
+          "von": "*/restaurants",
+          "nach": "filter_angewandt",
+          "verloren": 11
+        },
+        "kleine_zahl": "Unter 100 Besuchern am Einstieg — keine Quoten, nur absolute Zahlen. Im Bericht als \"x von y\" nennen.",
+        "schritte": [
+          {
+            "schritt": 1,
+            "typ": "path",
+            "wert": "*/restaurants",
+            "besucher": 17
+          },
+          {
+            "schritt": 2,
+            "typ": "event",
+            "wert": "filter_angewandt",
+            "besucher": 6,
+            "verloren": 11
+          },
+          {
+            "schritt": 3,
+            "typ": "path",
+            "wert": "*/restaurants/*",
+            "besucher": 1,
+            "verloren": 5
+          },
+          {
+            "schritt": 4,
+            "typ": "event",
+            "wert": "kontaktweg_genutzt",
+            "besucher": 1,
+            "verloren": 0
+          }
+        ]
+      }
+    },
+    "conversion_nach_quelle": {
+      "tool": "umami_conversion_nach_quelle",
+      "argumente": {
+        "websiteId": "b943d685-4a21-4e06-ba5c-4de3ccdc0178",
+        "startDate": "2026-10-17",
+        "endDate": "2026-11-13",
+        "timezone": "Europe/Luxembourg",
+        "schritte": [
+          "*/restaurants",
+          "filter_angewandt",
+          "*/restaurants/*",
+          "kontaktweg_genutzt"
+        ],
+        "fenster_minuten": 60
+      },
+      "antwort": {
+        "website": "b943d685-4a21-4e06-ba5c-4de3ccdc0178",
+        "zeitraum": {
+          "startDate": "2026-10-17",
+          "endDate": "2026-11-13",
+          "tage": 28,
+          "zeitzone": "Europe/Luxembourg"
+        },
+        "kette": [
+          "*/restaurants",
+          "filter_angewandt",
+          "*/restaurants/*",
+          "kontaktweg_genutzt"
+        ],
+        "fenster_minuten": 60,
+        "segmente": {
+          "alle": {
+            "einstieg": 17,
+            "abschluss": 1,
+            "staerkster_absprung": {
+              "von": "*/restaurants",
+              "nach": "filter_angewandt",
+              "verloren": 11
+            },
+            "kleine_zahl": "Unter 100 Besuchern am Einstieg — keine Quoten, nur absolute Zahlen. Im Bericht als \"x von y\" nennen."
+          },
+          "suche": {
+            "einstieg": 1,
+            "abschluss": 0,
+            "staerkster_absprung": {
+              "von": "filter_angewandt",
+              "nach": "*/restaurants/*",
+              "verloren": 1
+            },
+            "kleine_zahl": "Unter 100 Besuchern am Einstieg — keine Quoten, nur absolute Zahlen. Im Bericht als \"x von y\" nennen."
+          },
+          "ki": {
+            "einstieg": 0,
+            "abschluss": 0,
+            "staerkster_absprung": null,
+            "kleine_zahl": "Unter 100 Besuchern am Einstieg — keine Quoten, nur absolute Zahlen. Im Bericht als \"x von y\" nennen."
+          },
+          "sozial": {
+            "einstieg": 0,
+            "abschluss": 0,
+            "staerkster_absprung": null,
+            "kleine_zahl": "Unter 100 Besuchern am Einstieg — keine Quoten, nur absolute Zahlen. Im Bericht als \"x von y\" nennen."
+          }
+        },
+        "hinweis": "Direkter Traffic lässt sich in Umami nicht filtern (leerer Referrer), deshalb kein eigenes Segment. Wie viele Besucher direkt kamen, zeigt umami_metrics mit type \"channel\"."
+      }
+    },
+    "trichter:warteliste_app": {
+      "tool": "umami_funnel",
+      "argumente": {
+        "websiteId": "b943d685-4a21-4e06-ba5c-4de3ccdc0178",
+        "startDate": "2026-10-17",
+        "endDate": "2026-11-13",
+        "timezone": "Europe/Luxembourg",
+        "schritte": [
+          "*/app",
+          "warteliste_eingetragen"
+        ],
+        "fenster_minuten": 60
+      },
+      "antwort": {
+        "website": "b943d685-4a21-4e06-ba5c-4de3ccdc0178",
+        "zeitraum": {
+          "startDate": "2026-10-17",
+          "endDate": "2026-11-13",
+          "tage": 28,
+          "zeitzone": "Europe/Luxembourg"
+        },
+        "fenster_minuten": 60,
+        "filter": null,
+        "einstieg": 0,
+        "abschluss": 0,
+        "staerkster_absprung": null,
+        "kleine_zahl": "Unter 100 Besuchern am Einstieg — keine Quoten, nur absolute Zahlen. Im Bericht als \"x von y\" nennen.",
+        "schritte": [
+          {
+            "schritt": 1,
+            "typ": "path",
+            "wert": "*/app",
+            "besucher": 0
+          },
+          {
+            "schritt": 2,
+            "typ": "event",
+            "wert": "warteliste_eingetragen",
+            "besucher": 0,
+            "verloren": 0
+          }
+        ]
+      }
+    },
+    "trichter:warteliste_partner": {
+      "tool": "umami_funnel",
+      "argumente": {
+        "websiteId": "b943d685-4a21-4e06-ba5c-4de3ccdc0178",
+        "startDate": "2026-10-17",
+        "endDate": "2026-11-13",
+        "timezone": "Europe/Luxembourg",
+        "schritte": [
+          "*/partner",
+          "warteliste_eingetragen"
+        ],
+        "fenster_minuten": 60
+      },
+      "antwort": {
+        "website": "b943d685-4a21-4e06-ba5c-4de3ccdc0178",
+        "zeitraum": {
+          "startDate": "2026-10-17",
+          "endDate": "2026-11-13",
+          "tage": 28,
+          "zeitzone": "Europe/Luxembourg"
+        },
+        "fenster_minuten": 60,
+        "filter": null,
+        "einstieg": 4,
+        "abschluss": 0,
+        "staerkster_absprung": {
+          "von": "*/partner",
+          "nach": "warteliste_eingetragen",
+          "verloren": 4
+        },
+        "kleine_zahl": "Unter 100 Besuchern am Einstieg — keine Quoten, nur absolute Zahlen. Im Bericht als \"x von y\" nennen.",
+        "schritte": [
+          {
+            "schritt": 1,
+            "typ": "path",
+            "wert": "*/partner",
+            "besucher": 4
+          },
+          {
+            "schritt": 2,
+            "typ": "event",
+            "wert": "warteliste_eingetragen",
+            "besucher": 0,
+            "verloren": 4
+          }
+        ]
+      }
+    },
+    "trichter:warteliste_organisationen": {
+      "tool": "umami_funnel",
+      "argumente": {
+        "websiteId": "b943d685-4a21-4e06-ba5c-4de3ccdc0178",
+        "startDate": "2026-10-17",
+        "endDate": "2026-11-13",
+        "timezone": "Europe/Luxembourg",
+        "schritte": [
+          "*/organisationen*",
+          "warteliste_eingetragen"
+        ],
+        "fenster_minuten": 60
+      },
+      "antwort": {
+        "website": "b943d685-4a21-4e06-ba5c-4de3ccdc0178",
+        "zeitraum": {
+          "startDate": "2026-10-17",
+          "endDate": "2026-11-13",
+          "tage": 28,
+          "zeitzone": "Europe/Luxembourg"
+        },
+        "fenster_minuten": 60,
+        "filter": null,
+        "einstieg": 0,
+        "abschluss": 0,
+        "staerkster_absprung": null,
+        "kleine_zahl": "Unter 100 Besuchern am Einstieg — keine Quoten, nur absolute Zahlen. Im Bericht als \"x von y\" nennen.",
+        "schritte": [
+          {
+            "schritt": 1,
+            "typ": "path",
+            "wert": "*/organisationen*",
+            "besucher": 0
+          },
+          {
+            "schritt": 2,
+            "typ": "event",
+            "wert": "warteliste_eingetragen",
+            "besucher": 0,
+            "verloren": 0
+          }
+        ]
+      }
+    }
+  }
+}
