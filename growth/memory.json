@@ -1,7 +1,7 @@
 {
   "site": "sc-domain:endlech.lu",
   "angelegt": "2026-11-15",
-  "letzter_lauf": "2026-11-16",
+  "letzter_lauf": "2026-11-23",
   "hypothesen": [
     {
       "id": "H-2026-W46-01",
@@ -41,12 +41,31 @@
         "begruendung": "Kaskadenstufe Klicks/CTR: ab Monat 3 nach dem Deploy, also deployt + 3 Monate. Ziel 1,5 % entspricht einer üblichen CTR auf Position ~10 und bei gleichen Impressions rund 23 Klicks in 28 Tagen.",
         "gegenpruefung": "CTR der übrigen Site im selben Zeitraum: 8 / 252 = 3,2 % (Site gesamt aus abfragen.date: 12 / 1805 = 0,66 %). Steigt die Detailseiten-CTR, aber auch die der übrigen Site im gleichen Maß, war es nicht diese Änderung. Steigt die gewichtete Position deutlich (unter 9), ist eine CTR-Bewegung zum Teil Positionseffekt – dann im Ergebnis trennen."
       },
-      "status": "offen",
-      "nachgemessen": [],
+      "status": "zu-frueh",
+      "nachgemessen": [
+        {
+          "am": "2026-11-23",
+          "wert": 0.00241,
+          "wert_roh": {
+            "impressions": 1657,
+            "clicks": 4,
+            "position_gewichtet": 11.08,
+            "zeilen": 33
+          },
+          "zeitraum": "2026-10-24 bis 2026-11-20",
+          "quelle": "growth/snapshots/2026-W48.json",
+          "bewertet": false,
+          "hinweis": "Vor fruehestens (2027-02-15) – notiert, nicht bewertet. Mischzeitraum: 22 Tage vor, 6 Tage nach dem Deploy (2026-11-15). Gegenprüfung im selben Schnitt: übrige Site 1902 − 1657 = 245 Imp., 15 − 4 = 11 Kl."
+        }
+      ],
       "hinweise": [
         {
           "am": "2026-11-16",
           "text": "Nicht nachgemessen: Der Zeitraum des Snapshots 2026-W47 endet am 2026-11-13, der Deploy war am 2026-11-15. Live geprüft am 2026-11-16: Titel und Beschreibung stehen auf https://endlech.lu/fr/restaurants/3. Gegenprüfung beim Nachmessen genauso rechnen wie beim Anlegen: 252 Impressions = Site gesamt (abfragen.date) minus Detailseiten (abfragen.page). Die Seitenebene allein ergibt für die übrige Site andere Werte (W46: 322 Imp., 8 Kl.)."
+        },
+        {
+          "am": "2026-11-23",
+          "text": "Für Abfrage 3 aus Loop 2 (Umami, Detailseiten vor/nach dem Deploy) nur das Segment Suche vergleichen, nicht alle Besucher. Seit dem Deploy zählt Umami auf Detailseiten 15 Besucher in 8 Tagen (2026-11-15 bis 2026-11-22, Filter path c./restaurants/), im Vorzeitraum 2: 14 davon direkt, 1 Suche, 15 Absprünge bei 15 Besuchen, Verweildauer 0 s, überwiegend englische Seiten, aus US, VN, SG, TW, PL, GB, IL, AL und LU. Das sieht nach automatisierten Aufrufen aus, nicht nach Suchbesuchern; gegen alle Besucher gemessen sähe der Titel aus, als hätte er Absprünge gebracht. Siehe W-2026-W48-01."
         }
       ]
     },
@@ -84,6 +103,14 @@
           "quelle": "growth/snapshots/2026-W47.json",
           "bewertet": false,
           "hinweis": "Vor fruehestens (2026-11-29) – notiert, nicht bewertet."
+        },
+        {
+          "am": "2026-11-23",
+          "wert": "2 von 2 indexiert: /de/restaurants/6 und /de/restaurants/9 verdict PASS, \"Gesendet und indexiert\", beide zuletzt gecrawlt 2026-11-16T17:32:20Z, kanonisch auf sich selbst. Sitemap verarbeitet 2026-11-20T06:41Z, 0 Fehler, 150 URLs eingereicht.",
+          "zeitraum": "Indexprüfung 2026-11-23 (inspektion.geprueft 2026-11-23T11:06Z)",
+          "quelle": "growth/snapshots/2026-W48.json",
+          "bewertet": false,
+          "hinweis": "Vor fruehestens (2026-11-30) – notiert, nicht bewertet. Für die Zuordnung am 2026-11-30: Der Crawl der beiden de-URLs fällt auf den Tag des Antrags (2026-11-16). Die acht übrigen URLs von 6 und 9 (lb, fr, en, pt), für die nichts beantragt wurde, sind ebenfalls PASS, gecrawlt 2026-11-18 bis 2026-11-23."
         }
       ],
       "deployt_beleg": "Zweiteilige Maßnahme. (1) Sitemap: laut gsc_sitemaps im Snapshot 2026-W47 eingereicht 2026-11-14T23:32:12Z (00:32 Ortszeit am 15.11.), verarbeitet 2026-11-14T23:32:14Z, 0 Fehler, 150 URLs. (2) \"Indexierung beantragen\" für /de/restaurants/6 und /9: laut Rückmeldung von Michael am 2026-11-16 ausgeführt. Die Frist rechnet ab dem zweiten Teil.",
@@ -118,6 +145,11 @@
           "am": "2026-11-16",
           "zeitraum": "2026-10-17 bis 2026-11-13",
           "beobachtung": "Gleiche Kette, umami_conversion_nach_quelle: Suchmaschinen 11 → 8 → 2, alle Besucher 29 → 12 → 2. Detailseite → kontaktweg_genutzt (umami_funnel): alle 2 von 8. Hält, gilt_bis unverändert."
+        },
+        {
+          "am": "2026-11-23",
+          "zeitraum": "2026-10-24 bis 2026-11-20",
+          "beobachtung": "Gleiche Kette (*/ → */restaurants → */restaurants/*, 60 Min.), umami_conversion_nach_quelle: Suchmaschinen 11 → 7 → 2 (stärkster Absprung Liste → Detailseite, 5 verloren), alle Besucher 32 → 10 → 2 (aus dem Standardtrichter im Umami-Snapshot). Mit kontaktweg_genutzt: Suchmaschinen 1, alle 1. Hält, gilt_bis unverändert. Achtung: Der Einstieg bei alle enthält direkte Einzelaufrufe auf /en/ (8 von 11 Besuchern dort direkt, 11 Absprünge bei 12 Besuchen, Vorzeitraum 1 Besucher), siehe W-2026-W48-01. Das Segment Suche ist davon nicht berührt."
         }
       ]
     }
@@ -150,6 +182,10 @@
         {
           "am": "2026-11-16",
           "text": "faellig_ab von 2026-11-29 auf 2026-11-30 gesetzt, gleich mit fruehestens von H-2026-W46-02 (Indexierung am 2026-11-16 beantragt). Vor der Fälligkeit korrigiert, kein erneuter Aufschub."
+        },
+        {
+          "am": "2026-11-23",
+          "text": "Noch nicht fällig (faellig_ab 2026-11-30). Stand im Snapshot 2026-W48: alle zehn URLs verdict PASS, die Bedingung ist heute nicht erfüllt. Bleibt das am 2026-11-30 so, entfällt der Indexierungsgrund für die LIMIT-Änderung. Der zweite Grund bleibt dann zu entscheiden: R-2026-W46-01, Segment Suche 11 → 7 → 2, stärkster Absprung Liste → Detailseite (5 verloren). Bei Zahlen unter 100 wäre eine solche Änderung in Loop 2 nicht messbar."
         }
       ]
     },
@@ -191,6 +227,17 @@
           "text": "Themenliste entschieden: config.json themen um \"barrierefrei restaurant in der nähe\", \"rollstuhlgerecht restaurant in der nähe\" und \"restaurant accessible chaise roulante\" ergänzt. Gegen den Snapshot 2026-W47 gerechnet: 3 von 10 Themen mit Impressions (4 + 3 + 2 Imp., Pos. 1,0–3,0, alle auf /de/ bzw. /fr/). Der erste Aufschubgrund ist damit weg. Die Abfrage bei DataForSEO kostet Geld und läuft erst nach Freigabe durch Michael; bis dahin gilt faellig_ab."
         }
       ]
+    },
+    {
+      "id": "W-2026-W48-01",
+      "gestellt": "2026-11-23",
+      "quelle": "growth/laeufe/2026-W48.md",
+      "was": "Umami zählt seit Anfang November direkte Einzelaufrufe aus dem Ausland, überwiegend auf englischen Seiten: /en/ 11 Besucher im Zeitraum 2026-10-24 bis 2026-11-20 (Vorzeitraum 1), davon 8 direkt, 11 Absprünge bei 12 Besuchen, Search Console dort 1 Klick. Detailseiten 2026-11-15 bis 2026-11-22: 15 Besucher, 14 direkt, alle mit einem Aufruf und 0 s. Erneut prüfen (umami_metrics channel und country mit Filter path eq./en/ und c./restaurants/). Hält das Muster an, wird mit Michael entschieden, ob Loop 2 bei alle Besucher künftig nur noch das Segment Suche bewertet oder ob die Anwendung solche Aufrufe vor der Weiterleitung an Umami aussortieren soll. Letzteres wäre eine Änderung an Feature 11 mit Datenschutzfolgen und damit Sache des Betreibers.",
+      "warum_nicht_jetzt": "Erst ein Zeitraum mit dem Muster, alle Zahlen unter 100. Die Herkunft ist nicht belegt, nur das Muster (direkt, ein Aufruf, 0 s, Ausland). Keine laufende Hypothese misst derzeit mit Umami. Abfrage 3 zu H-2026-W46-01 kommt erst ab 2027-02-15 und hat einen Hinweis.",
+      "faellig_ab": "2026-12-21",
+      "bedingung": "Im Umami-Snapshot hat /en/ mindestens 5 Besucher, während die Search Console für https://endlech.lu/en/ höchstens 1 Klick zählt",
+      "status": "offen",
+      "erledigt": null
     }
   ]
 }
