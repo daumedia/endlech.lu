@@ -1,6 +1,7 @@
 # Dependabot für das monatliche Wartungsfenster (erster Samstag im Monat).
 # Sicherheitsupdates kommen sofort, unabhängig vom Zeitplan (Repo-Einstellung).
 # Versions-Updates kommen am 1. des Monats, gebündelt je Paketverwaltung.
+# Ausnahme Composer: nur Sicherheits-PRs, siehe unten.
 version: 2
 updates:
   - package-ecosystem: composer
@@ -8,10 +9,10 @@ updates:
     schedule:
       interval: monthly
       timezone: Europe/Luxembourg
-    versioning-strategy: increase-if-necessary
-    open-pull-requests-limit: 5
-    # Symfony-Minor- und -Major-Versionen bewusst von Hand (extra.symfony.require).
-    # Sicherheitskorrekturen kommen bei Symfony als Patch und bleiben erlaubt.
+    # Keine monatlichen Composer-PRs: Dependabot beachtet extra.symfony.require
+    # nicht und mischt Symfony-Versionen. Composer-Updates laufen von Hand mit
+    # Flex (composer update) im Wartungsfenster. Sicherheits-PRs kommen weiter.
+    open-pull-requests-limit: 0
     ignore:
       - dependency-name: "symfony/*"
         update-types: ["version-update:semver-minor", "version-update:semver-major"]
@@ -19,9 +20,6 @@ updates:
       composer-sicherheit:
         applies-to: security-updates
         patterns: ["*"]
-      composer-minor-patch:
-        patterns: ["*"]
-        update-types: ["minor", "patch"]
   - package-ecosystem: npm
     directory: /
     schedule:
