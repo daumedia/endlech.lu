@@ -42,13 +42,13 @@ return [
         'version' => '1.1.0',
     ],
     '@orchidjs/unicode-variants' => [
-        'version' => '1.1.2',
+        'version' => '1.2.2',
     ],
     'tom-select' => [
-        'version' => '2.5.2',
+        'version' => '2.7.0',
     ],
     'tom-select/dist/css/tom-select.css' => [
-        'version' => '2.5.2',
+        'version' => '2.7.0',
         'type' => 'css',
     ],
     'glightbox' => [
@@ -65,7 +65,7 @@ return [
         'version' => '13.3.0',
     ],
     '@web-auth/webauthn-stimulus' => [
-        'version' => '5.3.5',
+        'version' => '5.3.17',
     ],
     'es-module-shims' => [
         'version' => '2.8.4',
