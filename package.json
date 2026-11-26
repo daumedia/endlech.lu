@@ -9,7 +9,7 @@
         "glightbox": "3.3.1",
         "sortablejs": "1.15.7",
         "tom-select": "2.5.2",
-        "typescript": "^5.9.3",
+        "typescript": "^7.0.2",
         "typescript-eslint": "^8.57.0"
     },
     "license": "MIT",
