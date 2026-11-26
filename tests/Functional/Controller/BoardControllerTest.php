@@ -123,7 +123,7 @@ final class BoardControllerTest extends AbstractWebTestCase
         // ⚠ Und der Inhalt darf auch nicht in der Fehlerseite auftauchen.
         self::assertStringNotContainsString(
             'Ohne Verfasser',
-            (string) $client->getResponse()->getContent(),
+            self::antwortOhneQuelltextAuszug($client),
             'Der Titel darf in der 404-Antwort nicht erscheinen.',
         );
     }

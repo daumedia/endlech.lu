@@ -10,6 +10,22 @@ Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
 - **Suchmaschinen:** Die Detailseiten eines Restaurants tragen den Titel „Name: Barrierefreiheit – Endlech.lu“ und eine
   Kurzbeschreibung aus den erfassten Merkmalen und der Adresse, in allen fünf Sprachen (Growth-Hypothese H-2026-W46-01).
   ⚠ Seit 2026-11-15 live — ausgerollt zusammen mit `v2026.11.14`, ohne eigenes Release.
+- **Sicherheitsupdate Symfony 8.1, Twig 3.31 und WebAuthn 5.3.17:** Symfony 8.0 bekommt seit Juli 2026 keine
+  Korrekturen mehr; Dependabot meldete eine kritische und 13 hohe Lücken, `composer audit` 133 Advisories in 30
+  Paketen. Mit dem neuesten 8.0 (8.0.15) blieben 88 offen, mit 8.1.12 keine. Mitgezogen: Twig 3.22 → 3.31.1,
+  `web-auth/*` 5.3.5 → 5.3.17 (Passkeys), `spomky-labs/cbor-php` und `pki-framework`, PHPUnit 12.5.45, dazu die
+  abhängigen Doctrine-, Monolog- und `brick/math`-Pakete (0.18 → 1.0, nur über die WebAuthn-Bibliotheken).
+  Aufgelöst gegen PHP 8.4.27, die Version im Image.
+  - **`composer.json`:** alle `8.0.*` auf `8.1.*`, `extra.symfony.require` ebenso; `bump-after-update` hat die
+    Untergrenzen angehoben.
+  - **Neun Tests an 8.1 angepasst, keiner abgeschwächt.** Die Debug-Fehlerseite zitiert seit 8.1 den Quelltext
+    jedes Stack-Frames, auch des Tests — samt der Zeichenkette, auf die ein „verrät die 404-Seite nichts?“-Test
+    prüft. Neu `AbstractWebTestCase::antwortOhneQuelltextAuszug()` entfernt nur diese Auszüge (`div.trace-code`);
+    zehn Prüfungen in neun Tests nutzen sie. `SavedPagesTest` vergleicht „fremde gegen unbekannte Liste“ jetzt ohne
+    Debug, also an der Seite, die Besucher bekommen: Die Debug-Seite trägt seit 8.1 Log-Zeilen mit Uhrzeit und
+    zufällige Dump-Kennungen und ist nie zweimal gleich.
+  - ⚠ **Keine Migration.** ⚠ **Anwendung UND Worker ausrollen**, beide laufen aus demselben Image. Danach einmal mit
+    Passkey anmelden.
 
 ## [2026.11.14] – Favoriten und Listen
 

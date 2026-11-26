@@ -165,12 +165,12 @@ final class RoadmapIdeenAdresseTest extends AbstractWebTestCase
 
         $client->request('GET', $pfad);
         self::assertResponseStatusCodeSame(404, 'Gast');
-        self::assertStringNotContainsString('Geheim wartende Idee', (string) $client->getResponse()->getContent());
+        self::assertStringNotContainsString('Geheim wartende Idee', self::antwortOhneQuelltextAuszug($client));
 
         $this->loginAs($client, 'admin@endlech.lu');
         $client->request('GET', $pfad);
         self::assertResponseStatusCodeSame(404, 'fremdes Konto');
-        self::assertStringNotContainsString('Geheim wartende Idee', (string) $client->getResponse()->getContent());
+        self::assertStringNotContainsString('Geheim wartende Idee', self::antwortOhneQuelltextAuszug($client));
 
         $this->loginAs($client, 'user@endlech.lu');
         $client->request('GET', $pfad);

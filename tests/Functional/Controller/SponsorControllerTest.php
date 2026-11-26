@@ -58,7 +58,7 @@ final class SponsorControllerTest extends AbstractWebTestCase
         $client->request('GET', self::LOCALE.'/sponsoren/gibt-es-nicht');
 
         self::assertResponseStatusCodeSame(404);
-        self::assertStringNotContainsString('Acme', (string) $client->getResponse()->getContent());
+        self::assertStringNotContainsString('Acme', self::antwortOhneQuelltextAuszug($client));
     }
 
     public function testAk22AdresseAusserhalbDesMustersIst404(): void
