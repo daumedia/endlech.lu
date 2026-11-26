@@ -114,7 +114,7 @@ final class BoardLegacyRedirectTest extends AbstractWebTestCase
 
         $client->followRedirect();
         self::assertResponseStatusCodeSame(404);
-        self::assertStringNotContainsString('Streng geheimer Titel', (string) $client->getResponse()->getContent());
+        self::assertStringNotContainsString('Streng geheimer Titel', self::antwortOhneQuelltextAuszug($client));
 
         foreach (['/community/ideen', '/community/ideen?status=new', '/roadmap', '/roadmap/ideen', '/roadmap/ideen?status=new', '/changelog'] as $pfad) {
             $client->request('GET', self::LOCALE . $pfad);

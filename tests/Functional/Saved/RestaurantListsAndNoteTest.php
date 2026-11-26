@@ -186,7 +186,7 @@ final class RestaurantListsAndNoteTest extends AbstractWebTestCase
         ]]);
 
         self::assertResponseStatusCodeSame(404);
-        self::assertStringNotContainsString('Geheim', (string) $client->getResponse()->getContent());
+        self::assertStringNotContainsString('Geheim', self::antwortOhneQuelltextAuszug($client));
         self::assertSame(0, $this->eintraege($client, $fremdeListe));
     }
 

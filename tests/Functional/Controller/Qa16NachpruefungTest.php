@@ -73,7 +73,7 @@ final class Qa16NachpruefungTest extends AbstractWebTestCase
             $client->request('POST', sprintf('/de/roadmap/ideen/%d/zustimmen', $wartend->getId()), ['_token' => $token]);
             self::assertResponseStatusCodeSame(404, sprintf('Token „%s“', $token));
             self::assertNull($client->getResponse()->headers->get('Location'));
-            self::assertStringNotContainsStringIgnoringCase('seidenreiher', (string) $client->getResponse()->getContent());
+            self::assertStringNotContainsStringIgnoringCase('seidenreiher', self::antwortOhneQuelltextAuszug($client));
         }
 
         // Kehrseite der neuen Reihenfolge: Die CSRF-Prüfung greift weiterhin — eine veröffentlichte Idee mit

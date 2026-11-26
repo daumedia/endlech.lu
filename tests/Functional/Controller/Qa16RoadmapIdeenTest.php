@@ -185,7 +185,7 @@ final class Qa16RoadmapIdeenTest extends AbstractWebTestCase
                         if ($client->getResponse()->isRedirect()) {
                             $client->followRedirect();
                         }
-                        self::assertStringNotContainsString('Zebrafink', (string) $client->getResponse()->getContent(), sprintf('[%s] /%s%s%s', $konto ?? 'Gast', $sprache, $pfad, $abfrage));
+                        self::assertStringNotContainsString('Zebrafink', self::antwortOhneQuelltextAuszug($client), sprintf('[%s] /%s%s%s', $konto ?? 'Gast', $sprache, $pfad, $abfrage));
                     }
                 }
             }

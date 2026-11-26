@@ -78,4 +78,22 @@ abstract class AbstractWebTestCase extends WebTestCase
 
         return $node->first()->form($values);
     }
+
+    /**
+     * Die Antwort ohne die Quelltext-Auszüge der Debug-Fehlerseite.
+     *
+     * Seit Symfony 8.1 zitiert die Fehlerseite im Debug-Modus — also in jedem Test — den
+     * Quelltext jedes Stack-Frames, auch den des Tests selbst. Damit steht die Zeichenkette,
+     * auf die ein „verrät die 404-Seite nichts?"-Test prüft, in jeder 404-Antwort: als Zitat
+     * der Testzeile. Entfernt werden nur diese Auszüge (`div.trace-code`); alles, was die
+     * Anwendung selbst ausgibt, bleibt drin und wird weiter geprüft.
+     */
+    protected static function antwortOhneQuelltextAuszug(KernelBrowser $client): string
+    {
+        return (string) preg_replace(
+            '#<div id="trace-html-[^"]*" class="trace-code[^"]*">.*?</div>#s',
+            '',
+            (string) $client->getResponse()->getContent(),
+        );
+    }
 }

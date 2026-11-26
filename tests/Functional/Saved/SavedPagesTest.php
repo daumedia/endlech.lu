@@ -256,7 +256,10 @@ final class SavedPagesTest extends AbstractWebTestCase
 
     public function testAk53FremdeListeIstNichtGefundenWieEineUnbekannte(): void
     {
-        $client = static::createClient();
+        // Ohne Debug, also mit der Fehlerseite, die Besucher sehen: Seit Symfony 8.1 trägt
+        // die Debug-Fehlerseite Log-Zeilen mit Uhrzeit und zufällige Dump-Kennungen, zwei
+        // 404-Antworten sind dort nie gleich. Verglichen wird, was in Produktion ausgeliefert wird.
+        $client = static::createClient(['debug' => false]);
         $a = $this->user($client, self::KONTO);
         [$lokal] = $this->neueLokale($client, 1);
         $liste = $this->liste($client, $a, 'Mit Oma');
@@ -268,7 +271,7 @@ final class SavedPagesTest extends AbstractWebTestCase
             foreach ([(int) $liste->getId(), 999999] as $nummer) {
                 $client->request('GET', self::LOCALE.'/gespeichert/listen/'.$nummer.$zusatz);
                 self::assertResponseStatusCodeSame(404, '/gespeichert/listen/'.$nummer.$zusatz);
-                self::assertStringNotContainsString('Mit Oma', (string) $client->getResponse()->getContent());
+                self::assertStringNotContainsString('Mit Oma', self::antwortOhneQuelltextAuszug($client));
                 $antworten[$zusatz][] = $this->ohneNummer((string) $client->getResponse()->getContent(), $nummer);
             }
         }

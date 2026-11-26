@@ -377,7 +377,7 @@ final class SavedListManageTest extends AbstractWebTestCase
         foreach ($versuche as [$methode, $pfad, $daten]) {
             $client->request($methode, $pfad, $daten);
             self::assertResponseStatusCodeSame(404, $methode.' '.$pfad);
-            self::assertStringNotContainsString('Mit Oma', (string) $client->getResponse()->getContent(), $methode.' '.$pfad);
+            self::assertStringNotContainsString('Mit Oma', self::antwortOhneQuelltextAuszug($client), $methode.' '.$pfad);
             self::assertFalse($client->getResponse()->headers->has('Location'));
         }
 
