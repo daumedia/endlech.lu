@@ -26,6 +26,14 @@ Alle Änderungen an **Endlech.lu** werden in dieser Datei dokumentiert.
     zufällige Dump-Kennungen und ist nie zweimal gleich.
   - ⚠ **Keine Migration.** ⚠ **Anwendung UND Worker ausrollen**, beide laufen aus demselben Image. Danach einmal mit
     Passkey anmelden.
+- **JavaScript im Browser nachgezogen:** `@web-auth/webauthn-stimulus` 5.3.5 → 5.3.17, passend zum Server-Teil
+  `web-auth/webauthn-symfony-bundle` 5.3.17; `tom-select` 2.5.2 → 2.7.0 mit `@orchidjs/unicode-variants` 1.2.2. In
+  `importmap.php` und — als Typquelle für `tsc` — in `package.json` dieselben Versionen, dazu ESLint 10.15 und
+  typescript-eslint 8.74. Übernimmt Dependabot-PR #160, der nur die Typen gehoben hätte. `@simplewebauthn/browser`
+  bleibt auf 13.3.0: webauthn-stimulus 5.3.17 verlangt `^13.2.0`.
+  - `importmap:update` schreibt `importmap.php` neu und hätte die Hinweise im Kopf gelöscht (u. a. warum
+    `es-module-shims` lokal liegt) und `tom-select.default.min.css` ergänzt, das hier niemand lädt. Die Versionen sind
+    deshalb von Hand gehoben.
 
 ## [2026.11.14] – Favoriten und Listen
 
